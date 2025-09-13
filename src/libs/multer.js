@@ -6,10 +6,13 @@ const crypto = require('crypto')
 // const path = require('path');
 
 //const { S3_ENDPOINT } = process.env.S3_ENDPOINT;
-const {BUCKET_NAME} =`${process.env.BUCKET_NAME}`;
-const { SPACES_KEY } =`${process.env.SPACES_KEY}`;
-const { SPACES_SECRET } =`${process.env.SPACES_SECRET}`;
+const BUCKET_NAME =process.env.BUCKET_NAME;
+const { SPACES_KEY } =process.env.SPACES_KEY;
+const { SPACES_SECRET } =process.env.SPACES_SECRET;
 
+console.log('-----------------------------')
+console.log('12',BUCKET_NAME)
+console.log('-----------------------------')
 
 //endpoint:'nyc3.digitaloceanspaces.com',
 const s3 = new aws.S3({

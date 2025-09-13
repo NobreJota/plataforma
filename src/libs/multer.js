@@ -5,10 +5,10 @@ require('dotenv').config({path:'./.env'})
 const crypto = require('crypto')
 // const path = require('path');
 
-const { S3_ENDPOINT } = process.env;
-const {BUCKET_NAME} =process.env;
-const { SPACES_KEY } =process.env;
-const { SPACES_SECRET } =process.env;
+const { S3_ENDPOINT } = process.env.S3_ENDPOINT;
+const {BUCKET_NAME} =process.env.BUCKET_NAME;
+const { SPACES_KEY } =process.env.SPACES_KEY;
+const { SPACES_SECRET } =process.env.SPACES_SECRET;
 
 
 

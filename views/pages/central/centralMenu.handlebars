@@ -1,0 +1,103 @@
+<style>
+    .line{
+      color:#7902a3;  
+    }
+</style>
+<script>
+    function myFunction(n){
+
+    }
+</script> 
+<div style="display: flex;flex-direction: row;justify-content: space-between;width: 99%;margin: auto;background-color: #7902a3;height: 80vh;">
+    <div id="menu-lateral" style="width: 15%;background-color:#cccbcb;float: right;padding: .8%;height: 79.5vh;">
+        <h6>views/pages/central/centralmenu</h6>
+        <nav id="nav" class="sidebar line" style="background-color: #87898a;margin-top: 6vh;height: 70vh;color:red;">
+            <ul id-"nav-ul" class="list-unstyled line" style="color:black">
+                <li><a href="/dashboard/"><i class="fas fa-tachometer-alt"></i> Administração Central</a></li>
+               <li class="line hide">
+                    <a href="#submenu1" data-toggle="collapse" class="line" style="color:#fbf8f8;font-weight: 400;">
+                        <i class="fas fa-user"></i> Usuário
+                    </a>
+                    <ul id="submenu1" class="list-unstyled collapse hide">
+                        <li><a href="listar.html"><i class="fas fa-users"></i> Usuários</a></li>
+                        <li><a href="#"><i class="fas fa-key"></i> Nível de Acesso</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#submenu2" data-toggle="collapse" style="color:#fbf8f8;font-weight: 400;"><i class="fas fa-home"></i>Publicidade</a>
+                    <ul id="submenu2" class="list-unstyled collapse">
+                        <li><a href="#"><i class="far fa-image"></i>Entrada - Home</a></li>
+                        <li><a href="#"><i class="fas fa-briefcase"></i>Páginas</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#submenu3" data-toggle="collapse" style="color:#fbf8f8;font-weight: 400;"><i class="fas fa-home"></i>Segmentos</a>
+                    <ul id="submenu3" class="list-unstyled collapse">
+                        {{!-- <li><a href="/contato/segmento"><i class="fas fa-envelope-open-text"></i>Segmento</a></li> --}}
+                        <li><a href="/segmento/lista"><i class="fas fa-envelope-open-text"></i>Segmento</a></li>
+                        {{!-- <li><a href="/centralseg/buscar-segmentos/B"><i class="fas fa-envelope-open-text"></i>Segmento_sub</a></li>
+                        <li><a href="/centralseg/buscar-segmentos/C"><i class="fas fa-envelope-open-text"></i>Secção</a></li>
+                        <li><a href=""><i class="fas fa-envelope-open-text"></i>Lista segmentos/Edição</a></li> --}}
+                        {{!-- <li><a href="/contatoinfo/vis-contatoinfo"><i class="fas fa-tools"></i>----</a></li> --}}
+                    </ul>    
+                </li>   
+                <li>
+                    <a href="#submenu4" data-toggle="collapse" style="color:#fbf8f8;font-weight: 400;"><i class="fas fa-home"></i>Fornecedores</a>
+                    <ul id="submenu4" class="list-unstyled collapse">
+                        {{!-- <li><a href="/contato/segmento"><i class="fas fa-envelope-open-text"></i>Segmento</a></li> --}}
+                        <li><a href="/fornec/fornec"><i class="fas fa-envelope-open-text"></i>Cadastro</a></li>
+                        <li><a href="#"><i class="fas fa-envelope-open-text"></i>Pesquisa</a></li>
+                        <li><a href="#"><i class="fas fa-envelope-open-text"></i>Lista</a></li>
+                        {{!-- <li><a href="/contatoinfo/vis-contatoinfo"><i class="fas fa-tools"></i>----</a></li> --}}
+                    </ul>    
+                </li>    
+                <li>
+                    <a href="#submenu5" data-toggle="collapse" style="color:#fbf8f8;font-weight: 400;"><i class="fas fa-home"></i>Cooperados</a>
+                    <ul id="submenu5" class="list-unstyled collapse">
+                        {{!-- <li><a href="/contato/segmento"><i class="fas fa-envelope-open-text"></i>Segmento</a></li> --}}
+                        {{!-- <li><a href="/centrallj/cadastro-lojista"><i class="fas fa-envelope-open-text"></i>Cadastro</a></li>
+                        <li><a href="#"><i class="fas fa-envelope-open-text"></i>Adicionado segmento</a></li> --}}
+                        <li><a href="/lojista/lojista"><i class="fas fa-envelope-open-text"></i>Lista</a></li>
+                        {{!-- <li><a href="/contatoinfo/vis-contatoinfo"><i class="fas fa-tools"></i>----</a></li> --}}
+                    </ul>    
+                </li> 
+                <li>
+                    <a href="#submenu6" data-toggle="collapse" style="color:#fbf8f8;font-weight: 400;"><i class="fas fa-home"></i>Produto</a>
+                    <ul id="submenu6" class="list-unstyled collapse">
+                        {{!-- <li><a href="/contato/segmento"><i class="fas fa-envelope-open-text"></i>Segmento</a></li> --}}
+                        <li><a href="/produto/listfornecImport"><i class="fas fa-envelope-open-text"></i>Importação de lista</a></li>
+                        {{!-- <li><a href="#"><i class="fas fa-envelope-open-text"></i>Pesquisa</a></li> --}}
+                        <li><a href="/produto/lista-produto"><i class="fas fa-envelope-open-text"></i>Lista-produto</a></li>
+                        {{!-- <li><a href="/produto/animacao"><i class="fas fa-tools"></i>Animacao</a></li> --}}
+                    </ul>    
+                </li> 
+                  <li>
+                    <a href="#submenu7" data-toggle="collapse" style="color:#fbf8f8;font-weight: 400;"><i class="fas fa-home"></i>Animação</a>
+                    <ul id="submenu7" class="list-unstyled collapse">
+                        <li><a href="/produto/animacao"><i class="fas fa-tools"></i>Animacao</a></li>
+                    </ul>    
+                </li> 
+                <li><a href="/"><i class="fas fa-tachometer-alt"></i> Site</a></li>
+                <li><a href="/usuario/logout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+            </ul>
+        </nav>
+    </div>    
+    <div class="p-1" style="width: 85%;background-color: #b00293e8;margin-top: 6vh;">
+        <div class="list-group-item">
+            <div class="d-flex">
+                    <div class="mr-auto p-2">
+                    <h2 class="display-4 titulo">Administração Central</h2>
+                </div> 
+            </div>
+        </div>
+        <div class="list-group-item" style="margin-top: 15px;">
+                <div class="d-flex">
+                    <div class="mr-auto p-5" style="background-color: darkslategray;width: 95%;margin: auto;">
+                    <h2 class="display-10 titulo" style="color: red;margin-top: 15px;">Estatística</h2>
+                </div> 
+            </div>
+        </div>
+    </div> 
+</div>  
+
+  

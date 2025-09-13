@@ -1,0 +1,290 @@
+<style>
+  .list-group-item {
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+}
+
+.setor-item {
+  background-color: #f0f0f0;
+  font-weight: 100;
+  color:#333;
+}
+
+</style>
+
+<div id="main" class="row justify-content-center" style="background-color:#faf4f4 ;padding: 25px;margin-top: 2vh;border-radius: 6px;color:#fff;height: 85vh;">
+     <div id="divRow" class="col-md-12" style="height: 76vh; background-color:transparent;display: flex;flex-direction: row;justify-content: space-between;"> <!-- ou col-lg-6 para centralizar ainda mais -->
+      <div id="Segmento" style="background-color: blue;width: 30%;height: 74vh;margin: auto;border-radius: 4px;">
+          <h3 class="text-center" >Lista de Departamentos</h3>
+          <ul id="listaSegmentos" class="list-group mb-3" style="height: 70vh; overflow-y: auto;">
+             {{#each depto}}
+                 <li class="list-group-item segmento-item" data-segmento-id="{{this._id}}">
+                     {{this.nomeDepartamento}}
+                 </li>
+            {{/each}}
+         </ul>
+      </div>
+      <div id="Setor" style="background-color: blue;width: 30%;height: 74vh;margin: auto;border-radius: 4px;">
+          <h3 class="text-center">Lista de DeptoSetor</h3>
+          <ul id="setoresList" class="list-group mb-3" style="width: 95%;height:70vh;margin: auto; overflow-y: auto;">
+           
+         </ul>
+      </div>  
+      <div id="Secao"  style="background-color: blue;width: 30%;height: 74vh;margin: auto;border-radius: 4px;">
+          <h3 class="text-center">Lista de DeptoSeção</h3>
+          <ul id="listaSecoes" class="list-group mb-3" style="height: 70vh;margin: auto;width: 100%;">
+            {{!-- // {{#each secoes}}
+                 <li class="list-group-item">{{this}}</li>
+             {{/each}} --}}
+          </ul>
+      </div> 
+    </div>  
+    <!-- Botões -->
+    <div id="botoes" class="d-flex justify-content-center gap-2" style="padding: 20px;background-color:#c4bdbd;display: flex;flex-direction: row;justify-content: space-between;">
+       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSegmento" style="width: 30%;text-align: center;">Cadastrar <span style="color:#670303;font-weight: bold;">Departamento</span></button>
+       <button id="btnSetor" type="button" class="btn btn-primary botao-abrir-modal" data-segmento-id="{{this._id}}" data-bs-toggle="modal" data-bs-target="#modalSetor" style="display: none;width: 30%;text-align: center;">
+                  Cadastrar <span style="color:#670303;font-weight: bold;">DeptoSetor</span>
+       </button>
+      <button id="btnSecao" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSecao" style="display: none;width: 30%;text-align: center;">Cadastrar <span style="color: #670303;font-weight: bold;">Seção</span></button>
+    </div>
+  
+</div>
+
+<!-- Modal Segmento -->
+<div id="modalSegmento" class="modal fade"  tabindex="-1">
+  <div class="modal-dialog">
+    <form method="POST" action="/segmento/segmento/salvar" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="color: brown;">Cadastrar Departamento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" name="nomeDepartamento" class="form-control" placeholder="nome departamento" required>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Setor -->
+<div id="modalSetor" class="modal fade"  tabindex="-1">
+  <div class="modal-dialog" style="background-color:#fff;padding: 4px;height: 25vh;border-radius: 6px;float:inline-start;margin-left: 1.5vw;width: 20vw;">
+      
+      <form id="formSetor" class="modal-content" style="height: 18vh;margin: auto;background-color: #87cc06;">
+         <div class="modal-header">
+        <h5 class="modal-title" >Cadastrar<span style="color:brown">DeptoSetor</span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+        <input type="text" name="inputnomeDepartamento" id="inputnomeDepartamento">
+        <input type="text" name="inputDepartamentoId" id="inputDepartamentoId">
+        <div class="modal-body">
+          <input id="nomeDeptoSetor" type="text" name="nomeDeptoSetor" class="form-control" placeholder="Título do deptoSetor" required>
+        </div>
+        <div class="modal-footer" style="margin-top: 10px;">
+          <button type="submit" class="btn btn-success">Salvar</button>
+        </div>
+      </form>
+  </div>
+</div>
+
+<!-- Modal Seção -->
+<div id="modalSecao" class="modal fade"  tabindex="-1">
+  <div class="modal-dialog" style="background-color:#fff;padding: 4px;height: 30vh;border-radius: 6px;float:inline-start;margin-left: 1.5vw;width: 20vw;">
+    <form id="formSecao" method="POST" class="modal-content" style="height: 18vh;margin: auto;background-color:#87cc06;">
+      <div class="modal-header">
+        <h5 class="modal-title">Cadastrar Seção</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <input type="text" name="nomeSegmento" id="nomeSecao-Segmento" style="width: 100%;margin: auto;text-align: center;border: none;color:#333;">
+      <input type="button" name="nomeSetor" id="nomeSecao-Setor" style="width: 100%;margin: auto;text-align: center;border: none;color:#333;">
+      <input type="hidden" name="inputSecao-departamentoId" id="inputSecao-departamentoId" style="">
+      <input type="hidden" name="inputSecao-deptoSetorId" id="inputSecao-deptoSetorId">
+      <div class="modal-body">
+        <input type="text" name="nomeSecao" class="form-control" placeholder="Título da Seção" required>
+      </div>
+      <div class="modal-footer" style="margin-top: 1vh;">
+        <button type="submit" class="btn btn-success">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+{{!-- /////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////// --}}
+{{!-- // Salvar o segmento cadastrado --}}
+<script>
+  document.getElementById("formSetor").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    console.log('Alô!');
+    const departamentoId = document.getElementById("inputDepartamentoId").value;
+    const nomeDeptoSetor = document.querySelector("#formSetor input[name='nomeDeptoSetor']").value;
+    console.log('');
+    console.log(' [ 122 departamentoId ]',departamentoId);
+    console.log('');
+    console.log(' [ 125 nomeDeptoSetor ]',nomeDeptoSetor);
+    console.log('');
+    const response = await fetch("/segmento/setor/salvar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ departamentoId, nomeDeptoSetor })
+    });
+
+    const novoDeptoSetor = await response.json();
+    console.log("Setor salvo:", novoDeptoSetor);
+
+    // Atualiza lista visual
+    const setoresList = document.getElementById("setoresList");
+    const li = document.createElement("li");
+    li.classList.add("list-group-item","setor-item");
+    //li.classList.add("setor-item");
+    li.dataset.departamentoId = novoDeptoSetor.idDepto;
+    li.dataset.deptosetorId = novoDeptoSetor._id;
+    
+    li.innerText =  novoDeptoSetor.nomeDeptoSetor;
+
+    setoresList.appendChild(li);
+
+    const modal = bootstrap.Modal.getInstance(document.getElementById("modalSetor"));
+    modal.hide();
+
+    this.reset();
+  });
+</script>
+{{!-- Clica no item departamento para buscar os setores pertinentes --}}
+<script>
+  document.querySelectorAll(".segmento-item").forEach(item => {
+    item.addEventListener("click", async () => {
+      const departamentoId = item.getAttribute("data-segmento-id");
+      console.log("linha clicada sobre segmento-item :", departamentoId);
+
+      // Preenche o hidden do modal
+      document.getElementById("inputnomeDepartamento").value= item.innerHTML.trim();
+      document.getElementById("nomeSecao-Segmento").value=item.innerHTML.trim();
+      document.getElementById("inputDepartamentoId").value = departamentoId;
+      document.getElementById("inputDepartamentoId").style.color="blue";
+      document.getElementById("btnSetor").style.display="block";
+      
+
+      // Carrega setores correspondentes
+      const setoresList = document.getElementById("setoresList");
+      setoresList.innerHTML = "";
+      console.log('');
+      console.log('[ 174 ]',setoresList);
+      console.log('');
+      console.log('[ 174 ]',departamentoId);
+      console.log('');
+      const response = await fetch(`/segmento/setores/${departamentoId}`);
+      const setores = await response.json();
+      
+      console.log('');
+      console.log('[ 181 ]', setores);
+      console.log('');
+      // Faz a varredura 
+      setores.forEach(setor => {
+        console.log('');
+        console.log('44',setor.idDepto, "<><><><><><><> ", setor._id);
+        console.log('');
+        const li = document.createElement("li");
+        li.setAttribute('data-departamento-id',setor.idDepto);
+        li.setAttribute("data-deptosetor-id",setor._id)
+        li.classList.add("list-group-item","setor-item");
+        li.innerText = setor.nomeDeptoSetor;
+        setoresList.appendChild(li);
+      });
+
+       document.querySelectorAll(".setor-item").forEach(item => {
+            item.addEventListener("click",async () => {
+               // console.log("CLICOU NO SETOR:",item.data-deptosetor-id,"===",item.dataset.departamento-id);
+                const departamentoId=item.getAttribute("data-departamento-id")
+                const deptosetorId = item.getAttribute("data-deptosetor-id");
+                console.log(' [ 198 ]')
+                document.getElementById("nomeSecao-Setor").value=item.innerHTML;
+                document.getElementById("inputSecao-departamentoId").value = departamentoId;
+                document.getElementById("inputSecao-deptoSetorId").value = deptosetorId;
+                document.getElementById("btnSecao").style.display="block";
+                                                
+                console.log("Buscando seções do setor:", deptosetorId);
+                 const response =await fetch(`secoes/${deptosetorId}`);
+                //console.log(typeof(response))
+                const secoes =await response.json();
+                console.log('');
+                console.log('[ 211 ]',secoes);
+                console.log('');
+                const listaSecoes = document.getElementById("listaSecoes");
+                listaSecoes.innerHTML = ""; // Limpa a lista antes de preencher
+
+                secoes.forEach(secao => {
+                  const li = document.createElement("li");
+                  li.className = "list-group-item";
+                  li.innerText = secao.nomeSecao;
+                  listaSecoes.appendChild(li);
+                });
+            });
+       });
+    });
+  });
+</script>
+{{!-- Clica no Setor para buscas as seções --}}
+<script>
+  document.querySelectorAll(".setor-item").forEach(item => {
+  item.addEventListener("click", async function() {
+    const setorId = this.dataset.setorId;
+    console.log("Buscando seções do setor:", setorId);
+
+    const response = await fetch(`/secoes/${setorId}`);
+    const secoes = await response.json();
+    console.log('');
+    console.log('[ 135 ]', secoes);
+    console.log('');
+    const listaSecoes = document.getElementById("listaSecoes");
+    listaSecoes.innerHTML = ""; // Limpa a lista antes de preencher
+
+    secoes.forEach(secao => {
+      const li = document.createElement("li");
+      li.className = "list-group-item";
+      li.innerText = secao.nomeSecao;
+      listaSecoes.appendChild(li);
+    });
+  });
+});
+</script>
+ {{!-- Salvando a seção --}}
+<script>
+    document.getElementById("formSecao").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const departamentoId=document.getElementById("inputSecao-departamentoId").value;
+    const deptosetorId = document.getElementById("inputSecao-deptoSetorId").value;
+    const nomeSecao = this.querySelector("input[name='nomeSecao']").value;
+    console.log('passando para gravar ',nomeSecao,"  X ",departamentoId," X ",deptosetorId)
+    const response = await fetch("secao/salvar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ departamentoId, deptosetorId, nomeSecao })
+    });
+    console.log('response.Ok')
+    if (response.ok) {
+      const novaSecao = await response.json();
+      console.log("Seção salva:", novaSecao);
+      // Criar o <li> e adicionar na lista
+      const ulSecao = document.querySelector("#Secao ul");
+      const li = document.createElement("li");
+      li.className = "list-group-item";
+      li.innerText = novaSecao.nomeSecao; // ou novaSecao.titulo, conforme o retorno
+
+      ulSecao.appendChild(li);
+
+      const modal = bootstrap.Modal.getInstance(document.getElementById("modalSecao"));
+      modal.hide();
+
+      this.reset();
+    }else{
+       alert("não há seção gravada para esse Setor!")
+    }
+  });
+</script>
+ 

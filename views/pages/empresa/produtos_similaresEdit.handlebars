@@ -1,0 +1,12 @@
+<label>Adicionar produto similar:</label>
+<input type="text" id="buscarProduto" placeholder="Busque por c&oacute;digo ou nome...">
+
+<ul id="similaresSelecionados">
+  {{#each produto.similares}}
+    <li data-id="{{this._id}}">
+      {{this.nome}} ({{this.codigo}})
+      <button type="button" class="remover-similar">x</button>
+      <input type="hidden" name="similarProducts[]" value="{{this._id}}">
+     </li>
+  {{/each}}
+</ul>

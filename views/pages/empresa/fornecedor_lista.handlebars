@@ -1,0 +1,121 @@
+<style>
+.row label {
+    font-weight: 100;
+    height: 2vh;
+    padding-left: 10px;
+  }
+
+  .row input {
+    font-weight: 600;
+    height: 3vh;background-color: #f0f3f2;
+  }
+
+  .row_text{
+     font-size: smaller;
+  }
+
+  .row_textMarca{
+     font-size: small;
+     color:#295ee4
+  }
+</style>  
+<div id="painelLista" class="grade" style="margin-top: 6vh;">
+    <div style="display: flex;flex-direction: row;justify-content: center;">
+       <h1 style="font-weight:200;font-size:medium ;">Relação de fornecedores</h1>
+    </div>
+
+    <div id="CadastrarProduto" style="width: 98vw;height: 3vh;margin: auto;display: flex;flex-direction: row;justify-content: center;background-color: #295ee4;">
+          <button id="abrirModalProduto" style="border: none;background-color: transparent;" data-bs-toggle="modal" data-bs-target="#CadastrarProdutosModal" data-lojista="{{lojista._id}}" class="btn btn-sm" onclick="openCadastroFornecModal('{{lojaNumber}}')">
+            <h1 style="font-weight:200;color:#fff;font-size: small;">Cadastro de fornecedor</h1>
+            <input id="lojaFornec" type="text" style="display:block;" value="{{lojaNumber}}">
+          </button>
+    </div>
+  <div id="divTable" style="overflow-x: auto;width:100%;">
+     <table id="tabelaProdutos" class="table table-bordered table-striped">
+                <thead style="color: #df061f; background-color: #f2f2f2;">
+                <tr>
+                    <th style="width: 2vw;">Itens</th>
+                    <th style="display: none;">Id</th>
+                    <th>Código</th>
+                    <th>Fornecedor</th>
+                    <th>CNPJ</th>
+                    <th>Inscrição</th>
+                    <th>Contábil</th>
+                    <th>Marca</th>
+                    <th>Email</th>
+                    <th>Contato</th>
+                    <th>Logradouro</th>
+                    <th>Número</th>
+                    <th style="color: #df061f;">Cidade</th>
+                    <th>Bairro</th>
+                    <th>Estado</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody id="produtoTable">
+                        {{#each fornecedores}}
+                        <tr data-id="{{_id}}">
+                            <td class="alinhar-center">{{inc @index}}</td>
+                            <td style="display: none">{{_id}}</td>
+                            <td>{{../lojaNumber}}</td> <!-- Correto -->
+                            <td class="row_text">{{razao}}</td>
+                            <td>{{cnpj}}</td>
+                            <td>{{inscricao}}</td>
+                            <td>{{ncontabil}}</td>
+                            <td class="row_textMarca">{{marca}}</td>
+                            <td>{{email}}</td>
+                            <td>
+                                {{#if contato.representante.nome}}
+                                    <div><strong>{{contato.representante.nome}}</strong></div>
+                                {{/if}}
+                                {{#if contato.representante.celular}}
+                                    <div>📱 {{contato.representante.celular}}</div>
+                                {{/if}}
+                                {{#if contato.representante.email}}
+                                    <div>
+                                        <a href="mailto:{{contato.representante.email}}">
+                                            ✉️ {{contato.representante.email}}
+                                        </a>
+                                    </div>
+                                {{/if}}
+                            </td>
+                            <td>{{address.logradouro}}</td>
+                            <td>{{address.numero}}</td>
+                            <td>{{address.cidade}}</td>
+                            <td>{{address.bairro}}</td>
+                            <td>{{address.estado}}</td>
+                            <td>
+                            <div style="display: flex;flex-direction: row;justify-content:space-around;gap: 4px; flex-wrap: wrap;background-color:transparent;">
+                                <select 
+                                class="form-select form-select-sm" 
+                                onchange="executarAcaoComDataset(this)" 
+                                data-id="{{_id}}" 
+                                data-codigo="{{codigo}}" 
+                                data-descricao="{{razao}}" 
+                                data-fornecedor="{{razao}}" 
+                                data-referencia="{{cnpj}}">
+                                <option value="" selected disabled>⋮</option>
+                                <option value="vincular">🔗 Vincular</option>
+                                <option value="imagens">🖼️ Imagens</option>
+                                <option value="editar">✏️ Editar</option>
+                                <option value="deletar">🗑️ Deletar</option>
+                                </select>
+                            </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+                </tbody>
+     </table>
+  </div>  
+</div>
+<script>
+  async  function  openCadastroFornecModal(){
+   // console.log('[ 113 ]',n)
+          //ornec/cadastro/${lojistaId}`
+          let number=document.getElementById("lojaFornec").value;
+          console.log(' [ 116 ]', number)
+         const response = await fetch(`/fornec/novocadastro/${number}`);
+          console.log(' [ 116 ]')
+    }
+  
+</script>

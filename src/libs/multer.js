@@ -1,0 +1,49 @@
+const aws = require('aws-sdk');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+require('dotenv').config({path:'./.env'})
+const crypto = require('crypto')
+// const path = require('path');
+
+const { S3_ENDPOINT } = process.env;
+const {BUCKET_NAME} =process.env;
+const { SPACES_KEY } =process.env;
+const { SPACES_SECRET } =process.env;
+
+
+
+const s3 = new aws.S3({
+        endpoint:'nyc3.digitaloceanspaces.com',
+        accessKeyId:SPACES_KEY,
+        secretAccessKey:SPACES_SECRET,
+})
+
+const upload = multer({
+         storage:multerS3({
+         s3,
+         bucket:BUCKET_NAME,
+         acl:'public-read',
+         metadata:(req,file,cb) =>{
+            cb(null,{
+                fieldname:file.fieldname ,
+            })
+         },
+         key:(req,file,cb)=>{
+            cb(null,crypto.randomBytes(10).toString('hex')  + "_" + file.originalname);
+           // console.log('');
+           // console.log('______________________________________');
+           // console.log('');
+            //console.log(' [ 42 multer.js ]');
+            //console.log(' origem views :');
+            //console.log(' origem route : src/libs/multer.js');
+            console.log(' obs : Faz a gravação da imagem na OceanDigital');
+            console.log('  :');
+            console.log(' destino  : src/controlles/index.controllers.js');
+            console.log('______________________________________')
+            console.log('');
+        }
+         
+    }),
+}).single('upload');
+
+module.exports = { upload,s3 };

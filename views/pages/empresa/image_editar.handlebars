@@ -1,0 +1,24 @@
+<form id="formUploadImagens" enctype="multipart/form-data">
+  <div>
+    <label>Código:</label>
+    <input type="text" id="codigoProduto" name="codigo" readonly>
+
+    <label>Descrição:</label>
+    <input type="text" id="descricaoProduto" name="descricao" readonly>
+
+    <label>Referência:</label>
+    <input type="text" id="referenciaProduto" name="referencia" readonly>
+
+    <label>Quantidade de fotos:</label>
+    <select id="qteFotos" onchange="criarDivsFotos()">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      ...
+      <option value="7">7</option>
+    </select>
+  </div>
+
+  <div id="fotosContainer" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+
+  <button type="submit">Enviar todas</button>
+</form>

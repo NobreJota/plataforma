@@ -1,0 +1,15 @@
+<form action="/produtos/{{produto._id}}/editar" method="POST">
+  <!-- ... outros campos ... -->
+  <label>Produtos similares:</label>
+  <select name="similarProducts[]" multiple>
+    {{#each produtos}} 
+      <option value="{{this._id}}" 
+        {{#if produto.similares}} 
+          {{#if (containsId this._id ../produto.similares)}}selected{{/if}} 
+        {{/if}}>
+        {{this.codigo}} – {{this.nome}}
+      </option>
+    {{/each}}
+  </select>
+  <button type="submit">Salvar</button>
+</form>

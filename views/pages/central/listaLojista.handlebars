@@ -1,0 +1,920 @@
+<style>
+   .cabecalho-tabela th {
+    background-color: #f8f9fa;
+    color: #333;
+    padding: 10px;
+    font-weight: 100;
+    font-size: smaller;
+  }
+  table td{
+    background-color: #068648;
+  }
+
+  .row{
+    margin-bottom:5px;background-color: #d9c9c9;color: #0d0d0d;height: 5vh;font-weight: 100;
+  }
+
+  .row label {
+    font-weight: 100;
+    height: 2vh;
+    padding-left: 10px;
+  }
+
+  .row input {
+    font-weight: 600;
+    height: 3vh;background-color: #f0f3f2;
+  }
+
+  .longa{
+    width: 10vw;
+    background-color: #068648;
+  }
+
+
+
+  .curta{
+    width: 5vw;
+    background-color: brown;
+  }
+
+  .ajusteRow{
+     min-width: 100px; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+</style>
+<script>
+  let =jaCarregouDepartamentos=false;
+  let selecionados = [];
+</script>
+<div id="corpo" style="width: 99vw;height: 96vh;margin: auto;background-color: #d0d3d0;">
+  
+  {{!-- <div>
+     <h1 >Lista de Lojistas</h1>  
+  </div>   --}}
+    <div id="cadastroLojistaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#bbbcbb80; justify-content:center; align-items:center; z-index:9999;padding: 5px;">
+        <div style="background:#fff; width:50%; height:92vh;margin: auto;padding:10px; border-radius:10px; box-shadow:0 5px 10px #00000080;overflow-x: scroll;overflow-y: auto;">
+            <h4 style="font-weight: 200;color: #141414;">Cadastro de Lojista</h4>
+            <div id="divForm" style="background-color:transparent;height:90vh ;">
+                <form id="cadastroLojistaForm" style="padding-left: 10px;width: 95%;margin: auto;background-color: #ffffff;">
+                        <input type="hidden" id="editId" name="_id">
+                        <div class="row">
+                            <label>Razao:</label>
+                            <input type="text" id="inputrazao" name="inputrazao" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Responsável:</label>
+                            <input type="text" id="responsavel" name="responsavel" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>CPF:</label>
+                            <input type="text" id="cpf" name="cpf" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>CNPJ:</label>
+                            <input type="text" id="cnpj" name="cnpj" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Inscrição:</label>
+                            <input type="text" id="inscricao" name="inscricao" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Site:</label>
+                            <input type="text" id="site" name="site" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Marca:</label>
+                            <input type="text" id="marca" name="marca" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Celular:</label>
+                            <input type="text" id="celular" name="celular" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Fone:</label>
+                            <input type="text" id="fone" name="fone" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Email:</label>
+                            <input type="email" id="email" name="email" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Senha:</label>
+                            <input type="password" id="senha" name="senha" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Cep:</label>
+                            <input type="text" id="cep" name="cep" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Logradouro:</label>
+                            <input type="text" id="logradouro" name="logradouro" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Complemento:</label>
+                            <input type="text" id="complemento" name="complemento" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Bairro:</label>
+                            <input type="text" id="bairro" name="bairro" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Cidade:</label>
+                            <input type="text" id="cidade" name="cidade" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Estado:</label>
+                            <input type="text" id="estado" name="estado" class="form-control" >
+                        </div>
+                        {{!-- ///////////////////////////////////////////////////////////////////////// --}}
+                        <!-- Lista dos departamentos selecionados (pode ser antes visualmente) -->
+                        <div class="row">
+                              <label>Departameto selecionados:</label>
+                          <div id="listaDepartamentosSelecionados" style="margin-bottom: 1vh;">
+                              <input class="form-control" name="departamentos_nome[]" value="" readonly
+                                  style="width: 20vw; height: 3.5vh;background-color: #bb048e;" />
+                          </div>
+                        </div>
+                        <!-- Container onde cada linha select+input+ADD será inserida -->
+                        <div class="row">
+
+                        </div>
+                        <div id="departamentoContainer" style="display: flex; flex-direction: column; gap: 4px; background-color: #068648; padding: 4px 1vw; width: 100%;">
+                              <!-- Primeira linha de seleção -->
+                              <div class="grupo-depto" style="display: flex; align-items: center; gap: 1vw;flex-direction: row;justify-content: space-between;">
+                                      <!-- SELECT -->
+                                      <select class="form-control select-departamento"
+                                              name="departamentos[]"
+                                              style="width: 15vw; height: 3.5vh; background-color: #ffffff; color: #db1212;">
+                                        <option value="">Selecione um departamento</option>
+                                      </select>
+                                      <!-- INPUT readonly -->
+                                      <!-- BOTÃO ADD -->
+                                      <button type="button" class="btn btn-info btn-add-depto"
+                                              style="padding: 2px 12px; font-size: medium;">ADD</button>
+                              </div>
+                        </div>
+                        {{!-- ///////////////////////////////////////////////////////////////////////// --}}
+                        <div class="row" style="height: 4vh;background-color:#0d0d0d ;margin-bottom: .5vh;margin-top: 4vh;">
+                      
+                        </div>
+                        <div class="row" style="display:flex;flex-direction: row;justify-content:space-around;background-color: transparent;">
+                            <button type="button" class="btn btn-secondary" style="width: 30%;" onclick="closeCadastroModal()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" style="width: 30%;">Salvar</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>  
+    <div id="listaLojista" class="" style="background-color:#fff;margin-top: 6vh;">
+          <div style="display: flex;flex-direction: row;justify-content: center;">
+          <button style="border: none;background-color:transparent;" class="btn btn-sm" onclick="openCadLojistaModal()">
+            
+            <h1 style="font-weight:200;color:#054288;font-size:medium">Cadastro de Lojista</h1>
+          </button>
+          </div>  
+            <div id="barraSelect" style="display: flex;flex-direction: row;justify-content: space-between;width: 96vw;margin: auto;">
+                <div style="background:transparent;width:32vw ;">
+                  <h2 style="color: blue;">Lista de lojista</h2>
+                </div>
+                <div style="display: flex;flex-direction: row;justify-content:center;height: 2.5vh;width:32vw ;background:transparent;">
+                    <select>
+                        <option>Cariacica</option>
+                        <option>Serra</option>
+                        <option>Guarapari</option>
+                        <option>Vila Velha</option>
+                        <option>Vitória</option>
+                    </select>
+                </div>
+                <div style="display: flex;flex-direction: row;justify-content:center;height: 2.5vh;background:transparent;width:32vw ;">
+                    <select>
+                        <option>Material Construção</option>
+                        <option>Serviços</option>
+                        <option>Saúde</option>
+                        <option>Comunicação</option>
+                        <option>Imóveis</option>
+                    </select>
+                </div>
+            </div>
+            <div style="background-color:#fff;width: 100%;height: 80vh;margin: auto;overflow: auto;padding: 4px;">
+                    <div>
+                      {{!-- {{lojista.segmentos}} --}}
+                    </div>    
+                    <table class="table table-bordered">
+                          <thead>
+                              <tr class="cabecalho-tabela">
+                                  <th class="click-hide" data-column="0"><i data-lucide="eye-off"></i>Razão</th>
+                                  {{!-- <th>Situação</th>
+                                  <th>Template</th>
+                                  <th>Atividade</th> --}}
+                                  {{!-- <th>Resp.</th>
+                                  <th>CPF</th> --}}
+                                  <th class="click-hide" data-column="1"><i data-lucide="eye-off"></i>CNPJ</th>
+                                  <th class="click-hide" data-column="2">Inscrição</th>
+                                  <th class="click-hide" data-column="3">Site</th>
+                                  <th class="click-hide" data-column="4">Marca</th>
+                                  <th class="click-hide" data-column="5">Celular</th>
+                                  <th class="click-hide" data-column="6">Fone</th>
+                                  <th class="click-hide" data-column="7">Email</th>
+                                  <th class="click-hide" data-column="8">Cep</th>
+                                  <th class="click-hide" data-column="9">Logradouro</th>
+                                  {{!-- <th>Numero</th> --}}
+                                  <th class="click-hide" data-column="10">Complemento</th>
+                                  <th class="click-hide" data-column="11">Cidade</th>
+                                  <th class="click-hide" data-column="12">Bairro</th>
+                                  <th class="click-hide" data-column="13">Estado</th>
+                                  <th class="click-hide" data-column="14">Segmentos</th>
+                                  <th class="click-hide" data-column="15">Status</th>
+                                  <th class="click-hide" data-column="16">Ações</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {{#each lojista}}
+                              <tr data-id="{{this._id}}">
+                                  <td class="ajusteRow" contenteditable="true" data-field="razao">
+                                      {{this.razao}}
+                                  </td>
+                                  <td class="ajusteRow" contenteditable="true" data-field="cnpj">{{this.cnpj}}</td>
+                                  <td class="ajusteRow" contenteditable="true" data-field="inscricao">{{this.inscricao}}</td>
+                                  <td class="ajusteRow" contenteditable="true" data-field="site">{{this.site}}</td>
+                                  <td class="ajusteRow" contenteditable="true" data-field="marca">{{this.marca}}</td>
+                                  <td class="ajusteRow" contenteditable="true" data-field="celular">{{this.celular}}</td>
+                                  <td class="ajusteRow" contenteditable="true" data-field="telefone">{{this.telefone}}</td>
+                                  <td class="ajusteRow" contenteditable="true" data-field="email">{{this.email}}</td>
+                                  <td class="ajusteRow" contenteditable="true" data-field="cep">{{this.cep}}</td>
+                                  <td class="ajusteRow" >{{this.logradouro}}</td>
+                                  {{!-- <td class="ajusteRow">{{this.numero}}</td> --}}
+                                  <td class="ajusteRow" >{{this.complemento}}</td>
+                                  <td class="ajusteRow">{{this.cidade}}</td>
+                                  <td class="ajusteRow">{{this.bairro}}</td>
+                                  <td class="ajusteRow">{{this.estado}}</td>
+                                  <td class="ajusteRow" style="color:#bb048e">
+                                    {{#each departamentos}}
+                                          <option value="{{this._id}}">{{this.nomeDepartamento}}</option>
+                                    {{/each}}
+                                  </td>
+                                  <td>{{this.ativo}}</td>
+                                  <td>
+                                  <div class="d-flex justify-content-center align-items-center gap-2">
+                                    <button id="show-all" class="save-line btn btn-sm btn-secondary flex-fill text-center" style="min-width: 80px;margin-left: 3px;background-color: #bb048e;border: 2px white solid;">
+                                      <a href="" class="btn btn-sm flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: #bb048e;">All</a>
+                                    </button>
+                                    <button data-id="{{this._id}}" href="" class="btn btn-sm flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: coral;">
+                                      <a class="btn btn-sm flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: coral;">Editar</a>
+                                                
+                                    </button>
+                                    
+                                    <button data-id="{{this._id}}"  class="btn btn-sm btn-warning flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: #bb0404;">
+                                      <a href="/lojistas/delete/{{this._id}}" class="btn btn-sm btn-danger flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid">Excluir</a>
+                                    </button>  
+                                  </div>
+                                  </td>
+                              </tr>
+                              {{/each}}
+                          </tbody>
+                    </table>
+            </div>
+            
+    </div>
+{{!-- ///////////////////////////////////////////////////////////////// --}}
+</div>
+
+{{!-- ESCONDE O MODAL CADASTRO --}}
+{{!-- //<script>
+   function closeCadastroModal() { 
+    document.getElementById("cadastroLojistaModal").style.display = "none";
+   }
+</script> --}}
+ {{!-- MOSTRA O MODAL CADASTRO --}}
+{{!-- <script>
+   
+</script> --}}
+{{!-- Pula linha quando dar "ENTER" --}}
+
+
+
+<script>
+  //document.addEventListener("DOMContentLoaded", async function () {
+  //try {
+  //  const response = await fetch("/segmento/selectlista");
+  //  const departamentos = await response.json();
+  //  console.log('');
+  //  console.log('[364 ]',departamentos)
+  //  console.log('');
+  ///  const select = document.querySelector("#departamento-Container");
+
+  // / departamentos.forEach(depto => {
+  //    const option = document.createElement("option");
+  //    option.value = depto._id;
+  //    option.textContent = depto.nomeDepartamento; // Usa 'nome' porque no seu schema é nome, não titulo
+  //    select.appendChild(option);
+  //  });
+  //} catch (error) {
+  //  console.error("Erro ao carregar segmentos:", error);
+  //}
+//});
+</script>
+ 
+{{!-- <script>
+  document.getElementById("cadastroLojistaForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const data = {
+      razao: form.inputrazao.value,
+      nomeresponsavel: form.responsavel.value,
+      cpfresponsavel: form.cpf.value,
+      cnpj: form.cnpj.value,
+      inscricao: form.inscricao.value,
+      site: form.site.value,
+      marca: form.marca.value,
+      celular: form.celular.value,
+      telefone: form.fone.value,
+      email: form.email.value,
+      senha: form.senha.value,
+      cep: form.cep.value,
+      logradouro: form.logradouro.value,
+      complemento: form.complemento.value,
+      cidade: form.cidade.value,
+      bairro: form.bairro.value,
+      estado: form.estado.value,
+      assinante: "1",
+      situacao: "1",
+      template: "padrão",
+      atividade: "em atividade",
+      ativo: "1",
+      segmentos: [form.selectDepartamento.value],
+    };
+
+    try {
+          const response = await fetch("/lojista/lojista/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+          });
+
+          const result = await response.json();
+          console.log(result);
+
+          if (response.ok) {
+            alert("Lojista cadastrado com sucesso!");
+          } else {
+            alert("Erro: " + result.message);
+          }
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao enviar o formulário.");
+    }
+  });</script> --}}
+<script>
+  //lucide.createIcons();
+
+    document.querySelectorAll(".click-hide").forEach(th => {
+      th.addEventListener("click", (e) => {
+        const columnIndex = parseInt(th.dataset.column);
+        const table = th.closest("table");
+        const icon = th.querySelector("svg");
+        if (e.ctrlKey) {
+          const rowsArray = Array.from(table.querySelectorAll("tbody tr"));
+          rowsArray.sort((a, b) => {
+            const valA = a.children[columnIndex].textContent.trim().toLowerCase();
+            const valB = b.children[columnIndex].textContent.trim().toLowerCase();
+            return valA.localeCompare(valB);
+          });
+          rowsArray.forEach(row => table.querySelector("tbody").appendChild(row));
+        } else {
+          table.querySelectorAll("tr").forEach(row => {
+            if (row.children[columnIndex]) {
+              row.children[columnIndex].classList.toggle("d-none");
+            }
+          });
+          icon.setAttribute("data-lucide", icon.getAttribute("data-lucide") === "eye-off" ? "eye" : "eye-off");
+          lucide.createIcons();
+        }
+      });
+    });
+
+    document.getElementById("show-all").addEventListener("click", () => {
+      document.querySelectorAll("table tr").forEach(row => {
+        Array.from(row.children).forEach(cell => {
+          cell.classList.remove("d-none");
+          cell.style.display = "";
+        });
+      });
+      document.querySelectorAll(".click-hide svg").forEach(icon => {
+        icon.setAttribute("data-lucide", "eye-off");
+      });
+      lucide.createIcons();
+    });
+
+    document.querySelectorAll("td[contenteditable=true]").forEach(cell => {
+      cell.addEventListener("blur", async () => {
+        const row = cell.closest("tr");
+        const id = row.dataset.id;
+        const field = cell.dataset.field;
+        const value = cell.textContent.trim();
+        try {
+          console.log("RRRRRRRRRRRRRRRRRRRRR",id)
+          const response = await fetch(`/lojista/lojista/update/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ [field]: value })
+          });
+          const result = await response.json();
+          if (response.ok) {
+            cell.style.backgroundColor = "#c8f7c5";
+            setTimeout(() => cell.style.backgroundColor = "", 1000);
+          } else {
+            alert("Erro ao atualizar.");
+          }
+        } catch (error) {
+          console.error("Falha na atualização:", error);
+          alert("Erro na comunicação.");
+        }
+      });
+    });
+</script>
+{{!-- //</script> --}}
+<script>
+  document.querySelectorAll(".save-line").forEach(button => {
+  button.addEventListener("click", async () => {
+    const id = row.dataset.id;
+    const row = row.closest("tr");
+    const data = {};
+
+    row.querySelectorAll("td[contenteditable=true]").forEach(cell => {
+      data[cell.dataset.field] = cell.textContent.trim();
+    });
+
+    try {
+      const response = await fetch(`/lojistas/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        row.style.backgroundColor = "#c8f7c5";
+        setTimeout(() => row.style.backgroundColor = "", 1000);
+      } else {
+        alert("Erro ao atualizar.");
+      }
+    } catch (error) {
+      console.error("Falha na atualização:", error);
+      alert("Erro na comunicação.");
+    }
+  });
+});
+
+
+</script>
+<script>
+function  openCadLojistaModal() {
+  openCadastroLojistaModal();
+}
+</script>
+<script>
+   function openCadastroLojistaModal(){
+      //document.getElementById("cadastroLojistaModal").style.display="block";
+       window.location.href = "/lojista/departamento-selecao";
+   }  
+</script>
+
+
+{{!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX --}}
+
+{{!-- HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH --}}
+<script>
+/* ===============================
+   ROTINA 1: Variáveis globais
+   Armazena os dados carregados do servidor e controle de estado
+================================ */
+let listaDepartamentos = [];
+
+let jaCarregouDepartamentos = false;
+let contador = 1; // controla a quantidade de departamentos adicionados
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+/* ===============================
+   ROTINA 2: Busca os departamentos ao focar no campo #razao
+   Só executa uma vez por abertura
+================================ */
+//document.addEventListener("DOMContentLoaded", function () {
+//  const inputRazao = document.getElementById("inputrazao");
+//  if (!inputRazao) {
+//    console.warn("❌ inputrazao não encontrado no DOM.");
+//    return;
+//  }
+
+  //console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH!!!!!!!")
+//      document.getElemenXtById("inputrazao").addEventListener("focus", async () => {
+//        if (!inputRazao) {
+//             console.warn("❌ inputrazao não encontrado no DOM.");
+//            return;
+//        }
+//        if (jaCarregouDepartamentos) return;
+
+//        try {
+//          console.log(" dentro? ")
+//          const res = await fetch("/segmento/selectlista");
+//          listaDepartamentos = await res.json();
+//          console.log('[ 720 ]',listaDepartamentos)
+//          jaCarregouDepartamentos = true;
+
+//          preencherSelectsDisponiveis(); // preenche todos os selects disponíveis
+//        } catch (err) {
+//          console.error("Erro ao buscar departamentos:", err);
+//        }
+
+//      });
+//});
+/* ===============================
+   ROTINA 3: Preenche todos os selects com departamentos não selecionados
+   Utilizado na criação inicial e ao adicionar novo select
+================================ */
+
+
+
+
+
+/* ===============================
+   ROTINA 5: Botão ADD
+   - Cria uma nova linha com select + input
+   - Preenche o select com opções ainda disponíveis
+   - Limita a 10 seleções
+================================ */
+const maxDepartamentos = 10;
+//const seleciXonados = [];
+
+
+
+</script>
+
+{{!-- <script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const inputRazao = document.getElementById("inputrazao");
+      if (!inputRazao) {
+        console.warn("❌ inputrazao não encontrado no DOM.");
+        return;
+      }
+        // ////////////////////////////////////////////////////////////////////////
+        document.getElementById("inputrazao").addEventListener("focus", async () => {
+          if (jaCarregouDepartamentos) return;
+
+          try {
+            const res = await fetch("/segmento/selectlista");
+            listaDepartamentos = await res.json();
+            console.log('------------------------------------------------');
+            console.log('[ 670 ] Carregando o <select>',listaDepartamentos);
+            console.log('');
+            console.log('------------------------------------------------');
+            jaCarregouDepartamentos = true;
+            // preencherSelectsDisponiveis(listaDepartamentos); // preenche todos os selects disponíveis
+          } catch (err) {
+            console.log("Erro ao buscar departamentos:", err);
+          }
+          preencherSelectsDisponiveis(listaDepartamentos);
+          //BuscaNomeSelecionado();
+               
+            });
+            // /////////////////////////////////////////////////////////////////////////////////////
+});
+</script> --}}
+    
+{{!-- <script>
+    //PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+    function preencherSelectsDisponiveis(listaDepartamentos) {
+            
+            const selects = document.querySelectorAll(".select-departamento");
+            const listaVisual = document.getElementById("listaDepartamentosSelecionados");
+            
+            console.log('');
+            console.log(' 695',selects);
+            console.log(' [ 696 ]',listaVisual);
+            console.log('');
+            // Cria um array com os valores (IDs) atualmente selecionados nos <select>s
+            const selecionados = Array.from(selects)
+                                      .map(select => select.value) // pega o valor de cada <select>
+                                      .filter(val => val !== "");  // ignora os que ainda estão vazios
+
+                 console.log('---------------------------------------------');
+                 console.log(' [ 703 ] ',selecionados);
+                 console.log('---------------------------------------------');
+
+                 
+                     // Para cada ID selecionado...
+                    selecionados.forEach(id => {
+                        // ...procura o objeto completo do departamento na lista de todos
+                        const dep = listaDepartamentos.find(dep => dep._id === id);
+
+                        // Se encontrou o departamento...
+                        if (dep) {
+                            // Verifica se esse departamento já está visivelmente listado nos inputs
+                            const jaExiste = Array.from(listaVisual.querySelectorAll("input[readonly]"))
+                                .some(input => input.dataset.id === dep._id);
+
+                            // Se ainda não estiver na lista visual, adiciona
+                            if (!jaExiste) {
+                                // Cria o input readonly com o nome do departamento
+                                const tag = document.createElement("input");
+                                tag.type = "text";
+                                tag.className = "form-control";
+                                tag.style = "width: auto; display: inline-block; background-color: #fff3cd; color: #db1212; margin-right: .5vw;";
+                                tag.value = dep.nomeDepartamento;
+                                tag.readOnly = true;
+                                tag.dataset.id = dep._id; // salva o ID no atributo data-id
+                                listaVisual.appendChild(tag); // insere na div
+                            }
+                        }
+                    });
+
+
+                  // -----------------------------------------------------------
+                   console.log('[725]');
+                  // Agora preenche as opções de cada <select>
+                  // ----------------------------------------------------------
+                  selects.forEach(select => {
+                    const valorAtual = select.value;
+                    //select.innerHTML = '<option value="">Selecione um departamento</option>';
+
+                    listaDepartamentos.forEach(dep => {
+                      // O único que deve continuar no combo é o selecionado OU os ainda não escolhidos
+                      const isSelecionado = selecionados.includes(dep._id);
+                      const isEsteSelecionado = dep._id === valorAtual;
+
+                      if (!isSelecionado || isEsteSelecionado) {
+                        const opt = document.createElement("option");
+                        opt.value = dep._id;
+                        opt.textContent = dep.nomeDepartamento;
+
+                        if (isEsteSelecionado) {
+                          opt.selected = true; // mantém a seleção visual
+                        }
+                        select.appendChild(opt);
+                      }
+                    });
+                  });
+                  //-------------------------------------------------------------
+       }
+
+
+
+       //PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+        function BuscaNomeSelecionado(){
+            console.log('[757]')
+           // let registro=document.getElementById("departamentSelect"); 
+            addEventListener("change", function (e) {
+
+                      if (e.target.classList.contains("select-departamento")) {
+                          const select = e.target;
+                          const selectedId = select.value;
+
+                          const container = select.closest(".grupo-depto");
+                          //const input = container?.querySelector('input[readonly]');
+                          const inputs = document.querySelectorAll("#listaDepartamentosSelecionados input[readonly]");
+                          const input = inputs[inputs.length - 1];
+                          console.log('');
+                          console.log(' [ 770 ]', inputs)
+                          console.log('');
+                          console.log('[ 772 ]',input)
+                          console.log('');
+                          const selectedDep = listaDepartamentos.find(dep => dep._id === selectedId);
+                          //<><><><><><><><><><><><><><><><><><><><>
+                          console.log("selectedDep:", selectedDep);
+                          console.log('');
+                          console.log('<><>',selectedDep.nomeDepartamento);
+                          console.log('');
+                          if (selectedDep) {
+                                    input.value = selectedDep.nomeDepartamento;
+                                   // select.disabled = true; // Congela o <select> após seleção
+
+                                    input.dataset.id = selectedDep._id;
+
+                                    if (!selecionados.includes(selectedDep._id)) {
+                                      selecionados.push(selectedDep._id);
+                                    }
+
+                                    preencherSelectsDisponiveis(listaDepartamentos); // Atualiza opções disponíveis
+                         }
+                    }
+            })
+    }
+
+function adicionarDepartamentoSelecionado(selectElement) {
+  const selectedId = selectElement.value;
+  const selectedDep = listaDepartamentos.find(dep => dep._id === selectedId);
+
+  if (!selectedDep) return;
+
+  // Criar input readonly com nomeDepartamento
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "form-control departamento-input";
+  input.value = selectedDep.nomeDepartamento;
+  input.readOnly = true;
+  input.dataset.id = selectedDep._id;
+
+  // Adicionar na área visível
+  const area = document.getElementById("areaDepartamentosSelecionados");
+  area.appendChild(input);
+
+  // Remover o select atual
+  selectElement.remove();
+
+// Atualizar select com os departamentos que ainda faltam
+//  atualizarSelectDisponivel();
+const listaDiv = document.getElementById("listaDepartamentosSelecionados");
+
+  const divWrapper = document.createElement("div");
+  divWrapper.style.display = "flex";
+  divWrapper.style.marginBottom = "5px";
+  divWrapper.style.gap = "5px";
+   console.log("777777")
+  const input1 = document.createElement("input");
+  input1.type = "text";
+  input1.readOnly = true;
+  input1.className = "form-control";
+  input1.value = selectedDep.nomeDepartamento; // <- exemplo: "Construção Civil"
+  input1.dataset.id = selectedDep._id;
+  input1.name = "departamentos[]"; // Para enviar todos via POST
+
+  divWrapper.appendChild(input1);
+  listaDiv.appendChild(divWrapper);
+}
+
+function atualizarSelectDisponivel() {
+  const idsSelecionados = Array.from(document.querySelectorAll(".departamento-input"))
+    .map(input => input.dataset.id);
+
+  const restantes = listaDepartamentos.filter(dep => !idsSelecionados.includes(dep._id));
+
+  const select = document.createElement("select");
+  select.className = "form-select";
+  select.onchange = () => {
+    botaoAdd.disabled = !select.value;
+  };
+
+  const defaultOpt = document.createElement("option");
+  defaultOpt.textContent = "-- Selecione --";
+  defaultOpt.disabled = true;
+  defaultOpt.selected = true;
+  select.appendChild(defaultOpt);
+
+  restantes.forEach(dep => {
+    const opt = document.createElement("option");
+    opt.value = dep._id;
+    opt.textContent = dep.nomeDepartamento;
+    select.appendChild(opt);
+  });
+
+  const divLinha = document.createElement("div");
+  divLinha.className = "d-flex gap-2 my-2";
+
+  const botaoAdd = document.createElement("button");
+  botaoAdd.className = "btn btn-primary btn-sm";
+  botaoAdd.textContent = "ADD";
+  botaoAdd.disabled = true;
+  botaoAdd.onclick = () => adicionarDepartamentoSelecionado(select);
+
+  divLinha.appendChild(select);
+  divLinha.appendChild(botaoAdd);
+
+  document.getElementById("areaSelects").appendChild(divLinha);
+}
+</script> --}}
+{{!-- <script>
+/* ===============================
+   ROTINA 4: Listener de mudança nos selects
+   Quando um departamento é selecionado:
+   - Move o nome para o input correspondente
+   - Limpa o select
+   - Armazena o ID selecionado
+   - Ativa o botão ADD se houver mais opções
+================================ */
+document.getElementById("departamentoContainer").addEventListener("change", function (e) {
+  
+    // Verifica se o elemento que disparou o evento possui a classe "select-departamento"
+  if (e.target.classList.contains("select-departamento")) {
+    
+    // 🔥 Exibe no console que o select foi alterado e mostra o valor selecionado
+    console.log("🔥 AQUI — o <select> foi alterado:", e.target.value);
+
+    // Armazena o <select> que foi alterado
+    const select = e.target;
+
+    // Obtém o valor selecionado (o _id do departamento)
+    const selectedId = select.value;
+
+
+    // Encontra o input relacionado ao select da mesma linha
+    const container = select.closest(".grupo-depto");
+    const input2 = container.querySelector("input[readonly]");
+
+    
+    // Log de depuração mostrando o input que será usado
+    console.log('');
+    console.log(' [ 921 ]',input2);
+    console.log('');
+
+    // Procura o departamento selecionado na lista de departamentos (base de dados carregada)
+    const selectedDep = listaDepartamentos.find(dep => dep._id === selectedId);
+    
+    // Se encontrou o departamento selecionado...
+    if (selectedDep) {
+      // Busca novamente o input (redundante com a linha anterior — pode ser removido)
+      const input2 = document.querySelector("#listaDepartamentosSelecionados input[readonly]");
+      // Se o input não foi encontrado, exibe um aviso e interrompe
+      if (!input2) {
+        console.warn("⚠️ Input de ID não encontrado ao lado do select");
+      return;
+      }
+
+      // Preenche o input com o nome do departamento selecionado
+      input2.value = selectedDep.nomeDepartamento;
+
+      // Armazena o _id como data-id no input (útil para evitar repetições)
+      input2.dataset.id = selectedDep._id;
+
+      // Adiciona o ID selecionado à lista global de selecionados
+      selecionados.push(selectedDep._id);
+
+      // ❌ Linha comentada: limpar o <select> (não usamos agora)
+      // select.innerHTML = '';
+
+      // Filtra a lista de disponíveis, excluindo os já selecionados
+      const disponiveis = listaDepartamentos.filter(dep => !selecionados.includes(dep._id));
+
+      // ❌ Botão ADD: linha comentada (controle visual do botão, se for necessário)
+      // document.getElementById("addDepartamentoBtn").style.display = disponiveis.length > 0 ? "inline-block" : "none";
+
+
+    //  input2.value = selectedDep.nomeDepartamento;
+    //  input2.dataset.id = selectedDep._id;
+
+    //  selecionados.push(selectedDep._id);
+      //select.innerHTML = ''; // limpa após selecionar
+
+    //  const disponiveis = listaDepartamentos.filter(dep => !selecionados.includes(dep._id));
+      //document.getElementById("addDepartamentoBtn").style.display =disponiveis.length > 0 ? "inline-block" : "none";
+    }
+  }
+});
+</script>
+<script>
+  document.getElementById("addDepartamentoBtn").addEventListener("click", function () {
+        const container = document.getElementById("departamentoContainer");
+        const grupoAtual = container.querySelectorAll(".grupo-depto");
+        
+        if (grupoAtual.length >= maxDepartamentos) {
+          alert("Limite de 10 departamentos atingido.");
+          return;
+        }
+        console.log(' [ 969 ]')
+        const index = grupoAtual.length;
+
+        // Criar novo bloco
+        const grupo = document.createElement("div");
+        grupo.classList.add("grupo-depto");
+        grupo.style.cssText = "display: flex; align-items: center; gap: 1vw; padding: 4px 1vw;";
+
+        // Select
+        const select = document.createElement("select");
+        select.className = "form-control select-departamento";
+        select.name = "departamentos[]";
+        select.style.cssText = "width: 15vw; height: 3.5vh; background-color: #ffffff; color: #db1212;";
+        select.innerHTML = `<option value="">Selecione um departamento</option>`;
+        
+        // Preencher com os disponíveis
+        const disponiveis = listaDepartamentos.filter(dep => !selecionados.includes(dep._id));
+        disponiveis.forEach(dep => {
+          const opt = document.createElement("option");
+          opt.value = dep._id;
+          opt.textContent = dep.nomeDepartamento;
+          select.appendChild(opt);
+        });
+
+        // Input readonly
+        const input = document.createElement("input");
+        input.className = "form-control";
+        input.name = `departamentos[${index}]`;
+        input.readOnly = true;
+        input.style.cssText = "width: 20vw; height: 3.5vh;";
+        input.value = ""; // será preenchido via JS ao escolher no select
+
+        // Montar e adicionar
+        grupo.appendChild(select);
+        grupo.appendChild(input);
+        container.insertBefore(grupo, this.parentNode); // insere antes do botão
+
+        // Ocultar botão se acabou
+        if (disponiveis.length <= 1) {
+          this.style.display = "none";
+        }
+});
+</script> --}}
+
+ 

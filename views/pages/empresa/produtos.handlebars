@@ -1,0 +1,1363 @@
+
+<style>
+  .openModal{
+      display:none;
+      position:fixed; top:0; left:0;
+      width:100%; height:100%;
+      background:#00000080;
+      justify-content:center;
+      align-items:center; z-index:9999;"
+  }
+</style>
+<style>
+  .upload-box {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 200px;
+    background: #e81e1e;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    border: 1px solid #ccc;
+  }
+
+  .upload-top {
+    flex: 8;
+    display: flex;
+  }
+
+  .upload-bottom {
+    flex: 2;
+    display: flex;
+  }
+
+  .upload-label,
+  .upload-img,
+  .upload-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #ccc;
+  }
+
+  .upload-label {
+    font-weight: bold;
+  }
+
+  .upload-img img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .upload-button:last-child {
+    border-right: none;
+  }
+
+  .CidadeBairro{
+    width: 70%;height: 3.2vh;margin: auto;
+    margin-left: 6px;margin-top: -15px;
+    background-color: #ffffff;
+    color: #4e4d4d;
+    text-align: center;
+  }
+
+  .selectClass{
+     width:70%;height:3.2vh;margin: auto;
+     margin-left:15px;margin-top: 3px;
+     background-color:"red";
+     color:#0b2f83;text-decoration: none;
+  }
+
+  .optionClass{
+    color:black;
+    text-align: center;
+  }
+</style>
+<style>
+  .modal-body .list-group-item {
+  padding: 0.75rem 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.modal-body .list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+.btn-sm {
+  padding: 2px 8px;
+  font-size: 0.8rem;
+}
+
+.btn-vincular {
+  background-color: #198754;       /* Verde Bootstrap */
+  color: #fff;
+  font-weight: 500;
+  padding: 4px 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-vincular:hover {
+  background-color: #146c43;       /* Verde mais escuro ao passar o mouse */
+}
+</style>
+<style>
+.alinhar-direita {
+  text-align: right;
+}
+
+.alinhar-center {
+  text-align:center;
+}
+
+select.form-select-sm {
+  width: 120px;
+  padding: 2px 4px;
+  font-size: 12px;
+}
+
+.edit-row {
+  background-color: #fff3cd !important; /* amarelo claro */
+  border-left: 4px solid #ffc107;
+}
+
+.delete-row {
+  background-color: #f8d7da !important; /* vermelho claro */
+  border-left: 4px solid #dc3545;
+}
+
+
+</style>
+<style>
+.resultado-similar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
+}
+
+.resultado-similar:hover {
+  background-color: #e9ecef;
+}
+
+.resultado-similar span {
+  flex: 1;
+  margin-right: 10px;
+  color: #212529;
+}
+
+.resultado-similar button {
+  padding: 4px 10px;
+  background-color: #198754;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.2s ease;
+}
+
+.resultado-similar button:hover {
+  background-color: #146c43;
+}
+
+</style>
+<style>
+  <style>
+.modal-custom {
+  position: fixed;
+  top: 8vh;
+  left: 0;
+  width: 100%;
+  height: 92vh;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 9999;
+}
+
+.modal-content-custom {
+  background: white;
+  padding: 20px;
+  width: 500px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px #00000040;
+  position: relative;
+}
+
+.modal-content-custom .close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.similar-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+/*.foto-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* <--- aqui */
+ /* align-items: center;
+  height: 170px;
+  width: 120px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.fotos-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+}*/
+
+.fotos-wrapper{
+  min-height: 150px;            /* agora visível */
+  background: #094b2f;          /* seu verde escuro */
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-content: flex-start;
+}
+.foto-box{
+  width: 120px; height: 120px;
+  display: flex; flex-direction: column;background-color: #09ed18;justify-items: center;
+}
+.foto-box img{
+  width: 100px; height: 100px; object-fit: contain;
+  border:transparent; cursor: pointer;background-color: #fff;padding: 10px;
+}
+
+#select_departamento {
+  background-color: #04bb32;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  padding: 5px;
+}
+</style>
+<style>
+ #modalImagemProduto {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* 👈 trocado de "center" para "flex-start" */
+  padding-top: 30px; /* ✅ espaço interno superior */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.5); /* escurece fundo */
+  z-index: 9999;
+  overflow-y: auto;
+}
+
+
+ /*.modal-conteudo {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 700px;
+  max-width: 90vw;
+  box-shadow: 0 0 10px #00000033;
+  margin-top: 30px;  
+}*/
+
+
+.modal-contente {
+  position: relative;
+  border-radius: 0 !important;
+}
+
+.modal-dialog {
+  max-height: 90vh;
+  margin-top: 2vh;
+}
+
+.botao-fechar-topo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10; /* suficiente dentro do modal */
+  font-size: 18px;
+  padding: 0 10px;
+}
+
+.option-roxa{
+   background-color: #2b0a26;
+   color:#ffffff;
+}
+</style>
+<style>
+  .on_click{
+     color: #ffffff;background-color: transparent;border: 0px;font-size: medium;cursor: pointer;
+  }
+</style>
+<script>
+  window.todosSetoresSecoes = {{{todosSetoresSecoes}}};
+</script>
+<div id="menuLateral" class="lateral">
+  <div id="menulista" style="width: 10vw; height: 92vh; background-color:#fff; display: flex; flex-direction: column; justify-content: space-around; transition: margin-left 0.4s ease;">
+    <!-- Conteúdo do menu -->
+    <div style="height: 25vh;background-color:#fff;"></div>
+    <div style="display: flex; flex-direction: column; justify-content: space-around;background-color:transparent;text-align: left;margin: auto;">
+      <a id="passa-cadastrofornec" href="">Cadastro fornecedor</a>
+      <div style="height: 1vh;"></div>
+      <div>
+      <a id="passa-listafornec" href="/fornec/listafornec/:{{this._id}}">Lista fornecedor</a>
+      </div>
+    </div>
+    <div style="height: 25vh;"></div>
+  </div>
+
+  <div id="faixaVertical" style="width: 2vw; height: 92.5vh; background-color: #295ee4; display: flex; flex-direction: column; justify-content: space-around; z-index: 800;">
+    <h2 id="H2menuLateral" style="font-size: 1vw; text-align: end; color: #fff;">Menu lateral</h2>
+  </div>
+</div>  
+<div id="modalInfoSetorSecao" style="display:none; position:absolute; z-index:500;
+     background:#fff; border:1px solid #ccc; padding:10px; border-radius:6px;
+     box-shadow: 0 0 8px rgba(0,0,0,0.2); max-width: 250px; font-size: 14px;">
+  <div id="modalContentSetorSecao"></div>
+</div> 
+<div id="painelLista" class="grade" >
+        <div style="display: flex;flex-direction: row;justify-content: center;">
+           <h1 style="font-weight:200;font-size:medium ;">Relação de produtos</h1>
+        </div>
+        <div id="CadastrarProduto" style="width: 98vw;height: 3vh;margin: auto;display: flex;flex-direction: row;justify-content: center;background-color: #295ee4;">
+          <button id="abrirModalProduto" style="border: none;background-color: transparent;" data-bs-toggle="modal" data-bs-target="#CadastrarProdutosModal" data-lojista="{{lojista._id}}" class="btn btn-sm" onclick="openCadastroModal()">
+            <h1 style="font-weight:200;color:#fff;font-size: small;">Cadastro de produtos</h1>
+            {{!-- <input id="lojaFornec" type="text" style="display:block;" value="{{loja._id}}"> --}}
+          </button>
+        </div>
+        <div id="divTable" style="overflow-x: auto;width:100%;">
+          <table id="tabelaProdutos" class="table  table-bordered">
+            
+            <thead style="color: #df061f;">
+              <tr >
+                <th style="width: 1vw;" onclick="ordenarTabela(0)">Itens</th>
+                <th style="display: none;" >Id</th>
+                <th onclick="ordenarTabela(2)">Código</th>
+                <th onclick="ordenarTabela(3)">Descrição</th>
+                <th onclick="ordenarTabela(4)">Complemento</th>
+                <th onclick="ordenarTabela(5)">Refer</th>
+                <th onclick="ordenarTabela(6)">Fornecedor</th>
+                <th onclick="ordenarTabela(7)">Segmento</th>
+                {{!-- <th onclick="ordenarTabela(7)">Setor</th>
+                <th onclick="ordenarTabela(7)">Seção</th> --}}
+                <th onclick="ordenarTabela(8)">Qte</th>
+                <th onclick="ordenarTabela(9)">Custo</th>
+                <th onclick="ordenarTabela(10)">Vista</th>
+                <th onclick="ordenarTabela(11)">Prazo</th>
+                <th >Ações</th>
+              </tr>
+            </thead>
+            <tbody id="produtoTable">
+              {{#each produtos}}
+              <tr data-id="{{_id}}">
+                <td class="alinhar-center">{{inc @index}}</td>
+                <td style="display: none">{{_id}}</td>
+                <td>{{codigo}}</td>
+                <td>{{descricao}}</td>
+                <td>{{complete}}</td>
+                <td>{{referencia}}</td>
+                <td>{{fornecedor.razao}}</td>
+                <td>
+                   {{#each localloja}}
+                      {{#each departamento}}
+                        <span class="departamento-click" data-index="{{@../index}}" style="font-weight: bold;color:red;">
+                          {{nomeDepartamento}}
+                        </span>
+                      {{/each}}
+                    {{/each}}
+                </td>
+                <td class="alinhar-center">{{qte}}</td>
+                <td class="alinhar-direita">{{formatarDecimal precocusto}}</td>
+                <td class="alinhar-direita">{{formatarDecimal precovista}}</td>
+                <td class="alinhar-direita">{{formatarDecimal precoprazo}}</td>
+                <td>
+                  <div style="display: flex;flex-direction: row;justify-content:space-around;gap: 4px; flex-wrap: wrap;background-color:transparent;">
+                    <select 
+                            class="form-select form-select-sm" 
+                            onchange="executarAcaoComDataset(this)" 
+                            data-id="{{_id}}" 
+                            data-descricao="{{descricao}}" 
+                            data-fornecedor="{{fornecedor.razao}}"
+                            data-departamento ="{{localloja.[0].departamento.[0].nomeDepartamento}}">
+                      <option value="" selected disabled>⋮</option>
+                      <option value="vincular">🔗 Vincular</option>
+                      <option value="imagens">🖼️ Imagens</option>
+                      <option  value="editar">✏️ Editar</option>
+                      <option  value="deletar">🗑️ Deletar</option>
+                    </select>
+                    {{!-- // data-codigo="{{codigo}}"  --}}
+                  </div>
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>  
+</div>
+<!-- Modal para edição -->
+<div id="editModal"
+  style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:9999;">
+  <div
+    style="background:#fff; width:50%; height:auto; padding:20px; border-radius:10px; box-shadow:0 5px 10px rgba(0,0,0,0.5);">
+    <h4>Editar Produto ??</h4>
+    <form id="editForm">
+      {{!-- <input type="text" id="editId" value=""> --}}
+      <div style="margin-bottom:10px;" >
+        <label>Id:</label>
+        <label type="text" id="editId" name="editid" class="form-control" style="background-color: rgb(223, 138, 11);color:#121010"></label>
+      </div>
+      <div style="margin-bottom:10px;" >
+        <label>Código:</label>
+        <input type="text" id="editCodigo" name="codigo" class="form-control" style="background-color: yellow;color:#110b0b">
+      </div>
+      <div style="margin-bottom:10px;" >
+        <label>Descrição:</label>
+        <input type="text" id="editDescricao" name="descricao" class="form-control">
+      </div>
+       <div style="margin-bottom:10px;" >
+        <label>Complemento:</label>
+        <input type="text" id="editComplemento" name="complemento" class="form-control">
+      </div>
+      <div style="margin-bottom:10px;">
+        <label>Refer:</label>
+        <input type="text" id="editRefer" name="refer" class="form-control">
+      </div>
+       <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+            <label style="background-color:transparent;width: 85px;padding: 5px;color:#110b0b">Fornecedor:</label>
+            <select id="editFornec" name="fornecedor" style="height: 3.2vh;width:70%;margin: auto;margin-left: 6px;margin-top: 3px;">
+              <option value="">Selecione:</option>
+                {{#each f}}
+                   <option value="{{_id}}">{{razao}} - {{marca}}</option>
+                {{/each}}
+        </select>
+        
+        {{!-- <input type="text" id="editFornec" name="fornec" class="form-control"> --}}
+      </div>
+      <div style="margin-bottom:10px;">
+        <label>Quantidade:</label>
+        <input type="number" id="editQte" name="qte" class="form-control">
+      </div>
+      <div style="margin-bottom:10px;">
+        <label>Preço Custo:</label>
+        <input type="number" step="any" id="editPrecoCusto" name="precocusto" class="form-control">
+      </div>
+      <div style="margin-bottom:10px;">
+        <label>Preço Vista:</label>
+        <input type="number" step="any" id="editPrecoVista" name="precovista" class="form-control">
+      </div>
+      <div style="margin-bottom:10px;">
+        <label>Preço Prazo:</label>
+        <input type="number" step="any" id="editPrecoPrazo" name="precoprazo" class="form-control">
+      </div>
+      <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+  </div>
+</div>
+<!-- Modal para cadastro -->
+<div   id="cadastroProdutoModal" class="openModal">
+  <div
+    style="background:#959292; width:50%; height:97vh; padding:20px; border-radius:10px; box-shadow:0 5px 10px #00000080;position: relative;margin: auto;">
+    <button type="button" id="fecharForm" style="position: absolute;top: 5px;right: 5px;border: none;background: transparent;font-size: 30px;cursor: pointer;">&times;</button>
+    <div style="width: 98%;height: 92vh;margin: auto;background-color: #0b2f83;overflow: scroll;margin-top: 2.5vh;padding: 5px;">
+    <h4 style="font-weight: 200;color: #ffffff;">Cadastro de produto</h4>
+          <form id="cadastroProdutoForm" style="background-color: #295ee4;color:#fff;position: relative;height: 96vh;" >
+            <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #df061f;display:none;">
+            
+            <div style="margin-bottom:10px;background-color blueviolet;">
+              <label>Código:</label>
+              <input id="cadastroCodigo" type="text"  name="codigo" class="form-control">
+            </div>
+            <div style="margin-bottom:10px;display: none;">
+              <label>Marca loja:</label>
+              <label id="cadastroMarca" type="text"  name="marca" class="form-control">{{lojista.marca}}</label>
+            </div>
+            <div style="margin-bottom:10px;">
+              <label>Descrição:</label>
+              <input id="cadastroDescricao" type="text"  name="descricao" class="form-control">
+            </div>
+            <div style="margin-bottom:10px;">
+              <label>Complemento:</label>
+              <input id="cadastroComplemento" type="text"  name="complemento" class="form-control">
+            </div>
+            <div style="margin-bottom:10px;">
+              <label>Referência:</label>
+              <input id="cadastroReferencia" type="text"  name="referencia" class="form-control">
+            </div>
+            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+              <label style="background-color: #df061f;width: 85px;padding: 5px;">Fornecedor:</label>
+              <select id="selectFornecedores" name="fornecedores" style="height: 3.2vh;width:70%;margin: auto;margin-left: 6px;margin-top: 3px;">
+                       <option value="">Selecione:</option>
+                          {{#each f}}
+                            <option value="{{_id}}">{{marca}}</option>
+                          {{/each}}
+              </select>
+            </div>
+            <div style="background-color:transparent;margin-bottom: 12px;margin-top: 6px;display: none;">
+              <label id="cadastroCidade" style="background-color: #df061f;width: 85px;padding: 5px;">Cidade:</label>
+              <label id="cadastroBairro" class="CidadeBairro" style="margin-top: -6px;padding-top: 0px;">{{lojista.cidade}}</label>
+            </div>
+            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;display: none;">
+              <label style="background-color: #df061f;width: 85px;padding: 5px;">Bairro:</label>
+              <label class="CidadeBairro">{{lojista.bairro}}</label>
+            </div>
+            <div style="margin-bottom:10px;">
+              <label>Quantidade:</label>
+              <input id="cadastroQte" type="number"  name="qte" class="form-control">
+            </div>
+            <div style="margin-bottom:10px;">
+              <label>Preço Custo:</label>
+              <input id="cadastroPrecoCusto" type="number" name="precocusto" step="0.01" min="0" lang="pt-BR"   class="form-control">
+            </div>
+            <div style="margin-bottom:10px;">
+              <label>Preço Vista:</label>
+              <input id="cadastroPrecoVista" type="number" name="precovista" step="0.01" min="0" lang="pt-BR"   class="form-control">
+            </div>
+            <div style="margin-bottom:10px;">
+              <label>Preço Prazo:</label>
+              <input id="cadastroPrecoPrazo" type="number" name="precoprazo" step="0.01" min="0" lang="pt-BR"   class="form-control">
+            </div>
+            {{!-- ========================================================================== --}}
+            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+                <label style="background-color: #df061f;width: 150px;padding: 5px;">Departamento:</label>
+                <select id="select_departamento" name="select_departamento" style="height: 3.2vh; width: 70%; margin-left: 6px; margin-top: 3px;">
+                      <option value="" style="background-color: #295ee4;color:#fff">Selecione o departamento:</option>
+                </select>
+            </div>
+            {{!-- ========================================================================== --}}
+            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+                <label for="setor" style="background-color: #df061f;width: 150px;padding: 5px;">Setor:</label>
+                
+                <select id="selectSetor" name="setor" style="height: 3.2vh; width: 70%; margin-left: 6px; margin-top: 3px;">
+                      <option value="" style="color:black">Selecione o setor:</option>
+                </select>
+             
+            </div>
+            {{!-- ========================================================================== --}}
+            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+              <label for="divSelect" style="background-color: #df061f;width: 150px;padding: 5px;">Seção:</label>
+              {{!-- <div id="divSelect" style=""> --}}
+                <select id="selectSecao" name="secao" style="height: 3.2vh; width: 70%; margin-left: 6px; margin-top: 3px;">
+                      <option value="" style="color:black">Selecione a seção:</option>
+                </select>
+              {{!-- </div> --}}
+            </div>
+            {{!-- ========================================================================== --}}
+            <div style="display: flex;flex-direction: row;justify-content:space-around;justify-items: center;padding: o 10px 0 10px;margin-bottom: 10px;">
+                <button type="button" class="btn btn-secondary" onclick="closeCadastroModal()">Cancelar</button>
+                <button id="btnSalvar" type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+          </form>
+    </div>
+  </div>
+</div>
+<!-- Modal Produto -->
+<div id="modalProdutoVinculo" class="modal fade"  tabindex="-1">
+   <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Produto ?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="conteudoModalProduto">
+        <!-- Conteúdo preenchido dinamicamente via JS -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-sm" style="background-color:#02662d;color:#ffffff" onclick="abrirModalBuscaSimilar('{{_id}}')">+ vincular</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{!-- Busca Similares --}}
+<div id="areaBuscaSimilar" style="display:none; padding: 10px;">
+  <h6>Buscar Similar para Vincular</h6>
+  <input type="text" id="buscaSimilarInput1" placeholder="Buscar similar por código ou nome" class="form-control" onkeyup="buscarSimilares(baseId)">
+  <div id="resultadosSimilar1" style="margin-top:10px;"></div>
+</div>
+<!-- SEGUNDO BLOCO -->
+<div id="modalVinculo" class="modal fade"  tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Buscar Similar para Vincular</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input id="buscaSimilarInput2" type="text" class="form-control" style="background-color: #ffffff;color: #100e0e;" placeholder="Buscar similar por código ou nome" oninput="buscarSimilar()">
+        <div id="resultadosSimilar2" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- MODAL Upload de Imagens -->
+<div id="modalUploadImagens" style="display: none; position: fixed; top: 5vh; left:0;
+  width: 100%; height: 95vh; background: #a8b6a799;
+  justify-content: center; align-items:flex-start; z-index: 9999;padding: 4px;">
+  {{!-- COMEÇO DO bodyALL --}}
+  <div id="bodyAll" class="modal-contente" style="background-color: #022eaa;width: 80%;height: 40vh;padding-top: 6vh;margin: auto;margin-top: 5vh;border-radius: 8px;">
+       <button onclick="fecharModal()" class="btn btn-warning btn-sm botao-fechar-topo" style="position: absolute; top: 15px; right: 15px; z-index: 1050; font-size: 20px;background-color: #0b2f83;">✕</button>
+  
+      <div  id="bodyHeard" style="background: #022eaa; padding: 20px; width: 98%;margin: auto;   max-width:2200px; border-radius: 8px;margin-top: 15px;height: 15vh;">
+            <div style="display: flex;flex-direction: row;justify-content: space-between;">
+              <div id="painelLeft" style="width: 33%;height: 4vh;">
+               <h3 style="margin-bottom: 10px;color:#fff;">Selecionar e Gravar Imagens ?</h3>
+              </div>
+              <div id="painelCentral" style="width: 33%;height: 4vh;background-color:nsparent;text-align: center;padding: 3px;">
+                  <button type="button" class="btn btn-primary" onclick="liberaComputer()">busque no computador</button>
+              </div>
+              <div id="painelRight" style="width: 33%;height: 4vh;background-color:transparent;text-align: center;padding: 3px;">
+                  <button type="button" class="btn btn-primary" onclick="liberaBcoImagens()">busque no bco imagens</button>
+              </div>
+            </div>
+            {{!-- ///////////////////////////////////////////////////////////////////// --}}
+            <div id="bodyHeard-descricao" class="container-fluid" id="areaUpload" style="display: block;">
+                <!-- Linha de labels -->
+                <div  id="rowTitulo" class="row g-2 mb-1 small text-muted">
+                        <div class="col-3">
+                          <button class="form-control on_click"  onclick="">código [ _id ]</button>
+                        </div>
+                        <div class="col-3">
+                          <button type="button" id="campoDescricao" class="form-control on_click" onclick="ligarBuscas_Clique('')">descrição</button>
+                        </div>
+                        <div class="col-3">
+                          <button type="button" id="campoFornecedor" class="form-control on_click" onclick="ligarBuscas_Clique('fornecedor')">fornecedor</button>
+                        </div>
+                        <div class="col-3">
+                          <button type="button" id="campoDepartamento" class="form-control on_click" onclick="ligarBuscas_Clique('departamento')">departamento</button>
+                        </div>
+                </div>
+                <!-- Linha de inputs (readonly) -->
+                <div id="rowDescricao" class="row g-2 align-items-center mb-2">
+                        <div class="col-3">
+                          <input id="codigoimg" class="form-control form-control-sm" readonly>
+                        </div>
+                        <div class="col-3">
+                          <input id="descricaoimg" class="form-control form-control-sm" readonly>
+                        </div>
+                        <div class="col-3">
+                          <input id="fornecimg" class="form-control form-control-sm" readonly>
+                        </div>
+                        <div class="col-3">
+                          <input id="deptoimg"  class="form-control form-control-sm" readonly>
+                        </div>
+                </div>
+            </div>
+      </div>  
+      <div id="bodyBusqueComputer" style="background-color: yellow;display: none;">
+            <div id="bodyBusqueComputer_container" style="display: none;height: 35vh;background-color: #022eaa;">
+                <!-- Linha de controles (qte + botão buscar) -->
+                <label for="qteFotos" style="color:#fff;margin-left: 12px;margin-top: 5px;">Select qte de fotos:</label>
+                <select id="qteFotos" onchange="criardivsfotos()" style="margin-left: 10px;">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                </select>
+                <span style="margin-left: 20px;color: #fff;">(seleciona até sete fotos)</span>
+                <!-- *** AQUI o container das fotos (entre as duas divs) *** -->
+                <div id="fotosContainer" class="fotos-wrapper" style="display:flex;flex-direction: row;justify-content: center;background-color: #ffffff;">
+                      {{!-- conteúdo --}}
+                </div>
+                <!-- Barra com botão "Gravar todas" -->
+                <div id="divBtn" style="display:block;text-align: center;" class="mt-2">
+                  <!-- botão é criado dinamicamente pelo InserirFoto() -->
+                  <button id="botaoGravar" type="button" class="btn" style="width: 90%;height: 4vh;margin: auto;fontSize =16px;background-color: #022eaa;color: #ffffff;"> Gravar todas as imagens</button>
+                </div>
+            </div>
+      </div>
+      <div id="Imagens_bco" name="imagens_bco"  style="display: none;background-color: #022eaa;height: 30vh;">
+
+      </div>
+    </div>
+  </div>
+  {{!-- ///     FIM DO bodyAll --}}
+</div>
+{{!-- <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> --}}
+{{!-- MOSTRANDO E ESCONDENDO MENU LATERAL --}}
+<script>
+      const faixa = document.getElementById("faixaVertical");
+      const menulista = document.getElementById("menulista");
+
+      faixa.addEventListener("click", function () {
+        const currentMargin = parseFloat(window.getComputedStyle(menulista).marginLeft);
+        const vwToPx = vw => (vw * window.innerWidth) / 100;
+
+        const abertoPX = 0;
+        const fechadoPX = -vwToPx(10); // Agora -13vw
+
+        if (Math.abs(currentMargin - fechadoPX) <= 1) {
+          menulista.style.marginLeft = '0vw'; // Abre
+        } else {
+          menulista.style.marginLeft = '-10vw'; // Fecha
+        }
+      });
+</script>
+{{!-- PEGA ID LOJISTA PARA LINK FORNEC CADASTRO --}}
+<script>
+  function pegaIdlojista(){
+    //console.log(' [ 377 pegaIdlojista]')
+    let n=document.getElementById("IddoLojista");
+    const link = document.getElementById("passa-cadastrofornec");
+    // Atualiza o href corretamente:
+    let lojistaId=n.value;
+    link.href = `/fornec/cadastro/${lojistaId}`;
+     const link1 = document.getElementById("passa-listafornec");
+    // Atualiza o href corretamente:
+    link1.href = `/fornec/listafornec/${lojistaId}`;
+  }
+
+   pegaIdlojista()
+</script>
+{{!-- ORDENAÇÃO DE COLUNS --}}
+<script>
+let direcaoOrdenacao = [];
+
+function ordenarTabela(colunaIndex) {
+  const tabela = document.getElementById("tabelaProdutos");
+  const tbody = tabela.tBodies[0];
+  const linhas = Array.from(tbody.rows);
+
+  // Alternar direção
+  direcaoOrdenacao[colunaIndex] = !direcaoOrdenacao[colunaIndex];
+  const crescente = direcaoOrdenacao[colunaIndex];
+
+  linhas.sort((a, b) => {
+    const valA = a.cells[colunaIndex].innerText.trim();
+    const valB = b.cells[colunaIndex].innerText.trim();
+
+    const numA = parseFloat(valA.replace(",", "."));
+    const numB = parseFloat(valB.replace(",", "."));
+    const ambosNumeros = !isNaN(numA) && !isNaN(numB);
+
+    if (ambosNumeros) {
+      return crescente ? numA - numB : numB - numA;
+    } else {
+      return crescente
+        ? valA.localeCompare(valB)
+        : valB.localeCompare(valA);
+    }
+  });
+
+  linhas.forEach(row => tbody.appendChild(row));
+}
+</script>
+{{!-- buscaSimilarInput2 --}}
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  const inputBuscar = document.getElementById("buscaSimilarInput2");
+
+  if (!inputBuscar) return;
+
+  inputBuscar.addEventListener("input", async (e) => {
+    console.log(' [ 617 produtos .handlebars]')
+    const termo = e.target.value.trim();
+    if (termo.length < 2 || !produtoIdBaseSelecionado) return;
+
+    try {
+      const resposta = await fetch(`/simiproduto/buscar?termo=${encodeURIComponent(termo)}&baseId=${produtoIdBaseSelecionado}`);
+      const similares = await resposta.json();
+
+      const lista = document.getElementById("resultadosSimilar2");
+      lista.innerHTML = "";
+
+      if (!similares.length) {
+        lista.innerHTML = '<div class="text-muted">Nenhum resultado encontrado</div>';
+        return;
+      }
+
+      similares.forEach(sim => {
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+        li.innerHTML = `
+          <div>
+            <strong>${sim.codigo}</strong> - ${sim.descricao} (R$ ${parseFloat(sim.precovista?.$numberDecimal || '0').toFixed(2)})
+          </div>
+          <button class="btn btn-sm btn-success" onclick="vincularSimilar('${produtoIdBaseSelecionado}', '${sim._id}')">Vincular</button>
+        `;
+        lista.appendChild(li);
+      });
+    } catch (err) {
+      console.error("Erro na busca de similares:", err);
+    }
+  });
+});
+</script>
+{{!-- executarAcao(acao, id, codigo, descricao,fornecedor) --}}
+<script>
+function executarAcao(acao, id, descricao,fornecedor,departamento) {
+  
+  const row = document.querySelector(`[data-id='${id}']`);
+  const tableRows = document.querySelectorAll("tr");
+
+  // limpa os destaques anteriores
+  tableRows.forEach(r => r.classList.remove("edit-row", "delete-row"));
+  console.log('');
+  console.log(' [ 765 ] -Id => ',id,' descricao =>  ',descricao,' fornecedor=>   ',fornecedor,' departamento =>  ', departamento)
+  console.log('------------------------------------------------------');
+  console.log('');
+  const produtoId=id;
+  const departamentoNome=departamento;
+  switch (acao) {
+    case "vincular":
+      console.log(' [ 479 ] executarAcao',id)
+      abrirModalVinculoProduto(id);
+      break;
+    case "imagens":
+      abrirModalImagens(descricao,fornecedor,{produtoId,departamentoNome});
+      break;
+    case "editar":
+      row?.classList.add("edit-row");
+      openEditModal(id);
+      break;
+    case "deletar":
+      row?.classList.add("delete-row");
+      deleteProduct(id);
+      break;
+  }
+}
+//abrirModalImagens
+function abrirModalImagens(descricao,fornecedor,{ produtoId, departamentoNome }) {
+  console.log('',' 0 ', produtoId,' 1 ', descricao,' 3 ',fornecedor,' 4 ',departamentoNome);
+  document.getElementById("codigoimg").value=produtoId;
+  document.getElementById("descricaoimg").value=descricao;
+  document.getElementById("fornecimg").value=fornecedor;
+  document.getElementById("deptoimg").value=departamentoNome;
+  document.getElementById("modalUploadImagens").style.display = "block";
+  const campo=descricao;
+  BuscarProdutoImagem(campo);
+
+}
+</script>
+{{!-- criardivsfotos --}}
+<script>
+  function criardivsfotos() {
+    acertou();
+  }
+</script>
+{{!-- fotosContainer --}}
+<script>
+function acertou() {
+  console.log('');
+  console.log('---------------- INSERIRFOTO-------------------------');
+  console.log('');
+  
+
+  const qte = parseInt(document.getElementById("qteFotos").value, 10);
+  const container = document.getElementById("fotosContainer");
+  container.innerHTML = "";
+  
+      for (let i = 0; i < qte; i++) {
+        console.log('');
+        console.log(' CRIANDO INPUT')
+        console.log('');
+        const box = document.createElement("div");
+        box.classList.add("foto-box");
+        box.style.width = "120px";
+        box.style.height = "170px";
+        box.style.display = "flex";
+        box.style.flexDirection = "column";
+        box.style.alignItems = "center";
+        box.style.justifyItems = "center";
+        box.style.justifyContent = "center";
+        box.style.margin = "5px";
+
+        const img = document.createElement("img");
+        img.src = "/images/revistalogo.png"; // ou base64 vazio
+        img.style.width = "100px";
+        img.style.height = "100px";
+        img.style.objectFit = "contain";
+        img.style.cursor = "pointer";
+
+        const input = document.createElement("input");
+        input.type = "file";
+        input.id = `uploadImg${i}`
+        input.accept = "image/*";
+        input.style.display = "none"; // escondido
+
+        // Evento: clicar na imagem abre seletor
+        img.addEventListener("click", () => input.click());
+
+        // Evento: quando escolher imagem, mostra preview
+        input.addEventListener("change", () => {
+          if (input.files[0]) {
+            img.src = URL.createObjectURL(input.files[0]);
+          }
+        });
+
+      // Montagem
+        box.appendChild(img);
+        box.appendChild(input);
+        //box.appendChild(btn);
+
+        container.appendChild(box);
+      }
+
+      console.log("----------------------CRIANDO BTN + GRAVAR TODOS AS IMAGENS ----------------------")
+      //const D_btn=document.getElementById("divBtn");
+
+      //D_btn.innerHTML="";
+      //const botaoGravar = document.createElement("button");
+      //botaoGravar.type = "button";
+      //botaoGravar.textContent = "Gravar todas as imagens";
+      //botaoGravar.classList.add("btn", "btn-primary");
+      
+      //botaoGravar.style.backgroundColor="transparent";
+      //botaoGravar.style.marginTop = "10px";
+      //botaoGravar.style.
+      //D_btn.style.display = qte > 0 ? "block" : "none";
+
+      //D_btn.appendChild(botaoGravar);
+
+
+      console.log('------------------------------------------------------')
+    botaoGravar.addEventListener("click", async () => {
+        // metas do modal
+        const codigoId     = document.getElementById("codigoimg").value;
+        const produtoNome  = document.getElementById("descricaoimg").value;
+        const fornecedor   = document.getElementById("fornecimg").value;
+        const departamento = document.getElementById("deptoimg").value;
+
+        //{{!-- =descricao;
+        //=fornecedor;
+        //=departamento; --}}
+
+        const MAX_MB = 2;
+        const inputs = container.querySelectorAll('input[type="file"]');
+        let enviados = 0;
+
+        for (let i = 0; i < inputs.length; i++) {
+            const input = inputs[i];
+            const file = input.files?.[0];
+            if (!file) continue;
+
+            if (file.size > MAX_MB * 1024 * 1024) {
+              alert(`Arquivo ${i + 1} excede ${MAX_MB} MB. Pulei este.`);
+              continue;
+            }
+
+            const ordem = String(i + 1).padStart(2, "0");
+            const qs = new URLSearchParams({
+              filename: file.name,
+              filetype: file.type,
+              ordem
+            });
+
+            const r = await fetch(`/gravafoto/getpresignedurl?${qs.toString()}`);
+            const { uploadUrl, key } = await r.json();
+
+            const shortkey = key.substring(0, 16);
+            console.log('');
+            console.log(typeof(key))
+            console.log( shortkey);
+            console.log('');
+    
+           const up = await fetch(uploadUrl, {
+                                method: "PUT",
+                                body: file,
+                                headers: { "Content-Type": file.type, "x-amz-acl": "public-read" }
+                              });
+         
+           if (!up.ok) { alert(`Falha ao enviar a imagem ${i + 1}.`); continue; }
+
+           console.log('up',up)
+           console.log('----------------------------          ----------------------------------')
+           const publicUrl = uploadUrl.split("?")[0];
+           await fetch("/gravafoto/imagem/salvar", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        codigoId,
+                        produtoNome,
+                        fornecedor,
+                        departamento,
+                        imagemUrl: publicUrl,
+                        shortkey,
+                        mimeType: file.type,
+                        size: file.size
+                      })
+           });
+           enviados++;
+        }
+        alert(enviados > 0 ? `${enviados} imagem(ns) enviada(s) com sucesso.` : "Nenhuma imagem selecionada.");
+        fecharModalUpload();
+});
+
+
+};
+</script>
+{{!-- openCadastroModal --}}
+<script>
+  function openCadastroModal(){
+      document.getElementById("cadastroProdutoModal").style.display="block";
+  }  
+</script>
+{{!-- BUSCAR FORNECEDORES QUANDO O INPUTCODIGO TIVER FOCO --}}
+<script>
+  let fornecedoresCarregados = false;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const inputCodigo = document.getElementById("cadastroCodigo");
+    let lojistaId=document.getElementById("IddoLojista").value;
+
+    if (inputCodigo) {
+      inputCodigo.addEventListener("focus", async () => {
+        if (!fornecedoresCarregados) {
+          try {
+            const response = await fetch(`/fornec/fornecqlojista/${lojistaId}`);
+            const lista = await response.json();
+            console.log('[ 912 ]');
+            console.log('',lista);
+            console.log('');
+            const select = document.getElementById("selectFornecedores");
+
+            select.innerHTML = '<option disabled selected>Selecione um fornecedor</option>';
+
+            lista.forEach(dep => {
+              const opt = document.createElement("option");
+              opt.value = dep._id;
+              opt.textContent = dep.marca;
+              select.appendChild(opt);
+            });
+
+            fornecedoresCarregados = true; // para não buscar de novo
+          } catch (err) {
+            console.error("Erro ao buscar fornecedores:", err);
+          }
+        }
+      });
+    }
+  });
+</script>
+ {{!-- BUSCAR OS DEPARTAMENTOS QUANDO O INPUTCODIGO ADQUIRIR FOCO --}}
+<script>
+  let departamentosCarregados = false;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const inputCodigo = document.getElementById("cadastroDescricao");
+    let idLoja=document.getElementById("IddoLojista").value;
+    
+   // console.log(' [ 944 document.addEventListener("DOMContentLoaded",() ]',idLoja);
+   // console.log('');
+   // console.log(' IdLoja ',idLoja)
+   // console.log('');
+    if (inputCodigo) {
+      inputCodigo.addEventListener("focus", async () => {
+       // console.log("[ 951 ] Focus Código ")
+        if (!departamentosCarregados) {
+          try {
+            console.log('');
+            console.log('',idLoja);
+            console.log('');
+            const response = await fetch(`/produto/lojistadepartamentos/${idLoja}`);
+            const departamentos = await response.json();
+         //   console.log(' [ 942 ]');
+           // console.log('',departamentos);
+           // console.log('');
+            const select = document.getElementById("select_departamento");
+
+            // Limpa o <select> antes de preencher
+           // select.innerHTML = '<option disabled selected>Selecione um departamento</option>';
+            select.style.backgroundColor="#100e0e";
+            select.style.backgroundColor="red";  
+            select.style.color="#100e0e";
+            select.style.color="pink";
+            // Preenche o select com os dados recebidos
+            departamentos.forEach(dep => {
+              const opt = document.createElement("option");
+              opt.value = dep._id;
+              opt.textContent = dep.nomeDepartamento;
+              opt.classList.add("option-roxa");
+              select.appendChild(opt);
+            });
+
+            select.style.backgroundColor="black";
+            select.style.color="red";
+
+            departamentosCarregados = true;
+          } catch (err) {
+            console.error("Erro ao carregar departamentos:", err);
+          }
+        }
+      });
+    }
+  });
+</script>
+{{!-- select_departamento + selectSetor --}}
+<script>
+document.getElementById('select_departamento').addEventListener('change', async function () {
+  const departamentoId = this.value;
+
+  const setorSelect = document.getElementById('selectSetor');
+  setorSelect.innerHTML = '<option value="">Carregando setores...</option>';
+
+  if (departamentoId) {
+    try {
+      console.log('-----------------');
+      console.log(' [ 995 ]');
+      console.log('-----------------');
+      const response = await fetch(`/segmento/setores/${departamentoId}`);
+      const setores = await response.json();
+      console.log(' setores ==>',setores)
+      if (Array.isArray(setores)) {
+        setorSelect.innerHTML = '<option value="">Selecione o setor:</option>';
+        setores.forEach(setor => {
+          const opt = document.createElement('option');
+          opt.value = setor._id;
+          opt.textContent = setor.nomeDeptoSetor;
+          opt.classList.add("option-roxa");
+          setorSelect.appendChild(opt);
+
+          setorSelect.style.backgroundColor="blue";
+          setorSelect.style.color="red";
+        });
+      } else {
+        setorSelect.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
+      }
+    } catch (err) {
+      setorSelect.innerHTML = '<option value="">Erro ao buscar setores</option>';
+      console.error(err);
+    }
+  } else {
+    setorSelect.innerHTML = '<option value="">Selecione o setor:</option>';
+  }
+});
+document.getElementById('selectSetor').addEventListener('change', async function () {
+  const setorId = this.value;
+  const setorSecao = document.getElementById('selectSecao');
+  setorSecao.innerHTML = '<option value="">Carregando setores...</option>';
+  if (setorId) {
+    try {
+      console.log('-----------------');
+      console.log(' [ 1038 ]');
+      console.log('-----------------');
+      const response = await fetch(`/segmento/secoes/${setorId}`);
+      const secoes = await response.json();
+      console.log(' seções ==>',secoes)
+      if (Array.isArray(secoes)) {
+         setorSecao.innerHTML = '<option value="">Selecione o setor:</option>';
+         secoes.forEach(secao => {
+            const opt = document.createElement('option');
+            opt.value = secao._id;
+            opt.textContent = secao.nomeSecao;
+            opt.classList.add("option-roxa");
+            setorSecao.appendChild(opt);
+
+            setorSecao.style.backgroundColor="blue";
+            setorSecao.style.color="red";
+         });
+      } else {
+        setorSecao.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
+      }
+    }catch(e){
+      console.log('Error ao carregar a seção!')
+    }
+  }
+
+})
+</script>
+{{!-- modalContentSetorSecao --}}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const spans = document.querySelectorAll(".departamento-click");
+    const modal = document.getElementById("modalInfoSetorSecao");
+    const modalContent = document.getElementById("modalContentSetorSecao");
+
+    spans.forEach(span => {
+      span.addEventListener("click", function (e) {
+        const index = parseInt(this.dataset.index);
+
+        // Obtem dados do JS pré-carregado
+        const dados = window.todosSetoresSecoes?.[index];
+        if (!dados) return;
+
+        let html = "";
+        if (dados.setores?.length) {
+          html += "<strong>Setores:</strong><ul>";
+          dados.setores.forEach(s => html += `<li>${s}</li>`);
+          html += "</ul>";
+        }
+
+        if (dados.secoes?.length) {
+          html += "<strong>Seções:</strong><ul>";
+          dados.secoes.forEach(s => html += `<li>${s}</li>`);
+          html += "</ul>";
+        }
+
+        modalContent.innerHTML = html;
+
+        // Posiciona o modal
+        const rect = this.getBoundingClientRect();
+        modal.style.left = `${rect.left + window.scrollX}px`;
+        modal.style.top = `${rect.top + window.scrollY - modal.offsetHeight - 10}px`;
+        modal.style.display = "block";
+      });
+    });
+
+    // Esconde o modal ao clicar fora
+    document.addEventListener("click", function (e) {
+      if (!e.target.classList.contains("departamento-click") &&
+          !modal.contains(e.target)) {
+        modal.style.display = "none";
+      }
+    });
+  });
+</script>
+{{!-- modalContentSetorSecao --}}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const spans = document.querySelectorAll(".departamento-click");
+    const modal = document.getElementById("modalInfoSetorSecao");
+    const modalContent = document.getElementById("modalContentSetorSecao");
+
+    spans.forEach(span => {
+      span.addEventListener("click", function (e) {
+        const index = parseInt(this.dataset.index);
+
+        // Obtem dados do JS pré-carregado
+        const dados = window.todosSetoresSecoes?.[index];
+        if (!dados) return;
+
+        let html = "";
+        if (dados.setores?.length) {
+          html += "<strong>Setores:</strong><ul>";
+          dados.setores.forEach(s => html += `<li>${s}</li>`);
+          html += "</ul>";
+        }
+
+        if (dados.secoes?.length) {
+          html += "<strong>Seções:</strong><ul>";
+          dados.secoes.forEach(s => html += `<li>${s}</li>`);
+          html += "</ul>";
+        }
+
+        modalContent.innerHTML = html;
+
+        // Posiciona o modal
+        const rect = this.getBoundingClientRect();
+        modal.style.left = `${rect.left + window.scrollX}px`;
+        modal.style.top = `${rect.top + window.scrollY - modal.offsetHeight - 10}px`;
+        modal.style.display = "block";
+      });
+    });
+
+    // Esconde o modal ao clicar fora
+    document.addEventListener("click", function (e) {
+      if (!e.target.classList.contains("departamento-click") &&
+          !modal.contains(e.target)) {
+        modal.style.display = "none";
+      }
+    });
+  });
+</script>
+<script>
+  //////////////////////////////           //////////////////////////////////////////////////////
+      async  function BuscarProdutoImagem(campo) {
+          //=========================================================
+          console.log('-------------------------');
+          console.log(' nome do campo :',campo);
+          console.log('');
+          const response = await fetch(`/gravafoto/produtoImagem/buscar/${campo}`)
+          if(!response.ok) throw new Error("falha na busca");
+          //console.log('fim',response.json());
+          const docs = await response.json();
+          
+          renderResultadoProdutoImagem(docs)
+      }
+ 
+     function renderResultadoProdutoImagem(lista) {
+          console.log(1308)
+          console.log(lista.length)
+
+          const cont = document.getElementsByName('imagens_bco'); // seu container roxo
+           if (!cont) return;
+           cont.innerHTML = '';
+         
+           console.log(cont)
+         
+           const elemento = cont[0];
+         
+            if (!Array.isArray(lista) || lista.length === 0) {
+            elemento.innerHTML = `<div class="text-center text-light">Nenhum registro encontrado.</div>`;
+            return;
+          }
+
+          lista.forEach((img, i) => {
+            const box = document.createElement('div');
+            box.className = 'p-2';
+            box.style.width = '160px';
+            box.style.display = 'inline-block';
+            box.style.cursor = 'pointer';
+            box.innerHTML = `
+              <div class="border rounded p-2 bg-white">
+                <div style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${img.produtoNome||''}">
+                  ${img.produtoNome||'&nbsp;'}
+                </div>
+                <img src="${img.imagemUrl||''}" alt="" style="width:100%;height:120px;object-fit:cover;margin:6px 0;" />
+                <div style="font-size:11px;opacity:.8;">${img.fornecedor||''}</div>
+              </div>`;
+            box.addEventListener('click', () => selecionarImagemExistente(img)); // próxima etapa
+            elemento.appendChild(box);
+          });
+      }
+
+</script>
+<script>
+  function liberaComputer(){
+     const ComputerVisivel= document.getElementById('bodyBusqueComputer').style.display;
+     if (ComputerVisivel==="none"){
+        document.getElementById('bodyBusqueComputer').style.display='block';
+        document.getElementById("Imagens_bco").style.display="none";
+        const X=document.getElementById("bodyBusqueComputer_container");
+        X.style.height="30vh"
+        X.style.display="block";
+     }else{
+       document.getElementById('bodyBusqueComputer').style.display='none';
+     }
+     
+     
+  }
+
+  function liberaBcoImagens(){
+     document.getElementById('bodyBusqueComputer').style.display="none";
+     document.getElementById("Imagens_bco").style.display="block"
+     //const X=document.getElementById("bodyBusqueComputer_container");
+     //X.style.height="30vh"
+     //X.style.display="block";
+  }
+</script>

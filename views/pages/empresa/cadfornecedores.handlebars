@@ -1,0 +1,366 @@
+<style>
+  form {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+
+  h1, h3 {
+    text-align: center;
+    color: #0b2f83;
+    margin-bottom: 20px;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .form-row label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    font-size: 0.9rem;
+    flex: 1;
+  }
+
+  .form-row.cep-logradouro-numero label:nth-child(1) {
+    flex: 0 0 150px;
+  }
+
+  .form-row.cep-logradouro-numero label:nth-child(3) {
+    flex: 0 0 150px;
+  }
+
+  .form-row input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background: #0b2f83;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s;
+  }
+
+  button[type="submit"]:hover {
+    background: #08235f;
+  }
+</style>
+<div>
+<form id="formFornecedor">
+              <h1>Cadastro de Fornecedor</h1>
+              <input value="{{lojaId}}" type="text" name="qlojistas" >
+              <div class="form-row">
+                <label>Razão Social:
+                  <input type="text" name="razao" required>
+                </label>
+                <label>CNPJ:
+                  <input type="text" id="inputCNPJ" name="cnpj" placeholder="Digite o CNPJ" style="width: 250px;background-color: yellow;color:red;" />
+                </label>
+             </div>
+
+              <div class="form-row">
+                <label>Inscrição Estadual:
+                  <input type="text" name="inscricao">
+                </label>
+                <label>Nº Contábil:
+                  <input type="text" name="ncontabil">
+                </label>
+              </div>
+
+              <div class="form-row">
+                <label>Marca:
+                  <input type="text" name="marca">
+                </label>
+                <label>Email:
+                  <input type="email" name="email">
+                </label>
+              </div>
+
+              <h3>Endereço</h3>
+
+              <div class="form-row cep-logradouro-numero">
+                <label>CEP:
+                  <input type="text" name="address.cep" maxlength="10">
+                </label>
+                <label>Logradouro:
+                  <input type="text" name="address.logradouro">
+                </label>
+                <label>Número:
+                  <input type="text" name="address.numero" maxlength="10">
+                </label>
+              </div>
+
+              <div class="form-row">
+                <label>Bairro:
+                  <input type="text" name="address.bairro">
+                </label>
+                <label>Cidade:
+                  <input type="text" name="address.cidade">
+                </label>
+                <label>Estado:
+                  <input type="text" name="address.estado">
+                </label>
+              </div>
+
+              <h3>Contato Representante</h3>
+
+              <div class="form-row">
+                <label>Nome:
+                  <input type="text" name="contato.representante.nome">
+                </label>
+                <label>Email:
+                  <input type="email" name="contato.representante.email">
+                </label>
+                <label>Celular:
+                  <input type="text" name="contato.representante.celular">
+                </label>
+              </div>
+
+              <h3>Contato Comercial</h3>
+
+              <div class="form-row">
+                <label>Nome:
+                  <input type="text" name="contato.comercial.nome">
+                </label>
+                <label>Email:
+                  <input type="email" name="contato.comercial.email">
+                </label>
+                <label>Celular:
+                  <input type="text" name="contato.comercial.celular">
+                </label>
+              </div>
+
+              <h3>Contato Técnica</h3>
+
+              <div class="form-row">
+                <label>Nome:
+                  <input type="text" name="contato.tecnica.nome">
+                </label>
+                <label>Email:
+                  <input type="email" name="contato.tecnica.email">
+                </label>
+                <label>Celular:
+                  <input type="text" name="contato.tecnica.celular">
+                </label>
+              </div>
+
+              <button type="submit">Cadastrar</button>
+</form>
+</div>
+<script>
+  const input_A=document.getElementById("inputCNPJ");
+  //const resultadoDiv = document.getElementById("resultadoCNPJ");
+  console.log(" 281 ",input_A);
+  
+  input_A.addEventListener("keydown", async function (e) {
+      console.log('===> <===',e.Key);
+      if (e.key === "Enter") {
+        console.log(' [ 284 CNPJ]')
+        const cnpj = input_A.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+        if (cnpj.length !== 14) {
+          //resultadoDiv.innerHTML = "<span style='color:red;'>CNPJ inválido</span>";
+          return;
+        }
+
+       // resultadoDiv.innerHTML = "🔍 Buscando dados...";
+
+        try {
+                        console.log("-------------------------------");
+                        console.log("==> ",cnpj)
+                        console.log("-------------------------------");
+
+                       const res = await fetch(`/lojista/consulta-cnpj/${cnpj}`);
+        //const data = await res.json();
+
+        // const res = await fetch(`https://www.receitaws.com.br/v1/cnpj/${cnpj}`, {
+        //   headers: { "Content-Type": "application/json" }
+        // });
+
+                      const data = await res.json();
+                      console.log(" 300 CNPJ ",data)
+                      if (data.status === "ERROR") {
+                        //resultadoDiv.innerHTML = `<span style="color:red;">Erro: ${data.message}</span>`;
+                      } else {
+                            document.getElementsByName('razao')[0].value=`${data.nome}`,
+                            document.getElementsByName('razao')[0].style.backgroundColor="red";
+                            document.getElementsByName('razao')[0].style.color="white";
+                             document.getElementsByName('cnpj')[0].value=`${data.cnpj}`,
+                            document.getElementsByName('cnpj')[0].style.backgroundColor="red";
+                            document.getElementsByName('cnpj')[0].style.color="white";
+                            document.getElementsByName('marca')[0].value=`${data.fantasia}`,
+                            document.getElementsByName('marca')[0].style.backgroundColor="red";
+                            document.getElementsByName('marca')[0].style.color="white";
+                            document.getElementsByName('email')[0].value=`${data.email}`,
+                            document.getElementsByName('email')[0].style.backgroundColor="red";
+                            document.getElementsByName('email')[0].style.color="white";
+                            document.getElementsByName('address.cep')[0].value=`${data.cep}`,
+                            document.getElementsByName('address.cep')[0].style.backgroundColor="red";
+                            document.getElementsByName('address.cep')[0].style.color="white";
+                            document.getElementsByName('address.logradouro')[0].value=`${data.logradouro}`
+                            document.getElementsByName('address.logradouro')[0].style.backgroundColor="red";
+                            document.getElementsByName('address.logradouro')[0].style.color="white";
+                            document.getElementsByName('address.numero')[0].value=`${data.numero}`
+                            document.getElementsByName('address.numero')[0].style.backgroundColor="red";
+                            document.getElementsByName('address.numero')[0].style.color="white";
+                            document.getElementsByName('address.bairro')[0].value=`${data.bairro}`
+                            document.getElementsByName('address.bairro')[0].style.backgroundColor="red";
+                            document.getElementsByName('address.bairro')[0].style.color="white";
+                            document.getElementsByName('address.cidade')[0].value=`${data.municipio}`
+                            document.getElementsByName('address.cidade')[0].style.backgroundColor="red";
+                            document.getElementsByName('address.cidade')[0].style.color="white";
+                            document.getElementsByName('address.estado')[0].value=`${data.uf}` 
+                            document.getElementsByName('address.estado')[0].style.backgroundColor="red";
+                            document.getElementsByName('address.estado')[0].style.color="white";
+                      }
+        } catch (err) {
+         // resultadoDiv.innerHTML = "<span style='color:red;'>Erro na requisição.</span>";
+          console.error(err);
+        }
+      }
+  });
+</script>
+
+<script>
+  document.querySelectorAll("input").forEach(input => {
+              input.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                }
+              });
+
+          document.addEventListener("DOMContentLoaded", function () {
+               const inputs = Array.from(document.querySelectorAll("#formFornecedor input"));
+
+                inputs.forEach((input, index) => {
+                      input.addEventListener("keydown", function (e) {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+
+                              const nextInput = inputs[index + 1];
+                              if (nextInput) {
+                                nextInput.focus();
+                              } else {
+                                document.querySelector("#formFornecedor button[type='submit']").focus();
+                              }
+                            }
+                        // Não precisa tratar Backspace nem Delete manualmente!
+                        // Só ignore as outras teclas e deixe o comportamento padrão.
+                      });
+                });
+          });
+  });
+</script>
+<script>
+  document.getElementById("formFornecedor").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = {};
+
+    formData.forEach((value, key) => {
+      const keys = key.split(".");
+      let temp = data;
+      keys.forEach((k, i) => {
+        if (i === keys.length - 1) {
+          temp[k] = value;
+        } else {
+          if (!temp[k]) temp[k] = {};
+          temp = temp[k];
+        }
+      });
+    });
+    console.log('');
+    console.log('',data);
+    console.log('');
+    console.log('---------------------------------------');
+    try {
+      const response = await fetch("/fornec/gravarfornec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        alert("Fornecedor cadastrado com sucesso!");
+        e.target.reset();
+      } else {
+        const erro = await response.json();
+        alert("Erro: " + (erro.error || "Erro desconhecido"));
+      }
+    } catch (error) {
+      console.error("Erro ao cadastrar fornecedor:", error);
+      alert("Erro ao cadastrar fornecedor.");
+    }
+  });
+</script>
+<script>
+  const cepInput = document.querySelector("input[name='address.cep']");
+
+  cepInput.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      await buscarEnderecoPorCep(cepInput.value);
+      const nextField = document.querySelector("input[name='address.logradouro']");
+      if (nextField) nextField.focus();
+    }
+  });
+
+  async function buscarEnderecoPorCep(cep) {
+    cep = cep.replace(/\D/g, "");
+
+    if (cep.length !== 8) {
+      alert("CEP inválido");
+      return;
+    }
+
+    try {
+        console.log('==>',cep)
+        const response = await fetch(`/fornec/buscacep/${cep}`);
+        if (!response.ok) {
+          alert("CEP não encontrado.");
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.logradouro) {
+          document.querySelector("input[name='address.logradouro']").value = data.logradouro;
+          document.querySelector("input[name='address.bairro']").value = data.bairro;
+          document.querySelector("input[name='address.cidade']").value = data.localidade;
+          document.querySelector("input[name='address.estado']").value = data.uf;
+        }
+    } catch (error) {
+      console.error("Erro ao buscar endereço:", error);
+    }
+  }
+</script>
+<script>
+//document.addEventListener("DOMContentLoaded", function () {
+  
+//});
+</script>
+
+{{!-- // resultadoDiv.innerHTML = `
+                          //   <strong>Razão Social:</strong> ${data.nome} <br>
+                          //   <strong>Situação:</strong> ${data.situacao} <br>
+                          //   <strong>CNPJ:</strong> ${data.cnpj} <br>
+                          //   <strong>UF:</strong> ${data.uf} <br>
+                          //   <strong>Município:</strong> ${data.municipio}
+                          // `; --}}

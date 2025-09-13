@@ -15,7 +15,7 @@ console.log('12',BUCKET_NAME)
 console.log('-----------------------------')
 console.log('16',SPACES_KEY)
 console.log('-----------------------------')
-console.log('18',SPACES_SECRET_NAME)
+console.log('18',SPACES_SECRET)
 console.log('-----------------------------')
 
 //endpoint:'nyc3.digitaloceanspaces.com',

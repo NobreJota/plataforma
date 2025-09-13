@@ -11,11 +11,11 @@ const SPACES_KEY = process.env.SPACES_KEY;
 const SPACES_SECRET = process.env.SPACES_SECRET;
 
 console.log('-----------------------------')
-console.log('12',BUCKET_NAME)
+//console.log('12',BUCKET_NAME)
 console.log('-----------------------------')
-console.log('16',SPACES_KEY)
+//console.log('16',SPACES_KEY)
 console.log('-----------------------------')
-console.log('18',SPACES_SECRET)
+//console.log('18',SPACES_SECRET)
 console.log('-----------------------------')
 
 //endpoint:'nyc3.digitaloceanspaces.com',

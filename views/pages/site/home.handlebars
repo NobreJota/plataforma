@@ -4,424 +4,212 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minha Loja Online</title>
-  <style>
-    /* Reset básico */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
 
-    body {
-      font-family: Arial, sans-serif;
-    }
+<style>
+/* LOGO */
+.navbar-brand { letter-spacing: .5px; }
 
-    /* Estilos do header */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 70px;
-      background-color: #333;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-    }
+/* Busca: feedback visual */
+#homeSearchInput:focus {
+  box-shadow: 0 0 0 .25rem rgba(255,193,7,.35);
+  background-color: #fff8dc;
+}
 
-    .logomarca{
-      width: 15vw;
-      background-color: transparent;
-    }
-    /* Logo */
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #fff;
-      text-decoration: none;
-      background-color:transparent;
-      padding: 4px;
-    }
+/* Cards de produto */
+.product-card { border-radius: 1rem; }
+.product-card .price {
+  color: #df061f;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
 
-    /* Barra de pesquisa */
-    .search-bar {
-      width: 65vw;
-      flex: 1;
-      margin: 0 20px;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      background-color:transparent;
-    }
+/* Título com 2 linhas no máximo, sem quebrar layout */
+.product-title{
+  min-height: 3.4em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;        /* limita a 2 linhas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
-    .divform{
-      width: 40vw;
-      display:flex;
-      flex-direction: row;
-      justify-content: space-around;
-      background-color: #fff;
-    }
-
-    .divform input[type="text"] {
-      width: 100%;
-      /*max-width: 600px;*/
-      padding: 8px 10px;
-      border: none;
-      border-radius: 5px;
-      font-size: 1rem;
-      background-color:transparent;
-    }
-
-    .divform button {
-      width: 50%;
-      background-color: #FFD700;
-      border: none;
-      padding: 8px 15px;
-      margin-left: 10px;
-      font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-  
-
-    .search-bar button:hover {
-      background-color: #ffa500;
-    }
-
-    /* Links do menu (login, carrinho) */
-    .menu {
-      width: 20vw;
-      height: auto;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      background-color:transparent;
-      height: auto;
-      font-size: 5em;
-    }
-
-    .menu a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1rem;
-    }
-
-    .menu a:hover {
-      text-decoration: underline;
-      color: #FFD700;
-    }
-
-    /* Ícones */
-    .menu .icon {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .menu .icon img {
-      width: 20px;
-      height: 20px;
-    }
-
-    /* Responsividade */
-    @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        height: auto;
-        padding: 10px 20px;
-      }
-
-      .search-bar {
-        margin: 10px 0;
-      }
-
-      .menu {
-        gap: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-    }
-  </style>
-  <style>
-    /* Reset básico */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      padding: 20px;
-    }
-
-    .main{
-      margin-top: 50px; padding: 10px;
-    }
-
-    /* Grade Responsiva */
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta para pelo menos 200px por coluna */
-      gap: 20px;
-      background-color: #f7f3f5;
-    }
-
-    .grid-container-div{
-      width: 95vw; background-color: #fff; display: flex; justify-content: flex-start; gap: 10px; padding: 10px;margin-left: 0.4vw;
-    }
-
-    /* Cartão do Produto */
-    .card {
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      overflow: hidden;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s, box-shadow 0.2s;
-      height: 500px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content:flex-start;
-      padding: 0;
-      margin: 0;
-      width: 15vw;
-      height: auto;
-      box-sizing: border-box;
-    }
-
-    .card{
-      border-radius: 5px; padding: 20px;box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-img{
-      width: 100%;height:auto;margin-top: 3px;display:flex;background-color: #fff;padding: 2px;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-    }
-
-    .card img {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-    }
-
-    .card-body {
-      width:100%;height: auto;margin-top: 3px;
-      display:flex;flex-direction: column;
-      background-color: transparent;padding: 2px;
-      padding: 15px;
-      text-align: center;
-    }
-
-    .card-title {
-      font-size: 18px;
-      color: #333;
-      margin-bottom: 10px;
-    }
-
-    .card-price {
-      font-size: 16px;
-      color: #e10a0a;
-      font-weight: bold;
-    }
-
-    .card-button {
-      margin-top: 10px;
-      background-color: #27ae60;
-      color: #fff;
-      border: none;
-      border-radius: 3px;
-      padding: 10px 15px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background-color 0.3s;
-    }
-
-    .card-button:hover {
-      background-color: #2ecc71;
-    }
-
-    /* Responsividade */
-    @media (max-width: 768px) {
-      .grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      }
-    }
-
-    @media (max-width: 512px) {
-      .main{
-          margin-top: 50px; padding: 10px;
-      }
-
-      .grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        background-color:#edebea ;
-        padding-left: 0.5px;
-        display: flex;
-        flex-wrap: wrap;
-        padding-top:70px;
-      }
-
-      .grid-container-div{
-        width: 100%; background-color: #fff; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 0;
-       
-      }
-
-      .card{
-        background-color: #fff; border-radius: 5px; padding: 2px; width: calc(45% - 20px); 
-        max-width: 60vw;
-        min-width: 8vw;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-    }
-
-    /*@media (max-width: 480px) {
-      .grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        background-color:#ee0a9e ;
-       padding-left: 10px;
-       display: flex;
-       flex-wrap: wrap;
-      }
-
-      .grid-container-div{
-        width: 100%;
-        display: flex;
-        background-color: #0aee15;
-        padding: 5px;
-        width: calc(25% - 20px);
-      }
-    }*/
+/* Imagem sempre “contida” dentro do box */
+.card .ratio img { object-fit: contain; }
 </style>
+<style>
+    /* barra de chips rolável e sem barra de rolagem visível */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.chip { border-radius: 999px; padding: .35rem .9rem; white-space: nowrap; }
+.chip.active { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+
+/* barra de chips rolável e sem barra de rolagem visível */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.chip { border-radius: 999px; padding: .35rem .9rem; white-space: nowrap; }
+.chip.active { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+
+</style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/home.css" rel="stylesheet">
+<script src="https://kit.fontawesome.com/5a1d5d1b5a.js" crossorigin="anonymous"></script>
+
 </head>
 <body>
-  <!-- Cabeçalho -->
-  <header>
-    <!-- Logomarca -->
-    <div class="logomarca">
-          <a href="#" class="logo" style="color:#fff;font-style: italic;font: 400;">
-            ROTA<span style="color: red;font-style: italic;">es</span>
-            {{!-- <img src="/public/images/revistaLogoP.png"> --}}
-          </a>
+<!-- Topbar -->
+<nav class="navbar navbar-dark bg-dark sticky-top shadow-sm">
+  <div class="container-fluid gap-3">
+    <a class="navbar-brand fw-bold" href="/">
+      <span class="text-white">ROTA</span><span class="text-danger">es</span>
+    </a>
+
+    <form class="d-flex flex-grow-1 search-form" action="/buscar" method="GET" id="homeSearchForm" style="max-width: 900px;">
+      <input id="homeSearchInput" name="q" class="form-control me-2" type="search" placeholder="Buscar produtos..." aria-label="Buscar">
+      <button class="btn btn-warning fw-semibold px-4" type="submit">Pesquisar</button>
+    </form>
+
+    <div class="d-flex align-items-center gap-3">
+      <a href="/login" class="text-white text-decoration-none"><i class="fa-regular fa-user me-1"></i>Login</a>
+      <a href="/carrinho" class="text-white text-decoration-none"><i class="fa-solid fa-cart-shopping me-1"></i>Carrinho</a>
     </div>
-
-    <!-- Barra de Pesquisa -->
-    <div class="search-bar">
-      <form action="#" method="GET">
-        <div class="divform">
-           <input type="text" name="q" placeholder="Buscar produtos...">
-           <button type="submit">Pesquisar</button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Itens do menu -->
-    <nav class="menu">
-      <!-- Login -->
-      <a href="#login">
-        <div class="icon">
-          <img src="https://img.icons8.com/ios-filled/50/ffffff/user.png" alt="Ícone de Login">
-          <span>Login</span>
-        </div>
-      </a>
-
-      <!-- Carrinho -->
-      <a href="#carrinho">
-        <div class="icon">
-          <img src="https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png" alt="Ícone de Carrinho">
-          <span>Carrinho</span>
-        </div>
-      </a>
-    </nav>
-  </header>
-
-  <!-- Conteúdo da página -->
-  <main class="main">
-      {{!-- <h1 style="text-align: center; margin-bottom: 20px;">Loja Online</h1> --}}
-      <div class="grid-container">
-            <div class="grid-container-div" >
-                <!-- Card 1 -->
-                <div class="card" >
-                  <div class="card-img" >
-                    <img src="https://amelia.nyc3.digitaloceanspaces.com/338b1d3d163d4926e4d4_alicatepress%C3%A3o.png" alt="Produto 1" width="100%" height="auto">
-                  </div>
-                  <div class="card-body" >
-                    <h2 class="card-title">Alicate pressão</h2>
-                    <p class="card-price">R$ 59,90</p>
-                    <button class="card-button">Comprar</button>
-                  </div>
-                </div>
-                <!-- Card 2 -->
-                <div class="card" >
-                  <div class="card-img" >
-                    <img src="https://amelia.nyc3.digitaloceanspaces.com/abd7e275926d765e1df0_carrinhoMao.png" alt="Produto 2">
-                    </div>  
-                  <div class="card-body">
-                    <h2 class="card-title">Carrinho de mão</h2>
-                    <p class="card-price">R$ 89,90</p>
-                    <button class="card-button">Comprar</button>
-                  </div>
-                </div>
-                <!-- Card 3 -->
-                <div class="card">
-                  <div class="card-img" >
-                    <img src="https://amelia.nyc3.digitaloceanspaces.com/9a0cfdb215c640e2515c_maqTrapp.png" alt="Produto 3">
-                  </div>
-                  <div class="card-body">
-                    <h2 class="card-title">máquina cortar grama</h2>
-                    <p class="card-price">R$ 920,00</p>
-                    <button class="card-button">Comprar</button>
-                  </div>
-                </div>
-                <!-- Card 4 -->
-                <div class="card">
-                  <div class="card-img" >
-                      <img src="https://amelia.nyc3.digitaloceanspaces.com/6dfdbbfafd50a97cc2e0_torneiraBancada.png" alt="Produto 4">
-                  </div>
-                  <div class="card-body">
-                    <h2 class="card-title">torneira bancada Fabrimar</h2>
-                    <p class="card-price">R$ 849,90</p>
-                    <button class="card-button">Comprar</button>
-                  </div>
-                </div>
-                <!-- Card 5 -->
-                <div class="card">
-                  <div class="card-img" >
-                      <img src="https://amelia.nyc3.digitaloceanspaces.com/338b1d3d163d4926e4d4_alicatepress%C3%A3o.png" alt="Produto 5">
-                  </div>
-                  <div class="card-body">
-                    <h2 class="card-title">Produto 5</h2>
-                    <p class="card-price">R$ 79,90</p>
-                    <button class="card-button">Comprar</button>
-                  </div>
-                </div>
-                <div class="card">
-                  <div class="card-img" >
-                  <img src="https://amelia.nyc3.digitaloceanspaces.com/7605bd3d4dacf6cca1a9_LogoEmidioPaes.png" alt="Produto 5">
-                  </div>
-                  <div class="card-body">
-                    <h2 class="card-title">Emídio Paes</h2>
-                    <p class="card-price">Acabamento</p>
-                    <button class="card-button">Ir</button>
-                  </div>
-                </div>
-            </div>  
+  </div>
+</nav>
+<div class="bg-light border-bottom">
+  <div class="container py-3">
+    <form id="filtroForm" class="row gy-2 gx-2 align-items-end" method="GET" action="/">
+      {{!-- Busca texto --}}
+      <div class="col-12 col-md-5">
+        <label class="form-label mb-1">O que você procura?</label>
+        <input name="q" value="{{q}}" class="form-control" placeholder="Ex.: cimento, torneira, carrinho de mão">
       </div>
-  </main>
+
+      {{!-- Município --}}
+      <div class="col-6 col-md-2">
+        <label class="form-label mb-1">Município</label>
+        <select name="cidade" id="selectCidade" class="form-select">
+          <option value="">Todos</option>
+          {{#each cidades}}
+            <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      {{!-- Loja (depende do município) --}}
+      <div class="col-6 col-md-3">
+        <label class="form-label mb-1">Loja</label>
+        <select name="loja" id="selectLoja" class="form-select" {{#unless lojas.length}}disabled{{/unless}}>
+          <option value="">Todas</option>
+          {{#each lojas}}
+            <option value="{{this._id}}" {{#if (eq ../lojaSelecionada this._id)}}selected{{/if}}>{{this.razao}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="col-12 col-md-2 d-grid">
+        <button class="btn btn-primary">Aplicar filtros</button>
+      </div>
+
+      {{!-- campo oculto para segmento selecionado pelos chips --}}
+      <input type="hidden" name="segmento" id="segmentoHidden" value="{{segmentoSelecionado}}">
+    </form>
+
+    {{!-- Chips de Segmentos --}}
+    <div class="mt-3 overflow-x-auto no-scrollbar">
+      <div class="d-flex gap-2 flex-nowrap">
+        <button type="button"
+                class="chip btn btn-outline-secondary {{#unless segmentoSelecionado}}active{{/unless}}"
+                data-id="">
+          Todos
+        </button>
+        {{#each segmentos}}
+          <button type="button"
+                  class="chip btn btn-outline-secondary {{#if (eq ../segmentoSelecionado this._id)}}active{{/if}}"
+                  data-id="{{this._id}}">
+            {{this.nomeDepartamento}}
+          </button>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="mt-2">
+      <a href="/" class="text-decoration-underline small">Limpar todos os filtros</a>
+    </div>
+  </div>
+</div>
+
+<div class="container my-4">
+
+  {{!-- Banner opcional --}}
+  {{#if banner}}
+  <div class="row mb-3">
+    <div class="col">
+      <img src="{{banner.url}}" alt="{{banner.alt}}" class="img-fluid rounded shadow-sm w-100">
+    </div>
+  </div>
+  {{/if}}
+
+  <div class="row g-3" id="gridProdutos">
+    {{!-- Produtos --}}
+    {{#each produtos}}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <article class="card h-100 product-card shadow-sm">
+        <div class="ratio ratio-4x3">
+          <img src="{{this.imagemUrl}}" alt="{{this.descricao}}" class="card-img-top p-2 object-fit-contain">
+        </div>
+        <div class="card-body d-flex flex-column">
+          <h6 class="card-title text-center product-title">{{this.descricao}}</h6>
+          <p class="price text-center mb-3">{{moeda this.preco}}</p>
+          <button class="btn btn-success w-100 mt-auto" onclick="adicionarCarrinho('{{this._id}}')">Comprar</button>
+        </div>
+      </article>
+    </div>
+    {{/each}}
+
+    {{!-- Slots de Anunciantes (opcionais) --}}
+    {{#each anuncios}}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <aside class="card h-100 product-card d-flex align-items-center justify-content-center p-2 shadow-sm">
+        <img src="{{this.logo}}" alt="{{this.nome}}" class="img-fluid p-3" style="max-height:120px;">
+        <div class="card-body text-center">
+          <h6 class="mb-1">{{this.nome}}</h6>
+          <small class="text-muted">{{this.segmento}}</small>
+          <a href="{{this.url}}" class="btn btn-success w-100 mt-3">Ir</a>
+        </div>
+      </aside>
+    </div>
+    {{/each}}
+  </div>
+</div>
+
+<script src="/js/home.js"></script>
 </body>
+
 <script>
+// public/js/home.js
+document.addEventListener('DOMContentLoaded', () => {
+  const form  = document.getElementById('homeSearchForm');
+  const input = document.getElementById('homeSearchInput');
+
+  form.addEventListener('submit', (e) => {
+    const q = (input.value || '').trim();
+    if (!q) {
+      e.preventDefault();
+      alert('Digite um termo para buscar.');
+      input.focus();
+    } else {
+      // só pra dar um feedback visual de sucesso
+      input.classList.add('bg-success-subtle');
+      setTimeout(() => input.classList.remove('bg-success-subtle'), 1200);
+    }
+  });
+});
+
+function adicionarCarrinho(id) {
+  fetch(`/carrinho/add/${id}`, { method: 'POST' })
+    .then(r => r.ok ? r.json() : Promise.reject(r))
+    .then(() => alert('Produto adicionado ao carrinho!'))
+    .catch(() => alert('Não foi possível adicionar ao carrinho agora.'));
+}
 
 </script>
-</html>
-

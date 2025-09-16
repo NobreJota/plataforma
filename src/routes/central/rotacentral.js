@@ -18,6 +18,7 @@ router.get("/lista", async (req, res) => {
 router.get("/selectlista", async (req, res) => {
   console.log('');
   console.log(' [ 20 - router.get("/selectlista]');
+  console.log(' [ cadastro de produto - router.get("/selectlista]');
   console.log('');
   try {
     const departamentos = await Departamento.find().lean();

@@ -156,7 +156,7 @@ router.get("/departamento-selecao", (req, res) => {
 });
 
 router.post("/gravar", async (req, res) => {
-  console.log('[ 181 ] /gravar lojista',req.body)
+  console.log('[ 159 ] /gravar lojista',req.body)
   try {
    // const {
    //   inputrazao,
@@ -183,7 +183,7 @@ router.post("/gravar", async (req, res) => {
       razao: req.body.inputrazao,
       nomeresponsavel: req.body.responsavel,
       cpfresponsavel: req.body.cpf,
-      cnpj: req.body.cnpj,
+      cnpj: req.body.inputCNPJ,
       inscricao: req.body.inscricao,
       site: req.body.site,
       marca: req.body.marca,
@@ -219,15 +219,117 @@ router.post("/gravar", async (req, res) => {
 });
 
 router.get('/consulta-cnpj/:cnpj', async (req, res) => {
+  console.log(' ');
+  console.log(' [ 225 ]');
+  console.log(' origem views :pages/central/departamento-seleção:Cadastro de Lojista');
+  console.log(' origem route :Quando digitado CNPJ para cadastrar o lojista" ');
+  console.log(' obs : ');
+  console.log('');
+  console.log(' destino :mesmo??');
+  console.log('');
   const cnpj = req.params.cnpj;
-
+  console.log('===>',cnpj)
   try {
     const response = await fetch(`https://www.receitaws.com.br/v1/cnpj/${cnpj}`);
+    console.log(' 236 ');
+   // console.log('++++++++++++++++++',response.json());
+    console.log('');
     const data = await response.json();
     res.json(data); // devolve pro front-end
-  } catch (error) {
+    } catch (error) {
     res.status(500).json({ error: 'Erro ao consultar CNPJ' });
   }
 });
+
+// PERTENCE A CADASTRO DE LOJISTA
+router.get("/selectlista-depto", async (req, res) => {
+  console.log('');
+  console.log('');
+  console.log(' [ 250 ]');
+  console.log(' origem views :pages/central/departamento-seleção:Cadastro de Lojista');
+  console.log('');
+  console.log(' origem route :Quando digitado RAZÃO SOCIAL para pegar os segmentos" ');
+  console.log(' obs : ');
+  console.log('');
+  console.log(' destino :mesmo');
+  console.log('______________________________________');
+  try {
+    const departamentos = await Departamento.find().lean();
+    //console.log('258 lista de departamentos :');
+    console.log(departamentos);
+    res.json(departamentos); // retorna [{ _id, titulo }]
+  } catch (err) {
+    console.error("Erro ao buscar segmentos:", err);
+    res.status(500).json({ erro: "Erro ao buscar segmentos" });
+  }
+});
+
+// usa fetch nativo (Node >=18) ou undici como fallback
+let fetchFn = globalThis.fetch;
+if (!fetchFn) {
+  const { fetch } = require('undici');
+  fetchFn = fetch;
+}
+
+router.get('/consulta-ie-es/:cnpj', async (req, res) => {
+  try {
+    const cnpj = (req.params.cnpj || '').replace(/\D/g, '');
+    if (cnpj.length !== 14) {
+      return res.status(400).json({ ok: false, message: 'CNPJ inválido' });
+    }
+
+    const base  = process.env.IE_API_URL;   // ex.: https://api.seu_provedor.com/ie
+    const token = process.env.IE_API_TOKEN; // seu token do provedor (quando tiver)
+
+    // ✅ Sem provedor: não quebra o front, apenas informa indisponível
+    if (!base || !token) {
+      return res.json({
+        ok: true,
+        inscricaoEstadual: '',
+        message: 'Consulta automática desativada (sem provedor configurado).'
+      });
+    }
+
+    // ===== Com provedor (opcional, quando você tiver) =====
+    const url = `${base}?cnpj=${cnpj}&uf=ES&token=${encodeURIComponent(token)}`;
+
+    // Timeout seguro
+    const ac = new AbortController();
+    const timeoutId = setTimeout(() => ac.abort(), 20000);
+
+    const resp = await fetchFn(url, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      signal: ac.signal
+    }).finally(() => clearTimeout(timeoutId));
+
+    if (!resp.ok) {
+      const body = await resp.text().catch(() => '');
+      throw new Error(`IE provider HTTP ${resp.status}: ${body}`);
+    }
+
+    // 🔴 AQUI estava o seu erro: garanta que "data" exista SEMPRE
+    const data = await resp.json().catch(() => ({}));
+
+    const ie =
+      data?.inscricaoEstadual ??
+      data?.inscricao_estadual ??
+      data?.ie ??
+      data?.inscricao ??
+      data?.result?.ie ??
+      '';
+
+    return res.json({ ok: true, inscricaoEstadual: ie, raw: data });
+
+  } catch (err) {
+    console.error('consulta-ie-es erro:', err);
+    const isAbort = String(err?.name).toLowerCase() === 'aborterror';
+    return res.status(500).json({
+      ok: false,
+      message: isAbort ? 'Timeout ao consultar provedor IE' : 'Falha na consulta IE (SEFAZ-ES)'
+    });
+  }
+});
+
 
 module.exports = router;

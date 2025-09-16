@@ -1,3 +1,6 @@
+// server.js
+'use strict';
+
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -6,157 +9,123 @@ const flash = require('connect-flash');
 const path = require('path');
 const morgan = require('morgan');
 const passport = require('passport');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs'); // (se usar em algum lugar)
+const { engine } = require('express-handlebars');
 
 require('dotenv').config();
 require('./config/auth')(passport);
 require('./src/config/multer');
 require('./database/index');
 
-//const bodyParser = require('body-parser');
-//app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.urlencoded({extended: true}));
-
+// -------------------------------------------------------------------
+// Middlewares básicos
+// -------------------------------------------------------------------
+app.use(express.urlencoded({ extended: true })); // aceita POST de forms
 app.use(express.json());
 app.use(cors());
-app.use(morgan("dev"));
-app.use(express.static(path.join(__dirname,"public")));
-app.use(express.static("imagens"));
+app.use(morgan('dev'));
 
-//const { isValid } = require('@fnando/cnpj');
-////////////////////////////////////////////////////////
+// Arquivos estáticos
+app.use('/imagens', express.static(path.join(__dirname, 'imagens')));
+app.use(express.static(path.join(__dirname, 'public')));
 
-/////////////////////////////////////////////////////////
-// Esse é um middleware para enviar dados via formulário?
-
-
-// Configura o EJS como view engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// Configurações de sessão;
-app.use(session({
-  secret: process.env.SECRET || 'seusegredo',
-  resave: false,
-  saveUninitialized: true
-}));
- 
-app.use(flash());
-/// MORGAN
-// Ativa o morgan no modo 'dev'
-// app.use(morgan('dev'));
-
-// app.get('/', (req, res) => {
-//   res.send('Morgan está funcionando!??');
-// });
-
-// Middleware para tornar as mensagens flash disponíveis em todas as views
-app.use((req, res, next) => {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  next();
-});
-
-app.get('/flash', (req, res) => {
-  req.flash('success_msg', 'Mensagem flash exibida com sucesso!');
-  res.redirect('/');
-});
-
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-const exphbs = require('express-handlebars');
-///////////////////////////////////////////////////////////////////
-//hbs.registerHelper('containsId', function(id, list) {
-//  if (!list) return false;
-//  return list.some(item => item.toString() === id.toString());
-//});
-//////////////////////////////////////////////////////////////////////////
-
-// Criação da instância do Handlebars com helpers e configurações
-const hbsInstance = exphbs.create({
-  defaultLayout: 'não encontrado',
-  layoutsDir: __dirname + '/views/layout',
+// -------------------------------------------------------------------
+// View Engine: express-handlebars
+// -------------------------------------------------------------------
+app.engine('handlebars', engine({
+  defaultLayout: 'main', // espera views/layouts/main.handlebars
+  layoutsDir: path.join(__dirname, 'views', 'layout'),
+  partialsDir: path.join(__dirname, 'views', 'partials'),
   helpers: {
-    formatarDecimal: valor => {
-      const num = parseFloat(valor);
-      return isNaN(num) ? "" : num.toFixed(2);
+    eq: (a, b) => String(a) === String(b),
+    moeda: (v) =>
+      new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
+        .format(Number(v || 0)),
+    containsId: (id, list) =>
+      Array.isArray(list) && list.some(item => String(item) === String(id)),
+    formatarDecimal: (valor) => {
+      const n = parseFloat(valor);
+      return Number.isFinite(n) ? n.toFixed(2) : '';
     },
-    json: context => JSON.stringify(context),
-    inc: value => parseInt(value) + 1
+    json: (ctx) => JSON.stringify(ctx),
+    inc: (v) => parseInt(v, 10) + 1
   },
   runtimeOptions: {
     allowProtoPropertiesByDefault: true,
     allowProtoMethodsByDefault: true,
   }
-});
-
-// Configurações do Express com Handlebars
-app.engine('handlebars', hbsInstance.engine);
+}));
 app.set('view engine', 'handlebars');
-app.set('views', __dirname + '/views');
-// Variáveis globais para flash messages
+app.set('views', path.join(__dirname, 'views'));
+
+// -------------------------------------------------------------------
+// Sessão, flash e Passport
+// -------------------------------------------------------------------
+app.use(session({
+  secret: process.env.SECRET || 'seusegredo',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 4 // 4h (ajuste se quiser)
+  }
+}));
+
+app.use(flash());
+
+// Disponibiliza mensagens flash em todas as views
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   next();
 });
 
-const admin = require("./src/routes/central/usuario");
-const central = require("./src/routes/central/menu-admin");
-const segmento = require("./src/routes/central/rotacentral");
-const similares = require("./src/routes/central/rotacentral");
-const simiproduto=require("./src/routes/empresa/similares");
-const lojista = require("./src/routes/central/lojista");
+app.use(passport.initialize());
+app.use(passport.session());
 
-//app.use("/uploads", express.static("uploads")); // servir imagens
-//app.use("/produtoImagem", require("./src/routes/empresa/upload_foto"));
+// -------------------------------------------------------------------
+// Rotas
+// -------------------------------------------------------------------
+const admin       = require("./src/routes/central/usuario");
+const central     = require("./src/routes/central/menu-admin");
+const segmento    = require("./src/routes/central/rotacentral");
+const similares   = require("./src/routes/central/rotacentral");
+const simiproduto = require("./src/routes/empresa/similares");
+const lojista     = require("./src/routes/central/lojista");
 
-
-const home1 = require("./src/routes/site/home");
+const home1       = require("./src/routes/site/home");
 const usuarioloja = require("./src/routes/empresa/usuario");
-const loja = require("./src/routes/empresa/rotina");
-const produto = require("./src/routes/empresa/produtos");
-const fornec = require("./src/routes/empresa/fornecedores");
+const loja        = require("./src/routes/empresa/rotina");
+const produto     = require("./src/routes/empresa/produtos");
+const fornec      = require("./src/routes/empresa/fornecedores");
+const gravafoto   = require("./src/routes/empresa/upload_foto");
 
-const gravafoto=require("./src/routes/empresa/upload_foto");
+// Montagem das rotas
+app.use('/admin', admin);
+app.use('/central', central);
+app.use('/lojista', lojista);
+app.use('/segmento', segmento);
+app.use('/similares', similares);
 
-app.use('/admin',admin);
-app.use('/central',central);
-app.use('/lojista',lojista);
-app.use('/segmento',segmento);
-app.use('/similares',similares);
+app.use('/', home1);
+app.use('/usuarioloja', usuarioloja);
+app.use('/loja', loja);
+app.use('/produto', produto);
+app.use('/gravafoto', gravafoto);
+app.use('/fornec', fornec);
+app.use('/simiproduto', simiproduto);
 
-app.use('/',home1);
-app.use('/usuarioloja',usuarioloja);
-app.use('/loja',loja);
-app.use('/produto',produto);
-app.use('/gravafoto',gravafoto);
-app.use('/fornec',fornec);
-app.use('/simiproduto',simiproduto);
-//app.use("/produtoimagem", produtoimagem);
-
+// Log para rotas não tratadas (debug)
 app.use((req, res, next) => {
   console.log('');
-  console.log(`[ 145 -server.js ]>>> Chamada não tratada: ${req.method} ${req.originalUrl}`);
+  console.log(`[145 - server.js] >>> Chamada não tratada: ${req.method} ${req.originalUrl}`);
   console.log('');
   next();
 });
 
-
+// -------------------------------------------------------------------
+// Start
+// -------------------------------------------------------------------
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
-
-////////////////////////////////////////////////
-//app.engine('handlebars', handlebars.engine({ defaultLayout:'main',
-//        runtimeOptions: {
-//            allowProtoPropertiesByDefault: true,
-//            allowProtoMethodsByDefault: true,
-//        },
-//}))
-//////////////////////////////////////////////////////////////
-

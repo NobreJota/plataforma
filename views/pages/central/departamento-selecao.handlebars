@@ -25,6 +25,95 @@
       background-color: #ffffff;
     }
     
+    .letra{
+      color: black;
+    }
+</style>
+<style>
+  /* classes utilitárias, com !important para vencer estilos inline antigos */
+  .input-focus  { background: yellow !important; color: #000 !important; }
+  .input-filled { background: red    !important; color: #fff !important; }
+</style>
+
+<style>
+  /* Mantém sua base atual */
+.row input.form-control {
+  height: 30px;
+  font-size: 14px;
+  padding: 2px 6px;
+  color: blue;
+}
+.row label {
+  font-size: 14px;
+  margin-bottom: 2px;
+  line-height: 1.2;
+  color: blue;
+}
+.row { margin-bottom: 5px; }
+
+/* ===== NOVO: linha com dois inputs lado a lado ===== */
+.row-dupla {
+  display: grid;
+  grid-template-columns: 120px 1fr; /* label fixo + área dos inputs */
+  column-gap: 10px;
+  align-items: center;
+}
+.row-dupla > label {
+  grid-column: 1;
+}
+.row-dupla .dupla {
+  grid-column: 2;
+  display: flex;
+  gap: 10px;         /* espaço entre os dois inputs */
+}
+.row-dupla .dupla .form-control {
+  flex: 1;           /* divide igualmente o espaço */
+  min-width: 0;      /* evita quebra por conteúdo longo */
+  box-sizing: border-box;
+}
+
+/* Responsivo: se a tela for estreita, empilha os campos */
+@media (max-width: 600px) {
+  .row-dupla {
+    grid-template-columns: 1fr;     /* label e inputs em uma coluna */
+  }
+  .row-dupla > label {
+    margin-bottom: 4px;              /* um respiro entre label e inputs */
+  }
+  .row-dupla .dupla {
+    flex-direction: column;          /* inputs um abaixo do outro */
+  }
+}
+
+/* Linha com dois campos lado a lado, cada um com label em cima */
+.row-dupla-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* dois blocos iguais */
+  gap: 10px;
+  align-items: start;
+}
+
+.row-dupla-top .campo {
+  display: flex;
+  flex-direction: column; /* label em cima, input embaixo */
+  min-width: 0;           /* evita overflow quando o conteúdo é longo */
+}
+
+.row-dupla-top .campo label {
+  font-size: 14px;        /* mantém seu padrão */
+  margin-bottom: 2px;
+  line-height: 1.2;
+  color: blue;            /* combina com seu tema atual */
+}
+
+/* Responsivo: empilha em telas estreitas */
+@media (max-width: 600px) {
+  .row-dupla-top {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 </style>
 <div id="cadastroLojistaModal" style="display:block; position:fixed; top:7.2vh; left:0; width:100%; height:100%; background:#bbbcbb80; justify-content:center; align-items:center;padding: 5px;">
         <div style="background:#fff; width:50%; height:92vh;margin: auto;padding:10px; border-radius:10px; box-shadow:0 5px 10px #00000080;overflow-x: scroll;overflow-y: auto;">
@@ -32,6 +121,10 @@
             <div id="divForm" style="background-color:transparent;height:90vh ;">
                 <form id="cadastroLojistaForm" class="gravaSubmit" method="POST" action="/lojista/gravar">
                         <input type="hidden" id="editId" name="_id">
+                        <div class="row">
+                            <label>CNPJ:</label>
+                            <input type="text" id="inputCNPJ" name="inputCNPJ" class="form-control" style="background-color: #0d0d0d;color:yellow">
+                        </div>
                         <div class="row">
                             <label>Razao:</label>
                             <input type="text" id="inputrazao" name="inputrazao" class="form-control">
@@ -44,13 +137,20 @@
                             <label>CPF:</label>
                             <input type="text" id="cpf" name="cpf" class="form-control">
                         </div>
-                        <div class="row">
-                            <label>CNPJ:</label>
-                            <input type="text" id="cnpj" name="cnpj" class="form-control">
-                        </div>
-                        <div class="row">
+                        {{!-- <div class="row">
                             <label>Inscrição:</label>
                             <input type="text" id="inscricao" name="inscricao" class="form-control">
+                        </div> --}}
+                      <div class="row row-dupla-top">
+                            <div class="campo">
+                              <label for="inscricao">Inscrição Estadual</label>
+                              <input type="text" id="inscricao" name="inscricao" class="form-control" placeholder="">
+                            </div>
+
+                            <div class="campo">
+                              <label for="inscricao_municipal">Inscrição Municipal</label>
+                              <input type="text" id="inscricao_municipal" name="inscricao_municipal" class="form-control" placeholder="">
+                            </div>
                         </div>
                         <div class="row">
                             <label>Site:</label>
@@ -62,7 +162,7 @@
                         </div>
                         <div class="row">
                             <label>Celular:</label>
-                            <input type="text" id="celular" name="celular" class="form-control">
+                            <input type="text" id="celular" name="celular" class="form-control letra">
                         </div>
                         <div class="row">
                             <label>Fone:</label>
@@ -83,6 +183,10 @@
                         <div class="row">
                             <label>Logradouro:</label>
                             <input type="text" id="logradouro" name="logradouro" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label>Número:</label>
+                            <input type="text" id="numero" name="numero" class="form-control">
                         </div>
                         <div class="row">
                             <label>Complemento:</label>
@@ -129,7 +233,9 @@
 </div>
 
 <!-- HTML: Campos para selecionar departamentos e exibir os escolhidos em <ul> -->
-
+<script>
+const inputs = document.querySelectorAll("#cadastroLojistaForm input");
+</script>
 
 <script>
   // Variável que armazena todos os departamentos
@@ -138,9 +244,15 @@
   // Quando a razão social receber foco, carrega os departamentos uma única vez
   let jaCarregouDepartamentos = false;
   document.getElementById("inputrazao").addEventListener("focus", async () => {
+    //break
     if (jaCarregouDepartamentos) return;
     try {
-      const res = await fetch("/segmento/selectlista");
+      console.log('--------------------------');
+      console.log(' Vai buscar os segmentos para selação')
+      console.log('segmento = require("./src/routes/central/rotacentral")');
+      console.log('/segmento/selectlista')
+      console.log('--------------------------');
+      const res = await fetch("/lojista/selectlista-depto");
       listaDepartamentos = await res.json();
       preencherSelect();
       jaCarregouDepartamentos = true;
@@ -217,38 +329,38 @@
 </script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".row input").forEach((input) => {
-      input.addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-          e.preventDefault();
+//  document.addEventListener("DOMContentLoaded", function () {
+//    document.querySelectorAll(".row input").forEach((input) => {
+//      input.addEventListener("keydown", function (e) {
+//        if (e.key === "Enter") {
+//          e.preventDefault();
 
-          if (e.target.value.trim() === "") {
-            e.target.style.border = "2px solid red"; // Opcional: destacar vazio
-            return; // Não continua para o próximo input
-          } else {
-            e.target.style.border = ""; // Remove o destaque se estava
-          }
+//          if (e.target.value.trim() === "") {
+//            e.target.style.border = "2px solid red"; // Opcional: destacar vazio
+//            return; // Não continua para o próximo input
+//          } else {
+//            e.target.style.border = ""; // Remove o destaque se estava
+//          }
 
-          const allInputs = Array.from(document.querySelectorAll(".row input"));
-          const currentIndex = allInputs.indexOf(e.target);
-          const currentRow = allInputs[currentIndex];
+//          const allInputs = Array.from(document.querySelectorAll(".row input"));
+//          const currentIndex = allInputs.indexOf(e.target);
+//          const currentRow = allInputs[currentIndex];
 
-          currentRow.style.backgroundColor = "red";
-          currentRow.style.color = "#fff";
-
-          const nextInput = allInputs[currentIndex + 1];
-          if (nextInput) {
-            nextInput.style.backgroundColor = "yellow";
-            nextInput.focus();
-          }
-        }
-      });
-    });
-  });
+//          currentRow.style.backgroundColor = "red";
+//          currentRow.style.color = "#fff";
+//
+//          const nextInput = allInputs[currentIndex + 1];
+//          if (nextInput) {
+//            nextInput.style.backgroundColor = "yellow";
+//            nextInput.focus();
+//          }
+//        }
+//      });
+//    });
+//  });
 </script>
 
-//{{!-- BUSCA CEP API:VIACEP --}}
+{{!-- BUSCA CEP API:VIACEP --}}
 <script>
     async function buscarEnderecoPorCep(cep) {
           try {
@@ -304,7 +416,7 @@
 });
 </script>
 
-//{{!-- HÀ DUVIDAS SOBRE ESSE COMPORTAMENTO --}}
+{{!-- HÀ DUVIDAS SOBRE ESSE COMPORTAMENTO --}}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const estadoInput = document.getElementById("estado");
@@ -334,3 +446,390 @@ function extrairDepartamentosSelecionados(req) {
   return lista;
 }
 </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  const input_A=document.getElementById("inputCNPJ");
+  
+  
+  
+  input_A.addEventListener("keydown", async function (e) {
+      if (e.key === "Enter") {
+        const cnpj = input_A.value.replace(/\D/g, ""); // Remove tudo que não for número
+  
+        if (cnpj.length !== 14) {
+           alert("Favor verificar o CNPJ válido!")
+          return;
+        }
+        //"🔍 Buscando dados...";
+        try {
+        const res = await fetch(`/lojista/consulta-cnpj/${cnpj}`);
+        const data = await res.json();
+        if (data.status === "ERROR") {
+          //resultadoDiv.innerHTML = `<span style="color:red;">Erro: ${data.message}</span>`;
+        } else {
+                document.getElementsByName('inputrazao')[0].value=`${data.nome}`,
+                document.getElementsByName('inputrazao')[0].style.backgroundColor="red";
+                document.getElementsByName('inputrazao')[0].style.color="white";
+
+                document.getElementsByName('responsavel')[0].value=`${data.qsa[0].nome}`,
+                document.getElementsByName('responsavel')[0].style.backgroundColor="red";
+                document.getElementsByName('responsavel')[0].style.color="white";
+                console.log('');
+                console.log(data);
+                console.log('');
+                document.getElementsByName('cpf')[0].value=`${data.cpf}`,
+                document.getElementsByName('cpf')[0].style.backgroundColor="red";
+                document.getElementsByName('cpf')[0].style.color="white";
+
+                document.getElementsByName('inscricao')[0].value=`${""}`,
+                document.getElementsByName('inscricao')[0].style.backgroundColor="red";
+                document.getElementsByName('inscricao')[0].style.color="white";
+                if(data.fantasia==""){
+                  data.fantasia="não há"
+                }
+                document.getElementsByName('marca')[0].value=`${data.fantasia}`,
+                document.getElementsByName('marca')[0].style.backgroundColor="red";
+                document.getElementsByName('marca')[0].style.color="white";
+
+                document.getElementsByName('celular')[0].value=`${""}`,
+                document.getElementsByName('celular')[0].style.backgroundColor="red";
+                document.getElementsByName('celular')[0].style.color="white";
+
+                document.getElementsByName('fone')[0].value=`${data.telefone}`,
+                document.getElementsByName('fone')[0].style.backgroundColor="red";
+                document.getElementsByName('fone')[0].style.color="white";
+
+                document.getElementsByName('email')[0].value=`${data.email}`,
+                document.getElementsByName('email')[0].style.backgroundColor="red";
+                document.getElementsByName('email')[0].style.color="white";
+
+                document.getElementsByName('cep')[0].value=`${data.cep}`,
+                document.getElementsByName('cep')[0].style.backgroundColor="red";
+                document.getElementsByName('cep')[0].style.color="white";
+
+                document.getElementsByName('logradouro')[0].value=`${data.logradouro}`
+                document.getElementsByName('logradouro')[0].style.backgroundColor="red";
+                document.getElementsByName('logradouro')[0].style.color="white";
+
+                document.getElementsByName('numero')[0].value=`${data.numero}`
+                document.getElementsByName('numero')[0].style.backgroundColor="red";
+                document.getElementsByName('numero')[0].style.color="white";
+
+                document.getElementsByName('bairro')[0].value=`${data.bairro}`
+                document.getElementsByName('bairro')[0].style.backgroundColor="red";
+                document.getElementsByName('bairro')[0].style.color="white";
+
+                document.getElementsByName('cidade')[0].value=`${data.municipio}`
+                document.getElementsByName('cidade')[0].style.backgroundColor="red";
+                document.getElementsByName('cidade')[0].style.color="white";
+
+                document.getElementsByName('estado')[0].value=`${data.uf}` 
+                document.getElementsByName('estado')[0].style.backgroundColor="red";
+                document.getElementsByName('estado')[0].style.color="white";
+            }
+        } catch (err) {
+            alert(err)
+            console.error(err);
+        }
+      }
+  
+  })
+  })
+</script>
+<script>
+
+//document.querySelectorAll("cadastroLojistaForm").forEach((input, index, inputs) => {
+//          input.addEventListener("keydown", (e) => {
+//                  if (e.key === "Enter") {
+//                          e.preventDefault(); // evita submit do form
+
+//                          if (input.value.trim() === "") {
+//                            alert("⚠️ Este campo não pode ficar vazio!");
+//                            input.focus();
+//                            return;
+//                          }
+
+                          // Campo preenchido → vermelho
+//                          input.style.backgroundColor = "red";
+
+                          // Próximo input
+//                          const next = inputs[index + 1];
+//                          if (next) {
+//                            next.focus();
+//                            next.style.backgroundColor = "green";
+//                            next.style.color="black";
+//                          }
+//                  }
+//          });
+//});
+
+
+
+//inputs.forEach((input, index) => {
+  
+  // Quando pressionar tecla dentro do input
+//  input.addEventListener("keydown", (e) => {
+//    if (e.key === "Enter") {
+//      e.preventDefault(); // evita submit do form
+
+//      if (input.value.trim() === "") {
+//        alert("⚠️ Este campo não pode ficar vazio!");
+//        input.focus();
+//        return;
+//      }
+
+      // Preenchido → vermelho
+//      input.style.backgroundColor = "red";
+
+      // Vai para o próximo
+//      const next = inputs[index + 1];
+//      if (next) {
+//        next.focus();
+//      }
+//    }
+//  });
+
+  // Quando o input recebe foco → amarelo
+//  input.addEventListener("focus", () => {
+//    input.style.backgroundColor = "brown";
+//    input.style.color = "black";
+//  });
+
+  // Quando o input perde o foco → vermelho se preenchido, normal se vazio
+//  input.addEventListener("blur", () => {
+//    if (input.value.trim() !== "") {
+//      input.style.backgroundColor = "red";
+//    } else {
+//      input.style.backgroundColor = ""; // volta ao padrão
+//    }
+//  });
+
+//});
+</script>
+
+
+
+<script>
+//const inputs = document.querySelectorAll("#meuForm input");
+
+// utilitário para limpar classes e estilos herdados (ex: color branco da busca CNPJ)
+function resetStyles(el) {
+  el.classList.remove("input-focus", "input-filled");
+  el.style.backgroundColor = "";  // limpa inline
+  el.style.color = "";            // limpa inline (força voltar para o padrão)
+  el.style.caretColor = "";       // cursor volta ao padrão
+}
+
+// aplica “preenchido”
+function markFilled(el) {
+  resetStyles(el);
+  el.classList.add("input-filled");
+}
+
+// aplica “foco”
+function markFocus(el) {
+  resetStyles(el);
+  el.classList.add("input-focus");
+}
+
+//inputs.forEach((input, index) => {
+//  input.addEventListener("keydown", (e) => {
+//    if (e.key !== "Enter") return;
+//    e.preventDefault();
+
+//    if (input.value.trim() === "") {
+//      alert("⚠️ Este campo não pode ficar vazio!");
+//      markFocus(input);           // garante foco amarelo e texto preto ao permanecer
+//      input.focus();
+//      return;
+//    }
+
+    // atual fica preenchido (vermelho com texto branco)
+//    markFilled(input);
+
+    // vai para o próximo já garantindo texto preto (amarelo)
+//    const next = inputs[index + 1];
+//    if (next) {
+//      next.focus();
+//      markFocus(next);
+//    }
+//  });
+
+//  input.addEventListener("focus", () => {
+    // sempre que ganhar foco: amarelo e texto preto (mesmo se veio de uma função que deixou branco)
+//    markFocus(input);
+//  });
+
+//  input.addEventListener("blur", () => {
+//    if (input.value.trim() !== "") {
+//      markFilled(input);   // vermelho com texto branco
+//    } else {
+//      resetStyles(input);  // volta ao padrão
+//    }
+//  });
+//});
+</script>
+<style>
+  /* classes utilitárias para visual */
+  .is-focus  { background: yellow !important; color: #000 !important; }
+  .is-filled { background: red    !important; color: #fff !important; }
+</style>
+
+<script>
+(function () {
+  const form = document.getElementById("cadastroLojistaForm");
+  if (!form) return;
+
+  // Campos focáveis que nos interessam (evita hidden/disabled)
+  const focusables = Array.from(form.querySelectorAll(
+    "input:not([type='hidden']):not([disabled]), select:not([disabled]), textarea:not([disabled])"
+  ));
+
+  // Utilitários
+  function resetClasses(el){
+    el.classList.remove("is-focus","is-filled");
+    // Zera inline legado (CNPJ/CEP)
+    el.style.backgroundColor = "";
+    el.style.color = "";
+    el.style.caretColor = "";
+    el.style.border = "";
+  }
+  function markFocus(el){
+    resetClasses(el);
+    el.classList.add("is-focus"); // amarelo + texto preto
+  }
+  function markFilled(el){
+    resetClasses(el);
+    el.classList.add("is-filled"); // vermelho + texto branco
+  }
+  function nextOf(el){
+    const i = focusables.indexOf(el);
+    return i >= 0 ? focusables[i+1] : null;
+  }
+
+  // Eventos por campo
+  focusables.forEach((el) => {
+    // Sempre que ganhar foco: força amarelo e texto preto (derruba heranças)
+    el.addEventListener("focus", () => {
+      markFocus(el);
+    });
+
+    // Perdeu foco: se tem valor -> vermelho; se vazio -> limpa
+    el.addEventListener("blur", () => {
+      if (String(el.value).trim() !== "") {
+        markFilled(el);
+      } else {
+        resetClasses(el);
+      }
+    });
+
+    // Enter dentro do campo
+    el.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter") return;
+      e.preventDefault(); // não deixa submeter o form
+
+      if (String(el.value).trim() === "") {
+        alert("⚠️ Este campo não pode ficar vazio!");
+        // mantém o foco e garante amarelo + texto preto
+        markFocus(el);
+        el.focus();
+        return;
+      }
+
+      // Campo ok -> fica vermelho
+      markFilled(el);
+
+      // Vai para o próximo, já amarelo + texto preto
+      const nx = nextOf(el);
+      if (nx) {
+        nx.focus();
+        markFocus(nx);
+      }
+    });
+  });
+
+  // Caso a API de CNPJ/CEP pinte os campos (vermelho/branco),
+  // nosso "focus" acima sempre vai sobrescrever para amarelo/preto.
+})();
+</script>
+
+
+<script>
+(function(){
+  break
+  const ieInput   = document.getElementById('inscricao');
+  const cnpjInput = document.getElementById('inputCNPJ');
+  if (!ieInput || !cnpjInput) return;
+
+  // fetch com timeout
+  function fetchWithTimeout(url, ms = 15000) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(t));
+  }
+
+  async function tentarBuscaAutomatica() {
+    const cnpj = (cnpjInput.value || '').replace(/\D/g, '');
+    if (cnpj.length !== 14) {
+      alert('Digite um CNPJ válido (14 dígitos) antes de consultar a IE.');
+      return false;
+    }
+
+    // UI de carregamento
+    ieInput.dataset.loading = '1';
+    const oldPH = ieInput.placeholder;
+    ieInput.placeholder = 'Buscando na SEFAZ-ES...';
+    ieInput.style.cursor = 'progress';
+    ieInput.disabled = true;
+
+    try {
+      const res = await fetchWithTimeout(`/lojista/consulta-ie-es/${cnpj}`, 15000);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const out = await res.json().catch(() => ({}));
+
+      const ie = out?.inscricaoEstadual || out?.ie || out?.inscricao || '';
+      if (ie) {
+        ieInput.value = String(ie).replace(/\D/g, '').slice(0, 9); // normaliza
+        ieInput.style.backgroundColor = 'red';
+        ieInput.style.color = '#fff';
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error('IE auto:', err);
+      return false;
+    } finally {
+      ieInput.disabled = false;
+      ieInput.style.cursor = '';
+      ieInput.placeholder = oldPH || '';
+      delete ieInput.dataset.loading;
+    }
+  }
+
+  // Foco no campo IE
+  ieInput.addEventListener('focus', async () => {
+    // legível (derruba heranças de cor branca)
+    ieInput.style.backgroundColor = 'yellow';
+    ieInput.style.color = '#000';
+
+    if ((ieInput.value || '').trim() !== '') return; // já tem IE
+    if (ieInput.dataset.loading) return;
+
+    const ok = await tentarBuscaAutomatica();
+    if (!ok) {
+      const abrir = confirm('Não foi possível obter automaticamente.\nAbrir o portal oficial do ES para consultar a IE?');
+      if (abrir) {
+        window.open('https://www.sintegra.es.gov.br/', '_blank');
+        ieInput.placeholder = 'Cole aqui a IE (9 dígitos do ES)';
+        setTimeout(() => ieInput.select(), 60);
+      }
+    }
+  });
+
+  // Máscara: somente números, até 9 dígitos
+  ieInput.addEventListener('input', () => {
+    ieInput.value = ieInput.value.replace(/\D/g, '').slice(0, 9);
+  });
+})();
+</script>
+

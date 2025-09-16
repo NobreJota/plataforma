@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
-// const mongoose = require('mongoose')
+//ATENÇÃO =>> admin/login
+
+
 // const { eAdmin } = require("../../../../helpers/eAdmin")
 // -----------------------------------------------------------------------------------------------
 //   ENTRANDO NO HOME DA PARTE ADMINISTRATIVA ? 

@@ -1,44 +1,21 @@
+// database/index.js
+const mongoose = require('mongoose');
 
-const mongoose = require('mongoose')
-require('dotenv').config({path:'./.env'})
+const MONGO_URI  = (process.env.MONGO_URI || process.env.MONGODB_URI || '').trim();
+if (!MONGO_URI) throw new Error('MONGO_URI (ou MONGODB_URI) ausente no .env');
 
-// const 
-if (`${process.env.NODE_ENV}`!=='development'){
-        mongoose.connect(`${process.env.DB_CONNECT}`,
-            {useNewUrlParser:true,
-        }).then(()=>{
+mongoose.set('strictQuery', true);
 
-            console.log('___________________________________________________________');
+async function connectToDatabase() {
+  const isLocal = /(^mongodb(?:\+srv)?:\/\/)?(?:localhost|127\.0\.0\.1)/i.test(MONGO_URI);
+  const opts = { serverSelectionTimeoutMS: 10000 };
+  if (!isLocal && !/[\?&]tls=true/i.test(MONGO_URI) && !/^mongodb\+srv:\/\//i.test(MONGO_URI)) {
+    opts.ssl = true; // para DO/Atlas quando a URI não traz ?tls=true
+  }
+  await mongoose.connect(MONGO_URI, opts);
+  const c = mongoose.connection;
+  console.log(`✅ MongoDB conectado: ${c.host}${c.port ? ':'+c.port : ''} | DB: ${c.name}`);
+  return mongoose;
+}
 
-            console.log(" => Conexão com MongoDB- Rotaes realizada com sucesso!!! <= ");
-            urr=`${process.env.DB_URL}`;
-            console.log('   URL :',urr);
-
-            console.log('___________________________________________________________');
-
-        }).catch((erro)=>{
-            console.log('');
-            console.log('_______________________________________________________________');
-            console.log('');
-            console.log("- Error:Não foi possivel conectar ao banco Development!!",erro)
-            console.log('');
-            console.log('_______________________________________________________________>');
-            console.log('');
-        });
- }else{
-     console.log('linha 27',1)
-     busc()
-     async function  busc(){
-             mongoose.connect("",{
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            }).then(()=>{
-                console.log("Conexão com MongoDB-?????Loja Hum realizada com sucesso!!!")
-            }).catch((erro)=>{
-                console.log("-production - Error:Não foi possivel conectar ao banco Produção!",erro)
-            });
-      }
- }
- 
-
-module.exports = mongoose.connect;
+module.exports = { mongoose, connectToDatabase };

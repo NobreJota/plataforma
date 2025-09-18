@@ -1,4 +1,3 @@
-// server.js
 'use strict';
 
 const express = require('express');
@@ -9,32 +8,35 @@ const flash = require('connect-flash');
 const path = require('path');
 const morgan = require('morgan');
 const passport = require('passport');
-const bcrypt = require('bcryptjs'); // (se usar em algum lugar)
 const { engine } = require('express-handlebars');
 
 require('dotenv').config();
 require('./config/auth')(passport);
 require('./src/config/multer');
-require('./database/index');
+
+// ✅ ÚNICA importação do módulo de DB
+const { connectToDatabase, mongoose } = require('./database'); // <- use SEMPRE este
 
 // -------------------------------------------------------------------
-// Middlewares básicos
+// Static
 // -------------------------------------------------------------------
-app.use(express.urlencoded({ extended: true })); // aceita POST de forms
+app.use(express.static(path.join(__dirname, 'public')));      // /css, /js, /img
+app.use('/imagens', express.static(path.join(__dirname, 'imagens')));
+
+// -------------------------------------------------------------------
+// Middlewares
+// -------------------------------------------------------------------
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 
-// Arquivos estáticos
-app.use('/imagens', express.static(path.join(__dirname, 'imagens')));
-app.use(express.static(path.join(__dirname, 'public')));
-
 // -------------------------------------------------------------------
-// View Engine: express-handlebars
+// View Engine (ajuste 'layout' ou 'layouts' conforme sua pasta)
 // -------------------------------------------------------------------
 app.engine('handlebars', engine({
-  defaultLayout: 'main', // espera views/layouts/main.handlebars
-  layoutsDir: path.join(__dirname, 'views', 'layout'),
+  defaultLayout: 'main',
+  layoutsDir: path.join(__dirname, 'views', 'layout'),   // use 'layouts' se renomeou a pasta
   partialsDir: path.join(__dirname, 'views', 'partials'),
   helpers: {
     eq: (a, b) => String(a) === String(b),
@@ -65,41 +67,34 @@ app.use(session({
   secret: process.env.SECRET || 'seusegredo',
   resave: false,
   saveUninitialized: false,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 4 // 4h (ajuste se quiser)
-  }
+  cookie: { maxAge: 1000 * 60 * 60 * 4 } // 4h
 }));
-
 app.use(flash());
-
-// Disponibiliza mensagens flash em todas as views
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   next();
 });
-
 app.use(passport.initialize());
 app.use(passport.session());
 
 // -------------------------------------------------------------------
 // Rotas
 // -------------------------------------------------------------------
-const admin       = require("./src/routes/central/usuario");
-const central     = require("./src/routes/central/menu-admin");
-const segmento    = require("./src/routes/central/rotacentral");
-const similares   = require("./src/routes/central/rotacentral");
-const simiproduto = require("./src/routes/empresa/similares");
-const lojista     = require("./src/routes/central/lojista");
+const admin       = require('./src/routes/central/usuario');
+const central     = require('./src/routes/central/menu-admin');
+const segmento    = require('./src/routes/central/rotacentral');
+const similares   = require('./src/routes/central/rotacentral');
+const simiproduto = require('./src/routes/empresa/similares');
+const lojista     = require('./src/routes/central/lojista');
 
-const home1       = require("./src/routes/site/home");
-const usuarioloja = require("./src/routes/empresa/usuario");
-const loja        = require("./src/routes/empresa/rotina");
-const produto     = require("./src/routes/empresa/produtos");
-const fornec      = require("./src/routes/empresa/fornecedores");
-const gravafoto   = require("./src/routes/empresa/upload_foto");
+const home1       = require('./src/routes/site/home');
+const usuarioloja = require('./src/routes/empresa/usuario');
+const loja        = require('./src/routes/empresa/rotina');
+const produto     = require('./src/routes/empresa/produtos');
+const fornec      = require('./src/routes/empresa/fornecedores');
+const gravafoto   = require('./src/routes/empresa/upload_foto');
 
-// Montagem das rotas
 app.use('/admin', admin);
 app.use('/central', central);
 app.use('/lojista', lojista);
@@ -114,18 +109,57 @@ app.use('/gravafoto', gravafoto);
 app.use('/fornec', fornec);
 app.use('/simiproduto', simiproduto);
 
-// Log para rotas não tratadas (debug)
-app.use((req, res, next) => {
-  console.log('');
-  console.log(`[145 - server.js] >>> Chamada não tratada: ${req.method} ${req.originalUrl}`);
-  console.log('');
-  next();
+// -------------------------------------------------------------------
+// Healthchecks (usam o MESMO mongoose importado no topo)
+// -------------------------------------------------------------------
+const STATES = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+
+app.get('/health/live', (_req, res) => res.sendStatus(200));
+
+app.get('/health/db', async (_req, res) => {
+  const { connection } = mongoose;
+  const state = STATES[connection.readyState] ?? 'unknown';
+
+  const out = {
+    state,
+    readyState: connection.readyState,
+    dbName: connection.name || null,
+    host: connection.host || null,
+  };
+
+  if (connection.readyState === 1) {
+    try {
+      await connection.db.admin().command({ ping: 1 });
+      out.ping = 'ok';
+      return res.status(200).json(out);
+    } catch {
+      out.ping = 'fail';
+    }
+  }
+  res.status(503).json(out);
 });
 
-// -------------------------------------------------------------------
-// Start
-// -------------------------------------------------------------------
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+// Chrome devtools check
+app.get('/.well-known/appspecific/com.chrome.devtools.json', (_req,res)=>res.status(204).end());
+
+// 404
+app.use((req, _res, next) => {
+  console.log(`[server] Não tratada: ${req.method} ${req.originalUrl}`);
+  next();
 });
+app.use((_, res) => res.status(404).send('404 - Página não encontrada'));
+
+// -------------------------------------------------------------------
+// Boot: conecta no Mongo ANTES de ouvir porta
+// -------------------------------------------------------------------
+(async () => {
+  try {
+    await connectToDatabase(); // ✅ único ponto de conexão
+    const PORT = process.env.PORT || 5000;
+    console.log('');
+    app.listen(PORT, () => console.log(`HTTP on ${PORT}`));
+  } catch (err) {
+    console.error('❌ Falha ao conectar no Mongo:', err);
+    process.exit(1);
+  }
+})();

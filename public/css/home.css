@@ -1,0 +1,45 @@
+
+/* LOGO */
+.navbar-brand { letter-spacing: .5px; }
+
+/* Busca: feedback visual */
+#homeSearchInput:focus {
+  box-shadow: 0 0 0 .25rem rgba(255,193,7,.35);
+  background-color: #fff8dc;
+}
+
+/* Cards de produto */
+.product-card { border-radius: 1rem; }
+.product-card .price {
+  color: #df061f;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+/* Título com 2 linhas no máximo, sem quebrar layout */
+.product-title{
+  min-height: 3.4em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;        /* limita a 2 linhas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Imagem sempre “contida” dentro do box */
+.card .ratio img { object-fit: contain; }
+
+
+    /* barra de chips rolável e sem barra de rolagem visível */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.chip { border-radius: 999px; padding: .35rem .9rem; white-space: nowrap; }
+.chip.active { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+
+/* barra de chips rolável e sem barra de rolagem visível */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.chip { border-radius: 999px; padding: .35rem .9rem; white-space: nowrap; }
+.chip.active { background: #0d6efd; color: #fff; border-color: #0d6efd; }
+

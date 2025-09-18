@@ -51,6 +51,17 @@ const MconstrucaoSchema = new Schema({
 
 }, { timestamps: true });
 
+// campos usados nos filtros
+MconstrucaoSchema.index({ loja_id: 1 });
+MconstrucaoSchema.index({ 'localloja.departamento': 1 });
+
+
+// índice de texto para busca por palavra
+MconstrucaoSchema.index(
+  { descricao: 'text', referencia: 'text' },
+  { weights: { descricao: 3, referencia: 1 }, name: 'prod_text_idx' }
+);
+
 MconstrucaoSchema.plugin(mongoosePaginate);
 
 module.exports =

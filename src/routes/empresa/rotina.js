@@ -1,7 +1,8 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
+//const router = express.Router();
 const bcrypt = require('bcryptjs')
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
+const { mongoose } = require('../../../database');
 ////////////////////////////////////////////////
 const aws=require('@aws-sdk/client-s3')
 const { S3 } =require('@aws-sdk/client-s3')
@@ -20,6 +21,7 @@ const Lojista = mongoose.model('lojista');
 
 //require('../../models/departamento');
 //const Departamento=mongoose.model("departamentos");
+const escapeRegExp = s => (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const Departamento = require('../../models/departamento');
 
 require('../../models/deptosetores');
@@ -35,10 +37,44 @@ const path =require('path');
 //const { segmento } = require('../../models/lojista');
 
 router.post('/cooperados',async(req,res)=>{
-    console.log('[ 28-empresa ]',req.body)
+    console.log('');
+    console.log('[ 28-empresa ]',req.body);
+    console.log('');
     ////////////////////////////////////////////////////////////////////////
-    // Confere o login do cooperado
-    ////////////////////////////////////////////////////////////////////////
+    try {
+    const ns = Lojista.collection.namespace; // "<db>.<collection>"
+    const collName = Lojista.collection.collectionName;
+    const host = mongoose.connection.host;
+    const dbName = mongoose.connection.name;
+
+    // existe essa coleção nesse DB?
+    const exists = await mongoose.connection.db
+      .listCollections({ name: collName })
+      .toArray();
+
+    const total = exists.length
+      ? await Lojista.estimatedDocumentCount()
+      : 0;
+
+    const sample = exists.length
+      ? await Lojista.findOne({}).select('email razao').lean()
+      : null;
+
+    res.json({ host, dbName, ns, collectionExists: !!exists.length, total, sample });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: String(e) });
+  }
+  //????????????????????????????????????????????????????????????????????????
+  console.log('/////////////////////////////////////////////////////////////////////////')
+    const peek = await Lojista.findOne({})
+           .select('email emailloja contato.email razao')
+           .lean();
+   console.log('[peek]', peek); 
+   console.log('');
+   console.log('====================');
+
+    return
     console.log(" [ empresa-35 ]");
     console.log(' origem views : _cooperado/usuario/loginloja');
     console.log(' origem route : /lojista/empresa/rotina');
@@ -47,6 +83,7 @@ router.post('/cooperados',async(req,res)=>{
     console.log(' destino : _cooperado/admin/admincooperados');
     console.log('____________________________________________');
     console.log('');
+    console.log('1000=>',req.body)
     let emae;
     let senha;
     let errors = []
@@ -68,33 +105,91 @@ router.post('/cooperados',async(req,res)=>{
         }else{
            
              try {
-                          const { email, senha } = req.body;
+                        console.log(req.body)
+                        console.log('---------------------------------------------------')
+                        console.log('');
+                        const emailIn  = (req.body.email || '').trim();
+                        const senhaIn  = String(req.body.senha || '');
+                        
+                        console.log('');
+                        console.log('',emailIn);
+                        console.log('',senhaIn);
+                        console.log('');
 
-                          const lojista = await Lojista.findOne({ email }).select("+senha").lean();
+                        if (!emailIn || !senhaIn) {
+                          req.flash('error_msg', 'Informe e-mail e senha.');
+                          return res.redirect('/usuarioloja/login'); // ajuste rota da página
+                        }
 
-                          if (!lojista) {
-                            console.log("Usuário não encontrado.");
-                            return;
-                          }
-                          /////////////////////////////////////////////////////////////////////
-                          const f = await fornec.find({ qlojistas: lojista._id }).populate();
+                         // const filtro = {
+                         //         $or: [
+                         //           {  },
+                         //           { emailloja: emailIn },
+                         //           { 'contato.email': emailIn },
+                         //         ]
+                         //       };
+
+                          // Se no Schema a senha tiver select:false, use "+senha"
+                        const lojista = await Lojista.findOne({cnpj: '27323484000166'})
+                           // .collation({ locale: 'pt', strength: 2 })   // case-insensitive
+                           // .select('+senha razao') // traga a senha criptografada
+                            .lean(); // pode ser sem lean() se preferir
+
+                        if (!lojista) {
+                          req.flash('error_msg', 'Usuário não encontrado.');
+                          //return res.redirect('/usuarioloja/login');
+                        }
+                                            
+                          ////////////////////////////////////////////////////////////////////////////////
+                          const email = (req.body?.email || req.query?.email || '').trim();
+                          const senha = (req.body?.senha || req.query?.senha || '').trim();
+                            console.log(' [ 72 ]');
+                          console.log(email);
+                          console.log(senha);
                           console.log('');
-                        //  console.log('[ 79  fornec => ]',f);
-                          console.log('');
-                          const produtos=await Mconstrucao.find({loja_id:lojista._id})
-                                                            .populate({
-                                                                    path: "fornecedor",
-                                                                    model: "fornec", 
-                                                                    select: "razao",
-                                                                    options: { lean: true }});
-                           // ///////////////////////////////////////////////////////////////////////
-                           const senhaCorreta = await bcrypt.compare(senha, lojista.senha);
-                          // console.log(' [ 86 - rotina.js produtos => ',produtos)
-                          if (senhaCorreta) {
-                            if (senhaCorreta) {
-                                //  SE A SENHA ESTÁ CORRETA VAMOS REDIRECIONAR A ROTA
-                                 return res.redirect(`/loja/produtos?loja_id=${lojista._id}`);
+
+                            // const lojista = await Lojista.findOne({
+                            //   $or: [
+                            //     { email: email },
+                            //     { emailloja: email },
+                            //     { 'contato.email': email },
+                            //   ]
+                            // })
+                            // .collation({ locale: 'pt', strength: 2 }) // ignora caixa (case-insensitive)
+                            // .select('+senha email') // "+senha" se tiver select:false no schema
+                            // .lean();
+
+                            if (!lojista) {
+                              console.log('Usuário não encontrado.');
+                              return;
                             }
+                          /////////////////////////////////////////////////////////////////////
+                         // const f = await fornec.find({ qlojistas: lojista._id }).populate();
+                          console.log('');
+
+                         /////////////////////////////////////////////////////////////////////
+                         const ok = await bcrypt.compare(senha, lojista.senha); // se senha for hash
+                           if (!ok) {
+                              req.flash('error_msg','Usuário ou senha inválidos');
+                              return res.redirect(`/loja/produtos?loja_id=${lojista._id}`);
+                           }
+
+                        //  console.log('[ 79  fornec => ]',f);
+                         // console.log('');
+                         // const produtos=await Mconstrucao.find({loja_id:lojista._id})
+                         //                                   .populate({
+                         //                                           path: "fornecedor",
+                         //                                           model: "fornec", 
+                         //                                           select: "razao",
+                         //                                           options: { lean: true }});
+                         //  // ///////////////////////////////////////////////////////////////////////
+                        //   const senhaCorreta = await bcrypt.compare(senha, lojista.senha);
+                          // console.log(' [ 86 - rotina.js produtos => ',produtos)
+                        //  if (senhaCorreta) {
+                        //    if (senhaCorreta) {
+                                //  SE A SENHA ESTÁ CORRETA VAMOS REDIRECIONAR A ROTA
+                        //         return res.redirect(`/loja/produtos?loja_id=${lojista._id}`);
+                        //    }
                             // AQUI VAMOS RENDERIZAR PAGE LISTA PRODUTOS         
                            // console.log('');
                            // console.log('[ 95 ]',produtos[0].fornecedor);
@@ -106,9 +201,9 @@ router.post('/cooperados',async(req,res)=>{
                            //   f,
                            // });
                   
-                          } else {
+                        //  } else {
                             console.log("Senha incorreta.");
-                          }
+                        //  }
                         } catch (err) {
                           console.error("Erro:", err);
                         }

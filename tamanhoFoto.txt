@@ -1,0 +1,87 @@
+Tamanhos recomendados (px)
+
+Produto – grade (cards da Home)
+
+Exibição ~ 280–320 px de largura nos desktops.
+
+Entregue 2x para telas retina: 600×450 (principal)
+
+Extras: 300×225 (mobile), 900×675 (retina grande)
+
+Produto – página de detalhes
+
+Principal: 1200×900
+
+Zoom/Lightbox: 1600×1200
+
+Thumbs: 160×120 ou 240×180
+
+Banners/Hero (topo)
+
+Desktop: 1920×600
+
+Tablet: 1200×400
+
+Mobile: 800×300
+(mantenha “área segura” sem textos nas bordas)
+
+Ícones de Segmentos/Categorias
+
+256×256 (ou 384×384 para 1.5–2x)
+
+Logo de loja/anunciante
+
+Horizontal: 512×256 (PNG/SVG, fundo transparente)
+
+Quadrado: 512×512
+
+Formatos e peso
+
+WebP (ou AVIF) como padrão; JPEG de fallback.
+
+Alvos de tamanho:
+
+Card: ≤ 120 KB
+
+Detalhe: ≤ 300 KB
+
+Banner: ≤ 450 KB
+
+Fundo branco consistente, produto centralizado e margem interna ~10–12% em volta.
+
+HTML pronto (cards) com imagem responsiva
+<picture>
+  <source type="image/webp"
+    srcset="{{img300webp}} 300w, {{img600webp}} 600w, {{img900webp}} 900w"
+    sizes="(min-width: 992px) 25vw, (min-width: 576px) 50vw, 100vw">
+  <img src="{{img600jpg}}" alt="{{descricao}}"
+       class="card-img-top p-2"
+       loading="lazy" decoding="async"
+       style="object-fit:contain; aspect-ratio:4/3;">
+</picture>
+
+Dica com seu CSS atual
+
+Você já usa ratio-4x3/object-fit: contain. Perfeito. Só garanta que todas as imagens sigam 4:3 para evitar “pula-pula”.
+
+(Opcional) Gerar variantes no upload (Node + Sharp)
+// npm i sharp
+const sharp = require('sharp');
+const SIZES = [300, 600, 900, 1200]; // gera 4 variantes 4:3
+
+async function gerarVariantes(buffer) {
+  const out = [];
+  for (const w of SIZES) {
+    const h = Math.round(w * 3 / 4);
+    const webp = await sharp(buffer)
+      .resize({ width: w, height: h, fit: 'contain', background: '#fff' })
+      .webp({ quality: 82 })
+      .toBuffer();
+    const jpg = await sharp(buffer)
+      .resize({ width: w, height: h, fit: 'contain', background: '#fff' })
+      .jpeg({ quality: 80, mozjpeg: true })
+      .toBuffer();
+    out.push({ w, webp, jpg });
+  }
+  return out; // suba cada versão para o Spaces
+}

@@ -72,6 +72,6 @@ LojistaSchema.methods.compararSenha = function(senhaDigitada) {
   return bcrypt.compare(senhaDigitada, this.senha);
 };
 
-module.exports = {
-  Lojista: mongoose.model("lojista", LojistaSchema),
-};
+//module.exports = { Lojista: mongoose.model("lojista", LojistaSchema),
+  module.exports = mongoose.models.lojista || mongoose.model('lojista', LojistaSchema);
+//};

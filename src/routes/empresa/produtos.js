@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const Mconstrucao = mongoose.model("m_construcao");
 const Departamento = require("../../models/departamento");
 const DeptoSetor = require('../../models/deptosetores');
-const { Lojista }= require('../../models/lojista');
+const  Lojista = require('../../models/lojista');
 
 //  busca os produto conforme a cidade
 router.get("/produtos-por-cidade/:cidade", async (req, res) => {
@@ -118,10 +118,21 @@ router.put("/alterar/:id", async (req, res) => {
 });
 
 router.get('/lojistadepartamentos/:id', async (req, res) => {
-  console.log(' [ 108 ]',req.params.id);
+   const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'ID inválido' });
+  }
+  console.log('');
+  console.log('[ 122 ]');
+  console.log('route=>src/routes/empresa/produtos');
+  console.log('get => /lojistadepartamento');
+  console.log('');
+  console.log(' id do lojista : ',id);
+  console.log('');
+    
   try {
-    const lojista = await Lojista.findById(req.params.id).populate('departamentos', 'nomeDepartamento');
-    console.log(lojista.departamentos)
+    const lojista = await Lojista.findById(id).populate('departamentos', 'nomeDepartamento');
+    console.log('666',lojista.departamentos)
     let departamentos=lojista.departamentos
     res.json(departamentos);
   } catch (err) {

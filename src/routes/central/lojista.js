@@ -1,11 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { Lojista , segmento }= require('../../models/lojista');
+//const { segmento }= require('../../models/lojista');
 const Segmentos = require("../../models/departamento");
-
+const Lojista = require('../../models/lojista');
 
 router.get('/lojista', async (req, res) => {
-   console.log(" [ 8 passando por lojista ] ")
+   console.log('');
+   console.log(" [ 8 passando por lojista ] ");
+   console.log(" [ vem de => src/routes/cetral/lojista.js ]");
+   console.log(" [ vem de => views/pages/central/loginCentral.handlebars ] ")
+   console.log('');
    try {
     const lojistas = await Lojista.find()
       .populate("departamentos", "nomeDepartamento")

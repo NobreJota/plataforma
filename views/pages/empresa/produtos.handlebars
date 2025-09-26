@@ -242,7 +242,7 @@ select.form-select-sm {
   border-radius: 6px;
   padding: 10px;
   display: flex;
-  flex-wrap: wrap;
+  /*flex-wrap: wrap;*/
   gap: 10px;
   align-content: flex-start;
 }
@@ -321,8 +321,30 @@ select.form-select-sm {
      color: #ffffff;background-color: transparent;border: 0px;font-size: medium;cursor: pointer;
   }
 </style>
+<style>
+  .foto-box {
+  width: 120px;            /* pode ajustar */
+  aspect-ratio: 1 / 1;     /* quadradinho perfeito */
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 8px;
+}
+
+/* a própria imagem */
+.foto-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+</style>
 <script>
-  window.todosSetoresSecoes = {{{todosSetoresSecoes}}};
+  window.todosSetoresSecoes = {{{todosSetoresSecoes}}}
 </script>
 <div id="menuLateral" class="lateral">
   <div id="menulista" style="width: 10vw; height: 92vh; background-color:#fff; display: flex; flex-direction: column; justify-content: space-around; transition: margin-left 0.4s ease;">
@@ -349,7 +371,7 @@ select.form-select-sm {
 </div> 
 <div id="painelLista" class="grade" >
         <div style="display: flex;flex-direction: row;justify-content: center;">
-           <h1 style="font-weight:200;font-size:medium ;">Relação de produtos</h1>
+           <h1 style="font-weight:200;font-size:medium ;color: red;">Relação de produtos</h1>
         </div>
         <div id="CadastrarProduto" style="width: 98vw;height: 3vh;margin: auto;display: flex;flex-direction: row;justify-content: center;background-color: #295ee4;">
           <button id="abrirModalProduto" style="border: none;background-color: transparent;" data-bs-toggle="modal" data-bs-target="#CadastrarProdutosModal" data-lojista="{{lojista._id}}" class="btn btn-sm" onclick="openCadastroModal()">
@@ -494,16 +516,16 @@ select.form-select-sm {
     <div style="width: 98%;height: 92vh;margin: auto;background-color: #0b2f83;overflow: scroll;margin-top: 2.5vh;padding: 5px;">
     <h4 style="font-weight: 200;color: #ffffff;">Cadastro de produto</h4>
           <form id="cadastroProdutoForm" style="background-color: #295ee4;color:#fff;position: relative;height: 96vh;" >
-            <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #df061f;display:none;">
-            
+            <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #df061f;display:block;">
+             <div style="margin-bottom:10px;display: block;">
+              <label style="color:white">Marca loja:</label>
+              <label id="cadastroMarca" type="text"  name="marca" class="form-control" style="background-color: yellow;" >{{lojista.marca}}</label>
+            </div>
             <div style="margin-bottom:10px;background-color blueviolet;">
               <label>Código:</label>
-              <input id="cadastroCodigo" type="text"  name="codigo" class="form-control">
+              <input id="cadastroCodigo" type="text"  name="codigo" class="form-control" tabindex="0">
             </div>
-            <div style="margin-bottom:10px;display: none;">
-              <label>Marca loja:</label>
-              <label id="cadastroMarca" type="text"  name="marca" class="form-control">{{lojista.marca}}</label>
-            </div>
+           
             <div style="margin-bottom:10px;">
               <label>Descrição:</label>
               <input id="cadastroDescricao" type="text"  name="descricao" class="form-control">
@@ -525,6 +547,7 @@ select.form-select-sm {
                           {{/each}}
               </select>
             </div>
+            {{!-- Os nomes cidade e bairro constam  na ficha do produto para facilitar a consulta --}}
             <div style="background-color:transparent;margin-bottom: 12px;margin-top: 6px;display: none;">
               <label id="cadastroCidade" style="background-color: #df061f;width: 85px;padding: 5px;">Cidade:</label>
               <label id="cadastroBairro" class="CidadeBairro" style="margin-top: -6px;padding-top: 0px;">{{lojista.cidade}}</label>
@@ -626,88 +649,98 @@ select.form-select-sm {
   width: 100%; height: 95vh; background: #a8b6a799;
   justify-content: center; align-items:flex-start; z-index: 9999;padding: 4px;">
   {{!-- COMEÇO DO bodyALL --}}
-  <div id="bodyAll" class="modal-contente" style="background-color: #022eaa;width: 80%;height: 40vh;padding-top: 6vh;margin: auto;margin-top: 5vh;border-radius: 8px;">
-       <button onclick="fecharModal()" class="btn btn-warning btn-sm botao-fechar-topo" style="position: absolute; top: 15px; right: 15px; z-index: 1050; font-size: 20px;background-color: #0b2f83;">✕</button>
-  
-      <div  id="bodyHeard" style="background: #022eaa; padding: 20px; width: 98%;margin: auto;   max-width:2200px; border-radius: 8px;margin-top: 15px;height: 15vh;">
-            <div style="display: flex;flex-direction: row;justify-content: space-between;">
-              <div id="painelLeft" style="width: 33%;height: 4vh;">
-               <h3 style="margin-bottom: 10px;color:#fff;">Selecionar e Gravar Imagens ?</h3>
-              </div>
+  <div id="bodyAll" class="modal-contente" style="background-color: #0661cf;width: 80%;height: 60vh;padding-top: 4vh;margin: auto;border-radius: 8px;">
+       <button onclick="fecharModal()" class="btn btn-warning btn-sm botao-fechar-topo" style="position: absolute; top: 8px; right: 15px; z-index: 1050; font-size: 18px;background-color: #0b2f83;">✕</button>
+       <div  id="bodyHeard" style="background: #022eaa; padding: 20px; width: 98%;margin: auto;   max-width:2200px; border-radius: 8px;height: 15vh;background-color: #0661cf;padding-top: 5px;">
+            <label style="font-size: larger;color:white">Tratando da imagem</label>
+            <div style="display:flex;flex-direction: row;justify-content: space-around;">
               <div id="painelCentral" style="width: 33%;height: 4vh;background-color:nsparent;text-align: center;padding: 3px;">
                   <button type="button" class="btn btn-primary" onclick="liberaComputer()">busque no computador</button>
               </div>
-              <div id="painelRight" style="width: 33%;height: 4vh;background-color:transparent;text-align: center;padding: 3px;">
+              <div id="painelRight" style="width: 33%;height: 2vh;background-color:transparent;text-align: center;padding: 3px;">
                   <button type="button" class="btn btn-primary" onclick="liberaBcoImagens()">busque no bco imagens</button>
               </div>
             </div>
+            <div style="display: flex;flex-direction: row;justify-content: space-between;margin-top: 15px;">
+              <div id="painelLeft" style="width: 33%;height: 4vh;">
+               <h3 style="margin-bottom: 10px;color:#fff;">Selecionar e Gravar Imagens</h3>
+              </div>
+            </div>
             {{!-- ///////////////////////////////////////////////////////////////////// --}}
-            <div id="bodyHeard-descricao" class="container-fluid" id="areaUpload" style="display: block;">
-                <!-- Linha de labels -->
-                <div  id="rowTitulo" class="row g-2 mb-1 small text-muted">
-                        <div class="col-3">
-                          <button class="form-control on_click"  onclick="">código [ _id ]</button>
-                        </div>
-                        <div class="col-3">
-                          <button type="button" id="campoDescricao" class="form-control on_click" onclick="ligarBuscas_Clique('')">descrição</button>
-                        </div>
-                        <div class="col-3">
-                          <button type="button" id="campoFornecedor" class="form-control on_click" onclick="ligarBuscas_Clique('fornecedor')">fornecedor</button>
-                        </div>
-                        <div class="col-3">
-                          <button type="button" id="campoDepartamento" class="form-control on_click" onclick="ligarBuscas_Clique('departamento')">departamento</button>
-                        </div>
+            <div style="width: 100%;height: 0.30vh;background-color: white;"></div>
+      </div >      
+      <div id="bodyBusqueComputer_container" style="display:flex;height: 30vh;background-color:#0661cf;flex-direction: column;">
+                <div id="bodyHeard-descricao" class="container-fluid" id="areaUpload" style="display: block;margin-top: 10px;height:8vh;background-color:#0661cf;">
+                            <!-- Linha de labels -->
+                            <div  id="rowTitulo" class="row g-2 mb-1 small text-muted" style="background-color: #0661cf;">
+                                    <div class="col-3">
+                                      <button class="form-control on_click"  onclick="">id-produto</button>
+                                    </div>
+                                    <div class="col-3">
+                                      <button type="button" id="campoDescricao" class="form-control on_click" onclick="ligarBuscas_Clique('')">descrição</button>
+                                    </div>
+                                    <div class="col-3">
+                                      <button type="button" id="campoFornecedor" class="form-control on_click" onclick="ligarBuscas_Clique('fornecedor')">fornecedor</button>
+                                    </div>
+                                    <div class="col-3">
+                                      <button type="button" id="campoDepartamento" class="form-control on_click" onclick="ligarBuscas_Clique('departamento')">departamento</button>
+                                    </div>
+                            </div>
+                            <!-- Linha de inputs (readonly) -->
+                            <div id="rowDescricao" class="row g-2 align-items-center mb-2" style="background-color: #0661cf;">
+                                    <div class="col-3">
+                                      <input id="codigoimg" class="form-control form-control-sm" readonly>
+                                    </div>
+                                    <div class="col-3">
+                                      <input id="descricaoimg" class="form-control form-control-sm" readonly>
+                                    </div>
+                                    <div class="col-3">
+                                      <input id="fornecimg" class="form-control form-control-sm" readonly>
+                                    </div>
+                                    <div class="col-3">
+                                      <input id="deptoimg"  class="form-control form-control-sm" readonly>
+                                    </div>
+                            </div>
                 </div>
-                <!-- Linha de inputs (readonly) -->
-                <div id="rowDescricao" class="row g-2 align-items-center mb-2">
-                        <div class="col-3">
-                          <input id="codigoimg" class="form-control form-control-sm" readonly>
-                        </div>
-                        <div class="col-3">
-                          <input id="descricaoimg" class="form-control form-control-sm" readonly>
-                        </div>
-                        <div class="col-3">
-                          <input id="fornecimg" class="form-control form-control-sm" readonly>
-                        </div>
-                        <div class="col-3">
-                          <input id="deptoimg"  class="form-control form-control-sm" readonly>
-                        </div>
-                </div>
-            </div>
-      </div>  
-      <div id="bodyBusqueComputer" style="background-color: yellow;display: none;">
-            <div id="bodyBusqueComputer_container" style="display: none;height: 35vh;background-color: #022eaa;">
-                <!-- Linha de controles (qte + botão buscar) -->
-                <label for="qteFotos" style="color:#fff;margin-left: 12px;margin-top: 5px;">Select qte de fotos:</label>
-                <select id="qteFotos" onchange="criardivsfotos()" style="margin-left: 10px;">
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                </select>
-                <span style="margin-left: 20px;color: #fff;">(seleciona até sete fotos)</span>
-                <!-- *** AQUI o container das fotos (entre as duas divs) *** -->
-                <div id="fotosContainer" class="fotos-wrapper" style="display:flex;flex-direction: row;justify-content: center;background-color: #ffffff;">
-                      {{!-- conteúdo --}}
-                </div>
-                <!-- Barra com botão "Gravar todas" -->
-                <div id="divBtn" style="display:block;text-align: center;" class="mt-2">
-                  <!-- botão é criado dinamicamente pelo InserirFoto() -->
-                  <button id="botaoGravar" type="button" class="btn" style="width: 90%;height: 4vh;margin: auto;fontSize =16px;background-color: #022eaa;color: #ffffff;"> Gravar todas as imagens</button>
-                </div>
-            </div>
-      </div>
-      <div id="Imagens_bco" name="imagens_bco"  style="display: none;background-color: #022eaa;height: 30vh;">
+                <div id="bodyBusqueComputer" style="background-color: yellow;display: block;margin-top: 1vh;">
+                      <div id="bodyBusqueComputer_container" style="display:flex;height: 30vh;background-color:#0661cf;flex-direction: column;">
+                            <div style="height: 5vh;background-color:#0661cf;display: flex;flex-direction: row;justify-content:flex-start;">
+                                <!-- Linha de controles (qte + botão buscar) -->
+                                <label for="qteFotos" style="color:#fff;margin-left: 30px;margin-top: 10px;">Select qte de fotos:</label>
+                                <select id="qteFotos" onchange="criardivsfotos()" style="margin-left: 20px;height:3vh;">
+                                  <option value="0">0</option>
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="4">4</option>
+                                  <option value="5">5</option>
+                                  <option value="6">6</option>
+                                  <option value="7">7</option>
+                                </select>
+                                <label style="margin-left: 20px;color: #fff;margin-top: 10px;">(seleciona até sete fotos)</label>
+                                <!-- *** AQUI o container das fotos (entre as duas divs) *** -->
+                            </div>
+                            <div id="fotosContainer" class="fotos-wrapper" style="display:flex;flex-direction: row;justify-content: center;background-color:#ffffff;height: 20vh;padding:5px;justify-items: center;">
+                                  {{!-- conteúdo --}}
+                                  <div id="foto-box" class="foto-box" style="height: 15vh;margin-top: 15px;background-color: pink;border: gray;">
 
+                                  </div>
+                            </div>
+                            <!-- Barra com botão "Gravar todas" -->
+                            <div id="divBtn" style="display:block;text-align: center;background-color:transparent;" class="mt-2">
+                              <!-- botão é criado dinamicamente pelo InserirFoto() -->
+                              <button id="botaoGravar" type="button" class="btn" style="width: 90%;height: 4vh;margin: auto;fontSize =16px;background-color: #031956;color: #ffffff;"> Gravar todas as imagens</button>
+                            </div>
+                      </div>
+                </div>
+                <div id="Imagens_bco" name="imagens_bco"  style="display: block;background-color: #0ad718;height: 30vh;">
+                
+                </div>
       </div>
-    </div>
-  </div>
-  {{!-- ///     FIM DO bodyAll --}}
+  </div> 
 </div>
+  {{!-- ///     FIM DO bodyAll --}}
+{{!-- </div> --}}
 {{!-- <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> --}}
 {{!-- MOSTRANDO E ESCONDENDO MENU LATERAL --}}
 <script>
@@ -851,7 +884,7 @@ function executarAcao(acao, id, descricao,fornecedor,departamento) {
       break;
   }
 }
-//abrirModalImagens
+//abrirModalImagens para selecionar a imaagem a ser gravada
 function abrirModalImagens(descricao,fornecedor,{ produtoId, departamentoNome }) {
   console.log('',' 0 ', produtoId,' 1 ', descricao,' 3 ',fornecedor,' 4 ',departamentoNome);
   document.getElementById("codigoimg").value=produtoId;
@@ -929,22 +962,6 @@ function acertou() {
       }
 
       console.log("----------------------CRIANDO BTN + GRAVAR TODOS AS IMAGENS ----------------------")
-      //const D_btn=document.getElementById("divBtn");
-
-      //D_btn.innerHTML="";
-      //const botaoGravar = document.createElement("button");
-      //botaoGravar.type = "button";
-      //botaoGravar.textContent = "Gravar todas as imagens";
-      //botaoGravar.classList.add("btn", "btn-primary");
-      
-      //botaoGravar.style.backgroundColor="transparent";
-      //botaoGravar.style.marginTop = "10px";
-      //botaoGravar.style.
-      //D_btn.style.display = qte > 0 ? "block" : "none";
-
-      //D_btn.appendChild(botaoGravar);
-
-
       console.log('------------------------------------------------------')
     botaoGravar.addEventListener("click", async () => {
         // metas do modal
@@ -1086,9 +1103,9 @@ function acertou() {
             console.log('');
             const response = await fetch(`/produto/lojistadepartamentos/${idLoja}`);
             const departamentos = await response.json();
-         //   console.log(' [ 942 ]');
-           // console.log('',departamentos);
-           // console.log('');
+            console.log(' [ 1089 ]');
+            console.log('',departamentos);
+            console.log('');
             const select = document.getElementById("select_departamento");
 
             // Limpa o <select> antes de preencher
@@ -1286,58 +1303,65 @@ document.getElementById('selectSetor').addEventListener('change', async function
   });
 </script>
 <script>
-  //////////////////////////////           //////////////////////////////////////////////////////
-      async  function BuscarProdutoImagem(campo) {
-          //=========================================================
-          console.log('-------------------------');
-          console.log(' nome do campo :',campo);
-          console.log('');
-          const response = await fetch(`/gravafoto/produtoImagem/buscar/${campo}`)
-          if(!response.ok) throw new Error("falha na busca");
-          //console.log('fim',response.json());
-          const docs = await response.json();
-          
-          renderResultadoProdutoImagem(docs)
-      }
- 
-     function renderResultadoProdutoImagem(lista) {
-          console.log(1308)
-          console.log(lista.length)
+  //////////////////////////////   1309    //////////////////////////////////////////////////////
+  // Verifica se no bco de imagens há foto que possa ser usada pelo cliente.
+  async  function BuscarProdutoImagem(campo) {
+      //=========================================================
+      console.log('-------------------------');
+      console.log('------[ 1314 ] pages/empresa/produto.handlebars---------------');
+      console.log('BuscarProdutoImagem(campo)'); 
+      console.log(' nome do campo :',campo);
+      console.log('');
+      const response = await fetch(`/gravafoto/produtoImagem/buscar/${campo}`)
+      if(!response.ok) throw new Error("falha na busca");
+      //console.log('fim',response.json());
+      const docs = await response.json();
+      
+      renderResultadoProdutoImagem(docs)
+  }
 
-          const cont = document.getElementsByName('imagens_bco'); // seu container roxo
-           if (!cont) return;
-           cont.innerHTML = '';
-         
-           console.log(cont)
-         
-           const elemento = cont[0];
-         
-            if (!Array.isArray(lista) || lista.length === 0) {
-            elemento.innerHTML = `<div class="text-center text-light">Nenhum registro encontrado.</div>`;
-            return;
-          }
+  function renderResultadoProdutoImagem(lista) {
+      console.log('');
+      console.log(' [ 1328 ] renderizar o Resultado da busca imagem na div:imagens_bco')
+      console.log(lista.length)
 
-          lista.forEach((img, i) => {
-            const box = document.createElement('div');
-            box.className = 'p-2';
-            box.style.width = '160px';
-            box.style.display = 'inline-block';
-            box.style.cursor = 'pointer';
-            box.innerHTML = `
-              <div class="border rounded p-2 bg-white">
-                <div style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${img.produtoNome||''}">
-                  ${img.produtoNome||'&nbsp;'}
-                </div>
-                <img src="${img.imagemUrl||''}" alt="" style="width:100%;height:120px;object-fit:cover;margin:6px 0;" />
-                <div style="font-size:11px;opacity:.8;">${img.fornecedor||''}</div>
-              </div>`;
-            box.addEventListener('click', () => selecionarImagemExistente(img)); // próxima etapa
-            elemento.appendChild(box);
-          });
+      const cont = document.getElementsByName('imagens_bco'); // seu container roxo
+        if (!cont) return;
+        cont.innerHTML = '';
+      
+        console.log('O elemento = a divisão que conterá as imagens do bco de imagem => ',cont)
+      
+        const elemento = cont[0];
+      
+        // Se a lista é vazia então manda msg
+        if (!Array.isArray(lista) || lista.length === 0) {
+        elemento.innerHTML = `<div class="text-center text-light">Nenhum registro encontrado.</div>`;
+        return;
       }
+
+      // Pega a lista e preenche a divisão que conterá as imagens
+      lista.forEach((img, i) => {
+        const box = document.createElement('div');
+        box.className = 'p-2';
+        box.style.width = '160px';
+        box.style.display = 'inline-block';
+        box.style.cursor = 'pointer';
+        box.innerHTML = `
+          <div class="border rounded p-2 bg-white">
+            <div style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${img.produtoNome||''}">
+              ${img.produtoNome||'&nbsp;'}
+            </div>
+            <img src="${img.imagemUrl||''}" alt="" style="width:100%;height:120px;object-fit:cover;margin:6px 0;" />
+            <div style="font-size:11px;opacity:.8;">${img.fornecedor||''}</div>
+          </div>`;
+        box.addEventListener('click', () => selecionarImagemExistente(img)); // próxima etapa
+        elemento.appendChild(box);
+      });
+  }
 
 </script>
 <script>
+  // Aqui lida com a busca de imagem que estão no computador
   function liberaComputer(){
      const ComputerVisivel= document.getElementById('bodyBusqueComputer').style.display;
      if (ComputerVisivel==="none"){
@@ -1353,6 +1377,7 @@ document.getElementById('selectSetor').addEventListener('change', async function
      
   }
 
+  // Aqui lida com as imagens que estão contidas na bcoimagens
   function liberaBcoImagens(){
      document.getElementById('bodyBusqueComputer').style.display="none";
      document.getElementById("Imagens_bco").style.display="block"
@@ -1360,4 +1385,11 @@ document.getElementById('selectSetor').addEventListener('change', async function
      //X.style.height="30vh"
      //X.style.display="block";
   }
+
+  function closeCadastroModal(){
+     document.getElementById("cadastroProdutoModal").style.display="none"
+  }
+
+
+
 </script>

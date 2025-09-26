@@ -15,32 +15,6 @@ const Lojista = require('../../models/lojista');       // lojas
 const Departamento = require('../../models/departamento');  // segmentos
 
 
-//const hbs = require('hbs');
-//hbs.registerHelper('eq', (a, b) => String(a) === String(b));
-//hbs.registerHelper('moeda', v => `R$ ${(Number(v||0)).toFixed(2).replace('.', ',')}`);
-
-
-// 7768
-//router.get('/',(req,res)=>{
-//   console.log('');
-//   console.log('______________________________________');
-//   console.log(' ');
-//   console.log(' [ 18-site/home ]');
-//   console.log(' origem views :quando usuário digita a URL "rotaes.com.br" ');
-//   console.log(' origem route : _admin/admin-central/home.js/get("/")');
-//   console.log(' obs : página do site HOME');
-//   console.log('');
-//   console.log(' destino :pages/site/home.handlebars :: layout:""');
-//   console.log('');
-//   console.log('');
-   // res.render("pages/site/home",{ layouts:'central/main.handlebars'});
-//   res.render('pages/site/home',{layout:''})
-//})
-
-
-
-
-
 const CIDADES_ES = ['Vitória','Vila Velha','Guarapari','Cariacica','Serra'];
 
 // helper pra regex segura
@@ -100,6 +74,8 @@ router.get('/', async (req, res) => {
           : {}
       ).select('razao').lean()
     ]);
+
+    filtro['pageurls.0'] = { $exists: true, $regex: /\S/ };
 
     const docs = await Mconstrucao.find(filtro, projecao)
          .sort(ordenacao)

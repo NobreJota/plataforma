@@ -1,3 +1,11 @@
+<style>
+  .divMenu{
+    width: 14.28%;background-color: cornflowerblue;color:white;padding: 4px;text-align: center;
+  }
+  .btn-divMenu{
+    border-radius: 4px;background-color: transparent;color: #ffffff;border: 0px;
+  }
+</style>
 <!-- Topbar -->
 <nav class="navbar navbar-dark bg-dark sticky-top shadow-sm">
   <div class="container-fluid gap-3">
@@ -54,7 +62,7 @@
 
     <div class="mt-3 overflow-x-auto no-scrollbar">
       <div class="d-flex gap-2 flex-nowrap">
-        <button type="button"
+        {{!-- <button type="button"
                 class="chip btn btn-outline-secondary {{#unless segmentoSelecionado}}active{{/unless}}"
                 data-id="">
           Todos
@@ -65,7 +73,14 @@
                   data-id="{{this._id}}">
             {{this.nomeDepartamento}}
           </button>
-        {{/each}}
+        {{/each}} --}}
+        <div class="divMenu"><button class="btn-divMenu">COMPRAS</button></div>
+        <div class="divMenu" ><button class="btn-divMenu">AUTOMÓVEIS</button></div>
+        <div class="divMenu" ><button class="btn-divMenu">EDUCAÇÃO</button></div>
+        <div class="divMenu" ><button class="btn-divMenu">EMPREGOS</button></div>
+        <div class="divMenu"><button class="btn-divMenu">IMÓVEIS</button></div>
+        <div class="divMenu"><button class="btn-divMenu">RECICLAGEM</button></div>
+        <div class="divMenu"><button class="btn-divMenu">SERVIÇOS</button></div>
       </div>
     </div>
 
@@ -120,4 +135,96 @@
       <a href="/">Limpar filtros</a>
     </div>
  {{/if}}
+</div>
+
+<div id="ModalCOMPRAS" style="display: block;width: 70%;height: 30vh;margin: auto;background-color: yellow;">
+     <div id="primeiraLinha" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
+          <div id=line1-a style="background-color: black;width: 24%;height: 27vh;text-align: center;display: flex;flex-direction: column;justify-content: center;">
+                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">BRINQUEDOS</labeL>
+                <img src="../site/menu-compras/brinquedos.png" alt="construção" width="100%" height="auto">
+          </div>
+          <div id=line1-b style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">CONSTRUÇÃO</labeL>
+                <img src="../site/menu-compras/construção.png" alt="construção" width="100%" height="auto">
+          </div>
+          <div id=line1-c style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">CARNES</labeL>
+                <img src="../site/menu-compras/carnes.png" alt="construção" width="100%" height="auto">
+          </div>
+          <div id=line1-d style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+               <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">ESTÉTICA</labeL>
+                <img src="../site/menu-compras/estetica.png" alt="construção" width="100%" height="auto">
+          </div>
+     </div>
+     <div id="publi-1" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
+          <div style="width: 100%;height: 15vh;margin: auto;background-color: #999494;">
+
+          </div>
+     </div>
+     <div id="segundaLinha" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
+          <div id=line2-a style="background-color: black;width: 24%;height: 27vh;display: flex;flex-direction: column;">
+                 <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">ELETRÔNICOS</labeL>
+                <img src="../site/menu-compras/eletronicos.png" alt="construção" width="100%" height="auto">
+          </div>
+          <div id=line2-b style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">FARMÁCIAS</labeL>
+                <img src="../site/menu-compras/remedio.png" alt="construção" width="100%" height="auto">
+          </div>
+          <div id=line2-c style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">FARMÁCIAS</labeL>
+                <img src="../site/menu-compras/remedio.png" alt="construção" width="100%" height="auto">
+          </div>
+          <div id=line2-d style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+                 <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">JARDINS</labeL>
+                <img src="../site/menu-compras/jardins.png" alt="construção" width="100%" height="auto">
+          </div>
+     </div>
+       <div id="publi-2" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
+          <div style="width: 100%;height: 15vh;margin: auto;background-color: #999494;">
+             
+          </div>
+     </div>
+     <div id="terceiraLinha" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
+          <div id=line3-a style="background-color: black;width: 24%;height: 27vh;">
+                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">PESCA & CAMPING</labeL>
+                <img src="../site/menu-compras/camping.png" alt="construção" width="100%" height="auto">
+          </div>
+          <div id=line3-b style="background-color: black;width: 24%;height: 26vh;">
+                 <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">MÓVEIS</labeL>
+                <img src="../site/menu-compras/moveis.png" alt="construção" width="100%" height="auto">
+          </div>
+          <div id=line3-c style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+                  <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">ÓTICAS</labeL>
+                <img src="../site/menu-compras/oticas.png" alt="construção" width="100%" height="auto">
+          </div>
+          <div id=line3-d style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+                  <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">ROUPAS</labeL>
+                <img src="../site/menu-compras/roupas.png" alt="construção" width="100%" height="auto">
+          </div>
+     </div>
+       <div id="publi-3" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
+          <div style="width: 100%;height: 15vh;margin: auto;background-color: #999494;">
+
+          </div>
+     </div>
+     <div id="quartaLinha" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
+          <div id=line1-a style="background-color: black;width: 24%;height: 27vh;display: flex;flex-direction: column;">
+                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">UTILIDADES</labeL>
+                <img src="../site/menu-compras/utilidades.png" alt="construção" width="100%" height="auto">
+          </div>
+          <div id=line1-b style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+
+          </div>
+          <div id=line1-c style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+
+          </div>
+          <div id=line1-d style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+
+          </div>
+     </div>
+       <div id="publi-4" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
+          <div style="width: 100%;height: 15vh;margin: auto;background-color: #999494;">
+
+          </div>
+     </div>
 </div>

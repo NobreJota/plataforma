@@ -27,7 +27,7 @@ module.exports = function (passport) {
     }, async (email,senha,done)=>{
                 Usuario.findOne({email:email})
                         .then((usuario)=>{
-                            console.log('______________________________');
+                           // console.log('______________________________');
                             console.log('');
                             console.log(' [ 31 ] => config/auth.js/passport.use(new localStrategy)')
                             console.log('');

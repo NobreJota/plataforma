@@ -14,7 +14,8 @@ const Usuario = new Schema ( {
     },
     senha:{
         type:String,
-        required:true
+        required:true,
+        select: false
     },
     admin:{
         type:String,

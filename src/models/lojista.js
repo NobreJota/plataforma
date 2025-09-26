@@ -33,7 +33,7 @@ const LojistaSchema = new Schema({
     required: true,
     match: [/^\S+@\S+\.\S+$/, 'Email inválido']
   },
-  senha: { type: String, required: true, select: false },
+  senha: { type: String, required: true, select: true },
   cep: { type: String },
   logradouro: { type: String },
   numero: { type: String },

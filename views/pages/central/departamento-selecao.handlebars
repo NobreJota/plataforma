@@ -464,8 +464,10 @@ function extrairDepartamentosSelecionados(req) {
         try {
         const res = await fetch(`/lojista/consulta-cnpj/${cnpj}`);
         const data = await res.json();
+        console.log('{ }', data)
         if (data.status === "ERROR") {
           //resultadoDiv.innerHTML = `<span style="color:red;">Erro: ${data.message}</span>`;
+          
         } else {
                 document.getElementsByName('inputrazao')[0].value=`${data.nome}`,
                 document.getElementsByName('inputrazao')[0].style.backgroundColor="red";

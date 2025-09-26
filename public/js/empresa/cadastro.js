@@ -127,47 +127,95 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-//{{!-- GRAVANDO PRODUTO --}}
+//{{!-- GRAVANDO PRODUTO ==> --}}
 document.getElementById("cadastroProdutoForm").addEventListener("submit", async function (e) {
       e.preventDefault();
       try{    
           console.log("--------------------------------");
-          console.log(' [ 220 js/empresa/cadastro.js =>GRAVANDO PRODUTO ]');
+          console.log(' [ 135 js/empresa/cadastro.js =>GRAVANDO PRODUTO ]');
+          console.log(' [ vem de : views/page;empresa/produtos.handlebars ]');
+          console.log('');
+
           const select = document.getElementById("selectFornecedores");
           const loja_id = document.getElementById("IddoLojista").value;
+           if ( !loja_id  ) {
+               alert("Error: falta o _ID da loja.");
+               return;
+          }
           const codigo = document.getElementById("cadastroCodigo").value;
-          const marcaloja = document.getElementById("cadastroMarca").innerText.trim();
+           if ( !codigo  ) {
+               alert("Preencha o campo codigo.");
+               return;
+          }
+          const marcaloja ="testando"     // document.getElementById("cadastroMarca").innerText.trim();
+          //  if (   !marcaloja  ) {
+          //      alert("Preencha o campo marcaloja.");
+          //      return;
+          // }
           const descricao = document.getElementById("cadastroDescricao").value;
+           if (  !descricao  ) {
+               alert("Preencha o campo descrição.");
+               return;
+          }
           const complete = document.getElementById("cadastroComplemento").value;
+           if (  !complete   ) {
+               alert("Preencha o campo complete.");
+               return;
+          }
           const referencia = document.getElementById("cadastroReferencia").value;
+           if (  !referencia  ) {
+               alert("Preencha o campo referência.");
+               return;
+          }
           const pageurl="http:";
           const fornecedor = select.options[select.selectedIndex].value;
+           if (  !fornecedor ) {
+               alert("Preencha o campo fornecedor.");
+               return;
+          }
+          // Estamos gravando os nome da cidade e do bairro para faciliar a consulta
           const cidade = document.getElementById("cadastroCidade").innerText.trim();
+          if ( !cidade  ) {
+               alert("Preencha o campo  cidade.");
+               return;
+          }
           const bairro = document.getElementById("cadastroBairro").innerText.trim();
+          if ( !bairro ) {
+               alert("Preencha o campo  bairro.");
+               return;
+          }
           const ativo=1;
           const qte = document.getElementById("cadastroQte").value;
+          if ( !qte  ) {
+               alert("Preencha o campo  qte.");
+               return;
+          }
           const qte_negativa=0
           const qte_reservada=0
           const e_max=0
           const e_min=0
           const precocusto = document.getElementById("cadastroPrecoCusto").value;
+          if (  !precocusto  ) {
+               alert("Preencha o campo  precocusto.");
+               return;
+          }
           const precovista = document.getElementById("cadastroPrecoVista").value;
+          if ( !precovista  ) {
+               alert("Preencha o campo precovista.");
+               return;
+          }
           const precoprazo = document.getElementById("cadastroPrecoPrazo").value;
+          if ( !precoprazo ) {
+               alert("Preencha o campo  precoprazo.");
+               return;
+          }
           const segmento = document.getElementById("select_departamento").value;
+          if ( !segmento ) {
+               alert("Preencha o campo  segmento.");
+               return;
+          }
           const setor = document.getElementById("selectSetor").value;
           const secao = document.getElementById("selectSecao").value;
-        //  if(!req.body.email || typeof req.body.email == undefined || req.body.email == null){
-        //     errors.push({ error : "Erro: Necessário preencher o email!"})
-        //  }
-          if ( !loja_id || !codigo ||  !marcaloja || !descricao || !complete  || !referencia || !fornecedor ) {
-               alert("Preencha todos os campos obrigatórios.");
-               return;
-          }
-          if ( !cidade || !bairro ||  !qte  || !precocusto || !precovista || !precoprazo ) {
-               alert("Preencha todos os campos obrigatórios.");
-               return;
-          }
-
           const body = {
             loja_id,
             codigo,
@@ -217,6 +265,7 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
 
                 abrirModalImagens(descricao,fornecedor,{ produtoId,departamentoNome }); 
                 e.target.reset(); // limpa o formulário
+                // Não fecha o modal por que vai cadastrar mais um produto
               } else {
                 const erro = await response.json();
                 alert("Erro: " + (erro.error || "Erro desconhecido"));

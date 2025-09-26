@@ -1,12 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
+
+require("dotenv").config();
+const mongoose = require("mongoose");
 const path = require("path");
-//const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+
+const multer = require("multer");
+
 const { S3Client, PutObjectCommand, ListObjectsV2Command } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const ProdutoImagem = require("../../models/produtoImagem");
-//const MConstrucao =require('../../models/mconstrucao');
 const MConstrucao = require("../../models/mconstrucao");
 
 const storage = multer.diskStorage({
@@ -26,11 +29,35 @@ const s3 = new S3Client({
   }
 });
 /* <><><><><><><><></></></></></></></></><><><><><><><><></></></></></></></></><><><><><><><><></></></></></></></></> */
+function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+const STOP = new Set(['de','da','do','das','dos','para','pra','e','a','o','as','os','no','na','nos','nas']);
+
+function normalizePlain(str = "") {
+  return String(str)
+    .toLowerCase()
+    .normalize("NFD").replace(/\p{Diacritic}/gu, "")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function tokenizeNorm(s) {
+  return normalizePlain(s).split(/\s+/).filter(Boolean);
+}
+function escRE(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+function wordBoundary(token) { return new RegExp(`\\b${escRE(token)}(?:s)?\\b`, "i"); } // singular/plural
+function looseRE(token) { return new RegExp(token.split("").join(".{0,2}"), "i"); }     // fuzzy leve
+
+
 
 /* <><><><><><><><></></></></></></></></><><><><><><><><></></></></></></></></><><><><><><><><></></></></></></></></> */
 // Rota para gerar a URL assinada
 //router.get("/getpresignedurl", async (req, res) => {
 router.get("/getpresignedurl", async (req, res) => {
+  console.log('');
+  console.log(' [ 35 ] routes/empresa/uploaad_fotos.js => /getpresiignedurl');
+  console.log('');
+  console.log('');
   try{
         const { filename = "", filetype = "",  ordem = "01" } = req.query;
         const num = String(ordem).padStart(2, "0");
@@ -71,7 +98,9 @@ router.get("/getpresignedurl", async (req, res) => {
 
 
 router.get("/listararquivos", async (req, res) => {
-  console.log(' [ 45 uplaod.js => router.get("/listararquivos');
+  console.log('');
+  console.log(' [ 79 ] routes/empresa/upload_foto.js => router.get("/listararquivos');
+  console.log('');
   const { prefixo, filtro } = req.query;
 
   const params = {
@@ -92,7 +121,7 @@ router.get("/listararquivos", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  console.log(' [ 68 uplaod.js => router.get("/" => carregar imagens');
+  console.log(' [ 95 ] routes/empresa/upload_foto.js => router.get("/" => carregar imagens');
   try {
     const imagens = await ProdutoImagem.find().lean();
     res.render("grafafoto/index", { imagens });
@@ -105,7 +134,7 @@ router.get("/", async (req, res) => {
 // upload_foto.js
 router.post("/imagem/salvar", async (req, res) => {
   console.log('');
-  console.log(' [ 106 ] req.body',req.body);
+  console.log(' [ 108 ] routes/empresa/upload_foto.js==>imagem/salvar',req.body);
   console.log('');
   console.log('');
   try {
@@ -160,6 +189,9 @@ router.post("/imagem/salvar", async (req, res) => {
 
 
 router.post("/upload", upload.array("imagens", 7), async (req, res) => {
+  console.log('');
+  console.log(' [ 164 ] => routes/empresa/upload',req.params);
+  console.log('');
   try {
     const { codigo, descricao, referencia } = req.body;
     const imagens = req.files;
@@ -182,22 +214,64 @@ router.post("/upload", upload.array("imagens", 7), async (req, res) => {
   }
 });
 
-router.get("/produtoImagem/buscar/:id", async (req, res) => {
-  console.log('');
-  console.log(' [ 187 ] => routes/empresa/upload_foto',req.params);
-  console.log('');
-  const c=req.params.id;
-  console.log('valor de c :',c)
+// >>> Se usa /gravafoto/produtoImagem/buscar/:termo, troque a linha abaixo:
+router.get("/produtoImagem/buscar/:termo", async (req, res) => {
   try {
-    const docs = await ProdutoImagem.find({'produtoNome':c})
-       .sort({ createdAt: -1 })
-       .limit(60)
-       .lean();
-        console.log('--->', docs)
-        res.json(docs);
+    const bruto   = (req.params.termo || "").trim();
+    const all     = tokenizeNorm(bruto);
+    const tokens  = all.filter(t => !STOP.has(t));
+    if (!tokens.length) return res.json([]);
+
+    // 1) Busca principal: índice de TEXTO nos *_norm (rápido e com ranking)
+    const textQuery = { $text: { $search: tokens.join(" "), $language: "portuguese" } };
+    let prim = await ProdutoImagem
+      .find(textQuery, { score: { $meta: "textScore" } })
+      .sort({ score: { $meta: "textScore" } })
+      .limit(50)
+      .lean();
+
+    console.log('');  
+    console.log('resultado => ',prim);
+    console.log('');
+    // 2) Fallback por regex nos *_norm (garante "cadeira" + variações/typos)
+    let extra = [];
+    const orConds = [];
+
+    if (tokens.length === 1) {
+      const t = tokens[0];
+      // palavra isolada: exige a palavra (com plural) em nome/descrição
+      orConds.push({ produtoNome_norm: wordBoundary(t) });
+      orConds.push({ descricao_norm:   wordBoundary(t) });
+      // fuzzy para erros longos (ex.: “esperguiçadeira”)
+      if (t.length >= 6) {
+        orConds.push({ produtoNome_norm: looseRE(t) });
+        orConds.push({ descricao_norm:   looseRE(t) });
+      }
+    } else {
+      // várias palavras: todas precisam aparecer (qualquer ordem)
+      const andNome = { $and: tokens.map(t => ({ produtoNome_norm: wordBoundary(t) })) };
+      const andDesc = { $and: tokens.map(t => ({ descricao_norm:   wordBoundary(t) })) };
+      orConds.push(andNome, andDesc);
+    }
+
+    if (orConds.length) {
+      extra = await ProdutoImagem.find({ $or: orConds }).limit(100).lean();
+    }
+
+    // 3) Mescla resultados (sem duplicar) e limita a 50
+    const seen = new Set(prim.map(d => String(d._id)));
+    const merged = prim.concat(extra.filter(d => !seen.has(String(d._id))));
+    return res.json(merged.slice(0, 50));
   } catch (err) {
-    console.error("Erro em /produtoImagem/buscar:", err);
-    res.status(500).json({ ok:false, error:"Erro ao buscar produtoImagem" });
+    console.error("Erro na busca:", err);
+    return res.status(500).json({ error: "falha na busca" });
   }
 });
+
+  //const ProdutoImagem = require("./models/ProdutoImagem");
+(async () => {
+  const cur = ProdutoImagem.find().cursor();
+  for await (const d of cur) { await d.save(); } // dispara o pre('save') e preenche *_norm
+  console.log("Backfill *_norm concluído");
+})();
 module.exports = router;

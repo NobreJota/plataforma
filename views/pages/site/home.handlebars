@@ -10,13 +10,13 @@
 <nav class="navbar navbar-dark bg-dark sticky-top shadow-sm">
   <div class="container-fluid gap-3">
     <a class="navbar-brand fw-bold" href="/">
-      <span class="text-white">ROTA</span><span class="text-danger">es</span>
+      <span class="text-white" style="font-style: italic;">ROTA</span><span class="" style="color: #ffffff;font-style: oblique;">es</span>
     </a>
 
-    <form class="d-flex flex-grow-1 search-form" action="/buscar" method="GET" id="homeSearchForm" style="max-width: 900px;">
+    {{!-- <form class="d-flex flex-grow-1 search-form" action="/buscar" method="GET" id="homeSearchForm" style="max-width: 900px;">
       <input id="homeSearchInput" name="q" class="form-control me-2" type="search" placeholder="Buscar produtos..." aria-label="Buscar">
       <button class="btn btn-warning fw-semibold px-4" type="submit">Pesquisar</button>
-    </form>
+    </form> --}}
 
     <div class="d-flex align-items-center gap-3">
       <a href="/login" class="text-white text-decoration-none"><i class="fa-regular fa-user me-1"></i>Login</a>
@@ -74,7 +74,7 @@
             {{this.nomeDepartamento}}
           </button>
         {{/each}} --}}
-        <div class="divMenu"><button class="btn-divMenu">COMPRAS</button></div>
+        <div id="menuCompras"  class="divMenu"><button type="button" class="btn-divMenu" onclick="comprasMenu()">COMPRAS</button></div>
         <div class="divMenu" ><button class="btn-divMenu">AUTOMÓVEIS</button></div>
         <div class="divMenu" ><button class="btn-divMenu">EDUCAÇÃO</button></div>
         <div class="divMenu" ><button class="btn-divMenu">EMPREGOS</button></div>
@@ -137,11 +137,12 @@
  {{/if}}
 </div>
 
-<div id="ModalCOMPRAS" style="display: block;width: 70%;height: 30vh;margin: auto;background-color: yellow;">
+<div id="ModalCOMPRAS" style="display: none;width: 70%;height: 30vh;margin: auto;background-color: yellow;">
      <div id="primeiraLinha" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
           <div id=line1-a style="background-color: black;width: 24%;height: 27vh;text-align: center;display: flex;flex-direction: column;justify-content: center;">
                 <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">BRINQUEDOS</labeL>
-                <img src="../site/menu-compras/brinquedos.png" alt="construção" width="100%" height="auto">
+                <img id="img1-a" src="/site/menu-compras/brinquedos.png" alt="Brinquedos" width="100%" style="height:auto;object-fit:contain" loading="lazy"
+                               onerror="this.src='/site/menu-compras/placeholder.png'">
           </div>
           <div id=line1-b style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
                 <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">CONSTRUÇÃO</labeL>
@@ -228,3 +229,12 @@
           </div>
      </div>
 </div>
+<script>
+  function comprasMenu(){
+     //../site/menu-compras/brinquedos.png
+     console.log('BRAVO!')
+     let img1A=document.getElementById('img1-a');
+     console.log(img1A)
+     img1A.style.src="../site/menu-compras/brinquedos.png"
+  }
+</script>

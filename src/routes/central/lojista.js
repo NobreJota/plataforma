@@ -162,28 +162,7 @@ router.get("/departamento-selecao", (req, res) => {
 router.post("/gravar", async (req, res) => {
   console.log('[ 159 ] /gravar lojista',req.body)
   try {
-   // const {
-   //   inputrazao,
-   //   responsavel,
-   //   cpf,
-   //   cnpj,
-   //   inscricao,
-   //   site,
-   //   marca,
-   //   celular,
-   //   fone,
-   //   email,
-   //   senha,
-   //   cep,
-   //  logradouro,
-   //   complemento,
-   //  bairro,
-   //   cidade,
-   //   estado,
-   //   departamentos_nome // ← vem como array de IDs
-   // } = req.body;
-
-    const novoLojista = new Lojista({
+      const novoLojista = new Lojista({
       razao: req.body.inputrazao,
       nomeresponsavel: req.body.responsavel,
       cpfresponsavel: req.body.cpf,
@@ -206,14 +185,11 @@ router.post("/gravar", async (req, res) => {
       template: "base",
       atividade: "não informada",
       departamentos:req.body.departamentos_ids,
-      
     });
     // Defaults temporários (pode ajustar conforme seu fluxo depois) 
-    console.log('Bola dentro!!!!!')
-
     await novoLojista.save();
     console.log('');
-    console.log('[ 222 ] novoLojista.save');
+    console.log('[ 216 ] novoLojista.save');
     console.log('');
     res.redirect("/lojista/lojista"); // ajuste para onde redirecionar após salvar
   } catch (err) {

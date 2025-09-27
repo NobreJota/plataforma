@@ -190,9 +190,4 @@ router.get('/produtos/:id', async (req, res) => {
   res.render('produto-detalhe', { produto });
 });
 
-
-
-////////////// SIMILARES ADICIONANDO
-
-
 module.exports = router;

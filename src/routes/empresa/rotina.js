@@ -48,8 +48,8 @@ router.post('/cooperados',async(req,res)=>{
       errors.push({ error : "Erro: Necessário colocar a senha!"})
     }
 
-    if(req.body.senha.length>6 || req.body.senha.length<6){
-      errors.push({ error : "Erro: A senha não pode ser de comprimento diferente de 6!"})
+    if(req.body.senha.length>9 || req.body.senha.length<6){
+      errors.push({ error : "Erro: A senha não pode ser de comprimento maior que 9 ou menor que 6!"})
     }
     
     if(errors.length>0){
@@ -111,13 +111,6 @@ router.post('/cooperados',async(req,res)=>{
                                                         select: 'nomeSecao'
                                                       })
                                                       .lean();
-
-                                                      // console.log('==> ',produtos)
-                                                      // // ///////////////////////////////////////////////////////////////////////////////////////
-                                                      //  res.render("pages/empresa/produtos.handlebars", {
-                                                      //          layout: "empresa/admin-empresa.handlebars",
-                                                      //          lojista:produtos,
-                                                      //  });
                                                        //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       const list = produtos.map(p => ({
                          ...p,
@@ -160,13 +153,7 @@ router.post('/cooperados',async(req,res)=>{
                                catch(err){
                                   console.log(err)
                                }
-                              // .catch((e)=>{
-                              //    console.log(e)
-                              // });
-             // }                    
-             // catch(err){
-             //     console.log(err)
-             // }
+         
          }
 })
 
@@ -240,12 +227,7 @@ router.get("/produtos", async (req, res) => {
         todosSetoresSecoes: JSON.stringify(todosSetoresSecoes)
       });
       //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-        // res.render("pages/empresa/produtos.handlebars", {
-        //   layout: "empresa/admin-empresa.handlebars",
-        //   produto: produtos,
-        //   lojista,
-        //   f,
-        // });
+      
 });
    
 module.exports = router;

@@ -10,13 +10,13 @@ router.get('/login', (req, res) => {
   return res.render('pages/central/loginCentral.handlebars', { layout: 'central/login.handlebars' });
 });
 
-router.get('/admin/register', (req, res) => {
+router.get('/register', (req, res) => {
   if (process.env.TEST_JSON) return res.json({ page: 'register' });
   return res.render('pages/central/register.handlebars', { layout: 'central/admin.handlebars' });
 });
 
 // REGISTRO (com hash)
-router.post('/admin/register', async (req, res) => {
+router.post('/register', async (req, res) => {
   try {
     const nome   = String(req.body.nome  || '').trim();
     const email  = String(req.body.email || '').trim().toLowerCase();

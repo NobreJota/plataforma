@@ -311,7 +311,7 @@ const inputs = document.querySelectorAll("#cadastroLojistaForm input");
         const ul = document.getElementById("listaDepartamentosSelecionados");
         const form = this;
         console.log('[ 192 ]')
-        alert('[ 202 ] addEventListener("submit"')
+        //alert('[ 202 ] addEventListener("submit"')
         // Remove previamente criados (evita duplicação ao submeter duas vezes)
         document.querySelectorAll("input[name='departamentos_ids[]']").forEach(el => el.remove());
 
@@ -469,27 +469,28 @@ function extrairDepartamentosSelecionados(req) {
           //resultadoDiv.innerHTML = `<span style="color:red;">Erro: ${data.message}</span>`;
           
         } else {
-                document.getElementsByName('inputrazao')[0].value=`${data.nome}`,
+                const razao = data?.nome || '';
+                document.getElementsByName('inputrazao')[0].value=`${razao}`,
                 document.getElementsByName('inputrazao')[0].style.backgroundColor="red";
                 document.getElementsByName('inputrazao')[0].style.color="white";
 
-                document.getElementsByName('responsavel')[0].value=`${data.qsa[0].nome}`,
+                const nome = data?.qsa?.[0]?.nome?.trim?.() || ''
+                document.getElementsByName('responsavel')[0].value=`${nome}`,
                 document.getElementsByName('responsavel')[0].style.backgroundColor="red";
                 document.getElementsByName('responsavel')[0].style.color="white";
-                console.log('');
-                console.log(data);
-                console.log('');
-                document.getElementsByName('cpf')[0].value=`${data.cpf}`,
+                
+                const cpf = data?.cpf || '';
+                document.getElementsByName('cpf')[0].value=`${cpf}`,
                 document.getElementsByName('cpf')[0].style.backgroundColor="red";
                 document.getElementsByName('cpf')[0].style.color="white";
 
-                document.getElementsByName('inscricao')[0].value=`${""}`,
+                const inscricao=0
+                document.getElementsByName('inscricao')[0].value=`${inscricao}`,
                 document.getElementsByName('inscricao')[0].style.backgroundColor="red";
                 document.getElementsByName('inscricao')[0].style.color="white";
-                if(data.fantasia==""){
-                  data.fantasia="não há"
-                }
-                document.getElementsByName('marca')[0].value=`${data.fantasia}`,
+               
+                const fantasia = data?.fantasia || '';
+                document.getElementsByName('marca')[0].value=`${fantasia}`,
                 document.getElementsByName('marca')[0].style.backgroundColor="red";
                 document.getElementsByName('marca')[0].style.color="white";
 
@@ -497,35 +498,43 @@ function extrairDepartamentosSelecionados(req) {
                 document.getElementsByName('celular')[0].style.backgroundColor="red";
                 document.getElementsByName('celular')[0].style.color="white";
 
-                document.getElementsByName('fone')[0].value=`${data.telefone}`,
+                const telefone = data?.telefone || '';
+                document.getElementsByName('fone')[0].value=`${telefone}`,
                 document.getElementsByName('fone')[0].style.backgroundColor="red";
                 document.getElementsByName('fone')[0].style.color="white";
-
-                document.getElementsByName('email')[0].value=`${data.email}`,
+                 
+                const email = data?.email || ''; 
+                document.getElementsByName('email')[0].value=`${email}`,
                 document.getElementsByName('email')[0].style.backgroundColor="red";
                 document.getElementsByName('email')[0].style.color="white";
-
-                document.getElementsByName('cep')[0].value=`${data.cep}`,
+                
+                const cep = data?.cep || '';
+                document.getElementsByName('cep')[0].value=`${cep}`,
                 document.getElementsByName('cep')[0].style.backgroundColor="red";
                 document.getElementsByName('cep')[0].style.color="white";
 
-                document.getElementsByName('logradouro')[0].value=`${data.logradouro}`
+                const logradouro = data?.logradouro || '';
+                document.getElementsByName('logradouro')[0].value=`${logradouro}`
                 document.getElementsByName('logradouro')[0].style.backgroundColor="red";
                 document.getElementsByName('logradouro')[0].style.color="white";
 
-                document.getElementsByName('numero')[0].value=`${data.numero}`
+                const numero = data?.numero || '';
+                document.getElementsByName('numero')[0].value=`${numero}`
                 document.getElementsByName('numero')[0].style.backgroundColor="red";
                 document.getElementsByName('numero')[0].style.color="white";
 
-                document.getElementsByName('bairro')[0].value=`${data.bairro}`
+                const bairro = data?.bairro || '';
+                document.getElementsByName('bairro')[0].value=`${bairro}`
                 document.getElementsByName('bairro')[0].style.backgroundColor="red";
                 document.getElementsByName('bairro')[0].style.color="white";
 
+                const municipio = data?.municipio || '';
                 document.getElementsByName('cidade')[0].value=`${data.municipio}`
                 document.getElementsByName('cidade')[0].style.backgroundColor="red";
                 document.getElementsByName('cidade')[0].style.color="white";
 
-                document.getElementsByName('estado')[0].value=`${data.uf}` 
+                const uf = data?.uf || '';
+                document.getElementsByName('estado')[0].value=`${uf}` 
                 document.getElementsByName('estado')[0].style.backgroundColor="red";
                 document.getElementsByName('estado')[0].style.color="white";
             }

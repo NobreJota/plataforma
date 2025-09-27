@@ -3,8 +3,9 @@ const mongoose = require('mongoose')
 const bcryptjs = require('bcryptjs')
 const localStrategy = require('passport-local').Strategy
 
-require("../src/models/usuario")
-const Usuario = mongoose.model('usuarios')
+//require("../src/models/usuario")
+//const Usuario = mongoose.model('usuarios')
+const Usuario = require('../src/models/usuario'); // caminho relativo a partir de config/
 const passport = require('passport')
 const res = require('express/lib/response')
 

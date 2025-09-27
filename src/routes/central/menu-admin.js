@@ -15,7 +15,7 @@ const Mconstrucao=mongoose.model('m_construcao')
 require('../../models/usuario');
 const Usuario=mongoose.model("usuarios")
 
-router.post('/menu',(req,res)=>{
+router.post('/login',async(req,res)=>{
     console.log('[ 28-central ]',req.body)
     ////////////////////////////////////////////////////////////////////////
     // Confere o login do cooperado
@@ -31,110 +31,109 @@ router.post('/menu',(req,res)=>{
     console.log(' destino : _cooperado/admin/admincooperados');
     console.log('____________________________________________');
     console.log('');
-    let emae=req.body.email;
-    let senha=req.body.senha;
-    let errors = []
-    if(!req.body.email || typeof req.body.email == undefined || req.body.email == null){
-       errors.push({ error : "Erro: Necessário preencher o email!"})
-    }
-
-    if(!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null){
-       errors.push({ error : "Erro: Necessário colocar a senha!"})
-    }
-
-    if(req.body.senha.length>6 || req.body.senha.length<6){
-       errors.push({ error : "Erro: A senha não pode ser de comprimento diferente de 6!"})
-    }
-    
-    if(errors.length>0){
-       console.log('os erros',errors)
-       res.render("usuario/loginloja",{ layout:'admin.handlebars',errors:errors})
-    }else{
+   
         try{
-            // vai conferir se senha está correta
-            password=req.body.senha;
-            const salt = bcrypt.genSaltSync(10)
-            password= bcrypt.hashSync(password,salt)
-                      bcrypt.genSalt(10,(erro,salt)=>{
-                          bcrypt.hash(senha,salt,(erro,hash)=>{
-                            return senha
-                          })
-                      })
+             const email = String(req.body.email || '').trim().toLowerCase();
+             const senha = String(req.body.senha || '');
+     
                  // Se não tiver error então segue em frente
                   console.log(' [ 73-central ]',senha)
-                  Usuario.findOne({email:emae})
-                  .collation({ locale: 'pt', strength: 2 }) // case-insensitive
-                        .select('+senha email razao _id')          // <-- inclui a senha só aqui
-                        .lean();     
-                        
-                        if (!Usuario) {
-                          req.flash('error_msg', 'Usuário não encontrado.');
-                          return res.redirect('/usuarioloja/login');
-                        }                              // use lean se quiser objeto simples
-                            // .then((r)=>{
-                            //     console.log('resultado pesquisa para ',emae,' : ',r)
-                            //     if (r==="null"){
-                            //         console.log('Não foi encontrado o lojista')
-                            //         return
-                            //     }else{
-                            //         let Sub={};
-                            //         let L={};
-                            //         let Seg={};
-                            //         let segment=[];
-                            //     }
+                  const user = await Usuario.findOne({ email })
+                                            .collation({ locale: 'pt', strength: 2 })
+                                            .select('+senha nome email _id') // inclui a senha só aqui
+                                            .lean();
+
+                                            if (!user) {
+                                            req.flash('error_msg', 'Usuário não encontrado.');
+                                            return res.redirect('/usuarioloja/login');
+                                            }
+
+                                            const ok = await bcrypt.compare(senha, user.senha);
+                                            if (!ok) {
+                                            req.flash('error_msg', 'Senha inválida.');
+                                            return res.redirect('/usuarioloja/login');
+                                            }
+                                            return res.render('pages/central/centralmenu.handlebars', {
+                                                   layout: 'central/admin.handlebars',
+                                                   usuarioNome: user.nome
+                                            });
+                           
                                 ///////////////////////////////////////////////////////////////
-                                bcrypt.compare(senha,r.senha,(erro,correta) => {
-                                    if(correta){
-                                        console.log('_______________________________________________________')
-                                        console.log('')
-                                        console.log('a senha estando correta ,então')
-                                        console.log('vai para: view/loja/menu-loja')
-                                        console.log('')
-                                        console.log('_______________________________________________________')
-                                        console.log('')
-                                        let _id=r._id
-                                        console.log('2000',_id)
-                                        Mconstrucao.find({loja_id:_id})
-                                                    .then((result)=>{
-                                                        console.log('10000',result);
-                                                        res.render("pages/central/centralmenu.handlebars",{ layout:'central/admin.handlebars',loja:result}); 
-                                                    }) 
-                                                    .catch((e)=>{
-                                                      console.log(e)
-                                                    });
-                                                  }     
-                                                })           
-            }                
+                               
+            }               
             catch(err){
-            console.log(err)
+               console.error('Erro no login:', err);
+               req.flash('error_msg', 'Falha ao processar login.');
+               return res.redirect('/usuarioloja/login');
             }
-   }
+//    }
 })
 
+// GET /usuarioloja/register  (opcional: renderizar o form de cadastro)
+router.get('/usuarioloja/register', (req, res) => {
+  return res.render('pages/central/register.handlebars', {
+    layout: 'central/admin.handlebars'
+  });
+});
 
-//router.get('/alterar/:id',async(req,res)=>{
-//   console.log('6');
-//   console.log('--------------------------------') 
-//   console.log("Alterar => ",req.params)
-//     console.log('');
-//   console.log('--------------------------------')
-//   let id=req.params.id;
-//   console.log(id)
-//   Mconstrucao.find({_id:id})
-//               .then((result)=>{
-//                  console.log('');
-                  //console.log('5656',result);
-//                  let G=JSON.stringify(result)
-                  //G=result;
-//                  console.log('--------------------------------')
-//                  console.log('');
-//                  console.log(typeof(result));
-//                  console.log(typeof(G));
-//                  console.log('------------------------------------------');
-                  //const Objet = Object.keys(G);
-//                  console.log(G)
-//                  res.render("loja/empresa/alterar-produto",{ layout:'admin-loja.handlebars',produto:G});
-//               })
+// POST /usuarioloja/register  (criar usuário com hash na senha)
+router.post('/usuarioloja/register', async (req, res) => {
+  try {
+    const nome  = String(req.body.nome || '').trim();
+    const email = String(req.body.email || '').trim().toLowerCase();
+    const senha = String(req.body.senha || '');
+    const senha2 = String(req.body.senha2 || '');
 
-//})
+    // validações simples
+    const erros = [];
+    if (!nome) erros.push('Informe o nome.');
+    if (!email) erros.push('Informe o e-mail.');
+    if (!senha) erros.push('Informe a senha.');
+    if (senha && senha.length < 6) erros.push('A senha deve ter ao menos 6 caracteres.');
+    if (senha !== senha2) erros.push('As senhas não conferem.');
+
+    if (erros.length) {
+      req.flash('error_msg', erros.join(' '));
+      return res.redirect('/usuarioloja/register');
+    }
+
+    // Checagem de e-mail existente (case-insensitive)
+    const jaExiste = await Usuario.findOne({ email })
+      .collation({ locale: 'pt', strength: 2 })
+      .select('_id')
+      .lean();
+
+    if (jaExiste) {
+      req.flash('error_msg', 'Este e-mail já está cadastrado.');
+      return res.redirect('/usuarioloja/register');
+    }
+
+    // Hash da senha
+    const salt = await bcrypt.genSalt(12);       // custo 12 é um bom equilíbrio
+    const hash = await bcrypt.hash(senha, salt);
+
+    // Criação do usuário
+    await Usuario.create({
+      nome,
+      email,
+      senha: hash,
+      admin: '',               // ajuste se quiser já marcar como admin
+      updateAt: new Date()
+    });
+
+    req.flash('success_msg', 'Cadastro realizado com sucesso! Faça login.');
+    return res.redirect('/usuarioloja/login');
+  } catch (err) {
+    // Tratamento para duplicidade (se você ativar índice único depois)
+    if (err && err.code === 11000) {
+      req.flash('error_msg', 'E-mail já cadastrado.');
+      return res.redirect('/usuarioloja/register');
+    }
+    console.error('Erro ao registrar usuário:', err);
+    req.flash('error_msg', 'Falha ao registrar. Tente novamente.');
+    return res.redirect('/usuarioloja/register');
+  }
+});
+
+
 module.exports = router;

@@ -1,34 +1,15 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-// Está tabela cadastrará os usuários/clientes do do site e administradores do site
-const Usuario = new Schema ( {
-    nome:{
-        type:String,
-        required:true
-    },
-    email:{
-        type:String,
-        required:true,
-        //minlength:[6,'email must be at least 6'],
-       //unique:true
-    },
-    senha:{
-        type:String,
-        required:true,
-        select: false
-    },
-    admin:{
-        type:String,
-        required:false
-    },
-    createAt:{
-        type:Date,
-        default:Date.now()
-    },
-    updateAt:{
-       type:Date,
-       required:false
-   }
-})
+// models/usuario.js
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-mongoose.model("usuarios",Usuario)
+const UsuarioSchema = new Schema({
+  nome:  { type: String, required: true },
+  email: { type: String, required: true, trim: true, lowercase: true /*, unique: true */ },
+  senha: { type: String, required: true, select: false },
+  admin: { type: String, default: '' },
+  createAt: { type: Date, default: Date.now },
+  updateAt: { type: Date }
+});
+
+// Registra como 'usuarios' (bate com códigos antigos que chamavam por esse nome)
+module.exports = mongoose.models['usuarios'] || mongoose.model('usuarios', UsuarioSchema);

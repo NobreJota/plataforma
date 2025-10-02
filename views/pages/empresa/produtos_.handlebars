@@ -319,60 +319,8 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
 
 /* ====== Rodapé (gravar) ====== */
 .mi-footer {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;  /* deixa cada lado em sua ponta */
-  padding:12px 16px;
-  /* mantenha seu fundo atual se quiser */
-  /* background:#0b0b0b; */
-  overflow:visible;
-
+padding: 10px 12px; background: #0b100f; border-top: 1px solid #0f1a19; display: flex; justify-content: flex-end; gap: 10px;
 }
-
-.mi-footer-left{ position:relative; } 
-
-.mi-bankmenu{
-  position:absolute;
-  left:12px;             /* canto inferior esquerdo do modal */
-  bottom:58px;
-  display:none;
-  background:#fff;
-  padding:8px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  box-shadow:0 8px 18px rgba(0,0,0,.25);
-  z-index:1600;
-  gap:8px;
-  flex-direction:column;
-}
-.mi-bankmenu.show{ display:flex; }
-.mi-btn.small{ padding:6px 10px; font-size:.85rem; }
-
-.mi-pop[hidden]{ display:none; }
-.mi-pop{
-  position:absolute;
-  left:0;  
-  right:auto;                    /* gruda no botão à esquerda */
-  bottom:56px;                 /* sobe acima da barra vermelha */
-  z-index:50;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  width: 200px;
-  margin-left: 120px;
-}
-.mi-footer-left{ position:relative; }
-.mi-footer-right{ display:flex; gap:12px; }
-
-.mi-pop.show{ display:flex; }
-.mi-pop[hidden]{ display:none; }
-
-.mi-pop .mi-pop-item{
-  border:0; background:#1166ba; border-radius:8px; padding:8px 10px;
-  text-align:left; cursor:pointer; font-weight:300;margin-left: 2px;color:#ffffff;
-}
-.mi-pop .mi-pop-item:hover{ background:#e9ecef; }
-
 </style>
 
 <script>
@@ -734,18 +682,8 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
                 </section>
             </div>
             <div class="mi-footer">
-  <div class="mi-footer-left">
-    <button id="miBankMenuBtn" class="mi-btn flat" type="button">Bco Imagem ▾</button>
-    <div id="miBankMenu" class="mi-pop" hidden>
-      <button id="miBankMenuDesc" class="mi-pop-item" type="button">Buscar por descrição</button>
-      <button id="miBankMenuFor"  class="mi-pop-item" type="button">Buscar por fornecedor</button>
-    </div>
-  </div>
-
-  <div class="mi-footer-right">
-    <button id="btnGravarImagens" class="mi-btn primary" type="button">Gravar imagens</button>
-  </div>
-</div>
+                <button id="btnGravarImagens" class="mi-btn">Gravar imagens</button>
+            </div>
       </div>
 </div>
 <input id="miHiddenFile" type="file" accept="image/*" style="display:none" />
@@ -907,6 +845,104 @@ window.addEventListener("DOMContentLoaded", () => {
           departamento: departamentoNome
         });
   }
+</script>
+{{!-- criardivsfotos --}}
+<script>
+  function criardivsfotos() {
+    acertou();
+  }
+
+  function acertou() {
+  //const qte = parseInt(document.getElementById("qteFotos").value || "0", 10);
+  //const container = document.getElementById("fotosContainer");
+  //container.innerHTML = "";
+
+  //for (let i = 0; i < qte; i++) {
+  //  const box = document.createElement("div");
+  //  box.className = "foto-box";
+
+  //  const img = document.createElement("img");
+  //  img.src = "/images/revistalogo.png";
+
+  //  const input = document.createElement("input");
+  //  input.type = "file";
+  //  input.id = `uploadImg${i}`;
+  //  input.accept = "image/*";
+  //  input.style.display = "none";
+
+  //  img.addEventListener("click", () => input.click());
+  //  input.addEventListener("change", () => {
+  //    if (input.files[0]) img.src = URL.createObjectURL(input.files[0]);
+  //  });
+
+  //  box.appendChild(img);
+  //  box.appendChild(input);
+  //  container.appendChild(box);
+  }
+
+  // Garante um ÚNICO listener no botão
+  //const btn = document.getElementById("botaoGravar");
+  //btn.onclick = async () => {
+  // const codigoId     = document.getElementById("codigoimg").value;
+  // const produtoNome  = document.getElementById("descricaoimg").value;
+  //  const fornecedor   = document.getElementById("fornecimg").value;
+  //  const departamento = document.getElementById("deptoimg").value;
+
+  //  const MAX_MB = 2;
+  //  const inputs = container.querySelectorAll('input[type="file"]');
+  //  let enviados = 0;
+
+  //  for (let i = 0; i < inputs.length; i++) {
+  //    const input = inputs[i];
+  //    const file = input.files?.[0];
+  //    if (!file) continue;
+
+  //    if (file.size > MAX_MB * 1024 * 1024) {
+  //      alert(`Arquivo ${i + 1} excede ${MAX_MB} MB. Pulei este.`);
+  //      continue;
+  //    }
+
+  //    const ordem = String(i + 1).padStart(2, "0");
+  //    const qs = new URLSearchParams({
+  //      filename: file.name,
+  // /     filetype: file.type,
+  //      ordem
+   //   });
+
+ //     const r = await fetch(`/gravafoto/getpresignedurl?${qs.toString()}`);
+ //     const { uploadUrl, key } = await r.json();
+
+ //     const up = await fetch(uploadUrl, {
+ //       method: "PUT",
+ //      body: file,
+ //       headers: { "Content-Type": file.type, "x-amz-acl": "public-read" }
+ //     });
+ //     if (!up.ok) { alert(`Falha ao enviar a imagem ${i + 1}.`); continue; }
+
+ //     const publicUrl = uploadUrl.split("?")[0];
+ //     await fetch("/gravafoto/imagem/salvar", {
+ //       method: "POST",
+ //       headers: { "Content-Type": "application/json" },
+ //       body: JSON.stringify({
+ //         codigoId,
+ //         produtoNome,
+ //         fornecedor,
+ //         departamento,
+ //         imagemUrl: publicUrl,
+ // /        shortkey: String(key || "").substring(0,16),
+ //         mimeType: file.type,
+ //         size: file.size
+ //       })
+ //     });
+ //     enviados++;
+ //   }
+
+ //   alert(enviados > 0 ? `${enviados} imagem(ns) enviada(s) com sucesso.` : "Nenhuma imagem selecionada.");
+
+    // mantenho aberto (útil pra enviar mais); feche se quiser:
+ //    fecharModalUpload();
+ // };
+//}
 </script>
 
 
@@ -1107,10 +1143,10 @@ document.getElementById('selectSetor').addEventListener('change', async function
         modalContent.innerHTML = html;
 
         // Posiciona o modal
-        //const rect = this.getBoundingClientRect();
-        //modal.style.left = `${rect.left + window.scrollX}px`;
-        //modal.style.top = `${rect.top + window.scrollY - modal.offsetHeight - 10}px`;
-        //modal.style.display = "block";
+        const rect = this.getBoundingClientRect();
+        modal.style.left = `${rect.left + window.scrollX}px`;
+        modal.style.top = `${rect.top + window.scrollY - modal.offsetHeight - 10}px`;
+        modal.style.display = "block";
       });
     });
 
@@ -1170,562 +1206,525 @@ document.getElementById('selectSetor').addEventListener('change', async function
     });
   });
 </script>
- {{!-- FECHA CADASTROMODAL --}}
+<script>
+  async function BuscarProdutoImagem(){ return; }
+ function renderResultadoProdutoImagem(){ return; }  
+  //////////////////////////////   1309    //////////////////////////////////////////////////////
+</script>
 <script>
   function closeCadastroModal(){
      document.getElementById("cadastroProdutoModal").style.display="none"
   }
 </script>
-{{!-- AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA --}}
-{{!-- BLOCO 0 - Universal PREPARO (base compartilhada) --}}
 <script>
-        // === BASE (estado + refs + helpers) ===
-        const $backdrop        = document.getElementById('modalImagem');
-        const $miSlotGrid      = document.getElementById('miSlotGrid');
-        const $miBankGrid      = document.getElementById('imgbcoImg');
-        const $miBankEmpty     = document.getElementById('miBankEmpty');
-        const $miNoBankBanner  = document.getElementById('miNoBankBanner');
-        const $miSlotsTitle    = document.querySelector('.mi-slots-title');
+  // já existem acima no seu arquivo:
+  const $miSlotsTitle   = document.querySelector('.mi-slots-title');
+  const $miNoBankBanner = document.getElementById('miNoBankBanner');
+  const $miBankEmpty    = document.getElementById('miBankEmpty');
 
-        const $miProdId        = document.getElementById('miProdId');
-        const $miDescricao     = document.getElementById('miDescricao');
-        const $miFornecedor    = document.getElementById('miFornecedor');
-        const $miDepartamento  = document.getElementById('miDepartamento');
+(function modalImagemIIFE(){
+  /** =================== ESTADO =================== **/
+  const MAX_SLOTS = 7;
+  const slots = [];                         // { type: 'file'|'bank', file?, url?, key?, origin? }
+  const originalSlots = Array(MAX_SLOTS).fill(null); // baseline por índice
+  //??????????????????????????????????????
+  // === filtro DINÂMICO com base no produto atual ===
+let __usarFiltro = true;       // ligado nesta abertura do modal
+let __palavrasChave = [];      // palavras extraídas do produto
 
-        const $hiddenFile      = document.getElementById('miHiddenFile');
-        const $miReloadBank    = document.getElementById('miReloadBank');
-        const $miClearAll      = document.getElementById('miClearAll');
-        const $miClose         = document.getElementById('miClose');
-        const $btnGravar       = document.getElementById('btnGravarImagens');
-        console.log('1179')
-        const $miBankMenuBtn   = document.getElementById('miBankMenuBtn');
-        const $miBankMenu      = document.getElementById('miBankMenu');
-        const $miBankMenuDesc  = document.getElementById('miBankMenuDesc');
-        const $miBankMenuFor   = document.getElementById('miBankMenuFor');
+const normalizar = (s='') =>
+  s.normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase();
+
+function extrairPalavrasChave({ descricao = '', fornecedor = '', departamento = '' } = {}) {
+  const base = `${descricao} ${fornecedor} ${departamento}`;
+  const tokens = normalizar(base)
+    .split(/[^a-z0-9]+/)
+    .filter(w => w.length >= 4);
+  return [...new Set(tokens)].slice(0, 5); // até 5 palavras únicas
+}
+
+function configurarFiltroDinamico(ctx) {
+  __palavrasChave = extrairPalavrasChave(ctx);
+  __usarFiltro = __palavrasChave.length > 0;
+}
+
+function pontuacaoDeMatch(texto='') {
+  const set = new Set(normalizar(texto).split(/[^a-z0-9]+/));
+  return __palavrasChave.filter(p => set.has(p)).length;
+}
+
+function ehDoMesmoProdutoDoc(doc = {}) {
+  const texto = doc.produtoNome || doc.title || doc.descricao || doc.url || '';
+  const score = pontuacaoDeMatch(texto);
+  const minimo = Math.min(2, __palavrasChave.length || 1); // pede 2 acertos quando possível
+  return score >= minimo;
+}
+  /** =================== ELTs =================== **/
+  const $backdrop       = document.getElementById('modalImagem');
+  const $miSlotGrid     = document.getElementById('miSlotGrid');
+  const $miBankGrid     = document.getElementById('imgbcoImg');
+  const $hiddenFile     = document.getElementById('miHiddenFile');
+  const $btnGravar      = document.getElementById('btnGravarImagens');
+  const $miClose        = document.getElementById('miClose');
+  const $miReloadBank   = document.getElementById('miReloadBank');
+  const $miClearAll     = document.getElementById('miClearAll');
+
+  const $miProdId       = document.getElementById('miProdId');
+  const $miDescricao    = document.getElementById('miDescricao');
+  const $miFornecedor   = document.getElementById('miFornecedor');
+  const $miDepartamento = document.getElementById('miDepartamento');
+
+  /** =================== HELPERS (SLOTS) =================== **/
+  function firstEmptyIndex(){ for (let i=0;i<slots.length;i++) if (!slots[i]) return i; return -1; }
+  function recomputeNextIndex(){ nextSlotIndex = firstEmptyIndex(); }
+
+  function addEmptySlot(idx){
+    const slot = document.createElement('div');
+    slot.className = 'mi-slot empty';
+    slot.dataset.idx = idx;
+    slot.dataset.num = idx + 1;
+
+    slot.addEventListener('click', () => {
+      $hiddenFile.dataset.targetIdx = idx;
+      $hiddenFile.value = '';
+      $hiddenFile.click();
+    });
+
+    const remove = document.createElement('button');
+    remove.className = 'mi-remove';
+    remove.title = 'Remover';
+    remove.textContent = '×';
+    remove.addEventListener('click', (ev)=>{ ev.stopPropagation(); clearSlot(idx); });
+    slot.appendChild(remove);
+
+    $miSlotGrid.appendChild(slot);
+    slots[idx] = null;
+  }
+
+  function resetSlots(){
+    if (!$miSlotGrid) { console.warn('[slots] #miSlotGrid não encontrado'); return; }
+    slots.length = 0;
+    nextSlotIndex = 0;
+    $miSlotGrid.innerHTML = '';
+    for (let i=0;i<MAX_SLOTS;i++) addEmptySlot(i);
+    console.log('[resetSlots] criados', MAX_SLOTS, 'slots');
+  }
+
+  function fillSlotWithImage(idx, src){
+    const slot = $miSlotGrid.children[idx];
+    if (!slot) return;
+    slot.classList.remove('empty');
+    slot.classList.add('filled');
+    slot.innerHTML = '';
+
+    const img = document.createElement('img');
+    img.src = src;
+    slot.appendChild(img);
+
+    const remove = document.createElement('button');
+    remove.className = 'mi-remove';
+    remove.textContent = '×';
+    remove.title = 'Remover';
+    remove.addEventListener('click', (ev)=>{ ev.stopPropagation(); clearSlot(idx); });
+    slot.appendChild(remove);
+
+    recomputeNextIndex();
+  }
+
+  function clearSlot(idx){
+    const slot = $miSlotGrid.children[idx];
+    if (!slot) return;
+    slot.className = 'mi-slot empty';
+    slot.innerHTML = '';
+
+    const remove = document.createElement('button');
+    remove.className = 'mi-remove';
+    remove.textContent = '×';
+    remove.title = 'Remover';
+    remove.addEventListener('click', (ev)=>{ ev.stopPropagation(); clearSlot(idx); });
+    slot.appendChild(remove);
+
+    slots[idx] = null;
+    recomputeNextIndex();
+  }
+
+  function setBankEmptyState(flag){
+    if ($miBankEmpty)    $miBankEmpty.style.display    = flag ? 'block' : 'none';
+    if ($miNoBankBanner) $miNoBankBanner.style.display = flag ? 'block' : 'none';
+    if ($miSlotsTitle)
+      $miSlotsTitle.textContent = flag
+        ? 'Nenhuma imagem no banco — clique nas caixas acima para buscar no computador'
+        : 'Seleção e Gravar Imagens';
+  }
+
+  /** =================== CARREGAR DADOS =================== **/
+  async function carregarImagensDoProduto(produtoId, descricao, pagerUrls = []){
+    const termo = (__usarFiltro && __palavrasChave.length)
+  ? __palavrasChave[0]
+  : (descricao || '');
 
 
+    const res = await fetch(`/gravafoto/produtoImagem/buscar/${encodeURIComponent(termo)}`);
+    const base = res.ok ? (await res.json()) : [];
+    let doBanco = (Array.isArray(base) ? base : [])
+      .map(x => ({ url: x.imagemUrl || x.url, key: x.shortkey||x.key||x._id, produtoNome: x.produtoNome||x.descricao||'' }))
+      .filter(x => !!x.url);
 
+    if (__usarFiltro) doBanco = doBanco.filter(ehDoMesmoProdutoDoc);
 
-        const MAX_SLOTS = 7;
-        const slots         = Array(MAX_SLOTS).fill(null);     // {type:'file'|'bank', file?, url?, key?}
-        const originalSlots = Array(MAX_SLOTS).fill(null);     // baseline para diffs
-        let nextIdx = 0;
+    const merged = [...doBanco];
+    (Array.isArray(pagerUrls) ? pagerUrls : []).forEach(u => {
+          const urlStr = String(u||'');
+          const extra = { url:urlStr, key:null, produtoNome:urlStr };
+          if (!merged.some(m => m.url === urlStr) && (!__usarFiltro || ehDoMesmoProdutoDoc(extra))){
+              merged.push(extra);
+          }
+    });
 
-        // helpers de texto/filtro genérico (usa a descrição do produto)
-        const norm = s => String(s||'').toLowerCase()
-        .normalize('NFD').replace(/\p{Diacritic}/gu,'').replace(/[^a-z0-9\s._-]/g,' ');
-        const keywordsFromDescricao = desc => norm(desc).split(/\s+/).filter(w => w.length>=3);
-        const matchDescricaoTexto = (texto, desc) => {
-              const t = norm(texto); const kws = keywordsFromDescricao(desc);
-              return kws.length ? kws.some(k => t.includes(k)) : true;
-        };
+    for (const item of merged.slice(0, MAX_SLOTS)) {
+      const idx = firstEmptyIndex();
+      if (idx === -1) break;
+      slots[idx] = { type:'bank', url:item.url, key:item.key, origin: item.key ? 'existing' : 'pager' };
+      originalSlots[idx] = { url:item.url, key:item.key };
+      fillSlotWithImage(idx, item.url);
+    }
+  }
 
-        function setBankEmptyState(flag){
-        if ($miBankEmpty)     $miBankEmpty.style.display = flag ? 'block' : 'none';
-        if ($miNoBankBanner)  $miNoBankBanner.style.display = flag ? 'block' : 'none';
-        if ($miSlotsTitle)    $miSlotsTitle.textContent = flag
-            ? 'Nenhuma imagem no banco — clique nas caixas acima para buscar no computador'
-            : 'Seleção e Gravar Imagens';
-        }
+  async function carregarBcoImagens(params){
+    $miBankGrid.innerHTML = '';
+    setBankEmptyState(false);
 
-        const firstEmpty = () => { for (let i=0;i<MAX_SLOTS;i++) if (!slots[i]) return i; return -1; };
-        const recompute  = () => { nextIdx = firstEmpty(); };
+    try {
+     // const p = { ...(params||{}) };
+      //if (__somenteTorneiras) p.descricao = 'torneira';
+      const ROTA_BUSCA_IMAGENS = '/gravafoto/produtoImagem/buscar';
 
-        function addEmptySlot(i){
-        const slot = document.createElement('div');
-        slot.className = 'mi-slot empty';
-        slot.dataset.idx = i;
-        slot.dataset.num = i + 1;
-        slot.addEventListener('click', ()=>{
-            $hiddenFile.dataset.targetIdx = String(i);
-            $hiddenFile.value = '';
-            $hiddenFile.click();
-        });
-        const btn = document.createElement('button');
-        btn.className = 'mi-remove'; btn.title='Remover'; btn.textContent='×';
-        btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
-        slot.appendChild(btn);
-        $miSlotGrid.appendChild(slot);
-        slots[i] = null;
-        }
-        function resetSlots(){ $miSlotGrid.innerHTML=''; for(let i=0;i<MAX_SLOTS;i++) addEmptySlot(i); recompute(); }
-        function fillSlot(i, src){
-        const slot = $miSlotGrid.children[i]; if(!slot) return;
-        slot.className = 'mi-slot filled'; slot.innerHTML = '';
-        const img = document.createElement('img'); img.src = src; slot.appendChild(img);
-        const btn = document.createElement('button');
-        btn.className='mi-remove'; btn.title='Remover'; btn.textContent='×';
-        btn.addEventListener('click', ev=>{ ev.stopPropagation(); clearSlot(i); });
-        slot.appendChild(btn);
-        recompute();
-        }
+          // pega de 'p' se existir, senão de 'params', senão {}
+          const src = (typeof p !== 'undefined' && p) ||
+                      (typeof params !== 'undefined' && params) || {};
 
-        function clearSlot(i){
-        const slot = $miSlotGrid.children[i];
-        if(!slot) return;
-        slot.className='mi-slot empty';
-        slot.innerHTML='';
-        const btn = document.createElement('button');
-             btn.className='mi-remove';
-             btn.title='Remover';
-              btn.textContent='×';
-        btn.addEventListener('click', ev=>{ ev.stopPropagation(); clearSlot(i); });
-        slot.appendChild(btn);
-        slots[i]=null; recompute();
-        }
+          // monta querystring (formato 1)
+          const out = {
+            ...(src.termo        ? { termo: src.termo } : {}),
+            ...(src.descricao    ? { descricao: src.descricao } : {}),
+            ...(src.fornecedor   ? { fornecedor: src.fornecedor } : {}),
+            ...(src.departamento ? { departamento: src.departamento } : {}),
+          };
+          const urlQ = new URL(ROTA_BUSCA_IMAGENS, window.location.origin);
+          const qs   = new URLSearchParams(out).toString();
+          if (qs) urlQ.search = qs;
 
-        let __lastBankCriteria = { descricao:'', fornecedor:'' };
+          // monta :termo (formato 2) como fallback
+          const termoStr = String(
+            src.termo || src.descricao || [src.fornecedor, src.departamento].filter(Boolean).join(' ')
+          ).trim();
+          const urlP = new URL(
+            `${ROTA_BUSCA_IMAGENS}/${encodeURIComponent(termoStr || '')}`,
+            window.location.origin
+          );
 
-</script>
-{{!-- /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */ --}}
-<script>
-  /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */
-  $hiddenFile?.addEventListener('change', (ev)=>{
-            const APLICAR_FILTRO_UPLOAD = true; 
-            const file = ev.target.files?.[0];
-            const idx  = Number(ev.target.dataset.targetIdx ?? '-1');
-            if (!file || idx < 0) return;
+          // tenta querystring; se 404, tenta :termo
+          // ✅ use 'let' porque vamos reatribuir no fallback
+          let r = await fetch(urlQ.toString(), { headers: { Accept: 'application/json' }, cache: 'no-store' });
+          if (r.status === 404) {
+            console.warn('[bcoIMG] 404 em querystring, tentando formato :termo', urlP.toString());
+            r = await fetch(urlP.toString(), { headers: { Accept: 'application/json' }, cache: 'no-store' });
+          }
 
-            if (APLICAR_FILTRO_UPLOAD && $miDescricao?.value){
-            if (!matchDescricaoTexto(file.name, $miDescricao.value)){
-                alert('A imagem escolhida não parece do mesmo produto (pelo nome do arquivo).');
-                ev.target.value = '';
-                return;
+          console.log('status', r.status);
+          if (!r.ok) {
+            const body = await r.text().catch(()=>'');
+            throw new Error(`Falha ao buscar banco (HTTP ${r.status}) :: ${body.slice(0,120)}`);
+          }
+
+          // ✅ faça o parse UMA vez e use SEM reatribuir 'const'
+          let lista = await r.json();
+
+          console.log('LISTA = ',lista)
+          // guarda cópia para fallback
+          const listaOriginal = Array.isArray(lista) ? [...lista] : [];
+          if (!Array.isArray(lista)) lista = [];
+
+          // normalizador de ids (ObjectId, string, etc.)
+          const normId = (v) => {
+            if (!v) return '';
+            const s = String(v);
+            // extrai de "ObjectId('...')" se vier assim
+            const m = s.match(/ObjectId\(["']?([0-9a-fA-F]{24})["']?\)/);
+            const plain = m ? m[1] : s;
+            return plain.replace(/["']/g,'').trim().toLowerCase();
+          };
+
+          // tenta várias chaves para achar o id alvo
+          const alvoId = normId(
+            (typeof src !== 'undefined' && (src.codigoId || src.codigold || src.codigo || src.codigo_id)) ||
+            (typeof p   !== 'undefined' && (p.codigoId   || p.codigold   || p.codigo   || p.codigo_id)) ||
+            (window.__codigoIdAtual) ||
+            ''
+          );
+
+          if (__usarFiltro && alvoId) {
+            const antes = lista.length;
+            lista = lista.filter(d => {
+              const docId = normId(d.codigoId || d.codigold || d.codigo || d.codigo_id);
+              return docId && docId === alvoId;
+            });
+
+            // se zerou por divergência de tipos/nomes, mantém a lista original
+            if (antes > 0 && lista.length === 0) {
+              console.warn('[bcoIMG] filtro zerou com alvoId=', alvoId, ' — mantendo lista original');
+              lista = listaOriginal;
             }
-            }
+          }
 
-            const reader = new FileReader();
-            reader.onload = ()=>{ slots[idx] = { type:'file', file }; fillSlot(idx, reader.result); };
-            reader.readAsDataURL(file);
+          console.log('passando aqui', lista.length);
+          //console.log('passando aqui',lista.length);
+          if (!lista.length){ setBankEmptyState(true); return; }
+
+          for (const item of lista) {
+
+            console.log('--1546---',item);
+            console.log('--1546---',lista.length);
+
+            const card = document.createElement('div');
+            card.className = 'mi-thumb';
+            const img = document.createElement('img');
+            img.loading = 'lazy';
+            img.src = item.url;
+            card.appendChild(img);
+
+            card.addEventListener('click', ()=>{
+              if (__usarFiltro && !ehDoMesmoProdutoDoc(item)) {
+                  alert('A imagem não corresponde a este produto.');
+                  return;
+              }
+              const idx = firstEmptyIndex();
+              if (idx === -1) { alert('Limite de 7 imagens atingido.'); return; }
+              slots[idx] = { type:'bank', url:item.url, key:item.key, origin:'new-bank' };
+              fillSlotWithImage(idx, item.url);
+            });
+
+            $miBankGrid.appendChild(card);
+      }
+    } catch (err) {
+      console.error('Erro ao carregar banco de imagens:', err);
+      $miBankEmpty.style.display = 'block';
+      $miBankEmpty.textContent = 'Erro ao carregar o banco de imagens.';
+    }
+  }
+
+  /** =================== AÇÕES =================== **/
+  const __STOP = new Set(['de','da','do','das','dos','e','com','para','por','a','o','um','uma']);
+const __norm = s => String(s||'')
+  .normalize('NFD').replace(/\p{Diacritic}/gu,'') // tira acentos
+  .toLowerCase().trim();
+const __toks = s => __norm(s).split(/[^a-z0-9]+/).filter(t => t && !__STOP.has(t));
+
+        const __descricaoBase = () =>
+  document.getElementById('miDescricao')?.value ||
+  (globalThis.__termoFiltroDesc && String(globalThis.__termoFiltroDesc)) ||
+  document.getElementById('campoDescricao')?.value || '';
+
+/** retorna TRUE quando combina (cadeira deve passar; cama deve falhar) */
+function matchDescricaoTexto(candidate) {
+  const base = __descricaoBase();
+  if (!base) return true; // sem termo, não bloqueia
+
+  const cand = __norm(candidate);
+  const keys = __toks(base).filter(t => t.length >= 4); // pega “cadeira”, “espreguicadeira” etc.
+
+  // exige que PELO MENOS 1 token-chave do produto esteja no nome da imagem
+  return keys.some(t => cand.includes(t));
+}
+
+//BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+
+// opcional: mesmo critério para documentos do banco
+function ehDoMesmoProdutoDoc(doc) {
+  const alvo = [
+    doc?.produtoNome, doc?.descricao,
+    doc?.imagemUrl, doc?.key
+  ].filter(Boolean).join(' ');
+  return matchDescricaoTexto(alvo);
+}
+
+function filtro_computador(ev){
+  const inputEl = ev?.target;
+  if (!(inputEl instanceof HTMLInputElement) || inputEl.type !== 'file') return;
+
+  const file = inputEl.files && inputEl.files[0];
+  if (!file) return;
+
+  // usa a flag dinâmica do seu modal (__usarFiltro). Se quiser sempre filtrar, troque por 'true'
+  const precisaFiltrar = !!__usarFiltro;
+
+  // 1) Filtro pelo nome do arquivo (cadeira passa; cama bloqueia)
+  if (precisaFiltrar && !matchDescricaoTexto(file.name)) {
+    alert('A imagem não corresponde a este produto.');
+    inputEl.value = '';
+    ev.preventDefault();
+    ev.stopPropagation();
+    if (typeof ev.stopImmediatePropagation === 'function') ev.stopImmediatePropagation();
+    return;
+  }
+
+  // 2) Descobrir slot destino (dataset.targetIdx ou o primeiro vazio)
+  let targetIdx = Number(inputEl.dataset.targetIdx ?? '-1');
+  if (Number.isNaN(targetIdx) || targetIdx < 0) {
+    targetIdx = firstEmptyIndex();
+  }
+  if (targetIdx < 0) {
+    alert('Não há slot disponível para esta imagem.');
+    inputEl.value = '';
+    return;
+  }
+
+  // 3) Ler arquivo e preencher o slot
+  const reader = new FileReader();
+  reader.onload = () => {
+    const dataUrl = String(reader.result || '');
+    slots[targetIdx] = { type:'file', file, origin:'new-upload' };
+    fillSlotWithImage(targetIdx, dataUrl);
+    inputEl.value = ''; // permite reenviar o mesmo nome depois
+  };
+  reader.onerror = () => {
+    console.error('Falha ao ler o arquivo:', reader.error);
+    alert('Falha ao ler a imagem. Tente novamente.');
+    inputEl.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+/** ================ AÇÕES ================ **/
+// agora o listener só delega para a função completa
+$hiddenFile?.addEventListener('change', filtro_computador);
+
+
+/** ================ AÇÕES ================ **/
+$hiddenFile?.addEventListener('change', (ev) => {
+  const file = ev.target.files?.[0];
+
+  // usa match “positivo”: TRUE = combina → aceita; FALSE → bloqueia
+  if (globalThis.__usarFiltroDescricao && file && !matchDescricaoTexto(file.name)) {
+    alert('A imagem não corresponde a este produto.');
+    ev.target.value = '';
+    return;
+  }
+
+
+    //const file = ev.target.files?.[0];
+    const targetIdx = Number(ev.target.dataset.targetIdx ?? '-1');
+    if (!file || targetIdx < 0) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      slots[targetIdx] = { type:'file', file, origin:'new-upload' };
+      fillSlotWithImage(targetIdx, reader.result);
+    };
+    reader.readAsDataURL(file);
   });
-</script>
-{{!-- // BLOCO 2 — CARREGA AS IMAGENS JÁ VINCULADAS (por produtoId) + ABRIR MODAL --}}
-<script>
-    // BLOCO 2 — Carregar vinculadas e abrir
-    async function carregarImagensDoProduto(produtoId, pageurls = []){
-          originalSlots.fill(null);
 
-          if (!produtoId) return;
-
-          let lista = [];
-          try {
-              // ajuste a rota se a sua for diferente
-              const r = await fetch(`/gravafoto/produtoImagem/buscar/${encodeURIComponent(produtoId)}`);
-              if (r.ok) lista = await r.json();
-              console.log('');
-              console.log(lista);
-              console.log('');
-          } catch (e) {
-            console.warn('[carregarImagensDoProduto] falhou ao buscar por ID:', e);
-            return;
-          }
-
-          console.log(lista)
-
-          // 1) A API pode devolver o PRODUTO com 'pageurls' OU uma lista de imagens.
-          //    Detecta e normaliza para [{url, key}].
-          let docs = [];
-
-          // caso 1: veio um produto com pageurls
-          if (Array.isArray(lista) && lista.length && Array.isArray(lista[0].pageurls)) {
-            docs = lista[0].pageurls
-              .map(u => ({ url: String(u || '').trim(), key: null }))
-              .filter(d => !!d.url);
-
-          // caso 2: veio uma lista de registros de imagem
-          } else {
-            docs = (Array.isArray(lista) ? lista : [])
-              .map(x => ({
-                url: x.imagemUrl || x.url || '',
-                key: x.shortkey || x.key || x._id || ''
-              }))
-              .filter(x => !!x.url);
-          }
-
-          console.log('');
-          console.log('=> ',docs);
-          console.log('');
-          // 2) mescla 'pageurls' recebidos por parâmetro (se você passar da tela)
-          if (Array.isArray(pageurls)) {
-            pageurls.forEach(u => {
-              const s = String(u || '').trim();   // <— aqui é String, não string
-              if (!s) return;
-              if (!docs.some(d => d.url === s)) docs.push({ url: s, key: null });
-                          });
-          }
-
-
-          if (!$miSlotGrid || !$miSlotGrid.children.length) resetSlots();
-//              100000000000000000000'
- 
-            for (const it of docs.slice(0, MAX_SLOTS)) {
-                  const i = firstEmpty();
-                  if (i === -1) break;
-
-                  console.log('it.url =>', it.url);
-
-                  slots[i]         = { type:'bank', url: it.url, key: it.key, origin:'existing' };
-                  originalSlots[i] = { url: it.url, key: it.key };
-                  fillSlot(i, it.url);   // usa sua função já existente
-            }
-
-
-    }
-
-
-        async function _abrirModalImagemImpl({ produtoId='', descricao='', fornecedor='', departamento='', pagerUrls=[] } = {}){
-                // preenche cabeçalho
-                $miProdId.value       = String(produtoId||'');
-                $miDescricao.value    = String(descricao||'');
-                $miFornecedor.value   = String(fornecedor||'');
-                $miDepartamento.value = String(departamento||'');
-
-                // limpa slots + baseline
-                resetSlots();
-                originalSlots.fill(null);
-
-                // carrega vinculadas e banco
-                await carregarImagensDoProduto(produtoId);
-              
-
-                // abre modal
-                $backdrop.classList.add('show');
-                $backdrop.setAttribute('aria-hidden','false');
-        }
-
-        // expõe para quem chama
-        window.abrirModalImagem     = _abrirModalImagemImpl;
-        globalThis.abrirModalImagem = _abrirModalImagemImpl;
-</script>
-{{!-- // BLOCO 3 — BUSCA NO BANCO DE IMAGENS --}}
-<script>
-    // BLOCO 3 — Banco de imagens (filtro leve por descrição)
-// BLOCO 3 — Banco de imagens (filtro leve por descrição)
-async function carregarBcoImagens({descricao, fornecedor, departamento}){
-  __lastBankCriteria = { descricao: descricao || '', fornecedor: fornecedor || '' };
-
-  $miBankGrid.innerHTML = '';
-  setBankEmptyState(false);
-
-  try{
-    const q = new URLSearchParams({
-      descricao: descricao || '',
-      fornecedor: fornecedor || '',
-      departamento: departamento || ''
-    }).toString();
-
-    const r = await fetch(`/gravafoto/buscarBcoImg?${q}`);
-    if (!r.ok) throw new Error('Falha ao buscar banco de imagens');
-
-    let lista = await r.json();
-    if (!Array.isArray(lista)) lista = [];
-
-    // filtro leve por descrição do produto
-    if (descricao) lista = lista.filter(it => matchDescricaoTexto(it?.produtoNome||it?.url||'', descricao));
-
-    if (!lista.length){ setBankEmptyState(true); return; }
-
-    for (const it of lista){
-      const card = document.createElement('div'); card.className='mi-thumb';
-      const img  = document.createElement('img'); img.loading='lazy'; img.src = it.url;
-      card.appendChild(img);
-      card.addEventListener('click', ()=>{
-        const i = firstEmpty(); if (i===-1){ alert('Limite de 7 imagens.'); return; }
-        slots[i] = { type:'bank', url: it.url, key: it.key||null, origin:'bank' };
-        fillSlot(i, it.url);
-      });
-      $miBankGrid.appendChild(card);
-    }
-  }catch(e){
-    console.error(e);
-    setBankEmptyState(true);
-  }
-}
-
-// Recarregar usa o último critério (se existir), senão pega os inputs
-$miReloadBank?.addEventListener('click', ()=>{
-  const hasLast = (__lastBankCriteria.descricao || __lastBankCriteria.fornecedor);
-  const crit = hasLast
-    ? { ...__lastBankCriteria, departamento: '' }
-    : { descricao: $miDescricao.value || '', fornecedor: $miFornecedor.value || '', departamento: $miDepartamento.value || '' };
-  carregarBcoImagens(crit);
-});
-
-
-// Pop-menu (abrir/fechar/ações)
-//function openBankMenu(anchor){
-//  console.log('1435')
-//  if(!$miBankMenu) return;
-// / const rectModal  = $backdrop.getBoundingClientRect();
-//  const rectButton = anchor.getBoundingClientRect();
-//  $miBankMenu.style.left   = `${rectButton.left - rectModal.left}px`;
-//  $miBankMenu.style.bottom = `58px`;
-//  $miBankMenu.classList.add('show');
-//  $miBankMenu.removeAttribute('hidden');
-//}
-function openBankMenu(){
-  if(!$miBankMenu || !$miBankMenuBtn) return;
-
-  // garante que o menu é filho do bloco da esquerda do rodapé
-  const anchorWrap = $miBankMenuBtn.closest('.mi-footer-left');
-  if (anchorWrap && $miBankMenu.parentElement !== anchorWrap) {
-    anchorWrap.appendChild($miBankMenu);
-  }
-
-  // força posição fixa no lado esquerdo
-  $miBankMenu.style.left   = '0';
-  $miBankMenu.style.right  = 'auto';
-  $miBankMenu.style.bottom = '56px';
-
-  $miBankMenu.classList.add('show');
-  $miBankMenu.removeAttribute('hidden');
-}
-
-function closeBankMenu(){
-  if(!$miBankMenu) return;
-  $miBankMenu.classList.remove('show');
-  $miBankMenu.setAttribute('hidden','');
-}
-
-
-
-
-
-//function closeBankMenu(){
-//  if(!$miBankMenu) return;
-//  $miBankMenu.classList.remove('show');
-//  $miBankMenu.setAttribute('hidden','');
-//}
-
-//$miBankMenuBtn?.addEventListener('click', (e)=>{
-//  console.log('1450 - clique no botão Bco Imagem');
-//  e.stopPropagation();
-
-  // DIAGNÓSTICO: garantir que os elementos existem
-//  if (!$miBankMenu) {
-//    console.warn('[miBankMenuBtn] $miBankMenu é null. Falta o HTML do menu (id="miBankMenu")?');
-//    return;
-//  }
-//  if (!$backdrop) {
-//    console.warn('[miBankMenuBtn] $backdrop é null. Verifique id="modalImagem".');
-//    return;
-//  }
-
-//  if ($miBankMenu.classList.contains('show')) {
-//    closeBankMenu();
-//  } else {
-//    openBankMenu(e.currentTarget);
-//  }
-//});
-$miBankMenuBtn?.addEventListener('click', (e)=>{
-  e.stopPropagation();
-  if ($miBankMenu.classList.contains('show')) closeBankMenu();
-  else openBankMenu();
-});
-
-
-// fecha menu ao clicar fora / ESC
-//document.addEventListener('click', (e)=>{
-//  console.log('1457')
-//  if (!$miBankMenu?.classList.contains('show')) return;
-//  const t = e.target;
-//  if (!$miBankMenu.contains(t) && !$miBankMenuBtn.contains(t)) closeBankMenu();
-//});
-
-// fecha menu ao clicar fora
-document.addEventListener('click', (e)=>{
-  if (!$miBankMenu?.classList.contains('show')) return;
-  const t = e.target;
-  if (!$miBankMenu.contains(t) && !$miBankMenuBtn.contains(t)) closeBankMenu();
-});
-
-
-window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeBankMenu(); });
-
-// ações do menu
-//$miBankMenuDesc?.addEventListener('click', ()=>{
-//  closeBankMenu();
-//  __lastBankCriteria = { descricao: $miDescricao.value || '', fornecedor: '' };
-//  carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
-//});
-
-//$miBankMenuFor?.addEventListener('click', ()=>{
-//  closeBankMenu();
-//  __lastBankCriteria = { descricao: '', fornecedor: $miFornecedor.value || '' };
-//  carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
-//});
-
-// ações do menu
-$miBankMenuDesc?.addEventListener('click', ()=>{
-  closeBankMenu();
-  __lastBankCriteria = { descricao: $miDescricao.value || '', fornecedor: '' };
-  carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
-});
-$miBankMenuFor?.addEventListener('click', ()=>{
-  closeBankMenu();
-  __lastBankCriteria = { descricao: '', fornecedor: $miFornecedor.value || '' };
-  carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
-});
-
-
-// atalhos existentes (mantém)
-$miClearAll?.addEventListener('click', resetSlots);
-$miClose?.addEventListener('click', ()=>{ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); });
-$backdrop?.addEventListener('click', ev=>{ if (ev.target===$backdrop){ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); }});
-window.addEventListener('keydown', ev=>{ if (ev.key==='Escape' && $backdrop.classList.contains('show')){ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); }});
-
-
-</script>
-{{!-- // BLOCO 4 — Gravar imagens (usa suas funções existentes) --}}
-<script>
-        // BLOCO 4 — Gravar imagens (usa suas funções existentes)
-        $btnGravar?.addEventListener('click', async ()=>{
-        const temAlgo = slots.some(Boolean);
-        if (!temAlgo){ alert('Nenhuma imagem selecionada.'); return; }
-
-        // --- diffs (igual ao que você já vinha usando) ---
-        const sameRef = (a,b)=> !!(a&&b) && (
-            (a.key && b.key && a.key===b.key) ||
-            (!a.key && !b.key && a.url && b.url && a.url===b.url)
-        );
-
-        const removed=[], refsAdd=[], uploads=[];
-        for (let i=0;i<MAX_SLOTS;i++){
-            const orig = originalSlots[i];
-            const cur  = slots[i];
-            if (!orig && !cur) continue;
-            if (!orig && cur){ (cur.type==='file' ? uploads : refsAdd).push({idx:i, ...cur}); continue; }
-            if (orig && !cur){ removed.push({idx:i, ...orig}); continue; }
-            if (cur.type==='file'){ removed.push({idx:i, ...orig}); uploads.push({idx:i, ...cur}); }
-            else if (cur.type==='bank'){ sameRef(orig,cur) ? 0 : (removed.push({idx:i, ...orig}), refsAdd.push({idx:i, ...cur})); }
-        }
-
-        try{
-            // aqui você chama suas funções já existentes:
-            await salvarImagensCompat({
-            produtoId:    $miProdId.value,
-            descricao:    $miDescricao.value,
-            fornecedor:   $miFornecedor.value,
-            departamento: $miDepartamento.value,
-            refsAdd, uploads, removed,
-            order: slots.map((s,i)=> s ? (s.type==='bank'?{type:'bank',idx:i,key:s.key}:{type:'file',idx:i,filename:s.file?.name||null}) : null)
-            }, slots);
-
-            alert('Imagens gravadas com sucesso.');
-            $backdrop.classList.remove('show');
-            $backdrop.setAttribute('aria-hidden','true');
-        }catch(e){
-            console.error(e); alert('Erro ao gravar imagens. Veja o console.');
-        }
-});
-</script>
-<script>
-function pad2(n){ return String(n+1).padStart(2,'0'); }
-
-/**
- * 1) Para cada upload: pega presigned, faz PUT e depois salva JSON
- * 2) Para cada ref nova: salva JSON direto
- * (Removed: deixamos logado por enquanto; plugamos quando houver rota)
- */
-async function salvarImagensCompat({ produtoId, descricao, fornecedor, departamento, refsAdd, uploads, removed, order },slotsRef){
-        // 1) uploads (presigned + PUT + salvar)
-        for (const u of uploads){
-                const idx  = u.idx;
-                const s    = slotsRef[idx];
-                const file = s?.file;
-                if (!file) continue;
-
-                // 1.1 pega presigned
-                const qs = new URLSearchParams({
-                  filename: file.name,
-                  filetype: file.type || 'image/png',
-                  ordem: pad2(idx)
-                });
-                const r = await fetch(`/gravafoto/getpresignedurl?${qs.toString()}`);
-                console.log('R =====',r)
-                if (!r.ok) throw new Error('Falha ao obter URL de upload');
-                const { uploadUrl, key } = await r.json();
-
-                // 1.2 envia para o Space
-                //const up = await fetch(uploadUrl, {
-                //  method: 'PUT',
-                //  body: file,
-                //  headers: { 'Content-Type': file.type || 'image/png' }
-                //});
-               const up = await fetch(uploadUrl, {
-                      method: 'PUT',
-                      body: file,
-                      headers: {
-                        'Content-Type': file.type,   // deve bater com filetype usado na assinatura
-                        'x-amz-acl': 'public-read'   // mantém público ao salvar
-                  }
-                });                
-
-                if (!up.ok) throw new Error('Falha ao enviar arquivo para o Space');
-
-                const publicUrl = uploadUrl.split('?')[0];
-
-                // 1.3 grava registro no seu banco
-                await postSalvarImagem({
-                  produtoId, descricao, fornecedor, departamento,
-                  imagemUrl: publicUrl,
-                  shortkey:  key,
-                  mimeType:  file.type || 'image/png',
-                  size:      file.size,
-                  ordem:     pad2(idx)
-                });
-        }
-
-        // 2) refs novas (não precisam de upload)
-        for (const r of refsAdd){
-          await postSalvarImagem({
-            produtoId, descricao, fornecedor, departamento,
-            imagemUrl: r.url,
-            shortkey:  r.key,
-            mimeType:  'image/*',
-            size:      0,
-            ordem:     pad2(r.idx)
-          });
-        }
-
-        // 3) removidos (se tiver rota depois plugamos aqui)
-        if (removed.length){
-          console.warn('[remove] pendente de integrar no servidor:', removed);
-        }
-
-        // 4) ordem final (se você quiser aplicar do lado do servidor)
-        console.info('[order] estado final pedido:', order);
-}
-
-/** POST JSON no endpoint que você já usa */
-async function postSalvarImagem({
-  produtoId, descricao, fornecedor, departamento,
-  imagemUrl, shortkey, mimeType, size, ordem
-}){
-  const body = {
-    codigoId:     produtoId,
-    produtoNome:  descricao,
-    fornecedor:   fornecedor,
-    departamento: departamento,
-    imagemUrl,
-    shortkey,
-    mimeType,
-    size,
-    ordem
+  const closeModal = ()=>{
+    $backdrop.classList.remove('show');
+    $backdrop.setAttribute('aria-hidden', 'true');
   };
 
-  const res = await fetch('/gravafoto/imagem/salvar', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
-  if (!res.ok) {
-    const t = await res.text().catch(()=> '');
-    throw new Error(`Falha ao gravar imagens: ${res.status} ${t}`);
-  }
-  return res.json().catch(()=> ({}));
-}
+  $miClose?.addEventListener('click', closeModal);
+  $backdrop?.addEventListener('click', (ev)=>{ if (ev.target === $backdrop) closeModal(); });
+  window.addEventListener('keydown', (ev)=>{ if (ev.key === 'Escape' && $backdrop.classList.contains('show')) closeModal(); });
 
+  $miReloadBank?.addEventListener('click', ()=>{
+    carregarBcoImagens({
+      codigo:       $miProdId.value,
+      descricao:    $miDescricao.value,
+      fornecedor:   $miFornecedor.value,
+      departamento: $miDepartamento.value,
+    });
+  });
+
+  $miClearAll?.addEventListener('click', resetSlots);
+
+  $btnGravar?.addEventListener('click', async ()=>{
+    const temAlgo = slots.some(Boolean);
+    if (!temAlgo) { alert('Nenhuma imagem selecionada.'); return; }
+
+    const sameRef = (a,b) => !!(a && b) && (
+      (a.key && b.key && a.key === b.key) ||
+      (!a.key && !b.key && a.url && b.url && a.url === b.url)
+    );
+
+    const unchanged=[], removed=[], refsAdd=[], uploads=[];
+    for (let i=0;i<MAX_SLOTS;i++){
+      const orig = originalSlots[i];
+      const cur  = slots[i];
+      if (!orig && !cur) continue;
+
+      if (!orig && cur){
+        if (cur.type==='file') uploads.push({idx:i});
+        else refsAdd.push({idx:i, url:cur.url, key:cur.key});
+        continue;
+      }
+      if (orig && !cur){ removed.push({idx:i, key:orig.key, url:orig.url}); continue; }
+
+      if (cur.type==='file'){ removed.push({idx:i, key:orig.key, url:orig.url}); uploads.push({idx:i}); }
+      else { if (sameRef(orig,cur)) unchanged.push({idx:i, key:orig.key}); else { removed.push({idx:i, key:orig.key, url:orig.url}); refsAdd.push({idx:i, url:cur.url, key:cur.key}); } }
+    }
+
+    const order = slots.map((s,i)=> s ? (s.type==='bank' ? {type:'bank', idx:i, key:s.key} : {type:'file', idx:i, filename:s.file?.name||null}) : null);
+
+    console.group('[GRAVAR] diff');
+    console.log('unchanged', unchanged);
+    console.log('removed  ', removed);
+    console.log('refsAdd  ', refsAdd);
+    console.log('uploads  ', uploads);
+    console.log('order    ', order);
+    console.groupEnd();
+
+    try{
+      await salvarImagensCompat({
+        produtoId:    $miProdId.value,
+        descricao:    $miDescricao.value,
+        fornecedor:   $miFornecedor.value,
+        departamento: $miDepartamento.value,
+        refsAdd, uploads, removed, order
+      }, slots);
+      alert('Imagens gravadas com sucesso.');
+      closeModal();
+    }catch(err){
+      console.error(err);
+      alert('Erro ao gravar imagens. Veja o console.');
+    }
+  });
+
+  /** =================== API: ABRIR MODAL =================== **/
+  async function _abrirModalImagemImpl({ produtoId='', descricao='', fornecedor='', departamento='', pagerUrls=[] } = {}){
+    // preenche a faixa de info (B)
+    $miProdId.value       = produtoId || '';
+    $miDescricao.value    = descricao || '';
+    $miFornecedor.value   = fornecedor || '';
+    $miDepartamento.value = departamento || '';
+
+    // reset baseline
+    resetSlots();
+    originalSlots.fill(null);
+
+    // ativa filtro "torneira" e carrega
+    __somenteTorneiras = true;
+
+    await carregarImagensDoProduto(produtoId, descricao, pagerUrls);
+    await carregarBcoImagens({ descricao, fornecedor, departamento });
+
+    // abre modal
+    $backdrop.classList.add('show');
+    $backdrop.setAttribute('aria-hidden', 'false');
+    
+  }
+
+  // deixa acessível para seu onChange na tabela
+  window.abrirModalImagem     = _abrirModalImagemImpl;
+  globalThis.abrirModalImagem = _abrirModalImagemImpl;
+})(); // FIM DO IIFE (apenas um!)
+
+/* ====== mantém abaixo as funções já existentes ====== */
+/* salvarImagensCompat(...) e postSalvarImagem(...) ficam como no seu arquivo */
 </script>

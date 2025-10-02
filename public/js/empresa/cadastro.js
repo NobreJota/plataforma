@@ -147,11 +147,11 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
                alert("Preencha o campo codigo.");
                return;
           }
-          const marcaloja ="testando"     // document.getElementById("cadastroMarca").innerText.trim();
-          //  if (   !marcaloja  ) {
-          //      alert("Preencha o campo marcaloja.");
-          //      return;
-          // }
+          const marcaloja =document.getElementById("cadastroMarca").value;
+          if (   !marcaloja  ) {
+                alert("Preencha o campo marcaloja.");
+                return;
+          }
           const descricao = document.getElementById("cadastroDescricao").value;
            if (  !descricao  ) {
                alert("Preencha o campo descrição.");

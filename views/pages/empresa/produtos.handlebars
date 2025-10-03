@@ -371,7 +371,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
   border:0; background:#1166ba; border-radius:8px; padding:8px 10px;
   text-align:left; cursor:pointer; font-weight:300;margin-left: 2px;color:#ffffff;
 }
-.mi-pop .mi-pop-item:hover{ background:#e9ecef; }
+.mi-pop .mi-pop-item:hover{ background:#0f4e8c; }
 
 </style>
 
@@ -1276,9 +1276,64 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         slots[i]=null; recompute();
         }
 
+        
+  function clearBankUI(showMsg = true){
+    console.log('56666')
+    if ($miBankGrid) $miBankGrid.innerHTML = '';
+    // showMsg=true -> mostra "Não há imagens." / título de vazio
+    setBankEmptyState(!!showMsg);
+    __lastBankCriteria = { descricao:'', fornecedor:'' };
+    // fecha pop-menu se estiver aberto
+    if (typeof closeBankMenu === 'function') closeBankMenu();
+  }
+
+  // --- fecha o modal + limpa tudo que deve ser limpo
+  function closeModalImagem(){
+    clearBankUI(true);      // some com as miniaturas do banco
+    resetSlots();           // opcional, limpa os 7 slots
+    $backdrop.classList.remove('show');
+    $backdrop.setAttribute('aria-hidden','true');
+  }
+
         let __lastBankCriteria = { descricao:'', fornecedor:'' };
 
+        // --- limpeza completa ao fechar o modal ---
+function __limparEstadoDoModal(){
+  // slots (seleção)
+  resetSlots();
+  originalSlots.fill(null);
+
+  // banco de imagens (lista e estado)
+  if ($miBankGrid) $miBankGrid.innerHTML = '';
+  setBankEmptyState(true);                 // mostra “Não há imagens.”
+  __lastBankCriteria = { descricao:'', fornecedor:'' };
+
+  // menu pop (se estiver aberto)
+  if ($miBankMenu){
+    $miBankMenu.classList.remove('show');
+    $miBankMenu.setAttribute('hidden','');
+  }
+
+  // file input
+  if ($hiddenFile){
+    $hiddenFile.value = '';
+    delete $hiddenFile.dataset.targetIdx;
+  }
+}
+
+// fecha + limpa (use em todos os handlers de fechar)
+function __fecharModal(){
+  $backdrop.classList.remove('show');
+  $backdrop.setAttribute('aria-hidden','true');
+  __limparEstadoDoModal();
+}
+
+
 </script>
+<script>
+  // --- limpa UI do banco de imagens e zera o último critério
+</script>
+
 {{!-- /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */ --}}
 <script>
   /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */
@@ -1572,9 +1627,23 @@ $miBankMenuFor?.addEventListener('click', ()=>{
 
 // atalhos existentes (mantém)
 $miClearAll?.addEventListener('click', resetSlots);
-$miClose?.addEventListener('click', ()=>{ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); });
-$backdrop?.addEventListener('click', ev=>{ if (ev.target===$backdrop){ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); }});
-window.addEventListener('keydown', ev=>{ if (ev.key==='Escape' && $backdrop.classList.contains('show')){ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); }});
+//$miClose?.addEventListener('click', ()=>{ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); });
+//$backdrop?.addEventListener('click', ev=>{ if (ev.target===$backdrop){ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); }});
+//window.addEventListener('keydown', ev=>{ if (ev.key==='Escape' && $backdrop.classList.contains('show')){ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); }});
+// botão X (fechar)
+$miClose?.addEventListener('click', __fecharModal);
+
+// clique no fundo do backdrop
+$backdrop?.addEventListener('click', (ev)=>{
+  if (ev.target === $backdrop) __fecharModal();
+});
+
+// ESC
+window.addEventListener('keydown', (ev)=>{
+  if (ev.key === 'Escape' && $backdrop.classList.contains('show')){
+    __fecharModal();
+  }
+});
 
 
 </script>
@@ -1649,12 +1718,7 @@ async function salvarImagensCompat({ produtoId, descricao, fornecedor, departame
                 const { uploadUrl, key } = await r.json();
 
                 // 1.2 envia para o Space
-                //const up = await fetch(uploadUrl, {
-                //  method: 'PUT',
-                //  body: file,
-                //  headers: { 'Content-Type': file.type || 'image/png' }
-                //});
-               const up = await fetch(uploadUrl, {
+                const up = await fetch(uploadUrl, {
                       method: 'PUT',
                       body: file,
                       headers: {

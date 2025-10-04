@@ -375,6 +375,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
 
 </style>
 
+
 <script>
   window.todosSetoresSecoes = {{{todosSetoresSecoes}}}
 </script>
@@ -466,6 +467,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
                             data-fornecedor="{{fornecedor.razao}}"
                             data-departamento ="{{localloja.[0].departamento.[0].nomeDepartamento}}">
                       <option value="" selected disabled>⋮</option>
+                      <option value="" selected hidden>⋮</option>
                       <option value="vincular">🔗 Vincular</option>
                       <option value="imagens">🖼️ Imagens</option>
                       <option  value="editar">✏️ Editar</option>
@@ -749,6 +751,79 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
       </div>
 </div>
 <input id="miHiddenFile" type="file" accept="image/*" style="display:none" />
+<script>
+/* ===== MENU DE AÇÕES (três pontos) - controle global ===== */
+//(()=>{
+
+//  let openedMenu = null;
+
+//  function closeAnyMenu(){
+//    if (!openedMenu) return;
+//    openedMenu.classList.remove('show');
+//    openedMenu.setAttribute('hidden','');
+//    openedMenu = null;
+//  }
+
+//  function openMenu(btn){
+    // raiz do “componente” do menu
+//    const root = btn.closest('[data-aco-root]') || btn.parentElement;
+//    const menu = root?.querySelector('[data-aco-menu]');
+//    if (!menu) return;
+
+    // fecha outro menu que esteja aberto
+//    if (openedMenu && openedMenu !== menu) closeAnyMenu();
+
+    // posiciona próximo ao botão (usa posição fixa p/ não “saltar” com scroll)
+//    const r = btn.getBoundingClientRect();
+//    menu.style.position = 'fixed';
+///    menu.style.left     = `${Math.max(8, r.right - menu.offsetWidth)}px`;
+//   / menu.style.top      = `${r.bottom + 6}px`;
+///    menu.style.zIndex   = 3000;
+
+//    menu.removeAttribute('hidden');
+//    menu.classList.add('show');
+//    openedMenu = menu;
+//  }
+
+  // 1) Clique nos botões de três pontos
+///  document.addEventListener('click', (ev)=>{
+//    const btn = ev.target.closest('[data-aco="menu"]');
+//    if (btn){
+//      ev.preventDefault();
+//      ev.stopPropagation();
+//      // garante que não submeta formulário nem navegue
+//      if (btn.tagName === 'A') btn.setAttribute('href', 'javascript:void(0)');
+//      openMenu(btn);
+//      return;
+//    }
+
+    // 2) Clique fora fecha o menu
+//    if (openedMenu && !ev.target.closest('[data-aco-menu]')){
+//      closeAnyMenu();
+//    }
+//  });
+
+  // 3) ESC fecha
+//  window.addEventListener('keydown', (ev)=>{
+//    if (ev.key === 'Escape') closeAnyMenu();
+//  });
+
+  // 4) quando QUALQUER modal abrir/fechar, fecha o menu
+///  const modalIds = ['modalImagem','modalVinculo','modalEditar'];
+//  modalIds.forEach(id=>{
+//    const el = document.getElementById(id);
+//    if (!el) return;
+//    el.addEventListener('click', (e)=>{ if (e.target===el) closeAnyMenu(); });
+    // se houver botões de fechar dentro do modal
+//    el.querySelectorAll('[data-dismiss="modal"], .btn-close, [data-mi-close], #miClose')
+//      .forEach(b=> b.addEventListener('click', closeAnyMenu));
+//  });
+
+  // 5) expõe utilitário global (para chamar ao abrir modal por JS)
+//  window.acoCloseMenus = closeAnyMenu;
+
+//})();
+</script>
 
 {{!-- <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> --}}
 {{!-- MOSTRANDO E ESCONDENDO MENU LATERAL --}}
@@ -1076,54 +1151,11 @@ document.getElementById('selectSetor').addEventListener('change', async function
 
 })
 </script>
-{{!-- modalContentSetorSecao --}}
+{{!-- modalContent_SetorSecao --}}
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const spans = document.querySelectorAll(".departamento-click");
-    const modal = document.getElementById("modalInfoSetorSecao");
-    const modalContent = document.getElementById("modalContentSetorSecao");
-
-    spans.forEach(span => {
-      span.addEventListener("click", function (e) {
-        const index = parseInt(this.dataset.index);
-
-        // Obtem dados do JS pré-carregado
-        const dados = window.todosSetoresSecoes?.[index];
-        if (!dados) return;
-
-        let html = "";
-        if (dados.setores?.length) {
-          html += "<strong>Setores:</strong><ul>";
-          dados.setores.forEach(s => html += `<li>${s}</li>`);
-          html += "</ul>";
-        }
-
-        if (dados.secoes?.length) {
-          html += "<strong>Seções:</strong><ul>";
-          dados.secoes.forEach(s => html += `<li>${s}</li>`);
-          html += "</ul>";
-        }
-
-        modalContent.innerHTML = html;
-
-        // Posiciona o modal
-        //const rect = this.getBoundingClientRect();
-        //modal.style.left = `${rect.left + window.scrollX}px`;
-        //modal.style.top = `${rect.top + window.scrollY - modal.offsetHeight - 10}px`;
-        //modal.style.display = "block";
-      });
-    });
-
-    // Esconde o modal ao clicar fora
-    document.addEventListener("click", function (e) {
-      if (!e.target.classList.contains("departamento-click") &&
-          !modal.contains(e.target)) {
-        modal.style.display = "none";
-      }
-    });
-  });
+  
 </script>
-{{!-- modalContentSetorSecao --}}
+{{!-- modalContent-SetorSecao --}}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const spans = document.querySelectorAll(".departamento-click");
@@ -1176,9 +1208,7 @@ document.getElementById('selectSetor').addEventListener('change', async function
      document.getElementById("cadastroProdutoModal").style.display="none"
   }
 </script>
-{{!-- AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA --}}
+{{!-- //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA --}} --}}
 {{!-- BLOCO 0 - Universal PREPARO (base compartilhada) --}}
 <script>
         // === BASE (estado + refs + helpers) ===
@@ -1199,7 +1229,88 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         const $miClearAll      = document.getElementById('miClearAll');
         const $miClose         = document.getElementById('miClose');
         const $btnGravar       = document.getElementById('btnGravarImagens');
-        console.log('1179')
+        // ?????????????????????????????????????????????????????????????????????????
+        // == Controle do <select> “Ações” (Vincular | Imagens | Editar | Deletar)
+let __lastActionSelect = null;
+
+function __resetActionSelect(sel){
+  console.log('[ 1279=>function __resetActionSelect(sel) ] ',sel)
+  try{
+    sel.selectedIndex = 0; // volta para a opção vazia/placeholder
+    sel.value = '';
+    sel.blur();            // fecha o dropdown nativo
+  }catch(_){}
+}
+
+function __resetSelectIfNeeded(){
+  if (__lastActionSelect){
+    __resetActionSelect(__lastActionSelect);
+    __lastActionSelect = null;
+  }
+}
+
+// Disponibiliza a função chamada pelo onchange do <select>
+window.executarAcaoComDataset = function(sel){
+  const acao   = sel.value;
+  const dados  = {
+    id:           sel.dataset.id,
+    descricao:    sel.dataset.descricao,
+    fornecedor:   sel.dataset.fornecedor,
+    departamento: sel.dataset.departamento
+  };
+
+  // guarda qual foi o último select usado (se algum modal fechar “por fora”)
+  __lastActionSelect = sel;
+
+  // *** IMPORTANTE: reseta AGORA para permitir escolher a MESMA opção depois ***
+  __resetActionSelect(sel);
+
+  // fecha qualquer dropdown custom (se você tiver) — inócuo se não existir
+  if (window.acoCloseMenus) window.acoCloseMenus();
+
+  // Dispara a ação escolhida
+  if (acao === 'imagens'){
+    // abre seu modal de imagens (você já tem essa função global)
+    if (window.abrirModalImagem) window.abrirModalImagem({
+      produtoId:    dados.id,
+      descricao:    dados.descricao,
+      fornecedor:   dados.fornecedor,
+      departamento: dados.departamento
+    });
+  }
+  else if (acao === 'vincular'){
+    if (window.abrirModalVinculo) window.abrirModalVinculo(dados);
+  }
+  else if (acao === 'editar'){
+    if (window.abrirModalEditar) window.abrirModalEditar(dados);
+  }
+  else if (acao === 'deletar'){
+    if (confirm('Deseja realmente excluir este item?')){
+      if (window.excluirProduto) window.excluirProduto(dados.id);
+    }
+  }
+};
+
+// Garante que, ao FECHAR qualquer modal, o select volte para a opção vazia
+['modalImagem','modalVinculo','modalEditar'].forEach(id=>{
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  // clique no backdrop do modal
+  el.addEventListener('click', (e)=>{ if (e.target === el) __resetSelectIfNeeded(); });
+
+  // botões de fechar que possam existir no modal
+  el.querySelectorAll('[data-dismiss="modal"], .btn-close, #miClose, [data-mi-close]')
+    .forEach(b=> b.addEventListener('click', __resetSelectIfNeeded));
+});
+
+// ESC em qualquer lugar também reseta (por segurança)
+window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') __resetSelectIfNeeded(); });
+
+
+
+        //?????????????????????????????????????????????????????????????????????????
+        console.log('1355')
         const $miBankMenuBtn   = document.getElementById('miBankMenuBtn');
         const $miBankMenu      = document.getElementById('miBankMenu');
         const $miBankMenuDesc  = document.getElementById('miBankMenuDesc');
@@ -1277,84 +1388,82 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         }
 
         
-  function clearBankUI(showMsg = true){
-    console.log('56666')
-    if ($miBankGrid) $miBankGrid.innerHTML = '';
-    // showMsg=true -> mostra "Não há imagens." / título de vazio
-    setBankEmptyState(!!showMsg);
-    __lastBankCriteria = { descricao:'', fornecedor:'' };
-    // fecha pop-menu se estiver aberto
-    if (typeof closeBankMenu === 'function') closeBankMenu();
-  }
-
-  // --- fecha o modal + limpa tudo que deve ser limpo
-  function closeModalImagem(){
-    clearBankUI(true);      // some com as miniaturas do banco
-    resetSlots();           // opcional, limpa os 7 slots
-    $backdrop.classList.remove('show');
-    $backdrop.setAttribute('aria-hidden','true');
-  }
+        function clearBankUI(showMsg = true){
+          console.log(' [ line 1434 => dentro de clearBankUIclearBankUI ]')
+          if ($miBankGrid) $miBankGrid.innerHTML = '';
+          // showMsg=true -> mostra "Não há imagens." / título de vazio
+          setBankEmptyState(!!showMsg);
+          __lastBankCriteria = { descricao:'', fornecedor:'' };
+          // fecha pop-menu se estiver aberto
+          if (typeof closeBankMenu === 'function') closeBankMenu();
+          console.log('[ line 1441 ]')
+        }
 
         let __lastBankCriteria = { descricao:'', fornecedor:'' };
 
         // --- limpeza completa ao fechar o modal ---
-function __limparEstadoDoModal(){
-  // slots (seleção)
-  resetSlots();
-  originalSlots.fill(null);
+        function __limparEstadoDoModal(){
+          console.log('')
+          // slots (seleção)
+          resetSlots();
+          originalSlots.fill(null);
 
-  // banco de imagens (lista e estado)
-  if ($miBankGrid) $miBankGrid.innerHTML = '';
-  setBankEmptyState(true);                 // mostra “Não há imagens.”
-  __lastBankCriteria = { descricao:'', fornecedor:'' };
+          // banco de imagens (lista e estado)
+          if ($miBankGrid) $miBankGrid.innerHTML = '';
+          setBankEmptyState(true);                 // mostra “Não há imagens.”
+          __lastBankCriteria = { descricao:'', fornecedor:'' };
 
-  // menu pop (se estiver aberto)
-  if ($miBankMenu){
-    $miBankMenu.classList.remove('show');
-    $miBankMenu.setAttribute('hidden','');
-  }
+          // menu pop (se estiver aberto)
+          if ($miBankMenu){
+            $miBankMenu.classList.remove('show');
+            $miBankMenu.setAttribute('hidden','');
+          }
 
-  // file input
-  if ($hiddenFile){
-    $hiddenFile.value = '';
-    delete $hiddenFile.dataset.targetIdx;
-  }
-}
+          // file input
+          if ($hiddenFile){
+            $hiddenFile.value = '';
+            delete $hiddenFile.dataset.targetIdx;
+          }
+        }
 
-// fecha + limpa (use em todos os handlers de fechar)
-function __fecharModal(){
+        // fecha + limpa (use em todos os handlers de fechar)
+        function __fecharModal(){
   $backdrop.classList.remove('show');
   $backdrop.setAttribute('aria-hidden','true');
+
   __limparEstadoDoModal();
+
+  // NOVO: reseta TODOS os selects do menu de ações
+  document.querySelectorAll('#produtoTable select.form-select, #produtoTable select.form-select-sm')
+    .forEach(sel => { try { sel.selectedIndex = 0; sel.value = ''; sel.blur(); } catch(_){} });
+
+  __lastActionSelect = null;
 }
 
 
-</script>
-<script>
-  // --- limpa UI do banco de imagens e zera o último critério
-</script>
 
+</script>
 {{!-- /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */ --}}
 <script>
-  /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */
-  $hiddenFile?.addEventListener('change', (ev)=>{
-            const APLICAR_FILTRO_UPLOAD = true; 
-            const file = ev.target.files?.[0];
-            const idx  = Number(ev.target.dataset.targetIdx ?? '-1');
-            if (!file || idx < 0) return;
+        /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */
+        $hiddenFile?.addEventListener('change', (ev)=>{
+                  const APLICAR_FILTRO_UPLOAD = true; 
+                  const file = ev.target.files?.[0];
+                  const idx  = Number(ev.target.dataset.targetIdx ?? '-1');
+                  if (!file || idx < 0) return;
 
-            if (APLICAR_FILTRO_UPLOAD && $miDescricao?.value){
-            if (!matchDescricaoTexto(file.name, $miDescricao.value)){
-                alert('A imagem escolhida não parece do mesmo produto (pelo nome do arquivo).');
-                ev.target.value = '';
-                return;
-            }
-            }
+                  if (APLICAR_FILTRO_UPLOAD && $miDescricao?.value){
+                  if (!matchDescricaoTexto(file.name, $miDescricao.value)){
+                      alert('A imagem escolhida não parece do mesmo produto (pelo nome do arquivo).');
+                      ev.target.value = '';
+                      return;
+                  }
+                  }
 
-            const reader = new FileReader();
-            reader.onload = ()=>{ slots[idx] = { type:'file', file }; fillSlot(idx, reader.result); };
-            reader.readAsDataURL(file);
-  });
+                  const reader = new FileReader();
+                  reader.onload = ()=>{ slots[idx] = { type:'file', file }; fillSlot(idx, reader.result); };
+                  reader.readAsDataURL(file);
+        });
 </script>
 {{!-- // BLOCO 2 — CARREGA AS IMAGENS JÁ VINCULADAS (por produtoId) + ABRIR MODAL --}}
 <script>
@@ -1367,7 +1476,7 @@ function __fecharModal(){
           let lista = [];
           try {
               // ajuste a rota se a sua for diferente
-              const r = await fetch(`/gravafoto/produtoImagem/buscar/${encodeURIComponent(produtoId)}`);
+              const r = await fetch(`/gravafoto/produtoImagem/buscar/${encodeURIComponent(produtoId)}`, { cache: 'no-store' });
               if (r.ok) lista = await r.json();
               console.log('');
               console.log(lista);
@@ -1413,7 +1522,6 @@ function __fecharModal(){
 
 
           if (!$miSlotGrid || !$miSlotGrid.children.length) resetSlots();
-//              100000000000000000000'
  
             for (const it of docs.slice(0, MAX_SLOTS)) {
                   const i = firstEmpty();
@@ -1425,17 +1533,20 @@ function __fecharModal(){
                   originalSlots[i] = { url: it.url, key: it.key };
                   fillSlot(i, it.url);   // usa sua função já existente
             }
-
+             
 
     }
 
 
-        async function _abrirModalImagemImpl({ produtoId='', descricao='', fornecedor='', departamento='', pagerUrls=[] } = {}){
+    async function _abrirModalImagemImpl({ produtoId='', descricao='', fornecedor='', departamento='', pagerUrls=[] } = {}){
+                if (window.acoCloseMenus) window.acoCloseMenus();
+                __resetSelectIfNeeded(); 
                 // preenche cabeçalho
                 $miProdId.value       = String(produtoId||'');
                 $miDescricao.value    = String(descricao||'');
                 $miFornecedor.value   = String(fornecedor||'');
                 $miDepartamento.value = String(departamento||'');
+                clearBankUI(true)
 
                 // limpa slots + baseline
                 resetSlots();
@@ -1448,247 +1559,182 @@ function __fecharModal(){
                 // abre modal
                 $backdrop.classList.add('show');
                 $backdrop.setAttribute('aria-hidden','false');
-        }
+    }
 
-        // expõe para quem chama
-        window.abrirModalImagem     = _abrirModalImagemImpl;
-        globalThis.abrirModalImagem = _abrirModalImagemImpl;
+    // expõe para quem chama
+    window.abrirModalImagem     = _abrirModalImagemImpl;
+    globalThis.abrirModalImagem = _abrirModalImagemImpl;
 </script>
 {{!-- // BLOCO 3 — BUSCA NO BANCO DE IMAGENS --}}
 <script>
     // BLOCO 3 — Banco de imagens (filtro leve por descrição)
-// BLOCO 3 — Banco de imagens (filtro leve por descrição)
-async function carregarBcoImagens({descricao, fornecedor, departamento}){
-  __lastBankCriteria = { descricao: descricao || '', fornecedor: fornecedor || '' };
+    async function carregarBcoImagens({descricao, fornecedor, departamento}){
+        __lastBankCriteria = { descricao: descricao || '', fornecedor: fornecedor || '' };
 
-  $miBankGrid.innerHTML = '';
-  setBankEmptyState(false);
+        $miBankGrid.innerHTML = '';
+        setBankEmptyState(false);
 
-  try{
-    const q = new URLSearchParams({
-      descricao: descricao || '',
-      fornecedor: fornecedor || '',
-      departamento: departamento || ''
-    }).toString();
+        try{
+          const q = new URLSearchParams({
+            descricao: descricao || '',
+            fornecedor: fornecedor || '',
+            departamento: departamento || ''
+          }).toString();
 
-    const r = await fetch(`/gravafoto/buscarBcoImg?${q}`);
-    if (!r.ok) throw new Error('Falha ao buscar banco de imagens');
+          const r = await fetch(`/gravafoto/buscarBcoImg?${q}`, { cache: 'no-store' });
+          if (!r.ok) throw new Error('Falha ao buscar banco de imagens');
 
-    let lista = await r.json();
-    if (!Array.isArray(lista)) lista = [];
+          let lista = await r.json();
+          if (!Array.isArray(lista)) lista = [];
 
-    // filtro leve por descrição do produto
-    if (descricao) lista = lista.filter(it => matchDescricaoTexto(it?.produtoNome||it?.url||'', descricao));
+          // filtro leve por descrição do produto
+          if (descricao) lista = lista.filter(it => matchDescricaoTexto(it?.produtoNome||it?.url||'', descricao));
 
-    if (!lista.length){ setBankEmptyState(true); return; }
+          if (!lista.length){ setBankEmptyState(true); return; }
 
-    for (const it of lista){
-      const card = document.createElement('div'); card.className='mi-thumb';
-      const img  = document.createElement('img'); img.loading='lazy'; img.src = it.url;
-      card.appendChild(img);
-      card.addEventListener('click', ()=>{
-        const i = firstEmpty(); if (i===-1){ alert('Limite de 7 imagens.'); return; }
-        slots[i] = { type:'bank', url: it.url, key: it.key||null, origin:'bank' };
-        fillSlot(i, it.url);
-      });
-      $miBankGrid.appendChild(card);
+          for (const it of lista){
+            const card = document.createElement('div'); card.className='mi-thumb';
+            const img  = document.createElement('img'); img.loading='lazy'; img.src = it.url;
+            card.appendChild(img);
+            card.addEventListener('click', ()=>{
+              const i = firstEmpty(); if (i===-1){ alert('Limite de 7 imagens.'); return; }
+              slots[i] = { type:'bank', url: it.url, key: it.key||null, origin:'bank' };
+              fillSlot(i, it.url);
+            });
+            $miBankGrid.appendChild(card);
+          }
+        }catch(e){
+          console.error(e);
+          setBankEmptyState(true);
+        }
     }
-  }catch(e){
-    console.error(e);
-    setBankEmptyState(true);
-  }
-}
 
-// Recarregar usa o último critério (se existir), senão pega os inputs
-$miReloadBank?.addEventListener('click', ()=>{
-  const hasLast = (__lastBankCriteria.descricao || __lastBankCriteria.fornecedor);
-  const crit = hasLast
-    ? { ...__lastBankCriteria, departamento: '' }
-    : { descricao: $miDescricao.value || '', fornecedor: $miFornecedor.value || '', departamento: $miDepartamento.value || '' };
-  carregarBcoImagens(crit);
-});
+    // Recarregar usa o último critério (se existir), senão pega os inputs
+    $miReloadBank?.addEventListener('click', ()=>{
+      const hasLast = (__lastBankCriteria.descricao || __lastBankCriteria.fornecedor);
+      const crit = hasLast
+        ? { ...__lastBankCriteria, departamento: '' }
+        : { descricao: $miDescricao.value || '', fornecedor: $miFornecedor.value || '', departamento: $miDepartamento.value || '' };
+      carregarBcoImagens(crit);
+    });
 
+    function openBankMenu(){
+      if(!$miBankMenu || !$miBankMenuBtn) return;
 
-// Pop-menu (abrir/fechar/ações)
-//function openBankMenu(anchor){
-//  console.log('1435')
-//  if(!$miBankMenu) return;
-// / const rectModal  = $backdrop.getBoundingClientRect();
-//  const rectButton = anchor.getBoundingClientRect();
-//  $miBankMenu.style.left   = `${rectButton.left - rectModal.left}px`;
-//  $miBankMenu.style.bottom = `58px`;
-//  $miBankMenu.classList.add('show');
-//  $miBankMenu.removeAttribute('hidden');
-//}
-function openBankMenu(){
-  if(!$miBankMenu || !$miBankMenuBtn) return;
+      // garante que o menu é filho do bloco da esquerda do rodapé
+      const anchorWrap = $miBankMenuBtn.closest('.mi-footer-left');
+      if (anchorWrap && $miBankMenu.parentElement !== anchorWrap) {
+        anchorWrap.appendChild($miBankMenu);
+      }
 
-  // garante que o menu é filho do bloco da esquerda do rodapé
-  const anchorWrap = $miBankMenuBtn.closest('.mi-footer-left');
-  if (anchorWrap && $miBankMenu.parentElement !== anchorWrap) {
-    anchorWrap.appendChild($miBankMenu);
-  }
+      // força posição fixa no lado esquerdo
+      $miBankMenu.style.left   = '0';
+      $miBankMenu.style.right  = 'auto';
+      $miBankMenu.style.bottom = '56px';
 
-  // força posição fixa no lado esquerdo
-  $miBankMenu.style.left   = '0';
-  $miBankMenu.style.right  = 'auto';
-  $miBankMenu.style.bottom = '56px';
+      $miBankMenu.classList.add('show');
+      $miBankMenu.removeAttribute('hidden');
+    }
 
-  $miBankMenu.classList.add('show');
-  $miBankMenu.removeAttribute('hidden');
-}
+    function closeBankMenu(){
+      if(!$miBankMenu) return;
+      $miBankMenu.classList.remove('show');
+      $miBankMenu.setAttribute('hidden','');
+    }
 
-function closeBankMenu(){
-  if(!$miBankMenu) return;
-  $miBankMenu.classList.remove('show');
-  $miBankMenu.setAttribute('hidden','');
-}
+    $miBankMenuBtn?.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      if ($miBankMenu.classList.contains('show')) closeBankMenu();
+      else openBankMenu();
+    });
 
 
+    // fecha menu ao clicar fora
+    document.addEventListener('click', (e)=>{
+      if (!$miBankMenu?.classList.contains('show')) return;
+      const t = e.target;
+      if (!$miBankMenu.contains(t) && !$miBankMenuBtn.contains(t)) closeBankMenu();
+    });
 
 
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeBankMenu(); });
 
-//function closeBankMenu(){
-//  if(!$miBankMenu) return;
-//  $miBankMenu.classList.remove('show');
-//  $miBankMenu.setAttribute('hidden','');
-//}
-
-//$miBankMenuBtn?.addEventListener('click', (e)=>{
-//  console.log('1450 - clique no botão Bco Imagem');
-//  e.stopPropagation();
-
-  // DIAGNÓSTICO: garantir que os elementos existem
-//  if (!$miBankMenu) {
-//    console.warn('[miBankMenuBtn] $miBankMenu é null. Falta o HTML do menu (id="miBankMenu")?');
-//    return;
-//  }
-//  if (!$backdrop) {
-//    console.warn('[miBankMenuBtn] $backdrop é null. Verifique id="modalImagem".');
-//    return;
-//  }
-
-//  if ($miBankMenu.classList.contains('show')) {
-//    closeBankMenu();
-//  } else {
-//    openBankMenu(e.currentTarget);
-//  }
-//});
-$miBankMenuBtn?.addEventListener('click', (e)=>{
-  e.stopPropagation();
-  if ($miBankMenu.classList.contains('show')) closeBankMenu();
-  else openBankMenu();
-});
+    // ações do menu
+    $miBankMenuDesc?.addEventListener('click', ()=>{
+      closeBankMenu();
+      __lastBankCriteria = { descricao: $miDescricao.value || '', fornecedor: '' };
+      carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
+    });
+    $miBankMenuFor?.addEventListener('click', ()=>{
+      closeBankMenu();
+      __lastBankCriteria = { descricao: '', fornecedor: $miFornecedor.value || '' };
+      carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
+    });
 
 
-// fecha menu ao clicar fora / ESC
-//document.addEventListener('click', (e)=>{
-//  console.log('1457')
-//  if (!$miBankMenu?.classList.contains('show')) return;
-//  const t = e.target;
-//  if (!$miBankMenu.contains(t) && !$miBankMenuBtn.contains(t)) closeBankMenu();
-//});
+    // atalhos existentes (mantém)
+    $miClearAll?.addEventListener('click', resetSlots);
 
-// fecha menu ao clicar fora
-document.addEventListener('click', (e)=>{
-  if (!$miBankMenu?.classList.contains('show')) return;
-  const t = e.target;
-  if (!$miBankMenu.contains(t) && !$miBankMenuBtn.contains(t)) closeBankMenu();
-});
+    // botão X (fechar)
+    $miClose?.addEventListener('click', __fecharModal);
 
+    // clique no fundo do backdrop
+    $backdrop?.addEventListener('click', (ev)=>{
+      if (ev.target === $backdrop) __fecharModal();
+    });
 
-window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeBankMenu(); });
-
-// ações do menu
-//$miBankMenuDesc?.addEventListener('click', ()=>{
-//  closeBankMenu();
-//  __lastBankCriteria = { descricao: $miDescricao.value || '', fornecedor: '' };
-//  carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
-//});
-
-//$miBankMenuFor?.addEventListener('click', ()=>{
-//  closeBankMenu();
-//  __lastBankCriteria = { descricao: '', fornecedor: $miFornecedor.value || '' };
-//  carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
-//});
-
-// ações do menu
-$miBankMenuDesc?.addEventListener('click', ()=>{
-  closeBankMenu();
-  __lastBankCriteria = { descricao: $miDescricao.value || '', fornecedor: '' };
-  carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
-});
-$miBankMenuFor?.addEventListener('click', ()=>{
-  closeBankMenu();
-  __lastBankCriteria = { descricao: '', fornecedor: $miFornecedor.value || '' };
-  carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
-});
-
-
-// atalhos existentes (mantém)
-$miClearAll?.addEventListener('click', resetSlots);
-//$miClose?.addEventListener('click', ()=>{ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); });
-//$backdrop?.addEventListener('click', ev=>{ if (ev.target===$backdrop){ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); }});
-//window.addEventListener('keydown', ev=>{ if (ev.key==='Escape' && $backdrop.classList.contains('show')){ $backdrop.classList.remove('show'); $backdrop.setAttribute('aria-hidden','true'); }});
-// botão X (fechar)
-$miClose?.addEventListener('click', __fecharModal);
-
-// clique no fundo do backdrop
-$backdrop?.addEventListener('click', (ev)=>{
-  if (ev.target === $backdrop) __fecharModal();
-});
-
-// ESC
-window.addEventListener('keydown', (ev)=>{
-  if (ev.key === 'Escape' && $backdrop.classList.contains('show')){
-    __fecharModal();
-  }
-});
+    // ESC
+    window.addEventListener('keydown', (ev)=>{
+      if (ev.key === 'Escape' && $backdrop.classList.contains('show')){
+        __fecharModal();
+      }
+    });
 
 
 </script>
 {{!-- // BLOCO 4 — Gravar imagens (usa suas funções existentes) --}}
 <script>
-        // BLOCO 4 — Gravar imagens (usa suas funções existentes)
-        $btnGravar?.addEventListener('click', async ()=>{
-        const temAlgo = slots.some(Boolean);
-        if (!temAlgo){ alert('Nenhuma imagem selecionada.'); return; }
+    // BLOCO 4 — Gravar imagens (usa suas funções existentes)
+    $btnGravar?.addEventListener('click', async ()=>{
+            const temAlgo = slots.some(Boolean);
+            if (!temAlgo){ alert('Nenhuma imagem selecionada.'); return; }
 
-        // --- diffs (igual ao que você já vinha usando) ---
-        const sameRef = (a,b)=> !!(a&&b) && (
-            (a.key && b.key && a.key===b.key) ||
-            (!a.key && !b.key && a.url && b.url && a.url===b.url)
-        );
+            // --- diffs (igual ao que você já vinha usando) ---
+            const sameRef = (a,b)=> !!(a&&b) && (
+                (a.key && b.key && a.key===b.key) ||
+                (!a.key && !b.key && a.url && b.url && a.url===b.url)
+            );
 
-        const removed=[], refsAdd=[], uploads=[];
-        for (let i=0;i<MAX_SLOTS;i++){
-            const orig = originalSlots[i];
-            const cur  = slots[i];
-            if (!orig && !cur) continue;
-            if (!orig && cur){ (cur.type==='file' ? uploads : refsAdd).push({idx:i, ...cur}); continue; }
-            if (orig && !cur){ removed.push({idx:i, ...orig}); continue; }
-            if (cur.type==='file'){ removed.push({idx:i, ...orig}); uploads.push({idx:i, ...cur}); }
-            else if (cur.type==='bank'){ sameRef(orig,cur) ? 0 : (removed.push({idx:i, ...orig}), refsAdd.push({idx:i, ...cur})); }
-        }
+            const removed=[], refsAdd=[], uploads=[];
+            for (let i=0;i<MAX_SLOTS;i++){
+                const orig = originalSlots[i];
+                const cur  = slots[i];
+                if (!orig && !cur) continue;
+                if (!orig && cur){ (cur.type==='file' ? uploads : refsAdd).push({idx:i, ...cur}); continue; }
+                if (orig && !cur){ removed.push({idx:i, ...orig}); continue; }
+                if (cur.type==='file'){ removed.push({idx:i, ...orig}); uploads.push({idx:i, ...cur}); }
+                else if (cur.type==='bank'){ sameRef(orig,cur) ? 0 : (removed.push({idx:i, ...orig}), refsAdd.push({idx:i, ...cur})); }
+            }
 
-        try{
-            // aqui você chama suas funções já existentes:
-            await salvarImagensCompat({
-            produtoId:    $miProdId.value,
-            descricao:    $miDescricao.value,
-            fornecedor:   $miFornecedor.value,
-            departamento: $miDepartamento.value,
-            refsAdd, uploads, removed,
-            order: slots.map((s,i)=> s ? (s.type==='bank'?{type:'bank',idx:i,key:s.key}:{type:'file',idx:i,filename:s.file?.name||null}) : null)
-            }, slots);
+            try{
+                // aqui você chama suas funções já existentes:
+                await salvarImagensCompat({
+                produtoId:    $miProdId.value,
+                descricao:    $miDescricao.value,
+                fornecedor:   $miFornecedor.value,
+                departamento: $miDepartamento.value,
+                refsAdd, uploads, removed,
+                order: slots.map((s,i)=> s ? (s.type==='bank'?{type:'bank',idx:i,key:s.key}:{type:'file',idx:i,filename:s.file?.name||null}) : null)
+                }, slots);
 
-            alert('Imagens gravadas com sucesso.');
-            $backdrop.classList.remove('show');
-            $backdrop.setAttribute('aria-hidden','true');
-        }catch(e){
-            console.error(e); alert('Erro ao gravar imagens. Veja o console.');
-        }
-});
+                alert('Imagens gravadas com sucesso.');
+                //$backdrop.classList.remove('show');
+                //$backdrop.setAttribute('aria-hidden','true');
+                __fecharModal();
+            }catch(e){
+                console.error(e); alert('Erro ao gravar imagens. Veja o console.');
+            }
+    });
 </script>
 <script>
 function pad2(n){ return String(n+1).padStart(2,'0'); }
@@ -1712,7 +1758,7 @@ async function salvarImagensCompat({ produtoId, descricao, fornecedor, departame
                   filetype: file.type || 'image/png',
                   ordem: pad2(idx)
                 });
-                const r = await fetch(`/gravafoto/getpresignedurl?${qs.toString()}`);
+                const r = await fetch(`/gravafoto/getpresignedurl?${qs.toString()}`, { cache: 'no-store' });
                 console.log('R =====',r)
                 if (!r.ok) throw new Error('Falha ao obter URL de upload');
                 const { uploadUrl, key } = await r.json();

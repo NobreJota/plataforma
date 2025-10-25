@@ -49,8 +49,6 @@ function escRE(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
 function wordBoundary(token) { return new RegExp(`\\b${escRE(token)}(?:s)?\\b`, "i"); } // singular/plural
 function looseRE(token) { return new RegExp(token.split("").join(".{0,2}"), "i"); }     // fuzzy leve
 
-
-
 /* <><><><><><><><></></></></></></></></><><><><><><><><></></></></></></></></><><><><><><><><></></></></></></></></> */
 // Rota para gerar a URL assinada
 //router.get("/getpresignedurl", async (req, res) => {
@@ -72,8 +70,11 @@ router.get("/getpresignedurl", async (req, res) => {
     res.json({ uploadUrl, key });
 
     // logs opcionais (válidos)
+    console.log('');
     console.log('[getpresignedurl] key:', key);
+    console.log('.........................................................');
     console.log('[getpresignedurl] url:', uploadUrl);
+    console.log('');
   } catch (err) {
     console.error("Erro ao gerar URL assinada:", err);
     res.status(500).json({ error: "Erro ao gerar URL" });
@@ -85,11 +86,6 @@ router.get("/getpresignedurl", async (req, res) => {
    console.log('----------------------------------');
 
 });
-///});
-
-//const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });  //https://amelia.nyc3.digitaloceanspaces.com/produtos/biquiniVermelho.png
-//});//
-
 
 router.get("/listararquivos", async (req, res) => {
   console.log('');
@@ -255,12 +251,102 @@ router.get("/produtoImagem/buscar/:termo", async (req, res) => {
 });
 
 // GET /gravafoto/produtoImagem/buscar?descricao=...&fornecedor=...
-router.get("/buscarBcoImg", async (req, res) => {
+router.get("/buscar-BcoImg", async (req, res) => {
+  console.log('=========100======>>',req.query)
+  console.log('');
   try {
-    const { descricao = "", fornecedor = "" } = req.query;
+  //  const rawDesc  = String(req.query.descricao || '').trim();
+  //  const fornecedor = String(req.query.fornecedor || '').trim();
+  //  const departamento = String(req.query.departamento || '').trim();
 
-    // se nada foi passado, evite varrer a coleção inteira
-    if (!descricao && !fornecedor) return res.json([]);
+    // --- monta filtro dinamicamente ---
+  //  const filter = {};
+
+    // filtro leve por descrição no servidor (produtoNome / url)
+ //   if (rawDesc) {
+ //     const rx = new RegExp(rawDesc.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'); // escape + case-insensitive
+      // tente bater em produtoNome; se não existir no schema, remova essa linha
+  //    filter.$or = [
+  //      { produtoNome: rx },
+  //      { url: rx }
+  //    ];
+   // }
+
+    const rawDesc = String(req.query.descricao || '').trim();
+console.log('',rawDesc)
+// escape seguro + permite “qualquer coisa entre as palavras”
+const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const rxLoose = rawDesc ? new RegExp(escape(rawDesc).replace(/\s+/g, '.*'), 'i') : null;
+
+const filter = {};
+if (rxLoose) {
+  filter.$or = [
+    { produtoNome: rxLoose },
+    { nome: rxLoose },
+    { descricao: rxLoose },
+    { descricaoProduto: rxLoose },
+    { codigo: rxLoose },
+    { code: rxLoose },
+    { url: rxLoose },
+    { filename: rxLoose },
+    { key: rxLoose },
+  ];
+}
+
+    // se no seu schema fornecedor é string (nome/razao) OU ObjectId (ref):
+  //  if (fornecedor) {
+      // Ex. se for string "razao":
+  //    filter['fornecedor'] = fornecedor; 
+      // Se for ObjectId de ref: filter['fornecedor'] = new mongoose.Types.ObjectId(fornecedor)
+  //  }
+
+    // idem para departamento: ajuste campo conforme seu schema
+ //   if (departamento) {
+ //     filter['departamento'] = departamento;
+ //   }
+
+    // limites/ordem — ajuste conforme necessidade
+    const limit  = Math.min(parseInt(req.query.limit || '60', 10), 200);
+    const cursor = ProdutoImagem.find(filter)
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .lean();
+    
+    const docs = await cursor;
+     console.log('URLDOCS',docs)
+    // normaliza para o formato que o front espera
+    const resp = (docs || []).map(d => ({
+      url: d.imagemUrl,                     // precisa existir no schema
+      key: d.key || d.filename || null, // ajuste conforme seu storage
+      produtoNome: d.produtoNome || ''  // opcional, ajuda no matchDescricaoTexto
+    }));
+
+    console.log('1000=> resp',resp)
+     
+    // cache-control para evitar resultados “velhos”
+    res.set('Cache-Control', 'no-store');
+    return res.json(resp);
+
+  } catch (err) {
+    console.error('Erro em /buscarBcoImg:', err);
+    return res.status(500).json({ error: 'Falha ao buscar banco de imagens' });
+  }
+
+});
+
+
+//const ProdutoImagem = require("./models/ProdutoImagem");
+(async () => {
+  const cur = ProdutoImagem.find().cursor();
+  for await (const d of cur) { await d.save(); } // dispara o pre('save') e preenche *_norm
+  console.log("Backfill *_norm concluído");
+})();
+
+router.get("/buscar_BcoImg", async (req, res) => {
+
+  try{
+        // se nada foi passado, evite varrer a coleção inteira
+        if (!descricao && !fornecedor) return res.json([]);
 
     // --- helpers simples (use os seus se já existirem no arquivo) ---
     const norm = s => String(s || "")
@@ -318,11 +404,73 @@ router.get("/buscarBcoImg", async (req, res) => {
   }
 });
 
+router.get("/buscarBcoImg", async (req, res) => {
+// ===== filtro por descricao (ignorando números e unidades) =====
+const rawDesc = String(req.query.descricao || '').trim();
 
-//const ProdutoImagem = require("./models/ProdutoImagem");
-(async () => {
-  const cur = ProdutoImagem.find().cursor();
-  for await (const d of cur) { await d.save(); } // dispara o pre('save') e preenche *_norm
-  console.log("Backfill *_norm concluído");
-})();
+const escapeRx = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const norm = s => String(s || '')
+  .normalize('NFD').replace(/\p{Diacritic}/gu, '')
+  .toLowerCase().trim();
+
+// remove palavras inúteis e números (80, 100, mm, cm, x, de/da/do…)
+const STOP = new Set(['de','da','do','das','dos','mm','cm','m','x','para','e']);
+const tokens = norm(rawDesc).split(/[^a-z0-9]+/g)
+  .filter(t => t && !STOP.has(t) && !/^\d+$/.test(t));
+
+// constrói um regex tolerante: termo1 .* termo2 (ordem preservada)
+let rxLoose = null;
+if (tokens.length) {
+  const pattern = tokens.map(escapeRx).join('.*');
+  rxLoose = new RegExp(pattern, 'i');   // ex.: "aro.*arremate"
+}
+
+const filter = {};
+if (rxLoose) {
+  filter.$or = [
+    { produtoNome: rxLoose },
+    { nome: rxLoose },
+    { descricao: rxLoose },
+    { imagemUrl: rxLoose },
+    { key: rxLoose },
+    { filename: rxLoose },
+    { url: rxLoose },
+  ];
+}
+
+// ===== busca =====
+const limit = Math.min(parseInt(req.query.limit || '60', 10), 200);
+
+let docs = await ProdutoImagem
+  .find(filter, { imagemUrl:1, url:1, key:1, filename:1, produtoNome:1 })
+  .sort({ createdAt: -1 })
+  .limit(limit)
+  .lean();
+
+// (opcional) dedup por key/url
+const seen = new Set();
+docs = docs.filter(d => {
+  const k = d.key || d.filename || d.imagemUrl || d.url;
+  if (!k) return true;
+  if (seen.has(k)) return false;
+  seen.add(k);
+  return true;
+});
+
+// map final
+const resp = docs.map(d => ({
+  url: (d.imagemUrl && /^https?:\/\//i.test(d.imagemUrl)) ? d.imagemUrl
+       : (d.url || d.imagemUrl || ''),
+  key: d.key || d.filename || null,
+  produtoNome: d.produtoNome || d.nome || d.descricao || ''
+}));
+
+console.log('');
+console.log('',resp);
+console.log('');
+
+res.set('Cache-Control', 'no-store');
+return res.json(resp);
+
+});
 module.exports = router;

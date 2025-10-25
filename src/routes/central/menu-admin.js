@@ -53,6 +53,7 @@ router.post('/login',async(req,res)=>{
                                             req.flash('error_msg', 'Senha inválida.');
                                             return res.redirect('/usuarioloja/login');
                                             }
+                                            console.log('6000');
                                             return res.render('pages/central/centralmenu.handlebars', {
                                                    layout: 'central/admin.handlebars',
                                                    usuarioNome: user.nome

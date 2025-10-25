@@ -2,13 +2,39 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema;
 
+// LocalizacaoRefSchema (apenas o trecho)
 const LocalizacaoRefSchema = new Schema({
-  departamento:[ { type: mongoose.Schema.Types.ObjectId, ref: "departamentos" }],
-  setor: [{
-    nameSetor: { type: mongoose.Schema.Types.ObjectId, ref: "deptosetores" },
-    secao: [{ nameSecao: { type: mongoose.Schema.Types.ObjectId, ref: "deptosecoes" } }]
-  }]
+  departamento: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'departamentos' }],
+    default: []
+  },
+  setor: {
+    type: [{
+      // RENOMEADO
+      idSetor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'deptosetores',
+        required: true
+      },
+      // secao é ARRAY de refs; default: []
+      secao: {
+        type: [{
+          // RENOMEADO
+          idSecao: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'deptosecoes',
+            required: true
+          },
+          _id: false
+        }],
+        default: []    // evita voltar "secao: null"
+      },
+      _id: false
+    }],
+    default: []        // idem para "setor"
+  }
 }, { _id: false });
+
 
 // 🔸 Schema principal
 const MconstrucaoSchema = new Schema({
@@ -17,7 +43,16 @@ const MconstrucaoSchema = new Schema({
   cidade: { type: String },
   bairro: { type: String },
   codigo: { type: String, index: true },
-  descricao: { type: String },
+  // NOVO: validação que proíbe dígitos
+  descricao: {
+      type: String,
+      trim: true,
+      minlength: 2,
+      validate: {
+        validator: v => !/\d/.test(v || ''),
+        message: 'Descrição não pode conter números; use os campos "complemento" ou "referência".'
+      }
+  },
   complete: { type: String, default: false },
   referencia: { type: String },
   fornecedor: { type: Schema.Types.ObjectId, ref: "fornec" },
@@ -43,7 +78,8 @@ const MconstrucaoSchema = new Schema({
       default: []
   },
   pageok: { type: Boolean, default: false },
-  ativo: { type: Number },
+  ativo: { type: Number, enum: [1, 9], default: 1, index: true },
+  datadel: { type: Date, default: null },
   figure_mini: { type: String },
   figure_media: { type: String },
 
@@ -54,6 +90,7 @@ const MconstrucaoSchema = new Schema({
 // campos usados nos filtros
 MconstrucaoSchema.index({ loja_id: 1 });
 MconstrucaoSchema.index({ 'localloja.departamento': 1 });
+MconstrucaoSchema.index({ ativo: 1, datadel: 1 });
 
 
 // índice de texto para busca por palavra

@@ -1,0 +1,154 @@
+<style>
+  .aj-card img{ width:100%; height:180px; object-fit:contain; background:#fff; }
+  .aj-card .aj-title{ font-weight:600; font-size:.95rem; min-height: 2.6em; }
+  .aj-status{ font-size:.8rem; }
+</style>
+
+<div class="container-fluid p-3" style="margin-top: 3.5vh;background-color: blueviolet;">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="h6 m-0">Ajustes de Produtos ({{total}} candidatos)</h3>
+    <div>
+      {{#if hasPrev}}<a class="btn btn-sm btn-outline-secondary" href="?page={{pagePrev}}&limit={{limit}}">◀</a>{{/if}}
+      <span class="mx-2 small">pág. {{page}}</span>
+      {{#if hasNext}}<a class="btn btn-sm btn-outline-secondary" href="?page={{pageNext}}&limit={{limit}}">▶</a>{{/if}}
+      <button id="btnAjustarTodos" class="btn btn-sm btn-primary ms-3">Ajustar todos desta página</button>
+    </div>
+  </div>
+
+  <div id="ajGrid" class="row g-3">
+    {{this._id}}
+    {{#each itens}}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          
+              <div class="card aj-card h-100" data-id="{{this._id}}" data-idsetor="{{ this.firstIdSetor}}">
+                        <img src="{{_img}}" alt="img">
+                        <div class="card-body d-flex flex-column">
+                          <div class="aj-title mb-2" title="{{this.descricao}}">{{this.descricao}}</div>
+                          <div class="d-flex align-items-center mt-auto gap-2">
+                            <button class="btn btn-sm btn-success btnAjustar">Ajustar</button>
+                            <span class="aj-status text-muted">aguardando…</span>
+                          </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mt-2" style="background-color: #fff;">
+                            <button class="btn btn-sm btn-outline-primary btnEscolherSecao">Definir seção X</button>
+                            <select class="form-select form-select-sm d-none selSecao"></select>
+                            <button class="btn btn-sm btn-primary d-none btnSalvarSecao">Salvar ??</button>
+                        </div>
+              </div>
+        </div>
+    {{/each}}
+  </div>
+  
+
+</div>
+
+<script>
+(function(){
+  const grid = document.getElementById('ajGrid');
+  const btnTodos = document.getElementById('btnAjustarTodos');
+
+  async function ajustar(id, $status){
+    $status.textContent = 'ajustando…';
+    try{
+      const r = await fetch(`/ajuste/ajustes/produto/${id}`, { method:'PATCH' });
+      const j = await r.json();
+      if (j.ok){ $status.textContent = '✔ ajustado'; $status.classList.remove('text-muted'); $status.classList.add('text-success'); }
+      else { throw new Error(j.error || 'falha'); }
+    }catch(e){
+      $status.textContent = '✖ erro'; $status.classList.remove('text-muted'); $status.classList.add('text-danger');
+      console.error('erro ao ajustar', id, e);
+    }
+  }
+
+  grid.addEventListener('click', (ev)=>{
+    const btn = ev.target.closest('.btnAjustar');
+    if (!btn) return;
+    const card = btn.closest('.aj-card'); const id = card?.dataset?.id;
+    const st = card.querySelector('.aj-status');
+    if (id) ajustar(id, st);
+  });
+
+  btnTodos?.addEventListener('click', async ()=>{
+    const ids = [...document.querySelectorAll('.aj-card')].map(c => c.dataset.id);
+    const sts = [...document.querySelectorAll('.aj-card .aj-status')];
+    // faz em série para não sobrecarregar
+    for (let i=0;i<ids.length;i++){
+      await ajustar(ids[i], sts[i]);
+    }
+  });
+})();
+</script>
+
+<script>
+(function(){
+  const grid = document.getElementById('ajGrid');
+
+  // carregar seções de um setor
+  async function carregarSecoes(idSetor, sel){
+    sel.innerHTML = '';
+    const r = await fetch(`/ajuste/ajustes/setor/${idSetor}/secoes`);
+    const j = await r.json();
+    if (!j.ok) throw new Error('falha ao listar seções');
+    j.secoes.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s._id; opt.textContent = s.nameSecao;
+      sel.appendChild(opt);
+    });
+  }
+
+  grid.addEventListener('click', async (ev)=>{
+    // abrir select
+    console.log(' passando AQUI')
+    const btnPick = ev.target.closest('.btnEscolherSecao');
+    console.log('btnPick',btnPick)
+    if (btnPick) {
+      const card = btnPick.closest('.aj-card');
+      const id   = card.dataset.id;
+      const st   = card.querySelector('.aj-status');
+      const sel  = card.querySelector('.selSecao');
+      const btnSave = card.querySelector('.btnSalvarSecao');
+
+      // buscamos o idSetor atual do card (renderize no data-attr quando montar a lista)
+      const idSetor = card.dataset.idsetor;  // veja a nota abaixo
+
+      if (!idSetor) { st.textContent='sem idSetor'; st.classList.add('text-danger'); return; }
+
+      btnPick.classList.add('d-none');
+      sel.classList.remove('d-none'); btnSave.classList.remove('d-none');
+      try {
+        await carregarSecoes(idSetor, sel);
+      } catch (e) {
+        console.error(e); st.textContent='erro ao carregar seções'; st.classList.add('text-danger');
+      }
+    }
+
+    // salvar seção escolhida
+    const btnSave = ev.target.closest('.btnSalvarSecao');
+    if (btnSave) {
+      const card = btnSave.closest('.aj-card');
+      const id   = card.dataset.id;
+      console.log('ID => ',id)
+      const sel  = card.querySelector('.selSecao');
+      const st   = card.querySelector('.aj-status');
+
+      st.textContent = 'salvando...';
+      try{
+        console.log('ID',id)
+        const r = await fetch(`/ajuste/ajustes/produto/${id}/definir-secao`, {
+          method:'PATCH',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ idSecao: sel.value })
+        });
+        const j = await r.json();
+        if (j.ok) {
+          st.textContent='✔ seção definida'; st.classList.add('text-success');
+          btnSave.classList.add('d-none'); sel.classList.add('d-none');
+        } else { throw new Error(j.error || 'falha'); }
+      }catch(e){
+        console.error(e); st.textContent='✖ erro'; st.classList.add('text-danger');
+      }
+    }
+  });
+})();
+
+</script>

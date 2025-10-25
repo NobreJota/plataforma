@@ -1,19 +1,17 @@
 const mongoose = require('mongoose');
 
 const SecaoSchema = new mongoose.Schema({
-  secao: {
-       type: [{ nameSecao: { type: String, required: false } }],
-       default: null
-  },
+  nameSecao:  { type: String, required: false },
+  imagemUrl:  { type: String, default: '' },   // <-- NOVO
   idDepto: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'departamentos',
-    required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'departamentos',
+      required: true
   },
-  idDeptoSetor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'deptosetores',
-    required: true
+  idSetor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'deptosetores',
+      required: true
   }
 });
 

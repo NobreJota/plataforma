@@ -1,0 +1,187 @@
+<style>
+  /* Mantém a coluna do departamento “ocupada” nas linhas dos setores */
+.col-depto-spacer{
+  border-left: 2px solid rgba(0,0,0,.15);
+  width: 1%;
+}
+
+/* Destaca a linha do departamento e separa grupos */
+.row-depto > td{
+  border-top: 2px solid rgba(0,0,0,.25);
+}
+
+.row-setor .col-setor{
+  padding-left: .75rem;     /* leve recuo nos nomes dos setores */
+}
+
+/* Evita que a borda superior de um setor cole na do depto quando não for o primeiro item */
+.row-setor > td{
+  border-top: 1px solid rgba(0,0,0,.075);
+}
+
+</style>
+<div class="container-fluid px-3 py-2" style="background-color: #490132;width: 80%;margin: auto;">
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabLista">Demosntrativo de imagens dos setores</button>
+    </li>
+    <li class="nav-item" style="background-color: #fff;border-radius: 4px;margin-left: 10px;">
+      <a class="nav-link" href="/segmento/lista" style="color:#181010;border: none;">Voltar</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="tabLista">
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th style="width: 28%;background-color: darkmagenta;">Departamento</th>
+              <th style="width: 28%;background-color: darkmagenta;">Setores</th>
+              <th style="width: 120px;background-color:darkmagenta;">Imagens</th>
+              <th style="width: 90px;background-color: crimson;padding-left: 40px;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+  {{#each lista}}
+    <!-- Linha do Departamento -->
+    <tr class="row-depto">
+      <td class="col-depto">{{this.nome}}</td>
+      <td class="text-muted">—</td>
+      <td>
+        {{#if this.imagemUrl}}
+          <img src="{{this.imagemUrl}}" alt="img {{this.nome}}" style="height:48px;width:48px;object-fit:cover;border-radius:.5rem;border:1px solid #dee2e6;">
+        {{else}}
+          <span class="text-muted">—</span>
+        {{/if}}
+      </td>
+      <td>
+        
+      </td>
+    </tr>
+
+     {{!-- linhas dos SETORES --}}
+      {{#each this.setores}}
+        <tr class="row-setor">
+          <td class="col-depto-spacer"></td>
+
+          <td class="col-setor">{{this.nome}}</td>
+
+          <td>
+            {{#if this.imagemUrl}}
+              <img src="{{this.imagemUrl}}" alt="img {{this.nome}}"
+                  style="height:40px;width:40px;object-fit:cover;border-radius:.5rem;border:1px solid #dee2e6;">
+            {{else}}
+              <span class="text-muted">—</span>
+            {{/if}}
+          </td>
+
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">menu</button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a href="#"
+                    class="dropdown-item js-setor-imagem"
+                    data-setor-id="{{this._id}}"
+                    data-setor-nome="{{this.nome}}">
+                    imagem
+                  </a>
+                </li>
+                <li><a class="dropdown-item" href="/central/setor/{{this._id}}/editar">editar</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="/central/setor/{{this._id}}/suspender">suspender</a></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      {{/each}}
+      
+  {{/each}}
+</tbody>
+
+        </table>
+      </div>
+    </div>
+  </div>
+  
+</div>
+<!-- MODAL IMAGEM (upload simples, 1 imagem) -->
+
+<!-- MODAL: Vincular imagem -->
+<div class="modal fade" id="modalImagem" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:560px">
+    <div class="modal-content">
+      <form id="formImagem">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalImagemTitulo">Vincular imagem</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- contexto escondido -->
+          <input type="hidden" id="ctxTipo">         <!-- 'setor' | 'secao' -->
+          <input type="hidden" id="ctxSetorId">
+          <input type="hidden" id="ctxDocId">
+          <input type="hidden" id="ctxIdx">
+
+          <div class="mb-3">
+            <label class="form-label">Foto</label>
+            <input type="file" id="inpArquivo" class="form-control" accept="image/*" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Nome da imagem</label>
+            <input type="text" id="inpNome" class="form-control" placeholder="Ex.: bicicleta-ar-livre" maxlength="120">
+            <div class="form-text">Opcional — usamos só para organizar.</div>
+          </div>
+
+          <div class="mb-2">
+            <img id="preview" alt="preview" style="display:none;max-width:100%;border-radius:.5rem;border:1px solid #dee2e6;">
+          </div>
+
+          <div id="msgErro" class="text-danger small" style="display:none"></div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('click', (ev) => {
+  const a = ev.target.closest('.js-setor-imagem');
+  if (!a) return;
+  ev.preventDefault();
+  console.log('passando AQUI');
+  // Pega id/nome do setor (suporta data-id/data-nome OU data-setorId/data-setorNome)
+  const setorId   = a.dataset.setorId  || a.dataset.id;
+  const setorNome = a.dataset.setorNome || a.dataset.nome || '';
+
+  // Preenche o contexto do modal (mesmo modal usado nas seções)
+  document.getElementById('ctxTipo').value    = 'setor';
+  document.getElementById('ctxSetorId').value = setorId;
+  document.getElementById('ctxDocId').value   = '';
+  document.getElementById('ctxIdx').value     = '';
+  document.getElementById('modalImagemTitulo').textContent = `Imagem do setor: ${setorNome}`;
+
+  // Limpa campos/preview
+  const form = document.getElementById('formImagem');
+  const preview = document.getElementById('preview');
+  const msgErro = document.getElementById('msgErro');
+  form.reset();
+  preview.style.display = 'none';
+  preview.src = '';
+  msgErro.style.display = 'none';
+
+  // Mostra modal
+  const elModal = document.getElementById('modalImagem');
+  const modal = bootstrap.Modal.getOrCreateInstance(elModal);
+  modal.show();
+});
+</script>

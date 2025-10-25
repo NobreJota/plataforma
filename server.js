@@ -16,7 +16,9 @@ require('./src/config/multer');
 
 // ✅ ÚNICA importação do módulo de DB
 const { connectToDatabase, mongoose } = require('./database'); // <- use SEMPRE este
-
+//-------------------------------------------------------------------
+//const pa-th = require('path');
+app.use('/uploads', require('express').static(path.join(process.cwd(), 'uploads')));
 // -------------------------------------------------------------------
 // Static
 // -------------------------------------------------------------------
@@ -31,12 +33,13 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 
+
 // -------------------------------------------------------------------
 // View Engine (ajuste 'layout' ou 'layouts' conforme sua pasta)
 // -------------------------------------------------------------------
 app.engine('handlebars', engine({
   defaultLayout: 'main',
-  layoutsDir: path.join(__dirname, 'views', 'layout'),   // use 'layouts' se renomeou a pasta
+  layoutsDir: path.join(__dirname, 'views', 'layout'),
   partialsDir: path.join(__dirname, 'views', 'partials'),
   helpers: {
     eq: (a, b) => String(a) === String(b),
@@ -50,15 +53,46 @@ app.engine('handlebars', engine({
       return Number.isFinite(n) ? n.toFixed(2) : '';
     },
     json: (ctx) => JSON.stringify(ctx),
-    inc: (v) => parseInt(v, 10) + 1
+    inc: (v) => parseInt(v, 10) + 1,
+    dec: (v) => Math.max(parseInt(v, 10) - 1, 1),
+
+    // ✅ ESTES DOIS PRECISAM FICAR DENTRO DE "helpers"
+    encodeURIComponent: (s) => encodeURIComponent(String(s ?? '')),
+    includes: (arr, val) =>
+      Array.isArray(arr) && arr.map(String).includes(String(val)),
   },
   runtimeOptions: {
     allowProtoPropertiesByDefault: true,
     allowProtoMethodsByDefault: true,
-  }
+  },
 }));
+
+
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
+app.use('/uploads', express.static(path.resolve('uploads')));
+
+///////////////////////////////////////////////////////////////////////
+
+const hbs = require('hbs'); 
+hbs.handlebars.registerHelper('eq', (a,b) => String(a) === String(b));
+hbs.handlebars.registerHelper('inc', v => Math.max(Number(v)+1, 1));
+hbs.handlebars.registerHelper('dec', v => Math.max(Number(v)-1, 1));
+// AQUI COMEÇA AJUSTE
+hbs.registerHelper('firstIdSetor', p => {
+  try {
+      return p.localloja?.[0]?.setor?.[0]?.idSetor || '';
+  } catch { return ''; }
+});
+hbs.registerHelper('increment', v => Number(v)+1);
+hbs.registerHelper('decrement', v => Math.max(Number(v)-1,1));
+hbs.registerHelper('pickImg', p => {
+  const arrs = [p.pageurlS, p.pageurls, p.pageurl, p.imagens, p.images];
+  for (const a of arrs){ if (Array.isArray(a) && a.length && a[0]) return a[0]; }
+  const s = p.imagemUrl || p.imageUrl || p.fotoUrl || '';
+  return (s && String(s).trim()) || 'https://via.placeholder.com/480x360?text=Produto';
+});
+
 
 // -------------------------------------------------------------------
 // Sessão, flash e Passport
@@ -83,31 +117,41 @@ app.use(passport.session());
 // -------------------------------------------------------------------
 const admin       = require('./src/routes/central/usuario');
 const central     = require('./src/routes/central/menu-admin');
+const atividades  = require('./src/routes/central/atividades');
 const segmento    = require('./src/routes/central/rotacentral');
 const similares   = require('./src/routes/central/rotacentral');
 const simiproduto = require('./src/routes/empresa/similares');
 const lojista     = require('./src/routes/central/lojista');
+const paineis     = require('./src/routes/central/paineis');
+const paineisSecoes = require('./src/routes/central/paineis-secoes');
 
-const home1       = require('./src/routes/site/home');
+const home       = require('./src/routes/site/home');
 const usuarioloja = require('./src/routes/empresa/usuario');
 const loja        = require('./src/routes/empresa/rotina');
 const produto     = require('./src/routes/empresa/produtos');
 const fornec      = require('./src/routes/empresa/fornecedores');
 const gravafoto   = require('./src/routes/empresa/upload_foto');
+const ajuste      = require('./src/routes/empresa/ajuste');
+
 
 app.use('/admin', admin);
 app.use('/central', central);
 app.use('/lojista', lojista);
 app.use('/segmento', segmento);
 app.use('/similares', similares);
+app.use('/atividades',atividades);
+app.use('/paineis',paineis);
+app.use('/paineisecoes', paineisSecoes);
 
-app.use('/', home1);
+app.use('/', home);
 app.use('/usuarioloja', usuarioloja);
 app.use('/loja', loja);
 app.use('/produto', produto);
 app.use('/gravafoto', gravafoto);
 app.use('/fornec', fornec);
 app.use('/simiproduto', simiproduto);
+app.use('/ajuste',ajuste)
+
 
 // -------------------------------------------------------------------
 // Healthchecks (usam o MESMO mongoose importado no topo)
@@ -144,7 +188,9 @@ app.get('/.well-known/appspecific/com.chrome.devtools.json', (_req,res)=>res.sta
 
 // 404
 app.use((req, _res, next) => {
+  console.log('');
   console.log(`[server] Não tratada: ${req.method} ${req.originalUrl}`);
+  console.log('...........................................');
   next();
 });
 app.use((_, res) => res.status(404).send('404 - Página não encontrada'));

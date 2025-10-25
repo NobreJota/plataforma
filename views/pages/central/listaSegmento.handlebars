@@ -10,44 +10,178 @@
   color:#333;
 }
 
+
+</style>
+<style>
+:root{
+  --bg:#333;
+  --panel:#2f2f2f;
+  --accent:#f90ac9;
+  --card:#0f1b2d;
+  --header:#132338;
+  --text:#fff;
+  --radius:10px;
+}
+
+.app {
+  width: 98vw;
+  min-height: 95vh;
+  margin: 2vh 1vw 0;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  background: var(--bg);
+  border-radius: 6px;
+  padding: 25px;
+}
+
+.sidebar {
+  background: var(--accent);
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  color: #1a1a1a;
+}
+
+.sidebar ul{ list-style: none; margin:0; padding:0; }
+.sidebar li{
+  font-size: 1.125rem;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.sidebar li:hover{ background: rgba(0,0,0,.08); }
+
+.content {
+  background: var(--accent);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 85vh;
+}
+
+.columns {
+  background: #670303;
+  border-radius: 6px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  flex: 1;
+  min-height: 0; /* permite as listas rolarem */
+}
+
+.card-panel {
+  background: #15407a; /* “azul” */
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* permite o scroll interno */
+}
+
+.card-panel h3{
+  text-align: center;
+  font-size: 1.05rem;
+  margin: 10px 0;
+  color: #fff;
+}
+
+.scroll {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0 10px 10px;
+  border-radius: 6px;
+  background: #0e2a54;
+}
+
+.list-group-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #1a4c8a;
+  color: #e7f0ff;
+  background: transparent;
+}
+.list-group-item:last-child{ border-bottom: none; }
+
+.setor-item { font-weight: 500; }
+
+.toolbar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  background: #c4bdbd;
+  color:#121212;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+@media (max-width: 1024px){
+  .columns{ grid-template-columns: 1fr; }
+  .app{ grid-template-columns: 1fr; }
+}
 </style>
 
-<div id="main" class="row justify-content-center" style="background-color:#faf4f4 ;padding: 25px;margin-top: 2vh;border-radius: 6px;color:#fff;height: 85vh;">
-     <div id="divRow" class="col-md-12" style="height: 76vh; background-color:transparent;display: flex;flex-direction: row;justify-content: space-between;"> <!-- ou col-lg-6 para centralizar ainda mais -->
-      <div id="Segmento" style="background-color: blue;width: 30%;height: 74vh;margin: auto;border-radius: 4px;">
-          <h3 class="text-center" >Lista de Departamentos</h3>
-          <ul id="listaSegmentos" class="list-group mb-3" style="height: 70vh; overflow-y: auto;">
-             {{#each depto}}
-                 <li class="list-group-item segmento-item" data-segmento-id="{{this._id}}">
-                     {{this.nomeDepartamento}}
-                 </li>
-            {{/each}}
-         </ul>
+<div id="main" class="app">
+  <!-- MENU LATERAL -->
+  <aside id="menuLateral" class="sidebar">
+    <ul >
+      <li><a href="/paineis/painel" style="text-decoration: none;font-weight: 900;color:#096def;">Setores</a></li>
+      <li><a href="/paineisecoes/secoes" style="text-decoration: none;font-weight: 900;color:#096def;">Seções</a></li>
+      <li><a href="/segmento/ativardepto" style="text-decoration: none;font-weight: 900;color:#096def;">Ativar/Departamentos</a>  </li>
+    </ul>
+  </aside>
+
+  <!-- CONTEÚDO: DEPARTAMENTOS -->
+  <section id="Departamentos" class="content" style="display:block">
+    <div id="divRow" class="columns">
+      <!-- COLUNA 1 -->
+      <div id="Segmento" class="card-panel">
+        <h3>Lista de Departamentos</h3>
+        <ul id="listaSegmentos" class="list-group mb-3 scroll">
+          {{#each depto}}
+            <li class="list-group-item segmento-item" data-segmento-id="{{this._id}}">
+              {{this.nomeDepartamento}}
+            </li>
+          {{/each}}
+        </ul>
       </div>
-      <div id="Setor" style="background-color: blue;width: 30%;height: 74vh;margin: auto;border-radius: 4px;">
-          <h3 class="text-center">Lista de DeptoSetor</h3>
-          <ul id="setoresList" class="list-group mb-3" style="width: 95%;height:70vh;margin: auto; overflow-y: auto;">
-           
-         </ul>
-      </div>  
-      <div id="Secao"  style="background-color: blue;width: 30%;height: 74vh;margin: auto;border-radius: 4px;">
-          <h3 class="text-center">Lista de DeptoSeção</h3>
-          <ul id="listaSecoes" class="list-group mb-3" style="height: 70vh;margin: auto;width: 100%;">
-            {{!-- // {{#each secoes}}
-                 <li class="list-group-item">{{this}}</li>
-             {{/each}} --}}
-          </ul>
-      </div> 
-    </div>  
-    <!-- Botões -->
-    <div id="botoes" class="d-flex justify-content-center gap-2" style="padding: 20px;background-color:#c4bdbd;display: flex;flex-direction: row;justify-content: space-between;">
-       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSegmento" style="width: 30%;text-align: center;">Cadastrar <span style="color:#670303;font-weight: bold;">Departamento</span></button>
-       <button id="btnSetor" type="button" class="btn btn-primary botao-abrir-modal" data-segmento-id="{{this._id}}" data-bs-toggle="modal" data-bs-target="#modalSetor" style="display: none;width: 30%;text-align: center;">
-                  Cadastrar <span style="color:#670303;font-weight: bold;">DeptoSetor</span>
-       </button>
-      <button id="btnSecao" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSecao" style="display: none;width: 30%;text-align: center;">Cadastrar <span style="color: #670303;font-weight: bold;">Seção</span></button>
+
+      <!-- COLUNA 2 -->
+      <div id="Setor" class="card-panel">
+        <h3>Lista de DeptoSetor</h3>
+        <ul id="setoresList" class="list-group mb-3 scroll"></ul>
+      </div>
+
+      <!-- COLUNA 3 -->
+      <div id="Secao" class="card-panel">
+        <h3>Lista de DeptoSeção</h3>
+        <ul id="listaSecoes" class="list-group mb-3 scroll"></ul>
+      </div>
     </div>
-  
+
+    <!-- BOTÕES -->
+    <div id="botoes" class="toolbar">
+      <button class="btn btn-primary"
+              data-bs-toggle="modal" data-bs-target="#modalSegmento">
+        Cadastrar <span style="color:#670303;font-weight:700">Departamento</span>
+      </button>
+
+      <button id="btnSetor" type="button" class="btn btn-primary"
+              data-bs-toggle="modal" data-bs-target="#modalSetor" style="display:none">
+        Cadastrar <span style="color:#670303;font-weight:700">DeptoSetor</span>
+      </button>
+
+      <button id="btnSecao" class="btn btn-primary"
+              data-bs-toggle="modal" data-bs-target="#modalSecao" style="display:none">
+        Cadastrar <span style="color:#670303;font-weight:700">Seção</span>
+      </button>
+    </div>
+  </section>
+  <!-- CONTEÚDO: ATIVIDADES -->
+  {{!-- <section id="Atividades" class="content" style="display:block;">
+    <div style="background: #ffd400; width:100%; height:100%; border-radius:8px;"></div>
+  </section> --}}
 </div>
 
 <!-- Modal Segmento -->
@@ -184,9 +318,9 @@
       console.log('');
       // Faz a varredura 
       setores.forEach(setor => {
-        console.log('');
-        console.log('44',setor.idDepto, "<><><><><><><> ", setor._id);
-        console.log('');
+        //console.log('');
+        //console.log('44',setor.idDepto, "<><><><><><><> ", setor._id);
+        //console.log('');
         const li = document.createElement("li");
         li.setAttribute('data-departamento-id',setor.idDepto);
         li.setAttribute("data-deptosetor-id",setor._id)
@@ -207,21 +341,26 @@
                 document.getElementById("btnSecao").style.display="block";
                                                 
                 console.log("Buscando seções do setor:", deptosetorId);
-                 const response =await fetch(`secoes/${deptosetorId}`);
-                //console.log(typeof(response))
-                const secoes =await response.json();
-                console.log('');
-                console.log('[ 211 ]',secoes);
-                console.log('');
-                const listaSecoes = document.getElementById("listaSecoes");
-                listaSecoes.innerHTML = ""; // Limpa a lista antes de preencher
+                const r = await fetch(`/segmento/secoes/${deptosetorId}`);
+                fetch('http://localhost:5000/segmento/secoes/68f76be9c4ba5a635e5663ba')
+                        .then(r => r.json())
+                        .then(data => {
+                          console.log(data); // aqui sim você verá { itens: ['bicicleta'] }
+                        })
+                        .catch(err => console.error(err));
 
-                secoes.forEach(secao => {
-                  const li = document.createElement("li");
-                  li.className = "list-group-item";
-                  li.innerText = secao.nomeSecao;
+
+                console.log(' vr de r => ',r)
+                console.log('');
+                console
+                const { itens = [] } = await r.json();
+                listaSecoes.innerHTML = '';
+                for (const s of itens) {
+                  const li = document.createElement('li');
+                  li.className = 'list-group-item';
+                  li.textContent = s;
                   listaSecoes.appendChild(li);
-                });
+                }
             });
        });
     });
@@ -229,27 +368,27 @@
 </script>
 {{!-- Clica no Setor para buscas as seções --}}
 <script>
-  document.querySelectorAll(".setor-item").forEach(item => {
-  item.addEventListener("click", async function() {
-    const setorId = this.dataset.setorId;
-    console.log("Buscando seções do setor:", setorId);
+  //document.querySelectorAll(".setor-item").forEach(item => {
+  //item.addEventListener("click", async function() {
+  //  const setorId = this.dataset.setorId;
+  //  console.log("Buscando seções do setor:", setorId);
 
-    const response = await fetch(`/secoes/${setorId}`);
-    const secoes = await response.json();
-    console.log('');
-    console.log('[ 135 ]', secoes);
-    console.log('');
-    const listaSecoes = document.getElementById("listaSecoes");
-    listaSecoes.innerHTML = ""; // Limpa a lista antes de preencher
+  //  const response = await fetch(`/segmento/secoes_/${setorId}`);
+  //  const secoes = await response.json();
+  //  console.log('');
+  //  console.log('[ 135 ]', secoes);
+  //  console.log('');
+  //  const listaSecoes = document.getElementById("listaSecoes");
+  //  listaSecoes.innerHTML = ""; // Limpa a lista antes de preencher
 
-    secoes.forEach(secao => {
-      const li = document.createElement("li");
-      li.className = "list-group-item";
-      li.innerText = secao.nomeSecao;
-      listaSecoes.appendChild(li);
-    });
-  });
-});
+  //  secoes.forEach(secao => {
+  //    const li = document.createElement("li");
+  //    li.className = "list-group-item";
+  //    li.innerText = secao.nomeSecao;
+  //    listaSecoes.appendChild(li);
+  //  });
+  //});
+//});
 </script>
  {{!-- Salvando a seção --}}
 <script>
@@ -287,4 +426,14 @@
     }
   });
 </script>
- 
+ {{!-- <script>
+    function AtividadeOpen(){
+      document.getElementById("Atividades").style.display="block";      
+      document.getElementById('Departamentos').style.display="none";
+    }
+
+    function DepartamentosOpen(){
+      document.getElementById('Departamentos').style.display="block";
+      document.getElementById("Atividades").style.display="none";      
+    }
+ </script> --}}

@@ -9,7 +9,11 @@ const Mconstrucao = mongoose.model("m_construcao");
 const Fornec = require("../../models/fornecedor");
 
 router.get("/lista", async (req, res) => {
-  const depto = await Departamento.find().lean();
+  const depto = await Departamento
+                       .find()
+                       .collation({ locale: 'pt', strength: 1 }) // ordena A=a=á
+                       .sort({ nomeDepartamento: 1 }) 
+                       .lean();
   console.log('[ 10 ] ',depto)
   res.render("pages/central/listaSegmento", { layout: "central/segmento", depto });
 });
@@ -42,16 +46,23 @@ router.get("/por-segmento/:id", async (req, res) => {
   }
 });
 
-router.get("/secoes_/:setorId", async (req, res) => {
-  try {
-    console.log('300000',req.params);
-    const setorId = mongoose.Types.ObjectId(req.params.setorId);
-    const secoes = await Secao.find({ setor: setorId }).lean();
-    //const secoes = await Secao.find({ setor: req.params.setorId }).lean();
-    res.json(secoes); // [{ _id, titulo }]
-  } catch (err) {
-    console.error("Erro ao buscar seções:", err);
-    res.status(500).json({ erro: "Erro ao buscar seções" });
+router.get("/secoes/:setorId", async (req, res) => {
+    try {
+    const idSetor = req.params.setorId;
+    console.log('==>',req.params.setorId)
+    console.log('==> ',idSetor);
+    const rows = await deptosecoes
+      .find({ idSetor }, 'nameSecao')        // só o campo que você precisa
+      .sort({ nameSecao: 1 })
+      .lean();
+    console.log('valor de rows',rows)
+    const n=rows.map(r => r.nameSecao)
+    console.log('VR DE N',n)
+    return res.status(200).json({itens:n}); // array simples de strings
+
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Falha ao carregar seções' });
   }
 });
 //////////////////////  FIM DO CADASTRO DE PRODUTO
@@ -75,7 +86,7 @@ router.post("/segmento/salvar", async (req, res) => {
   await Departamento.create({ nomeDepartamento: n1 });
   console.log("------------------------------");
   console.log("------------------------------");
-  res.redirect("/lista");
+  res.redirect("/segmento/lista");
 });
 
 router.post("/setor/salvar", async (req, res) => {
@@ -103,29 +114,44 @@ router.post("/setor/salvar", async (req, res) => {
   }    
 });
 
-router.post("/secao/salvar", async (req, res) => {
-  const { nomeSecao, departamentoId, deptosetorId } = req.body;
-  console.log("");
-  console.log(" [ 107 ] ",req.body);
-  console.log("");
-  if (!nomeSecao || !departamentoId || !deptosetorId) {
-    return res.status(400).json({ error: "Campos obrigatórios não preenchidos" });
-  }
-
+// POST /segmento/secao/salvar
+router.post('/secao/salvar', async (req, res) => {
   try {
-    const novaSecao = await deptosecoes.create({
-      nomeSecao,
-      idDepto: departamentoId,
-      idDeptoSetor: deptosetorId
+    const { nomeSecao, departamentoId, deptosetorId, imagemUrl } = req.body;
+
+    if (!nomeSecao || !departamentoId || !deptosetorId) {
+      return res.status(400).json({ error: 'Campos obrigatórios não preenchidos' });
+    }
+
+    // IDs
+    const depId   = new mongoose.Types.ObjectId(departamentoId);
+    const setorId = new mongoose.Types.ObjectId(deptosetorId);
+
+    // imagemUrl pode vir como [] (ex.: form) — normaliza para string
+    const img = Array.isArray(imagemUrl)
+      ? (imagemUrl[0] || '')
+      : String(imagemUrl || '').trim();
+
+    // cria 1 documento por seção
+    const doc = await deptosecoes.create({
+      nameSecao: String(nomeSecao).trim(),
+      imagemUrl: img,          // String (pode ser '')
+      idDepto: depId,
+      idSetor: setorId,
     });
 
-    res.status(201).json(novaSecao);
+    return res.status(201).json({ ok: true, id: doc._id });
   } catch (err) {
-    console.error("Erro ao salvar seção:", err);
-    res.status(500).json({ error: "Erro ao salvar" });
+    console.error('Erro ao salvar seção:', err);
+    return res.status(400).json({
+      error: 'Falha ao salvar seção',
+      details: err?.message,
+    });
   }
 
+
 });
+
 
 router.get("/secoes/:deptoSetorId", async (req, res) => {
   console.log('');
@@ -188,6 +214,47 @@ router.get('/produtos/:id', async (req, res) => {
     .populate('fornecedor')
     .populate('similares');  // preenche o array de similares com documentos de Produto
   res.render('produto-detalhe', { produto });
+});
+// [GET] Painel de ativação
+router.get('/ativardepto', async (req, res) => {
+    try {
+    const departamentos = await Departamento
+    .find({}, 'nomeDepartamento ativado')
+    .sort({ nomeDepartamento: 1 })
+    .lean();
+
+
+    return res.render('pages/central/painel-depto_ativar.handlebars', {
+    layout: 'central/segmento',
+    title: 'Ativar/Desativar Departamentos',
+    departamentos
+    });
+    } catch (err) {
+    console.error('[GET painel.depto_ativar]', err);
+    return res.status(500).send('Erro ao carregar lista');
+    }
+});
+
+// [POST] Ativar
+router.post('/departamentos/:id/ativar', async (req, res) => {
+try {
+await Departamento.updateOne({ _id: req.params.id }, { $set: { ativado: 1 } });
+return res.redirect('back');
+} catch (err) {
+console.error('[POST ativar departamento]', err);
+return res.status(500).send('Falha ao ativar');
+}
+});
+
+// [POST] Desativar
+router.post('/departamentos/:id/desativar', async (req, res) => {
+try {
+await Departamento.updateOne({ _id: req.params.id }, { $set: { ativado: 0 } });
+return res.redirect('back');
+} catch (err) {
+console.error('[POST desativar departamento]', err);
+return res.status(500).send('Falha ao desativar');
+}
 });
 
 module.exports = router;

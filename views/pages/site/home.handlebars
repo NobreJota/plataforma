@@ -6,235 +6,748 @@
     border-radius: 4px;background-color: transparent;color: #ffffff;border: 0px;
   }
 </style>
-<!-- Topbar -->
-<nav class="navbar navbar-dark bg-dark sticky-top shadow-sm">
-  <div class="container-fluid gap-3">
-    <a class="navbar-brand fw-bold" href="/">
-      <span class="text-white" style="font-style: italic;">ROTA</span><span class="" style="color: #ffffff;font-style: oblique;">es</span>
-    </a>
+<style>
+  /* ====== topo ====== */
+.topbar{
+  position: sticky; top: 0; z-index: 1000;
+  background: #12171d;   /* mude a cor aqui */
+  box-shadow: 0 2px 10px rgba(0,0,0,.15);
+  padding: 8px 100px 8px 100px;
+}
 
-    {{!-- <form class="d-flex flex-grow-1 search-form" action="/buscar" method="GET" id="homeSearchForm" style="max-width: 900px;">
-      <input id="homeSearchInput" name="q" class="form-control me-2" type="search" placeholder="Buscar produtos..." aria-label="Buscar">
-      <button class="btn btn-warning fw-semibold px-4" type="submit">Pesquisar</button>
-    </form> --}}
+/* logo */
+.brand{
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing:.3px;
+  color: #066bdf;
+  text-decoration: none; /* cor do "Rota" */
+  margin-left: 0; /* centralizar com container */
+}
 
-    <div class="d-flex align-items-center gap-3">
-      <a href="/login" class="text-white text-decoration-none"><i class="fa-regular fa-user me-1"></i>Login</a>
-      <a href="/carrinho" class="text-white text-decoration-none"><i class="fa-solid fa-cart-shopping me-1"></i>Carrinho</a>
-    </div>
-  </div>
-</nav>
+.brand-accent{ color: #ff4dc4; }           /* cor do "es" */
 
-<div class="bg-light border-bottom">
-  <div class="container py-3">
-    <form id="filtroForm" class="row gy-2 gx-2 align-items-end" method="GET" action="/">
-      <div class="col-12 col-md-5">
-        <label class="form-label mb-1">O que você procura?</label>
-        <input name="q" value="{{q}}" class="form-control" placeholder="Ex.: cimento, torneira, carrinho de mão">
-      </div>
+.actions{
+  position: absolute;
+  right: 90px;            /* distância da borda direita */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 90px;
+}
 
-      <div class="col-6 col-md-2">
-        <label class="form-label mb-1">Município</label>
-        <select name="cidade" id="selectCidade" class="form-select">
-          <option value="">Todos</option>
-          {{#each cidades}}
-            <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
-          {{/each}}
-        </select>
-      </div>
+.actions{ justify-self: end; }
 
-      <div class="col-6 col-md-3">
-        <label class="form-label mb-1">Loja</label>
-        <select name="loja" id="selectLoja" class="form-select" {{#unless lojas.length}}disabled{{/unless}}>
-          <option value="">Todas</option>
-          {{#each lojas}}
-            <option value="{{this._id}}" {{#if (eq ../lojaSelecionada this._id)}}selected{{/if}}>{{this.razao}}</option>
-          {{/each}}
-        </select>
-      </div>
+.action-link{
+  color:#ecf3ff; text-decoration:none; font-weight:600;
+  display:inline-flex; align-items:center; gap:8px;
+  padding: 6px 0; opacity:.95;
+}
 
-      <div class="col-12 col-md-2 d-grid">
-        <button class="btn btn-primary">Aplicar filtros</button>
-      </div>
+.action-link:hover{ opacity:1; }
 
-      <input type="hidden" name="segmento" id="segmentoHidden" value="{{segmentoSelecionado}}">
-    </form>
 
-    <div class="mt-3 overflow-x-auto no-scrollbar">
-      <div class="d-flex gap-2 flex-nowrap">
-        {{!-- <button type="button"
-                class="chip btn btn-outline-secondary {{#unless segmentoSelecionado}}active{{/unless}}"
-                data-id="">
-          Todos
-        </button>
-        {{#each segmentos}}
-          <button type="button"
-                  class="chip btn btn-outline-secondary {{#if (eq ../segmentoSelecionado this._id)}}active{{/if}}"
-                  data-id="{{this._id}}">
-            {{this.nomeDepartamento}}
-          </button>
-        {{/each}} --}}
-        <div id="menuCompras"  class="divMenu"><button type="button" class="btn-divMenu" onclick="comprasMenu()">COMPRAS</button></div>
-        <div class="divMenu" ><button class="btn-divMenu">AUTOMÓVEIS</button></div>
-        <div class="divMenu" ><button class="btn-divMenu">EDUCAÇÃO</button></div>
-        <div class="divMenu" ><button class="btn-divMenu">EMPREGOS</button></div>
-        <div class="divMenu"><button class="btn-divMenu">IMÓVEIS</button></div>
-        <div class="divMenu"><button class="btn-divMenu">RECICLAGEM</button></div>
-        <div class="divMenu"><button class="btn-divMenu">SERVIÇOS</button></div>
-      </div>
-    </div>
+/* ====== container centralizado (desktop e mobile) ====== */
+.container-wide{
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 12px;
+}
 
-    <div class="mt-2">
-      <a href="/" class="text-decoration-underline small">Limpar todos os filtros</a>
-    </div>
-  </div>
-</div>
+/*DETALHES*/
+.topbar-row{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  align-items: center;
+  min-height: 56px;
+}
 
-<div class="container my-4">
-  {{#if banner}}
-  <div class="row mb-3">
-    <div class="col">
-      <img src="{{banner.url}}" alt="{{banner.alt}}" class="img-fluid rounded shadow-sm w-100">
-    </div>
-  </div>
-  {{/if}}
+.fa-cart-shopping{ font-size: 18px; }
 
-  {{#if produtos.length}}
-  <div class="row g-3" id="gridProdutos">
-    {{#each produtos}}
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-      <article class="card h-100 product-card shadow-sm">
-        <div class="ratio ratio-4x3">
-          <img src="{{this.imagemUrl}}" alt="{{this.descricao}}" class="card-img-top p-2 object-fit-contain">
-        </div>
-        <div class="card-body d-flex flex-column">
-          <h6 class="card-title text-center product-title">{{this.descricao}}</h6>
-          <p class="price text-center mb-3">{{moeda this.preco}}</p>
-          <button class="btn btn-success w-100 mt-auto" onclick="adicionarCarrinho('{{this._id}}')">Comprar</button>
-        </div>
-      </article>
-    </div>
-    {{/each}}
-  
-    {{#each anuncios}}
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-      <aside class="card h-100 product-card d-flex align-items-center justify-content-center p-2 shadow-sm">
-        <img src="{{this.logo}}" alt="{{this.nome}}" class="img-fluid p-3" style="max-height:120px;">
-        <div class="card-body text-center">
-          <h6 class="mb-1">{{this.nome}}</h6>
-          <small class="text-muted">{{this.segmento}}</small>
-          <a href="{{this.url}}" class="btn btn-success w-100 mt-3">Ir</a>
-        </div>
-      </aside>
-    </div>
-    {{/each}}
-  </div>
-  {{else}}
-    <div class="alert alert-info">
-      Nenhum produto encontrado {{#if q}}para “{{q}}”{{/if}}.
-      <a href="/">Limpar filtros</a>
-    </div>
- {{/if}}
-</div>
 
-<div id="ModalCOMPRAS" style="display: none;width: 70%;height: 30vh;margin: auto;background-color: yellow;">
-     <div id="primeiraLinha" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
-          <div id=line1-a style="background-color: black;width: 24%;height: 27vh;text-align: center;display: flex;flex-direction: column;justify-content: center;">
-                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">BRINQUEDOS</labeL>
-                <img id="img1-a" src="/site/menu-compras/brinquedos.png" alt="Brinquedos" width="100%" style="height:auto;object-fit:contain" loading="lazy"
-                               onerror="this.src='/site/menu-compras/placeholder.png'">
-          </div>
-          <div id=line1-b style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
-                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">CONSTRUÇÃO</labeL>
-                <img src="../site/menu-compras/construção.png" alt="construção" width="100%" height="auto">
-          </div>
-          <div id=line1-c style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
-                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">CARNES</labeL>
-                <img src="../site/menu-compras/carnes.png" alt="construção" width="100%" height="auto">
-          </div>
-          <div id=line1-d style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
-               <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">ESTÉTICA</labeL>
-                <img src="../site/menu-compras/estetica.png" alt="construção" width="100%" height="auto">
-          </div>
-     </div>
-     <div id="publi-1" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
-          <div style="width: 100%;height: 15vh;margin: auto;background-color: #999494;">
+/* ====== busca + filtros ====== */
+.search-wrap{ display:flex; flex-direction:column; gap:8px; }
 
-          </div>
-     </div>
-     <div id="segundaLinha" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
-          <div id=line2-a style="background-color: black;width: 24%;height: 27vh;display: flex;flex-direction: column;">
-                 <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">ELETRÔNICOS</labeL>
-                <img src="../site/menu-compras/eletronicos.png" alt="construção" width="100%" height="auto">
-          </div>
-          <div id=line2-b style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
-                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">FARMÁCIAS</labeL>
-                <img src="../site/menu-compras/remedio.png" alt="construção" width="100%" height="auto">
-          </div>
-          <div id=line2-c style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
-                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">FARMÁCIAS</labeL>
-                <img src="../site/menu-compras/remedio.png" alt="construção" width="100%" height="auto">
-          </div>
-          <div id=line2-d style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
-                 <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">JARDINS</labeL>
-                <img src="../site/menu-compras/jardins.png" alt="construção" width="100%" height="auto">
-          </div>
-     </div>
-       <div id="publi-2" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
-          <div style="width: 100%;height: 15vh;margin: auto;background-color: #999494;">
-             
-          </div>
-     </div>
-     <div id="terceiraLinha" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
-          <div id=line3-a style="background-color: black;width: 24%;height: 27vh;">
-                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">PESCA & CAMPING</labeL>
-                <img src="../site/menu-compras/camping.png" alt="construção" width="100%" height="auto">
-          </div>
-          <div id=line3-b style="background-color: black;width: 24%;height: 26vh;">
-                 <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">MÓVEIS</labeL>
-                <img src="../site/menu-compras/moveis.png" alt="construção" width="100%" height="auto">
-          </div>
-          <div id=line3-c style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
-                  <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">ÓTICAS</labeL>
-                <img src="../site/menu-compras/oticas.png" alt="construção" width="100%" height="auto">
-          </div>
-          <div id=line3-d style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
-                  <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">ROUPAS</labeL>
-                <img src="../site/menu-compras/roupas.png" alt="construção" width="100%" height="auto">
-          </div>
-     </div>
-       <div id="publi-3" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
-          <div style="width: 100%;height: 15vh;margin: auto;background-color: #999494;">
+.search-wrap{ justify-self: stretch; }
 
-          </div>
-     </div>
-     <div id="quartaLinha" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
-          <div id=line1-a style="background-color: black;width: 24%;height: 27vh;display: flex;flex-direction: column;">
-                <labeL style="color: #ffffff;font-size: larger;margin-top: 8vh;">UTILIDADES</labeL>
-                <img src="../site/menu-compras/utilidades.png" alt="construção" width="100%" height="auto">
-          </div>
-          <div id=line1-b style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
+.search-form{
+  display:grid; gap:8px; align-items:center;
+  grid-template-columns: 1fr 160px 220px 140px; /* input + selects + botão */
+}
+.search-form .form-control,
+.search-form .form-select{ min-height: 38px; }
 
-          </div>
-          <div id=line1-c style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
-
-          </div>
-          <div id=line1-d style="background-color: black;width: 24%;height: 26vh;display: flex;flex-direction: column;">
-
-          </div>
-     </div>
-       <div id="publi-4" style="display: flex;flex-direction: row;justify-content:space-between;padding: 4px;">
-          <div style="width: 100%;height: 15vh;margin: auto;background-color: #999494;">
-
-          </div>
-     </div>
-</div>
-<script>
-  function comprasMenu(){
-     //../site/menu-compras/brinquedos.png
-     console.log('BRAVO!')
-     let img1A=document.getElementById('img1-a');
-     console.log(img1A)
-     img1A.style.src="../site/menu-compras/brinquedos.png"
+/* ====== responsivo ====== */
+@media (max-width: 992px){
+  .topbar-row{
+    grid-template-columns: 120px 1fr 100px; /* logo + busca + ações */
   }
+  .actions{ gap:12px; margin-right: 6px; }
+  .search-form{
+    grid-template-columns: 1fr 1fr; /* quebra em 2 colunas */
+  }
+  .search-form .btn{ grid-column: 1 / -1; } /* botão em linha inteira */
+}
+
+@media (max-width: 576px){
+  .topbar-row{ grid-template-columns: 1fr; }
+  .brand{ justify-self:center; }
+  .actions{ justify-content:center; margin-right:0; }
+  .search-form{ grid-template-columns: 1fr; }
+}
+
+/* opcional: remove sombra/linhas da faixa abaixo se houver */
+.header-shadow-bridge{ display:none; }
+
+.topbar .container-wide{ padding-left:32px; padding-right:32px; }
+@media (max-width:576px){
+  /*.topbar .container-wide{ padding:0 12px; }*/
+}
+</style>
+<style>
+  .quickbar { padding-top: 0px; padding-bottom: 10px;background-color: blueviolet; } 
+</style>
+<style>
+#sugestoesLista{
+  position:absolute; top:100%; left:0; right:0;
+  background:#fff; border:1px solid #cfcfcf; border-top:none;
+  z-index: 1000; max-height: 240px; overflow:auto; display:none;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+#sugestoesLista .sug-item{
+  padding:8px 10px; cursor:pointer; color:#900; /* seu vermelho */
+  border-top:1px solid #eee;
+  background:#fff;
+}
+#sugestoesLista .sug-item:hover,
+#sugestoesLista .sug-item.active{
+  background:#f6f6f6;
+}
+</style>
+<style>
+  /* antes: aspect-ratio: 16 / 9; object-fit: cover;  */
+.atividade-thumb{
+  aspect-ratio: 1 / 1;           /* quadrado */
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f6f7f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.atividade-thumb img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;            /* NÃO corta; encaixa inteira */
+  display: block;
+}
+
+/* garante espaço pro texto e evita sobreposição */
+.atividade-name{
+  margin-top: 6px;
+  font-size: .95rem;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+}
+
+@supports not (aspect-ratio: 1 / 1){
+  .atividade-thumb{ position: relative; }
+  .atividade-thumb::before{
+    content: ""; display: block; padding-top: 100%; /* mantém quadrado */
+  }
+  .atividade-thumb img{
+    position: absolute; inset: 8px;
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    object-fit: contain;
+  }
+}
+</style>
+<style>
+  .home-depto-bar{
+  display:flex; gap:12px; flex-wrap:wrap;
+}
+.btn-depto{
+  flex:1 1 160px;           /* ocupa largura; se tiver 1 só, expande a linha inteira */
+  text-align:center;
+  background:#5d87e6; color:#fff;
+  border-radius:6px; padding:8px 12px; border:0;
+  text-decoration:none; font-weight:600;
+}
+.btn-depto:hover{ filter:brightness(0.95); }
+.btn-depto-active{ outline:2px solid #2b5dd1; }
+
+.home-atividades .atividades-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap:16px;
+}
+.atividade-card{
+  display:block;
+  border:1px solid #eee; border-radius:10px; padding:10px;
+  text-decoration:none; color:#333; background:#fff;
+  transition:transform .08s ease, box-shadow .08s ease;
+}
+.atividade-card:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.08); }
+.atividade-thumb{ height:130px; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:8px; }
+.atividade-thumb img{ width:100%; height:100%; object-fit:cover; }
+.atividade-name{ margin-top:8px; text-align:center; font-weight:600; }
+
+</style>
+<style>
+  .home-atividades { padding: 16px 0 24px; }
+  .home-title { font-size: 1.25rem; font-weight: 600; margin: 8px 0 16px; }
+
+  .atividades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  .atividade-card {
+    display: flex; flex-direction: column; gap: 8px;
+    text-decoration: none; border: 1px solid #eee; border-radius: 12px;
+    padding: 10px; background: #fff; transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .atividade-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+
+  .atividade-thumb {
+    aspect-ratio: 16 / 9; width: 100%; overflow: hidden; border-radius: 10px; background: #f6f7f9;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .atividade-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .atividade-name {
+    font-size: .95rem; font-weight: 600; color: #222; text-align: center; min-height: 2.2em;
+  }
+
+  /* responsivo */
+  @media (max-width: 768px) {
+    .atividades-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  }
+</style>
+<style>
+.btn-depto-sub{
+  display:inline-block;
+  margin-top:6px;
+  padding:6px 10px;
+  font-size:.95rem;
+  opacity:.9;
+  pointer-events:none; /* apenas indicativo, não clicável */
+}
+
+/* cabeçalho do painel de seções */
+.secoes-header{
+  display:flex; align-items:center; gap:8px;
+  margin-top: 4px;          /* encosta no topo */
+  margin-bottom: 8px;       /* menos espaço antes do grid */
+}
+
+/* chips menores */
+.btn-depto{ padding:4px 10px; font-size:.9rem; }
+.btn-depto-sub{ padding:4px 10px; font-size:.9rem; margin-top:0; }
+
+/* título com menos margem */
+.home-title{ margin: 4px 0 8px; }
+.card-product img { max-height: 220px; }
+@media (min-width: 1200px){ .card-product img { max-height: 200px; } }
+</style>
+<header class="topbar" style="background-color: #101010;">
+        <!-- LOGO -->
+        <a class="brand" href="/" style="background-color:transparent;">
+           <span>Rota</span><span class="brand-accent" >es</span>
+        </a>
+        <nav class="actions" >
+           <a href="/login" class="action-link"><i class="fa-regular fa-user"></i> Login</a>
+           <a href="/carrinho" class="action-link"><i class="fa-solid fa-cart-shopping"></i> Carrinho</a>
+        </nav>
+        <div class="container-wide" style="background-color: #999494;">
+          <div class="topbar-row">
+            <!-- BUSCA + FILTROS (coloque seu form aqui dentro) -->
+            <div class="search-wrap">
+              <!-- exemplo: substitua pelo seu form atual -->
+              <form class="search-form" action="/buscar" method="get">
+                  <input class="form-control" name="q" id="inputBusca" placeholder="O que você procura?" />
+
+                  <select id="selectCidade" class="form-select" name="municipio" >
+                      <option value="">Município</option>
+                      {{#each cidades}}
+                        <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
+                      {{/each}}
+                  </select>
+                  <select id="selectBairro" class="form-select" name="loja">
+                      <option value="">Bairros</option>
+                  </select>
+                  <button class="btn btn-primary" type="submit">Aplicar filtros</button>
+              </form>
+            </div>
+          </div>
+        </div>
+</header>
+<div class="quickbar bg-light border-bottom" >
+  
+  <div class="container my-2">
+      <div class="home-depto-bar" role="toolbar" aria-label="Departamentos" style="background-color: #900;">
+        {{#if departamentosAtivos.length}}
+          {{#each departamentosAtivos}}
+            {{!-- botão navega mudando ?segmento= --}}
+            <a class="btn btn-depto {{#if (eq ../segmentoAtual this.nomeDepartamento)}}btn-depto-active{{/if}}"
+              href="/?segmento={{encodeURIComponent this.nomeDepartamento}}">
+              {{this.nomeDepartamento}}
+            </a>
+          {{/each}}
+        {{else}}
+          <div class="alert alert-warning m-0">Nenhum departamento ativado.</div>
+        {{/if}}
+      </div>
+  </div>
+</div>
+<div id="Setores" style="display:block;">
+  <section class="home-atividades">
+    <div class="container">
+      <h2 class="home-title">Setores</h2>
+      {{#if atividades.length}}
+        <div class="atividades-grid">
+          {{#each atividades}}
+          <a class="atividade-card js-open-setor"
+            href="/setor/{{_id}}"
+            data-setor-id="{{_id}}"
+            aria-label="{{nome}}">
+            <div class="atividade-thumb"><img src="{{imagemUrl}}" alt="{{nome}}"></div>
+            <div class="atividade-name">{{titulo}}</div>
+          </a>
+
+          {{/each}}
+        </div>
+      {{else}}
+        <p class="text-muted">Nenhum setor encontrado para {{segmentoAtual}}.</p>
+      {{/if}}
+    </div>
+  </section>
+</div>
+<div id="secoesPane" class="container my-3" hidden></div>
+<div id="produtos" class="container my-4" style="background-color: #900;display: none;">
+        {{#if banner}}
+            <div class="row mb-3">
+              <div class="col">
+                <img src="{{banner.url}}" alt="{{banner.alt}}" class="img-fluid rounded shadow-sm w-100">
+              </div>
+            </div>
+        {{/if}}
+
+        {{#if produtos.length}}
+              <div class="row g-3" id="gridProdutos">
+                {{#each produtos}}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                  <article class="card h-100 product-card shadow-sm">
+                    <div class="ratio ratio-4x3">
+                      <img src="{{this.pageurls}}" alt="{{this.descricao}}" class="card-img-top p-2 object-fit-contain">
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                      <h6 class="card-title text-center product-title">{{this.descricao}}</h6>
+                      <p class="price text-center mb-3">{{moeda this.preco}}</p>
+                      <button class="btn btn-success w-100 mt-auto" onclick="adicionarCarrinho('{{this._id}}')">Comprar ?</button>
+                    </div>
+                  </article>
+                </div>
+                {{/each}}
+              
+                {{#each anuncios}}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                  <aside class="card h-100 product-card d-flex align-items-center justify-content-center p-2 shadow-sm">
+                    <img src="{{this.logo}}" alt="{{this.nome}}" class="img-fluid p-3" style="max-height:120px;">
+                    <div class="card-body text-center">
+                      <h6 class="mb-1">{{this.nome}}</h6>
+                      <small class="text-muted">{{this.segmento}}</small>
+                      <a href="{{this.url}}" class="btn btn-success w-100 mt-3">Ir</a>
+                    </div>
+                  </aside>
+                </div>
+                {{/each}}
+              </div>
+        {{else}}
+        <div class="alert alert-info">
+              Nenhum produto encontrado {{#if q}}para “{{q}}”{{/if}}.
+              <a href="/">Limpar filtros</a>
+        </div>
+        {{/if}}
+</div>
+
+
+ {{!-- COMEÇO DO JAVASCRIPT --}}
+<script>
+  const selCidade = document.getElementById('selectCidade');
+  const selBairro = document.getElementById('selectBairro');
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (selCidade && selCidade.value) carregarBairros(selCidade.value);
+});
+
+selCidade.addEventListener('change', () => carregarBairros(selCidade.value));
+
+async function carregarBairros(cidade){
+  console.log('');
+  console.log(' [ 225 ]',cidade);
+  console.log('');
+  selBairro.innerHTML = '<option value="">Carregando...</option>';
+  selBairro.disabled = true;
+
+  if (!cidade){
+    selBairro.innerHTML = '<option value="">Bairro</option>';
+    return;
+  }
+  console.log('');
+  console.log('');
+  console.log('[ 236 ]');
+  console.log('');
+  try{
+    // ajuste a rota ao seu router
+    const r = await fetch(`/bairros?cidade=${encodeURIComponent(cidade)}`);
+   
+    const bairros = await r.json();
+   
+    const itens = Array.isArray(bairros) ? bairros
+            : (Array.isArray(bairros?.items) ? bairros.items : []);
+
+    const selecionado = '{{bairroSelecionado}}';
+    
+    selBairro.innerHTML = '<option value="">Bairro</option>' +
+      itens.map(b => `<option value="${b}" ${b === "{{bairroSelecionado}}" ? 'selected' : ''}>${b}</option>`).join('');
+
+    selBairro.disabled = false;
+  }catch(e){
+    console.error(e);
+    selBairro.innerHTML = '<option value="">Bairro</option>';
+  }
+}
+</script>
+<script>
+      const inputBusca = document.querySelector('input[name="q"]');
+
+      const listaSugestoes = document.createElement('div');
+      listaSugestoes.id = 'sugestoesLista';
+      inputBusca.parentElement.appendChild(listaSugestoes);
+
+      inputBusca.addEventListener('input', async () => {
+        const termo = inputBusca.value.trim().toLowerCase();
+        if (termo.length < 3) { listaSugestoes.innerHTML = ''; return; }
+
+        const resp = await fetch(`/buscar-sugestoes?q=${encodeURIComponent(termo)}`);
+        const sugestoes = await resp.json();
+
+        listaSugestoes.innerHTML = sugestoes.map(s => `<div>${s}</div>`).join('');
+
+        listaSugestoes.querySelectorAll('div').forEach(div => {
+          div.addEventListener('click', () => {
+            inputBusca.value = div.textContent;
+            listaSugestoes.innerHTML = '';
+          });
+      });
+});
+
+</script>
+<script>
+  
+// ===== Autocomplete leve =====
+(() => {
+  const input = document.querySelector('input[name="q"]');
+  if (!input) return;
+
+  // wrapper p/ posicionar a lista
+  input.parentElement.style.position = 'relative';
+
+  const box = document.createElement('div');
+  box.id = 'sugestoesLista';
+  input.parentElement.appendChild(box);
+
+  let items = [];
+  let active = -1;
+  let lastTerm = '';
+  let timer = null;
+
+  const debounce = (fn, ms=300) => (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), ms);
+  };
+
+  const render = () => {
+    box.innerHTML = items.map((t,i)=>`
+      <div class="sug-item ${i===active?'active':''}" data-i="${i}" title="${t}">${t}</div>
+    `).join('');
+    [...box.querySelectorAll('.sug-item')].forEach(div=>{
+      div.addEventListener('mousedown', (e)=>{ // mousedown evita blur antes do click
+        e.preventDefault();
+        const idx = Number(div.dataset.i);
+        choose(idx);
+      });
+    });
+    box.style.display = items.length ? 'block' : 'none';
+  };
+
+  const choose = (idx) => {
+    if (idx < 0 || idx >= items.length) return;
+    input.value = items[idx];
+    close();
+    // opcional: submeter o form ao escolher
+    // input.form?.submit();
+  };
+
+  const close = () => {
+    items = [];
+    active = -1;
+    render();
+  };
+
+  const fetchSug = debounce(async () => {
+    const term = (input.value || '').trim();
+    if (term.length < 3) { close(); return; }
+    if (term === lastTerm) return;
+    lastTerm = term;
+
+    try {
+      const r = await fetch(`/buscar-sugestoes?q=${encodeURIComponent(term)}`, { cache: 'no-store' });
+      const data = Array.isArray(await r.json()) ? r.json : [];
+      // acima some bugzinho — vamos ler corretamente:
+    } catch(_) {}
+  }, 250);
+
+  // correção da leitura (evitar confusão com o acima)
+  const safeFetch = debounce(async () => {
+    const term = (input.value || '').trim();
+    if (term.length < 3) { close(); return; }
+    if (term === lastTerm) return;
+    lastTerm = term;
+    try {
+      const r = await fetch(`/buscar-sugestoes?q=${encodeURIComponent(term)}`, { cache: 'no-store' });
+      const arr = await r.json();
+      items = Array.isArray(arr) ? arr : [];
+      active = -1;
+      render();
+    } catch(e){ close(); }
+  }, 250);
+
+  // eventos
+  input.addEventListener('input', safeFetch);
+  input.addEventListener('keydown', (e) => {
+    if (!items.length) return;
+    if (e.key === 'ArrowDown'){ active = (active + 1) % items.length; render(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp'){ active = (active - 1 + items.length) % items.length; render(); e.preventDefault(); }
+    else if (e.key === 'Enter'){ if (active >= 0) { e.preventDefault(); choose(active); } }
+    else if (e.key === 'Escape'){ close(); }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!box.contains(e.target) && e.target !== input) close();
+  });
+})();
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+  const inputBusca = document.querySelector('input[name="q"]');
+  if (!inputBusca) return;
+
+  const listaSugestoes = document.createElement('div');
+  listaSugestoes.id = 'sugestoesLista';
+  inputBusca.parentElement.appendChild(listaSugestoes);
+
+  // ... resto do seu código ...
+});
+
+</script>
+
+<script>
+(function(){
+  const $pane = document.getElementById('secoesPane');
+
+  document.addEventListener('click', async (ev) => {
+    const a = ev.target.closest('a.js-open-setor');
+    if (!a) return;
+    ev.preventDefault();
+
+    const id = a.getAttribute('data-setor-id');
+    if (!id) return;
+
+    try{
+      const r = await fetch(`/setor/${encodeURIComponent(id)}`, {headers:{'Accept':'application/json'}});
+      if(!r.ok){ console.warn('API seções', r.status); return; }
+      const data = await r.json();
+      renderSecoes(data);
+      showArea('secoes');
+    }catch(e){ console.error(e); }
+  });
+
+  function renderSecoes(data){
+    const header = `
+        <div class="secoes-header">
+        <div class="btn btn-depto btn-depto-active">${esc(data.departamento||'')}</div>
+        <div class="btn btn-depto btn-depto-sub">${esc(data.setor||'')}</div>
+        </div>
+        <h2 class="home-title">Seções</h2>
+      `;
+
+    const grid = (Array.isArray(data.secoes) && data.secoes.length)
+      ? `<div class="atividades-grid">
+          ${data.secoes.map(card).join('')}
+         </div>`
+      : `<p class="text-muted">Nenhuma seção com imagem neste setor.</p>`;
+
+    $pane.innerHTML = header + grid;
+    $pane.hidden = false;
+    $pane.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function card(s){
+    return `
+        <a class="atividade-card js-open-secao" href="${s.href}"
+          data-secao-id="${att(s._id)}">
+          <div class="atividade-thumb">
+            <img loading="lazy" src="${s.imagemUrl}" alt="${att(s.nome)}">
+          </div>
+          <div class="atividade-name">${esc(s.nome)}</div>
+        </a>`;
+  }
+
+
+  const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+  const esc = (x)=>String(x??'').replace(/[&<>\"']/g,m=>map[m]);
+  const att = esc;
+})();
+
+
+
+// clique em uma SEÇÃO -> carrega produtos e mostra o grid
+document.addEventListener('click', async (ev) => {
+  const a = ev.target.closest('a.js-open-secao');
+  if (!a) return;
+  ev.preventDefault();
+
+  const secaoId = a.getAttribute('data-secao-id');
+  if (!secaoId) return;
+
+  try{
+    // ajuste a rota conforme seu backend
+    const r = await fetch(`/secao/${encodeURIComponent(secaoId)}/produtos`,
+                          { headers: { 'Accept':'application/json' }});
+    if (!r.ok){ console.warn('API produtos da seção', r.status); return; }
+
+    const data = await r.json();  // { secao:'bicicleta', produtos:[...] }
+    renderProdutos(data);
+    showArea('produtos');
+    document.getElementById('produtos')
+      ?.scrollIntoView({ behavior:'smooth', block:'start' });
+  }catch(e){ console.error(e); }
+});
+
+// util para alternar as áreas
+function showArea(area){               // 'atividades' | 'secoes' | 'produtos'
+  const $ativ   = document.getElementById('Setores');
+  const $secoes = document.getElementById('secoesPane');
+  const $prod   = document.getElementById('produtos');
+
+  // esconde tudo
+  if ($ativ)   $ativ.style.display   = 'none';
+  if ($prod)   $prod.style.display   = 'none';
+  if ($secoes) { $secoes.hidden = true; $secoes.style.display = 'none'; }
+
+  // mostra o solicitado
+  if (area === 'atividades' && $ativ){
+    $ativ.style.display = 'block';
+  } else if (area === 'secoes' && $secoes){
+    $secoes.hidden = false;           // remove o atributo hidden
+    $secoes.style.display = 'block';
+  } else if (area === 'produtos' && $prod){
+    $prod.style.display = 'block';
+  }
+}
+
+</script>
+<script>
+function renderProdutos(data){
+  const $secTitle = document.getElementById('secoes-name');   // opcional: título da seção
+  const $prod     = document.getElementById('produtos');
+  if (!$prod) return;
+
+  const nomeSecao = (data?.secao?.nomeSecao) || data?.secao || '';
+  const prods = Array.isArray(data?.produtos) ? data.produtos : [];
+
+  // título “Produtos” + breadcrumb simples (opcional)
+  if ($secTitle) $secTitle.textContent = nomeSecao || 'Produtos';
+
+  if (prods.length === 0){
+    $prod.innerHTML = `
+      <div class="text-center text-muted py-4">
+        Nenhum produto encontrado para esta seção.
+      </div>`;
+    return;
+  }
+
+  const PLACEHOLDER = 'https://via.placeholder.com/480x360?text=Produto';
+
+function pickImage(p){
+  // 1) arrays conhecidos
+  const arrays = [p.pageurlS, p.pageurls, p.pageurl, p.imagens, p.images];
+  for (const a of arrays){
+    if (Array.isArray(a) && a.length && a[0]) return String(a[0]);
+  }
+  // 2) campos escalares comuns
+  const singles = [p.imagemUrl, p.imageUrl, p.fotoUrl, p.thumbUrl];
+  for (const s of singles){
+    if (s && String(s).trim()) return String(s).trim();
+  }
+  return PLACEHOLDER;
+}
+  // helper preço
+  const brl = v => (typeof v === 'number' && !isNaN(v) && v > 0)
+    ? v.toLocaleString('pt-BR',{ style:'currency', currency:'BRL'})
+    : '';
+
+  // monta cards (3 por linha em md, 2 em sm, 1 no xs; 4 no lg)
+  const cards = prods.map(p => {
+    const img = pickImage(p);
+
+    const preco  = brl(p.preco1 || p.preco || p.precoavista);
+    const href   = p.href || `/produto/${p._id}`;   // ajuste se tiver outra rota
+
+    return `
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+        <article class="card h-100 card-product">
+          <a class="ratio ratio-4x3" href="${href}" aria-label="${p.descricao || ''}">
+  <img class="w-100 h-100 object-fit-contain p-2"
+       src="${img}"
+       alt="${p.descricao || ''}"
+       loading="lazy"
+       referrerpolicy="no-referrer"
+       onerror="this.src='${PLACEHOLDER}'">
+</a>
+
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-title mb-2 text-truncate" title="${p.descricao || ''}">${p.descricao || ''}</h6>
+            ${preco ? `<div class="mt-auto fw-semibold">${preco}</div>` : `<div class="mt-auto text-muted small">preço sob consulta</div>`}
+          </div>
+        </article>
+      </div>
+    `;
+  }).join('');
+
+  $prod.innerHTML = `
+    <section class="container-fluid px-0">
+      <div class="d-flex align-items-center justify-content-between mb-2 px-2">
+        <h2 class="h6 mb-0">${nomeSecao ? `Produtos · ${nomeSecao}` : 'Produtos'}</h2>
+        <span class="text-muted small">${prods.length} itens</span>
+      </div>
+      <div class="row g-3 px-2">
+        ${cards}
+      </div>
+    </section>`;
+}
+
+
 </script>

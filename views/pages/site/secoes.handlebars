@@ -1,0 +1,52 @@
+<style>
+.home-atividades .atividades-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap:16px;
+}
+
+.atividades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  /* responsivo */
+  @media (max-width: 768px) {
+    .atividades-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  }
+
+  .atividade-card{
+  display:block;
+  border:1px solid #eee; border-radius:10px; padding:10px;
+  text-decoration:none; color:#333; background:#fff;
+  transition:transform .08s ease, box-shadow .08s ease;
+}
+.atividade-card:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.08); }
+
+.atividade-card {
+    display: flex; flex-direction: column; gap: 8px;
+    text-decoration: none; border: 1px solid #eee; border-radius: 12px;
+    padding: 10px; background: #fff; transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .atividade-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+</style>
+
+
+
+<div class="container my-3">
+  <h3 class="mb-2">{{departamentoNome}} <small class="text-muted">/ {{setorNome}}</small></h3>
+   {{secoes}}
+  {{#if secoes.length}}
+    <div class="atividades-grid">
+      {{#each secoes}}
+        <a class="atividade-card" href="/produtos?secao={{encodeURIComponent this.nomeSecao}}" aria-label="{{this.nomeSecao}}">
+          <div class="atividade-thumb"><img src="{{this.imagemUrl}}" alt="{{this.nomeSecao}}"></div>
+          <div class="atividade-name">{{this.nomeSecao}}</div>
+        </a>
+      {{/each}}
+    </div>
+  {{else}}
+    <p class="text-muted">Nenhuma seção com imagem neste setor.</p>
+  {{/if}}
+</div>

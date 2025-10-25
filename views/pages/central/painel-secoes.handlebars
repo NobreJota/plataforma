@@ -1,0 +1,477 @@
+<style>
+/*.row-setor > td{ border-top:2px solid rgba(0,0,0,.25); }
+.col-setor-spacer{ border-left:2px solid rgba(0,0,0,.15); width:1%; }
+.col-secao{ padding-left:.75rem; }
+.row-secao > td{ border-top:1px solid rgba(0,0,0,.075); }*/
+
+.row-setor > td{ border-top:2px solid rgba(0,0,0,.25); }
+.col-setor-spacer{ border-left:2px solid rgba(0,0,0,.15); width:1%; }
+.col-secao{ padding-left:.75rem; }
+.row-secao > td{ border-top:1px solid rgba(0,0,0,.075); }
+
+</style>
+<style>
+/* deixa o zoom suave e sem empurrar a tabela */
+.thumb-zoom{
+  height: 40px;            /* 36px nas seções, se quiser diferente, crie .thumb-zoom.sm */
+  width: 40px;
+  object-fit: cover;
+  border-radius: .5rem;
+  border: 1px solid #dee2e6;
+  transition: transform .15s ease-in-out, box-shadow .15s ease-in-out;
+  will-change: transform;
+  display: inline-block;
+  position: relative;      /* para o z-index funcionar durante o hover */
+  z-index: 1;
+}
+
+/* expande por cima, sem mudar o fluxo da tabela */
+.thumb-zoom:hover{
+  transform: scale(2.4);
+  z-index: 50;
+  box-shadow: 0 10px 24px rgba(0,0,0,.25);
+}
+
+/* se o zoom estiver cortando, deixe a área da tabela “vazar” para fora */
+.table-responsive{ overflow: visible; }
+
+.thumb-zoom.sm{ height:36px; width:36px; }
+.table td, .table th { position: relative; overflow: visible; }
+
+</style>
+
+<div class="container-fluid px-3 py-2" style="width: 80%;height: 85vh;margin: auto;background-color: darkblue;overflow-y: auto;">
+  <!-- Filtro: Departamento -->
+  <form class="row g-2 align-items-center mb-2" style="margin-top: 2vh;" method="GET" action="/paineis/secoes">
+    <div class="col-auto">
+      <label class="form-label fw-bold mb-0" style="color:#f3efef;">Departamento</label>
+    </div>
+    <div class="col-4">
+      <select name="dep" class="form-select">
+        <option value="">Selecione…</option>
+        {{#each departamentos}}
+          <option value="{{this._id}}" {{#if (eq ../depSelecionado this._id)}}selected{{/if}}>
+            {{this.nomeDepartamento}}
+          </option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="col-auto">
+      {{!-- <button class="btn btn-primary">Carregar</button> --}}
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-sm align-middle">
+     <thead class="table-dark">
+        <tr>
+            <th style="width: 28%;">Setores</th>
+            <th style="width: 110px;">Imagens</th>      {{!-- thumb do SETOR --}}
+            <th>Seções</th>
+            <th style="width: 110px;">Imagens</th>      {{!-- thumb da SEÇÃO --}}
+            <th style="width: 90px;">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tbSecoes">
+        {{#if lista.length}}
+          {{#each lista}}
+            <!-- Linha do Setor -->
+            <tr class="row-setor">
+              <td class="fw-semibold">{{this.nome}}</td>
+              <td class="text-muted">—</td>
+              <td>
+                {{#if this.imagemUrl}}
+                  <img src="{{this.imagemUrl}}" class="thumb-zoom" alt="img {{this.nome}}"
+                       style="height:40px;width:40px;object-fit:cover;border-radius:.5rem;border:1px solid #dee2e6;">
+                {{else}} <span class="text-muted">—</span> {{/if}}
+              </td>
+              <td>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">menu</button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item js-setor-imagem" href="#" data-id="{{this._id}}" data-nome="{{this.nome}}">imagem</a></li>
+                    <li><a class="dropdown-item" href="/central/setor/{{this._id}}/editar">editar</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="/central/setor/{{this._id}}/suspender">suspender</a></li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+
+            
+            {{!-- dentro de pages/central/painel-secoes.handlebars --}}
+{{#each this.secoes}}
+  <tr class="row-secao">
+    <td class="col-setor-spacer"></td>
+    <td class="col-secao">{{this.nome}}</td>
+    <td>
+      {{#if this.imagemUrl}}
+          <img src="{{this.imagemUrl}}" class="thumb-zoom sm" alt="img {{this.nome}}">
+      {{else}} <span class="text-muted">—</span> {{/if}}
+    </td>
+    <td>
+      <div class="dropdown">
+        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">menu</button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <a href="#"
+               class="dropdown-item js-secao-imagem"
+               data-doc="{{this._idDoc}}"
+               data-idx="{{this.idx}}"
+               data-nome="{{this.nome}}">
+               imagem
+            </a>
+          </li>
+          <li><a class="dropdown-item" href="#">editar</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="#">suspender</a></li>
+        </ul>
+      </div>
+    </td>
+  </tr>
+{{/each}}
+
+          {{/each}}
+        {{else}}
+          <tr><td colspan="4" class="text-muted">Selecione um departamento para listar.</td></tr>
+        {{/if}}
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- MODAL: Vincular imagem -->
+<div class="modal fade" id="modalImagem" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width:560px">
+    <div class="modal-content">
+      <form id="formImagem">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalImagemTitulo">Vincular imagem</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- contexto escondido -->
+          <input type="hidden" id="ctxTipo">         <!-- 'setor' | 'secao' -->
+          <input type="hidden" id="ctxSetorId">
+          <input type="hidden" id="ctxDocId">
+          <input type="hidden" id="ctxIdx">
+
+          <div class="mb-3">
+            <label class="form-label">Foto</label>
+            <input type="file" id="inpArquivo" class="form-control" accept="image/*" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Nome da imagem</label>
+            <input type="text" id="inpNome" class="form-control" placeholder="Ex.: bicicleta-ar-livre" maxlength="120">
+            <div class="form-text">Opcional — usamos só para organizar.</div>
+          </div>
+
+          <div class="mb-2">
+            <img id="preview" alt="preview" style="display:none;max-width:100%;border-radius:.5rem;border:1px solid #dee2e6;">
+          </div>
+
+          <div id="msgErro" class="text-danger small" style="display:none"></div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+(() => {
+  // Bootstrap modal
+  const modalEl = document.getElementById('modalImagem');
+  const modal = new bootstrap.Modal(modalEl);
+
+  // elementos
+  const form = document.getElementById('formImagem');
+  const inpArquivo = document.getElementById('inpArquivo');
+  const inpNome    = document.getElementById('inpNome');
+  const preview    = document.getElementById('preview');
+  const titulo     = document.getElementById('modalImagemTitulo');
+  const msgErro    = document.getElementById('msgErro');
+
+  const ctxTipo   = document.getElementById('ctxTipo');
+  const ctxSetor  = document.getElementById('ctxSetorId');
+  const ctxDoc    = document.getElementById('ctxDocId');
+  const ctxIdx    = document.getElementById('ctxIdx');
+
+  // util: sugere nome a partir do arquivo
+  function sugestaoNome(file){
+    if (!file) return '';
+    return file.name.replace(/\.[^.]+$/, '').slice(0, 120);
+  }
+
+  // preview
+  inpArquivo.addEventListener('change', () => {
+    msgErro.style.display = 'none';
+    const f = inpArquivo.files?.[0];
+    if (!f) { preview.style.display='none'; preview.src=''; return; }
+    preview.src = URL.createObjectURL(f);
+    preview.style.display = 'block';
+    if (!inpNome.value) inpNome.value = sugestaoNome(f);
+  });
+
+  // abrir modal ao clicar no menu "imagem"
+  document.addEventListener('click', (ev) => {
+    const aSec = ev.target.closest('.js-secao-imagem');
+    const aSet = ev.target.closest('.js-setor-imagem');
+    if (!aSec && !aSet) return;
+    ev.preventDefault();
+
+    // limpa estado
+    form.reset();
+    preview.style.display = 'none';
+    preview.src = '';
+    msgErro.style.display='none';
+
+    if (aSec) {
+      ctxTipo.value  = 'secao';
+      ctxDoc.value   = aSec.dataset.doc;
+      ctxIdx.value   = aSec.dataset.idx;
+      ctxSetor.value = '';
+      titulo.textContent = `Imagem da seção: ${aSec.dataset.nome || ''}`;
+    } else {
+      ctxTipo.value  = 'setor';
+      ctxSetor.value = aSet.dataset.id;
+      ctxDoc.value   = '';
+      ctxIdx.value   = '';
+      titulo.textContent = `Imagem do setor: ${aSet.dataset.nome || ''}`;
+    }
+
+    modal.show();
+  });
+
+  // submit do form
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msgErro.style.display='none';
+
+    const file = inpArquivo.files?.[0];
+    if (!file) {
+      msgErro.textContent = 'Escolha uma imagem.'; 
+      msgErro.style.display='block';
+      return;
+    }
+
+    try {
+      // 1) upload local -> { url }
+      const fd = new FormData();
+      fd.append('image', file);
+      // opcional: mandar o nome também
+      if (inpNome.value) fd.append('name', inpNome.value);
+
+      const up = await fetch('/paineisecoes/upload/image', { method:'POST', body: fd });
+      const { url } = await up.json();
+      if (!url) throw new Error('Upload falhou');
+
+      // 2) grava URL no banco
+      if (ctxTipo.value === 'setor') {
+        const r = await fetch(`/paineisecoes/setor/${ctxSetor.value}/imagem`, {
+          method:'PATCH', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ imagemUrl: url })
+        });
+        if (!r.ok) throw new Error('Falha ao salvar imagem do setor');
+      } else {
+        const r = await fetch(`/paineisecoes/secao/${ctxDoc.value}/item/${ctxIdx.value}/imagem`, {
+          method:'PATCH', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ imagemUrl: url })
+        });
+        if (!r.ok) throw new Error('Falha ao salvar imagem da seção');
+      }
+
+      // 3) fecha & recarrega a lista
+      modal.hide();
+      if (typeof carregar === 'function') carregar(); else location.reload();
+
+    } catch (err) {
+      console.error(err);
+      msgErro.textContent = err.message || 'Não foi possível salvar.';
+      msgErro.style.display='block';
+    }
+  });
+})();
+</script>
+
+
+{{!-- <script>
+///(() => {
+//  const fileInput = document.getElementById('pickImage');
+  let pending = null; // {tipo:'secao'|'setor', docId?, idx?, setorId?}
+
+  // abre seletor ao clicar no menu "imagem"
+  document.addEventListener('click', (ev) => {
+    const btnSecao = ev.target.closest('.js-secao-imaXgem');
+    const btnSetor = ev.target.closest('.js-setor-imagem');
+    if (!btnSecao && !btnSetor) return;
+    ev.preventDefault();
+
+    pending = btnSecao
+      ? { tipo:'secao', docId: btnSecao.dataset.doc, idx: btnSecao.dataset.idx }
+      : { tipo:'setor', setorId: btnSetor.dataset.id };
+
+    fileInput.value = '';
+    fileInput.click();
+  });
+
+  // upload + salvar URL
+  fileInput.addEventListener('change', async () => {
+    if (!fileInput.files || !fileInput.files[0] || !pending) return;
+    const file = fileInput.files[0];
+
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const up = await fetch('/paineis/upload/image', { method:'POST', body: fd });
+      const { url } = await up.json();
+      if (!url) throw new Error('Upload falhou');
+
+      if (pending.tipo === 'setor') {
+        await fetch(`/paineis/setor/${pending.setorId}/imagem`, {
+          method:'PATCH', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ imagemUrl: url })
+        });
+      } else {
+        await fetch(`/paineis/secao/${pending.docId}/item/${pending.idx}/imagem`, {
+          method:'PATCH', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ imagemUrl: url })
+        });
+      }
+
+      if (typeof carregar === 'function') carregar(); else location.reload();
+    } catch (e) {
+      console.error(e);
+      alert('Não foi possível salvar a imagem.');
+    } finally {
+      pending = null;
+    }
+  });
+})();
+</script> --}}
+
+
+
+
+
+<script>
+(function(){
+  const sel  = document.querySelector('select[name="dep"]');
+  const body = document.getElementById('tbSecoes');
+
+  async function carregar(){
+    const dep = (sel.value || '').trim();
+    if (!dep){
+      body.innerHTML = `<tr><td colspan="4" class="text-muted">Selecione um departamento para listar.</td></tr>`;
+      return;
+    }
+    //paineisecoes
+    try{
+      console.log('');  
+      console.log('[ 214 ]',dep);
+      body.innerHTML = `<tr><td colspan="4">Carregando…</td></tr>`;
+      const r = await fetch(`/paineisecoes/secoes/data?dep=${encodeURIComponent(dep)}`);
+      const { lista=[] } = await r.json();
+      render(lista);
+    }catch(err){
+      console.error(err);
+      body.innerHTML = `<tr><td colspan="4" class="text-danger">Falha ao carregar.</td></tr>`;
+    }
+  }
+
+ 
+            function render(lista){
+            const body = document.getElementById('tbSecoes');
+            if(!lista.length){
+            body.innerHTML = `<tr><td colspan="5" class="text-muted">Selecione um departamento para listar.</td></tr>`;
+            return;
+            }
+ 
+            let html = '';
+            for(const s of lista){
+            /* ===== Linha do SETOR ===== */
+            html += `
+                <tr class="row-setor">
+                <td class="fw-semibold">${escapeHTML(s.nome)}</td>
+                <td>${renderThumb(s.imagemUrl, s.nome, 44)}</td>
+                <td class="text-muted">—</td>
+                <td></td>
+                <td>${renderMenuSetor(s._id, s.nome)}</td>
+                </tr>
+            `;
+
+            /* ===== Linhas das SEÇÕES ===== */
+            for(const c of (s.secoes||[])){
+                html += `
+                <tr class="row-secao">
+                    <td class="col-setor-spacer"></td>
+                    <td></td>
+                    <td class="col-secao">${escapeHTML(c.nome)}</td>
+                    <td>${renderThumb(c.imagemUrl, c.nome, 40)}</td>
+                    <td>${renderMenuSecao(c._idDoc, c.idx, c.nome)}</td>
+                </tr>
+                `;
+            }
+            }
+            body.innerHTML = html;
+            }
+
+            /* helpers já existentes no seu script, mantenha-os */
+            function renderThumb(url, alt, size){
+             if(!url) return `<span class="text-muted">—</span>`; 
+  const cls = size <= 36 ? 'thumb-zoom sm' : 'thumb-zoom';
+  return `<img src="${escapeAttr(url)}" alt="img ${escapeAttr(alt||'')}" class="${cls}">`;
+            }
+
+            function renderMenuSetor(id, nome){
+            return `
+            <div class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">menu</button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item js-setor-imagem" href="#" data-id="${id}" data-nome="${escapeAttr(nome)}">imagem</a></li>
+                <li><a class="dropdown-item" href="/central/setor/${id}/editar">editar</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="/central/setor/${id}/suspender">suspender</a></li>
+                </ul>
+            </div>`;
+            }
+            function renderMenuSecao(docId, idx, nome){
+            return `
+            <div class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">menu</button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item js-secao-imagem" href="#" data-doc="${docId}" data-idx="${idx}" data-nome="${escapeAttr(nome)}">imagem</a></li>
+                <li><a class="dropdown-item" href="#">editar</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#">suspender</a></li>
+                </ul>
+            </div>`;
+            }
+            
+
+
+  // util simples
+  function escapeHTML(s=''){ return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  function escapeAttr(s=''){ return escapeHTML(String(s)); }
+
+  // integra com seu modal, se existir
+  document.addEventListener('click', async (e) => {
+    const a1 = e.target.closest('.js-setor-imagem');
+  });
+
+  // carrega na entrada e ao mudar o select
+  sel.addEventListener('change', carregar);
+  window.addEventListener('DOMContentLoaded', carregar);
+})();
+</script>
+{{!-- <script>
+function render_Thumb(url, alt, size){
+  if(!url) return `<span class="text-muted">—</span>`;
+  const cls = size <= 36 ? 'thumb-zoom sm' : 'thumb-zoom';
+  return `<img src="${escapeAttr(url)}" alt="img ${escapeAttr(alt||'')}" class="${cls}">`;
+}
+</script> --}}

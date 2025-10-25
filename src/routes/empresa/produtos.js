@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const Mconstrucao = mongoose.model("m_construcao");
 const Departamento = require("../../models/departamento");
 const DeptoSetor = require('../../models/deptosetores');
-const  Lojista = require('../../models/lojista');
+const Lojista = require('../../models/lojista');
 
 //  busca os produto conforme a cidade
 router.get("/produtos-por-cidade/:cidade", async (req, res) => {
@@ -29,7 +29,9 @@ router.get("/produtos-por-cidade/:cidade", async (req, res) => {
 // Procura produtos pelo loja_Id
 router.get("/produtos-por-lojista/:id", async (req, res) => {
   const { id } = req.params;
-  const produtos = await Mconstrucao.find({ loja_id: id }).lean();
+  const produtos = await Mconstrucao.find(
+                          {descricao: { $regex: '\\d' }, loja_id: id })
+                                    .lean();
   res.json(produtos);
 });
 
@@ -54,7 +56,13 @@ router.post('/gravarproduto',async(req,res)=>{
         departamentoNome: depNome
       });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+      if (err.name === 'ValidationError' && err.errors?.descricao) {
+          return res.status(400).render('pages/empresa/produto-form', {
+            erroDescricao: err.errors.descricao.message,
+            produto: req.body
+          });
+      }
+      throw err;
   }
 })
 
@@ -77,7 +85,8 @@ router.get("/segmento/:id/setores", async (req, res) => {
 });
 
 router.put("/alterar/:id", async (req, res) => {
-    console.log(' [ 64  empresa/produtos.js   put/alterar ]');
+  console.log('');
+  console.log(' [ 80 public/js/empresa/produtos.js   put/alterar ]');
   console.log(req.params);
 
   const { id } = req.params;
@@ -108,7 +117,10 @@ router.put("/alterar/:id", async (req, res) => {
 
     console.log(' [ 94 ] ', update);
 
-    await Mconstrucao.findByIdAndUpdate(id, update);
+    await Mconstrucao.findByIdAndUpdate(id, update,{
+       runValidators: true,
+       context: 'query'
+    });
 
     res.status(200).json({ mensagem: "Produto atualizado com sucesso!" });
   } catch (error) {
@@ -155,8 +167,5 @@ router.get('/setores/:departamentoId', async (req, res) => {
     res.status(500).json({ erro: 'Erro ao buscar setores.' });
   }
 });
-
-
-
 
 module.exports = router;

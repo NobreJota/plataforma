@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
-//const { segmento }= require('../../models/lojista');
+
 const Segmentos = require("../../models/departamento");
 const Lojista = require('../../models/lojista');
+const produtoController = require('../../controllers/produtoController');
+const Mconstrucao = require('../../models/mconstrucao');
+const Departamento = require('../../models/departamento');
+
 
 router.get('/lojista', async (req, res) => {
    console.log('');
@@ -103,11 +107,6 @@ router.put("/lojista/update/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
-// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-// routes/api/departamentos.js
-
-const Departamento = require('../../models/departamento');
 
 router.get('/', async (req, res) => {
   try {
@@ -310,6 +309,20 @@ router.get('/consulta-ie-es/:cnpj', async (req, res) => {
     });
   }
 });
+
+// routes
+router.delete('/produto-delete/:id', produtoController.softDelete);
+
+//router.delete('/produto/delete/:id', async (req, res) => {
+//  try {
+//    const { id } = req.params;
+//    await Mconstrucao.findByIdAndDelete(id);
+//    return res.sendStatus(204);
+//  } catch (err) {
+//    console.error(err);
+//    return res.status(500).json({ error: 'Falha ao deletar produto' });
+//  }
+//});
 
 
 module.exports = router;

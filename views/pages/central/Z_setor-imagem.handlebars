@@ -1,0 +1,11 @@
+<div class="container p-3">
+  <h5>Vincular imagem ao setor: {{setor.nomeDeptoSetor}}</h5>
+  <form method="POST" action="/paineis/setor/{{setor._id}}/imagem">
+    <div class="mb-3">
+      <label class="form-label">URL da imagem</label>
+      <input type="url" class="form-control" name="imagemUrl" value="{{setor.imagemUrl}}">
+    </div>
+    <button class="btn btn-primary">Salvar</button>
+    <a class="btn btn-light" href="/paineis/atividades">Cancelar</a>
+  </form>
+</div>

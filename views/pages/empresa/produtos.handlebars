@@ -1,5 +1,28 @@
+<style>
+  table thead.fixar-apos-paginacao{
+  position: sticky;
+  top: calc(var(--h-topbar) + var(--h-filtros) + var(--h-paginacao));
+  z-index: 5;
+}
 
+/* garante em browsers que só fixam o TH */
+table thead.fixar-apos-paginacao th{
+  position: sticky;
+  top: calc(var(--h-topbar) + var(--h-filtros) + var(--h-paginacao));
+  background: #dfb706;   /* mesma cor da sua linha de cabeçalho */
+}
 
+/* importante para o sticky funcionar bem sobre Bootstrap */
+#tabelaProdutos{ border-collapse: separate; border-spacing: 0; }
+
+/* o cabeçalho gruda logo abaixo da paginação */
+#tabelaProdutos thead.fixar-apos-paginacao th{
+  position: sticky;
+  top: calc(var(--h-topbar) + var(--h-filtros) + var(--h-paginacao));
+  z-index: 2;
+  background: #dfb706;   /* mesma cor da sua linha de cabeçalho */
+}
+</style>
 <style>
   .CidadeBairro{
     width: 70%;height: 3.2vh;margin: auto;
@@ -244,7 +267,7 @@ padding: 0 10px; outline: none; background: #fff; color: #000;
 
 /* ====== Corpo (C + D) ====== */
 
-//.mi-body { flex: 1; display: grid; grid-template-rows: 220px 1fr; }  /* C ≈ 220px, D ocupa o resto */
+/*.mi-body { flex: 1; display: grid; grid-template-rows: 220px 1fr; }  /* C ≈ 220px, D ocupa o resto */
 .mi-body { flex:1; display:grid; grid-template-rows: 220px 1fr; } 
 
 /* ====== Seção C: Slots de fotos ====== */
@@ -316,7 +339,6 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
 .mi-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .mi-empty-msg { opacity: .85; font-weight: 600; }
 
-
 /* ====== Rodapé (gravar) ====== */
 .mi-footer {
   display:flex;
@@ -326,7 +348,6 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
   /* mantenha seu fundo atual se quiser */
   /* background:#0b0b0b; */
   overflow:visible;
-
 }
 
 .mi-footer-left{ position:relative; } 
@@ -375,65 +396,166 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
 
 </style>
 
+<!-- DEV DESK -->
+<style>
+#DevDesk{position:fixed; bottom:12px; right:12px; width:580px; height:420px;
+  background:#fff; border:2px solid #111; border-radius:6px; box-shadow:0 10px 30px rgba(0,0,0,.3);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial; z-index:999999; display:none; resize:both; overflow:hidden;}
+#DevDesk header{display:grid; grid-template-columns:1fr 1fr 1fr 32px; gap:6px; padding:8px; border-bottom:2px solid #111; background:#f7f7f7;}
+#DevDesk header input{height:26px; border:1px solid #bbb; border-radius:4px; padding:0 8px; font-size:12px;}
+#DevDesk header button{border:0; background:#111; color:#fff; border-radius:4px; cursor:pointer; font-weight:700}
+#DevDesk main{height:calc(100% - 56px); padding:10px; background:#fff; overflow:auto;}
+#DevDesk .ans{min-height:220px; border:2px dashed #aaa; border-radius:6px; padding:16px; font-size:18px; font-weight:700; text-align:center; color:#222;}
+#DevDesk .log{margin-top:10px; background:#0b0b0b; color:#cfd; font:12px/1.35 ui-monospace,Menlo,Consolas,monospace; padding:10px; border-radius:6px; white-space:pre-wrap;}
+#DevDesk .muted{opacity:.7}
+#DevDesk .row{display:flex; justify-content:space-between; align-items:center; margin:6px 0 2px}
+</style>
+<style>
+ #main {
+      width: 100vw;
+      height: 100vh; /* altura para visualização completa */
+      background-color: #5e5c5c; /* apenas para visualização */
+      position: relative; /* necessário para iniciar o contexto de empilhamento */
+      z-index: 1; /* camada inferior */
+    }
+
+    .grade{
+      width:calc(100vw - 2.5vw);
+      height: 95vh;
+      background-color: #ffffff;
+      margin:3.8vh 0px 0px 2.1vw;
+      color:#295ee4
+    }
+
+    .edit-row {
+      background-color: #f6990e; /* Amarelo claro */
+    }
+
+    .delete-row {
+      background-color: #c40303; /* Vermelho claro */
+    }
+
+    .btn-warning{
+       background-color: #b87004;
+       color:#fff;
+    }
+
+    .btn-danger{
+       background-color: #f90532;
+       color:#fff;
+    }
+
+    .selected-row {
+      background-color: unset;
+    }
+  </style>
+  <style>
+        /* Estilos genéricos da tabela */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: #b80b0b;
+       text-align:center;
+    }
+
+
+    td {
+      border: 1px solid #ddd;
+      padding-left: 8px;
+      text-align:left;
+    }
+
+    
+    button {
+      cursor: pointer;
+    }
+    </style>
+<div id="DevDesk" role="complementary" aria-label="Painel de debug">
+  <header>
+    <input id="DevQ1" placeholder="1ª — descreva o problema…">
+    <input id="DevQ2" placeholder="2ª — onde está no HTML/JS…">
+    <input id="DevQ3" placeholder="3ª — o que o fetch/ação faz…">
+    <button id="DevClose" title="Fechar">×</button>
+  </header>
+  <main>
+    <div class="ans" id="DevAns">AQUI A RESPOSTA DA ÚLTIMA QUESTÃO</div>
+    <div class="row"><span class="muted">Logs</span>
+      <div>
+        <button id="DevCopy" style="margin-right:6px">Copiar</button>
+        <button id="DevClear">Limpar</button>
+      </div>
+    </div>
+    <pre class="log" id="DevLog"></pre>
+  </main>
+</div>
+
+<script>
+(()=>{
+  const box=document.getElementById('DevDesk');
+  const Q1=document.getElementById('DevQ1');
+  const Q2=document.getElementById('DevQ2');
+  const Q3=document.getElementById('DevQ3');
+  const Ans=document.getElementById('DevAns');
+  const Log=document.getElementById('DevLog');
+  function toggle(){ box.style.display=(box.style.display==='none'||!box.style.display)?'block':'none'; }
+  function addLog(...args){
+    const msg=args.map(x=>typeof x==='string'?x:JSON.stringify(x,null,2)).join(' ');
+    Log.textContent+=(Log.textContent?'\n':'')+msg; Log.scrollTop=Log.scrollHeight;
+  }
+  window.debug={
+    show:()=>{box.style.display='block'}, hide:()=>{box.style.display='none'}, toggle,
+    note1:t=>Q1.value=t||'', note2:t=>Q2.value=t||'', note3:t=>Q3.value=t||'',
+    answer:html=>{Ans.innerHTML=html||'&nbsp;'},
+    log:addLog,
+    mirrorConsole(){
+      const orig=console.log; console.log=(...a)=>{ orig.apply(console,a); addLog(...a); };
+    }
+  };
+  // atalhos / botões
+  document.getElementById('DevClose').onclick=toggle;
+  document.getElementById('DevClear').onclick=()=>Log.textContent='';
+  document.getElementById('DevCopy').onclick=()=>{
+    const txt=`1) ${Q1.value}\n2) ${Q2.value}\n3) ${Q3.value}\n\nRESPOSTA:\n${Ans.innerText}\n\nLOGS:\n${Log.textContent}`;
+    navigator.clipboard.writeText(txt).then(()=>addLog('[DevDesk] copiado'));
+  };
+  window.addEventListener('keydown',e=>{ if(e.altKey&&(e.key==='d'||e.key==='D')){ e.preventDefault(); toggle(); }});
+  // espelha console
+  window.debug.mirrorConsole();
+})();
+</script>
 
 <script>
   window.todosSetoresSecoes = {{{todosSetoresSecoes}}}
 </script>
-<div id="menuLateral" class="lateral">
-  <div id="menulista" style="width: 10vw; height: 92vh; background-color:#fff; display: flex; flex-direction: column; justify-content: space-around; transition: margin-left 0.4s ease;">
-    <!-- Conteúdo do menu -->
-    <div style="height: 25vh;background-color:#fff;"></div>
-    <div style="display: flex; flex-direction: column; justify-content: space-around;background-color:transparent;text-align: left;margin: auto;">
-      <a id="passa-cadastrofornec" href="">Cadastro fornecedor</a>
-      <div style="height: 1vh;"></div>
-      <div>
-      <a id="passa-listafornec" href="/fornec/listafornec/:{{this._id}}">Lista fornecedor</a>
-      </div>
-    </div>
-    <div style="height: 25vh;"></div>
-  </div>
 
-  <div id="faixaVertical" style="width: 2vw; height: 92.5vh; background-color: #295ee4; display: flex; flex-direction: column; justify-content: space-around; z-index: 800;">
-    <h2 id="H2menuLateral" style="font-size: 1vw; text-align: end; color: #fff;">Menu lateral</h2>
-  </div>
-</div>  
 <div id="modalInfoSetorSecao" style="display:none; position:absolute; z-index:500;
      background:#fff; border:1px solid #ccc; padding:10px; border-radius:6px;
      box-shadow: 0 0 8px rgba(0,0,0,0.2); max-width: 250px; font-size: 14px;">
   <div id="modalContentSetorSecao"></div>
 </div> 
-<div id="painelLista" class="grade" >
-        <div style="display: flex;flex-direction: row;justify-content: center;">
-           <h1 style="font-weight:200;font-size:medium ;color: red;">Relação de produtos</h1>
-        </div>
-        <div id="CadastrarProduto" style="width: 98vw;height: 3vh;margin: auto;display: flex;flex-direction: row;justify-content: center;background-color: #295ee4;">
-          <button id="abrirModalProduto" style="border: none;background-color: transparent;" data-bs-toggle="modal" data-bs-target="#CadastrarProdutosModal" data-lojista="{{lojista._id}}" class="btn btn-sm" onclick="openCadastroModal()">
-            <h1 style="font-weight:200;color:#fff;font-size: small;">Cadastro de produtos</h1>
-            {{!-- <input id="lojaFornec" type="text" style="display:block;" value="{{loja._id}}"> --}}
-          </button>
-        </div>
-        <div id="divTable" style="overflow-x: auto;width:100%;">
-          <table id="tabelaProdutos" class="table  table-bordered">
-            
-            <thead style="color: #df061f;">
-              <tr >
-                <th style="width: 1vw;" onclick="ordenarTabela(0)">Itens</th>
-                <th style="display: none;" >Id</th>
-                <th onclick="ordenarTabela(2)">Código</th>
-                <th onclick="ordenarTabela(3)">Descrição</th>
-                <th onclick="ordenarTabela(4)">Complemento</th>
-                <th onclick="ordenarTabela(5)">Refer</th>
-                <th onclick="ordenarTabela(6)">Fornecedor</th>
-                <th onclick="ordenarTabela(7)">Segmento</th>
-                {{!-- <th onclick="ordenarTabela(7)">Setor</th>
-                <th onclick="ordenarTabela(7)">Seção</th> --}}
-                <th onclick="ordenarTabela(8)">Qte</th>
-                <th onclick="ordenarTabela(9)">Custo</th>
-                <th onclick="ordenarTabela(10)">Vista</th>
-                <th onclick="ordenarTabela(11)">Prazo</th>
-                <th >Ações</th>
-              </tr>
-            </thead>
+<div id="painelLista" class="grade" style="display: block;">
+    <div id="divTable" style="overflow-x: auto;width:100%;margin-top: 8vh;background-color: #ffffff;">
+          <table id="tabelaProdutos" class="table  table-bordered" style="font-size: small;margin-top:0.3vh;">
+            <thead class="fixar-apos-paginacao" style="color: #df061f;width: 100%;font-size:x-small ;font-weight: 400;" >
+            <tr style="background-color: #dfb706;">
+              <th style="width: 0.35vw;" onclick="ordenarTabela(0)" style="">Ord</th>
+              <th style="display: none;" >Id</th>
+              <th onclick="ordenarTabela(2)" style="width: 1vw;">Código</th>
+              <th onclick="ordenarTabela(3)" style="width: 13.4vw;">Descrição</th>
+              <th onclick="ordenarTabela(4)" style="width: 13.8vw;">Complemento</th>
+              <th onclick="ordenarTabela(5)" style="width: 5.5vw;">Refer</th>
+              <th onclick="ordenarTabela(6)" style="width: 13vw;">Fornecedor</th>
+              <th onclick="ordenarTabela(7)">Segmento</th>
+              <th onclick="ordenarTabela(8)">Qte</th>
+              <th onclick="ordenarTabela(9)">Custo</th>
+              <th onclick="ordenarTabela(10)">Vista</th>
+              <th onclick="ordenarTabela(11)">Prazo</th>
+              <th >Ações</th>
+            </tr>
+        </thead>
             <tbody id="produtoTable">
               {{#each produtos}}
               <tr data-id="{{_id}}">
@@ -443,7 +565,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
                 <td>{{descricao}}</td>
                 <td>{{complete}}</td>
                 <td>{{referencia}}</td>
-                <td>{{fornecedor.razao}}</td>
+                <td>{{fornecedor.marca}}</td>
                 <td>
                    {{#each localloja}}
                       {{#each departamento}}
@@ -467,7 +589,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
                             data-fornecedor="{{fornecedor.razao}}"
                             data-departamento ="{{localloja.[0].departamento.[0].nomeDepartamento}}">
                       <option value="" selected disabled>⋮</option>
-                      <option value="" selected hidden>⋮</option>
+                      {{!-- <option value="" selected hidden>⋮</option> --}}
                       <option value="vincular">🔗 Vincular</option>
                       <option value="imagens">🖼️ Imagens</option>
                       <option  value="editar">✏️ Editar</option>
@@ -480,7 +602,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
               {{/each}}
             </tbody>
           </table>
-        </div>  
+    </div>  
 </div>
 <!-- Modal para edição -->
 <div id="editModal"
@@ -537,7 +659,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
         <label>Preço Prazo:</label>
         <input type="number" step="any" id="editPrecoPrazo" name="precoprazo" class="form-control">
       </div>
-      <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+      <button type="button" class="btn btn-secondary" onclick="closeEditModal(); window.limparMenuAcoes?.();">Cancelar</button>
       <button type="submit" class="btn btn-primary">Salvar</button>
     </form>
   </div>
@@ -550,10 +672,10 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
     <div style="width: 98%;height: 92vh;margin: auto;background-color: #0b2f83;overflow: scroll;margin-top: 2.5vh;padding: 5px;">
     <h4 style="font-weight: 200;color: #ffffff;">Cadastro de produto</h4>
           <form id="cadastroProdutoForm" style="background-color: #295ee4;color:#fff;position: relative;height: 96vh;" >
-            <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #df061f;display:block;">
-             <div style="margin-bottom:10px;display: block;">
+            <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #df061f;display:none;">
+             <div style="margin-bottom:10px;display:none;">
               <label style="color:white">Marca loja:</label>
-              <input id="cadastroMarca" type="text"  name="marca" class="form-control" style="background-color: yellow;" >{{lojista.marca}}</input>
+              <label id="cadastroMarca" type="text"  name="marca" class="form-control" style="background-color: #ec7018;" >{{lojista.marca}}</label>
             </div>
             <div style="margin-bottom:10px;background-color blueviolet;">
               <label>Código:</label>
@@ -563,6 +685,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
             <div style="margin-bottom:10px;">
               <label>Descrição:</label>
               <input id="cadastroDescricao" type="text"  name="descricao" class="form-control">
+              <small id="descricaoErr" class="text-warning" hidden></small>
             </div>
             <div style="margin-bottom:10px;">
               <label>Complemento:</label>
@@ -582,13 +705,13 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
               </select>
             </div>
             {{!-- Os nomes cidade e bairro constam  na ficha do produto para facilitar a consulta --}}
-            <div style="background-color:transparent;margin-bottom: 12px;margin-top: 6px;display: none;">
-              <label id="cadastroCidade" style="background-color: #df061f;width: 85px;padding: 5px;">Cidade:</label>
-              <label id="cadastroBairro" class="CidadeBairro" style="margin-top: -6px;padding-top: 0px;">{{lojista.cidade}}</label>
+            <div style="background-color:transparent;margin-bottom: 12px;margin-top: 6px;display: block;">
+              <label style="background-color: #0611df;width: 85px;padding: 5px;">Cidade:</label>
+              <label id="cadastroCidade" class="CidadeBairro" style="margin-top: -6px;padding-top: 0px;">{{lojista.cidade}}</label>
             </div>
-            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;display: none;">
-              <label style="background-color: #df061f;width: 85px;padding: 5px;">Bairro:</label>
-              <label class="CidadeBairro">{{lojista.bairro}}</label>
+            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;display:block;">
+              <label style="background-color: #0611df;width: 85px;padding: 5px;">Bairro:</label>
+              <label id="cadastroBairro" class="CidadeBairro" style="background-color: orange;color: #fff;">{{lojista.bairro}}</label>
             </div>
             <div style="margin-bottom:10px;">
               <label>Quantidade:</label>
@@ -720,7 +843,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
                           <button id="miClearAll" class="mi-btn danger">Limpar seleção</button>
                         </div>
                   </div>
-                  <div id="miSlotGrid" class="mi-slot-grid" style="background:trasnsparente ;"></div>
+                  <div id="miSlotGrid" class="mi-slot-grid" style="background:transparent;"></div>
                   <div id="miNoBankBanner" class="mi-nobank" style="display:none">
                           Não há imagens no banco. Clique nas caixas acima para escolher do seu computador.
                   </div>
@@ -750,81 +873,133 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
 </div>
       </div>
 </div>
+<!-- Modal para deletar -->
+<div id="deleteModal"
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,.5); justify-content:center; align-items:center; z-index:9999;">
+  <div style="background:#fff; width:420px; padding:16px; border-radius:10px; box-shadow:0 5px 10px rgba(0,0,0,.3);">
+    <h4>Remover produto</h4>
+    <p>Tem certeza que deseja excluir o produto abaixo?</p>
+
+    <div style="background:#f7f7f7; border:1px solid #eee; padding:8px; border-radius:6px;">
+      <div><strong>ID:</strong> <span id="delId"></span></div>
+      <div><strong>Descrição:</strong> <span id="delDesc"></span></div>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+      <button type="button" class="btn btn-secondary" onclick="closeDeleteModal();">Cancelar</button>
+      <button type="button" class="btn btn-danger" id="btnConfirmDelete">Excluir</button>
+    </div>
+  </div>
+</div>
+
 <input id="miHiddenFile" type="file" accept="image/*" style="display:none" />
 <script>
-/* ===== MENU DE AÇÕES (três pontos) - controle global ===== */
-//(()=>{
+// === CORE DOS SLOTS (precisa existir ANTES de usar resetSlots) ===
+const MAX_SLOTS = 7;
+const slots         = Array(MAX_SLOTS).fill(null);
+const originalSlots = Array(MAX_SLOTS).fill(null);
+let nextIdx = 0;
 
-//  let openedMenu = null;
+function firstEmpty(){ for (let i=0;i<MAX_SLOTS;i++) if (!slots[i]) return i; return -1; }
+function recompute(){ nextIdx = firstEmpty(); }
 
-//  function closeAnyMenu(){
-//    if (!openedMenu) return;
-//    openedMenu.classList.remove('show');
-//    openedMenu.setAttribute('hidden','');
-//    openedMenu = null;
-//  }
+function addEmptySlot(i){
+  const slot = document.createElement('div');
+  slot.className = 'mi-slot empty';
+  slot.dataset.idx = i;
+  slot.dataset.num = i + 1;
+  slot.addEventListener('click', () => {
+    if (!window.$hiddenFile) return;
+    $hiddenFile.dataset.targetIdx = String(i);
+    $hiddenFile.value = '';
+    $hiddenFile.click();
+  });
+  const btn = document.createElement('button');
+  btn.className = 'mi-remove'; btn.title = 'Remover'; btn.textContent = '×';
+  btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
+  slot.appendChild(btn);
+  if (window.$miSlotGrid) $miSlotGrid.appendChild(slot);
+  slots[i] = null;
+}
 
-//  function openMenu(btn){
-    // raiz do “componente” do menu
-//    const root = btn.closest('[data-aco-root]') || btn.parentElement;
-//    const menu = root?.querySelector('[data-aco-menu]');
-//    if (!menu) return;
+function resetSlots(){
+  if (!window.$miSlotGrid) return;
+  $miSlotGrid.innerHTML = '';
+  for (let i = 0; i < MAX_SLOTS; i++) addEmptySlot(i);
+  recompute();
+}
 
-    // fecha outro menu que esteja aberto
-//    if (openedMenu && openedMenu !== menu) closeAnyMenu();
+function fillSlot(i, src){
+  const slot = $miSlotGrid?.children?.[i];
+  if (!slot) return;
+  slot.className = 'mi-slot filled';
+  slot.innerHTML = '';
+  const img = document.createElement('img'); img.src = src; slot.appendChild(img);
+  const btn = document.createElement('button');
+  btn.className = 'mi-remove'; btn.title = 'Remover'; btn.textContent = '×';
+  btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
+  slot.appendChild(btn);
+  recompute();
+}
 
-    // posiciona próximo ao botão (usa posição fixa p/ não “saltar” com scroll)
-//    const r = btn.getBoundingClientRect();
-//    menu.style.position = 'fixed';
-///    menu.style.left     = `${Math.max(8, r.right - menu.offsetWidth)}px`;
-//   / menu.style.top      = `${r.bottom + 6}px`;
-///    menu.style.zIndex   = 3000;
-
-//    menu.removeAttribute('hidden');
-//    menu.classList.add('show');
-//    openedMenu = menu;
-//  }
-
-  // 1) Clique nos botões de três pontos
-///  document.addEventListener('click', (ev)=>{
-//    const btn = ev.target.closest('[data-aco="menu"]');
-//    if (btn){
-//      ev.preventDefault();
-//      ev.stopPropagation();
-//      // garante que não submeta formulário nem navegue
-//      if (btn.tagName === 'A') btn.setAttribute('href', 'javascript:void(0)');
-//      openMenu(btn);
-//      return;
-//    }
-
-    // 2) Clique fora fecha o menu
-//    if (openedMenu && !ev.target.closest('[data-aco-menu]')){
-//      closeAnyMenu();
-//    }
-//  });
-
-  // 3) ESC fecha
-//  window.addEventListener('keydown', (ev)=>{
-//    if (ev.key === 'Escape') closeAnyMenu();
-//  });
-
-  // 4) quando QUALQUER modal abrir/fechar, fecha o menu
-///  const modalIds = ['modalImagem','modalVinculo','modalEditar'];
-//  modalIds.forEach(id=>{
-//    const el = document.getElementById(id);
-//    if (!el) return;
-//    el.addEventListener('click', (e)=>{ if (e.target===el) closeAnyMenu(); });
-    // se houver botões de fechar dentro do modal
-//    el.querySelectorAll('[data-dismiss="modal"], .btn-close, [data-mi-close], #miClose')
-//      .forEach(b=> b.addEventListener('click', closeAnyMenu));
-//  });
-
-  // 5) expõe utilitário global (para chamar ao abrir modal por JS)
-//  window.acoCloseMenus = closeAnyMenu;
-
-//})();
+function clearSlot(i){
+  const slot = $miSlotGrid?.children?.[i];
+  if (!slot) return;
+  slot.className = 'mi-slot empty';
+  slot.innerHTML = '';
+  const btn = document.createElement('button');
+  btn.className = 'mi-remove'; btn.title = 'Remover'; btn.textContent = '×';
+  btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
+  slot.appendChild(btn);
+  slots[i] = null;
+  recompute();
+}
 </script>
 
+<script>
+/* INIT — referências do modal de imagem, visíveis para os demais scripts */
+(() => {
+  window.$backdrop       = document.getElementById('modalImagem');
+  window.$miSlotGrid     = document.getElementById('miSlotGrid');
+  window.$miBankGrid     = document.getElementById('imgbcoImg');
+  window.$miBankEmpty    = document.getElementById('miBankEmpty');
+  window.$miNoBankBanner = document.getElementById('miNoBankBanner');
+  window.$miSlotsTitle   = document.querySelector('.mi-slots-title');
+
+  window.$miProdId       = document.getElementById('miProdId');
+  window.$miDescricao    = document.getElementById('miDescricao');
+  window.$miFornecedor   = document.getElementById('miFornecedor');
+  window.$miDepartamento = document.getElementById('miDepartamento');
+
+  window.$hiddenFile     = document.getElementById('miHiddenFile');
+  window.$miReloadBank   = document.getElementById('miReloadBank');
+  window.$miClearAll     = document.getElementById('miClearAll');
+  window.$miClose        = document.getElementById('miClose');
+  window.$btnGravar      = document.getElementById('btnGravarImagens');
+
+  // --- menu do banco de imagens ---
+  window.$miBankMenuBtn  = document.getElementById('miBankMenuBtn');
+  window.$miBankMenu     = document.getElementById('miBankMenu');
+  window.$miBankMenuDesc = document.getElementById('miBankMenuDesc');
+  window.$miBankMenuFor  = document.getElementById('miBankMenuFor');
+
+  // --- stubs seguros (caso os blocos de funções carreguem depois) ---
+  window.setBankEmptyState = window.setBankEmptyState || function(flag){
+    if (window.$miBankEmpty)    $miBankEmpty.style.display    = flag ? 'block' : 'none';
+    if (window.$miNoBankBanner) $miNoBankBanner.style.display = flag ? 'block' : 'none';
+    if (window.$miSlotsTitle)   $miSlotsTitle.textContent = flag
+      ? 'Nenhuma imagem no banco — clique nas caixas acima para buscar no computador'
+      : 'Seleção e Gravar Imagens';
+  };
+
+  window.clearBankUI = window.clearBankUI || function(showMsg = true){
+    if (window.$miBankGrid) $miBankGrid.innerHTML = '';
+    setBankEmptyState(!!showMsg);
+  };
+})();
+
+</script>
 {{!-- <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> --}}
 {{!-- MOSTRANDO E ESCONDENDO MENU LATERAL --}}
 <script>
@@ -944,15 +1119,13 @@ window.addEventListener("DOMContentLoaded", () => {
         // limpa os destaques anteriores
         tableRows.forEach(r => r.classList.remove("edit-row", "delete-row"));
         console.log('');
-     //   console.log(' [ 765 ] -Id => ',id,' descricao =>  ',descricao,' fornecedor=>   ',fornecedor,' departamento =>  ', departamento)
-     //   console.log('------------------------------------------------------');
-     //   console.log('');
         const produtoId=id;
         const departamentoNome=departamento;
         switch (acao) {
           case "vincular":
             console.log(' [ 479 ] executarAcao',id)
             abrirModalVinculoProduto(id);
+            window.abrirModalVinculoProduto = abrirModalVinculoProduto;
             break;
           case "imagens":
              window.abrirModalImagem({
@@ -965,16 +1138,19 @@ window.addEventListener("DOMContentLoaded", () => {
           case "editar":
             row?.classList.add("edit-row");
             openEditModal(id);
+            window.openEditModal = openEditModal;
             break;
           case "deletar":
-            row?.classList.add("delete-row");
-            deleteProduct(id);
-            break;
+             row?.classList.add("delete-row");
+             openDeleteModal(id, descricao);
+             window.openDeleteModal = openDeleteModal;
+             break;
         }
   }
 
   //abrirModalImagens para selecionar a imaagem a ser gravada
   function abrirModalImagens(descricao, fornecedor, { produtoId, departamentoNome }) {
+        console.log(' [ 981 -abrirModalImagens]')
         window.abrirModalImagem({
           produtoId,
           descricao,
@@ -983,8 +1159,6 @@ window.addEventListener("DOMContentLoaded", () => {
         });
   }
 </script>
-
-
 {{!-- openCadastroModal --}}
 <script>
   function openCadastroModal(){
@@ -1208,241 +1382,6 @@ document.getElementById('selectSetor').addEventListener('change', async function
      document.getElementById("cadastroProdutoModal").style.display="none"
   }
 </script>
-{{!-- //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA --}} --}}
-{{!-- BLOCO 0 - Universal PREPARO (base compartilhada) --}}
-<script>
-        // === BASE (estado + refs + helpers) ===
-        const $backdrop        = document.getElementById('modalImagem');
-        const $miSlotGrid      = document.getElementById('miSlotGrid');
-        const $miBankGrid      = document.getElementById('imgbcoImg');
-        const $miBankEmpty     = document.getElementById('miBankEmpty');
-        const $miNoBankBanner  = document.getElementById('miNoBankBanner');
-        const $miSlotsTitle    = document.querySelector('.mi-slots-title');
-
-        const $miProdId        = document.getElementById('miProdId');
-        const $miDescricao     = document.getElementById('miDescricao');
-        const $miFornecedor    = document.getElementById('miFornecedor');
-        const $miDepartamento  = document.getElementById('miDepartamento');
-
-        const $hiddenFile      = document.getElementById('miHiddenFile');
-        const $miReloadBank    = document.getElementById('miReloadBank');
-        const $miClearAll      = document.getElementById('miClearAll');
-        const $miClose         = document.getElementById('miClose');
-        const $btnGravar       = document.getElementById('btnGravarImagens');
-        // ?????????????????????????????????????????????????????????????????????????
-        // == Controle do <select> “Ações” (Vincular | Imagens | Editar | Deletar)
-let __lastActionSelect = null;
-
-function __resetActionSelect(sel){
-  console.log('[ 1279=>function __resetActionSelect(sel) ] ',sel)
-  try{
-    sel.selectedIndex = 0; // volta para a opção vazia/placeholder
-    sel.value = '';
-    sel.blur();            // fecha o dropdown nativo
-  }catch(_){}
-}
-
-function __resetSelectIfNeeded(){
-  if (__lastActionSelect){
-    __resetActionSelect(__lastActionSelect);
-    __lastActionSelect = null;
-  }
-}
-
-// Disponibiliza a função chamada pelo onchange do <select>
-window.executarAcaoComDataset = function(sel){
-  const acao   = sel.value;
-  const dados  = {
-    id:           sel.dataset.id,
-    descricao:    sel.dataset.descricao,
-    fornecedor:   sel.dataset.fornecedor,
-    departamento: sel.dataset.departamento
-  };
-
-  // guarda qual foi o último select usado (se algum modal fechar “por fora”)
-  __lastActionSelect = sel;
-
-  // *** IMPORTANTE: reseta AGORA para permitir escolher a MESMA opção depois ***
-  __resetActionSelect(sel);
-
-  // fecha qualquer dropdown custom (se você tiver) — inócuo se não existir
-  if (window.acoCloseMenus) window.acoCloseMenus();
-
-  // Dispara a ação escolhida
-  if (acao === 'imagens'){
-    // abre seu modal de imagens (você já tem essa função global)
-    if (window.abrirModalImagem) window.abrirModalImagem({
-      produtoId:    dados.id,
-      descricao:    dados.descricao,
-      fornecedor:   dados.fornecedor,
-      departamento: dados.departamento
-    });
-  }
-  else if (acao === 'vincular'){
-    if (window.abrirModalVinculo) window.abrirModalVinculo(dados);
-  }
-  else if (acao === 'editar'){
-    if (window.abrirModalEditar) window.abrirModalEditar(dados);
-  }
-  else if (acao === 'deletar'){
-    if (confirm('Deseja realmente excluir este item?')){
-      if (window.excluirProduto) window.excluirProduto(dados.id);
-    }
-  }
-};
-
-// Garante que, ao FECHAR qualquer modal, o select volte para a opção vazia
-['modalImagem','modalVinculo','modalEditar'].forEach(id=>{
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  // clique no backdrop do modal
-  el.addEventListener('click', (e)=>{ if (e.target === el) __resetSelectIfNeeded(); });
-
-  // botões de fechar que possam existir no modal
-  el.querySelectorAll('[data-dismiss="modal"], .btn-close, #miClose, [data-mi-close]')
-    .forEach(b=> b.addEventListener('click', __resetSelectIfNeeded));
-});
-
-// ESC em qualquer lugar também reseta (por segurança)
-window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') __resetSelectIfNeeded(); });
-
-
-
-        //?????????????????????????????????????????????????????????????????????????
-        console.log('1355')
-        const $miBankMenuBtn   = document.getElementById('miBankMenuBtn');
-        const $miBankMenu      = document.getElementById('miBankMenu');
-        const $miBankMenuDesc  = document.getElementById('miBankMenuDesc');
-        const $miBankMenuFor   = document.getElementById('miBankMenuFor');
-
-
-
-
-        const MAX_SLOTS = 7;
-        const slots         = Array(MAX_SLOTS).fill(null);     // {type:'file'|'bank', file?, url?, key?}
-        const originalSlots = Array(MAX_SLOTS).fill(null);     // baseline para diffs
-        let nextIdx = 0;
-
-        // helpers de texto/filtro genérico (usa a descrição do produto)
-        const norm = s => String(s||'').toLowerCase()
-        .normalize('NFD').replace(/\p{Diacritic}/gu,'').replace(/[^a-z0-9\s._-]/g,' ');
-        const keywordsFromDescricao = desc => norm(desc).split(/\s+/).filter(w => w.length>=3);
-        const matchDescricaoTexto = (texto, desc) => {
-              const t = norm(texto); const kws = keywordsFromDescricao(desc);
-              return kws.length ? kws.some(k => t.includes(k)) : true;
-        };
-
-        function setBankEmptyState(flag){
-        if ($miBankEmpty)     $miBankEmpty.style.display = flag ? 'block' : 'none';
-        if ($miNoBankBanner)  $miNoBankBanner.style.display = flag ? 'block' : 'none';
-        if ($miSlotsTitle)    $miSlotsTitle.textContent = flag
-            ? 'Nenhuma imagem no banco — clique nas caixas acima para buscar no computador'
-            : 'Seleção e Gravar Imagens';
-        }
-
-        const firstEmpty = () => { for (let i=0;i<MAX_SLOTS;i++) if (!slots[i]) return i; return -1; };
-        const recompute  = () => { nextIdx = firstEmpty(); };
-
-        function addEmptySlot(i){
-        const slot = document.createElement('div');
-        slot.className = 'mi-slot empty';
-        slot.dataset.idx = i;
-        slot.dataset.num = i + 1;
-        slot.addEventListener('click', ()=>{
-            $hiddenFile.dataset.targetIdx = String(i);
-            $hiddenFile.value = '';
-            $hiddenFile.click();
-        });
-        const btn = document.createElement('button');
-        btn.className = 'mi-remove'; btn.title='Remover'; btn.textContent='×';
-        btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
-        slot.appendChild(btn);
-        $miSlotGrid.appendChild(slot);
-        slots[i] = null;
-        }
-        function resetSlots(){ $miSlotGrid.innerHTML=''; for(let i=0;i<MAX_SLOTS;i++) addEmptySlot(i); recompute(); }
-        function fillSlot(i, src){
-        const slot = $miSlotGrid.children[i]; if(!slot) return;
-        slot.className = 'mi-slot filled'; slot.innerHTML = '';
-        const img = document.createElement('img'); img.src = src; slot.appendChild(img);
-        const btn = document.createElement('button');
-        btn.className='mi-remove'; btn.title='Remover'; btn.textContent='×';
-        btn.addEventListener('click', ev=>{ ev.stopPropagation(); clearSlot(i); });
-        slot.appendChild(btn);
-        recompute();
-        }
-
-        function clearSlot(i){
-        const slot = $miSlotGrid.children[i];
-        if(!slot) return;
-        slot.className='mi-slot empty';
-        slot.innerHTML='';
-        const btn = document.createElement('button');
-             btn.className='mi-remove';
-             btn.title='Remover';
-              btn.textContent='×';
-        btn.addEventListener('click', ev=>{ ev.stopPropagation(); clearSlot(i); });
-        slot.appendChild(btn);
-        slots[i]=null; recompute();
-        }
-
-        
-        function clearBankUI(showMsg = true){
-          console.log(' [ line 1434 => dentro de clearBankUIclearBankUI ]')
-          if ($miBankGrid) $miBankGrid.innerHTML = '';
-          // showMsg=true -> mostra "Não há imagens." / título de vazio
-          setBankEmptyState(!!showMsg);
-          __lastBankCriteria = { descricao:'', fornecedor:'' };
-          // fecha pop-menu se estiver aberto
-          if (typeof closeBankMenu === 'function') closeBankMenu();
-          console.log('[ line 1441 ]')
-        }
-
-        let __lastBankCriteria = { descricao:'', fornecedor:'' };
-
-        // --- limpeza completa ao fechar o modal ---
-        function __limparEstadoDoModal(){
-          console.log('')
-          // slots (seleção)
-          resetSlots();
-          originalSlots.fill(null);
-
-          // banco de imagens (lista e estado)
-          if ($miBankGrid) $miBankGrid.innerHTML = '';
-          setBankEmptyState(true);                 // mostra “Não há imagens.”
-          __lastBankCriteria = { descricao:'', fornecedor:'' };
-
-          // menu pop (se estiver aberto)
-          if ($miBankMenu){
-            $miBankMenu.classList.remove('show');
-            $miBankMenu.setAttribute('hidden','');
-          }
-
-          // file input
-          if ($hiddenFile){
-            $hiddenFile.value = '';
-            delete $hiddenFile.dataset.targetIdx;
-          }
-        }
-
-        // fecha + limpa (use em todos os handlers de fechar)
-        function __fecharModal(){
-  $backdrop.classList.remove('show');
-  $backdrop.setAttribute('aria-hidden','true');
-
-  __limparEstadoDoModal();
-
-  // NOVO: reseta TODOS os selects do menu de ações
-  document.querySelectorAll('#produtoTable select.form-select, #produtoTable select.form-select-sm')
-    .forEach(sel => { try { sel.selectedIndex = 0; sel.value = ''; sel.blur(); } catch(_){} });
-
-  __lastActionSelect = null;
-}
-
-
-
-</script>
 {{!-- /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */ --}}
 <script>
         /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */
@@ -1539,31 +1478,64 @@ window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') __resetSelectI
 
 
     async function _abrirModalImagemImpl({ produtoId='', descricao='', fornecedor='', departamento='', pagerUrls=[] } = {}){
+                console.log('[IMG] abrirModalImagemImpl()', { produtoId, descricao, fornecedor, departamento });
                 if (window.acoCloseMenus) window.acoCloseMenus();
-                __resetSelectIfNeeded(); 
-                // preenche cabeçalho
-                $miProdId.value       = String(produtoId||'');
-                $miDescricao.value    = String(descricao||'');
-                $miFornecedor.value   = String(fornecedor||'');
-                $miDepartamento.value = String(departamento||'');
-                clearBankUI(true)
 
-                // limpa slots + baseline
-                resetSlots();
-                originalSlots.fill(null);
+  // (se quiser) garante que nenhum select fique “preso”
+  // __resetSelectIfNeeded?.();
 
-                // carrega vinculadas e banco
-                await carregarImagensDoProduto(produtoId);
-              
+  $miProdId.value       = String(produtoId||'');
+  $miDescricao.value    = String(descricao||'');
+  $miFornecedor.value   = String(fornecedor||'');
+  $miDepartamento.value = String(departamento||'');
 
-                // abre modal
-                $backdrop.classList.add('show');
-                $backdrop.setAttribute('aria-hidden','false');
-    }
+  clearBankUI(true);
 
-    // expõe para quem chama
-    window.abrirModalImagem     = _abrirModalImagemImpl;
-    globalThis.abrirModalImagem = _abrirModalImagemImpl;
+  if (typeof resetSlots === 'function') resetSlots();
+  else if (window.$miSlotGrid) $miSlotGrid.innerHTML = '';
+
+  originalSlots.fill(null);
+
+  try {
+    await carregarImagensDoProduto(produtoId);
+    console.log('[IMG] imagens vinculadas carregadas');
+  } catch (e) {
+    console.error('[IMG] erro carregarImagensDoProduto', e);
+  }
+
+  $backdrop.classList.add('show');
+  $backdrop.setAttribute('aria-hidden','false');
+}
+window.abrirModalImagem = _abrirModalImagemImpl; // mantém global
+
+
+               
+</script>
+<script>
+// garante referências já criadas ($backdrop, resetSlots, etc.)
+function __limparEstadoDoModal(){
+  try { if (typeof resetSlots === 'function') resetSlots(); } catch(e){}
+  try { originalSlots.fill(null); } catch(e){}
+  try { if ($miBankGrid) $miBankGrid.innerHTML = ''; } catch(e){}
+  try { if (typeof setBankEmptyState === 'function') setBankEmptyState(true); } catch(e){}
+  try { __lastBankCriteria = { descricao:'', fornecedor:'' }; } catch(e){}
+  try { if ($miBankMenu){ $miBankMenu.classList.remove('show'); $miBankMenu.setAttribute('hidden',''); } } catch(e){}
+  try { if ($hiddenFile){ $hiddenFile.value=''; if ($hiddenFile.dataset) delete $hiddenFile.dataset.targetIdx; } } catch(e){}
+}
+
+
+
+function __fecharModal(){
+  if (!$backdrop) return;
+  $backdrop.classList.remove('show');
+  $backdrop.setAttribute('aria-hidden','true');
+  __limparEstadoDoModal();
+
+  window.limparMenuAcoes?.();
+}
+
+// deixa disponível mesmo se os listeners forem definidos antes
+window.__fecharModal = __fecharModal;
 </script>
 {{!-- // BLOCO 3 — BUSCA NO BANCO DE IMAGENS --}}
 <script>
@@ -1577,30 +1549,55 @@ window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') __resetSelectI
         try{
           const q = new URLSearchParams({
             descricao: descricao || '',
-            fornecedor: fornecedor || '',
-            departamento: departamento || ''
+           // fornecedor: fornecedor || '',
+           // departamento: departamento || ''
           }).toString();
 
+          console.log('');
+          console.log(' [1484] valor de q',q)
+          console.log('');
+          console.log('',descricao)
           const r = await fetch(`/gravafoto/buscarBcoImg?${q}`, { cache: 'no-store' });
           if (!r.ok) throw new Error('Falha ao buscar banco de imagens');
-
+          //console.log(' Retorno da consulta / Gravafoto/buscarBcoImg?',r.json())
           let lista = await r.json();
           if (!Array.isArray(lista)) lista = [];
-
+          console.log( 'LISTA => ',lista) 
           // filtro leve por descrição do produto
-          if (descricao) lista = lista.filter(it => matchDescricaoTexto(it?.produtoNome||it?.url||'', descricao));
+          if (descricao) lista = lista.filter(it => 
+                  matchDescricaoTexto(
+                    it?.produtoNome||it?.url||'', descricao
+                  )
+            );
 
           if (!lista.length){ setBankEmptyState(true); return; }
 
+          $miBankGrid.innerHTML = '';              // garante limpar antes
+          setBankEmptyState(false); 
+
+          console.log('lista ',lista.length)
+
           for (const it of lista){
-            const card = document.createElement('div'); card.className='mi-thumb';
-            const img  = document.createElement('img'); img.loading='lazy'; img.src = it.url;
+            const card = document.createElement('div'); 
+            card.className='mi-thumb';
+            const img  = document.createElement('img'); 
+            img.loading='lazy';
+            img.src = it.url || it.imagemUrl; 
             card.appendChild(img);
+
             card.addEventListener('click', ()=>{
-              const i = firstEmpty(); if (i===-1){ alert('Limite de 7 imagens.'); return; }
+              const i = firstEmpty(); 
+              if (i===-1){ alert('Limite de 7 imagens.'); return; }
+
               slots[i] = { type:'bank', url: it.url, key: it.key||null, origin:'bank' };
               fillSlot(i, it.url);
             });
+            console.log('');
+
+            console.log('')
+            console.log('',card);
+            console.log(firstEmpty());
+            console.log('')
             $miBankGrid.appendChild(card);
           }
         }catch(e){
@@ -1648,14 +1645,12 @@ window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') __resetSelectI
       else openBankMenu();
     });
 
-
     // fecha menu ao clicar fora
     document.addEventListener('click', (e)=>{
       if (!$miBankMenu?.classList.contains('show')) return;
       const t = e.target;
       if (!$miBankMenu.contains(t) && !$miBankMenuBtn.contains(t)) closeBankMenu();
     });
-
 
     window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeBankMenu(); });
 
@@ -1676,19 +1671,17 @@ window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') __resetSelectI
     $miClearAll?.addEventListener('click', resetSlots);
 
     // botão X (fechar)
-    $miClose?.addEventListener('click', __fecharModal);
+    $miClose?.addEventListener('click', ()=>window.__fecharModal?.());
+    
 
     // clique no fundo do backdrop
-    $backdrop?.addEventListener('click', (ev)=>{
-      if (ev.target === $backdrop) __fecharModal();
-    });
+    $backdrop?.addEventListener('click', (ev)=>{ if (ev.target === $backdrop) window.__fecharModal?.(); });
 
     // ESC
-    window.addEventListener('keydown', (ev)=>{
-      if (ev.key === 'Escape' && $backdrop.classList.contains('show')){
-        __fecharModal();
-      }
-    });
+   window.addEventListener('keydown', (ev)=>{ if (ev.key === 'Escape' && $backdrop.classList.contains('show')) window.__fecharModal?.(); });
+  
+
+
 
 
 </script>
@@ -1730,12 +1723,13 @@ window.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') __resetSelectI
                 alert('Imagens gravadas com sucesso.');
                 //$backdrop.classList.remove('show');
                 //$backdrop.setAttribute('aria-hidden','true');
-                __fecharModal();
+                window.__fecharModal();
             }catch(e){
                 console.error(e); alert('Erro ao gravar imagens. Veja o console.');
             }
     });
 </script>
+
 <script>
 function pad2(n){ return String(n+1).padStart(2,'0'); }
 
@@ -1838,4 +1832,177 @@ async function postSalvarImagem({
   return res.json().catch(()=> ({}));
 }
 
+</script>
+
+<script>
+(function initSlotGrid() {
+  const grid = document.getElementById("miSlotGrid");
+  if (!grid) return;
+
+  const TOTAL_SLOTS = 7;
+  grid.innerHTML = "";
+
+  for (let i = 1; i <= TOTAL_SLOTS; i++) {
+    const slot = document.createElement("div");
+    slot.className = "mi-slot";
+    slot.dataset.index = i;
+
+    const img = document.createElement("img");
+    img.className = "mi-preview";
+    img.id = `preview_${i}`;
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "contain";
+    img.style.display = "none";
+
+    const span = document.createElement("span");
+    span.textContent = "Clique aqui para pegar a foto no computador";
+    span.className = "mi-label";
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.style.display = "none";
+
+    // clique no slot abre seletor
+    slot.addEventListener("click", () => {
+      input.click();
+    });
+
+    // ao escolher a imagem -> mostrar preview
+    input.addEventListener("change", () => {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        img.src = e.target.result;
+        img.style.display = "block";
+        span.style.display = "none";
+      };
+      reader.readAsDataURL(file);
+    });
+
+    slot.appendChild(img);
+    slot.appendChild(span);
+    slot.appendChild(input);
+    grid.appendChild(slot);
+  }
+})();
+</script>
+{{!-- 1) Ao terminar o INIT, garanta que os slots existam --}}
+<script>
+// 🔗 1) Ao terminar o INIT, garanta que os slots existam
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.$miSlotGrid) resetSlots();
+});
+</script>
+{{!-- Listener do input oculto: transfere a imagem escolhida para o slot clicado --}}
+<script>
+// 🖼️ 2) Listener do input oculto: transfere a imagem escolhida para o slot clicado
+(() => {
+  if (!window.$hiddenFile) return;
+
+  $hiddenFile.addEventListener('change', function () {
+    const idx  = parseInt(this.dataset.targetIdx || '-1', 10);
+    const file = this.files && this.files[0];
+    if (idx < 0 || !file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      // preenche visualmente o slot
+      fillSlot(idx, e.target.result);
+
+      // registra no estado (se você usa depois para upload)
+      slots[idx] = { type: 'file', file };
+
+      recompute();
+    };
+    reader.readAsDataURL(file);
+
+    // permite escolher o MESMO arquivo novamente no futuro
+    this.value = '';
+  });
+})();
+</script>
+
+<script>
+// 🧹 3) Botão "Limpar seleção" reaproveitando o que você já tem
+(() => {
+  if (!window.$miClearAll) return;
+  $miClearAll.addEventListener('click', () => {
+    resetSlots();
+    // zera o estado também
+    for (let i = 0; i < MAX_SLOTS; i++) slots[i] = null;
+  });
+})();
+</script>
+<script>
+// === helpers globais (uma vez só) ===
+//(function(){
+  (function(){
+  if (!window.__norm) {
+    window.__norm = function(s){
+      return String(s || '')
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .toLowerCase()
+        .trim();
+    };
+  }
+
+ if (!window.__STOP) {
+    window.__STOP = new Set(['de','da','do','das','dos','mm','cm','m','x','para','e']);
+  }
+
+  if (!window.matchDescricaoTexto) {
+    window.matchDescricaoTexto = function(texto, consulta){
+      const A = __norm(texto).split(/[^a-z0-9]+/g).filter(t => t && !__STOP.has(t) && !/^\d+$/.test(t));
+      const B = __norm(consulta).split(/[^a-z0-9]+/g).filter(t => t && !__STOP.has(t) && !/^\d+$/.test(t));
+      if (!B.length) return true;
+
+      let hits = 0;
+      for (const t of B){
+        if (A.some(a => a.includes(t) || t.includes(a))) hits++;
+      }
+      const need = Math.min(2, Math.ceil(B.length / 2));
+      return hits >= need;
+    };
+  }
+})();
+</script>
+<script>
+//function matchDescricaoTexto(texto, consulta) {
+//  const hay   = __norm(texto);
+//  const terms = __norm(consulta).split(/\s+/).filter(Boolean);
+//  if (!terms.length) return true;
+
+//  let matches = 0;
+//  for (const t of terms) {
+//    if (hay.includes(t)) matches++;
+//  }
+
+  // considera “semelhante” se ao menos metade das palavras baterem
+//  return matches >= Math.ceil(terms.length / 2);
+//}
+</script>
+<script>
+(function(){
+  const bar   = document.getElementById('filtrosProdutos');
+  const pager = document.querySelector('.pager-inline');
+
+  function setHeights(){
+    const bh = bar   ? Math.round(bar.getBoundingClientRect().height)   : 48;
+    const ph = pager ? Math.round(pager.getBoundingClientRect().height) : 34;
+    document.documentElement.style.setProperty('--bar-h',   bh + 'px');
+    document.documentElement.style.setProperty('--pager-h', ph + 'px');
+  }
+
+  window.addEventListener('load', setHeights);
+  window.addEventListener('resize', setHeights);
+  // se os selects mudarem de tamanho, recalcula
+  document.getElementById('filtroStatus')?.addEventListener('change', setHeights);
+  document.getElementById('filtroFornecedor')?.addEventListener('change', setHeights);
+  document.getElementById('filtroModo')?.addEventListener('change', setHeights);
+})();
 </script>

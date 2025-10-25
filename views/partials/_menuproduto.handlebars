@@ -1,0 +1,258 @@
+ <style>
+* {box-sizing: border-box;}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.fixed-top{
+   background-color:#023c6c ;width: 100%;margin:auto;padding: 6px;height: 3vh;margin-top: .2vh;
+}
+
+/* ===== layout da faixa ===== */
+:root{
+  --toolbar-pad-y: 2px;
+  --toolbar-pad-x: 16px;
+  --toolbar-gap:  8px;
+}
+/* colunas dos filtros (já tínhamos left/center/right) */
+.fx-col{ display:flex; align-items:center; gap:10px; }
+.fx-left, .fx-right{ flex:0 0 280px; min-width:240px; }
+.fx-center{ flex:1 1 520px; min-width:380px; }
+
+/* ===== rótulos coloridos (na lateral de cada divisão) ===== */
+.label-pill{
+  display:inline-block; font-weight:600; font-size:.95rem;
+  padding:2px 8px; border-radius:4px;
+  line-height:1.2; white-space:nowrap;
+}
+
+.lbl-ativos{ background:#ffdddd; color:#a30000; border:1px solid #ff6b6b; } /* vermelho claro */
+.lbl-forn  { background:#dfe9ff; color:#0833a2; border:1px solid #4d74ff; } /* azul */
+.lbl-img   { background:#fff1b3; color:#8a5a00; border:1px solid #ffd24d; } /* amarelo */
+
+.toolbar-sticky{
+  /*position: sticky;*/
+  top: 3.5vh;                          /* gruda no topo */
+  z-index: 1020;                   /* acima do cabeçalho da tabela */
+  background: #fff0e3e6;             /* sua cor de fundo atual */
+  padding: var(--toolbar-pad-y) var(--toolbar-pad-x);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--toolbar-gap);
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+
+.toolbar-sticky .form-select.form-select-sm{ height: calc(2rem + 2px); }
+
+#filtrosProdutos{
+ /* position: sticky;*/
+  left:0
+  top: 0;
+  z-index: 900;
+}
+
+.pager-inline{
+  flex: 1 1 100%;
+  display:flex;
+  justify-content:center;          /* centraliza */
+  align-items:center;
+  gap: 8px;
+}
+
+.faixa-topo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #fff;
+    width: 80%;
+    margin: auto;
+   }
+
+   /* ===== opcional: borda laranja da área abaixo ===== */
+.faixa-topo + .faixa-borda {
+  border:6px solid #ff8a00; border-top-left-radius:8px; border-top-right-radius:8px;
+  border-bottom:none; height:14px; margin:6px 0 12px;
+}
+
+.faixa-topo .form-select.form-select-sm{
+  height: calc(2rem + 2px);
+  padding: .25rem .5rem;
+}
+
+.faixa-topo{ 
+  padding: 2px 34px;                    /* mais espaço left/right dentro da faixa */
+  gap: 38px;                             /* espaço entre colunas um pouco menor */
+}
+
+#menuLateral {
+      width: auto;
+      height: 94vh;
+      position: absolute;
+      top: 3.8vh;
+      left: 0;
+      display: flex;
+      flex-direction: row;
+      z-index: 1000;
+      background-color: #fff;
+    }
+
+    #H2menuLateral {
+      writing-mode: vertical-rl; /* vertical (de baixo para cima) */
+      transform: rotate(180deg); /* inverte para cima para baixo */
+      font-size: 1vw;
+      color: #13e236;
+      margin: 0;
+      text-align: center;
+      font-weight: 100;
+      margin-left: .4vw;
+    }
+
+    #faixaVertical {
+      width: 2vw;
+      height: 96vh;
+      background-color: #295ee4;
+      z-index: 800;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+
+#menulista {
+       width: 13vw;
+       height: 96vh;
+       background-color:transparent;
+       margin-top: 2px;
+       transition: margin-left 0.4s ease;
+       margin-left: -10vw; /* Escondido inicialmente */
+    }
+    
+@media screen and (max-width: 600px) {
+  .topnav .search-container {
+    float: none;
+  }
+  .topnav a, .topnav input[type=text], .topnav .search-container button {
+    float: none;
+    display: block;
+    text-align: left;
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+  }
+  .topnav input[type=text] {
+    border: 1px solid #ccc;  
+  }
+}
+</style>
+<script>
+  function myFunction(n){
+
+  }
+</script>
+
+ <div class="fixed-top" >
+    <div class="" style="background-color: #2196F3;">
+        <h1 style="color:#ffffff;float: left;margin-left: 2vw;font-size: 0.8rem;">Empresa:{{lojista.razao}}</h1>
+    </div>
+    {{!-- ///////////////////////////////////////////////////////////////////////////////// --}}
+    <div id="menuLateral" class="" style="z-index: 1000;height: 100vh;background-color: #fff;margin-top:-0.6vh;">
+        <div id="menulista" style="width: 10vw; height: 98vh;display: flex; flex-direction: column; justify-content: space-around; transition: margin-left 0.4s ease;">
+          <!-- Conteúdo do menu -->
+          <div style="height: 15vh;background-color:#fff;"></div>
+          <div style="display: flex; flex-direction: column; justify-content: space-between;background-color:#fff;text-align: left;margin: auto;height: 30vh;padding-top: 5vh;">
+             <button style="border: block;background-color:#0833a2;color:#fff">
+               <a id="passa-cadastrofornec" href="" style="text-decoration: none;color:#ffffff;">Cadastro fornecedor</a>
+            </button>
+            {{!-- <div style="height: 1vh;"></div> --}}
+            {{!-- <div> --}}
+              <button style="border: block;background-color:#0833a2;width: 100%;">
+                {{!-- <h1 style="font-weight:200;color:#fff;font-size: small;"> --}}
+                <a id="passa-listafornec" href="/fornec/listafornec/:{{this._id}}" style="text-decoration: none;color:#ffffff;">Lista fornecedor</a>
+                {{!-- </h1> --}}
+              </button>
+            {{!-- </div> --}}
+            {{!-- <div style="background-color: #ffffff;margin-top: 0.2vh;border-radius: 6px;height: 99vh;"> --}}
+              <button id="abrirModalProduto" style="border: block;background-color:#0833a2;color:#ffffff;margin-bottom: 2vh;" data-bs-toggle="modal" data-bs-target="CadastrarProdutosModal" data-lojista="{{lojista._id}}" class="btn btn-sm" onclick="openCadastroModal()">
+                  {{!-- <h1 style="font-weight:200;color:#fff;font-size: small;">Cadastro de produtos</h1> --}}
+                  <input id="lojaFornec" type="text" style="display:none;" value="{{lojista.marca}}">Cadasto de produtos
+                </button>
+            {{!-- </div> --}}
+          </div>
+          <div style="height: 25vh;"></div>
+        </div>
+        <div id="faixaVertical" style="width: 2vw; height: 98vh; background-color:#0b56e1; display: flex; flex-direction: column; justify-content: space-around; z-index: 800;margin-top:-0.5vh;">
+          <h2 id="H2menuLateral" style="font-size: 1vw; text-align: end; color: #fff;">Menu lateral</h2>
+        </div>
+    </div>
+    <div class="toolbar-sticky" style="margin-top: 2.2vh;width: 100%;background-color: #ffffff;">
+      <form id="filtrosProdutos" class="faixa-topo toolbar-sticky" method="GET">
+          <!-- COLUNA ESQUERDA (largura fixa) -->
+          <div class="fx-col fx-left">
+            <span class="label-pill lbl-ativos">Ativos:</span>
+            <select class="form-select form-select-sm" name="status" id="filtroStatus">
+              <option value="">Todos</option>
+              <option value="ativos"   {{#if (eq statusSelecionado "ativos")}}selected{{/if}}>Ativo</option>
+              <option value="inativos" {{#if (eq statusSelecionado "inativos")}}selected{{/if}}>Inativo</option>
+            </select>
+          </div>
+
+          <!-- COLUNA CENTRAL (flexível/maior) -->
+          <div class="fx-col fx-center">
+            <span class="label-pill lbl-forn">Fornecedores:</span>
+            <select class="form-select form-select-sm" name="fornecedor" id="filtroFornecedor">
+              <option value="">Todos</option>
+              {{#each fornecedores}}
+                <option value="{{this._id}}" {{#if (eq ../fornecedorSelecionado this._id)}}selected{{/if}}>
+                  {{this.razao}}
+                </option>
+              {{/each}}
+            </select>
+          </div>
+
+          <!-- COLUNA DIREITA (largura fixa, igual à esquerda) -->
+          <div class="fx-col fx-right">
+            <span class="label-pill lbl-img">Imagens:</span>
+            <select class="form-select form-select-sm" name="modo" id="filtroModo">
+              <option value="lista"   {{#if (eq modoSelecionado "lista")}}selected{{/if}}>Lista</option>
+              <option value="imagens" {{#if (eq modoSelecionado "imagens")}}selected{{/if}}>Imagens</option>
+            </select>
+          </div>
+
+          
+      </form>
+      <nav class="pager-inline" aria-label="Paginação" style="background-color: #ffffff;">
+              <ul class="pagination pagination-sm mb-0">
+                <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+                  <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page=1">«</a>
+                </li>
+                <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+                  <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{dec page}}">‹</a>
+                </li>
+
+                {{#each pageNumbers}}
+                  <li class="page-item {{#if (eq this ../page)}}active{{/if}}">
+                    <a class="page-link" href="{{../basePath}}?{{../qsNoPage}}{{#if ../qsNoPage}}&{{/if}}page={{this}}">{{this}}</a>
+                  </li>
+                {{/each}}
+
+                <li class="page-item {{#if (eq page pages)}}disabled{{/if}}">
+                  <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{inc page}}">›</a>
+                </li>
+                <li class="page-item {{#if (eq page pages)}}disabled{{/if}}">
+                  <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{pages}}">»</a>
+                </li>
+              </ul>
+              <a class="btn btn-outline-primary btn-sm ms-2"
+                href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{inc page}}">
+                Próximos 50 »
+              </a>
+      </nav>
+    </div>
+    {{!-- <table id="tabelaProdutos" class="table  table-bordered" style="width: 100%;background-color: #2196F3;padding: 2px;margin-left: 1.7vw;">
+        
+    </table>    --}}
+</div>
+
+

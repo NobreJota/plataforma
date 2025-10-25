@@ -1,0 +1,537 @@
+<style>
+.center-wrap{
+      width:95%;
+      height: 80vh;
+      margin:0 auto;
+}
+
+/* aproveitei o layout que te passei; só estilos da tabela/abas */
+.nav-tabs .nav-link { color:#111 }
+.nav-tabs .nav-link.active { font-weight:700 }
+.table thead th{ background:#132338; color:#fff; }
+.thumb { width:44px; height:44px; object-fit:cover; border-radius:6px; border:1px solid #1a4c8a; }
+.actions .dropdown-menu{ min-width: 160px; }
+
+.dropdown-menu{
+  max-height: 60vh;
+  overflow:auto;
+  transform-origin: top right;
+}
+
+
+
+.app{ width:100%; min-height:80vh; margin-top:10vh; display:grid; grid-template-columns:220px 1fr; gap:16px; }
+.center-wrap{ width:95%; margin:0 auto; }
+
+
+/* sidebar como menu */
+.sidebar { background:#f5c; border-radius:8px; padding:8px; }
+.sidebar ul{ list-style:none; margin:0; padding:0; }
+.sidebar li{
+  background:#2b3f56; color:#fff; 
+  border-radius:6px; padding:10px 12px; margin-bottom:8px;
+  cursor:pointer; user-select:none;
+  transition: transform .05s ease, background .15s ease;
+}
+.sidebar li:hover{ background:#355372; }
+.sidebar li.active{ outline:2px solid #fff3; background:#1f2f42; }
+
+/* conteúdo */
+.content{ min-height: 70vh; }
+
+/* card do cadastro */
+#tabCadastro form{
+  background:#0e2a54 !important;
+  border-radius:10px;
+  padding:16px !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+}
+
+/* aba (pink) com contraste melhor */
+.nav-tabs[role="tablist"]{
+  background:#ff59c7; 
+  border-radius:8px; padding:6px;
+}
+</style>
+<style>
+#imgHoverBox{
+  position: fixed; top:0; left:0; width:220px; height:220px;
+  display:none; pointer-events:none; z-index: 9999;
+  border-radius:10px; box-shadow: 0 12px 36px rgba(0,0,0,.45);
+  background:#000 center/contain no-repeat;
+}
+.td-img img.thumb{ cursor: zoom-in; }
+</style>
+
+<div class="app" style="margin-top: 10vh;">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <ul>
+      <li><a id="miAtividade" class="active" onclick="AtividadeOpen()">Atividade</a>
+      <li><a href="/ativsub/" id="miDepartamentos" >Sub_Atividade</a></li>
+      <li><a href="/segmento/lista" id="miDepartamentos" >Voltar</a></li>
+    </ul>
+  </aside>
+
+  <!-- Conteúdo: Atividades -->
+  <section id="Atividades" class="content" style="display:block">
+     <div class="center-wrap">
+          <!-- Abas -->
+          <ul class="nav nav-tabs" role="tablist" style="background:#f5c; border-radius:8px; padding:6px;">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabLista" type="button">Lista</button></li>
+            <li  class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabCadastro" type="button">Cadastro</button></li>
+          </ul>
+
+          <div class="tab-content" style="background:#670303; border-radius:8px; padding:12px; flex:1; min-height:0;">
+              <!-- LISTA -->
+              <div class="tab-pane fade show active" id="tabLista">
+                <div class="table-responsive" style="max-height:60vh; overflow:auto; background:#0e2a54; border-radius:8px;">
+                  <table id="tblAtividades" class="table table-sm align-middle mb-0">
+                    <thead>
+                      <tr>
+                        <th style="width:42%">Atividade</th>
+                        <th id="imgHoverBox" style="width:12%">Imagem</th>
+                        <th style="width:28%">Departamento</th>
+                        <th style="width:18%">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#if atividades.length}}
+                        {{#each atividades}}
+                          <tr data-id="{{this._id}}">
+                            <td class="td-nome">{{this.nome}}</td>
+                            <td class="td-img">
+                              {{#if this.imagemUrl}}
+                                <img class="thumb" src="{{this.imagemUrl}}" alt="">
+                              {{else}}
+                                <span class="text-muted">—</span>
+                              {{/if}}
+                            </td>
+                            <td class="td-dep" data-dep="{{this.departamento._id}}">{{this.departamento.nomeDepartamento}}</td>
+                            <td class="actions">
+                              <div class="dropdown">
+                                <button class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown">menu</button>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item js-setor-imagem"
+                                          href="#"
+                                          data-id="{{this._id}}"
+                                          data-nome="{{this.nome}}">
+                                          imagem
+                                       </a></li>
+                                  <li><a class="dropdown-item acao-editar" href="#">editar</a></li>
+                                  <li><a class="dropdown-item text-danger acao-suspender" href="#">suspender</a></li>
+                                </ul>
+                              </div>
+                            </td>
+                          </tr>
+                        {{/each}}
+                      {{else}}
+                        <tr>
+                          <td colspan="4" class="text-center text-muted py-4">Nenhuma atividade cadastrada ainda.</td>
+                        </tr>
+                      {{/if}}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- CADASTRO -->
+              <div class="tab-pane fade" id="tabCadastro">
+                <form id="frmCadAtividade" class="p-3" style="background:#0e2a54; border-radius:8px; max-width:680px;">
+                  <div class="mb-3">
+                    <label class="form-label" style="color:#fff">Nome da atividade</label>
+                    <input id="cadNome" type="text" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label"style="color:#fff">Departamento (vinculado)</label>
+                    <select id="cadDep" class="form-select" required>
+                      <option value="" selected disabled>selecione…</option>
+                      {{#each departamentos}}
+                        <option value="{{this._id}}">{{this.nomeDepartamento}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                  <button class="btn btn-success">Salvar 1</button>
+                </form>
+              </div>
+          </div>
+    </div>
+  </section>
+</div>
+
+<!-- MODAL EDITAR -->
+<div class="modal fade" id="mdlEdit" tabindex="-1">
+  <div class="modal-dialog">
+    <form id="frmEdit" class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Editar atividade</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <input type="hidden" id="editId">
+        <div class="mb-3">
+          <label class="form-label">Nome</label>
+          <input id="editNome" type="text" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Departamento</label>
+          <select id="editDep" class="form-select" required>
+            {{#each departamentos}}
+              <option value="{{this._id}}">{{this.nomeDepartamento}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-primary">Salvar</button></div>
+    </form>
+  </div>
+</div>
+
+
+
+
+<script>
+function AtividadeOpen(){  document.getElementById('Atividades').style.display="block";  document.getElementById('Departamentos').style.display="none"; }
+
+// === CADASTRO
+document.getElementById('frmCadAtividade').addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const nome = document.getElementById('cadNome').value.trim();
+      const departamento = document.getElementById('cadDep').value;
+      if (!nome || !departamento) return;
+
+      const r = await fetch('/atividades', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ nome, departamento })
+      });
+      const j = await r.json();
+      if (j.ok){
+        location.reload(); // simples e garantido (pode trocar por append na linha)
+      } else {
+        alert('Falha ao salvar');
+      }
+});
+
+// === AÇÕES NA TABELA (delegação)
+const tbody = document.querySelector('#tblAtividades tbody');
+
+tbody.addEventListener('click', (ev)=>{
+  const a = ev.target.closest('a.dropdown-item');
+  if (!a) return;
+  ev.preventDefault();
+
+  const tr = ev.target.closest('tr');
+  const id = tr.dataset.id;
+
+  if (a.classList.contains('acao-imagem')){
+    // abrir modal imagem
+    document.getElementById('imgId').value = id;
+    const imgEl = tr.querySelector('.td-img img');
+    const has = !!imgEl;
+    const prev = document.getElementById('imgPreview');
+    if (has){ prev.src = imgEl.src; prev.style.display='inline-block'; } else { prev.style.display='none'; }
+    document.getElementById('imgFile').value = '';
+    new bootstrap.Modal(document.getElementById('mdlImagem')).show();
+  }
+
+  if (a.classList.contains('acao-editar')){
+    // abrir modal editar
+    document.getElementById('editId').value = id;
+    document.getElementById('editNome').value = tr.querySelector('.td-nome').textContent.trim();
+    document.getElementById('editDep').value = tr.querySelector('.td-dep').dataset.dep;
+    new bootstrap.Modal(document.getElementById('mdlEdit')).show();
+  }
+
+  if (a.classList.contains('acao-suspender')){
+    if (!confirm('Suspender esta atividade?')) return;
+    fetch(`/atividades/atividades/${id}/suspender`, { method:'PATCH' })
+      .then(r=>r.json())
+      .then(j=>{ if (j.ok) tr.remove(); else alert('Falha ao suspender'); })
+      .catch(()=> alert('Erro na requisição'));
+  }
+});
+
+// === EDITAR (submit)
+document.getElementById('frmEdit').addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const id = document.getElementById('editId').value;
+      const nome = document.getElementById('editNome').value.trim();
+      const departamento = document.getElementById('editDep').value;
+
+      const r = await fetch(`/atividaades/atividades/${id}`, {
+        method:'PUT', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ nome, departamento })
+      });
+      const j = await r.json();
+      if (j.ok) location.reload(); else alert('Falha ao editar');
+});
+
+
+</script>
+<script>
+// helper pra marcar item ativo do menu
+function __setActiveMenu(section){
+  const a = document.getElementById('miAtividade');
+  const d = document.getElementById('miDepartamentos');
+  if (section === 'atividades'){ a.classList.add('active'); d.classList.remove('active'); }
+  else { d.classList.add('active'); a.classList.remove('active'); }
+}
+
+// sobrescreve suas funções mantendo comportamento
+function AtividadeOpen(){
+  document.getElementById('Atividades').style.display="block";
+  document.getElementById('Departamentos').style.display="none";
+  __setActiveMenu('atividades');
+}
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      if (location.hash.toLowerCase() === '#cadastro'){
+        const btn = document.querySelector('[data-bs-target="#tabCadastro"]');
+        if (btn){ btn.click(); }
+      }
+    });
+</script>
+<script>
+function openModal(modalId){
+  const el = document.getElementById(modalId);
+  if (!el) return;
+  if (window.bootstrap && bootstrap.Modal){
+    bootstrap.Modal.getOrCreateInstance(el).show();
+  } else {
+    // fallback simples
+    el.style.display = 'block';
+    el.classList.add('show');
+    document.body.classList.add('modal-open');
+    const bd = document.createElement('div');
+    bd.id = modalId + '__bd';
+    bd.className = 'modal-backdrop fade show';
+    document.body.appendChild(bd);
+  }
+}
+function closeModal(modalId){
+  const el = document.getElementById(modalId);
+  if (!el) return;
+  if (window.bootstrap && bootstrap.Modal){
+    bootstrap.Modal.getOrCreateInstance(el).hide();
+  } else {
+    el.style.display = 'none';
+    el.classList.remove('show');
+    document.body.classList.remove('modal-open');
+    const bd = document.getElementById(modalId + '__bd');
+    if (bd) bd.remove();
+  }
+}
+</script>
+<script>
+document.getElementById('cadNome')?.addEventListener('keydown', (e)=>{
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    document.getElementById('cadDep')?.focus();
+  }
+});
+</script>
+<script>
+(function(){
+  const box = document.getElementById('imgHoverBox');
+  let shown = false;
+
+  function move(e){
+    if (!shown) return;
+    const pad = 16;
+    let x = e.clientX + pad, y = e.clientY + pad;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const bw = box.offsetWidth, bh = box.offsetHeight;
+    if (x + bw > vw) x = e.clientX - bw - pad;
+    if (y + bh > vh) y = e.clientY - bh - pad;
+    box.style.transform = `translate(${x}px, ${y}px)`;
+  }
+
+  document.addEventListener('mousemove', move);
+
+  document.addEventListener('mouseover', e=>{
+    const img = e.target.closest('.td-img img');
+    if (!img) return;
+    shown = true;
+    box.style.backgroundImage = `url("${img.src}")`;
+    box.style.display = 'block';
+  });
+
+  document.addEventListener('mouseout', e=>{
+    const img = e.target.closest('.td-img img');
+    if (!img) return;
+    shown = false;
+    box.style.display = 'none';
+  });
+})();
+</script>
+
+
+<script>
+  
+/** ======= Estado local do modal ======= **/
+let __bankSelectedUrl = '';    // url escolhida no banco para esta atividade
+
+// Abre/fecha e carrega o banco de imagens
+document.getElementById('btnPickFromBank').addEventListener('click', async ()=>{
+  const wrap = document.getElementById('bankWrap');
+  const grid = document.getElementById('bankGrid');
+  const search = document.getElementById('bankSearch');
+
+  wrap.style.display = (wrap.style.display === 'none' || !wrap.style.display) ? 'block' : 'none';
+  if (wrap.style.display !== 'block') return;
+
+  // filtro por departamento (tenta pegar do editar ou do combo de cadastro)
+  const depId =
+    document.getElementById('editDep')?.value ||
+    document.getElementById('cadDep')?.value || '';
+
+  // carrega lista inicial
+  await carregarBanco(depId, '');
+
+  // search “ao digitar”
+  search.oninput = async (e)=>{
+    await carregarBanco(depId, e.target.value.trim());
+  };
+
+      async function carregarBanco(departamento, q){
+          const grid = document.getElementById('bankGrid');
+          grid.innerHTML = '<div class="text-muted">Carregando...</div>';
+          try{
+            const qs = new URLSearchParams();
+            if (departamento) qs.set('departamento', departamento);
+            if (q) qs.set('q', q);
+       
+            const r = await fetch(`/atividades/bco-imagens?${qs.toString()}`);
+            // 1) Checa status
+            if (!r.ok){
+              const txt = await r.text();
+              console.error('GET /bco-imagens falhou', r.status, txt);
+              grid.innerHTML = `<div class="text-danger">Erro ${r.status} ao carregar banco de imagens.</div>`;
+              return;
+            }
+
+            // 2) Checa content-type (garante que é JSON mesmo)
+            const ct = (r.headers.get('content-type') || '').toLowerCase();
+            if (!ct.includes('application/json')){
+              const txt = await r.text();
+              console.error('Resposta não-JSON de /bco-imagens:', txt.slice(0, 500));
+              grid.innerHTML = `<div class="text-danger">Resposta inválida do servidor.</div>`;
+              return;
+            }
+
+            const j = await r.json();
+            grid.innerHTML = '';
+
+            if (!j.ok || !Array.isArray(j.items) || j.items.length === 0){
+              grid.innerHTML = '<div class="text-muted">Nenhuma imagem encontrada.</div>';
+              return;
+            }
+
+
+
+            j.items.forEach(it=>{
+              const box = document.createElement('div');
+              box.style.cssText = 'position:relative;border:1px solid #345;border-radius:8px;padding:2px;cursor:pointer;background-color:"yellow"';
+              box.innerHTML = `
+                <img src="${it.imagemUrl}" alt="" style="width:100%;height:78px;object-fit:cover;border-radius:6px;">
+              `;
+              box.addEventListener('click', ()=>{
+                __bankSelectedUrl = it.imagemUrl;
+                // destaca seleção
+                grid.querySelectorAll('div').forEach(d=>d.style.outline='none');
+                box.style.outline='3px solid #1abc9c';
+                // atualiza preview
+                const prev = document.getElementById('imgPreview');
+                prev.src = __bankSelectedUrl;
+                prev.style.display = 'inline-block';
+                // limpa input file (vamos usar a do banco)
+                document.getElementById('imgFile').value = '';
+              });
+              grid.appendChild(box);
+            });
+          }catch(e){
+            console.error(e);
+            grid.innerHTML = '<div class="text-danger">Erro ao carregar banco de imagens.</div>';
+          }
+      }
+});
+
+// Salvar (usa arquivo OU url do banco)
+document.getElementById('btnSalvarImg').addEventListener('click', async ()=>{
+  const id   = document.getElementById('imgId').value;
+  const file = document.getElementById('imgFile').files[0];
+
+  if (!file && !__bankSelectedUrl){
+    alert('Escolha um arquivo ou selecione uma imagem do banco.');
+    return;
+  }
+
+  try{
+    let finalUrl = __bankSelectedUrl;
+
+    // 1) Upload para o Space se veio arquivo
+    if (file){
+      const qs = new URLSearchParams({
+        filename: file.name,
+        filetype: file.type || 'image/png',
+        ordem: '01'
+      });
+      const pres = await fetch(`/gravafoto/getpresignedurl?${qs.toString()}`);
+      if (!pres.ok) throw new Error('presigned fail');
+      const { uploadUrl } = await pres.json();
+
+      const up = await fetch(uploadUrl, {
+        method:'PUT',
+        body:file,
+        headers:{
+          'Content-Type': file.type || 'image/png',
+          'x-amz-acl': 'public-read'
+        }
+      });
+      if (!up.ok) throw new Error('upload fail');
+      finalUrl = uploadUrl.split('?')[0];
+    }
+
+    // 2) Grava URL na atividade
+    const r = await fetch(`/atividades/${id}/imagem`, {
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ imagemUrl: finalUrl })
+    });
+    const j = await r.json();
+    if (!j.ok) throw new Error('Falha ao salvar imagem na atividade');
+
+    // 3) Se veio de arquivo, tb grava no banco (origem = atividade)
+    if (file){
+      const depId =
+        document.getElementById('editDep')?.value ||
+        document.getElementById('cadDep')?.value || '';
+      const key = finalUrl.split('/').pop();  // simples: o nome no Space
+      await fetch('atividades/bco-imagens', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          imagemUrl: finalUrl,
+          key,
+          mimeType: file.type || '',
+          size: file.size || 0,
+          departamento: depId || null,
+          origem: 'atividade',
+          atividadeId: id
+        })
+      });
+      // (se esse POST falhar não bloqueamos a UX da atividade)
+    }
+
+    // refresca a lista
+    location.reload();
+  }catch(e){
+    console.error(e);
+    alert('Erro no salvamento da imagem.');
+  } finally {
+    // limpa seleção do banco para próxima vez
+    __bankSelectedUrl = '';
+  }
+});
+
+
+</script>

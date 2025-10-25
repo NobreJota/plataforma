@@ -125,8 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
           });      
 });
 
-
-
 //{{!-- GRAVANDO PRODUTO ==> --}}
 document.getElementById("cadastroProdutoForm").addEventListener("submit", async function (e) {
       e.preventDefault();
@@ -147,7 +145,7 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
                alert("Preencha o campo codigo.");
                return;
           }
-          const marcaloja =document.getElementById("cadastroMarca").value;
+          const marcaloja =document.getElementById("cadastroMarca").innerText;
           if (   !marcaloja  ) {
                 alert("Preencha o campo marcaloja.");
                 return;
@@ -376,8 +374,6 @@ function deleteProduct(id) {
         }
 }
 
-
-
 function abrirmodalprodutoSimilar(){
   console.log("alô!")
 }
@@ -476,6 +472,58 @@ function executarAcaoComDataset(selectEl) {
 }
 
 
+// NOVO: impedir números na descrição
+(function () {
+  const $desc = document.getElementById('descricao');     // <input id="descricao">
+  const $form = document.getElementById('formProduto');   // <form id="formProduto">
+  const $err  = document.getElementById('descricaoErr');  // <small id="descricaoErr">
+
+  if (!$desc) return;
+  const hasDigit = s => /\d/.test(s || '');
+
+  // Bloqueia números enquanto digita
+  $desc.addEventListener('beforeinput', (e) => {
+    if (typeof e.data === 'string' && /\d/.test(e.data)) {
+      e.preventDefault();
+      showMsg('Proibido número na descrição. Use “Complemento” ou “Referência”.');
+    }
+  });
+
+  // Trata colar
+  $desc.addEventListener('paste', (e) => {
+    const pasted = (e.clipboardData || window.clipboardData).getData('text') || '';
+    if (hasDigit(pasted)) {
+      e.preventDefault();
+      $desc.value += pasted.replace(/\d+/g, '');
+      showMsg('Remova números da descrição. Use “Complemento” ou “Referência”.');
+    }
+  });
+
+  // Sanitiza caso entre algum dígito
+  $desc.addEventListener('input', () => {
+    if (hasDigit($desc.value)) {
+      $desc.value = $desc.value.replace(/\d+/g, '');
+      showMsg('');
+    }
+  });
+
+  // Validação no submit
+  if ($form) {
+    $form.addEventListener('submit', (e) => {
+      if (hasDigit($desc.value)) {
+        e.preventDefault();
+        $desc.focus();
+        showMsg('Descrição não pode conter números.');
+      }
+    });
+  }
+
+  function showMsg(t) {
+    if (!$err) return;
+    $err.textContent = t;
+    $err.hidden = !t;
+  }
+})();
 
 
 

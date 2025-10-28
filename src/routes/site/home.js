@@ -2,7 +2,7 @@ const express=require('express')
 const router=express.Router()
 const mongoose = require('mongoose');
 
-const Mconstrucao  = require('../../models/mconstrucao');     // produtos
+const Ddocumento  = require('../../models/ddocumento');     // produtos
 const Lojista = require('../../models/lojista');              // lojas
 const Departamento = require('../../models/departamento');    // segmentos
 const DeptoSetor   = require('../../models/deptosetores');    // admin.deptosetores
@@ -43,7 +43,7 @@ router.get('/', async (req, res) => {
     // 2️⃣ define departamento alvo
     const segmentoIn = (req.query.segmento || '').trim();
     const isFirstLoad = !segmentoIn;
-    const alvoNome = segmentoIn || 'E-commerce';
+    const alvoNome = segmentoIn || 'Compras Online';
 
     // 🔍 busca o documento real do departamento (por nome, mas para capturar o _id)
     const depAlvo = await Departamento.findOne({
@@ -165,7 +165,7 @@ router.get('/produtos', async (req, res) => {
     // se você usa datadel, também filtra quem não foi “apagado logicamente”
     filtro.$and.push({ $or: [ { datadel: { $exists: false } }, { datadel: null } ] });
 
-    const docs = await Mconstrucao.find(filtro, projecao)
+    const docs = await Ddocumento.find(filtro, projecao)
          .sort(ordenacao)
          .limit(300)
          .lean();
@@ -239,7 +239,7 @@ router.get('/buscar', async (req, res) => {
     if (municipio) filtro['localloja.cidade'] = municipio;
     if (bairro)    filtro['localloja.bairro'] = bairro;
 
-    const produtos = await Mconstrucao.find(filtro)
+    const produtos = await Ddocumento.find(filtro)
       .populate('fornecedor', 'razao')
       .lean();
      console.log('');
@@ -275,7 +275,7 @@ router.get('/buscar-sugestoes', async (req, res) => {
     const pattern = norm(q).split(/\s+/).filter(Boolean).map(escapeRx).join('.*');
     const rx = new RegExp(pattern, 'i');
 
-    const docs = await Mconstrucao.find(
+    const docs = await Ddocumento.find(
       { descricao: { $regex: rx } },
       { _id: 0, descricao: 1 }
     )
@@ -387,16 +387,7 @@ router.get('/secao/:secaoId/produtos', async (req, res) => {
       }
     });
 
-    // const produtos = await Mconstrucao.find(
-    //   { $or: orConds },
-    //   { _id: 1, descricao: 1, preco1: 1, pageurlS: 1 }
-    // )
-    // .sort({ descricao: 1 })
-    // .populate({ path: 'localloja.setor.idSetor',  model: 'deptosetores', select: 'nomeDeptoSetor imagemUrl' })
-    // .populate({ path: 'localloja.setor.secao.idSecao', model: 'deptosecoes',  select: 'nomeSecao imagemUrl' })
-    // .lean();
-
-    const produtos = await Mconstrucao.find({
+    const produtos = await Ddocumento.find({
   localloja: { $elemMatch: {
     setor: { $elemMatch: {
       secao: { $elemMatch: { idSecao: param } }

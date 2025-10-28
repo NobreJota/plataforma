@@ -10,8 +10,8 @@ const { eAdmin } = require("../../../helpers/eAdmin");
 require('../../models/lojista');
 const Lojista = mongoose.model('lojista');
 
-require('../../models/mconstrucao');
-const Mconstrucao=mongoose.model('m_construcao')
+require('../../models/ddocumento');
+//const Ddocumento=mongoose.model('d_documento')
 require('../../models/usuario');
 const Usuario=mongoose.model("usuarios")
 

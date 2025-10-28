@@ -14,5 +14,5 @@ const SecaoSchema = new mongoose.Schema({
       required: true
   }
 });
-
+SecaoSchema.index({ idSetor: 1, nameSecao: 1 }, { unique: true });
 module.exports = mongoose.models.secoes || mongoose.model('deptosecoes', SecaoSchema);

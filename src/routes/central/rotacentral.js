@@ -4,8 +4,8 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Departamento = require("../../models/departamento");
 const DeptoSetor = require("../../models/deptosetores");
-const deptosecoes = require("../../models/deptosecao");
-const Mconstrucao = mongoose.model("m_construcao");
+const DeptoSecoes = require("../../models/deptosecao");
+//const Ddocumento = mongoose.model("d_documento");
 const Fornec = require("../../models/fornecedor");
 
 router.get("/lista", async (req, res) => {
@@ -49,9 +49,10 @@ router.get("/por-segmento/:id", async (req, res) => {
 router.get("/secoes/:setorId", async (req, res) => {
     try {
     const idSetor = req.params.setorId;
-    console.log('==>',req.params.setorId)
-    console.log('==> ',idSetor);
-    const rows = await deptosecoes
+    console.log('');
+    console.log('B ==> ',idSetor);
+    console.log('');
+    const rows = await DeptoSecoes
       .find({ idSetor }, 'nameSecao')        // só o campo que você precisa
       .sort({ nameSecao: 1 })
       .lean();
@@ -117,28 +118,61 @@ router.post("/setor/salvar", async (req, res) => {
 // POST /segmento/secao/salvar
 router.post('/secao/salvar', async (req, res) => {
   try {
-    const { nomeSecao, departamentoId, deptosetorId, imagemUrl } = req.body;
+    // const { nomeSecao, departamentoId, deptosetorId, imagemUrl } = req.body;
+
+    // if (!nomeSecao || !departamentoId || !deptosetorId) {
+    //   return res.status(400).json({ error: 'Campos obrigatórios não preenchidos' });
+    // }
+
+    // // IDs
+    // const depId   = new mongoose.Types.ObjectId(departamentoId);
+    // const setorId = new mongoose.Types.ObjectId(deptosetorId);
+
+    // // imagemUrl pode vir como [] (ex.: form) — normaliza para string
+    // const img = Array.isArray(imagemUrl)
+    //   ? (imagemUrl[0] || '')
+    //   : String(imagemUrl || '').trim();
+
+    // // cria 1 documento por seção
+    // const doc = await deptosecoes.create({
+    //   nameSecao: String(nomeSecao).trim(),
+    //   imagemUrl: img,          // String (pode ser '')
+    //   idDepto: depId,
+    //   idSetor: setorId,
+    // });
+
+    // return res.status(201).json({ ok: true, id: doc._id });
+     const { nomeSecao, departamentoId, deptosetorId, imagemUrl } = req.body;
 
     if (!nomeSecao || !departamentoId || !deptosetorId) {
       return res.status(400).json({ error: 'Campos obrigatórios não preenchidos' });
     }
 
-    // IDs
     const depId   = new mongoose.Types.ObjectId(departamentoId);
     const setorId = new mongoose.Types.ObjectId(deptosetorId);
 
-    // imagemUrl pode vir como [] (ex.: form) — normaliza para string
     const img = Array.isArray(imagemUrl)
       ? (imagemUrl[0] || '')
       : String(imagemUrl || '').trim();
 
-    // cria 1 documento por seção
-    const doc = await deptosecoes.create({
+    // (opcional) evitar duplicado: mesma seção no mesmo setor
+    const exists = await DeptoSecoes.findOne({ idSetor: setorId, nameSecao: String(nomeSecao).trim() }).lean();
+    if (exists) {
+      return res.status(409).json({ error: 'Já existe uma seção com esse nome nesse setor.' });
+    }
+
+    const doc = await DeptoSecoes.create({
       nameSecao: String(nomeSecao).trim(),
-      imagemUrl: img,          // String (pode ser '')
+      imagemUrl: img,
       idDepto: depId,
       idSetor: setorId,
     });
+
+    // 👇 marca e incrementa no setor
+    await DeptoSetor.updateOne(
+      { _id: setorId },
+      { $set: { hasSecoes: true }, $inc: { secoesCount: 1 } }
+    );
 
     return res.status(201).json({ ok: true, id: doc._id });
   } catch (err) {
@@ -163,7 +197,7 @@ router.get("/secoes/:deptoSetorId", async (req, res) => {
     console.log('');
     console.log('[ 136 /rotacentral/secoes/:deptoSetorId',deptoSetorId);
     console.log('');
-    const secoes = await deptosecoes.find({ idDeptoSetor: deptoSetorId }).lean();
+    const secoes = await DeptoSecoes.find({ idDeptoSetor: deptoSetorId }).lean();
     console.log(' [ 139 ] ',secoes)
     res.send(secoes);
   } catch (err) {

@@ -4,7 +4,7 @@ const router = express.Router();
 const Segmentos = require("../../models/departamento");
 const Lojista = require('../../models/lojista');
 const produtoController = require('../../controllers/produtoController');
-const Mconstrucao = require('../../models/mconstrucao');
+const Mconstrucao = require('../../models/ddocumento');
 const Departamento = require('../../models/departamento');
 
 
@@ -313,16 +313,6 @@ router.get('/consulta-ie-es/:cnpj', async (req, res) => {
 // routes
 router.delete('/produto-delete/:id', produtoController.softDelete);
 
-//router.delete('/produto/delete/:id', async (req, res) => {
-//  try {
-//    const { id } = req.params;
-//    await Mconstrucao.findByIdAndDelete(id);
-//    return res.sendStatus(204);
-//  } catch (err) {
-//    console.error(err);
-//    return res.status(500).json({ error: 'Falha ao deletar produto' });
-//  }
-//});
 
 
 module.exports = router;

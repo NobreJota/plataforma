@@ -677,6 +677,30 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
               <label style="color:white">Marca loja:</label>
               <label id="cadastroMarca" type="text"  name="marca" class="form-control" style="background-color: #ec7018;" >{{lojista.marca}}</label>
             </div>
+            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+                <label style="background-color:transparent;width: 800px;padding: 5px;color:#fff">Para ter mais acesso a departamentos entrar em contato com administrador:</label>
+                <label style="background-color: #df061f;width: 150px;padding: 5px;">Departamento:</label>
+                <select name="departamento_id" id="selDepartamento" class="form-select form-select-sm" required>
+                      <option value="">Selecione o departamento</option>
+                      {{#each departamentos}}
+                        <option value="{{_id}}">{{nomeDepartamento}}</option>
+                      {{/each}}
+                </select>
+            </div>
+            {{!-- ========================================================================== --}}
+            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+                <label for="setor" style="background-color: #df061f;width: 150px;padding: 5px;">Setor:</label>
+                <select name="setor_id" id="selSetor" class="form-select form-select-sm" required >
+                      <option value="">Selecione o setor</option>
+                </select>
+            </div>
+            {{!-- ========================================================================== --}}
+            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+              <label for="divSelect" style="background-color: #df061f;width: 150px;padding: 5px;">Seção:</label>
+                <select name="secao_id" id="selSecao" class="form-select form-select-sm" required disabled>
+                    <option value="">Selecione a seção</option>
+                </select>
+            </div>
             <div style="margin-bottom:10px;background-color blueviolet;">
               <label>Código:</label>
               <input id="cadastroCodigo" type="text"  name="codigo" class="form-control" tabindex="0">
@@ -730,30 +754,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
               <input id="cadastroPrecoPrazo" type="number" name="precoprazo" step="0.01" min="0" lang="pt-BR"   class="form-control">
             </div>
             {{!-- ========================================================================== --}}
-            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
-                <label style="background-color: #df061f;width: 150px;padding: 5px;">Departamento:</label>
-                <select id="select_departamento" name="select_departamento" style="height: 3.2vh; width: 70%; margin-left: 6px; margin-top: 3px;">
-                      <option value="" style="background-color: #295ee4;color:#fff">Selecione o departamento:</option>
-                </select>
-            </div>
-            {{!-- ========================================================================== --}}
-            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
-                <label for="setor" style="background-color: #df061f;width: 150px;padding: 5px;">Setor:</label>
-                
-                <select id="selectSetor" name="setor" style="height: 3.2vh; width: 70%; margin-left: 6px; margin-top: 3px;">
-                      <option value="" style="color:black">Selecione o setor:</option>
-                </select>
-             
-            </div>
-            {{!-- ========================================================================== --}}
-            <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
-              <label for="divSelect" style="background-color: #df061f;width: 150px;padding: 5px;">Seção:</label>
-              {{!-- <div id="divSelect" style=""> --}}
-                <select id="selectSecao" name="secao" style="height: 3.2vh; width: 70%; margin-left: 6px; margin-top: 3px;">
-                      <option value="" style="color:black">Selecione a seção:</option>
-                </select>
-              {{!-- </div> --}}
-            </div>
+            
             {{!-- ========================================================================== --}}
             <div style="display: flex;flex-direction: row;justify-content:space-around;justify-items: center;padding: o 10px 0 10px;margin-bottom: 10px;">
                 <button type="button" class="btn btn-secondary" onclick="closeCadastroModal()">Cancelar</button>
@@ -1172,7 +1173,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("DOMContentLoaded", () => {
     const inputCodigo = document.getElementById("cadastroCodigo");
     let lojistaId=document.getElementById("IddoLojista").value;
-
+    //{{!-- Pegando os fornecedores cadastradoLoja ID --}}
     if (inputCodigo) {
       inputCodigo.addEventListener("focus", async () => {
         if (!fornecedoresCarregados) {
@@ -1210,26 +1211,25 @@ window.addEventListener("DOMContentLoaded", () => {
     const inputCodigo = document.getElementById("cadastroDescricao");
     let idLoja=document.getElementById("IddoLojista").value;
     ///////////////////////////////////////////////
+    
     if (inputCodigo) {
       inputCodigo.addEventListener("focus", async () => {
-       // console.log("[ 951 ] Focus Código ")
+         console.log('ALÕ!')   
         if (!departamentosCarregados) {
           try {
             console.log('');
-            console.log('',idLoja);
+            console.log('=> 1232 => cadastroDescrição ganhou foco =>  idLoja',idLoja);
             console.log('');
             const response = await fetch(`/produto/lojistadepartamentos/${idLoja}`);
             const departamentos = await response.json();
-            console.log(' [ 1089 ]');
-            console.log('',departamentos);
+            console.log(' [ 1236 ] => departamentos',departamentos);
             console.log('');
-            const select = document.getElementById("select_departamento");
-
+            const select = document.getElementById("selDepartamento");
+            //console.log(select);
             // Limpa o <select> antes de preencher
-           // select.innerHTML = '<option disabled selected>Selecione um departamento</option>';
-            select.style.backgroundColor="#100e0e";
-            select.style.backgroundColor="red";  
-            select.style.color="#100e0e";
+            select.innerHTML = '<option disabled selected>Selecione um departamento</option>';
+            let cor='#100e0e'
+            select.style.backgroundColor=cor;
             select.style.color="pink";
             // Preenche o select com os dados recebidos
             departamentos.forEach(dep => {
@@ -1252,34 +1252,37 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 </script>
-{{!-- select_departamento + selectSetor --}}
+{{!-- Selecionado um departamento para buscar aos setores pertinentes --}}
 <script>
-document.getElementById('select_departamento').addEventListener('change', async function () {
+  //Quando se seleciona um departamento então vai-se buscar os setores pertinentes aquele departamento.
+document.getElementById('selDepartamento').addEventListener('change', async function () {
+  console.log('123456')
   const departamentoId = this.value;
-
-  const setorSelect = document.getElementById('selectSetor');
+  console.log('departamentoId',this.value)
+  const setorSelect = document.getElementById('selSetor');
   setorSelect.innerHTML = '<option value="">Carregando setores...</option>';
 
   if (departamentoId) {
     try {
       console.log('-----------------');
-      console.log(' [ 995 ]');
       console.log('-----------------');
-      const response = await fetch(`/segmento/setores/${departamentoId}`);
-      const setores = await response.json();
-      console.log(' setores ==>',setores)
+      const response = await fetch(`/produto/setores/${departamentoId}`);
+      //const setores = await response.json();
+       const data = await response.json();
+      // console.log('data recebido =>', data);
+      const setores = Array.isArray(data) ? data : (data.setores || []); 
+      //const setores = Array.isArray(data) ? data : (data.setores || []);  // pega o array correto
+      console.log('array de setores =>', setores);
       if (Array.isArray(setores)) {
         setorSelect.innerHTML = '<option value="">Selecione o setor:</option>';
-        setores.forEach(setor => {
-          const opt = document.createElement('option');
-          opt.value = setor._id;
-          opt.textContent = setor.nomeDeptoSetor;
-          opt.classList.add("option-roxa");
-          setorSelect.appendChild(opt);
-
-          setorSelect.style.backgroundColor="blue";
-          setorSelect.style.color="red";
-        });
+        setores.forEach((setor) => {
+            const opt = document.createElement('option');
+            opt.value = String(setor.idSetor);                // garante string
+            opt.textContent = setor.nomeDeptoSetor || ''; // texto visível
+            opt.classList.add('option-roxa');
+            setorSelect.appendChild(opt);
+            //console.log(opt)
+      });
       } else {
         setorSelect.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
       }
@@ -1291,30 +1294,39 @@ document.getElementById('select_departamento').addEventListener('change', async 
     setorSelect.innerHTML = '<option value="">Selecione o setor:</option>';
   }
 });
-document.getElementById('selectSetor').addEventListener('change', async function () {
+
+//!-- Quando se seleciona um setor no ComboSetor então vai buscar as seções pertinentes --}}
+document.getElementById('selSetor').addEventListener('change', async function () {
   const setorId = this.value;
-  const setorSecao = document.getElementById('selectSecao');
+  const setorSecao = document.getElementById('selSecao');
   setorSecao.innerHTML = '<option value="">Carregando setores...</option>';
   if (setorId) {
     try {
       console.log('-----------------');
       console.log(' [ 1038 ]');
       console.log('-----------------');
-      const response = await fetch(`/segmento/secoes/${setorId}`);
+      const { itens = [] } = await fetch(`/produto/secoes/${setorId}`);
       const secoes = await response.json();
-      console.log(' seções ==>',secoes)
-      if (Array.isArray(secoes)) {
-         setorSecao.innerHTML = '<option value="">Selecione o setor:</option>';
-         secoes.forEach(secao => {
-            const opt = document.createElement('option');
-            opt.value = secao._id;
-            opt.textContent = secao.nomeSecao;
-            opt.classList.add("option-roxa");
-            setorSecao.appendChild(opt);
+      console.log(' seções ==>',secoes);
+      itens.forEach(secao => {
+        const opt = document.createElement('option');
+        opt.value = secao._id;
+        opt.textContent = secao.nameSecao;
+        setorSecao.appendChild(opt);
+      });
 
-            setorSecao.style.backgroundColor="blue";
-            setorSecao.style.color="red";
-         });
+      //if (Array.isArray(secoes)) {
+      //   setorSecao.innerHTML = '<option value="">Selecione o setor:</option>';
+      //   secoes.forEach(secao => {
+      //      const opt = document.createElement('option');
+      //      opt.value = secao._id;
+      //      opt.textContent = secao.nomeSecao;
+      //      opt.classList.add("option-roxa");
+      //      setorSecao.appendChild(opt);
+
+      //      setorSecao.style.backgroundColor="blue";
+      //      setorSecao.style.color="red";
+      //   });
       } else {
         setorSecao.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
       }

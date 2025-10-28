@@ -2,17 +2,20 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-const Mconstrucao = mongoose.model("m_construcao");
+const Ddocumento = mongoose.model("d_documento");
 const Departamento = require("../../models/departamento");
 const DeptoSetor = require('../../models/deptosetores');
+const DeptoSecoes= require('../../models/deptosecao')
 const Lojista = require('../../models/lojista');
+//const segmentoSetor= require('../../models/deptosetores')
+
 
 //  busca os produto conforme a cidade
 router.get("/produtos-por-cidade/:cidade", async (req, res) => {
   try {
     const { cidade } = req.params;
 
-    const produtos = await Mconstrucao
+    const produtos = await Ddocumento
       .find()
       .populate({ path: 'loja_id', match: { cidade } })
       .lean();
@@ -29,7 +32,7 @@ router.get("/produtos-por-cidade/:cidade", async (req, res) => {
 // Procura produtos pelo loja_Id
 router.get("/produtos-por-lojista/:id", async (req, res) => {
   const { id } = req.params;
-  const produtos = await Mconstrucao.find(
+  const produtos = await Ddocumento.find(
                           {descricao: { $regex: '\\d' }, loja_id: id })
                                     .lean();
   res.json(produtos);
@@ -37,7 +40,7 @@ router.get("/produtos-por-lojista/:id", async (req, res) => {
 
 router.post('/gravarproduto',async(req,res)=>{
   try {
-      const doc = await Mconstrucao.create(req.body); // ou payload montado
+      const doc = await Ddocumento.create(req.body); // ou payload montado
       // Pega o departamento (array ou singular)
       const depId = Array.isArray(doc.localloja?.[0]?.departamento)
         ? doc.localloja[0].departamento[0] || null
@@ -67,7 +70,8 @@ router.post('/gravarproduto',async(req,res)=>{
 })
 
 router.get("/segmento/:id/setores", async (req, res) => {
-  const segmento = await Segmento.findById(req.params.id).populate({
+  console.log('mil');
+  const segmento = await DeptoSetor.findById(req.params.id).populate({
     path: 'setores',
     populate: { path: 'secoes' }
   });
@@ -75,14 +79,6 @@ router.get("/segmento/:id/setores", async (req, res) => {
   res.json(segmento);
 });
 
-router.get("/segmento/:id/setores", async (req, res) => {
-  const segmento = await Segmento.findById(req.params.id).populate({
-    path: 'setores',
-    populate: { path: 'secoes' }
-  });
-
-  res.json(segmento);
-});
 
 router.put("/alterar/:id", async (req, res) => {
   console.log('');
@@ -117,7 +113,7 @@ router.put("/alterar/:id", async (req, res) => {
 
     console.log(' [ 94 ] ', update);
 
-    await Mconstrucao.findByIdAndUpdate(id, update,{
+    await Ddocumento.findByIdAndUpdate(id, update,{
        runValidators: true,
        context: 'query'
     });
@@ -130,22 +126,24 @@ router.put("/alterar/:id", async (req, res) => {
 });
 
 router.get('/lojistadepartamentos/:id', async (req, res) => {
+  console.log('Alô!')
+
    const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ error: 'ID inválido' });
   }
   console.log('');
-  console.log('[ 122 ]');
-  console.log('route=>src/routes/empresa/produtos');
-  console.log('get => /lojistadepartamento');
+ // console.log('[ 138 ] route=>src/routes/empresa/produtos/lojistadepartamento/:id');
   console.log('');
-  console.log(' id do lojista : ',id);
   console.log('');
+ // console.log(' id do lojista : ',id);
+  ///console.log('');
     
   try {
     const lojista = await Lojista.findById(id).populate('departamentos', 'nomeDepartamento');
-    console.log('666',lojista.departamentos)
+    //console.log('resultado da pesquisa =>',lojista.departamentos)
     let departamentos=lojista.departamentos
+    
     res.json(departamentos);
   } catch (err) {
     console.error('Erro ao buscar departamentos:', err);
@@ -154,18 +152,49 @@ router.get('/lojistadepartamentos/:id', async (req, res) => {
 });
 
 router.get('/setores/:departamentoId', async (req, res) => {
+  ////////////////////////////////////////
   try {
-    const { departamentoId } = req.params;
+      const departamentoId = req.params.departamentoId;
 
-    const registros = await DeptoSetor.find({ departamento: departamentoId })
-      .populate('setor', 'titulo') // traz apenas o título
+      const registros = await DeptoSetor.find({
+        idDepto: departamentoId,
+        hasSecoes: true,            // 👈 só setores com seções
+      })
+      .select('nomeDeptoSetor idDepto imagemUrl') // campos que você precisa
       .lean();
 
-    const setores = registros.map(r => r.setor); // array com os setores populados
-    res.json(setores);
+      const setores = registros.map(r => ({
+        idSetor: String(r._id),
+        nomeDeptoSetor: r.nomeDeptoSetor || '',
+        idDepto: String(r.idDepto),
+        imagemUrl: r.imagemUrl || ''
+      }));
+
+      res.json(setores);
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao buscar setores.' });
   }
 });
 
+router.get("/secoes/:setorId", async (req, res) => {
+    console.log(5000)
+    try {
+    const idSetor = req.params.setorId;
+    console.log('');
+    console.log('B ==> ',idSetor);
+    console.log('');
+    const rows = await DeptoSecoes
+      .find({ idSetor }, 'nameSecao')        // só o campo que você precisa
+      .sort({ nameSecao: 1 })
+      .lean();
+    console.log('valor de rows',rows)
+    const n=rows.map(r => r.nameSecao)
+    console.log('VR DE N',n)
+    return res.status(200).json({itens:n}); // array simples de strings
+
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Falha ao carregar seções' });
+  }
+});
 module.exports = router;

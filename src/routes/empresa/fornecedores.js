@@ -14,7 +14,7 @@ const Fornecedor =require('../../models/fornecedor');
 // Listar todos os fornecedores
 router.get("/", async (req, res) => {
   console.log('');
-  console.log(' [ 17 /fornec/ ] ');
+  console.log(' [ src/routes/empresa/fornecedores => [17/ get("/fornec/") ] ');
   console.log('');
   //////////////////////////////////////////////////////////
   try {
@@ -213,7 +213,7 @@ router.get("/fornecqlojista/:id", async (req, res) => {
   const lojaId = req.params.id;
 
   console.log('');
-  console.log(' [ 17 /fornec/ ] Loja ID:', lojaId);
+  console.log(' [ src/routes/empresas/fornecedores//forneclojista/ ] Loja ID:', lojaId);
   console.log('');
 
   try {

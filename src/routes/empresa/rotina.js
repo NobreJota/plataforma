@@ -13,8 +13,8 @@ const Lojista = mongoose.model('lojista');
 require('../../models/deptosetores');
 require('../../models/deptosecao');
 
-require('../../models/mconstrucao');
-const Mconstrucao=mongoose.model('m_construcao');
+require('../../models/ddocumento');
+const Ddocumento=mongoose.model('d_documento');
 const fornec=require('../../models/fornecedor');
 
 function ensureLojista(req, res, next) {
@@ -118,8 +118,8 @@ router.get('/cooperados', ensureLojista, async (req, res) => {
 
           // count + busca
           const [total, produtos, fornecedores, lojista] = await Promise.all([
-            Mconstrucao.countDocuments(filtro),
-            Mconstrucao.find(filtro)
+            Ddocumento.countDocuments(filtro),
+            Ddocumento.find(filtro)
               .populate('fornecedor', 'marca')
               .populate({ path: 'localloja.departamento', select: 'nomeDepartamento' })
               .populate({ path: 'localloja.setor.idSetor', model: 'deptosetores', select: 'nomeDeptoSetor' })
@@ -187,7 +187,7 @@ router.get("/produtos", async (req, res) => {
   const lojista = await Lojista.findById(loja_id).lean();
   console.log(' [ 127 ]',lojista)
 
-  const produtos = await Mconstrucao.find({ loja_id: lojista._id })
+  const produtos = await Ddocumento.find({ loja_id: lojista._id })
                         .populate('fornecedor', 'razao')
                         .populate({ path: 'localloja.departamento', select: 'nomeDepartamento' })
                         .populate({

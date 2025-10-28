@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const Mconstrucao = mongoose.model("m_construcao");
+const Ddocumento = mongoose.model("d_documento");
 ///////////////////////////////////////////////////////////////////
 // FAZ A BUSCA DE PRODUTOS COM TERMOS SIMILARES
 router.get("/buscar", async (req, res) => {
@@ -17,7 +17,7 @@ router.get("/buscar", async (req, res) => {
 
   try {
     // Carrega o produto base
-    const produtoBase = await Mconstrucao.findById(baseId).lean();
+    const produtoBase = await Ddocumento.findById(baseId).lean();
 
     if (!produtoBase) {
       return res.status(404).json({ erro: "Produto base não encontrado." });
@@ -27,7 +27,7 @@ router.get("/buscar", async (req, res) => {
     const idsSimilares = (produtoBase.similares || []).map(id => id.toString());
 
     // Busca produtos que não são o base e nem já similares
-    const produtos = await Mconstrucao.find({
+    const produtos = await Ddocumento.find({
       _id: { $ne: baseId, $nin: idsSimilares },
       $or: [
         { codigo: new RegExp(termo, "i") },
@@ -55,7 +55,7 @@ router.get("/produtos/detalhes/:id", async (req, res) => {
   try {
     //const fornecedor = await Fornec.findById("687bb4f0505327b30d3c81b5").lean();
     console.log(req.params.id)
-    const produto = await Mconstrucao.findById(req.params.id)
+    const produto = await Ddocumento.findById(req.params.id)
       .populate({ 
                   path: "fornecedor", select: "razao marca", model: "fornec" })
       .populate({path:"similares", select:"codigo descricao referencia precovista"}) 
@@ -76,7 +76,7 @@ router.post("/vincular", async (req, res) => {
   const { produtoBaseId, similarId } = req.body;
   try {
     // Evita duplicados
-    const produto = await Mconstrucao.findById(produtoBaseId);
+    const produto = await Ddocumento.findById(produtoBaseId);
 
     if (!produto) {
       return res.status(404).json({ erro: "Produto base não encontrado" });
@@ -104,12 +104,12 @@ router.post("/vincular", async (req, res) => {
 //            return res.status(400).json({ error: "IDs inválidos" });
 //          }
 
-//          await Mconstrucao.updateOne(
+//          await MconstXrucao.updateOne(
 //            { _id: produtoBaseId },
 //            { $addToSet: { similares: similarId } }
 //          );
 
-//          await Mconstrucao.updateOne(
+//          await MconstruXcao.updateOne(
 //            { _id: similarId },
 //            { $addToSet: { similares: produtoBaseId } }
 //          );
@@ -129,7 +129,7 @@ router.post("/corrigir-legado", async (req, res) => {
   console.log('[ 106 /similares/corrigir-legado');
   console.log('');
   try {
-    const resultado = await Mconstrucao.updateMany(
+    const resultado = await Ddocumento.updateMany(
       { similares: { $type: "objectId" } },
       [{ $set: { similares: ["$similares"] } }]
     );
@@ -151,7 +151,7 @@ router.put('/produtos/:produtoId/removersimilar/:similarId', async (req, res) =>
   console.log('[ 154 => router/empresa/similares(simiproduto) =>/produtos/:produtoId/removersimilar/:similarId]')
   const { produtoId, similarId } = req.params;
   try {
-    await Mconstrucao.findByIdAndUpdate(produtoId, {
+    await Ddocumento.findByIdAndUpdate(produtoId, {
       $pull: { similares: similarId }
     });
     res.sendStatus(200);
@@ -170,7 +170,7 @@ module.exports = router;
 //   const { termo, baseId } = req.query;
 
 //   try {
-//     const produtos = await Mconstrucao.find({
+//     const produtos = await MconstrXucao.find({
 //       _id: { $ne: baseId },
 //       $or: [
 //         { codigo: new RegExp(termo, "i") },

@@ -405,7 +405,7 @@
       },
       body: JSON.stringify({ departamentoId, deptosetorId, nomeSecao })
     });
-    console.log('response.Ok')
+   // console.log('response.Ok')
     if (response.ok) {
       const novaSecao = await response.json();
       console.log("Seção salva:", novaSecao);

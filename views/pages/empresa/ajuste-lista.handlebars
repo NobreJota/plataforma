@@ -3,8 +3,158 @@
   .aj-card .aj-title{ font-weight:600; font-size:.95rem; min-height: 2.6em; }
   .aj-status{ font-size:.8rem; }
 </style>
+<!-- ========== MODAL AJUSTE: CSS ========== -->
+<style>
+  :root{
+    --bg: #0f1020;
+    --surface: #1e1f33;
+    --muted: #a6a8c9;
+    --text: #e6e8ff;
+    --brand: #7c5cff;
+    --brand-2: #6ed0ff;
+    --border: #2b2d4a;
+    --shadow: 0 20px 60px rgba(0,0,0,.35);
+    --radius: 16px;
+  }
 
-<div class="container-fluid p-3" style="margin-top: 3.5vh;background-color: blueviolet;">
+  /* Demo button */
+  .btn-demo{
+    margin: 16px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  /* Overlay + container */
+  .modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,20,.55);
+  backdrop-filter: blur(3px);
+  padding: 24px;           /* respiro nas bordas */
+  display: none;           /* abre com a classe is-open */
+  z-index: 1000;
+}
+.modal-overlay.is-open{
+  display: block;
+}
+
+/* Centralização “blindada” do modal */
+.modal{
+  position: fixed;         /* chave da centralização */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  /* centro exato */
+  width: min(1100px, 92vw);
+  max-height: min(88vh, calc(100vh - 48px));
+  margin: 0;               /* não conta mais */
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;        /* cabeçalho/rodapé fixos */
+  background: #5a89ff;
+}
+
+/* Área rolável do corpo do modal */
+.modal__body{
+  overflow: auto;
+}
+
+/* (opcional) se quiser bloquear scroll do body ao abrir o modal */
+body.modal-open{ overflow: hidden; }
+
+  .modal__header, .modal__footer{
+    padding: 14px 16px;
+    background: rgba(255,255,255,.02);
+    border-bottom: 1px solid var(--border);
+  }
+  .modal__footer{ border-top: 1px solid var(--border); border-bottom: 0; display: flex; gap: 10px; justify-content: flex-end; }
+
+  .modal__header{
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal__header h3{ font-size: 1.05rem; margin: 0; letter-spacing: .3px; }
+
+  .modal__close{
+    background: transparent; border: 0; color: var(--muted);
+    font-size: 1.2rem; cursor: pointer; line-height: 1;
+  }
+  .modal__close:hover{ color: var(--text); }
+
+  
+
+  /* Layout interno do ModalAjuste */
+  #ModalAjuste{
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 960px){
+    #ModalAjuste{ grid-template-columns: 1fr; }
+  }
+
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .card__title{
+    margin: 0 0 8px 0;
+    font-size: .95rem;
+    color: var(--brand-2);
+    letter-spacing: .2px;
+  }
+
+  .group{ margin-top: 12px; }
+  .group h5{
+    margin: 8px 0;
+    font-size: .85rem; font-weight: 600; color: var(--muted);
+  }
+
+  .grid-2{
+    display: grid; gap: 10px;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+  }
+  @media (max-width: 560px){ .grid-2{ grid-template-columns: 1fr; } }
+
+  .field label{
+    display: block; font-size: .72rem; color: var(--muted); margin-bottom: 4px;
+  }
+  .field .value{
+    padding: 8px 10px; border: 1px solid var(--border);
+    border-radius: 10px; background: #171833; min-height: 36px;
+    font-size: .9rem; color: var(--text);
+    display: flex; align-items: center;
+  }
+
+  /* thumbs */
+  .thumbs{ display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
+  .thumbs--single{ grid-template-columns: 1fr; } 
+  .thumbs img{
+    width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+    border-radius: 10px; border: 1px solid var(--border);
+    background: #0e1026;
+  }
+
+  /* Buttons */
+  .btn{
+    padding: 10px 14px; border-radius: 12px; border: 1px solid transparent;
+    background: linear-gradient(135deg, var(--brand), #5a89ff);
+    color: white; cursor: pointer; font-weight: 600;
+  }
+  .btn:hover{ filter: brightness(1.05); }
+  .btn:active{ transform: translateY(1px); }
+
+  .btn.btn-outline{
+    background: transparent; border: 1px solid var(--border); color: var(--text);
+  }
+  .btn.btn-outline:hover{ background: rgba(255,255,255,.04); }
+</style>
+{{!-- ////////////////////////////////////////////////////////////////////// --}}
+<div class="container-fluid p-3" style="margin-top: 3.5vh;background-color: #fff;">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="h6 m-0">Ajustes de Produtos ({{total}} candidatos)</h3>
     <div>
@@ -18,21 +168,32 @@
   <div id="ajGrid" class="row g-3">
     {{this._id}}
     {{#each itens}}
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3" style="background-color: #5cb009;">
           
-              <div class="card aj-card h-100" data-id="{{this._id}}" data-idsetor="{{ this.firstIdSetor}}">
-                        <img src="{{_img}}" alt="img">
+              <div class="card aj-card h-100" data-id="{{this._id}}" data-idsetor="{{ this.firstIdSetor}}" style="background-color: #025e10;">
+                        <img  src="{{_img}}"
+                              alt="imagem???"
+                              style="width:100%;height:180px;object-fit:contain;background:#fff"
+                              onerror="this.onerror=null;this.src='https://via.placeholder.com/640x480?text=imagem';" />
                         <div class="card-body d-flex flex-column">
-                          <div class="aj-title mb-2" title="{{this.descricao}}">{{this.descricao}}</div>
+                          <div class="aj-title mb-2" title="{{this.descricao}}" style="color:#fff;">{{this.descricao}}</div>
+                          <div class="aj-title mb-2" style="color:#fff;">{{this._id}}</div>
                           <div class="d-flex align-items-center mt-auto gap-2">
                             <button class="btn btn-sm btn-success btnAjustar">Ajustar</button>
                             <span class="aj-status text-muted">aguardando…</span>
                           </div>
                         </div>
                         <div class="d-flex align-items-center gap-2 mt-2" style="background-color: #fff;">
-                            <button class="btn btn-sm btn-outline-primary btnEscolherSecao">Definir seção X</button>
+                            {{!-- <button class="btn btn-sm btn-outline-primary btnEscolherSecao">Definir seção X</button>
                             <select class="form-select form-select-sm d-none selSecao"></select>
-                            <button class="btn btn-sm btn-primary d-none btnSalvarSecao">Salvar ??</button>
+                            <button class="btn btn-sm btn-primary d-none btnSalvarSecao">Salvar</button> --}}
+                            {{!-- <button onclick="openAjuste_Modal(data)">Modal</button> --}}
+                            <div class="d-flex align-items-center mt-2 gap-2">
+                                <button class="btn btn-sm btn-secondary btnOpenModal" data-id="{{this._id}}">
+                                       Modal
+                                </button>
+                             </div>
+
                         </div>
               </div>
         </div>
@@ -41,114 +202,358 @@
   
 
 </div>
+<!-- ========== MODAL AJUSTE: HTML ========== -->
 
+
+<div id="ajusteOverlay" class="modal-overlay" aria-hidden="true">
+  <div role="dialog" aria-modal="true" aria-labelledby="ajusteTitle" class="modal">
+    <header class="modal__header">
+      <h3 id="ajusteTitle">Ajuste de Produto</h3>
+      <button class="modal__close" aria-label="Fechar" onclick="closeAjusteModal()">✕</button>
+    </header>
+
+    <div class="modal__body">
+      <div id="ModalAjuste">
+
+        <!-- Coluna 1: Produto -->
+        <section id="Produto" class="card">
+          <h4 class="card__title">Produto</h4>
+          <div id="idProduto" class="field">
+            <label>ID do Produto</label>
+            <div class="value">—</div>
+          </div>
+              <label class="form-label small mb-1 mt-2">Descrição</label>
+              <input id="descricaoProduto" class="form-control form-control-sm" readonly> 
+          <div id="ImgProduto" class="field">
+            <label>Imagens</label>
+            <div id="idpageUrls" class="thumbs"></div>
+          </div>
+        </section>
+
+        <!-- Coluna 2: Departamento / Setor / Seção -->
+        <section class="card">
+          <h4 class="card__title">Estrutura</h4>
+
+          <!-- Departamento -->
+          <div id="Deptatamento" class="group">
+            <h5>Departamento</h5>
+            <div class="grid-2">
+              <div class="field">
+                <label>id-depto</label>
+                <div name="id-depto" class="value">—</div>
+              </div>
+              <div class="field">
+                <label>nomeDepartamento</label>
+                <div name="nomeDepartamento" class="value">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Setor -->
+          <div id="Setores" class="group">
+            <h5>Setor</h5>
+            <div class="grid-2">
+              <div class="field">
+                <label>id-setor</label>
+                <div name="id-setor" class="value">—</div>
+              </div>
+              <div class="field">
+                <label>nomeDeptoSetor</label>
+                <div name="nomeDeptoSetor" class="value">—</div>
+              </div>
+              <div class="field">
+                <label>idDepto</label>
+                <div name="idDepto" class="value">—</div>
+              </div>
+              <div class="field">
+                <label>imagemUrl</label>
+                <div name="imagemUrl" class="value">—</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Seção -->
+          <div id="Secao" class="group">
+            <h5>Seção</h5>
+            <div class="grid-2">
+              <div class="field">
+                <label>id-secao</label>
+                <div name="id-secao" class="value">—</div>
+              </div>
+              <div class="field">
+                <label>nameSecao</label>
+                <div name="nameSecao" class="value">—</div>
+              </div>
+              <div class="field">
+                <label>idDepto</label>
+                <div name="idDepto" class="value secao-iddepto">—</div>
+              </div>
+              <div class="field">
+                <label>idSetor</label>
+                <div name="idSetor" class="value">—</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <footer class="modal__footer">
+      <button class="btn btn-outline" onclick="closeAjusteModal()">Cancelar</button>
+      <button class="btn">Salvar ajustes</button>
+    </footer>
+  </div>
+</div>
+{{!--  --}}
+
+
+{{!-- Ajustar produtos (PATCH) — mantém “Ajustar” e “Ajustar todos” --}}
 <script>
-(function(){
+(() => {
+  console.log('1) Ajustar produtos');
+
   const grid = document.getElementById('ajGrid');
   const btnTodos = document.getElementById('btnAjustarTodos');
+  if (!grid) return;
 
-  async function ajustar(id, $status){
+  async function ajustar(id, $status) {
+    if (!$status) return;
     $status.textContent = 'ajustando…';
-    try{
-      const r = await fetch(`/ajuste/ajustes/produto/${id}`, { method:'PATCH' });
+    try {
+      const r = await fetch(`/ajuste/ajustes/produto/${id}`, { method: 'PATCH' });
       const j = await r.json();
-      if (j.ok){ $status.textContent = '✔ ajustado'; $status.classList.remove('text-muted'); $status.classList.add('text-success'); }
-      else { throw new Error(j.error || 'falha'); }
-    }catch(e){
-      $status.textContent = '✖ erro'; $status.classList.remove('text-muted'); $status.classList.add('text-danger');
+      if (j.ok) {
+        $status.textContent = '✔ ajustado';
+        $status.classList.remove('text-muted', 'text-danger');
+        $status.classList.add('text-success');
+      } else {
+        throw new Error(j.error || 'falha');
+      }
+    } catch (e) {
       console.error('erro ao ajustar', id, e);
+      $status.textContent = '✖ erro';
+      $status.classList.remove('text-muted', 'text-success');
+      $status.classList.add('text-danger');
     }
   }
 
-  grid.addEventListener('click', (ev)=>{
+  // Ajustar 1 card
+  grid.addEventListener('click', (ev) => {
     const btn = ev.target.closest('.btnAjustar');
     if (!btn) return;
-    const card = btn.closest('.aj-card'); const id = card?.dataset?.id;
-    const st = card.querySelector('.aj-status');
+    const card = btn.closest('.aj-card');
+    const id = card?.dataset?.id;
+    const st = card?.querySelector('.aj-status');
     if (id) ajustar(id, st);
   });
 
-  btnTodos?.addEventListener('click', async ()=>{
-    const ids = [...document.querySelectorAll('.aj-card')].map(c => c.dataset.id);
-    const sts = [...document.querySelectorAll('.aj-card .aj-status')];
-    // faz em série para não sobrecarregar
-    for (let i=0;i<ids.length;i++){
-      await ajustar(ids[i], sts[i]);
+  // Ajustar todos os cards da página (em série)
+  btnTodos?.addEventListener('click', async () => {
+    const cards = [...document.querySelectorAll('.aj-card')];
+    for (const card of cards) {
+      const id = card.dataset.id;
+      const st = card.querySelector('.aj-status');
+      if (id) await ajustar(id, st);
     }
   });
 })();
 </script>
 
+{{!-- Definir seção (carregar select e salvar) --}}
 <script>
-(function(){
+(() => {
+  console.log('2) Definir seção');
   const grid = document.getElementById('ajGrid');
+  if (!grid) return;
 
-  // carregar seções de um setor
-  async function carregarSecoes(idSetor, sel){
+  // Carrega opções de seções de um setor
+  async function carregarSecoes(idSetor, sel) {
     sel.innerHTML = '';
     const r = await fetch(`/ajuste/ajustes/setor/${idSetor}/secoes`);
     const j = await r.json();
-    if (!j.ok) throw new Error('falha ao listar seções');
-    j.secoes.forEach(s => {
+    if (!j.ok) throw new Error(j.error || 'falha ao listar seções');
+
+    for (const s of j.secoes) {
       const opt = document.createElement('option');
-      opt.value = s._id; opt.textContent = s.nameSecao;
+      opt.value = s._id;
+      opt.textContent = s.nameSecao;
       sel.appendChild(opt);
-    });
+    }
   }
 
-  grid.addEventListener('click', async (ev)=>{
-    // abrir select
-    console.log(' passando AQUI')
+  grid.addEventListener('click', async (ev) => {
+    // Abrir select
     const btnPick = ev.target.closest('.btnEscolherSecao');
-    console.log('btnPick',btnPick)
     if (btnPick) {
       const card = btnPick.closest('.aj-card');
-      const id   = card.dataset.id;
-      const st   = card.querySelector('.aj-status');
-      const sel  = card.querySelector('.selSecao');
+      const idSetor = card?.dataset?.idsetor;
+      const st = card.querySelector('.aj-status');
+      const sel = card.querySelector('.selSecao');
       const btnSave = card.querySelector('.btnSalvarSecao');
 
-      // buscamos o idSetor atual do card (renderize no data-attr quando montar a lista)
-      const idSetor = card.dataset.idsetor;  // veja a nota abaixo
-
-      if (!idSetor) { st.textContent='sem idSetor'; st.classList.add('text-danger'); return; }
+      if (!idSetor) {
+        if (st) {
+          st.textContent = 'sem idSetor';
+          st.classList.add('text-danger');
+        }
+        return;
+      }
 
       btnPick.classList.add('d-none');
-      sel.classList.remove('d-none'); btnSave.classList.remove('d-none');
+      sel.classList.remove('d-none');
+      btnSave.classList.remove('d-none');
+
       try {
         await carregarSecoes(idSetor, sel);
       } catch (e) {
-        console.error(e); st.textContent='erro ao carregar seções'; st.classList.add('text-danger');
+        console.error(e);
+        if (st) {
+          st.textContent = 'erro ao carregar seções';
+          st.classList.add('text-danger');
+        }
       }
+      return; // evita passar para o “salvar” no mesmo clique
     }
 
-    // salvar seção escolhida
+    // Salvar seção
     const btnSave = ev.target.closest('.btnSalvarSecao');
     if (btnSave) {
       const card = btnSave.closest('.aj-card');
-      const id   = card.dataset.id;
-      console.log('ID => ',id)
-      const sel  = card.querySelector('.selSecao');
-      const st   = card.querySelector('.aj-status');
+      const id = card?.dataset?.id;
+      const st = card.querySelector('.aj-status');
+      const sel = card.querySelector('.selSecao');
 
-      st.textContent = 'salvando...';
-      try{
-        console.log('ID',id)
+      if (!id || !sel?.value) return;
+
+      if (st) st.textContent = 'salvando...';
+      try {
         const r = await fetch(`/ajuste/ajustes/produto/${id}/definir-secao`, {
-          method:'PATCH',
-          headers:{ 'Content-Type':'application/json' },
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ idSecao: sel.value })
         });
-        const j = await r.json();
-        if (j.ok) {
-          st.textContent='✔ seção definida'; st.classList.add('text-success');
-          btnSave.classList.add('d-none'); sel.classList.add('d-none');
-        } else { throw new Error(j.error || 'falha'); }
-      }catch(e){
-        console.error(e); st.textContent='✖ erro'; st.classList.add('text-danger');
+        const j = await r.json(); // não chamar r.json() duas vezes
+        if (!j.ok) throw new Error(j.error || 'falha');
+
+        if (st) {
+          st.textContent = '✔ seção definida';
+          st.classList.remove('text-muted', 'text-danger');
+          st.classList.add('text-success');
+        }
+        btnSave.classList.add('d-none');
+        sel.classList.add('d-none');
+      } catch (e) {
+        console.error(e);
+        if (st) {
+          st.textContent = '✖ erro';
+          st.classList.remove('text-muted', 'text-success');
+          st.classList.add('text-danger');
+        }
       }
     }
   });
 })();
+</script>
+{{!-- Modal de ajuste — sem dados “mock”, sem duplicações, com imagem vinda de pageurls[0] --}}<script>
+(() => {
+  console.log('3) Modal de ajuste');
 
+  const grid = document.getElementById('ajGrid');
+  const overlay = document.getElementById('ajusteOverlay');
+  if (!grid || !overlay) return;
+
+  function setText(sel, value) {
+    const el = document.querySelector(sel);
+    if (el) el.textContent = (value ?? '—');
+  }
+
+  function firstImage(doc) {
+    // usa pageurls[0]; se faltar, tenta imagemUrl; senão, placeholder
+    const u =
+      (Array.isArray(doc.pageurls) && doc.pageurls[0]) ||
+      doc.imagemUrl ||
+      'https://via.placeholder.com/640x480?text=Produto';
+    return u;
+  }
+
+  function openAjusteModal(data) {
+    // campos
+    //setText('#idProduto .value', data?._id || '—');
+    setText('#idProduto .value', data?._id || '—');
+setText('#descricaoProduto', data?.descricao || '');
+
+    // imagem
+    const thumbs = document.getElementById('idpageUrls');
+    if (thumbs) {
+      thumbs.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = firstImage(data);
+      img.alt = 'imagem';
+      thumbs.appendChild(img);
+      thumbs.classList.add('thumbs--single');
+    }
+
+    // Departamento
+    setText('#Deptatamento [name="id-depto"]', data?.departamento?.id || '—');
+    setText('#Deptatamento [name="nomeDepartamento"]', data?.departamento?.nome || '—');
+
+    // Setor
+    setText('#Setores [name="id-setor"]', data?.setor?.id || '—');
+    setText('#Setores [name="nomeDeptoSetor"]', data?.setor?.nome || '—');
+    setText('#Setores [name="idDepto"]', data?.setor?.idDepto || '—');
+    setText('#Setores [name="imagemUrl"]', data?.setor?.imagemUrl || '—');
+
+    // Seção
+    setText('#Secao [name="id-secao"]', data?.secao?.id || '—');
+    setText('#Secao [name="nameSecao"]', data?.secao?.nome || '—');
+    setText('#Secao [name="idDepto"]', data?.secao?.idDepto || '—');
+    setText('#Secao [name="idSetor"]', data?.secao?.idSetor || '—');
+
+    // abre
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+
+    document.addEventListener('keydown', onEscClose);
+  }
+
+  function closeAjusteModal() {
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.removeEventListener('keydown', onEscClose);
+  }
+  function onEscClose(e) {
+    if (e.key === 'Escape') closeAjusteModal();
+  }
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeAjusteModal();
+  });
+
+  // Abre modal a partir do botão de cada card
+  grid.addEventListener('click', async (ev) => {
+    const btn = ev.target.closest('.btnOpenModal');
+    if (!btn) return;
+
+    const id = btn.dataset.id;
+    if (!id) return;
+
+    try {
+      const r = await fetch(`/ajuste/ajustes/produto/${id}/detalhe`, { cache: 'no-store' });
+      const j = await r.json(); // <- ESSENCIAL
+      if (!j.ok) throw new Error(j.error || 'falha');
+
+      openAjusteModal(j.data);
+      // se quiser manter o evento global, ele está aqui:
+      window.dispatchEvent(new CustomEvent('ajuste:open', { detail: j.data }));
+    } catch (e) {
+      console.error('erro ao abrir modal', e);
+      alert('Não consegui carregar os dados desse produto.');
+    }
+  });
+
+  // Listener opcional do evento (se em algum lugar você quiser “ouvir”)
+  window.addEventListener('ajuste:open', (e) => {
+    // openAjusteModal(e.detail);  // descomente se quiser dirigir pelo evento
+  });
+})();
 </script>

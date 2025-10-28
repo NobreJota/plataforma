@@ -11,7 +11,7 @@ const { Types } = require('mongoose');
 const { S3Client, PutObjectCommand, ListObjectsV2Command } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const ProdutoImagem = require("../../models/produtoImagem");
-const MConstrucao = require("../../models/mconstrucao");
+const MConstrucao = require("../../models/ddocumento");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
@@ -155,7 +155,7 @@ router.post("/imagem/salvar", async (req, res) => {
       size: Number(size) || 0
     });
 
-    // 2) adiciona a URL no produto (m_construcao.pageurls)
+    // 2) adiciona a URL no produto (ddocumento.pageurls)
     if (codigoId) {
       console.log('codigoId')
       await MConstrucao.findByIdAndUpdate(

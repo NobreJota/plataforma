@@ -488,7 +488,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
         <button id="DevClear">Limpar</button>
       </div>
     </div>
-    <pre class="log" id="DevLog"></pre>
+    {{!-- <pre class="log" id="DevLog"></pre> --}}
   </main>
 </div>
 
@@ -665,7 +665,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
   </div>
 </div>
 <!-- Modal para cadastro -->
-<div   id="cadastroProdutoModal" class="openModal">
+{{!-- <div   id="cadastroProdutoModal" class="openModal">
   <div
     style="background:#959292; width:50%; height:97vh; padding:20px; border-radius:10px; box-shadow:0 5px 10px #00000080;position: relative;margin: auto;">
     <button type="button" id="fecharForm" style="position: absolute;top: 5px;right: 5px;border: none;background: transparent;font-size: 30px;cursor: pointer;" onclick="closeCadastroModal()">&times;</button>
@@ -758,12 +758,12 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
             {{!-- ========================================================================== --}}
             <div style="display: flex;flex-direction: row;justify-content:space-around;justify-items: center;padding: o 10px 0 10px;margin-bottom: 10px;">
                 <button type="button" class="btn btn-secondary" onclick="closeCadastroModal()">Cancelar</button>
-                <button id="btnSalvar" type="submit" class="btn btn-primary">Salvar</button>
+                <button id="btnSalvar" type="subXmit" class="btn btn-primary">Salvar</button>
             </div>
           </form>
     </div>
   </div>
-</div>
+</div> --}}
 <!-- Modal Produto -->
 <div id="modalProdutoVinculo" class="modal fade"  tabindex="-1">
    <div class="modal-dialog">
@@ -1166,181 +1166,9 @@ window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("cadastroProdutoModal").style.display="block";
   }  
 </script>
-{{!-- BUSCAR FORNECEDORES QUANDO O INPUTCODIGO TIVER FOCO --}}
-<script>
-  let fornecedoresCarregados = false;
+ 
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const inputCodigo = document.getElementById("cadastroCodigo");
-    let lojistaId=document.getElementById("IddoLojista").value;
-    //{{!-- Pegando os fornecedores cadastradoLoja ID --}}
-    if (inputCodigo) {
-      inputCodigo.addEventListener("focus", async () => {
-        if (!fornecedoresCarregados) {
-          try {
-            const response = await fetch(`/fornec/fornecqlojista/${lojistaId}`);
-            const lista = await response.json();
-            console.log('[ 912 ]');
-            console.log('',lista);
-            console.log('');
-            const select = document.getElementById("selectFornecedores");
 
-            select.innerHTML = '<option disabled selected>Selecione um fornecedor</option>';
-
-            lista.forEach(dep => {
-              const opt = document.createElement("option");
-              opt.value = dep._id;
-              opt.textContent = dep.marca;
-              select.appendChild(opt);
-            });
-
-            fornecedoresCarregados = true; // para não buscar de novo
-          } catch (err) {
-            console.error("Erro ao buscar fornecedores:", err);
-          }
-        }
-      });
-    }
-  });
-</script>
- {{!-- BUSCAR OS DEPARTAMENTOS QUANDO O INPUTCODIGO ADQUIRIR FOCO --}}
-<script>
-  let departamentosCarregados = false;
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const inputCodigo = document.getElementById("cadastroDescricao");
-    let idLoja=document.getElementById("IddoLojista").value;
-    ///////////////////////////////////////////////
-    
-    if (inputCodigo) {
-      inputCodigo.addEventListener("focus", async () => {
-         console.log('ALÕ!')   
-        if (!departamentosCarregados) {
-          try {
-            console.log('');
-            console.log('=> 1232 => cadastroDescrição ganhou foco =>  idLoja',idLoja);
-            console.log('');
-            const response = await fetch(`/produto/lojistadepartamentos/${idLoja}`);
-            const departamentos = await response.json();
-            console.log(' [ 1236 ] => departamentos',departamentos);
-            console.log('');
-            const select = document.getElementById("selDepartamento");
-            //console.log(select);
-            // Limpa o <select> antes de preencher
-            select.innerHTML = '<option disabled selected>Selecione um departamento</option>';
-            let cor='#100e0e'
-            select.style.backgroundColor=cor;
-            select.style.color="pink";
-            // Preenche o select com os dados recebidos
-            departamentos.forEach(dep => {
-              const opt = document.createElement("option");
-              opt.value = dep._id;
-              opt.textContent = dep.nomeDepartamento;
-              opt.classList.add("option-roxa");
-              select.appendChild(opt);
-            });
-
-            select.style.backgroundColor="black";
-            select.style.color="red";
-
-            departamentosCarregados = true;
-          } catch (err) {
-            console.error("Erro ao carregar departamentos:", err);
-          }
-        }
-      });
-    }
-  });
-</script>
-{{!-- Selecionado um departamento para buscar aos setores pertinentes --}}
-<script>
-  //Quando se seleciona um departamento então vai-se buscar os setores pertinentes aquele departamento.
-document.getElementById('selDepartamento').addEventListener('change', async function () {
-  console.log('123456')
-  const departamentoId = this.value;
-  console.log('departamentoId',this.value)
-  const setorSelect = document.getElementById('selSetor');
-  setorSelect.innerHTML = '<option value="">Carregando setores...</option>';
-
-  if (departamentoId) {
-    try {
-      console.log('-----------------');
-      console.log('-----------------');
-      const response = await fetch(`/produto/setores/${departamentoId}`);
-      //const setores = await response.json();
-       const data = await response.json();
-      // console.log('data recebido =>', data);
-      const setores = Array.isArray(data) ? data : (data.setores || []); 
-      //const setores = Array.isArray(data) ? data : (data.setores || []);  // pega o array correto
-      console.log('array de setores =>', setores);
-      if (Array.isArray(setores)) {
-        setorSelect.innerHTML = '<option value="">Selecione o setor:</option>';
-        setores.forEach((setor) => {
-            const opt = document.createElement('option');
-            opt.value = String(setor.idSetor);                // garante string
-            opt.textContent = setor.nomeDeptoSetor || ''; // texto visível
-            opt.classList.add('option-roxa');
-            setorSelect.appendChild(opt);
-            //console.log(opt)
-      });
-      } else {
-        setorSelect.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
-      }
-    } catch (err) {
-      setorSelect.innerHTML = '<option value="">Erro ao buscar setores</option>';
-      console.error(err);
-    }
-  } else {
-    setorSelect.innerHTML = '<option value="">Selecione o setor:</option>';
-  }
-});
-
-//!-- Quando se seleciona um setor no ComboSetor então vai buscar as seções pertinentes --}}
-document.getElementById('selSetor').addEventListener('change', async function () {
-  const setorId = this.value;
-  const setorSecao = document.getElementById('selSecao');
-  setorSecao.innerHTML = '<option value="">Carregando setores...</option>';
-  if (setorId) {
-    try {
-      console.log('-----------------');
-      console.log(' [ 1038 ]');
-      console.log('-----------------');
-      const { itens = [] } = await fetch(`/produto/secoes/${setorId}`);
-      const secoes = await response.json();
-      console.log(' seções ==>',secoes);
-      itens.forEach(secao => {
-        const opt = document.createElement('option');
-        opt.value = secao._id;
-        opt.textContent = secao.nameSecao;
-        setorSecao.appendChild(opt);
-      });
-
-      //if (Array.isArray(secoes)) {
-      //   setorSecao.innerHTML = '<option value="">Selecione o setor:</option>';
-      //   secoes.forEach(secao => {
-      //      const opt = document.createElement('option');
-      //      opt.value = secao._id;
-      //      opt.textContent = secao.nomeSecao;
-      //      opt.classList.add("option-roxa");
-      //      setorSecao.appendChild(opt);
-
-      //      setorSecao.style.backgroundColor="blue";
-      //      setorSecao.style.color="red";
-      //   });
-      } else {
-        setorSecao.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
-      }
-    }catch(e){
-      console.log('Error ao carregar a seção!')
-    }
-  }
-
-})
-</script>
-{{!-- modalContent_SetorSecao --}}
-<script>
-  
-</script>
 {{!-- modalContent-SetorSecao --}}
 <script>
   document.addEventListener("DOMContentLoaded", function () {

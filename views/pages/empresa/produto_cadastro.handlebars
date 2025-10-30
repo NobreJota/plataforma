@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">        
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    {{!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    {{!-- <link rel="stylesheet" href="/css/fontawesome.min.css"> --}}
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/js/empresa/cadastro.js">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {{!-- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> --}}
+    {{!-- <script src=""></script> --}}
+  <script defer>
+      window.colacerto = function () { }
+  </script>
+    <title>Rotaes  : Admin : lojista</title>
+    <style>
+        * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      position: relative;
+    }
+   
+    .foo{
+      writing-mode: vertical-rl;
+    }
+
+    #main {
+      width: 100vw;
+      height: 100vh; /* altura para visualização completa */
+      background-color: #5e5c5c; /* apenas para visualização */
+      position: relative; /* necessário para iniciar o contexto de empilhamento */
+      z-index: 1; /* camada inferior */
+    }
+
+    #menuLateral {
+      width: auto;
+      height: 94vh;
+      position: absolute;
+      top: 3.8vh;
+      left: 0;
+      display: flex;
+      flex-direction: row;
+      z-index: 10;
+      background-color: #fff;
+    }
+
+    #menulista {
+       width: 13vw;
+       height: 96vh;
+       background-color:transparent;
+       margin-top: 2px;
+       transition: margin-left 0.4s ease;
+       margin-left: -10vw; /* Escondido inicialmente */
+    }
+
+    #faixaVertical {
+      width: 2vw;
+      height: 96vh;
+      background-color: #295ee4;
+      z-index: 800;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+
+    #H2menuLateral {
+      writing-mode: vertical-rl; /* vertical (de baixo para cima) */
+      transform: rotate(180deg); /* inverte para cima para baixo */
+      font-size: 1vw;
+      color: #13e236;
+      margin: 0;
+      text-align: center;
+      font-weight: 100;
+      margin-left: .4vw;
+    }
+
+    .bck-flex{
+      background-color:#ffffff;height: 100vh;
+    }
+
+    .grade{
+      width:calc(100vw - 2.5vw);
+      height: 95vh;
+      background-color: #ffffff;
+      margin:3.8vh 0px 0px 2.1vw;
+      color:#295ee4
+    }
+
+    .edit-row {
+      background-color: #f6990e; /* Amarelo claro */
+    }
+
+    .delete-row {
+      background-color: #c40303; /* Vermelho claro */
+    }
+
+    .btn-warning{
+       background-color: #b87004;
+       color:#fff;
+    }
+
+    .btn-danger{
+       background-color: #f90532;
+       color:#fff;
+    }
+
+    .selected-row {
+      background-color: unset;
+    }
+
+    
+    </style>
+    <style>
+        /* Estilos genéricos da tabela */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: #b80b0b;
+       text-align:center;
+    }
+
+
+    td {
+      border: 1px solid #ddd;
+      padding-left: 8px;
+      text-align:left;
+    }
+
+    
+    button {
+      cursor: pointer;
+    }
+
+    .openModal{
+    display:block;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:#00000080;
+    justify-content:center;
+    align-items:flex-start;   /* cola no topo em notebook */
+    padding-top:30px;         /* respiro no topo */
+    z-index:9999;
+  }
+    </style>
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+</head>
+<script>
+  function myFunction(n){
+    console.log(3434)
+  }
+</script>
+<body  onload="myFunction(1)" style="background-color: #ffffff;">
+        
+        <div   id="cadastroProdutoModal" class="openModal">
+        <div
+            style="background:#959292; width:50%; height:97vh; padding:20px; border-radius:10px; box-shadow:0 5px 10px #00000080;position: relative;margin: auto;">
+            <button type="button" id="fecharForm" style="position: absolute;top: 5px;right: 5px;border: none;background: transparent;font-size: 30px;cursor: pointer;" onclick="closeCadastroModal()">&times;</button>
+            <div style="width: 98%;height: 92vh;margin: auto;background-color: #0b2f83;overflow: scroll;margin-top: 2.5vh;padding: 5px;">
+            <h4 style="font-weight: 200;color: #ffffff;">Cadastro de produto</h4>
+                <form id="cadastroProdutoForm" style="background-color: #295ee4;color:#fff;position: relative;height: 96vh;" >
+                    <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #df061f;display:none;">
+                    <div style="margin-bottom:10px;display:none;">
+                    <label style="color:white">Marca loja:</label>
+                    <label id="cadastroMarca" type="text"  name="marca" class="form-control" style="background-color: #ec7018;" >{{lojista.marca}}</label>
+                    </div>
+                    <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+                        <label style="background-color:transparent;width: 800px;padding: 5px;color:#fff">Para ter mais acesso a departamentos entrar em contato com administrador:</label>
+                        <label style="background-color: #df061f;width: 150px;padding: 5px;">Departamento:</label>
+                        <select name="departamento_id" id="selDepartamento" class="form-select form-select-sm" required>
+                            <option value="">Selecione o departamento</option>
+                            {{#each departamentos}}
+                                <option value="{{_id}}">{{nomeDepartamento}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    {{!-- ========================================================================== --}}
+                    <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+                        <label for="setor" style="background-color: #df061f;width: 150px;padding: 5px;">Setor:</label>
+                        <select name="setor_id" id="selSetor" class="form-select form-select-sm" required >
+                            <option value="">Selecione o setor</option>
+                        </select>
+                    </div>
+                    {{!-- ========================================================================== --}}
+                    <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+                    <label for="divSelect" style="background-color: #df061f;width: 150px;padding: 5px;">Seção:</label>
+                        <select name="secao_id" id="selSecao" class="form-select form-select-sm" required disabled>
+                            <option value="">Selecione a seção</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:10px;background-color blueviolet;">
+                    <label>Código:</label>
+                    <input id="cadastroCodigo" type="text"  name="codigo" class="form-control" tabindex="0">
+                    </div>
+                
+                    <div style="margin-bottom:10px;">
+                    <label>Descrição:</label>
+                    <input id="cadastroDescricao" type="text"  name="descricao" class="form-control">
+                    <small id="descricaoErr" class="text-warning" hidden></small>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                    <label>Complemento:</label>
+                    <input id="cadastroComplemento" type="text"  name="complemento" class="form-control">
+                    </div>
+                    <div style="margin-bottom:10px;">
+                    <label>Referência:</label>
+                    <input id="cadastroReferencia" type="text"  name="referencia" class="form-control">
+                    </div>
+                    <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
+                    <label style="background-color: #df061f;width: 85px;padding: 5px;">Fornecedor:</label>
+                    <select id="selectFornecedores" name="fornecedores" style="height: 3.2vh;width:70%;margin: auto;margin-left: 6px;margin-top: 3px;">
+                            <option value="">Selecione:</option>
+                                {{#each f}}
+                                    <option value="{{_id}}">{{marca}}</option>
+                                {{/each}}
+                    </select>
+                    </div>
+                    {{!-- Os nomes cidade e bairro constam  na ficha do produto para facilitar a consulta --}}
+                    <div style="background-color:transparent;margin-bottom: 12px;margin-top: 6px;display: block;">
+                    <label style="background-color: #0611df;width: 85px;padding: 5px;">Cidade:</label>
+                    <label id="cadastroCidade" class="CidadeBairro" style="margin-top: -6px;padding-top: 0px;">{{lojista.cidade}}</label>
+                    </div>
+                    <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;display:block;">
+                    <label style="background-color: #0611df;width: 85px;padding: 5px;">Bairro:</label>
+                    <label id="cadastroBairro" class="CidadeBairro" style="background-color: orange;color: #fff;">{{lojista.bairro}}</label>
+                    </div>
+                    <div style="margin-bottom:10px;">
+                    <label>Quantidade:</label>
+                    <input id="cadastroQte" type="number"  name="qte" class="form-control">
+                    </div>
+                    <div style="margin-bottom:10px;">
+                    <label>Preço Custo:</label>
+                    <input id="cadastroPrecoCusto" type="number" name="precocusto" step="0.01" min="0" lang="pt-BR"   class="form-control">
+                    </div>
+                    <div style="margin-bottom:10px;">
+                    <label>Preço Vista:</label>
+                    <input id="cadastroPrecoVista" type="number" name="precovista" step="0.01" min="0" lang="pt-BR"   class="form-control">
+                    </div>
+                    <div style="margin-bottom:10px;">
+                    <label>Preço Prazo:</label>
+                    <input id="cadastroPrecoPrazo" type="number" name="precoprazo" step="0.01" min="0" lang="pt-BR"   class="form-control">
+                    </div>
+                    {{!-- ========================================================================== --}}
+                    
+                    {{!-- ========================================================================== --}}
+                    <div style="display: flex;flex-direction: row;justify-content:space-around;justify-items: center;padding: o 10px 0 10px;margin-bottom: 10px;">
+                        <button type="button" class="btn btn-secondary" onclick="closeCadastroModal()">Cancelar</button>
+                        <button id="btnSalvar" type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+        <script src="/js/dashboard.js"></script>
+
+        {{!-- <script type="module" src="/js/modal-imagem.js"></script> --}}
+        {{!-- <script defer src="/js/modal-imagem.js"></script> --}}
+
+        <script src="/js/empresa/bcoimagem.js" defer></script>
+        <script src="/js/empresa/cadastro.js" defer></script>
+        <script src="/js/empresa/editecadastro.js" defer></script>
+        <script src="/js/empresa/similares.js" defer></script>
+
+        <script src="/js/rotinas/limpaSelect.js"></script>
+        <script src="/js/rotinas/produto-ImageModal.js"></script>
+        <script src="/js/rotinas/produto-VinculoModal.js"></script>
+        <script src="/js/rotinas/produto-editModal.js"></script>
+        <script src="/js/rotinas/produto-DeleteModal.js"></script>
+        <script src="/js/rotinas/AcaoComDataset.js"></script>
+
+    </div>  
+</body>
+</html>
+{{!-- BUSCAR OS DEPARTAMENTOS QUANDO O INPUTCODIGO ADQUIRIR FOCO --}}
+<script>
+  let departamentosCarregados = false;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const inputCodigo = document.getElementById("cadastroDescricao");
+    let idLoja=document.getElementById("IddoLojista").value;
+    ///////////////////////////////////////////////
+    
+    if (inputCodigo) {
+      inputCodigo.addEventListener("focus", async () => {
+         console.log('ALÕ!')   
+        if (!departamentosCarregados) {
+          try {
+            console.log('');
+            console.log('=> 1232 => cadastroDescrição ganhou foco =>  idLoja',idLoja);
+            console.log('');
+            const response = await fetch(`/produto/lojistadepartamentos/${idLoja}`);
+            const departamentos = await response.json();
+            console.log(' [ 1236 ] => departamentos',departamentos);
+            console.log('');
+            const select = document.getElementById("selDepartamento");
+            console.log('1000')
+            select.innerHTML = '<option disabled selected>Selecione um departamento</option>';
+            let cor='#100e0e'
+            select.style.backgroundColor=cor;
+            select.style.color="pink";
+            // Preenche o select com os dados recebidos
+            departamentos.forEach(dep => {
+              const opt = document.createElement("option");
+              opt.value = dep._id;
+              opt.textContent = dep.nomeDepartamento;
+              opt.classList.add("option-roxa");
+              select.appendChild(opt);
+            });
+            console.log('2000')
+            select.style.backgroundColor="black";
+            select.style.color="red";
+
+            departamentosCarregados = true;
+          } catch (err) {
+            console.error("Erro ao carregar departamentos:", err);
+          }
+        }
+      });
+    }
+  });
+</script>
+{{!-- Selecionado um departamento para buscar aos setores pertinentes --}}
+<script>
+  //Quando se seleciona um departamento então vai-se buscar os setores pertinentes aquele departamento.
+document.getElementById('selDepartamento').addEventListener('change', async function () {
+  console.log('123456')
+  const departamentoId = this.value;
+  console.log('departamentoId',this.value)
+  const setorSelect = document.getElementById('selSetor');
+  setorSelect.innerHTML = '<option value="">Carregando setores...</option>';
+
+  if (departamentoId) {
+    try {
+      console.log('--------10001---------');
+      console.log('-----------------');
+      const response = await fetch(`/produto/setores/${departamentoId}`);
+      //const setores = await response.json();
+       const data = await response.json();
+      // console.log('data recebido =>', data);
+      const setores = Array.isArray(data) ? data : (data.setores || []); 
+      //const setores = Array.isArray(data) ? data : (data.setores || []);  // pega o array correto
+      console.log('array de setores =>', setores);
+      if (Array.isArray(setores)) {
+        setorSelect.innerHTML = '<option value="">Selecione o setor:</option>';
+        setores.forEach((setor) => {
+            const opt = document.createElement('option');
+            opt.value = String(setor.idSetor);                // garante string
+            opt.textContent = setor.nomeDeptoSetor || ''; // texto visível
+            opt.classList.add('option-roxa');
+            setorSelect.appendChild(opt);
+            //console.log(opt)
+      });
+      } else {
+        setorSelect.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
+      }
+    } catch (err) {
+      setorSelect.innerHTML = '<option value="">Erro ao buscar setores</option>';
+      console.error(err);
+    }
+  } else {
+    setorSelect.innerHTML = '<option value="">Selecione o setor:</option>';
+  }
+});
+
+    //!-- Quando se seleciona um setor no ComboSetor então vai buscar as seções pertinentes --}}
+    document.getElementById('selSetor').addEventListener('change', async function () {
+      const setorId = this.value;
+      const setorSecao = document.getElementById('selSecao');
+      setorSecao.innerHTML = '<option value="">Carregando setores...</option>';
+      if (setorId) {
+        try {
+          console.log('-----------------');
+          console.log(' [ 1038 ]');
+          console.log('-----------------');
+          const { itens = [] } =await(await fetch(`/produto/secoes/${setorId}`)).json();
+          //const secoes = await response.json();
+          try{
+              setorSecao.innerHTML = '<option value="">Selecione a seção:</option>';
+              itens.forEach(secao => {
+                const opt = document.createElement('option');
+                opt.value = secao._id;
+                opt.textContent = secao.nameSecao;
+                setorSecao.appendChild(opt);
+              });
+
+          
+          } else {
+            setorSecao.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
+          }
+        }catch(e){
+          console.log('Error ao carregar a seção!')
+        }
+      }
+
+})
+</script>
+{{!-- BUSCAR FORNECEDORES QUANDO O INPUTCODIGO TIVER FOCO --}}
+<script>
+  let fornecedoresCarregados = false;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const inputCodigo = document.getElementById("cadastroCodigo");
+    let lojistaId=document.getElementById("IddoLojista").value;
+    //{{!-- Pegando os fornecedores cadastradoLoja ID --}}
+    if (inputCodigo) {
+      inputCodigo.addEventListener("focus", async () => {
+        if (!fornecedoresCarregados) {
+          try {
+            const response = await fetch(`/fornec/fornecqlojista/${lojistaId}`);
+            const lista = await response.json();
+            console.log('[ 912 ]');
+            console.log('',lista);
+            console.log('');
+            const select = document.getElementById("selectFornecedores");
+
+            select.innerHTML = '<option disabled selected>Selecione um fornecedor</option>';
+
+            lista.forEach(dep => {
+              const opt = document.createElement("option");
+              opt.value = dep._id;
+              opt.textContent = dep.marca;
+              select.appendChild(opt);
+            });
+
+            fornecedoresCarregados = true; // para não buscar de novo
+          } catch (err) {
+            console.error("Erro ao buscar fornecedores:", err);
+          }
+        }
+      });
+    }
+  });
+</script>

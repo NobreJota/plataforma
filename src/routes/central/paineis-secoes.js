@@ -18,7 +18,7 @@ const upload = multer({ storage });
 // POST /paineis/upload/image  -> { url: '/uploads/xxxxx.png' }
 router.post('/upload/image', upload.single('image'), (req, res) => {
   console.log('');
-  console.log('ABC-300');
+  console.log(' [ 21 src/routes/central/paineis-secoes.js//upolad/image',req.file);
   console.log('');
   if (!req.file) return res.status(400).json({ error: 'arquivo não enviado' });
   res.json({ url: `/uploads/${req.file.filename}` });
@@ -26,9 +26,10 @@ router.post('/upload/image', upload.single('image'), (req, res) => {
 
 // PATCH /paineis/secao/:docId/item/:idx/imagem
 router.patch('/secao/:docId/item/:idx/imagem', async (req, res) => {
-  console.log('1200',req.params)
   console.log('');
-  console.log('1200',req.body)
+  console.log(' [ 30 ] src/toutes/central/paineis-secoes.js//secao/:dicit/item/:idx/imagem',req.params)
+  console.log('');
+  console.log(' [ 32 ] req.body',req.body)
   try{
   const { docId } = req.params;                 // id do doc em deptosecoes
     const { imagemUrl } = req.body;               // '/uploads/....png'
@@ -54,7 +55,9 @@ router.patch('/secao/:docId/item/:idx/imagem', async (req, res) => {
 
 // GET /paineis/secoes?dep=<ObjectId>
 router.get('/secoes', async (req, res) => {
-  console.log('9000')
+  console.log('');
+  console.log(' 59 src/routes/central/paneis-secoes.js//secoes')
+  console.log('');
   try {
     const departamentos = await Departamento.find()
       .collation({ locale: 'pt', strength: 1 })

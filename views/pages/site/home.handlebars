@@ -1,3 +1,16 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ 'Sua revista eletrônica' }}</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        referrerpolicy="no-referrer" />
+
 <style>
   .divMenu{
     width: 14.28%;background-color: cornflowerblue;color:white;padding: 4px;text-align: center;
@@ -109,7 +122,7 @@
 }
 </style>
 <style>
-  .quickbar { padding-top: 0px; padding-bottom: 10px;background-color: blueviolet; } 
+  .quickbar { padding-top: 0px; padding-bottom: 10px; } 
 </style>
 <style>
 #sugestoesLista{
@@ -178,7 +191,7 @@
   flex:1 1 160px;           /* ocupa largura; se tiver 1 só, expande a linha inteira */
   text-align:center;
   background:#5d87e6; color:#fff;
-  border-radius:6px; padding:8px 12px; border:0;
+  border-radius:6px;  border:0;
   text-decoration:none; font-weight:600;
 }
 .btn-depto:hover{ filter:brightness(0.95); }
@@ -259,7 +272,9 @@
 .card-product img { max-height: 220px; }
 @media (min-width: 1200px){ .card-product img { max-height: 200px; } }
 </style>
-<header class="topbar" style="background-color: #101010;">
+</head>
+<body>
+<header class="topbar" style="background-color: #06e006;">
         <!-- LOGO -->
         <a class="brand" href="/" style="background-color:transparent;">
            <span>Rota</span><span class="brand-accent" >es</span>
@@ -294,7 +309,7 @@
 <div class="quickbar bg-light border-bottom" >
   
   <div class="container my-2">
-      <div class="home-depto-bar" role="toolbar" aria-label="Departamentos" style="background-color: #900;">
+      <div class="home-depto-bar" role="toolbar" aria-label="Departamentos" >
         {{#if departamentosAtivos.length}}
           {{#each departamentosAtivos}}
             {{!-- botão navega mudando ?segmento= --}}
@@ -333,7 +348,7 @@
   </section>
 </div>
 <div id="secoesPane" class="container my-3" hidden></div>
-<div id="produtos" class="container my-4" style="background-color: #900;display: none;">
+<div id="produtos" class="container my-4" style="background-color: #fbfafa;display: none;">
         {{#if banner}}
             <div class="row mb-3">
               <div class="col">
@@ -381,52 +396,52 @@
 </div>
 
 
- {{!-- COMEÇO DO JAVASCRIPT --}}
+ {{!-- COMEÇO DO JAVASCRIPT TRATA DE BAIRROS E--}}
 <script>
-  const selCidade = document.getElementById('selectCidade');
-  const selBairro = document.getElementById('selectBairro');
+    const selCidade = document.getElementById('selectCidade');
+    const selBairro = document.getElementById('selectBairro');
 
-document.addEventListener('DOMContentLoaded', () => {
-  if (selCidade && selCidade.value) carregarBairros(selCidade.value);
-});
+    document.addEventListener('DOMContentLoaded', () => {
+      if (selCidade && selCidade.value) carregarBairros(selCidade.value);
+    });
 
-selCidade.addEventListener('change', () => carregarBairros(selCidade.value));
+    selCidade.addEventListener('change', () => carregarBairros(selCidade.value));
 
-async function carregarBairros(cidade){
-  console.log('');
-  console.log(' [ 225 ]',cidade);
-  console.log('');
-  selBairro.innerHTML = '<option value="">Carregando...</option>';
-  selBairro.disabled = true;
+    async function carregarBairros(cidade){
+      console.log('');
+      console.log(' [ 225 ]',cidade);
+      console.log('');
+      selBairro.innerHTML = '<option value="">Carregando...</option>';
+      selBairro.disabled = true;
 
-  if (!cidade){
-    selBairro.innerHTML = '<option value="">Bairro</option>';
-    return;
-  }
-  console.log('');
-  console.log('');
-  console.log('[ 236 ]');
-  console.log('');
-  try{
-    // ajuste a rota ao seu router
-    const r = await fetch(`/bairros?cidade=${encodeURIComponent(cidade)}`);
-   
-    const bairros = await r.json();
-   
-    const itens = Array.isArray(bairros) ? bairros
-            : (Array.isArray(bairros?.items) ? bairros.items : []);
+      if (!cidade){
+        selBairro.innerHTML = '<option value="">Bairro</option>';
+        return;
+      }
+      console.log('');
+      console.log('');
+      console.log('[ 236 ]');
+      console.log('');
+      try{
+        // ajuste a rota ao seu router
+        const r = await fetch(`/bairros?cidade=${encodeURIComponent(cidade)}`);
+      
+        const bairros = await r.json();
+      
+        const itens = Array.isArray(bairros) ? bairros
+                : (Array.isArray(bairros?.items) ? bairros.items : []);
 
-    const selecionado = '{{bairroSelecionado}}';
-    
-    selBairro.innerHTML = '<option value="">Bairro</option>' +
-      itens.map(b => `<option value="${b}" ${b === "{{bairroSelecionado}}" ? 'selected' : ''}>${b}</option>`).join('');
+        const selecionado = '{{bairroSelecionado}}';
+        
+        selBairro.innerHTML = '<option value="">Bairro</option>' +
+          itens.map(b => `<option value="${b}" ${b === "{{bairroSelecionado}}" ? 'selected' : ''}>${b}</option>`).join('');
 
-    selBairro.disabled = false;
-  }catch(e){
-    console.error(e);
-    selBairro.innerHTML = '<option value="">Bairro</option>';
-  }
-}
+        selBairro.disabled = false;
+      }catch(e){
+        console.error(e);
+        selBairro.innerHTML = '<option value="">Bairro</option>';
+      }
+    }
 </script>
 <script>
       const inputBusca = document.querySelector('input[name="q"]');
@@ -453,8 +468,8 @@ async function carregarBairros(cidade){
 });
 
 </script>
+{{!-- //// ===== Autocomplete leve ===== --}}
 <script>
-  
 // ===== Autocomplete leve =====
 (() => {
   const input = document.querySelector('input[name="q"]');
@@ -548,7 +563,7 @@ async function carregarBairros(cidade){
   });
 })();
 </script>
-
+{{!-- Sugestão lista --}}
 <script>
   document.addEventListener('DOMContentLoaded', () => {
   const inputBusca = document.querySelector('input[name="q"]');

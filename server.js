@@ -24,6 +24,7 @@ app.use('/uploads', require('express').static(path.join(process.cwd(), 'uploads'
 // -------------------------------------------------------------------
 app.use(express.static(path.join(__dirname, 'public')));      // /css, /js, /img
 app.use('/imagens', express.static(path.join(__dirname, 'imagens')));
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 // -------------------------------------------------------------------
 // Middlewares
@@ -125,13 +126,15 @@ const lojista     = require('./src/routes/central/lojista');
 const paineis     = require('./src/routes/central/paineis');
 const paineisSecoes = require('./src/routes/central/paineis-secoes');
 
-const home       = require('./src/routes/site/home');
+const home        = require('./src/routes/site/home');
 const usuarioloja = require('./src/routes/empresa/usuario');
 const loja        = require('./src/routes/empresa/rotina');
 const produto     = require('./src/routes/empresa/produtos');
+const cadproduto  = require("./src/routes/empresa/produto_cadastro")
 const fornec      = require('./src/routes/empresa/fornecedores');
 const gravafoto   = require('./src/routes/empresa/upload_foto');
 const ajuste      = require('./src/routes/empresa/ajuste');
+
 
 
 app.use('/admin', admin);
@@ -147,6 +150,7 @@ app.use('/', home);
 app.use('/usuarioloja', usuarioloja);
 app.use('/loja', loja);
 app.use('/produto', produto);
+app.use('/cadproduto',cadproduto);
 app.use('/gravafoto', gravafoto);
 app.use('/fornec', fornec);
 app.use('/simiproduto', simiproduto);

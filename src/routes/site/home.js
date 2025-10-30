@@ -31,7 +31,8 @@ const PLACEHOLDER_IMG =
           font-family="Arial" font-size="24" fill="#6b7280">Atividade</text>
   </svg>`);
   //???????????????????????????????????????????????????????????????????????????????????
-// GET /
+
+// CARREGA A PADE COMPRAS ONLINE COMO PADRÂO /
 router.get('/', async (req, res) => {
      try {
     // 1️⃣ todos os departamentos ativados → botões do topo
@@ -39,7 +40,7 @@ router.get('/', async (req, res) => {
       .find({ ativado: 1 }, 'nomeDepartamento')
       .sort({ nomeDepartamento: 1 })
       .lean();
-
+    console.log('2000',depsAtivos)
     // 2️⃣ define departamento alvo
     const segmentoIn = (req.query.segmento || '').trim();
     const isFirstLoad = !segmentoIn;
@@ -54,7 +55,7 @@ router.get('/', async (req, res) => {
 
     if (!depAlvo?._id) {
       return res.render('pages/site/home.handlebars', {
-        layout: 'site/main.handlebars',
+        layout: '',
         departamentosAtivos: depsAtivos,
         segmentoAtual: 'Departamento não encontrado',
         atividades: []
@@ -99,6 +100,7 @@ router.get('/', async (req, res) => {
 
 });
 
+// CARREGA OS PRODUTOS DA SECAO
 router.get('/produtos', async (req, res) => {
   
   try {
@@ -198,9 +200,10 @@ router.get('/produtos', async (req, res) => {
   }
 });
 
+// BUSCA OS BAIRRO DO LOJISTA
 router.get('/bairros', async (req, res) => {
   console.log('');
-  console.log( ' [ 112 ] => src/routes/site/home.js')
+  console.log( ' [ 205 ] => src/routes/site/home.js//bairros')
   console.log('');
   ////////////////////////////////////////////////////////////
   try {
@@ -226,6 +229,7 @@ router.get('/bairros', async (req, res) => {
   }
 });
 
+// VAI BUSCAR OS PRODUTOS DE ACORDO COM A CIDADE BAIRRO
 router.get('/buscar', async (req, res) => {
   try {
     const { q = '', municipio = '', bairro = '' } = req.query;
@@ -292,14 +296,15 @@ router.get('/buscar-sugestoes', async (req, res) => {
 });
 
 router.get('/setor/:idSetor', async (req, res) => {
-  console.log('2000?');
-
+  console.log('');
+  console.log(' [ 299 ] src/routes/site/home.js//setor/:idSetor');
+  console.log('',req.params);
   try {
-        const idSetor=req.params;
-        const n=req.params.idSetor
-        console.log('vr de N',n)
+        const idSetor=req.params.idSetor
+        //const n=req.params.idSetor//
+        //console.log('vr de N',n)
         const setor = await DeptoSetor
-          .findById(n, 'nomeDeptoSetor idDepto')
+          .findById(idSetor, 'nomeDeptoSetor idDepto')
           .populate({ path: 'idDepto', select: 'nomeDepartamento' })
           .lean();
 
@@ -310,7 +315,7 @@ router.get('/setor/:idSetor', async (req, res) => {
 
        const raw = await DeptoSecao
                   .find(
-                    { idSetor: n, imagemUrl: { $regex: IMG_HTTP_RX } },
+                    { idSetor: idSetor, imagemUrl: { $regex: IMG_HTTP_RX } },
                     '_id nameSecao imagemUrl'         // <-- no schema é nameSecao
                   )
                   .sort({ nameSecao: 1 })

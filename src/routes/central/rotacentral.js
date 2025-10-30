@@ -47,10 +47,11 @@ router.get("/por-segmento/:id", async (req, res) => {
 });
 
 router.get("/secoes/:setorId", async (req, res) => {
+   console.log('2345');
     try {
     const idSetor = req.params.setorId;
     console.log('');
-    console.log('B ==> ',idSetor);
+    console.log('idSetor_Seção ==> ',idSetor);
     console.log('');
     const rows = await DeptoSecoes
       .find({ idSetor }, 'nameSecao')        // só o campo que você precisa
@@ -73,8 +74,8 @@ router.get("/setores/:departamentoId", async (req, res) => {
   console.log('');
 
   const { departamentoId } = req.params;
-  const setores = await DeptoSetor.find({ idDepto: departamentoId }).lean();
-  console.log(' [ 64 ] rotacentral ==> router.get("/setores"',setores)
+  const setores = await DeptoSetor.find({ idDepto: departamentoId }).sort({ nomeDeptoSetor: 1 }).lean();
+  console.log(' [ 78 ] rotacentral ==> router.get("/setores"',setores)
   res.send(setores);
 });
 
@@ -206,7 +207,6 @@ router.get("/secoes/:deptoSetorId", async (req, res) => {
   }
 });
 
-/////////////////////////////////////////////////////////////////////////////
 // Rota de busca de produtos (retorna JSON)
 router.get('/produtos/search', async (req, res) => {
   const termo = req.query.q || "";

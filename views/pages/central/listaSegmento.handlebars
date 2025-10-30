@@ -32,7 +32,8 @@
   gap: 16px;
   background: var(--bg);
   border-radius: 6px;
-  padding: 25px;
+  padding: 10px;
+  background: #aba7a7;
 }
 
 .sidebar {
@@ -40,6 +41,7 @@
   border-radius: var(--radius);
   padding: 24px 16px;
   color: #1a1a1a;
+  background:#fff;
 }
 
 .sidebar ul{ list-style: none; margin:0; padding:0; }
@@ -60,10 +62,11 @@
   flex-direction: column;
   gap: 16px;
   min-height: 85vh;
+  background: #15407a;
 }
 
 .columns {
-  background: #670303;
+  background: #02cfcc;
   border-radius: 6px;
   padding: 12px;
   display: grid;
@@ -138,7 +141,7 @@
       <!-- COLUNA 1 -->
       <div id="Segmento" class="card-panel">
         <h3>Lista de Departamentos</h3>
-        <ul id="listaSegmentos" class="list-group mb-3 scroll">
+        <ul id="listaSegmentos" class="list-group mb-4 scroll">
           {{#each depto}}
             <li class="list-group-item segmento-item" data-segmento-id="{{this._id}}">
               {{this.nomeDepartamento}}
@@ -149,14 +152,13 @@
 
       <!-- COLUNA 2 -->
       <div id="Setor" class="card-panel">
-        <h3>Lista de DeptoSetor</h3>
-        <ul id="setoresList" class="list-group mb-3 scroll"></ul>
+        <h3>Lista de Setores</h3>
+        <ul id="setoresList" class="list-group mb-4 scroll"></ul>
       </div>
-
       <!-- COLUNA 3 -->
       <div id="Secao" class="card-panel">
-        <h3>Lista de DeptoSeção</h3>
-        <ul id="listaSecoes" class="list-group mb-3 scroll"></ul>
+        <h3>Lista de Seções</h3>
+        <ul id="listaSecoes" class="list-group mb-4 scroll"></ul>
       </div>
     </div>
 
@@ -169,7 +171,7 @@
 
       <button id="btnSetor" type="button" class="btn btn-primary"
               data-bs-toggle="modal" data-bs-target="#modalSetor" style="display:none">
-        Cadastrar <span style="color:#670303;font-weight:700">DeptoSetor</span>
+        Cadastrar <span style="color:#670303;font-weight:700;margin-left: 20px;">DeptoSetor</span>
       </button>
 
       <button id="btnSecao" class="btn btn-primary"
@@ -208,9 +210,9 @@
       
       <form id="formSetor" class="modal-content" style="height: 18vh;margin: auto;background-color: #87cc06;">
          <div class="modal-header">
-        <h5 class="modal-title" >Cadastrar<span style="color:brown">DeptoSetor</span></h5>
+           <h5 class="modal-title" >Cadastrar ?<span style="color:#07e03a;margin-left:25px;">DeptoSetor</span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
+         </div>
         <input type="text" name="inputnomeDepartamento" id="inputnomeDepartamento">
         <input type="text" name="inputDepartamentoId" id="inputDepartamentoId">
         <div class="modal-body">
@@ -233,7 +235,7 @@
       </div>
       <input type="text" name="nomeSegmento" id="nomeSecao-Segmento" style="width: 100%;margin: auto;text-align: center;border: none;color:#333;">
       <input type="button" name="nomeSetor" id="nomeSecao-Setor" style="width: 100%;margin: auto;text-align: center;border: none;color:#333;">
-      <input type="hidden" name="inputSecao-departamentoId" id="inputSecao-departamentoId" style="">
+      <input type="hidden" name="inputSecao-departamentoId" id="inputSecao-departamentoId" >
       <input type="hidden" name="inputSecao-deptoSetorId" id="inputSecao-deptoSetorId">
       <div class="modal-body">
         <input type="text" name="nomeSecao" class="form-control" placeholder="Título da Seção" required>
@@ -318,51 +320,58 @@
       console.log('');
       // Faz a varredura 
       setores.forEach(setor => {
-        //console.log('');
-        //console.log('44',setor.idDepto, "<><><><><><><> ", setor._id);
-        //console.log('');
-        const li = document.createElement("li");
-        li.setAttribute('data-departamento-id',setor.idDepto);
-        li.setAttribute("data-deptosetor-id",setor._id)
-        li.classList.add("list-group-item","setor-item");
-        li.innerText = setor.nomeDeptoSetor;
+        const li = document.createElement('li');
+        li.className = 'list-group-item setor-item';
+        li.textContent = setor.nomeDeptoSetor;      // ajuste o campo conforme sua API
+        li.dataset.departamentoId = setor.idDepto;  // <- camelCase no dataset
+        li.dataset.deptosetorId   = setor.idSetor || setor._id; // o que vier da API
         setoresList.appendChild(li);
       });
 
-       document.querySelectorAll(".setor-item").forEach(item => {
-            item.addEventListener("click",async () => {
-               // console.log("CLICOU NO SETOR:",item.data-deptosetor-id,"===",item.dataset.departamento-id);
-                const departamentoId=item.getAttribute("data-departamento-id")
-                const deptosetorId = item.getAttribute("data-deptosetor-id");
-                console.log(' [ 198 ]')
-                document.getElementById("nomeSecao-Setor").value=item.innerHTML;
-                document.getElementById("inputSecao-departamentoId").value = departamentoId;
-                document.getElementById("inputSecao-deptoSetorId").value = deptosetorId;
-                document.getElementById("btnSecao").style.display="block";
-                                                
-                console.log("Buscando seções do setor:", deptosetorId);
-                const r = await fetch(`/segmento/secoes/${deptosetorId}`);
-                fetch('http://localhost:5000/segmento/secoes/68f76be9c4ba5a635e5663ba')
-                        .then(r => r.json())
-                        .then(data => {
-                          console.log(data); // aqui sim você verá { itens: ['bicicleta'] }
-                        })
-                        .catch(err => console.error(err));
+       setoresList.addEventListener('click', async (ev) => {
+            const item = ev.target.closest('.setor-item');
+            if (!item) return;
 
+            // Lê os datasets corretamente (camelCase)
+            const departamentoId = item.dataset.departamentoId;
+            const deptosetorId   = item.dataset.deptosetorId;
 
-                console.log(' vr de r => ',r)
-                console.log('');
-                console
-                const { itens = [] } = await r.json();
-                listaSecoes.innerHTML = '';
-                for (const s of itens) {
-                  const li = document.createElement('li');
-                  li.className = 'list-group-item';
-                  li.textContent = s;
-                  listaSecoes.appendChild(li);
-                }
-            });
-       });
+            console.log("Clique no setor:", deptosetorId, "Departamento:", departamentoId);
+
+            // Atualiza campos do formulário (se houver)
+            document.getElementById('nomeSecao-Setor').value= item.textContent;
+            document.getElementById('inputSecao-departamentoId').value = departamentoId;
+            document.getElementById('inputSecao-deptoSetorId').value = deptosetorId;
+
+            // Carrega seções do setor selecionado
+            const ulSecoes = document.getElementById('listaSecoes'); // sua UL de seções
+
+            ulSecoes.innerHTML = '<li class="list-group-item">Carregando seções…</li>';
+            document.getElementById("btnSecao").style.display="block";
+            try {
+              const r  = await fetch(`/segmento/secoes/${deptosetorId}`, { cache: 'no-store' });
+              const j  = await r.json();
+              const itens = Array.isArray(j) ? j : (j.itens || []);  // aceita {itens:[...]} ou array puro
+
+              ulSecoes.innerHTML = '';
+              if (!itens.length) {
+                ulSecoes.innerHTML = '<li class="list-group-item">Sem seções para este setor.</li>';
+               // document.getElementById('btnSecao').style.display="block"
+                return;
+              }
+
+              console.log(itens)
+              itens.forEach(secao => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.textContent = secao || secao.nomeSecao || '(sem nome)';
+                ulSecoes.appendChild(li);
+              });
+            } catch (err) {
+              console.error(err);
+              ulSecoes.innerHTML = '<li class="list-group-item text-danger">Falha ao buscar seções.</li>';
+            }
+       }) 
     });
   });
 </script>

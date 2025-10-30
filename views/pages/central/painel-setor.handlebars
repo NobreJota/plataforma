@@ -23,7 +23,7 @@
 <div class="container-fluid px-3 py-2" style="background-color: #490132;width: 80%;margin: auto;">
   <ul class="nav nav-tabs mb-3">
     <li class="nav-item">
-      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabLista">Demosntrativo de imagens dos setores</button>
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabLista" style="color:rgb(11, 4, 139);">Demonstrativo de imagens dos setores</button>
     </li>
     <li class="nav-item" style="background-color: #fff;border-radius: 4px;margin-left: 10px;">
       <a class="nav-link" href="/segmento/lista" style="color:#181010;border: none;">Voltar</a>
@@ -43,63 +43,56 @@
             </tr>
           </thead>
           <tbody>
-  {{#each lista}}
-    <!-- Linha do Departamento -->
-    <tr class="row-depto">
-      <td class="col-depto">{{this.nome}}</td>
-      <td class="text-muted">—</td>
-      <td>
-        {{#if this.imagemUrl}}
-          <img src="{{this.imagemUrl}}" alt="img {{this.nome}}" style="height:48px;width:48px;object-fit:cover;border-radius:.5rem;border:1px solid #dee2e6;">
-        {{else}}
-          <span class="text-muted">—</span>
-        {{/if}}
-      </td>
-      <td>
-        
-      </td>
-    </tr>
-
-     {{!-- linhas dos SETORES --}}
-      {{#each this.setores}}
-        <tr class="row-setor">
-          <td class="col-depto-spacer"></td>
-
-          <td class="col-setor">{{this.nome}}</td>
-
-          <td>
-            {{#if this.imagemUrl}}
-              <img src="{{this.imagemUrl}}" alt="img {{this.nome}}"
-                  style="height:40px;width:40px;object-fit:cover;border-radius:.5rem;border:1px solid #dee2e6;">
-            {{else}}
-              <span class="text-muted">—</span>
-            {{/if}}
-          </td>
-
-          <td>
-            <div class="dropdown">
-              <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">menu</button>
-              <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                  <a href="#"
-                    class="dropdown-item js-setor-imagem"
-                    data-setor-id="{{this._id}}"
-                    data-setor-nome="{{this.nome}}">
-                    imagem
-                  </a>
-                </li>
-                <li><a class="dropdown-item" href="/central/setor/{{this._id}}/editar">editar</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger" href="/central/setor/{{this._id}}/suspender">suspender</a></li>
-              </ul>
-            </div>
-          </td>
-        </tr>
-      {{/each}}
-      
-  {{/each}}
-</tbody>
-
+              {{#each lista}}
+                      <!-- Linha do Departamento -->
+                      <tr class="row-depto">
+                            <td class="col-depto">{{this.nome}}</td>
+                            <td class="text-muted">—</td>
+                            <td>
+                              {{#if this.imagemUrl}}
+                                <img src="{{this.imagemUrl}}" alt="img {{this.nome}}" style="height:48px;width:48px;object-fit:cover;border-radius:.5rem;border:1px solid #dee2e6;">
+                              {{else}}
+                                <span class="text-muted">—</span>
+                              {{/if}}
+                            </td>
+                            <td></td>
+                    </tr>
+                        {{!-- linhas dos SETORES --}}
+                        {{#each this.setores}}
+                            <tr class="row-setor">
+                                                  <td class="col-depto-spacer"></td>
+                                                  <td class="col-setor">{{this.nome}}</td>
+                                                  <td>
+                                                    {{#if this.imagemUrl}}
+                                                      <img src="{{this.imagemUrl}}" alt="img {{this.nome}}"
+                                                          style="height:40px;width:40px;object-fit:cover;border-radius:.5rem;border:1px solid #dee2e6;">
+                                                    {{else}}
+                                                      <span class="text-muted"></span>
+                                                    {{/if}}
+                                                  </td>
+                                                  {{!-- /////////////////////////////////////////////////////// --}}
+                                                  <td>
+                                                    <div class="dropdown">
+                                                      <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">menu</button>
+                                                      <ul class="dropdown-menu dropdown-menu-end">
+                                                        <li>
+                                                          <a href="#"
+                                                            class="dropdown-item js-setor-imagem"
+                                                            data-setor-id="{{this._id}}"
+                                                            data-setor-nome="{{this.nome}}">
+                                                            imagem
+                                                          </a>
+                                                        </li>
+                                                        <li><a class="dropdown-item" href="/central/setor/{{this._id}}/editar">editar</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item text-danger" href="/central/setor/{{this._id}}/suspender">suspender</a></li>
+                                                      </ul>
+                                                    </div>
+                                                  </td>
+                            </tr>
+                      {{/each}}
+              {{/each}}
+            </tbody>
         </table>
       </div>
     </div>
@@ -109,7 +102,7 @@
 <!-- MODAL IMAGEM (upload simples, 1 imagem) -->
 
 <!-- MODAL: Vincular imagem -->
-<div class="modal fade" id="modalImagem" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalImagem" tabindex="-1" aria-hidden="true" style="background: #490132;">
   <div class="modal-dialog modal-dialog-centered" style="max-width:560px">
     <div class="modal-content">
       <form id="formImagem">
@@ -121,7 +114,7 @@
         <div class="modal-body">
           <!-- contexto escondido -->
           <input type="hidden" id="ctxTipo">         <!-- 'setor' | 'secao' -->
-          <input type="hidden" id="ctxSetorId">
+          <input type="hidden"  style="background: yellow;visibility: visible;" id="ctxSetorId">
           <input type="hidden" id="ctxDocId">
           <input type="hidden" id="ctxIdx">
 
@@ -154,34 +147,117 @@
 
 
 <script>
-document.addEventListener('click', (ev) => {
-  const a = ev.target.closest('.js-setor-imagem');
-  if (!a) return;
-  ev.preventDefault();
-  console.log('passando AQUI');
-  // Pega id/nome do setor (suporta data-id/data-nome OU data-setorId/data-setorNome)
-  const setorId   = a.dataset.setorId  || a.dataset.id;
-  const setorNome = a.dataset.setorNome || a.dataset.nome || '';
+    
+  // Abrir o modal (OK)
+  document.addEventListener('click', (ev) => {
+    const a = ev.target.closest('.js-setor-imagem');
+    if (!a) return;
+    ev.preventDefault();
 
-  // Preenche o contexto do modal (mesmo modal usado nas seções)
-  document.getElementById('ctxTipo').value    = 'setor';
-  document.getElementById('ctxSetorId').value = setorId;
-  document.getElementById('ctxDocId').value   = '';
-  document.getElementById('ctxIdx').value     = '';
-  document.getElementById('modalImagemTitulo').textContent = `Imagem do setor: ${setorNome}`;
+    const setorId   = a.dataset.setorId  || a.dataset.id;
+    const setorNome = a.dataset.setorNome || a.dataset.nome || '';
 
-  // Limpa campos/preview
-  const form = document.getElementById('formImagem');
-  const preview = document.getElementById('preview');
-  const msgErro = document.getElementById('msgErro');
-  form.reset();
-  preview.style.display = 'none';
-  preview.src = '';
-  msgErro.style.display = 'none';
+    // Preenche contexto do modal
+    document.getElementById('ctxTipo').value    = 'setor';
+    document.getElementById('ctxSetorId').value = setorId;
+    console.log(document.getElementById('ctxSetorId'))
+    console.log(setorId)
+    document.getElementById('ctxDocId').value   = '';
+    document.getElementById('ctxIdx').value     = '';
+    document.getElementById('modalImagemTitulo').textContent =
+      `Imagem do setor: ${setorNome}`;
 
-  // Mostra modal
-  const elModal = document.getElementById('modalImagem');
-  const modal = bootstrap.Modal.getOrCreateInstance(elModal);
-  modal.show();
-});
+    // Limpa campos/preview
+    const form = document.getElementById('formImagem');
+    const preview = document.getElementById('preview');
+    const msgErro = document.getElementById('msgErro');
+    form.reset();
+    preview.style.display = 'none';
+    preview.src = '';
+    msgErro.style.display = 'none';
+
+    // Abre modal
+    const elModal = document.getElementById('modalImagem');
+    bootstrap.Modal.getOrCreateInstance(elModal).show();
+  });
+
+  // Preview da imagem (opcional)
+  document.getElementById('inpArquivo')?.addEventListener('change', (e) => {
+    const file = e.target.files?.[0];
+    const preview = document.getElementById('preview');
+    if (!file) { preview.style.display = 'none'; return; }
+    const url = URL.createObjectURL(file);
+    preview.src = url;
+    preview.style.display = 'block';
+  });
+
+  // SUBMIT do form (corrigido!)
+  document.getElementById('formImagem').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // 1) Pega tudo no momento do submit (evita valores vazios)
+    const elModal  = document.getElementById('modalImagem');
+    const modal    = bootstrap.Modal.getOrCreateInstance(elModal);
+
+    const msgErro  = document.getElementById('msgErro');
+    const inpArq   = document.getElementById('inpArquivo');
+    const inpNome  = document.getElementById('inpNome');
+
+    const ctxTipo  = document.getElementById('ctxTipo').value;     // 'setor' | 'secao'
+    const ctxSetor = document.getElementById('ctxSetorId').value;  // <-- agora vem preenchido
+    const ctxDoc   = document.getElementById('ctxDocId').value;
+    const ctxIdx   = document.getElementById('ctxIdx').value;
+
+    msgErro.style.display = 'none';
+
+    const file = inpArq.files?.[0];
+    if (!file) {
+      msgErro.textContent = 'Escolha uma imagem.';
+      msgErro.style.display = 'block';
+      return;
+    }
+
+    try {
+      // 2) Upload
+      const fd = new FormData();
+      fd.append('image', file);
+      if (inpNome.value) fd.append('name', inpNome.value);
+
+      const up = await fetch('/paineis/upload/image', { method: 'POST', body: fd });
+      if (!up.ok) throw new Error('Falha no upload');
+      const { url } = await up.json();
+      if (!url) throw new Error('Upload não retornou URL');
+
+      // 3) Persistência por tipo
+      if (ctxTipo === 'setor') {
+        // valida id
+        if (!ctxSetor) throw new Error('ID do setor não encontrado');
+        const r = await fetch(`/paineis/setor/${ctxSetor}/imagem`, {
+          method:'PATCH',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ imagemUrl: url })
+        });
+        if (!r.ok) throw new Error('Falha ao salvar imagem do setor');
+      } else {
+        const r = await fetch(`/paineis/secao/${ctxDoc}/item/${ctxIdx}/imagem`, {
+          method:'PATCH',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify({ imagemUrl: url })
+        });
+        if (!r.ok) throw new Error('Falha ao salvar imagem da seção');
+      }
+
+      // 4) Fecha e recarrega
+      modal.hide();
+      if (typeof carregar === 'function') carregar();
+      else location.reload();
+
+    } catch (err) {
+      console.error(err);
+      msgErro.textContent = err.message || 'Não foi possível salvar.';
+      msgErro.style.display = 'block';
+    }
+  });
 </script>
+
+

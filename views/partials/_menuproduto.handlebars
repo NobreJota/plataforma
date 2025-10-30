@@ -146,11 +146,7 @@ body {
   }
 }
 </style>
-<script>
-  function myFunction(n){
 
-  }
-</script>
 
  <div class="fixed-top" >
     <div class="" style="background-color: #2196F3;">
@@ -173,12 +169,13 @@ body {
                 {{!-- </h1> --}}
               </button>
             {{!-- </div> --}}
-            {{!-- <div style="background-color: #ffffff;margin-top: 0.2vh;border-radius: 6px;height: 99vh;"> --}}
-              <button id="abrirModalProduto" style="border: block;background-color:#0833a2;color:#ffffff;margin-bottom: 2vh;" data-bs-toggle="modal" data-bs-target="CadastrarProdutosModal" data-lojista="{{lojista._id}}" class="btn btn-sm" onclick="openCadastroModal()">
-                  {{!-- <h1 style="font-weight:200;color:#fff;font-size: small;">Cadastro de produtos</h1> --}}
-                  <input id="lojaFornec" type="text" style="display:none;" value="{{lojista.marca}}">Cadasto de produtos
-                </button>
-            {{!-- </div> --}}
+            
+             <button class="btn btn-sm btn-primary"
+                    type="button"
+                    onclick="location.href='/cadproduto/cadastro?lojista={{lojista._id}}'">
+              Cadastro de produtos
+            </button>
+            
           </div>
           <div style="height: 25vh;"></div>
         </div>

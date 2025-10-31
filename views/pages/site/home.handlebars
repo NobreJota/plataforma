@@ -5,11 +5,22 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>{{ 'Sua revista eletrônica' }}</title>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/home.css">
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-        referrerpolicy="no-referrer" />
+          <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous"
+        />
+
+        <!-- Font Awesome (opcional; pode ficar antes ou depois do Bootstrap) -->
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          referrerpolicy="no-referrer"
+        />
+
+        <!-- Seu CSS por último para sobrescrever o Bootstrap -->
+        <link rel="stylesheet" href="/css/home.css">
 
 <style>
   .divMenu{
@@ -22,101 +33,121 @@
 <style>
   /* ====== topo ====== */
 .topbar{
-  position: sticky; top: 0; z-index: 1000;
-  background: #12171d;   /* mude a cor aqui */
-  box-shadow: 0 2px 10px rgba(0,0,0,.15);
-  padding: 8px 100px 8px 100px;
+  position: sticky; top:0; z-index:1000;
+  background:#181716; color:#fff;
+  box-shadow:0 2px 10px rgba(0,0,0,.15);
+  font-size:clamp(14px,1.3vw,16px);
 }
 
 /* logo */
 .brand{
-  display: inline-flex;
-  align-items: baseline;
-  gap: 2px;
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing:.3px;
-  color: #066bdf;
-  text-decoration: none; /* cor do "Rota" */
-  margin-left: 0; /* centralizar com container */
+  display:inline-flex; align-items:baseline; font-weight:800;
+  font-size:clamp(18px,2vw,24px); color:#066bdf; text-decoration:none;
 }
 
 .brand-accent{ color: #ff4dc4; }           /* cor do "es" */
 
 .actions{
-  position: absolute;
-  right: 90px;            /* distância da borda direita */
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  gap: 90px;
+ display:flex; align-items:center; justify-content:flex-end;
+  gap:clamp(8px,1.8vw,14px); min-width:260px; 
 }
 
-.actions{ justify-self: end; }
+/*.actions{ justify-self: end; }*/
 
 .action-link{
   color:#ecf3ff; text-decoration:none; font-weight:600;
-  display:inline-flex; align-items:center; gap:8px;
-  padding: 6px 0; opacity:.95;
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(255,255,255,.08); border-radius:999px; padding:6px 10px;
+  white-space:nowrap; font-size:clamp(13px,1.1vw,15px);
 }
-
-.action-link:hover{ opacity:1; }
+.action-link:hover{ background:rgba(255,255,255,.15); }
 
 
 /* ====== container centralizado (desktop e mobile) ====== */
 .container-wide{
-  max-width: 1280px;
+ max-width: clamp(1100px, 96vw, 1400px);
   margin: 0 auto;
-  padding: 0 12px;
+  padding-left: clamp(8px, 2vw, 16px);
+  padding-right: clamp(8px, 2vw, 16px);
 }
 
 /*DETALHES*/
 .topbar-row{
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  align-items: center;
-  min-height: 56px;
+  display:grid;
+  grid-template-columns: minmax(110px,auto) 1fr auto; /* logo | busca | ações */
+  align-items:center; gap:clamp(8px,2vw,16px);
+  padding:8px 0;
 }
 
 .fa-cart-shopping{ font-size: 18px; }
 
 
 /* ====== busca + filtros ====== */
-.search-wrap{ display:flex; flex-direction:column; gap:8px; }
+.search-wrap{ display:flex; flex-direction:column; }
 
 .search-wrap{ justify-self: stretch; }
 
 .search-form{
   display:grid; gap:8px; align-items:center;
-  grid-template-columns: 1fr 160px 220px 140px; /* input + selects + botão */
+  grid-template-columns:
+    minmax(380px, 1fr)  /* <- input cresce */
+    minmax(140px, 18vw)
+    minmax(140px, 18vw)
+    auto;
 }
+
 .search-form .form-control,
-.search-form .form-select{ min-height: 38px; }
+.search-form .form-select,
+.search-form .btn{
+  min-height:40px; font-size:clamp(14px,1.2vw,16px); margin:0;
+}
+
+.search-form .form-control,.search-form .form-select{ border-color:#d0d0d0; }
+
+/* se quiser esconder o botão sem quebrar o grid */
+.search-form .btn[hidden]{ display:none !important; }
+/* OU: temporariamente esconda visualmente mas preserve altura horizontal */
+.hide-submit{ visibility:hidden; width:0; padding:0; margin:0; }
+@media (min-width: 1200px){ .container{ max-width: 1320px; } }
+@media (min-width: 1400px){ .container{ max-width: 1440px; } }
 
 /* ====== responsivo ====== */
 @media (max-width: 992px){
-  .topbar-row{
-    grid-template-columns: 120px 1fr 100px; /* logo + busca + ações */
+  .topbar-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
-  .actions{ gap:12px; margin-right: 6px; }
-  .search-form{
-    grid-template-columns: 1fr 1fr; /* quebra em 2 colunas */
+  .actions {
+    justify-content: center;
+    flex-wrap: wrap;
   }
-  .search-form .btn{ grid-column: 1 / -1; } /* botão em linha inteira */
+  .search-form {
+    grid-template-columns: 1fr 1fr;
+  }
+  .search-form .btn {
+    grid-column: 1 / -1;
+  }
 }
 
+
 @media (max-width: 576px){
-  .topbar-row{ grid-template-columns: 1fr; }
-  .brand{ justify-self:center; }
-  .actions{ justify-content:center; margin-right:0; }
+  .topbar-row{ grid-template-columns: 1fr; gap: 6px; }
+  .actions{ justify-content: center; }
+  .brand{ justify-self: center; }
   .search-form{ grid-template-columns: 1fr; }
 }
 
 /* opcional: remove sombra/linhas da faixa abaixo se houver */
 .header-shadow-bridge{ display:none; }
 
-.topbar .container-wide{ padding-left:32px; padding-right:32px; }
+
+.topbar .container-wide{
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: clamp(12px, 3vw, 32px);
+  padding-right: clamp(12px, 3vw, 32px);
+}
+
 @media (max-width:576px){
   /*.topbar .container-wide{ padding:0 12px; }*/
 }
@@ -142,25 +173,7 @@
 }
 </style>
 <style>
-  /* antes: aspect-ratio: 16 / 9; object-fit: cover;  */
-.atividade-thumb{
-  aspect-ratio: 1 / 1;           /* quadrado */
-  width: 100%;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #f6f7f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.atividade-thumb img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;            /* NÃO corta; encaixa inteira */
-  display: block;
-}
-
+/* antes: aspect-ratio: 16 / 9; object-fit: cover;  */
 /* garante espaço pro texto e evita sobreposição */
 .atividade-name{
   margin-top: 6px;
@@ -272,40 +285,61 @@
 .card-product img { max-height: 220px; }
 @media (min-width: 1200px){ .card-product img { max-height: 200px; } }
 </style>
+<style>
+  .atividade-thumb{
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f6f7f9;
+  display: flex; align-items: center; justify-content: center;
+}
+.atividade-thumb img{
+  width: 100%; height: 100%; object-fit: contain; display: block;
+}
+
+/* tipografia que acompanha a tela */
+.topbar{ font-size: clamp(14px, 1.4vw, 16px); }
+.fa-cart-shopping{ font-size: 18px; }
+
+</style>
 </head>
 <body>
-<header class="topbar" style="background-color: #06e006;">
-        <!-- LOGO -->
-        <a class="brand" href="/" style="background-color:transparent;">
-           <span>Rota</span><span class="brand-accent" >es</span>
-        </a>
-        <nav class="actions" >
-           <a href="/login" class="action-link"><i class="fa-regular fa-user"></i> Login</a>
-           <a href="/carrinho" class="action-link"><i class="fa-solid fa-cart-shopping"></i> Carrinho</a>
-        </nav>
-        <div class="container-wide" style="background-color: #999494;">
-          <div class="topbar-row">
-            <!-- BUSCA + FILTROS (coloque seu form aqui dentro) -->
-            <div class="search-wrap">
-              <!-- exemplo: substitua pelo seu form atual -->
-              <form class="search-form" action="/buscar" method="get">
-                  <input class="form-control" name="q" id="inputBusca" placeholder="O que você procura?" />
+<header class="topbar">
+  <div class="container-wide topbar-row">
+    <!-- LOGO -->
+    <a class="brand" href="/">
+      <span>Rota</span><span class="brand-accent">es</span>
+    </a>
 
-                  <select id="selectCidade" class="form-select" name="municipio" >
-                      <option value="">Município</option>
-                      {{#each cidades}}
-                        <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
-                      {{/each}}
-                  </select>
-                  <select id="selectBairro" class="form-select" name="loja">
-                      <option value="">Bairros</option>
-                  </select>
-                  <button class="btn btn-primary" type="submit">Aplicar filtros</button>
-              </form>
-            </div>
-          </div>
-        </div>
+    <!-- BUSCA + FILTROS -->
+    <form class="search-form" action="/buscar" method="get">
+      <input class="form-control" name="q" id="inputBusca" placeholder="O que você procura?" />
+
+      <select id="selectCidade" class="form-select" name="municipio">
+        <option value="">Município</option>
+        {{#each cidades}}
+          <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
+        {{/each}}
+      </select>
+
+      <select id="selectBairro" class="form-select" name="loja">
+        <option value="">Bairros</option>
+      </select>
+
+      <!-- deixe o botão por enquanto; se não quiser ver, eu escondo via CSS sem quebrar o grid -->
+      <button class="btn btn-primary" type="submit">Aplicar filtros</button>
+    </form>
+
+    <!-- AÇÕES -->
+    <nav class="actions">
+      <a href="/login" class="action-link"><i class="fa-regular fa-user"></i> Login</a>
+      <a href="/lojista/cadastro" class="action-link"><i class="fa-regular fa-id-badge"></i> Seja um cooperado</a>
+      <a href="/carrinho" class="action-link"><i class="fa-solid fa-cart-shopping"></i> Carrinho</a>
+    </nav>
+  </div>
 </header>
+
 <div class="quickbar bg-light border-bottom" >
   
   <div class="container my-2">
@@ -407,6 +441,45 @@
 
     selCidade.addEventListener('change', () => carregarBairros(selCidade.value));
 
+async function carregarBairros(cidade, bairroParaSelecionar = ''){
+  const selCidade = document.getElementById('selectCidade');
+  const selBairro = document.getElementById('selectBairro');
+
+  selBairro.innerHTML = '<option value="">Carregando...</option>';
+  selBairro.disabled = true;
+
+  if (!cidade){
+    selBairro.innerHTML = '<option value="">Bairro</option>';
+    selBairro.disabled = false;
+    return;
+  }
+
+  try{
+    const r = await fetch(`/bairros?cidade=${encodeURIComponent(cidade)}`, {cache:'no-store'});
+    const data = await r.json();
+
+    const itens = Array.isArray(data) ? data
+               : (Array.isArray(data?.items) ? data.items : []);
+
+    // prioridade: (1) parâmetro explícito, (2) variável do servidor, (3) localStorage
+    const selecionado =
+      bairroParaSelecionar ||
+      '{{bairroSelecionado}}' ||
+      localStorage.getItem('rotaes:bairro') || '';
+
+    selBairro.innerHTML = '<option value="">Bairro</option>' +
+      itens.map(b => `<option value="${b}" ${b === selecionado ? 'selected' : ''}>${b}</option>`).join('');
+
+    selBairro.disabled = false;
+
+  }catch(e){
+    console.error(e);
+    selBairro.innerHTML = '<option value="">Bairro</option>';
+    selBairro.disabled = false;
+  }
+}
+
+
     async function carregarBairros(cidade){
       console.log('');
       console.log(' [ 225 ]',cidade);
@@ -444,6 +517,50 @@
     }
 </script>
 <script>
+// ===== Preferências locais (cidade/bairro) =====
+(() => {
+  const selCidade = document.getElementById('selectCidade');
+  const selBairro = document.getElementById('selectBairro');
+
+  // carrega preferências salvas
+  document.addEventListener('DOMContentLoaded', async () => {
+    const prefCidade = localStorage.getItem('rotaes:cidade') || '';
+    const prefBairro = localStorage.getItem('rotaes:bairro') || '';
+
+    // se o select estiver vazio, aplica a preferência
+    if (selCidade && !selCidade.value && prefCidade){
+      selCidade.value = prefCidade;
+      // carrega bairros e seleciona o salvo
+      await carregarBairros(prefCidade, prefBairro);
+    }
+    // se já veio cidade da página, persiste
+    if (selCidade && selCidade.value){
+      localStorage.setItem('rotaes:cidade', selCidade.value);
+    }
+  });
+
+  // salva a cada mudança
+  selCidade?.addEventListener('change', () => {
+    localStorage.setItem('rotaes:cidade', selCidade.value || '');
+    // ao trocar de cidade, apaga bairro salvo
+    localStorage.removeItem('rotaes:bairro');
+  });
+  selBairro?.addEventListener('change', () => {
+    localStorage.setItem('rotaes:bairro', selBairro.value || '');
+  });
+})();
+</script>
+<script>
+// ===== contador simples de visitas à HOME =====
+(() => {
+  const k = 'rotaes:home:visitas';
+  const n = parseInt(localStorage.getItem(k) || '0', 10) + 1;
+  localStorage.setItem(k, String(n));
+  // console.log('Visitas à home:', n);
+})();
+</script>
+
+<script>
       const inputBusca = document.querySelector('input[name="q"]');
 
       const listaSugestoes = document.createElement('div');
@@ -475,19 +592,17 @@
   const input = document.querySelector('input[name="q"]');
   if (!input) return;
 
-  // wrapper p/ posicionar a lista
   input.parentElement.style.position = 'relative';
-
   const box = document.createElement('div');
   box.id = 'sugestoesLista';
   input.parentElement.appendChild(box);
 
   let items = [];
   let active = -1;
-  let lastTerm = '';
   let timer = null;
+  let lastTerm = '';
 
-  const debounce = (fn, ms=300) => (...args) => {
+  const debounce = (fn, ms=250) => (...args) => {
     clearTimeout(timer);
     timer = setTimeout(() => fn(...args), ms);
   };
@@ -496,22 +611,20 @@
     box.innerHTML = items.map((t,i)=>`
       <div class="sug-item ${i===active?'active':''}" data-i="${i}" title="${t}">${t}</div>
     `).join('');
-    [...box.querySelectorAll('.sug-item')].forEach(div=>{
-      div.addEventListener('mousedown', (e)=>{ // mousedown evita blur antes do click
+    box.style.display = items.length ? 'block' : 'none';
+    box.querySelectorAll('.sug-item').forEach(div=>{
+      div.addEventListener('mousedown', e => {
         e.preventDefault();
         const idx = Number(div.dataset.i);
         choose(idx);
       });
     });
-    box.style.display = items.length ? 'block' : 'none';
   };
 
   const choose = (idx) => {
     if (idx < 0 || idx >= items.length) return;
     input.value = items[idx];
     close();
-    // opcional: submeter o form ao escolher
-    // input.form?.submit();
   };
 
   const close = () => {
@@ -522,59 +635,30 @@
 
   const fetchSug = debounce(async () => {
     const term = (input.value || '').trim();
-    if (term.length < 3) { close(); return; }
+    if (term.length < 3){ close(); return; }
     if (term === lastTerm) return;
     lastTerm = term;
-
-    try {
-      const r = await fetch(`/buscar-sugestoes?q=${encodeURIComponent(term)}`, { cache: 'no-store' });
-      const data = Array.isArray(await r.json()) ? r.json : [];
-      // acima some bugzinho — vamos ler corretamente:
-    } catch(_) {}
-  }, 250);
-
-  // correção da leitura (evitar confusão com o acima)
-  const safeFetch = debounce(async () => {
-    const term = (input.value || '').trim();
-    if (term.length < 3) { close(); return; }
-    if (term === lastTerm) return;
-    lastTerm = term;
-    try {
-      const r = await fetch(`/buscar-sugestoes?q=${encodeURIComponent(term)}`, { cache: 'no-store' });
+    try{
+      const r = await fetch(`/buscar-sugestoes?q=${encodeURIComponent(term)}`, {cache:'no-store'});
       const arr = await r.json();
       items = Array.isArray(arr) ? arr : [];
       active = -1;
       render();
-    } catch(e){ close(); }
+    }catch{ close(); }
   }, 250);
 
-  // eventos
-  input.addEventListener('input', safeFetch);
+  input.addEventListener('input', fetchSug);
   input.addEventListener('keydown', (e) => {
     if (!items.length) return;
     if (e.key === 'ArrowDown'){ active = (active + 1) % items.length; render(); e.preventDefault(); }
     else if (e.key === 'ArrowUp'){ active = (active - 1 + items.length) % items.length; render(); e.preventDefault(); }
-    else if (e.key === 'Enter'){ if (active >= 0) { e.preventDefault(); choose(active); } }
+    else if (e.key === 'Enter'){ if (active >= 0){ e.preventDefault(); choose(active); } }
     else if (e.key === 'Escape'){ close(); }
   });
-
   document.addEventListener('click', (e) => {
     if (!box.contains(e.target) && e.target !== input) close();
   });
 })();
-</script>
-{{!-- Sugestão lista --}}
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-  const inputBusca = document.querySelector('input[name="q"]');
-  if (!inputBusca) return;
-
-  const listaSugestoes = document.createElement('div');
-  listaSugestoes.id = 'sugestoesLista';
-  inputBusca.parentElement.appendChild(listaSugestoes);
-
-  // ... resto do seu código ...
-});
 
 </script>
 

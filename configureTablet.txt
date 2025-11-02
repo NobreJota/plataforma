@@ -1,0 +1,72 @@
+Boa! Aqui vai um “kit de bolso” com os breakpoints mais usados para você acompanhar no vpLabel e montar suas @media. Priorize mobile-first (min-width).
+Larguras (W) mais comuns
+Bootstrap 5 (clássico)
+
+≤575px — extra-small (phones pequenos)
+
+≥576px — sm
+
+≥768px — md
+
+≥992px — lg
+
+≥1200px — xl
+
+≥1400px — xxl
+
+@media (min-width:576px){ /* sm */ }
+@media (min-width:768px){ /* md */ }
+@media (min-width:992px){ /* lg */ }
+@media (min-width:1200px){/* xl */ }
+@media (min-width:1400px){/* xxl */ }
+
+Tailwind (aprox.)
+
+
+640, 768, 1024, 1280, 1536 px
+
+
+“Real world” úteis para QA
+
+
+320 / 360 / 375 / 390 / 414 (iPhones/Androids comuns)
+
+
+768 / 820–834 / 912 (tablets portrait/landscape)
+
+1024 / 1280 / 1366 / 1440 / 1536 / 1600 / 1920 (desktops/notebooks)
+
+Alturas (H) úteis (quando precisar)
+Altura varia muito; só use height quando o layout depender do “dobrar” da página, sticky etc.
+
+Phones: 568, 667, 736, 812, 844, 896
+
+Tablets: 1024, 1112, 1180
+
+Desktop: 720, 768, 800, 900, 1080
+
+/* Ex.: ajustar topo quando a janela ficar muito baixa */
+@media (max-height:700px){ /* reduza paddings, fontes, etc. */ }
+
+Sugerido para o seu header (prático)
+Você já está bem com 1/6/3 fr. Eu usaria só 3 faixas:
+/* ≥1400px: cheio, espaçado */
+@media (min-width:1400px){
+  .topbar-row{ grid-template-columns: 1fr 6fr 3fr; }
+}
+
+/* 1100–1399px: compacto, mas em linha */
+@media (min-width:1100px) and (max-width:1399px){
+  .topbar-row{ grid-template-columns: minmax(120px,1fr) minmax(380px,6fr) minmax(280px,3fr); }
+}
+
+/* <1100px: empilha (logo / busca / ações) */
+@media (max-width:1099px){
+  .topbar-row{ grid-template-columns: 1fr; gap:10px; }
+  .actions{ justify-content:center; flex-wrap:wrap; }
+  .search-form{ grid-template-columns: 1fr 1fr; }
+  
+Regra prática: meça com seu label e teste em 375, 768, 992, 1200, 1366, 1440 e 1920. Se não houver “quebra” feia entre eles, você está com a malha de breakpoints perfeita para o projeto.
+
+
+Regra prática: meça com seu label e teste em 375, 768, 992, 1200, 1366, 1440 e 1920. Se não houver “quebra” feia entre eles, você está com a malha de breakpoints perfeita para o projeto.

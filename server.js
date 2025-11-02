@@ -79,6 +79,7 @@ const hbs = require('hbs');
 hbs.handlebars.registerHelper('eq', (a,b) => String(a) === String(b));
 hbs.handlebars.registerHelper('inc', v => Math.max(Number(v)+1, 1));
 hbs.handlebars.registerHelper('dec', v => Math.max(Number(v)-1, 1));
+hbs.handlebars.registerHelper('firstName', n => String(n||'').trim().split(' ')[0] || '');
 // AQUI COMEÇA AJUSTE
 hbs.registerHelper('firstIdSetor', p => {
   try {
@@ -104,6 +105,7 @@ app.use(session({
   saveUninitialized: false,
   cookie: { maxAge: 1000 * 60 * 60 * 4 } // 4h
 }));
+ 
 app.use(flash());
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
@@ -112,6 +114,32 @@ app.use((req, res, next) => {
 });
 app.use(passport.initialize());
 app.use(passport.session());
+
+//const Usuario = require('./models/usuariossite');
+
+app.use(async (req, res, next) => {
+  res.locals.userSite = null;
+  try {
+    if (req.session?.userId) {
+      const u = await Usuario.findById(req.session.userId)
+        .select('nome email cidadePadrao bairroPadrao')
+        .lean();
+      if (u) res.locals.userSite = u;
+    }
+  } catch {}
+  next();
+});
+
+// Evitar cache do navegador para não voltar com valores/login usuarioSite
+app.use(morgan('dev'));
+
+app.use((req, res, next) => {
+  // evita que o browser mostre página antiga com selects preenchidos
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  next();
+});
 
 // -------------------------------------------------------------------
 // Rotas
@@ -134,8 +162,22 @@ const cadproduto  = require("./src/routes/empresa/produto_cadastro")
 const fornec      = require('./src/routes/empresa/fornecedores');
 const gravafoto   = require('./src/routes/empresa/upload_foto');
 const ajuste      = require('./src/routes/empresa/ajuste');
+const auth = require('./src/routes/auth');
 
+const UsuarioSite = require('./src/models/usuariosite');
 
+app.use(async (req, res, next) => {
+  res.locals.userSite = null;
+  try{
+    if (req.session?.userId){
+      const u = await UsuarioSite.findById(req.session.userId)
+        .select('nome email')
+        .lean();
+      if (u) res.locals.userSite = u;
+    }
+  }catch(_){}
+  next();
+});
 
 app.use('/admin', admin);
 app.use('/central', central);
@@ -154,7 +196,8 @@ app.use('/cadproduto',cadproduto);
 app.use('/gravafoto', gravafoto);
 app.use('/fornec', fornec);
 app.use('/simiproduto', simiproduto);
-app.use('/ajuste',ajuste)
+app.use('/ajuste',ajuste);
+app.use('/', auth.router);
 
 
 // -------------------------------------------------------------------

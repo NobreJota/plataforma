@@ -11,7 +11,9 @@ const { Types } = require('mongoose');
 const { S3Client, PutObjectCommand, ListObjectsV2Command } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const ProdutoImagem = require("../../models/produtoImagem");
-const MConstrucao = require("../../models/ddocumento");
+// const MConstrucao = require("../../models/ddocumento");
+const MConstrucao=mongoose.model('arquivo_doc');
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),

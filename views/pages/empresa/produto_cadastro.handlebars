@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">        
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     {{!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> --}}
@@ -146,44 +149,262 @@
     }
 
     .openModal{
-    display:block;
-    position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background:#00000080;
-    justify-content:center;
-    align-items:flex-start;   /* cola no topo em notebook */
-    padding-top:30px;         /* respiro no topo */
-    z-index:9999;
+        display:block;
+        position:fixed;
+        top:0; left:0;
+        width:100%; height:100%;
+        background:#00000080;
+        justify-content:center;
+        align-items:flex-start;   /* cola no topo em notebook */
+        padding-top:30px;         /* respiro no topo */
+        z-index:9999;
   }
     </style>
-    <meta http-equiv="Cache-Control" content="no-store" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
+   
+    <style>
+#modalImagem.backdrop{
+  position: relative;           /* vira painel normal */
+  background: transparent;      /* sem fundo escuro */
+  width: 47%;                   /* igual ao form */
+  float: right;                 /* encosta à direita */
+  height: 97vh;                 /* mesmo “pé-direito” do form */
+  display: block;
+  z-index: auto;
+}
 
-</head>
-<script>
-  function myFunction(n){
-    console.log(3434)
+#modalImagem.backdrop.show { display: block; }
+
+
+#modalImagem .mi-dialog{
+  position: static;             /* sai do absolute */
+  right: auto; top: auto;
+  width: 100%;
+  height: 97vh;                 /* acompanha o painel */
+  /* mantém seu visual interno */
+  background: #f10505;
+  color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.2); /* suaviza a sombra, opcional */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ====== Cabeçalho (A) ====== */
+.mi-header {
+background: #8d0037; /* vinho */
+padding: 14px 18px 10px;
+display: grid;
+grid-template-columns: auto 1fr auto;
+gap: 12px;
+align-items: center;
+border-bottom: 2px solid #330018;
+}
+.mi-title {
+font-size: 20px;
+font-weight: 700;
+letter-spacing: .3px;
+white-space: nowrap;
+}
+.mi-actions { display: flex; gap: 10px; align-items: center; }
+.mi-btn {
+border: 0; outline: 0; cursor: pointer;
+padding: 8px 12px; border-radius: 10px;
+background: #1976d2; color: #fff; font-weight: 600;
+}
+.mi-btn:hover { filter: brightness(1.05); }
+.mi-btn.flat { background: #3949ab; }
+.mi-btn.danger { background: #b71c1c; }
+.mi-close {
+background: #111; color: #fff; border: 1px solid #333; border-radius: 12px;
+font-weight: 800; width: 36px; height: 36px; display: grid; place-items: center; cursor: pointer;
+}
+.mi-close:hover { background: #222; }
+
+
+/* ====== Linha de Informações (B) ====== */
+.mi-info {
+background: #19a204; /* verde vivo */
+padding: 10px 12px;
+border-bottom: 2px solid #0c5102;
+}
+.mi-grid {
+display: grid;
+grid-template-columns: 1.1fr 1.6fr 1.4fr 1.1fr;
+gap: 10px;
+}
+.mi-field { display: grid; gap: 4px; font-size: 12px; color: #122; }
+.mi-field label { font-weight: 700; color: #032d02; }
+.mi-field input {
+height: 34px; border: 0; border-radius: 8px;
+padding: 0 10px; outline: none; background: #fff; color: #000;
+}
+.mi-field input[readonly] { background: #f3f6f9; }
+
+
+/* ====== Corpo (C + D) ====== */
+
+/*.mi-body { flex: 1; display: grid; grid-template-rows: 220px 1fr; }  /* C ≈ 220px, D ocupa o resto */
+.mi-body { flex:1; display:grid; grid-template-rows: 220px 1fr; } 
+
+/* ====== Seção C: Slots de fotos ====== */
+.mi-slots {
+background: #ffe606; /* amarelo */
+padding: 14px 14px 8px;
+overflow: hidden;
+
+}
+
+.mi-slots-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.mi-slots-title { color: #1a1a1a; font-weight: 800; }
+.mi-nobank{
+  margin:8px 0 0;
+  background:rgba(176,0,32,.12);
+  border:1px dashed #b00020;
+  color:#2b0008;
+  font-weight:800;
+  padding:8px 10px;
+  border-radius:10px;
+}
+.mi-slot-grid {
+   display: grid; grid-template-columns: repeat(7, minmax(120px,1fr));
+   gap: 12px; align-items: stretch;
+}
+.mi-slot {
+background: #ffffff; /* magenta */
+border-radius: 14px; position: relative; overflow: hidden; cursor: pointer;
+display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606;color:#0b100f;
+}
+
+.mi-slot::before{
+  content: attr(data-num);
+  position: absolute; top: 6px; left: 10px;
+  font-weight: 900; font-size: 18px;
+  color: #8d0037; text-shadow: 0 1px 0 #fff;
+}
+
+.mi-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.mi-slot.empty::after {
+   content: "Clique aqui para pegar a foto no computador";
+   color: #9c0808; font-weight: 400; text-align: center; padding: 10px; line-height: 1.1;
+}
+.mi-slot .mi-remove {
+    position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%;
+    display: none; place-items: center; background: rgba(0,0,0,.65); color: #fff; font-size: 14px; cursor: pointer;
+}
+.mi-slot.filled .mi-remove { display: grid; }
+
+
+/* ====== Barra de ações (slots) ====== */
+.mi-toolbar { display: flex; gap: 10px; }
+
+
+/* ====== Seção D: Banco de Imagens ====== */
+.mi-bank {
+      background: #7da56b; /* verde musgo claro do mock */
+      border-top: 6px solid #8d0037; /* contorno vinho */
+      padding: 10px 12px 12px;
+      overflow: auto;
+}
+.mi-bank-title { font-weight: 800; color: #1b000a; margin-bottom: 8px; }
+.mi-bank-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
+.mi-thumb {
+    aspect-ratio: 1/1; background: #f2f2f2; border-radius: 10px; overflow: hidden; border: 3px solid #7b002e; cursor: pointer;
+    display: grid; place-items: center;
+}
+.mi-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mi-empty-msg { opacity: .85; font-weight: 600; }
+
+/* ====== Rodapé (gravar) ====== */
+.mi-footer {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;  /* deixa cada lado em sua ponta */
+  padding:12px 16px;
+  /* mantenha seu fundo atual se quiser */
+  /* background:#0b0b0b; */
+  overflow:visible;
+}
+
+.mi-footer-left{ position:relative; } 
+
+.mi-bankmenu{
+  position:absolute;
+  left:12px;             /* canto inferior esquerdo do modal */
+  bottom:58px;
+  display:none;
+  background:#fff;
+  padding:8px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  box-shadow:0 8px 18px rgba(0,0,0,.25);
+  z-index:1600;
+  gap:8px;
+  flex-direction:column;
+}
+.mi-bankmenu.show{ display:flex; }
+.mi-btn.small{ padding:6px 10px; font-size:.85rem; }
+
+.mi-pop[hidden]{ display:none; }
+.mi-pop{
+  position:absolute;
+  left:0;  
+  right:auto;                    /* gruda no botão à esquerda */
+  bottom:56px;                 /* sobe acima da barra vermelha */
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width: 200px;
+  margin-left: 120px;
+}
+.mi-footer-left{ position:relative; }
+.mi-footer-right{ display:flex; gap:12px; }
+
+.mi-pop.show{ display:flex; }
+.mi-pop[hidden]{ display:none; }
+
+.mi-pop .mi-pop-item{
+  border:0; background:#1166ba; border-radius:8px; padding:8px 10px;
+  text-align:left; cursor:pointer; font-weight:300;margin-left: 2px;color:#ffffff;
+}
+.mi-pop .mi-pop-item:hover{ background:#0f4e8c; }
+
+</style>
+<style>
+  .imgmodal{
+    background:#959292; width:100%; height:97vh; padding:20px; border-radius:10px; box-shadow:0 5px 10px #00000080;margin: auto;
   }
-</script>
-<body  onload="myFunction(1)" style="background-color: #ffffff;">
+
+  .CidadeBairro{
+    width: 70%;height: 3.2vh;margin: auto;
+    margin-left: 6px;margin-top: -15px;
+    background-color: #ffffff;
+    color: #4e4d4d;
+    text-align: center;
+  }
+</style>
+</head>
+
+<body   style="background-color: #ffffff;">
         
-        <div   id="cadastroProdutoModal" class="openModal">
-        <div
-            style="background:#959292; width:50%; height:97vh; padding:20px; border-radius:10px; box-shadow:0 5px 10px #00000080;position: relative;margin: auto;">
+ <div id="cadastroProdutoModal" class="" style="width: 47%;float: left;background-color: #848985;margin-left: 2%;">
+        <div class="imgmodal">
             <button type="button" id="fecharForm" style="position: absolute;top: 5px;right: 5px;border: none;background: transparent;font-size: 30px;cursor: pointer;" onclick="closeCadastroModal()">&times;</button>
-            <div style="width: 98%;height: 92vh;margin: auto;background-color: #0b2f83;overflow: scroll;margin-top: 2.5vh;padding: 5px;">
+            <div style="width: 98%;height: 92vh;margin: auto;background-color: #000308;overflow-y: scroll ;margin-top: 2.5vh;padding: 5px;overflow-x: hidden;">
             <h4 style="font-weight: 200;color: #ffffff;">Cadastro de produto</h4>
-                <form id="cadastroProdutoForm" style="background-color: #295ee4;color:#fff;position: relative;height: 96vh;" >
+                <form id="cadastroProdutoForm" style="background-color: #94af96;color:#fff;position: relative;height: 145vh;" >
                     <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #df061f;display:none;">
-                    <div style="margin-bottom:10px;display:none;">
+                    <div style="margin-bottom:10px;display:block;">
                     <label style="color:white">Marca loja:</label>
-                    <label id="cadastroMarca" type="text"  name="marca" class="form-control" style="background-color: #ec7018;" >{{lojista.marca}}</label>
+                    {{!-- {{lojista}} --}}
+                    <label id="cadastroMarca" type="text"  name="marca" class="form-control" style="background-color: #fff;" >{{lojista.marca}}</label>
                     </div>
                     <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
                         <label style="background-color:transparent;width: 800px;padding: 5px;color:#fff">Para ter mais acesso a departamentos entrar em contato com administrador:</label>
-                        <label style="background-color: #df061f;width: 150px;padding: 5px;">Departamento:</label>
+                        <label style="background-color:transparent;width: 150px;padding: 5px;font-weight: bold;">Departamento:</label>
                         <select name="departamento_id" id="selDepartamento" class="form-select form-select-sm" required>
                             <option value="">Selecione o departamento</option>
                             {{#each departamentos}}
@@ -193,16 +414,16 @@
                     </div>
                     {{!-- ========================================================================== --}}
                     <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
-                        <label for="setor" style="background-color: #df061f;width: 150px;padding: 5px;">Setor:</label>
+                        <label for="setor" style="background-color:transparent;width: 150px;padding: 5px;font-weight: bold;">Setor:</label>
                         <select name="setor_id" id="selSetor" class="form-select form-select-sm" required >
-                            <option value="">Selecione o setor</option>
+                            <option value="{{_id}}">Selecione o setor</option>
                         </select>
                     </div>
                     {{!-- ========================================================================== --}}
                     <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
-                    <label for="divSelect" style="background-color: #df061f;width: 150px;padding: 5px;">Seção:</label>
-                        <select name="secao_id" id="selSecao" class="form-select form-select-sm" required disabled>
-                            <option value="">Selecione a seção</option>
+                    <label for="divSelect" style="background-color:transparent;width: 150px;padding: 5px;font-weight: bold;">Seção:</label>
+                        <select name="secao_id" id="selSecao" class="form-select form-select-sm" required >
+                            <option value="{{_id}}">Selecione a seção</option>
                         </select>
                     </div>
                     <div style="margin-bottom:10px;background-color blueviolet;">
@@ -224,7 +445,7 @@
                     <input id="cadastroReferencia" type="text"  name="referencia" class="form-control">
                     </div>
                     <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
-                    <label style="background-color: #df061f;width: 85px;padding: 5px;">Fornecedor:</label>
+                    <label style="background-color:transparent;width: 85px;padding: 5px;font-weight: bold;">Fornecedor:</label>
                     <select id="selectFornecedores" name="fornecedores" style="height: 3.2vh;width:70%;margin: auto;margin-left: 6px;margin-top: 3px;">
                             <option value="">Selecione:</option>
                                 {{#each f}}
@@ -234,12 +455,12 @@
                     </div>
                     {{!-- Os nomes cidade e bairro constam  na ficha do produto para facilitar a consulta --}}
                     <div style="background-color:transparent;margin-bottom: 12px;margin-top: 6px;display: block;">
-                    <label style="background-color: #0611df;width: 85px;padding: 5px;">Cidade:</label>
-                    <label id="cadastroCidade" class="CidadeBairro" style="margin-top: -6px;padding-top: 0px;">{{lojista.cidade}}</label>
+                    <label style="background-color:transparent;width: 85px;padding: 3px;height: 3.5vh;font-weight: bold;">Cidade:</label>
+                    <label id="cadastroCidade" class="CidadeBairro" style="margin-top: -6px;padding-top: 0px;background-color: #02662d;color:#fff;height: 3.5vh;">{{lojista.cidade}}</label>
                     </div>
                     <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;display:block;">
-                    <label style="background-color: #0611df;width: 85px;padding: 5px;">Bairro:</label>
-                    <label id="cadastroBairro" class="CidadeBairro" style="background-color: orange;color: #fff;">{{lojista.bairro}}</label>
+                          <label name="nomeBairro" style="background-color:transparent;width: 85px;padding: 3px;height: 3.5vh;font-weight: bold;">Bairro</label>
+                          <label type="text" id="cadastroBairro" class="CidadeBairro" style="background-color:#02662d;color: #fff;height: 3.5vh;" >{{lojista.bairro}}</label>
                     </div>
                     <div style="margin-bottom:10px;">
                     <label>Quantidade:</label>
@@ -263,11 +484,84 @@
                     <div style="display: flex;flex-direction: row;justify-content:space-around;justify-items: center;padding: o 10px 0 10px;margin-bottom: 10px;">
                         <button type="button" class="btn btn-secondary" onclick="closeCadastroModal()">Cancelar</button>
                         <button id="btnSalvar" type="submit" class="btn btn-primary">Salvar</button>
+                        {{!-- segue=>cadastro.js --}}
                     </div>
                 </form>
             </div>
         </div>
+ </div> 
+<!-- MODAL Upload de Imagens -->
+<div id="modalImagem" class="backdrop" role="dialog" aria-modal="true" aria-hidden="true" style="width: 47vw;float: right;margin-right: 2%;">
+      <div class="mi-dialog" style="width: 100%;">
+            <!-- A: Cabeçalho -->
+            <div class="mi-header">
+                <button id="miClose" class="mi-close" title="Fechar">×</button>
+                <div class="mi-title">Tratando da imagem</div>
+                <div class="mi-actions">
+                <button id="miReloadBank" class="mi-btn flat" title="Recarregar banco de imagens">Recarregar Bco IMG</button>
+                </div>
+            </div>
+            <!-- B: Linha de informações do produto -->
+            <div class="mi-info">
+                <div class="mi-grid">
+                    <div class="mi-field">
+                      <label>id-produto</label>
+                      <input id="miProdId" type="text" readonly>
+                    </div>
+                    <div class="mi-field">
+                      <label>descrição</label>
+                      <input id="miDescricao" type="text" readonly>
+                    </div>
+                    <div class="mi-field">
+                      <label>fornecedor</label>
+                      <input id="miFornecedor" type="text" readonly>
+                    </div>
+                    <div class="mi-field">
+                      <label>departamento</label>
+                      <input id="miDepartamento" type="text" readonly>
+                    </div>
+                </div>
+            </div>
+            <!-- Corpo: C (slots) + D (banco) -->
+            <div class="mi-body">
+                <!-- C: Slots de fotos -->
+                <section class="mi-slots">
+                  <div class="mi-slots-header">
+                        <div class="mi-slots-title">Seleção e Gravar Imagens</div>
+                        <div class="mi-toolbar">
+                          <button id="miClearAll" class="mi-btn danger">Limpar seleção</button>
+                        </div>
+                  </div>
+                  <div id="miSlotGrid" class="mi-slot-grid" style="background:transparent;"></div>
+                  <div id="miNoBankBanner" class="mi-nobank" style="display:none">
+                          Não há imagens no banco. Clique nas caixas acima para escolher do seu computador.
+                  </div>
+                  
+                </section>
+                <!-- D: Banco de imagens -->
+                <section class="mi-bank">
+                    <div class="mi-bank-title">banco de imagens</div>
+                    <div id="imgbcoImg" name="imgbcoImg" class="mi-bank-grid"></div>
+                    <div id="miBankEmpty" class="mi-empty-msg" style="display:none">
+                        Não há imagens.
+                    </div>
+                </section>
+            </div>
+            <div class="mi-footer">
+  <div class="mi-footer-left">
+    <button id="miBankMenuBtn" class="mi-btn flat" type="button">Bco Imagem ▾</button>
+    <div id="miBankMenu" class="mi-pop" hidden>
+      <button id="miBankMenuDesc" class="mi-pop-item" type="button">Buscar por descrição</button>
+      <button id="miBankMenuFor"  class="mi-pop-item" type="button">Buscar por fornecedor</button>
+    </div>
+  </div>
 
+  <div class="mi-footer-right">
+    <button id="btnGravarImagens" class="mi-btn primary" type="button">Gravar imagens</button>
+  </div>
+</div>
+      </div>
+</div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
         <script src="/js/dashboard.js"></script>
@@ -277,7 +571,7 @@
 
         <script src="/js/empresa/bcoimagem.js" defer></script>
         <script src="/js/empresa/cadastro.js" defer></script>
-        <script src="/js/empresa/editecadastro.js" defer></script>
+        {{!-- <script src="/js/empresa/editecadastro.js" defer></script> --}}
         <script src="/js/empresa/similares.js" defer></script>
 
         <script src="/js/rotinas/limpaSelect.js"></script>
@@ -286,8 +580,144 @@
         <script src="/js/rotinas/produto-editModal.js"></script>
         <script src="/js/rotinas/produto-DeleteModal.js"></script>
         <script src="/js/rotinas/AcaoComDataset.js"></script>
+  <script>
+/**
+ * Blocos de IMAGENS do produto — migrados de cooperado-admin
+ * Depende apenas de elementos opcionais no DOM:
+ *  - #pc_produtoId      (hidden com o _id do produto)
+ *  - #pc_file           (input[type=file])
+ *  - #pc_previewList    (container para prévias locais)
+ *  - #pc_vinculadas     (container para imagens já vinculadas)
+ *  - #pc_btnBanco       (botão para abrir o banco de imagens)
+ *  - #btnSalvar      (botão para gravar as imagens selecionadas)
+ *
+ * Obs.: Se você já tem funções globais (ex.: abrirModalBancoImagens,
+ * uploadImagensProduto, listarImagensProduto, vincularImagemProduto),
+ * este script as usa. Caso não exista, ele faz um fallback simples.
+ */
+(() => {
+  const $ = (sel) => document.querySelector(sel);
+  const produtoIdEl   = $('#pc_produtoId');
+  const fileInput     = $('#pc_file');
+  const previewWrap   = $('#pc_previewList');
+  const vinculadasWrap= $('#pc_vinculadas');
+  const btnBanco      = $('#pc_btnBanco');
+  const btnSalvar     = $('#btnSalvar');
 
-    </div>  
+  const getProdutoId = () => produtoIdEl?.value?.trim() || '';
+
+  // ===== BLOCO 1 – BUSCA NO COMPUTADOR (com filtro genérico)
+  if (fileInput) {
+    fileInput.addEventListener('change', () => {
+      if (!previewWrap) return;
+      previewWrap.innerHTML = '';
+      const files = Array.from(fileInput.files || []);
+      files.forEach(f => {
+        if (!/^image\//.test(f.type)) return;  // filtra só imagens
+        const url = URL.createObjectURL(f);
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = f.name;
+        img.style.maxWidth = '110px';
+        img.style.maxHeight = '110px';
+        img.style.margin = '4px';
+        previewWrap.appendChild(img);
+      });
+    });
+  }
+
+  // ===== BLOCO 2 – CARREGA AS IMAGENS JÁ VINCULADAS (por produto) + ABRIR MODAL
+  async function carregarImagensVinculadas() {
+    if (!vinculadasWrap) return;
+    vinculadasWrap.innerHTML = '<small>Carregando...</small>';
+
+    const produtoId = getProdutoId();
+    if (!produtoId) { vinculadasWrap.innerHTML = '<small>Produto sem ID.</small>'; return; }
+
+    try {
+      if (typeof window.listarImagensProduto === 'function') {
+        // usa sua função existente, se houver
+        const lista = await window.listarImagensProduto(produtoId);
+        renderVinculadas(lista);
+      } else {
+        // fallback simples — ajuste a rota se necessário
+        const r = await fetch(`/produtoImagem/listar?produtoId=${encodeURIComponent(produtoId)}`);
+        const json = await r.json();
+        renderVinculadas(Array.isArray(json) ? json : (json.items || []));
+      }
+    } catch (e) {
+      vinculadasWrap.innerHTML = '<small>Falha ao carregar imagens.</small>';
+      console.error(e);
+    }
+  }
+
+  function renderVinculadas(lista) {
+    if (!vinculadasWrap) return;
+    if (!lista?.length) { vinculadasWrap.innerHTML = '<small>Nenhuma imagem vinculada.</small>'; return; }
+    vinculadasWrap.innerHTML = '';
+    lista.forEach(it => {
+      const img = document.createElement('img');
+      img.src = it.url || it.imagemUrl || '';
+      img.alt = it.nome || '';
+      img.style.maxWidth = '110px';
+      img.style.maxHeight = '110px';
+      img.style.margin = '4px';
+      vinculadasWrap.appendChild(img);
+    });
+  }
+
+  // ===== BLOCO 3 – BUSCA NO BANCO DE IMAGENS
+  if (btnBanco) {
+    btnBanco.addEventListener('click', () => {
+      // Se você já tem um modal/função, usa:
+      if (typeof window.abrirModalBancoImagens === 'function') {
+        window.abrirModalBancoImagens(getProdutoId());
+      } else {
+        // fallback mínimo: emite um evento para quem escuta abrir o modal
+        document.dispatchEvent(new CustomEvent('abrir-banco-imagens', {
+          detail: { produtoId: getProdutoId() }
+        }));
+      }
+    });
+  }
+
+  // ===== BLOCO 4 – Gravar imagens (usa suas funções existentes)
+  if (btnSalvar) {
+    btnSalvar.addEventListener('click', async () => {
+      const produtoId = getProdutoId();
+      if (!produtoId) { alert('Produto sem ID.'); return; }
+      const files = Array.from(fileInput?.files || []);
+      if (!files.length) { alert('Selecione ao menos uma imagem.'); return; }
+
+      try {
+        if (typeof window.uploadImagensProduto === 'function') {
+          // usa seu fluxo atual (ex.: Spaces + vincular)
+          await window.uploadImagensProduto(files, produtoId);
+        } else {
+          // fallback simples — ajuste a rota se necessário
+          const fd = new FormData();
+          fd.append('produtoId', produtoId);
+          files.forEach(f => fd.append('imagens', f));
+          await fetch('/produtoImagem/upload', { method: 'POST', body: fd });
+        }
+        // recarrega a galeria vinculada
+        await carregarImagensVinculadas();
+        // limpa seleção local
+        if (fileInput) { fileInput.value = ''; }
+        if (previewWrap) { previewWrap.innerHTML = ''; }
+        alert('Imagens gravadas.');
+      } catch (e) {
+        console.error(e);
+        alert('Falha ao gravar imagens.');
+      }
+    });
+  }
+
+  // Carrega as vinculadas assim que a página do cadastro abrir
+  document.addEventListener('DOMContentLoaded', carregarImagensVinculadas);
+})();
+</script>
+   
 </body>
 </html>
 {{!-- BUSCAR OS DEPARTAMENTOS QUANDO O INPUTCODIGO ADQUIRIR FOCO --}}
@@ -301,18 +731,18 @@
     
     if (inputCodigo) {
       inputCodigo.addEventListener("focus", async () => {
-         console.log('ALÕ!')   
+         //console.log('ALÕ!')   
         if (!departamentosCarregados) {
           try {
-            console.log('');
-            console.log('=> 1232 => cadastroDescrição ganhou foco =>  idLoja',idLoja);
-            console.log('');
+           // console.log('');
+           // console.log('=> 1232 => cadastroDescrição ganhou foco =>  idLoja',idLoja);
+           // console.log('');
             const response = await fetch(`/produto/lojistadepartamentos/${idLoja}`);
             const departamentos = await response.json();
-            console.log(' [ 1236 ] => departamentos',departamentos);
-            console.log('');
+            //console.log(' [ 1236 ] => departamentos',departamentos);
+            //console.log('');
             const select = document.getElementById("selDepartamento");
-            console.log('1000')
+           // console.log('1000')
             select.innerHTML = '<option disabled selected>Selecione um departamento</option>';
             let cor='#100e0e'
             select.style.backgroundColor=cor;
@@ -325,7 +755,7 @@
               opt.classList.add("option-roxa");
               select.appendChild(opt);
             });
-            console.log('2000')
+           // console.log('2000')
             select.style.backgroundColor="black";
             select.style.color="red";
 
@@ -342,23 +772,23 @@
 <script>
   //Quando se seleciona um departamento então vai-se buscar os setores pertinentes aquele departamento.
 document.getElementById('selDepartamento').addEventListener('change', async function () {
-  console.log('123456')
+  //console.log('123456')
   const departamentoId = this.value;
-  console.log('departamentoId',this.value)
+  //console.log('departamentoId',this.value)
   const setorSelect = document.getElementById('selSetor');
   setorSelect.innerHTML = '<option value="">Carregando setores...</option>';
 
   if (departamentoId) {
     try {
-      console.log('--------10001---------');
-      console.log('-----------------');
+      //console.log('--------10001---------');
+      //console.log('-----------------');
       const response = await fetch(`/produto/setores/${departamentoId}`);
       //const setores = await response.json();
        const data = await response.json();
       // console.log('data recebido =>', data);
       const setores = Array.isArray(data) ? data : (data.setores || []); 
       //const setores = Array.isArray(data) ? data : (data.setores || []);  // pega o array correto
-      console.log('array de setores =>', setores);
+      //console.log('array de setores =>', setores);
       if (Array.isArray(setores)) {
         setorSelect.innerHTML = '<option value="">Selecione o setor:</option>';
         setores.forEach((setor) => {
@@ -388,11 +818,12 @@ document.getElementById('selDepartamento').addEventListener('change', async func
       setorSecao.innerHTML = '<option value="">Carregando setores...</option>';
       if (setorId) {
         try {
-          console.log('-----------------');
-          console.log(' [ 1038 ]');
-          console.log('-----------------');
+          //console.log('-----------------');
+          //console.log(' [ 1038 ]');
+          //console.log('-----------------');
           const { itens = [] } =await(await fetch(`/produto/secoes/${setorId}`)).json();
-          //const secoes = await response.json();
+          //console.log('[ 815 ]',itens)
+          //const secoes = itens //await response.json();
           try{
               setorSecao.innerHTML = '<option value="">Selecione a seção:</option>';
               itens.forEach(secao => {
@@ -400,11 +831,12 @@ document.getElementById('selDepartamento').addEventListener('change', async func
                 opt.value = secao._id;
                 opt.textContent = secao.nameSecao;
                 setorSecao.appendChild(opt);
+               // console.log(opt)
               });
 
           
-          } else {
-            setorSecao.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
+          } catch(e) {
+             setorSecao.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
           }
         }catch(e){
           console.log('Error ao carregar a seção!')
@@ -427,8 +859,8 @@ document.getElementById('selDepartamento').addEventListener('change', async func
           try {
             const response = await fetch(`/fornec/fornecqlojista/${lojistaId}`);
             const lista = await response.json();
-            console.log('[ 912 ]');
-            console.log('',lista);
+           // console.log('[ 912 ]');
+           // console.log('',lista);
             console.log('');
             const select = document.getElementById("selectFornecedores");
 
@@ -449,4 +881,181 @@ document.getElementById('selDepartamento').addEventListener('change', async func
       });
     }
   });
+</script>
+{{!-- MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM --}}
+{{!-- <script>
+/* INIT — referências do modal de imagem, visíveis para os demais scripts */
+(() => {
+  window.$backdrop       = document.getElementById('modalImagem');
+  window.$miSlotGrid     = document.getElementById('miSlotGrid');
+  window.$miBankGrid     = document.getElementById('imgbcoImg');
+  window.$miBankEmpty    = document.getElementById('miBankEmpty');
+  window.$miNoBankBanner = document.getElementById('miNoBankBanner');
+  window.$miSlotsTitle   = document.querySelector('.mi-slots-title');
+
+  window.$miProdId       = document.getElementById('miProdId');
+  window.$miDescricao    = document.getElementById('miDescricao');
+  window.$miFornecedor   = document.getElementById('miFornecedor');
+  window.$miDepartamento = document.getElementById('miDepartamento');
+
+  window.$hiddenFile     = document.getElementById('miHiddenFile');
+  window.$miReloadBank   = document.getElementById('miReloadBank');
+  window.$miClearAll     = document.getElementById('miClearAll');
+  window.$miClose        = document.getElementById('miClose');
+  window.$btnGravar      = document.getElementById('btnGravarImagens');
+
+  // --- menu do banco de imagens ---
+  window.$miBankMenuBtn  = document.getElementById('miBankMenuBtn');
+  window.$miBankMenu     = document.getElementById('miBankMenu');
+  window.$miBankMenuDesc = document.getElementById('miBankMenuDesc');
+  window.$miBankMenuFor  = document.getElementById('miBankMenuFor');
+
+  // --- stubs seguros (caso os blocos de funções carreguem depois) ---
+  window.setBankEmptyState = window.setBankEmptyState || function(flag){
+    if (window.$miBankEmpty)    $miBankEmpty.style.display    = flag ? 'block' : 'none';
+    if (window.$miNoBankBanner) $miNoBankBanner.style.display = flag ? 'block' : 'none';
+    if (window.$miSlotsTitle)   $miSlotsTitle.textContent = flag
+      ? 'Nenhuma imagem no banco — clique nas caixas acima para buscar no computador'
+      : 'Seleção e Gravar Imagens';
+  };
+
+  window.clearBankUI = window.clearBankUI || function(showMsg = true){
+    if (window.$miBankGrid) $miBankGrid.innerHTML = '';
+    setBankEmptyState(!!showMsg);
+  };
+})();
+
+</script> --}}
+<script>
+(() => {
+  const $  = (s) => document.querySelector(s);
+  const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+  // ===== elementos do seu modal =====
+  const elProdId   = $('#miProdId');
+  const elSlots    = $('#miSlotGrid');
+  const elBankGrid = $('#imgbcoImg');
+  const elBankEmpty= $('#miBankEmpty');
+
+  const btnReloadBank = $('#miReloadBank');
+  const btnBankMenu   = $('#miBankMenuBtn');
+  const btnBankByDesc = $('#miBankMenuDesc');
+  const btnBankByFor  = $('#miBankMenuFor');
+  const btnGravar     = $('#btnGravarImagens');
+
+  const getProdutoId = () => (elProdId?.value || '').trim();
+
+  // ===== carregar banco de imagens (filtro opcional) =====
+  async function carregarBancoImagens(filtro = {}) {
+    if (!elBankGrid) return;
+
+    elBankGrid.innerHTML = '<small>Carregando...</small>';
+    elBankEmpty?.setAttribute('style','display:none');
+
+    try {
+      if (typeof window.listarBancoImagens === 'function') {
+        // usa sua função, se existir
+        const itens = await window.listarBancoImagens(filtro);
+        renderBanco(itens);
+      } else {
+        // fallback simples — ajuste a rota conforme seu backend
+        const qs = new URLSearchParams(filtro).toString();
+        
+        const r  = await fetch('/gravafoto/produtoImagem/buscar/:termo' + qs);
+        const js = await r.json();
+        const itens = Array.isArray(js) ? js : (js.items || []);
+        renderBanco(itens);
+      }
+    } catch (e) {
+      console.error(e);
+      elBankGrid.innerHTML = '<small>Falha ao carregar banco.</small>';
+    }
+  }
+
+  function renderBanco(itens) {
+    if (!elBankGrid) return;
+    if (!itens?.length) {
+      elBankGrid.innerHTML = '';
+      elBankEmpty?.setAttribute('style','');
+      return;
+    }
+    elBankEmpty?.setAttribute('style','display:none');
+    elBankGrid.innerHTML = '';
+    itens.forEach(it => {
+      const img = document.createElement('img');
+      img.src   = it.url || it.imagemUrl || '';
+      img.alt   = it.nome || '';
+      img.className = 'mi-bank-thumb';
+      img.addEventListener('click', () => {
+        // se você tiver uma função para selecionar imagem do banco para um slot:
+        if (typeof window.selecionarImagemDoBanco === 'function') {
+          window.selecionarImagemDoBanco(it, elSlots);
+        }
+      });
+      elBankGrid.appendChild(img);
+    });
+  }
+
+  // ===== eventos =====
+  // Recarregar banco (sem filtro)
+  btnReloadBank?.addEventListener('click', () => carregarBancoImagens());
+
+  // Menu do banco (abrir/fechar)
+  btnBankMenu?.addEventListener('click', () => {
+    const pop = $('#miBankMenu');
+    if (pop) pop.hidden = !pop.hidden;
+  });
+  // Buscar por descrição
+  btnBankByDesc?.addEventListener('click', async () => {
+    const termo = prompt('Descrição contém:');
+    if (termo !== null) await carregarBancoImagens({ q: termo });
+  });
+  // Buscar por fornecedor
+  btnBankByFor?.addEventListener('click', async () => {
+    const forn = prompt('Fornecedor contém:');
+    if (forn !== null) await carregarBancoImagens({ fornecedor: forn });
+  });
+
+  // Gravar imagens (usa seu coletor de arquivos dos slots)
+  btnGravar?.addEventListener('click', async () => {
+    const produtoId = getProdutoId();
+    if (!produtoId) { alert('Produto sem ID.'); return; }
+
+    try {
+      let arquivos = [];
+      if (typeof window.coletarArquivosDosSlots === 'function') {
+        // use sua função existente
+        arquivos = await window.coletarArquivosDosSlots(elSlots);
+      } else {
+        // fallback simples: pega todos inputs file dentro dos slots
+        const inputs = $$('#miSlotGrid input[type="file"]');
+        inputs.forEach(inp => arquivos.push(...Array.from(inp.files || [])));
+      }
+
+      if (!arquivos.length && typeof window.coletarSelecionadasDoBanco === 'function') {
+        // se você marca imagens escolhidas do banco, colete aqui
+        arquivos = await window.coletarSelecionadasDoBanco();
+      }
+
+      if (!arquivos.length) { alert('Nenhuma imagem selecionada.'); return; }
+
+      if (typeof window.uploadImagensProduto === 'function') {
+        await window.uploadImagensProduto(arquivos, produtoId);
+      } else {
+        const fd = new FormData();
+        fd.append('produtoId', produtoId);
+        arquivos.forEach(f => fd.append('imagens', f));
+        await fetch('/produtoImagem/upload', { method: 'POST', body: fd });
+      }
+
+      alert('Imagens gravadas.');
+    } catch (e) {
+      console.error(e);
+      alert('Falha ao gravar imagens.');
+    }
+  });
+
+  // opcional: carregue o banco ao abrir a página/modal
+  document.addEventListener('DOMContentLoaded', () => carregarBancoImagens());
+})();
 </script>

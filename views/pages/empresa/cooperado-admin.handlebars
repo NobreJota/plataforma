@@ -1,408 +1,463 @@
-<style>
-  table thead.fixar-apos-paginacao{
+<!DOCTYPE html>
+<html lang="pt-br">
+{{!-- <head> --}}
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">       
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    {{!-- <link rel="stylesheet" href="httpsX://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> --}}
+    {{!-- <link rel="stylesheet" href="httpsX://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> --}}
+
+    {{!-- <link rel="stylesheet" href="/css/fontawesome.min.css"> --}}
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/js/empresa/cadastro.js">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    {{!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> --}}
+    {{!-- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> --}}
+    {{!-- <script src=""></script> --}}
+  <script defer>
+      window.colacerto = function () { }
+  </script>
+    <title>Rotaes  : Admin : lojista</title>
+    <style>
+      html, body{
+  height: 100%;
+  overflow: hidden;           /* <- trava scroll da página */
+  background: #111;           /* opcional: cor de fundo padrão */
+}
+
+  :root{
+    /* será atualizado via JS para bater com a altura real do header */
+    --h-top: 56px;        /* altura do header fixo */
+    --gap: 12px;          /* respiro entre faixas */
+    --z-top: 1030;        /* acima do conteúdo */
+    --z-toolbar: 1020;    /* abaixo do header, acima do conteúdo */
+  }
+
+
+
+  /* ===== Header fixo ===== */
+  .topbar{
+    position: fixed; inset: 0 0 auto 0;
+    z-index: var(--z-top);
+    background: #0b2a3f; color:#fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,.2);
+  }
+  .topbar .brand{ font-weight: 800; color:#fff; text-decoration:none; }
+  .topbar .brand .accent{ color:#47d1ff; }
+
+  /* empurra a página para baixo da barra fixa */
+  body{ padding-top: var(--h-top); background:#111; }
+
+  /* ===== Faixa de filtros (painelLista) ===== */
+  .painel-lista{
+    position: sticky; top: var(--h-top); z-index: var(--z-toolbar);
+  }
+
+  .painel-lista .container-fluid{ padding-left: 0; padding-right: 16px; }
+
+  painel-lista .pager-inline{
+  display:flex; justify-content:center; align-items:center;
+  padding: 6px 0; margin: 0;
+}
+
+
+  .painel-lista .toolbar{
+    display: grid; gap: 10px; align-items: center;
+    grid-template-columns: 1fr 1fr;        /* mobile */
+  }
+  .label-pill{
+    font-weight:700; color:#b70000; margin-right:6px;
+  }
+  .toolbar .form-select{ min-height: 36px; }
+
+  /* ===== Conteúdo ===== */
+  .content-wrap{
+    height: calc(100vh - var(--h-top));
+    padding: 0;                 /* sem respiro que criava o “vão” */
+    background: transparent;    /* tira o fundo pink */
+  }
+
+  /* Cabeçalho da tabela grudado no topo do contêiner com scroll */
+#divTable{ 
+   position: relative;
+  height: 100%;               /* ocupa toda a .content-wrap */
+  width: 98%;
+  margin: auto;
+  overflow-y: scroll;         /* <- barra SEMPRE visível */
+  overflow-x: auto;           /* horizontal quando necessário */
+  scrollbar-gutter: stable both-edges;  /* evita “pulo” de layout */
+  background-color: #100e0e;  /* seu fundo */
+  
+  };  
+#divTable table{ border-collapse: separate; } /* evita glitches no sticky */
+
+#divTable thead thead{ 
   position: sticky;
-  top: calc(var(--h-topbar) + var(--h-filtros) + var(--h-paginacao));
+  top: 0;
   z-index: 5;
 }
 
-/* garante em browsers que só fixam o TH */
-table thead.fixar-apos-paginacao th{
-  position: sticky;
-  top: calc(var(--h-topbar) + var(--h-filtros) + var(--h-paginacao));
-  background: #dfb706;   /* mesma cor da sua linha de cabeçalho */
+
+#divTable thead th{
+  position: sticky;     /* alguns navegadores exigem no th também */
+  top: 0;
+  z-index: 6;
+  background: #dfb706;  /* mesma cor do cabeçalho da sua tabela */
+  /* opcional: separador visual quando rolar */
+  box-shadow: 0 2px 0 rgba(0,0,0,.06);
 }
 
-/* importante para o sticky funcionar bem sobre Bootstrap */
-#tabelaProdutos{ border-collapse: separate; border-spacing: 0; }
-
-/* o cabeçalho gruda logo abaixo da paginação */
-#tabelaProdutos thead.fixar-apos-paginacao th{
-  position: sticky;
-  top: calc(var(--h-topbar) + var(--h-filtros) + var(--h-paginacao));
-  z-index: 2;
-  background: #dfb706;   /* mesma cor da sua linha de cabeçalho */
+/* opcional: uma “sombrinha” para separar visualmente quando rolar */
+#divTable thead {
+  box-shadow: 0 2px 0 rgba(0,0,0,.06);
 }
+
+.content-wrap{ padding-top: 0; }
+
+  /* ===== Responsivo ===== */
+  @media (min-width: 992px){
+   .painel-lista .toolbar{
+    grid-template-columns: 280px 1fr 280px;  /* desktop: Ativos | Fornecedores | Imagens */
+    gap: 16px;
+  }
+  }
+
+  /* nova linha da paginação dentro da faixa */
+.painel-lista .pager{
+  padding-top: 6px; padding-bottom: 6px;
+  display: flex; justify-content: center; align-items: center;
+  background: transparent;    /* mantém amarelo da faixa */
+}
+
+/* elimina “vão” entre faixa e tabela */
+.content-wrap{ padding-top: 8px; }
+.table-wrap{ margin-top: 0 !important;}           /* se você usa um wrap da tabela */
+.table{ margin-top: 0; }    
 </style>
+{{!-- ///////////////////////////////////////////////////////////////////////////// --}}
 <style>
-  
+    * {
+      box-sizing: border-box;
+    }
 
-  .modal-body .list-group-item {
-  padding: 0.75rem 0.5rem;
-  transition: background-color 0.2s;
-}
+    body {
+      margin: 0;
+      position: relative;
+    }
+   
+    .bck-flex{
+      background-color:#ffffff;height: 100vh;
+    }
+  </style>
+  <style>
+    * {box-sizing: border-box;}
 
-.modal-body .list-group-item:hover {
-  background-color: #f8f9fa;
-}
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-.btn-sm {
-  padding: 2px 8px;
-  font-size: 0.8rem;
-}
+    .fixed-top{
+      background-color:#023c6c ;width: 100%;margin:auto;padding: 6px;height: 3vh;margin-top: .2vh;
+    }
 
-.alinhar-direita {
-  text-align: right;
-}
+    /* ===== layout da faixa ===== */
+    /*:root{
+      --toolbar-pad-y: 2px;
+      --toolbar-pad-x: 16px;
+      --toolbar-gap:  8px;
+    }*/
 
-.alinhar-center {
-  text-align:center;
-}
+    /* colunas dos filtros (já tínhamos left/center/right) */
+    .fx-col{ display:flex; align-items:center; gap:10px; }
+    .fx-left, .fx-right{ flex:0 0 280px; min-width:240px; }
+    .fx-center{ flex:1 1 520px; min-width:380px; }
 
-.edit-row {
-  background-color: #fff3cd !important; /* amarelo claro */
-  border-left: 4px solid #ffc107;
-}
+    /* ===== rótulos coloridos (na lateral de cada divisão) ===== */
+    .label-pill{
+      display:inline-block; font-weight:600; font-size:.95rem;
+      padding:2px 8px; border-radius:4px;
+      line-height:1.2; white-space:nowrap;
+    }
 
-.delete-row {
-  background-color: #f8d7da !important; /* vermelho claro */
-  border-left: 4px solid #dc3545;
-}
+    .lbl-ativos{ background:#ffdddd; color:#a30000; border:1px solid #ff6b6b; } /* vermelho claro */
+    .lbl-forn  { background:#dfe9ff; color:#0833a2; border:1px solid #4d74ff; } /* azul */
+    .lbl-img   { background:#fff1b3; color:#8a5a00; border:1px solid #ffd24d; } /* amarelo */
+
+    /*position: sticky;*/
+    .toolbar-sticky{
+      
+      top: 3.5vh;                          /* gruda no topo */
+      z-index: 1020;                   /* acima do cabeçalho da tabela */
+      background: #b05404e6;             /* sua cor de fundo atual */
+      padding: var(--toolbar-pad-y) var(--toolbar-pad-x);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--toolbar-gap);
+      border-bottom: 1px solid rgba(0,0,0,.08);
+    }
+
+    .toolbar-sticky .form-select.form-select-sm{ height: calc(2rem + 2px); }
+
+    /* position: sticky;*/
+    #filtrosProdutos{
+    
+      left:0
+      top: 0;
+      z-index: 900;
+    }*/
+
+    .pager-inline{
+      flex: 1 1 100%;
+      display:flex;
+      justify-content:center;          /* centraliza */
+      align-items:center;
+      gap: 8px;
+    }
+
+    .faixa-topo {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: #fff;
+        width: 80%;
+        margin: auto;
+      }
+
+      /* ===== opcional: borda laranja da área abaixo ===== */
+    .faixa-topo + .faixa-borda {
+      border:6px solid #ff8a00; border-top-left-radius:8px; border-top-right-radius:8px;
+      border-bottom:none; height:14px; margin:6px 0 12px;
+    }
+
+    .faixa-topo .form-select.form-select-sm{
+      height: calc(2rem + 2px);
+      padding: .25rem .5rem;
+    }
+
+    .faixa-topo{ 
+      padding: 2px 34px;                    /* mais espaço left/right dentro da faixa */
+      gap: 38px;                             /* espaço entre colunas um pouco menor */
+    }
+
+    #menuLateral {
+          width: auto;
+          height: 94vh;
+          position: absolute;
+          top: 3.8vh;
+          left: 0;
+          display: flex;
+          flex-direction: row;
+          z-index: 1000;
+          background-color: #fff;
+        }
+
+        #H2menuLateral {
+          writing-mode: vertical-rl; /* vertical (de baixo para cima) */
+          transform: rotate(180deg); /* inverte para cima para baixo */
+          font-size: 1vw;
+          color: #13e236;
+          margin: 0;
+          text-align: center;
+          font-weight: 100;
+          margin-left: .4vw;
+        }
+
+        #faixaVertical {
+          width: 2vw;
+          height: 96vh;
+          background-color: #295ee4;
+          z-index: 800;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+        }
+
+    #menulista {
+          width: 13vw;
+          height: 96vh;
+          background-color:transparent;
+          margin-top: 2px;
+          transition: margin-left 0.4s ease;
+          margin-left: -10vw; /* Escondido inicialmente */
+        }
+    
+        @media screen and (max-width: 600px) {
+          .topnav .search-container {
+            float: none;
+          }
+          .topnav a, .topnav input[type=text], .topnav .search-container button {
+            float: none;
+            display: block;
+            text-align: left;
+            width: 100%;
+            margin: 0;
+            padding: 14px;
+          }
+          .topnav input[type=text] {
+            border: 1px solid #ccc;  
+          }
+        }
 </style>
-<style>
-.resultado-similar {
+  <style>
+* {box-sizing: border-box;}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.fixed-top{
+   background-color:#023c6c ;width: 100%;margin:auto;padding: 6px;height: 3vh;margin-top: .2vh;
+}
+
+/* ===== layout da faixa ===== */
+:root{
+  --toolbar-pad-y: 2px;
+  --toolbar-pad-x: 16px;
+  --toolbar-gap:  8px;
+}
+/* colunas dos filtros (já tínhamos left/center/right) */
+.fx-col{ display:flex; align-items:center; gap:10px; }
+.fx-left, .fx-right{ flex:0 0 280px; min-width:240px; }
+.fx-center{ flex:1 1 520px; min-width:380px; }
+
+/* ===== rótulos coloridos (na lateral de cada divisão) ===== */
+.label-pill{
+  display:inline-block; font-weight:600; font-size:.95rem;
+  padding:2px 8px; border-radius:4px;
+  line-height:1.2; white-space:nowrap;
+}
+
+.lbl-ativos{ background:#ffdddd; color:#a30000; border:1px solid #ff6b6b; } /* vermelho claro */
+.lbl-forn  { background:#dfe9ff; color:#0833a2; border:1px solid #4d74ff; } /* azul */
+.lbl-img   { background:#fff1b3; color:#8a5a00; border:1px solid #ffd24d; } /* amarelo */
+
+/*position: sticky;*/
+.toolXbar-sticky{
+  top: 3.5vh;                          /* gruda no topo */
+  z-index: 1020;                   /* acima do cabeçalho da tabela */
+  background: #fff0e3e6;             /* sua cor de fundo atual */
+  padding: var(--toolbar-pad-y) var(--toolbar-pad-x);
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
-  padding: 8px 12px;
-  margin-bottom: 6px;
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
+  gap: var(--toolbar-gap);
+  border-bottom: 1px solid rgba(0,0,0,.08);
 }
 
-.resultado-similar:hover {
-  background-color: #e9ecef;
+.toolXbar-sticky .form-select.form-select-sm{ height: calc(2rem + 2px); }
+
+ /* position: sticky;*/
+#filtrosXProdutos{
+
+  left:0
+  top: 0;
+  z-index: 900;
 }
 
-.resultado-similar span {
-  flex: 1;
-  margin-right: 10px;
-  color: #212529;
-}
-
-.resultado-similar button {
-  padding: 4px 10px;
-  background-color: #198754;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
-  font-size: 0.8rem;
-  transition: background-color 0.2s ease;
-}
-
-.resultado-similar button:hover {
-  background-color: #146c43;
-}
-
-</style>
-<style>
-  .foto-box{
-    width: 120px;
-    height: 170px;
-    display:flex; flex-direction: column;
-    align-items:center; justify-content:center;
-    background:#ed09e5;
-    border: 1px solid #cfd3d7;
-    border-radius: 10px;
-    padding: 6px;
-    box-shadow: 0 2px 6px rgba(0,0,0,.15);
-    aspect-ratio: 1 / 1;     /* quadradinho perfeito */
-    overflow: hidden;
-  }
-
-
-.fotos-wrapper{
-  min-height: 150px;            /* agora visível */
-  background: #094b2f;          /* seu verde escuro */
-  border-radius: 6px;
-  padding: 10px;
-  display: flex;
-  flex-wrap: wrap;        /* <- importante p/ notebook */
-  gap: 10px;
-  align-content: flex-start;
-}
-
-.foto-box img{
-  width: 100px; height: 100px;
-  object-fit: contain;
-  border:transparent; cursor: pointer;
-  background-color: #fff;
-  padding: 8px;
-  border-radius: 8px;
-  /* observar */
-  max-width: 100%;
-  max-height: 100%;
-}
-
-#select_departamento {
-  background-color: #04bb32;
-  color: white;
-  font-weight: bold;
-  border-radius: 4px;
-  padding: 5px;
-}
-</style>
-{{!-- *modal vinculo  */ --}}
-<style>
-
-.modal-dialog {
-  max-height: 90vh;
-  margin-top: 2vh;
-}
-
-.option-roxa{
-   background-color: #2b0a26;
-   color:#ffffff;
-}
-
-.openModal{
-    display:none;
-    position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background:#00000080;
-    justify-content:center;
-    align-items:flex-start;   /* cola no topo em notebook */
-    padding-top:30px;         /* respiro no topo */
-    z-index:9999;
-  }
-
-  #botaoGravar{
-    width: 90%;
-    height: 40px;
-  }
-</style>
-<style>
-  /* empilhar cabeçalhos no notebook */
-  @media (max-width: 1366px){    }
-</style>
-{{!-- ///////////////////////////////////////////////////////////////////////////////////////////// --}}
-<style>
-#modalImagem.backdrop {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,.55);
-display: none; /* controlado por .show */
-z-index: 1500;
-}
-#modalImagem.backdrop.show { display: block; }
-
-
-#modalImagem .mi-dialog {
-    position: absolute;
-    right: 2vw; /* encostado à direita, como o usuário costuma preferir */
-    top: 4vh;
-    width: min(96vw, 1180px);
-    height: 92vh;
-    background: #f10505;
-    color: #fff;
-    border-radius: 16px;
-    box-shadow: 0 12px 40px rgba(0,0,0,.6);
-    overflow: hidden; /* barra interna por seção */
-    display: flex;
-    flex-direction: column;
-}
-
-
-/* ====== Cabeçalho (A) ====== */
-.mi-header {
-background: #8d0037; /* vinho */
-padding: 14px 18px 10px;
-display: grid;
-grid-template-columns: auto 1fr auto;
-gap: 12px;
-align-items: center;
-border-bottom: 2px solid #330018;
-}
-.mi-title {
-font-size: 20px;
-font-weight: 700;
-letter-spacing: .3px;
-white-space: nowrap;
-}
-.mi-actions { display: flex; gap: 10px; align-items: center; }
-.mi-btn {
-border: 0; outline: 0; cursor: pointer;
-padding: 8px 12px; border-radius: 10px;
-background: #1976d2; color: #fff; font-weight: 600;
-}
-.mi-btn:hover { filter: brightness(1.05); }
-.mi-btn.flat { background: #3949ab; }
-.mi-btn.danger { background: #b71c1c; }
-.mi-close {
-background: #111; color: #fff; border: 1px solid #333; border-radius: 12px;
-font-weight: 800; width: 36px; height: 36px; display: grid; place-items: center; cursor: pointer;
-}
-.mi-close:hover { background: #222; }
-
-
-/* ====== Linha de Informações (B) ====== */
-.mi-info {
-background: #19a204; /* verde vivo */
-padding: 10px 12px;
-border-bottom: 2px solid #0c5102;
-}
-.mi-grid {
-display: grid;
-grid-template-columns: 1.1fr 1.6fr 1.4fr 1.1fr;
-gap: 10px;
-}
-.mi-field { display: grid; gap: 4px; font-size: 12px; color: #122; }
-.mi-field label { font-weight: 700; color: #032d02; }
-.mi-field input {
-height: 34px; border: 0; border-radius: 8px;
-padding: 0 10px; outline: none; background: #fff; color: #000;
-}
-.mi-field input[readonly] { background: #f3f6f9; }
-
-
-/* ====== Corpo (C + D) ====== */
-
-/*.mi-body { flex: 1; display: grid; grid-template-rows: 220px 1fr; }  /* C ≈ 220px, D ocupa o resto */
-.mi-body { flex:1; display:grid; grid-template-rows: 220px 1fr; } 
-
-/* ====== Seção C: Slots de fotos ====== */
-.mi-slots {
-background: #ffe606; /* amarelo */
-padding: 14px 14px 8px;
-overflow: hidden;
-
-}
-
-.mi-slots-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.mi-slots-title { color: #1a1a1a; font-weight: 800; }
-.mi-nobank{
-  margin:8px 0 0;
-  background:rgba(176,0,32,.12);
-  border:1px dashed #b00020;
-  color:#2b0008;
-  font-weight:800;
-  padding:8px 10px;
-  border-radius:10px;
-}
-.mi-slot-grid {
-   display: grid; grid-template-columns: repeat(7, minmax(120px,1fr));
-   gap: 12px; align-items: stretch;
-}
-.mi-slot {
-background: #ffffff; /* magenta */
-border-radius: 14px; position: relative; overflow: hidden; cursor: pointer;
-display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606;color:#0b100f;
-}
-
-.mi-slot::before{
-  content: attr(data-num);
-  position: absolute; top: 6px; left: 10px;
-  font-weight: 900; font-size: 18px;
-  color: #8d0037; text-shadow: 0 1px 0 #fff;
-}
-
-.mi-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-.mi-slot.empty::after {
-   content: "Clique aqui para pegar a foto no computador";
-   color: #9c0808; font-weight: 400; text-align: center; padding: 10px; line-height: 1.1;
-}
-.mi-slot .mi-remove {
-    position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%;
-    display: none; place-items: center; background: rgba(0,0,0,.65); color: #fff; font-size: 14px; cursor: pointer;
-}
-.mi-slot.filled .mi-remove { display: grid; }
-
-
-/* ====== Barra de ações (slots) ====== */
-.mi-toolbar { display: flex; gap: 10px; }
-
-
-/* ====== Seção D: Banco de Imagens ====== */
-.mi-bank {
-      background: #7da56b; /* verde musgo claro do mock */
-      border-top: 6px solid #8d0037; /* contorno vinho */
-      padding: 10px 12px 12px;
-      overflow: auto;
-}
-.mi-bank-title { font-weight: 800; color: #1b000a; margin-bottom: 8px; }
-.mi-bank-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
-.mi-thumb {
-    aspect-ratio: 1/1; background: #f2f2f2; border-radius: 10px; overflow: hidden; border: 3px solid #7b002e; cursor: pointer;
-    display: grid; place-items: center;
-}
-.mi-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.mi-empty-msg { opacity: .85; font-weight: 600; }
-
-/* ====== Rodapé (gravar) ====== */
-.mi-footer {
+.pager-inline{
+  flex: 1 1 100%;
   display:flex;
+  justify-content:center;          /* centraliza */
   align-items:center;
-  justify-content:space-between;  /* deixa cada lado em sua ponta */
-  padding:12px 16px;
-  /* mantenha seu fundo atual se quiser */
-  /* background:#0b0b0b; */
-  overflow:visible;
+  gap: 8px;
 }
 
-.mi-footer-left{ position:relative; } 
+.faixa-topo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #fff;
+    width: 80%;
+    margin: auto;
+   }
 
-.mi-bankmenu{
-  position:absolute;
-  left:12px;             /* canto inferior esquerdo do modal */
-  bottom:58px;
-  display:none;
-  background:#fff;
-  padding:8px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  box-shadow:0 8px 18px rgba(0,0,0,.25);
-  z-index:1600;
-  gap:8px;
-  flex-direction:column;
+   /* ===== opcional: borda laranja da área abaixo ===== */
+.faixa-topo + .faixa-borda {
+  border:6px solid #ff8a00; border-top-left-radius:8px; border-top-right-radius:8px;
+  border-bottom:none; height:14px; margin:6px 0 12px;
 }
-.mi-bankmenu.show{ display:flex; }
-.mi-btn.small{ padding:6px 10px; font-size:.85rem; }
 
-.mi-pop[hidden]{ display:none; }
-.mi-pop{
-  position:absolute;
-  left:0;  
-  right:auto;                    /* gruda no botão à esquerda */
-  bottom:56px;                 /* sobe acima da barra vermelha */
-  z-index:50;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  width: 200px;
-  margin-left: 120px;
+.faixa-topo .form-select.form-select-sm{
+  height: calc(2rem + 2px);
+  padding: .25rem .5rem;
 }
-.mi-footer-left{ position:relative; }
-.mi-footer-right{ display:flex; gap:12px; }
 
-.mi-pop.show{ display:flex; }
-.mi-pop[hidden]{ display:none; }
-
-.mi-pop .mi-pop-item{
-  border:0; background:#1166ba; border-radius:8px; padding:8px 10px;
-  text-align:left; cursor:pointer; font-weight:300;margin-left: 2px;color:#ffffff;
+.faixa-topo{ 
+  padding: 2px 34px;                    /* mais espaço left/right dentro da faixa */
+  gap: 38px;                             /* espaço entre colunas um pouco menor */
 }
-.mi-pop .mi-pop-item:hover{ background:#0f4e8c; }
 
-</style>
+#menuLateral {
+      width: auto;
+      height: 94vh;
+      position: absolute;
+      top: 3.8vh;
+      left: 0;
+      display: flex;
+      flex-direction: row;
+      z-index: 1000;
+      background-color: #fff;
+    }
 
-<!-- DEV DESK -->
-<style>
-#DevDesk{position:fixed; bottom:12px; right:12px; width:580px; height:420px;
-  background:#fff; border:2px solid #111; border-radius:6px; box-shadow:0 10px 30px rgba(0,0,0,.3);
-  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial; z-index:999999; display:none; resize:both; overflow:hidden;}
-#DevDesk header{display:grid; grid-template-columns:1fr 1fr 1fr 32px; gap:6px; padding:8px; border-bottom:2px solid #111; background:#f7f7f7;}
-#DevDesk header input{height:26px; border:1px solid #bbb; border-radius:4px; padding:0 8px; font-size:12px;}
-#DevDesk header button{border:0; background:#111; color:#fff; border-radius:4px; cursor:pointer; font-weight:700}
-#DevDesk main{height:calc(100% - 56px); padding:10px; background:#fff; overflow:auto;}
-#DevDesk .ans{min-height:220px; border:2px dashed #aaa; border-radius:6px; padding:16px; font-size:18px; font-weight:700; text-align:center; color:#222;}
-#DevDesk .log{margin-top:10px; background:#0b0b0b; color:#cfd; font:12px/1.35 ui-monospace,Menlo,Consolas,monospace; padding:10px; border-radius:6px; white-space:pre-wrap;}
-#DevDesk .muted{opacity:.7}
-#DevDesk .row{display:flex; justify-content:space-between; align-items:center; margin:6px 0 2px}
+    #H2menuLateral {
+      writing-mode: vertical-rl; /* vertical (de baixo para cima) */
+      transform: rotate(180deg); /* inverte para cima para baixo */
+      font-size: 1vw;
+      color: #13e236;
+      margin: 0;
+      text-align: center;
+      font-weight: 100;
+      margin-left: .4vw;
+    }
+
+    #faixaVertical {
+      width: 2vw;
+      height: 96vh;
+      background-color: #295ee4;
+      z-index: 800;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+
+#menulista {
+       width: 13vw;
+       height: 96vh;
+       background-color:transparent;
+       margin-top: 2px;
+       transition: margin-left 0.4s ease;
+       margin-left: -10vw; /* Escondido inicialmente */
+    }
+    
+@media screen and (max-width: 600px) {
+  .topnav .search-container {
+    float: none;
+  }
+  .topnav a, .topnav input[type=text], .topnav .search-container button {
+    float: none;
+    display: block;
+    text-align: left;
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+  }
+  .topnav input[type=text] {
+    border: 1px solid #ccc;  
+  }
+}
 </style>
 <style>
  #main {
@@ -415,10 +470,10 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
 
     .grade{
       width:calc(100vw - 2.5vw);
-      height: 95vh;
+      height: 100%;
       background-color: #ffffff;
-      margin:3.8vh 0px 0px 2.1vw;
-      color:#295ee4
+      color:#295ee4;
+      margin-top:0;
     }
 
     .edit-row {
@@ -443,161 +498,250 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
       background-color: unset;
     }
   </style>
-  <style>
-        /* Estilos genéricos da tabela */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
 
-    th {
-      background-color: #b80b0b;
-       text-align:center;
-    }
-
-
-    td {
-      border: 1px solid #ddd;
-      padding-left: 8px;
-      text-align:left;
-    }
-
-    
-    button {
-      cursor: pointer;
-    }
-    </style>
-<div id="DevDesk" role="complementary" aria-label="Painel de debug">
-  <header>
-    <input id="DevQ1" placeholder="1ª — descreva o problema…">
-    <input id="DevQ2" placeholder="2ª — onde está no HTML/JS…">
-    <input id="DevQ3" placeholder="3ª — o que o fetch/ação faz…">
-    <button id="DevClose" title="Fechar">×</button>
-  </header>
-  <main>
-    <div class="ans" id="DevAns">AQUI A RESPOSTA DA ÚLTIMA QUESTÃO</div>
-    <div class="row"><span class="muted">Logs</span>
-      <div>
-        <button id="DevCopy" style="margin-right:6px">Copiar</button>
-        <button id="DevClear">Limpar</button>
-      </div>
+{{!-- ///////////////////////////////////////////////////////////////////////////// --}}
+<header class="topbar">
+  <div class="container-fluid py-2">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="/" class="brand">
+        Rota<span class="accent">es</span>
+      </a>
     </div>
-    {{!-- <pre class="log" id="DevLog"></pre> --}}
-  </main>
-</div>
+  </div>
 
-<script>
-(()=>{
-  const box=document.getElementById('DevDesk');
-  const Q1=document.getElementById('DevQ1');
-  const Q2=document.getElementById('DevQ2');
-  const Q3=document.getElementById('DevQ3');
-  const Ans=document.getElementById('DevAns');
-  const Log=document.getElementById('DevLog');
-  function toggle(){ box.style.display=(box.style.display==='none'||!box.style.display)?'block':'none'; }
-  function addLog(...args){
-    const msg=args.map(x=>typeof x==='string'?x:JSON.stringify(x,null,2)).join(' ');
-    Log.textContent+=(Log.textContent?'\n':'')+msg; Log.scrollTop=Log.scrollHeight;
-  }
-  window.debug={
-    show:()=>{box.style.display='block'}, hide:()=>{box.style.display='none'}, toggle,
-    note1:t=>Q1.value=t||'', note2:t=>Q2.value=t||'', note3:t=>Q3.value=t||'',
-    answer:html=>{Ans.innerHTML=html||'&nbsp;'},
-    log:addLog,
-    mirrorConsole(){
-      const orig=console.log; console.log=(...a)=>{ orig.apply(console,a); addLog(...a); };
-    }
-  };
-  // atalhos / botões
-  document.getElementById('DevClose').onclick=toggle;
-  document.getElementById('DevClear').onclick=()=>Log.textContent='';
-  document.getElementById('DevCopy').onclick=()=>{
-    const txt=`1) ${Q1.value}\n2) ${Q2.value}\n3) ${Q3.value}\n\nRESPOSTA:\n${Ans.innerText}\n\nLOGS:\n${Log.textContent}`;
-    navigator.clipboard.writeText(txt).then(()=>addLog('[DevDesk] copiado'));
-  };
-  window.addEventListener('keydown',e=>{ if(e.altKey&&(e.key==='d'||e.key==='D')){ e.preventDefault(); toggle(); }});
-  // espelha console
-  window.debug.mirrorConsole();
-})();
-</script>
+<section class="painel-lista">
+  <div class="container-fluid py-2">
+    <div class="toolbar">
+      <!-- Ativos -->
+      <div class="d-flex align-items-center">
+        <span class="label-pill">Ativos:</span>
+        <select class="form-select form-select-sm">
+          <option>Todos</option>
+          <option>Somente ativos</option>
+          <option>Inativos</option>
+        </select>
+      </div>
 
-<script>
-  window.todosSetoresSecoes = {{{todosSetoresSecoes}}}
-</script>
+      <!-- Fornecedores -->
+      <div class="d-flex align-items-center">
+        <span class="label-pill">Fornecedores:</span>
+        <select class="form-select form-select-sm">
+          <option>Todos</option>
+          {{!-- opções reais aqui --}}
+        </select>
+      </div>
 
-<div id="modalInfoSetorSecao" style="display:none; position:absolute; z-index:500;
-     background:#fff; border:1px solid #ccc; padding:10px; border-radius:6px;
-     box-shadow: 0 0 8px rgba(0,0,0,0.2); max-width: 250px; font-size: 14px;">
-  <div id="modalContentSetorSecao"></div>
-</div> 
-<div id="painelLista" class="grade" style="display: block;">
-    <div id="divTable" style="overflow-x: auto;width:100%;margin-top: 2.7vh;background-color: #e49b26;">
-          <table id="tabelaProdutos" class="table  table-bordered" style="font-size: small;margin-top:0.3vh;">
-            <thead class="fixar-apos-paginacao" style="color: #df061f;width: 100%;font-size:x-small ;font-weight: 400;" >
-            <tr style="background-color: #2306df;">
-              <th style="width: 0.35vw;" onclick="ordenarTabela(0)" style="">Ord</th>
-              <th style="display: none;" >Id</th>
-              <th onclick="ordenarTabela(2)" style="width: 1vw;">Código</th>
-              <th onclick="ordenarTabela(3)" style="width: 13.4vw;">Descrição</th>
-              <th onclick="ordenarTabela(4)" style="width: 13.8vw;">Complemento</th>
-              <th onclick="ordenarTabela(5)" style="width: 5.5vw;">Refer</th>
-              <th onclick="ordenarTabela(6)" style="width: 13vw;">Fornecedor</th>
-              <th onclick="ordenarTabela(7)">Segmento</th>
-              <th onclick="ordenarTabela(8)">Qte</th>
-              <th onclick="ordenarTabela(9)">Custo</th>
-              <th onclick="ordenarTabela(10)">Vista</th>
-              <th onclick="ordenarTabela(11)">Prazo</th>
-              <th >Ações</th>
-            </tr>
-        </thead>
-            <tbody id="produtoTable">
-              {{#each produtos}}
-              <tr data-id="{{_id}}">
-                <td class="alinhar-center">{{inc @index}}</td>
-                <td style="display: none">{{_id}}</td>
-                <td>{{codigo}}</td>
-                <td>{{descricao}}</td>
-                <td>{{complete}}</td>
-                <td>{{referencia}}</td>
-                <td>{{fornecedor.marca}}</td>
-                <td>
-                   {{#each localloja}}
-                      {{#each departamento}}
-                        <span class="departamento-click" data-index="{{@../index}}" style="font-weight: bold;color:red;">
-                          {{nomeDepartamento}}
-                        </span>
+      <!-- Imagens -->
+      <div class="d-flex align-items-center">
+        <span class="label-pill">Imagens:</span>
+        <select class="form-select form-select-sm">
+          <option>Lista</option>
+          <option>Grid</option>
+          <option>Sem imagem</option>
+        </select>
+      </div>
+
+          <!-- Paginação dentro da faixa amarela -->
+    <nav class="pager-inline" aria-label="Paginação">
+      <ul class="pagination pagination-sm mb-0">
+        <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+          <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page=1">«</a>
+        </li>
+        <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+          <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{dec page}}">‹</a>
+        </li>
+
+        {{#each pageNumbers}}
+          <li class="page-item {{#if (eq this ../page)}}active{{/if}}">
+            <a class="page-link" href="{{../basePath}}?{{../qsNoPage}}{{#if ../qsNoPage}}&{{/if}}page={{this}}">{{this}}</a>
+          </li>
+        {{/each}}
+
+        <li class="page-item {{#if (eq page pages)}}disabled{{/if}}"><a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{inc page}}">›</a></li>
+        <li class="page-item {{#if (eq page pages)}}disabled{{/if}}"><a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{pages}}">»</a></li>
+      </ul>
+
+      <a class="btn btn-outline-primary btn-sm ms-2"
+         href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{inc page}}">
+        Próximos 50 »
+      </a>
+    </nav>
+
+    </div>
+  </div>
+</section>
+{{!-- <div class="alert alert-light border">
+      <nav class="pager-inline" aria-label="Paginação" style="background-color: #ffffff;">
+              <ul class="pagination pagination-sm mb-0">
+                <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+                  <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page=1">«</a>
+                </li>
+                <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+                  <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{dec page}}">‹</a>
+                </li>
+
+                {{#each pageNumbers}}
+                  <li class="page-item {{#if (eq this ../page)}}active{{/if}}">
+                    <a class="page-link" href="{{../basePath}}?{{../qsNoPage}}{{#if ../qsNoPage}}&{{/if}}page={{this}}">{{this}}</a>
+                  </li>
+                {{/each}}
+
+                <li class="page-item {{#if (eq page pages)}}disabled{{/if}}">
+                  <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{inc page}}">›</a>
+                </li>
+                <li class="page-item {{#if (eq page pages)}}disabled{{/if}}">
+                  <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{pages}}">»</a>
+                </li>
+              </ul>
+              <a class="btn btn-outline-primary btn-sm ms-2"
+                href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{inc page}}">
+                Próximos 50 »
+              </a>
+      </nav>
+</div> --}}
+</header>
+<body>
+<main class="content-wrap">
+  <div class="container-fluid">
+    
+    <div style="">
+        <div id="painelLista" class="grade" style="display: block;background: #aea5ac;">
+            <div id="divTable" style="overflow:auto;width:98%;height:90vh;margin:auto;background-color:#100e0e;">
+                  <table id="tabelaProdutos" class="table  table-bordered" style="font-size: small;">
+                    <thead class="fixar-apos-paginacao" style="color: #df061f;width: 100%;font-size:x-small ;font-weight: 400;" >
+                    <tr style="background-color: #dfb706;">
+                      <th style="width: 0.35vw;" onclick="ordenarTabela(0)" style="">Ord</th>
+                      <th style="display: none;" >Id</th>
+                      <th onclick="ordenarTabela(2)" style="width: 1vw;">Código</th>
+                      <th onclick="ordenarTabela(3)" style="width: 13.4vw;">Descrição</th>
+                      <th onclick="ordenarTabela(4)" style="width: 13.8vw;">Complemento</th>
+                      <th onclick="ordenarTabela(5)" style="width: 5.5vw;">Refer</th>
+                      <th onclick="ordenarTabela(6)" style="width: 13vw;">Fornecedor</th>
+                      <th onclick="ordenarTabela(7)">Segmento</th>
+                      <th onclick="ordenarTabela(8)">Qte</th>
+                      <th onclick="ordenarTabela(9)">Custo</th>
+                      <th onclick="ordenarTabela(10)">Vista</th>
+                      <th onclick="ordenarTabela(11)">Prazo</th>
+                      <th >Ações</th>
+                    </tr>
+                </thead>
+                    <tbody id="produtoTable">
+                      {{#each produtos}}
+                      <tr data-id="{{_id}}">
+                        <td class="alinhar-center">{{inc @index}}</td>
+                        <td style="display: none">{{_id}}</td>
+                        <td>{{codigo}}</td>
+                        <td>{{descricao}}</td>
+                        <td>{{complete}}</td>
+                        <td>{{referencia}}</td>
+                        <td>{{fornecedor.marca}}</td>
+                        <td>
+                          {{#each localloja}}
+                              {{#each departamento}}
+                                <span class="departamento-click" data-index="{{@../index}}" style="font-weight: bold;color:red;">
+                                  {{nomeDepartamento}}
+                                </span>
+                              {{/each}}
+                            {{/each}}
+                        </td>
+                        <td class="alinhar-center">{{qte}}</td>
+                        <td class="alinhar-direita">{{formatarDecimal precocusto}}</td>
+                        <td class="alinhar-direita">{{formatarDecimal precovista}}</td>
+                        <td class="alinhar-direita">{{formatarDecimal precoprazo}}</td>
+                        <td>
+                          <div style="display: flex;flex-direction: row;justify-content:space-around;gap: 4px; flex-wrap: wrap;background-color:transparent;">
+                            <select 
+                                    class="form-select form-select-sm" 
+                                    onchange="executarAcaoComDataset(this)" 
+                                    data-id="{{_id}}" 
+                                    data-descricao="{{descricao}}" 
+                                    data-fornecedor="{{fornecedor.razao}}"
+                                    data-departamento ="{{localloja.[0].departamento.[0].nomeDepartamento}}">
+                              <option value="" selected disabled>⋮</option>
+                              {{!-- <option value="" selected hidden>⋮</option> --}}
+                              <option value="vincular">🔗 Vincular</option>
+                              <option value="imagens">🖼️ Imagens</option>
+                              <option  value="editar">✏️ Editar</option>
+                              <option  value="deletar">🗑️ Deletar</option>
+                            </select>
+                            {{!-- // data-codigo="{{codigo}}"  --}}
+                          </div>
+                        </td>
+                      </tr>
                       {{/each}}
-                    {{/each}}
-                </td>
-                <td class="alinhar-center">{{qte}}</td>
-                <td class="alinhar-direita">{{formatarDecimal precocusto}}</td>
-                <td class="alinhar-direita">{{formatarDecimal precovista}}</td>
-                <td class="alinhar-direita">{{formatarDecimal precoprazo}}</td>
-                <td>
-                  <div style="display: flex;flex-direction: row;justify-content:space-around;gap: 4px; flex-wrap: wrap;background-color:transparent;">
-                    <select 
-                            class="form-select form-select-sm" 
-                            onchange="executarAcaoComDataset(this)" 
-                            data-id="{{_id}}" 
-                            data-descricao="{{descricao}}" 
-                            data-fornecedor="{{fornecedor.razao}}"
-                            data-departamento ="{{localloja.[0].departamento.[0].nomeDepartamento}}">
-                      <option value="" selected disabled>⋮</option>
-                      {{!-- <option value="" selected hidden>⋮</option> --}}
-                      <option value="vincular">🔗 Vincular</option>
-                      <option value="imagens">🖼️ Imagens</option>
-                      <option  value="editar">✏️ Editar</option>
-                      <option  value="deletar">🗑️ Deletar</option>
-                    </select>
-                    {{!-- // data-codigo="{{codigo}}"  --}}
-                  </div>
-                </td>
-              </tr>
-              {{/each}}
-            </tbody>
-          </table>
-    </div>  
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+</main>
+<div id="menuLateral" class="" style="z-index: 1000;height: 100vh;background-color: #fff;margin-top:-0.6vh;">
+        <div id="menulista" style="width: 10vw; height: 98vh;display: flex; flex-direction: column; justify-content: space-around; transition: margin-left 0.4s ease;">
+          <!-- Conteúdo do menu -->
+          <div style="height: 15vh;background-color:#fff;"></div>
+          <div style="display: flex; flex-direction: column; justify-content: space-between;background-color:#fff;text-align: left;margin: auto;height: 30vh;padding-top: 5vh;">
+             <button style="border: block;background-color:#0833a2;color:#fff">
+               <a id="passa-cadastrofornec" href="" style="text-decoration: none;color:#ffffff;">Cadastro fornecedor</a>
+            </button>
+            {{!-- <div style="height: 1vh;"></div> --}}
+            {{!-- <div> --}}
+              <button style="border: block;background-color:#0833a2;width: 100%;">
+                {{!-- <h1 style="font-weight:200;color:#fff;font-size: small;"> --}}
+                <a id="passa-listafornec" href="/fornec/listafornec/:{{this._id}}" style="text-decoration: none;color:#ffffff;">Lista fornecedor</a>
+                {{!-- </h1> --}}
+              </button>
+            {{!-- </div> --}}
+            
+             <button class="btn btn-sm btn-primary"
+                    type="button"
+                    onclick="location.href='/cadproduto/cadastro?lojista={{lojista._id}}'">
+              Cadastro de produtos
+            </button>
+            
+          </div>
+          <div style="height: 25vh;"></div>
+        </div>
+        <div id="faixaVertical" style="width: 2vw; height: 98vh; background-color:#0b56e1; display: flex; flex-direction: column; justify-content: space-around; z-index: 800;margin-top:-0.5vh;">
+          <h2 id="H2menuLateral" style="font-size: 1vw; text-align: end; color: #fff;">Menu lateral</h2>
+        </div>
 </div>
+
+<script>
+  // mede a altura real do header e atualiza a variável CSS --h-top
+  (function(){
+    const root = document.documentElement;
+    const header = document.querySelector('.topbar');
+    function setHeaderHeight(){
+      const h = header ? header.offsetHeight : 56;
+      root.style.setProperty('--h-top', h + 'px');
+    }
+    window.addEventListener('load', setHeaderHeight, {once:true});
+    window.addEventListener('resize', setHeaderHeight, {passive:true});
+    // se tiver fontes web que alteram a altura mais tarde:
+    document.fonts && document.fonts.addEventListener('loadingdone', setHeaderHeight);
+  })();
+</script>
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+        <script src="/js/dashboard.js"></script>
+        {{!-- <script type="module" src="/js/modal-imagem.js"></script> --}}
+        {{!-- <script defer src="/js/modal-imagem.js"></script> --}}
+        <script src="/js/empresa/bcoimagem.js" defer></script>
+        <script src="/js/empresa/cadastro.js" defer></script>
+        <script src="/js/empresa/editecadastro.js" defer></script>
+        <script src="/js/empresa/similares.js" defer></script>
+        <script src="/js/rotinas/limpaSelect.js"></script>
+        <script src="/js/rotinas/produto-ImageModal.js"></script>
+        <script src="/js/rotinas/produto-VinculoModal.js"></script>
+        <script src="/js/rotinas/produto-editModal.js"></script>
+        <script src="/js/rotinas/produto-DeleteModal.js"></script>
+        <script src="/js/rotinas/AcaoComDataset.js"></script>
+</body>
+</html>    
+
 <!-- Modal para edição -->
 <div id="editModal"
   style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:9999;">
@@ -697,78 +841,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
     </div>
   </div>
 </div>
-<!-- MODAL Upload de Imagens -->
-<div id="modalImagem" class="backdrop" role="dialog" aria-modal="true" aria-hidden="true">
-      <div class="mi-dialog">
-            <!-- A: Cabeçalho -->
-            <div class="mi-header">
-                <button id="miClose" class="mi-close" title="Fechar">×</button>
-                <div class="mi-title">Tratando da imagem</div>
-                <div class="mi-actions">
-                <button id="miReloadBank" class="mi-btn flat" title="Recarregar banco de imagens">Recarregar Bco IMG</button>
-                </div>
-            </div>
-            <!-- B: Linha de informações do produto -->
-            <div class="mi-info">
-                <div class="mi-grid">
-                    <div class="mi-field">
-                      <label>id-produto</label>
-                      <input id="miProdId" type="text" readonly>
-                    </div>
-                    <div class="mi-field">
-                      <label>descrição</label>
-                      <input id="miDescricao" type="text" readonly>
-                    </div>
-                    <div class="mi-field">
-                      <label>fornecedor</label>
-                      <input id="miFornecedor" type="text" readonly>
-                    </div>
-                    <div class="mi-field">
-                      <label>departamento</label>
-                      <input id="miDepartamento" type="text" readonly>
-                    </div>
-                </div>
-            </div>
-            <!-- Corpo: C (slots) + D (banco) -->
-            <div class="mi-body">
-                <!-- C: Slots de fotos -->
-                <section class="mi-slots">
-                  <div class="mi-slots-header">
-                        <div class="mi-slots-title">Seleção e Gravar Imagens</div>
-                        <div class="mi-toolbar">
-                          <button id="miClearAll" class="mi-btn danger">Limpar seleção</button>
-                        </div>
-                  </div>
-                  <div id="miSlotGrid" class="mi-slot-grid" style="background:transparent;"></div>
-                  <div id="miNoBankBanner" class="mi-nobank" style="display:none">
-                          Não há imagens no banco. Clique nas caixas acima para escolher do seu computador.
-                  </div>
-                  
-                </section>
-                <!-- D: Banco de imagens -->
-                <section class="mi-bank">
-                    <div class="mi-bank-title">banco de imagens</div>
-                    <div id="imgbcoImg" name="imgbcoImg" class="mi-bank-grid"></div>
-                    <div id="miBankEmpty" class="mi-empty-msg" style="display:none">
-                        Não há imagens.
-                    </div>
-                </section>
-            </div>
-            <div class="mi-footer">
-  <div class="mi-footer-left">
-    <button id="miBankMenuBtn" class="mi-btn flat" type="button">Bco Imagem ▾</button>
-    <div id="miBankMenu" class="mi-pop" hidden>
-      <button id="miBankMenuDesc" class="mi-pop-item" type="button">Buscar por descrição</button>
-      <button id="miBankMenuFor"  class="mi-pop-item" type="button">Buscar por fornecedor</button>
-    </div>
-  </div>
 
-  <div class="mi-footer-right">
-    <button id="btnGravarImagens" class="mi-btn primary" type="button">Gravar imagens</button>
-  </div>
-</div>
-      </div>
-</div>
 <!-- Modal para deletar -->
 <div id="deleteModal"
      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
@@ -853,7 +926,7 @@ function clearSlot(i){
 }
 </script>
 
-<script>
+{{!-- <script>
 /* INIT — referências do modal de imagem, visíveis para os demais scripts */
 (() => {
   window.$backdrop       = document.getElementById('modalImagem');
@@ -895,7 +968,7 @@ function clearSlot(i){
   };
 })();
 
-</script>
+</script> --}}
 {{!-- <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> --}}
 {{!-- MOSTRANDO E ESCONDENDO MENU LATERAL --}}
 <script>
@@ -1061,9 +1134,6 @@ window.addEventListener("DOMContentLoaded", () => {
       document.getElementById("cadastroProdutoModal").style.display="block";
   }  
 </script>
- 
-
-
 {{!-- modalContent-SetorSecao --}}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -1118,7 +1188,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 </script>
 {{!-- /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */ --}}
-<script>
+{{!-- <script>
         /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */
         $hiddenFile?.addEventListener('change', (ev)=>{
                   const APLICAR_FILTRO_UPLOAD = true; 
@@ -1138,9 +1208,9 @@ window.addEventListener("DOMContentLoaded", () => {
                   reader.onload = ()=>{ slots[idx] = { type:'file', file }; fillSlot(idx, reader.result); };
                   reader.readAsDataURL(file);
         });
-</script>
+</script> --}}
 {{!-- // BLOCO 2 — CARREGA AS IMAGENS JÁ VINCULADAS (por produtoId) + ABRIR MODAL --}}
-<script>
+{{!-- <script>
     // BLOCO 2 — Carregar vinculadas e abrir
     async function carregarImagensDoProduto(produtoId, pageurls = []){
           originalSlots.fill(null);
@@ -1245,32 +1315,30 @@ window.abrirModalImagem = _abrirModalImagemImpl; // mantém global
 
 
                
-</script>
-<script>
-// garante referências já criadas ($backdrop, resetSlots, etc.)
-function __limparEstadoDoModal(){
-  try { if (typeof resetSlots === 'function') resetSlots(); } catch(e){}
-  try { originalSlots.fill(null); } catch(e){}
-  try { if ($miBankGrid) $miBankGrid.innerHTML = ''; } catch(e){}
-  try { if (typeof setBankEmptyState === 'function') setBankEmptyState(true); } catch(e){}
-  try { __lastBankCriteria = { descricao:'', fornecedor:'' }; } catch(e){}
-  try { if ($miBankMenu){ $miBankMenu.classList.remove('show'); $miBankMenu.setAttribute('hidden',''); } } catch(e){}
-  try { if ($hiddenFile){ $hiddenFile.value=''; if ($hiddenFile.dataset) delete $hiddenFile.dataset.targetIdx; } } catch(e){}
-}
+</script> --}}
+{{!-- <script>
+    // garante referências já criadas ($backdrop, resetSlots, etc.)
+    function __limparEstadoDoModal(){
+      try { if (typeof resetSlots === 'function') resetSlots(); } catch(e){}
+      try { originalSlots.fill(null); } catch(e){}
+      try { if ($miBankGrid) $miBankGrid.innerHTML = ''; } catch(e){}
+      try { if (typeof setBankEmptyState === 'function') setBankEmptyState(true); } catch(e){}
+      try { __lastBankCriteria = { descricao:'', fornecedor:'' }; } catch(e){}
+      try { if ($miBankMenu){ $miBankMenu.classList.remove('show'); $miBankMenu.setAttribute('hidden',''); } } catch(e){}
+      try { if ($hiddenFile){ $hiddenFile.value=''; if ($hiddenFile.dataset) delete $hiddenFile.dataset.targetIdx; } } catch(e){}
+    }
 
+    function __fecharModal(){
+      if (!$backdrop) return;
+      $backdrop.classList.remove('show');
+      $backdrop.setAttribute('aria-hidden','true');
+      __limparEstadoDoModal();
 
+      window.limparMenuAcoes?.();
+    }
 
-function __fecharModal(){
-  if (!$backdrop) return;
-  $backdrop.classList.remove('show');
-  $backdrop.setAttribute('aria-hidden','true');
-  __limparEstadoDoModal();
-
-  window.limparMenuAcoes?.();
-}
-
-// deixa disponível mesmo se os listeners forem definidos antes
-window.__fecharModal = __fecharModal;
+    // deixa disponível mesmo se os listeners forem definidos antes
+    window.__fecharModal = __fecharModal;
 </script>
 {{!-- // BLOCO 3 — BUSCA NO BANCO DE IMAGENS --}}
 <script>
@@ -1463,7 +1531,7 @@ window.__fecharModal = __fecharModal;
                 console.error(e); alert('Erro ao gravar imagens. Veja o console.');
             }
     });
-</script>
+</script> --}}
 
 <script>
 function pad2(n){ return String(n+1).padStart(2,'0'); }
@@ -1706,38 +1774,4 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 })();
 </script>
-<script>
-//function matchDescricaoTexto(texto, consulta) {
-//  const hay   = __norm(texto);
-//  const terms = __norm(consulta).split(/\s+/).filter(Boolean);
-//  if (!terms.length) return true;
 
-//  let matches = 0;
-//  for (const t of terms) {
-//    if (hay.includes(t)) matches++;
-//  }
-
-  // considera “semelhante” se ao menos metade das palavras baterem
-//  return matches >= Math.ceil(terms.length / 2);
-//}
-</script>
-<script>
-(function(){
-  const bar   = document.getElementById('filtrosProdutos');
-  const pager = document.querySelector('.pager-inline');
-
-  function setHeights(){
-    const bh = bar   ? Math.round(bar.getBoundingClientRect().height)   : 48;
-    const ph = pager ? Math.round(pager.getBoundingClientRect().height) : 34;
-    document.documentElement.style.setProperty('--bar-h',   bh + 'px');
-    document.documentElement.style.setProperty('--pager-h', ph + 'px');
-  }
-
-  window.addEventListener('load', setHeights);
-  window.addEventListener('resize', setHeights);
-  // se os selects mudarem de tamanho, recalcula
-  document.getElementById('filtroStatus')?.addEventListener('change', setHeights);
-  document.getElementById('filtroFornecedor')?.addEventListener('change', setHeights);
-  document.getElementById('filtroModo')?.addEventListener('change', setHeights);
-})();
-</script>

@@ -37,7 +37,7 @@ const LocalizacaoRefSchema = new Schema({
 
 
 // 🔸 Schema principal
-const DdocumentoSchema = new Schema({
+const ArquivoDocSchema = new Schema({
   loja_id: { type: Schema.Types.ObjectId, ref: 'lojista', index: true },
   marcaloja: { type: String },
   cidade: { type: String },
@@ -88,20 +88,20 @@ const DdocumentoSchema = new Schema({
 }, { timestamps: true });
 
 // campos usados nos filtros
-DdocumentoSchema.index({ loja_id: 1 });
-DdocumentoSchema.index({ 'localloja.departamento': 1 });
-DdocumentoSchema.index({ ativo: 1, datadel: 1 });
+ArquivoDocSchema.index({ loja_id: 1 });
+ArquivoDocSchema.index({ 'localloja.departamento': 1 });
+ArquivoDocSchema.index({ ativo: 1, datadel: 1 });
 
 
 // índice de texto para busca por palavra
-DdocumentoSchema.index(
+ArquivoDocSchema.index(
   { descricao: 'text', referencia: 'text' },
   { weights: { descricao: 3, referencia: 1 }, name: 'prod_text_idx' }
 );
 
-DdocumentoSchema.plugin(mongoosePaginate);
+ArquivoDocSchema.plugin(mongoosePaginate);
 
 module.exports =
   mongoose.models.d_documento ||
-  mongoose.model("d_documento", DdocumentoSchema);
+  mongoose.model("arquivo_doc", ArquivoDocSchema);
 

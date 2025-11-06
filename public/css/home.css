@@ -20,7 +20,7 @@
 .product-title{
   min-height: 3.4em;
   display: -webkit-box;
-  -webkit-line-clamp: 2;        /* limita a 2 linhas */
+  /*-webkit-line-clamp: 2;         limita a 2 linhas */
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

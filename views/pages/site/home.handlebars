@@ -18,16 +18,10 @@
         />
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Seu CSS por último para sobrescrever o Bootstrap -->
-        {{!-- <link rel="stylesheet" href="/css/home.css"> --}}
+        <link rel="stylesheet" href="/css/home.css">
+        
 <style>
-  /*.divMenu{
-    width: 14.28%;background-color: cornflowerblue;color:white;padding: 4px;text-align: center;
-  }
-  .btn-divMenu{
-    border-radius: 4px;background-color: transparent;color: #ffffff;border: 0px;
-  }*/
-</style>
-<style>
+
   /* ====== topo ====== */
 .topbar{
   position: sticky; top:0; z-index:1000;
@@ -54,7 +48,7 @@
   margin: auto;
   padding-left: clamp(16px, 3vw, 36px);
   padding-right: clamp(16px, 3vw, 36px);
-  background: yellow;
+  background: rgb(17, 17, 16);
   }
 
 /* logo */
@@ -363,6 +357,44 @@
 #vpLabel small{ opacity:.8; font-weight:500; }
 .fa-cart-shopping{ font-size: 18px; }
 
+#userMenu option { background:#b30000; color:#fff; }
+
+</style>
+<style>
+  /* Mobile-first (até 575px) */
+@media (max-width: 575.98px){
+  .topbar-row{ grid-template-columns:1fr; text-align:center; }
+  .search-form{ grid-template-columns:1fr; gap:10px; }
+  .actions{ justify-content:center; flex-wrap:wrap; }
+  .home-depto-bar{ gap:8px; }
+  .atividade-thumb{ aspect-ratio: 1/1; }
+}
+
+/* ≥576px (sm) */
+@media (min-width: 576px) and (max-width: 767.98px){
+  .search-form{ grid-template-columns: 1fr 1fr; }
+}
+
+/* ≥768px (md) */
+@media (min-width: 768px) and (max-width: 991.98px){
+  .topbar-row{ grid-template-columns: 1fr 1fr; }
+  .search-form{ grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* ≥992px (lg) */
+@media (min-width: 992px) and (max-width: 1199.98px){
+  .topbar-row{
+    grid-template-columns: minmax(140px,1fr) minmax(420px,6fr) minmax(280px,3fr);
+  }
+}
+
+/* ≥1200px (xl) — desktop “cheio” */
+@media (min-width: 1200px){
+  .topbar-row{
+    grid-template-columns: minmax(120px,1fr) minmax(420px,6fr) minmax(280px,3fr);
+  }
+}
+
 </style>
 </head>
 <body>
@@ -372,46 +404,49 @@
     <a class="brand" href="/">
       <span>Rota</span><span class="brand-accent">es</span>
     </a>
-
     <!-- BUSCA + FILTROS -->
     <form class="search-form" action="/buscar" method="get" autocomplete="off">
-  <input class="form-control" name="q" id="inputBusca" placeholder="O que você procura?" autocomplete="off" />
+          <input class="form-control" name="q" id="inputBusca" placeholder="O que você procura?" autocomplete="off" />
 
-  <select id="selectCidade" class="form-select" name="municipio" autocomplete="off">
-    <option value="" {{#unless cidadeSelecionada}}selected{{/unless}}>Município</option>
-    {{#each cidades}}
-      <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
-    {{/each}}
-  </select>
-
-  <select id="selectBairro" class="form-select" name="loja" autocomplete="off">
-    <option value="" {{#unless bairroSelecionado}}selected{{/unless}}>Bairros</option>
-    {{#each bairros}}
-      <option value="{{this}}" {{#if (eq ../bairroSelecionado this)}}selected{{/if}}>{{this}}</option>
-    {{/each}}
-  </select>
-  <!-- ... -->
+          <select id="selectCidade" class="form-select" name="municipio">
+              <option value="" {{#unless cidadeSelecionada}}selected{{/unless}}>Município</option>
+              {{#each cidades}}
+                <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
+              {{/each}}
+          </select>
+          <select id="selectBairro" class="form-select" name="loja">
+            <option value="" {{#unless bairroSelecionado}}selected{{/unless}}>Bairros</option>
+            {{#each bairros}}
+              <option value="{{this}}" {{#if (eq ../bairroSelecionado this)}}selected{{/if}}>{{this}}</option>
+            {{/each}}
+          </select>
 </form>
+   <!-- AÇÕES -->
+   <nav class="actions" style="background: #333;">
+        {{#if userSite}}
+            <div class="user-menu" style="display:inline-flex;align-items:center;gap:10px;">
+                <i class="fa-regular fa-user" aria-hidden="true" style="margin-left:4px;margin-right:8px;"></i>
+                <label for="userMenu" class="visually-hidden">Menu do usuário</label>
 
-
-    <!-- AÇÕES -->
-    <nav class="actions" style="background: #900;">
-      {{#if userSite}}
-          <span class="action-link" style="background:rgba(255,255,255,.08);">
-            <i class="fa-regular fa-user"></i> {{firstName userSite.nome}}
-          </span>
-          <a href="/logout" class="action-link">Sair</a>
-      {{else}}
-          <a href="/login" class="action-link"><i class="fa-regular fa-user"></i> Login</a>
-      {{/if}}
-          <a href="/lojista/cadastro" class="action-link"><i class="fa-regular fa-id-badge"></i> Seja um cooperado</a>
-          <a href="/carrinho" class="action-link"><i class="fa-solid fa-cart-shopping"></i> Carrinho</a>
+                <!-- select sem borda e com fundo da cor do botão -->
+                <select id="userMenu" class="user-select"
+                        onchange="if(this.value){ location.href=this.value; this.value=''; }"
+                        style="background:transparent;color:#fff;border:none;border-radius:16px;
+                              padding:4px 12px;height:28px;line-height:28px;font-size:.9rem;outline:none;">
+                  <option value="" selected>{{firstName userSite.nome}}</option>
+                  <option value="/home-logado">Minha conta</option>
+                  <option value="/logout">Sair</option>
+                </select>
+            </div>
+        {{else}}
+           <a href="/login" class="action-link"><i class="fa-regular fa-user"></i> Login</a>
+        {{/if}}
+          <a href="/sejacooperado" class="action-link"><i class="fa-regular fa-id-badge"></i> Seja um cooperado</a>
     </nav>
   </div>
 </header>
 <label id="vpLabel" aria-live="polite"></label>
 <div class="quickbar bg-light border-bottom" >
-  
   <div class="container my-2">
       <div class="home-depto-bar" role="toolbar" aria-label="Departamentos" >
         {{#if departamentosAtivos.length}}
@@ -435,14 +470,13 @@
       {{#if atividades.length}}
         <div class="atividades-grid">
           {{#each atividades}}
-          <a class="atividade-card js-open-setor"
-            href="/setor/{{_id}}"
-            data-setor-id="{{_id}}"
-            aria-label="{{nome}}">
-            <div class="atividade-thumb"><img src="{{imagemUrl}}" alt="{{nome}}"></div>
-            <div class="atividade-name">{{titulo}}</div>
-          </a>
-
+              <a class="atividade-card js-open-setor"
+                href="/setor/{{_id}}"
+                data-setor-id="{{_id}}"
+                aria-label="{{nome}}">
+                <div class="atividade-thumb"><img src="{{imagemUrl}}" alt="{{nome}}"></div>
+                <div class="atividade-name">{{titulo}}</div>
+              </a>
           {{/each}}
         </div>
       {{else}}
@@ -460,49 +494,47 @@
               </div>
             </div>
         {{/if}}
-
         {{#if produtos.length}}
-              <div class="row g-3" id="gridProdutos">
-                {{#each produtos}}
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                  <article class="card h-100 product-card shadow-sm">
-                    <div class="ratio ratio-4x3">
-                      <img src="{{this.pageurls}}" alt="{{this.descricao}}" class="card-img-top p-2 object-fit-contain">
-                    </div>
-                    <div class="card-body d-flex flex-column">
-                      <h6 class="card-title text-center product-title">{{this.descricao}}</h6>
-                      <p class="price text-center mb-3">{{moeda this.preco}}</p>
-                      <button class="btn btn-success w-100 mt-auto" onclick="adicionarCarrinho('{{this._id}}')">Comprar ?</button>
-                    </div>
-                  </article>
-                </div>
-                {{/each}}
-              
-                {{#each anuncios}}
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                  <aside class="card h-100 product-card d-flex align-items-center justify-content-center p-2 shadow-sm">
-                    <img src="{{this.logo}}" alt="{{this.nome}}" class="img-fluid p-3" style="max-height:120px;">
-                    <div class="card-body text-center">
-                      <h6 class="mb-1">{{this.nome}}</h6>
-                      <small class="text-muted">{{this.segmento}}</small>
-                      <a href="{{this.url}}" class="btn btn-success w-100 mt-3">Ir</a>
-                    </div>
-                  </aside>
-                </div>
-                {{/each}}
+            <div class="row g-3" id="gridProdutos">
+              {{#each produtos}}
+              <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <article class="card h-100 product-card shadow-sm">
+                  <div class="ratio ratio-4x3">
+                    <img src="{{this.pageurls}}" alt="{{this.descricao}}" class="card-img-top p-2 object-fit-contain">
+                  </div>
+                  <div class="card-body d-flex flex-column">
+                    <h6 class="card-title text-center product-title">{{this.descricao}}</h6>
+                    <p class="price text-center mb-3">{{moeda this.preco}}</p>
+                    <button class="btn btn-success w-100 mt-auto" onclick="adicionarCarrinho('{{this._id}}')">Comprar ?</button>
+                  </div>
+                </article>
               </div>
+              {{/each}}
+            
+              {{#each anuncios}}
+              <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <aside class="card h-100 product-card d-flex align-items-center justify-content-center p-2 shadow-sm">
+                  <img src="{{this.logo}}" alt="{{this.nome}}" class="img-fluid p-3" style="max-height:120px;">
+                  <div class="card-body text-center">
+                    <h6 class="mb-1">{{this.nome}}</h6>
+                    <small class="text-muted">{{this.segmento}}</small>
+                    <a href="{{this.url}}" class="btn btn-success w-100 mt-3">Ir</a>
+                  </div>
+                </aside>
+              </div>
+              {{/each}}
+            </div>
         {{else}}
-        <div class="alert alert-info">
-              Nenhum produto encontrado {{#if q}}para “{{q}}”{{/if}}.
-              <a href="/">Limpar filtros</a>
-        </div>
+            <div class="alert alert-info">
+                  Nenhum produto encontrado {{#if q}}para “{{q}}”{{/if}}.
+                  <a href="/">Limpar filtros</a>
+            </div>
         {{/if}}
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- linha anterior existente -->
-<script>
-  
 
+<!-- linha anterior existente -->
+{{!-- <script>
+////////////////////////////////////////////////////////////
 (function(){
   const el = document.getElementById('vpLabel') || (function(){
     const n = document.createElement('label'); n.id = 'vpLabel'; document.body.appendChild(n); return n;
@@ -526,481 +558,285 @@
   window.addEventListener('load', draw, {once:true});
   draw();
 })();
-</script>
+</script> --}}
+
+{{!-- <script>
+document.addEventListener('DOMContentLoaded', function(){
+  var menu = document.getElementById('userMenu');
+  if (!menu) return;
+  console.log('menu X10',menu)
+  //////////////////////////////////////////////////////////////
+  function go(v){
+    console.log('valor de v',v)
+    if (v === 'logout') {
+      window.location.href = '/logout';
+    } else if (v === 'profile') {
+      window.location.href = '/home-logado'; // ✅ com hífen
+    }
+    // volta a exibir o primeiro nome
+    menu.value = '';
+  }
+
+  // dispara em troca real de opção
+  menu.addEventListener('change', function(e){
+    // log para confirmar que o handler está ativo
+    console.log('[userMenu change]', e.target.value);
+    go(e.target.value);
+  });
+
+  // fallback (alguns navegadores disparam 'input' ao abrir/confirmar)
+  menu.addEventListener('input', function(e){
+     console.log('[userMenu input]', e.target.value);
+    if (e.target.value === 'logout' || e.target.value === 'profile') {
+      go(e.target.value);
+    }
+  });
+});
+</script> --}}
 </body>
- {{!-- COMEÇO DO JAVASCRIPT TRATA DE BAIRROS E--}}
-<script>
+
+
+</html>
+<script id="home-bundle">
+(() => {
+  // ===== Helpers =====
+  const $  = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+  const on = (el, ev, fn, op) => el && el.addEventListener(ev, fn, op);
+  const escMap = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+  const esc = (x)=>String(x??'').replace(/[&<>\"']/g,m=>escMap[m]);
+  const att = esc;
+  const brl = v => (typeof v==='number' && isFinite(v) && v>0) ? v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}) : '';
+
+  // ===== carregarBairros (global) =====
+  async function carregarBairros(cidade, bairroSel='') {
+    const selBairro = document.getElementById('selectBairro');
+    if (!selBairro) return;
+    if (!cidade){
+      selBairro.innerHTML = '<option value="">Bairros</option>';
+      selBairro.disabled = false;
+      return;
+    }
+    selBairro.disabled = true;
+    selBairro.innerHTML = '<option value="">Carregando...</option>';
+    try{
+      const r = await fetch(`/bairros?cidade=${encodeURIComponent(cidade)}`, { cache:'no-store' });
+      const data = await r.json();
+      const itens = Array.isArray(data) ? data : (Array.isArray(data?.items) ? data.items : []);
+      selBairro.innerHTML =
+        ['<option value="">Bairros</option>']
+        .concat(itens.map(b => `<option value="${b}" ${b===bairroSel?'selected':''}>${b}</option>`))
+        .join('');
+    }catch(e){
+      console.error('carregarBairros', e);
+      selBairro.innerHTML = '<option value="">Bairros</option>';
+    }finally{
+      selBairro.disabled = false;
+    }
+  }
+  window.carregarBairros = carregarBairros;
+
+  // ===== Cidade/Bairro: regras de inicialização =====
+  (async function initCidadeBairro(){
+    const LOGGED = {{#if userSite}}true{{else}}false{{/if}};
+    const PAD_CIDADE = `{{userSite.cidadePadrao}}` || '';
+    const PAD_BAIRRO = `{{userSite.bairroPadrao}}` || '';
+    const FROM_SERVER_CIDADE = `{{cidadeSelecionada}}` || '';
+    const FROM_SERVER_BAIRRO = `{{bairroSelecionado}}` || '';
+
     const selCidade = document.getElementById('selectCidade');
     const selBairro = document.getElementById('selectBairro');
+    if (!selCidade || !selBairro) return;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      if (selCidade && selCidade.value) carregarBairros(selCidade.value);
-    });
+    // Fallback: se o servidor não trouxe lista de cidades (só placeholder), preenche localmente
+    const DEFAULT_CIDADES = ['Vitória','Vila Velha','Serra','Cariacica','Guarapari'];
+    if (selCidade.options.length <= 1) {
+      DEFAULT_CIDADES.forEach(c => selCidade.add(new Option(c, c)));
+    }
 
-    selCidade.addEventListener('change', () => carregarBairros(selCidade.value));
-
-async function carregarBairros(cidade, bairroParaSelecionar = ''){
-  const selCidade = document.getElementById('selectCidade');
-  const selBairro = document.getElementById('selectBairro');
-
-  selBairro.innerHTML = '<option value="">Carregando...</option>';
-  selBairro.disabled = true;
-
-  if (!cidade){
-    selBairro.innerHTML = '<option value="">Bairro</option>';
-    selBairro.disabled = false;
-    return;
-  }
-
-  try{
-    const r = await fetch(`/bairros?cidade=${encodeURIComponent(cidade)}`, {cache:'no-store'});
-    const data = await r.json();
-
-    const itens = Array.isArray(data) ? data
-               : (Array.isArray(data?.items) ? data.items : []);
-
-    // prioridade: (1) parâmetro explícito, (2) variável do servidor, (3) localStorage
-    const selecionado =
-      bairroParaSelecionar ||
-      '{{bairroSelecionado}}' ||
-      localStorage.getItem('rotaes:bairro') || '';
-
-    selBairro.innerHTML = '<option value="">Bairro</option>' +
-      itens.map(b => `<option value="${b}" ${b === selecionado ? 'selected' : ''}>${b}</option>`).join('');
-
-    selBairro.disabled = false;
-
-  }catch(e){
-    console.error(e);
-    selBairro.innerHTML = '<option value="">Bairro</option>';
-    selBairro.disabled = false;
-  }
-}
-
-
-    async function carregarBairros(cidade){
-      console.log('');
-      console.log(' [ 585 carregaBairros(cidade) ]',cidade);
-      console.log('');
-      selBairro.innerHTML = '<option value="">Carregando...</option>';
-      selBairro.disabled = true;
-
-      if (!cidade){
-        selBairro.innerHTML = '<option value="">Bairro</option>';
-        return;
+    // Helper para garantir opção presente e selecionada
+    const ensure = (select, value) => {
+      if (!value) return;
+      let opt = Array.from(select.options).find(o => (o.value||'')===value);
+      if (!opt){
+        const idx = (select.options[0] && select.options[0].value==='') ? 1 : 0;
+        opt = new Option(value, value, true, true);
+        select.add(opt, idx);
       }
-      console.log('');
-      console.log('');
-     
-      console.log('');
+      select.value = value;
+    };
+
+    if (!LOGGED) {
+      // Visitante e pós-logout: zera e limpa qualquer resquício salvo
+      localStorage.removeItem('rotaes:cidade');
+      localStorage.removeItem('rotaes:bairro');
+      selCidade.selectedIndex = 0;                                 // "Município"
+      selBairro.innerHTML = '<option value="">Bairros</option>';   // limpa bairros
+      // ao mudar cidade, carrega bairros e não persiste nada
+      on(selCidade, 'change', async () => {
+        await carregarBairros(selCidade.value || '', '');
+      });
+      return; // nada de auto-preencher para visitante
+    }
+
+    // Logado: usa valor vindo do servidor (ou padrões do usuário)
+    const useCidade = FROM_SERVER_CIDADE || PAD_CIDADE;
+    const useBairro = FROM_SERVER_BAIRRO || PAD_BAIRRO;
+
+    if (useCidade){
+      ensure(selCidade, useCidade);
+      await carregarBairros(useCidade, useBairro || '');
+      if (useBairro) ensure(selBairro, useBairro);
+      // opcional: persistir localmente enquanto logado
+      localStorage.setItem('rotaes:cidade', useCidade);
+      if (useBairro) localStorage.setItem('rotaes:bairro', useBairro);
+    } else {
+      // sem cidade conhecida → placeholders
+      selCidade.selectedIndex = 0;
+      selBairro.innerHTML = '<option value="">Bairros</option>';
+    }
+
+    // Mesmo logado, se trocar a cidade manualmente, recarrega bairros
+    on(selCidade, 'change', e => carregarBairros(e.target.value, ''));
+  })();
+
+  // ===== Navegação: Setores -> Seções =====
+  (function setoresSecoes(){
+    const pane = document.getElementById('secoesPane');
+    if (!pane) return;
+
+    on(document, 'click', async (ev) => {
+      const a = ev.target.closest('a.js-open-setor');
+      if (!a) return;
+      ev.preventDefault();
+      const id = a.getAttribute('data-setor-id');
+      if (!id) return;
+
       try{
-        // ajuste a rota ao seu router
-        const r = await fetch(`/bairros?cidade=${encodeURIComponent(cidade)}`);
-      
-        const bairros = await r.json();
-         console.log('[ 603 fetch(`/bairros?cidade ]',bairros);
-        const itens = Array.isArray(bairros) ? bairros
-                : (Array.isArray(bairros?.items) ? bairros.items : []);
-
-        const selecionado = '{{bairroSelecionado}}';
-        
-        selBairro.innerHTML = '<option value="">Bairro</option>' +
-          itens.map(b => `<option value="${b}" ${b === "{{bairroSelecionado}}" ? 'selected' : ''}>${b}</option>`).join('');
-
-        selBairro.disabled = false;
-      }catch(e){
-        console.error(e);
-        selBairro.innerHTML = '<option value="">Bairro</option>';
-      }
-    }
-</script>
-<script>
-// ===== Preferências locais (cidade/bairro) =====
-(() => {
-  const selCidade = document.getElementById('selectCidade');
-  const selBairro = document.getElementById('selectBairro');
-
-  // carrega preferências salvas
-  document.addEventListener('DOMContentLoaded', async () => {
-    const prefCidade = localStorage.getItem('rotaes:cidade') || '';
-    const prefBairro = localStorage.getItem('rotaes:bairro') || '';
-
-    // se o select estiver vazio, aplica a preferência
-    if (selCidade && !selCidade.value && prefCidade){
-      selCidade.value = prefCidade;
-      // carrega bairros e seleciona o salvo
-      await carregarBairros(prefCidade, prefBairro);
-    }
-    // se já veio cidade da página, persiste
-    if (selCidade && selCidade.value){
-      localStorage.setItem('rotaes:cidade', selCidade.value);
-    }
-  });
-
-  // salva a cada mudança
-  selCidade?.addEventListener('change', () => {
-    localStorage.setItem('rotaes:cidade', selCidade.value || '');
-    // ao trocar de cidade, apaga bairro salvo
-    localStorage.removeItem('rotaes:bairro');
-  });
-  selBairro?.addEventListener('change', () => {
-    localStorage.setItem('rotaes:bairro', selBairro.value || '');
-  });
-})();
-</script>
-<script>
-// ===== contador simples de visitas à HOME =====
-(() => {
-  const k = 'rotaes:home:visitas';
-  const n = parseInt(localStorage.getItem(k) || '0', 10) + 1;
-  localStorage.setItem(k, String(n));
-  // console.log('Visitas à home:', n);
-})();
-</script>
-
-<script>
-      const inputBusca = document.querySelector('input[name="q"]');
-
-      const listaSugestoes = document.createElement('div');
-      listaSugestoes.id = 'sugestoesLista';
-      inputBusca.parentElement.appendChild(listaSugestoes);
-
-      inputBusca.addEventListener('input', async () => {
-        const termo = inputBusca.value.trim().toLowerCase();
-        if (termo.length < 3) { listaSugestoes.innerHTML = ''; return; }
-
-        const resp = await fetch(`/buscar-sugestoes?q=${encodeURIComponent(termo)}`);
-        const sugestoes = await resp.json();
-
-        listaSugestoes.innerHTML = sugestoes.map(s => `<div>${s}</div>`).join('');
-
-        listaSugestoes.querySelectorAll('div').forEach(div => {
-          div.addEventListener('click', () => {
-            inputBusca.value = div.textContent;
-            listaSugestoes.innerHTML = '';
-          });
-      });
-});
-
-</script>
-{{!-- //// ===== Autocomplete leve ===== --}}
-<script>
-// ===== Autocomplete leve =====
-(() => {
-  const input = document.querySelector('input[name="q"]');
-  if (!input) return;
-
-  input.parentElement.style.position = 'relative';
-  const box = document.createElement('div');
-  box.id = 'sugestoesLista';
-  input.parentElement.appendChild(box);
-
-  let items = [];
-  let active = -1;
-  let timer = null;
-  let lastTerm = '';
-
-  const debounce = (fn, ms=250) => (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), ms);
-  };
-
-  const render = () => {
-    box.innerHTML = items.map((t,i)=>`
-      <div class="sug-item ${i===active?'active':''}" data-i="${i}" title="${t}">${t}</div>
-    `).join('');
-    box.style.display = items.length ? 'block' : 'none';
-    box.querySelectorAll('.sug-item').forEach(div=>{
-      div.addEventListener('mousedown', e => {
-        e.preventDefault();
-        const idx = Number(div.dataset.i);
-        choose(idx);
-      });
+        const r = await fetch(`/setor/${encodeURIComponent(id)}`, { headers:{'Accept':'application/json'} });
+        if (!r.ok){ console.warn('API seções', r.status); return; }
+        const data = await r.json();
+        renderSecoes(data);
+        showArea('secoes');
+      }catch(e){ console.error(e); }
     });
-  };
 
-  const choose = (idx) => {
-    if (idx < 0 || idx >= items.length) return;
-    input.value = items[idx];
-    close();
-  };
-
-  const close = () => {
-    items = [];
-    active = -1;
-    render();
-  };
-
-  const fetchSug = debounce(async () => {
-    const term = (input.value || '').trim();
-    if (term.length < 3){ close(); return; }
-    if (term === lastTerm) return;
-    lastTerm = term;
-    try{
-      const r = await fetch(`/buscar-sugestoes?q=${encodeURIComponent(term)}`, {cache:'no-store'});
-      const arr = await r.json();
-      items = Array.isArray(arr) ? arr : [];
-      active = -1;
-      render();
-    }catch{ close(); }
-  }, 250);
-
-  input.addEventListener('input', fetchSug);
-  input.addEventListener('keydown', (e) => {
-    if (!items.length) return;
-    if (e.key === 'ArrowDown'){ active = (active + 1) % items.length; render(); e.preventDefault(); }
-    else if (e.key === 'ArrowUp'){ active = (active - 1 + items.length) % items.length; render(); e.preventDefault(); }
-    else if (e.key === 'Enter'){ if (active >= 0){ e.preventDefault(); choose(active); } }
-    else if (e.key === 'Escape'){ close(); }
-  });
-  document.addEventListener('click', (e) => {
-    if (!box.contains(e.target) && e.target !== input) close();
-  });
-})();
-
-</script>
-
-<script>
-(function(){
-  const $pane = document.getElementById('secoesPane');
-
-  document.addEventListener('click', async (ev) => {
-    const a = ev.target.closest('a.js-open-setor');
-    if (!a) return;
-    ev.preventDefault();
-
-    const id = a.getAttribute('data-setor-id');
-    if (!id) return;
-
-    try{
-      const r = await fetch(`/setor/${encodeURIComponent(id)}`, {headers:{'Accept':'application/json'}});
-      if(!r.ok){ console.warn('API seções', r.status); return; }
-      const data = await r.json();
-      renderSecoes(data);
-      showArea('secoes');
-    }catch(e){ console.error(e); }
-  });
-
-  function renderSecoes(data){
-    const header = `
-        <div class="secoes-header">
-        <div class="btn btn-depto btn-depto-active">${esc(data.departamento||'')}</div>
-        <div class="btn btn-depto btn-depto-sub">${esc(data.setor||'')}</div>
-        </div>
-        <h2 class="home-title">Seções</h2>
-      `;
-
-    const grid = (Array.isArray(data.secoes) && data.secoes.length)
-      ? `<div class="atividades-grid">
-          ${data.secoes.map(card).join('')}
-         </div>`
-      : `<p class="text-muted">Nenhuma seção com imagem neste setor.</p>`;
-
-    $pane.innerHTML = header + grid;
-    $pane.hidden = false;
-    $pane.scrollIntoView({behavior:'smooth', block:'start'});
-  }
-
-  function card(s){
-    return `
+    function card(s){
+      return `
         <a class="atividade-card js-open-secao" href="${s.href}"
-          data-secao-id="${att(s._id)}">
+           data-secao-id="${att(s._id)}">
           <div class="atividade-thumb">
             <img loading="lazy" src="${s.imagemUrl}" alt="${att(s.nome)}">
           </div>
           <div class="atividade-name">${esc(s.nome)}</div>
         </a>`;
-  }
+    }
 
+    function renderSecoes(data){
+      const header = `
+        <div class="secoes-header">
+          <div class="btn btn-depto btn-depto-active">${esc(data.departamento||'')}</div>
+          <div class="btn btn-depto btn-depto-sub">${esc(data.setor||'')}</div>
+        </div>
+        <h2 class="home-title">Seções</h2>`;
+      const grid = (Array.isArray(data.secoes) && data.secoes.length)
+        ? `<div class="atividades-grid">${data.secoes.map(card).join('')}</div>`
+        : `<p class="text-muted">Nenhuma seção com imagem neste setor.</p>`;
+      pane.innerHTML = header + grid;
+      pane.hidden = false;
+      pane.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  })();
 
-  const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
-  const esc = (x)=>String(x??'').replace(/[&<>\"']/g,m=>map[m]);
-  const att = esc;
-})();
+  // ===== Seção -> Produtos =====
+  (function secaoProdutos(){
+    on(document, 'click', async (ev) => {
+      const a = ev.target.closest('a.js-open-secao');
+      if (!a) return;
+      ev.preventDefault();
 
+      const secaoId = a.getAttribute('data-secao-id');
+      if (!secaoId) return;
 
+      try{
+        const r = await fetch(`/secao/${encodeURIComponent(secaoId)}/produtos`, { headers:{'Accept':'application/json'} });
+        if (!r.ok){ console.warn('API produtos da seção', r.status); return; }
+        const data = await r.json(); // { secao, produtos }
+        renderProdutos(data);
+        showArea('produtos');
+        document.getElementById('produtos')?.scrollIntoView({behavior:'smooth', block:'start'});
+      }catch(e){ console.error(e); }
+    });
 
-// clique em uma SEÇÃO -> carrega produtos e mostra o grid
-document.addEventListener('click', async (ev) => {
-  const a = ev.target.closest('a.js-open-secao');
-  if (!a) return;
-  ev.preventDefault();
+    // alterna áreas
+    window.showArea = function(area){
+      const $ativ   = document.getElementById('Setores');
+      const $secoes = document.getElementById('secoesPane');
+      const $prod   = document.getElementById('produtos');
+      if ($ativ)   $ativ.style.display   = 'none';
+      if ($prod)   $prod.style.display   = 'none';
+      if ($secoes){ $secoes.hidden = true; $secoes.style.display = 'none'; }
+      if (area==='atividades' && $ativ) $ativ.style.display='block';
+      else if (area==='secoes' && $secoes){ $secoes.hidden=false; $secoes.style.display='block'; }
+      else if (area==='produtos' && $prod){ $prod.style.display='block'; }
+    };
+  })();
 
-  const secaoId = a.getAttribute('data-secao-id');
-  if (!secaoId) return;
+  // ===== Render de Produtos =====
+  function renderProdutos(data){
+    const $prod = document.getElementById('produtos');
+    if (!$prod) return;
 
-  try{
-    // ajuste a rota conforme seu backend
-    const r = await fetch(`/secao/${encodeURIComponent(secaoId)}/produtos`,
-                          { headers: { 'Accept':'application/json' }});
-    if (!r.ok){ console.warn('API produtos da seção', r.status); return; }
+    const nomeSecao = (data?.secao?.nomeSecao) || data?.secao || '';
+    const prods = Array.isArray(data?.produtos) ? data.produtos : [];
 
-    const data = await r.json();  // { secao:'bicicleta', produtos:[...] }
-    renderProdutos(data);
-    showArea('produtos');
-    document.getElementById('produtos')
-      ?.scrollIntoView({ behavior:'smooth', block:'start' });
-  }catch(e){ console.error(e); }
-});
-
-// util para alternar as áreas
-function showArea(area){               // 'atividades' | 'secoes' | 'produtos'
-  const $ativ   = document.getElementById('Setores');
-  const $secoes = document.getElementById('secoesPane');
-  const $prod   = document.getElementById('produtos');
-
-  // esconde tudo
-  if ($ativ)   $ativ.style.display   = 'none';
-  if ($prod)   $prod.style.display   = 'none';
-  if ($secoes) { $secoes.hidden = true; $secoes.style.display = 'none'; }
-
-  // mostra o solicitado
-  if (area === 'atividades' && $ativ){
-    $ativ.style.display = 'block';
-  } else if (area === 'secoes' && $secoes){
-    $secoes.hidden = false;           // remove o atributo hidden
-    $secoes.style.display = 'block';
-  } else if (area === 'produtos' && $prod){
-    $prod.style.display = 'block';
-  }
-}
-
-</script>
-<script>
-function renderProdutos(data){
-  const $secTitle = document.getElementById('secoes-name');   // opcional: título da seção
-  const $prod     = document.getElementById('produtos');
-  if (!$prod) return;
-
-  const nomeSecao = (data?.secao?.nomeSecao) || data?.secao || '';
-  const prods = Array.isArray(data?.produtos) ? data.produtos : [];
-
-  // título “Produtos” + breadcrumb simples (opcional)
-  if ($secTitle) $secTitle.textContent = nomeSecao || 'Produtos';
-
-  if (prods.length === 0){
-    $prod.innerHTML = `
-      <div class="text-center text-muted py-4">
+    if (!prods.length){
+      $prod.innerHTML = `<div class="text-center text-muted py-4">
         Nenhum produto encontrado para esta seção.
       </div>`;
-    return;
-  }
-
-  const PLACEHOLDER = 'https://via.placeholder.com/480x360?text=Produto';
-
-function pickImage(p){
-  // 1) arrays conhecidos
-  const arrays = [p.pageurlS, p.pageurls, p.pageurl, p.imagens, p.images];
-  for (const a of arrays){
-    if (Array.isArray(a) && a.length && a[0]) return String(a[0]);
-  }
-  // 2) campos escalares comuns
-  const singles = [p.imagemUrl, p.imageUrl, p.fotoUrl, p.thumbUrl];
-  for (const s of singles){
-    if (s && String(s).trim()) return String(s).trim();
-  }
-  return PLACEHOLDER;
-}
-  // helper preço
-  const brl = v => (typeof v === 'number' && !isNaN(v) && v > 0)
-    ? v.toLocaleString('pt-BR',{ style:'currency', currency:'BRL'})
-    : '';
-
-  // monta cards (3 por linha em md, 2 em sm, 1 no xs; 4 no lg)
-  const cards = prods.map(p => {
-    const img = pickImage(p);
-
-    const preco  = brl(p.preco1 || p.preco || p.precoavista);
-    const href   = p.href || `/produto/${p._id}`;   // ajuste se tiver outra rota
-
-    return `
-      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-        <article class="card h-100 card-product">
-          <a class="ratio ratio-4x3" href="${href}" aria-label="${p.descricao || ''}">
-  <img class="w-100 h-100 object-fit-contain p-2"
-       src="${img}"
-       alt="${p.descricao || ''}"
-       loading="lazy"
-       referrerpolicy="no-referrer"
-       onerror="this.src='${PLACEHOLDER}'">
-</a>
-
-          <div class="card-body d-flex flex-column">
-            <h6 class="card-title mb-2 text-truncate" title="${p.descricao || ''}">${p.descricao || ''}</h6>
-            ${preco ? `<div class="mt-auto fw-semibold">${preco}</div>` : `<div class="mt-auto text-muted small">preço sob consulta</div>`}
-          </div>
-        </article>
-      </div>
-    `;
-  }).join('');
-
-  $prod.innerHTML = `
-    <section class="container-fluid px-0">
-      <div class="d-flex align-items-center justify-content-between mb-2 px-2">
-        <h2 class="h6 mb-0">${nomeSecao ? `Produtos · ${nomeSecao}` : 'Produtos'}</h2>
-        <span class="text-muted small">${prods.length} itens</span>
-      </div>
-      <div class="row g-3 px-2">
-        ${cards}
-      </div>
-    </section>`;
-}
-</script>
-
-<script>
-(function(){
-  // valores vindos do servidor (injetados pelo middleware res.locals.userSite)
-  const PAD_CIDADE = '{{userSite.cidadePadrao}}';
-  const PAD_BAIRRO = '{{userSite.bairroPadrao}}';
-
-  const selCidade = document.getElementById('selectCidade');
-  const selBairro = document.getElementById('selectBairro');
-
-  // Se o usuário estiver logado e tiver padrão, preenche automático
-  const logged = {{#if userSite}}true{{else}}false{{/if}};
-  if (logged && selCidade && selBairro){
-    if (PAD_CIDADE){
-      selCidade.value = PAD_CIDADE;
-      // carrega bairros e seleciona o padrão
-      if (typeof carregarBairros === 'function'){
-        carregarBairros(PAD_CIDADE).then(()=>{
-          if (PAD_BAIRRO){
-            selBairro.value = PAD_BAIRRO;
-          }
-        });
-      }
+      return;
     }
-    // Se quiser, esconda os selects quando logado
-    // selCidade.closest('.form-select')?.classList.add('d-none');
-    // selBairro.closest('.form-select')?.classList.add('d-none');
+
+    const PLACEHOLDER = 'https://via.placeholder.com/480x360?text=Produto';
+    const pickImage = (p) => {
+      const arrays = [p.pageurlS, p.pageurls, p.pageurl, p.imagens, p.images];
+      for (const a of arrays){ if (Array.isArray(a) && a.length && a[0]) return String(a[0]); }
+      const singles = [p.imagemUrl, p.imageUrl, p.fotoUrl, p.thumbUrl];
+      for (const s of singles){ if (s && String(s).trim()) return String(s).trim(); }
+      return PLACEHOLDER;
+    };
+
+    const cards = prods.map(p=>{
+      const img   = pickImage(p);
+      const preco = brl(p.preco1 || p.preco || p.precoavista);
+      const href  = p.href || `/produto/${p._id}`;
+      return `
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+          <article class="card h-100 card-product">
+            <a class="ratio ratio-4x3" href="${href}" aria-label="${esc(p.descricao||'')}">
+              <img class="w-100 h-100 object-fit-contain p-2"
+                   src="${img}" alt="${esc(p.descricao||'')}" loading="lazy"
+                   referrerpolicy="no-referrer"
+                   onerror="this.src='${PLACEHOLDER}'">
+            </a>
+            <div class="card-body d-flex flex-column">
+              <h6 class="card-title mb-2 text-truncate" title="${esc(p.descricao||'')}">${esc(p.descricao||'')}</h6>
+              ${preco ? `<div class="mt-auto fw-semibold">${preco}</div>`
+                      : `<div class="mt-auto text-muted small">preço sob consulta</div>`}
+            </div>
+          </article>
+        </div>`;
+    }).join('');
+
+    $prod.innerHTML = `
+      <section class="container-fluid px-0">
+        <div class="d-flex align-items-center justify-content-between mb-2 px-2">
+          <h2 class="h6 mb-0">${nomeSecao ? `Produtos · ${esc(nomeSecao)}` : 'Produtos'}</h2>
+          <span class="text-muted small">${prods.length} itens</span>
+        </div>
+        <div class="row g-3 px-2">${cards}</div>
+      </section>`;
   }
-})();
-</script>
-<script>
-(function(){
-  // valores vindos do servidor (se logado)
-  const PAD_CIDADE = '{{userSite.cidadePadrao}}';
-  const PAD_BAIRRO = '{{userSite.bairroPadrao}}';
 
-  const selCidade = document.getElementById('selectCidade');
-  const selBairro = document.getElementById('selectBairro');
-
-  const logged = {{#if userSite}}true{{else}}false{{/if}};
-  if (logged && selCidade && selBairro){
-    if (PAD_CIDADE){
-      selCidade.value = PAD_CIDADE;
-
-      // garante que os bairros dessa cidade sejam carregados
-      if (typeof carregarBairros === 'function'){
-        // carregarBairros deve retornar uma Promise; se não retorna, só remova o .then(...)
-        Promise.resolve(carregarBairros(PAD_CIDADE)).then(()=>{
-          if (PAD_BAIRRO) selBairro.value = PAD_BAIRRO;
-        });
-      }
-    }
-    // OPCIONAL: esconder os selects quando logado
-    // selCidade.classList.add('d-none');
-    // selBairro.classList.add('d-none');
-  }
 })();
 </script>

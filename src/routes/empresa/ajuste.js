@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
-const Ddocumento = require('../../models/ddocumento'); // ddocumento
+const Ddocumento = mongoose.model('arquivo_doc')
 const Departamento  = require('../../models/departamento');
 const DeptoSetor  = require('../../models/deptosetores');
 const DeptoSecao  = require('../../models/deptosecao');   // deptosecoes

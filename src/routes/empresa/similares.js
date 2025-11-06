@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const Ddocumento = mongoose.model("d_documento");
+const ArquivoDoc = mongoose.model("arquivo_doc");
 ///////////////////////////////////////////////////////////////////
 // FAZ A BUSCA DE PRODUTOS COM TERMOS SIMILARES
 router.get("/buscar", async (req, res) => {
@@ -17,7 +17,7 @@ router.get("/buscar", async (req, res) => {
 
   try {
     // Carrega o produto base
-    const produtoBase = await Ddocumento.findById(baseId).lean();
+    const produtoBase = await ArquivoDoc.findById(baseId).lean();
 
     if (!produtoBase) {
       return res.status(404).json({ erro: "Produto base não encontrado." });
@@ -27,7 +27,7 @@ router.get("/buscar", async (req, res) => {
     const idsSimilares = (produtoBase.similares || []).map(id => id.toString());
 
     // Busca produtos que não são o base e nem já similares
-    const produtos = await Ddocumento.find({
+    const produtos = await ArquivoDoc.find({
       _id: { $ne: baseId, $nin: idsSimilares },
       $or: [
         { codigo: new RegExp(termo, "i") },
@@ -50,18 +50,20 @@ router.get("/buscar", async (req, res) => {
 
 router.get("/produtos/detalhes/:id", async (req, res) => {
   console.log('');
-  console.log(" [ 31 - similares.js ]")
+  console.log(" [ 53 \routes\empresa\similares.js ]")
   console.log('');
   try {
     //const fornecedor = await Fornec.findById("687bb4f0505327b30d3c81b5").lean();
-    console.log(req.params.id)
-    const produto = await Ddocumento.findById(req.params.id)
+    console.log('');
+    console.log('req.params.id',req.params.id)
+    console.log('');
+    const produto = await ArquivoDoc.findById(req.params.id)
       .populate({ 
                   path: "fornecedor", select: "razao marca", model: "fornec" })
       .populate({path:"similares", select:"codigo descricao referencia precovista"}) 
       .lean();
       console.log('');
-      console.log('[ 42 - similares.js ] ',produto)
+      console.log('[ 66 - similares.js ] ',produto)
       console.log('');
     res.json(produto);
   } catch (err) {
@@ -76,7 +78,7 @@ router.post("/vincular", async (req, res) => {
   const { produtoBaseId, similarId } = req.body;
   try {
     // Evita duplicados
-    const produto = await Ddocumento.findById(produtoBaseId);
+    const produto = await ArquivoDoc.findById(produtoBaseId);
 
     if (!produto) {
       return res.status(404).json({ erro: "Produto base não encontrado" });
@@ -129,7 +131,7 @@ router.post("/corrigir-legado", async (req, res) => {
   console.log('[ 106 /similares/corrigir-legado');
   console.log('');
   try {
-    const resultado = await Ddocumento.updateMany(
+    const resultado = await ArquivoDoc.updateMany(
       { similares: { $type: "objectId" } },
       [{ $set: { similares: ["$similares"] } }]
     );
@@ -151,7 +153,7 @@ router.put('/produtos/:produtoId/removersimilar/:similarId', async (req, res) =>
   console.log('[ 154 => router/empresa/similares(simiproduto) =>/produtos/:produtoId/removersimilar/:similarId]')
   const { produtoId, similarId } = req.params;
   try {
-    await Ddocumento.findByIdAndUpdate(produtoId, {
+    await ArquivoDoc.findByIdAndUpdate(produtoId, {
       $pull: { similares: similarId }
     });
     res.sendStatus(200);

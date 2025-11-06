@@ -1,6 +1,7 @@
 // ajuste o caminho se for diferente
 const mongoose = require('mongoose');
-const Produto = require('./../models/ddocumento'); 
+//const Produto = require('./../models/arquivoDoc'); 
+const Produto=mongoose.model("arquivo_doc")
 
 exports.softDelete = async (req, res) => {
   try {

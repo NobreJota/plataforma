@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require("mongoose");
 const Departamento = require('../../models/departamento'); // ajuste o caminho
 const Lojista = require('../../models/lojista'); // se quiser mostrar a marca
+const Ddocumento=mongoose.model('arquivo_doc');
+
 
 router.get('/cadastro', async (req, res) => {
   try {
@@ -13,9 +16,9 @@ router.get('/cadastro', async (req, res) => {
     // opcional: receber lojista/marca via query
     const lojistaId = req.query.lojista || '';
     const lojista = lojistaId
-      ? await Lojista.findById(lojistaId, { marca: 1 }).lean()
+      ? await Lojista.findById(lojistaId, { marca: 1,bairro:1,cidade:1 }).lean()
       : null;
-
+    console.log('lojista [18 ] ? ',lojista)
     return res.render('pages/empresa/produto_cadastro.handlebars', {
       layout: '',
       departamentos,
@@ -28,6 +31,11 @@ router.get('/cadastro', async (req, res) => {
 });
 
 router.post('/gravarproduto',async(req,res)=>{
+
+  console.log('');
+  console.log('linha 34 =>',req.body);
+  console.log('');
+  
   try {
       const doc = await Ddocumento.create(req.body); // ou payload montado
       // Pega o departamento (array ou singular)

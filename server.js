@@ -33,6 +33,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
+// Middleware para evitar qualquer cache no cliente e proxies
+// const noStore = (req, res, next) => {
+//   res.set({
+//     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+//     'Pragma': 'no-cache',
+//     'Expires': '0',
+//     'Surrogate-Control': 'no-store'
+//   });
+//   next();
+// };
 
 
 // -------------------------------------------------------------------
@@ -61,6 +71,10 @@ app.engine('handlebars', engine({
     encodeURIComponent: (s) => encodeURIComponent(String(s ?? '')),
     includes: (arr, val) =>
       Array.isArray(arr) && arr.map(String).includes(String(val)),
+
+    firstName(full) {
+      return (full || '').toString().trim().split(/\s+/)[0] || 'Visitante';
+    }
   },
   runtimeOptions: {
     allowProtoPropertiesByDefault: true,
@@ -80,12 +94,14 @@ hbs.handlebars.registerHelper('eq', (a,b) => String(a) === String(b));
 hbs.handlebars.registerHelper('inc', v => Math.max(Number(v)+1, 1));
 hbs.handlebars.registerHelper('dec', v => Math.max(Number(v)-1, 1));
 hbs.handlebars.registerHelper('firstName', n => String(n||'').trim().split(' ')[0] || '');
+
 // AQUI COMEÇA AJUSTE
 hbs.registerHelper('firstIdSetor', p => {
   try {
       return p.localloja?.[0]?.setor?.[0]?.idSetor || '';
   } catch { return ''; }
 });
+
 hbs.registerHelper('increment', v => Number(v)+1);
 hbs.registerHelper('decrement', v => Math.max(Number(v)-1,1));
 hbs.registerHelper('pickImg', p => {
@@ -115,20 +131,47 @@ app.use((req, res, next) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
-//const Usuario = require('./models/usuariossite');
+
+const UsuarioSite = require('./src/models/usuariosite');
 
 app.use(async (req, res, next) => {
   res.locals.userSite = null;
+
   try {
     if (req.session?.userId) {
-      const u = await Usuario.findById(req.session.userId)
-        .select('nome email cidadePadrao bairroPadrao')
+      const u = await UsuarioSite.findById(req.session.userId)
+        .select('nome email cidadePadrao bairroPadrao') // traga o que usa no site
         .lean();
       if (u) res.locals.userSite = u;
     }
-  } catch {}
+  } catch (e) {
+    // opcional: console.warn('[userSite mw]', e.message);
+  }
+
+  // 👉 calcula firstName aqui (AGORA existe res)
+  const nome = res.locals.userSite?.nome || res.locals.userSite?.name || '';
+  res.locals.firstName = (nome.trim().split(/\s+/)[0]) || 'Visitante';
+
   next();
 });
+
+// app.use(async (req, res, next) => {
+//   res.locals.userSite = null;
+//   try {
+//     if (req.session?.userId) {
+//       const u = await UsuarioSite.findById(req.session.userId)
+//         .select('nome email cidadePadrao bairroPadrao')
+//         .lean();
+//       if (u) res.locals.userSite = u;
+//     }
+//   } catch (e) {
+//     // opcional: console.warn('[userSite mw]', e.message);
+//   }
+//   next();
+// });
+
+//const nome = res.locals.userSite?.nome || res.locals.userSite?.name || '';
+//res.locals.firstName = (nome.trim().split(/\s+/)[0]) || 'Visitante';
 
 // Evitar cache do navegador para não voltar com valores/login usuarioSite
 app.use(morgan('dev'));
@@ -164,20 +207,7 @@ const gravafoto   = require('./src/routes/empresa/upload_foto');
 const ajuste      = require('./src/routes/empresa/ajuste');
 const auth = require('./src/routes/auth');
 
-const UsuarioSite = require('./src/models/usuariosite');
 
-app.use(async (req, res, next) => {
-  res.locals.userSite = null;
-  try{
-    if (req.session?.userId){
-      const u = await UsuarioSite.findById(req.session.userId)
-        .select('nome email')
-        .lean();
-      if (u) res.locals.userSite = u;
-    }
-  }catch(_){}
-  next();
-});
 
 app.use('/admin', admin);
 app.use('/central', central);

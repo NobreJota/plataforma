@@ -9,7 +9,7 @@ const BcoImagemSchema = new mongoose.Schema({
 
   origem:      { type: String, enum: ['atividade','produto','outro'], default: 'atividade' },
   atividadeId: { type: mongoose.Schema.Types.ObjectId, ref: 'atividade', default: null },
-  produtoId:   { type: mongoose.Schema.Types.ObjectId, ref: 'm_construcao', default: null },
+  produtoId:   { type: mongoose.Schema.Types.ObjectId, ref: 'arquivo_doc', default: null },
 
   departamento:{ type: mongoose.Schema.Types.ObjectId, ref: 'departamento', default: null },
 }, { timestamps: true });

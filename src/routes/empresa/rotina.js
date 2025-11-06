@@ -13,8 +13,8 @@ const Lojista = mongoose.model('lojista');
 require('../../models/deptosetores');
 require('../../models/deptosecao');
 
-require('../../models/ddocumento');
-const Ddocumento=mongoose.model('d_documento');
+//require('../../models/ddocumento');
+const Ddocumento=mongoose.model('arquivo_doc');
 const fornec=require('../../models/fornecedor');
 
 function ensureLojista(req, res, next) {
@@ -148,8 +148,9 @@ router.get('/cooperados', ensureLojista, async (req, res) => {
           const qsNoPage = params.toString();
 
           // render
-          res.render('pages/empresa/produtos.handlebars', {
-            layout: 'empresa/empresa-produto.handlebars',
+          // 'empresa/empresa-produto.handlebars'
+          res.render('pages/empresa/cooperado-admin.handlebars', {
+            layout:false ,
             basePath: '/loja/cooperados',      // <- use isso nos links
             produtos,
             fornecedores,

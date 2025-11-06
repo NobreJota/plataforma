@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-const Ddocumento = mongoose.model("d_documento");
+const ArquivoDoc = mongoose.model("arquivo_doc");
 const Departamento = require("../../models/departamento");
 const DeptoSetor = require('../../models/deptosetores');
 const DeptoSecoes= require('../../models/deptosecao')
@@ -14,7 +14,7 @@ router.get("/produtos-por-cidade/:cidade", async (req, res) => {
   try {
     const { cidade } = req.params;
 
-    const produtos = await Ddocumento
+    const produtos = await ArquivoDoc
       .find()
       .populate({ path: 'loja_id', match: { cidade } })
       .lean();
@@ -31,13 +31,11 @@ router.get("/produtos-por-cidade/:cidade", async (req, res) => {
 // Procura produtos pelo loja_Id
 router.get("/produtos-por-lojista/:id", async (req, res) => {
   const { id } = req.params;
-  const produtos = await Ddocumento.find(
+  const produtos = await ArquivoDoc.find(
                           {descricao: { $regex: '\\d' }, loja_id: id })
                                     .lean();
   res.json(produtos);
 });
-
-
 
 router.get("/segmento/:id/setores", async (req, res) => {
   console.log('mil');
@@ -82,7 +80,7 @@ router.put("/alterar/:id", async (req, res) => {
 
     console.log(' [ 94 ] ', update);
 
-    await Ddocumento.findByIdAndUpdate(id, update,{
+    await ArquivoDoc.findByIdAndUpdate(id, update,{
        runValidators: true,
        context: 'query'
     });
@@ -158,9 +156,9 @@ router.get("/secoes/:setorId", async (req, res) => {
       .sort({ nameSecao: 1 })
       .lean();
     console.log('valor de rows',rows)
-    const n=rows.map(r => r.nameSecao)
-    console.log('VR DE N',n)
-    return res.status(200).json({itens:n}); // array simples de strings
+    // const n=rows.map(r => r.nameSecao)
+    // console.log('VR DE N',n)
+    return res.status(200).json({itens:rows}); // array simples de strings
 
   } catch (e) {
     console.error(e);

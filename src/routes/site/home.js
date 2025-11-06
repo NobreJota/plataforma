@@ -2,11 +2,13 @@ const express=require('express')
 const router=express.Router()
 const mongoose = require('mongoose');
 
-const Ddocumento  = require('../../models/ddocumento');     // produtos
+// const Ddocumento  = require('../../models/arquivoDoc');     // produtos
+const Ddocumento=mongoose.model("arquivo_doc")
 const Lojista = require('../../models/lojista');              // lojas
 const Departamento = require('../../models/departamento');    // segmentos
 const DeptoSetor   = require('../../models/deptosetores');    // admin.deptosetores
 const DeptoSecao = require('../../models/deptosecao');
+const { render } = require('express/lib/response');
 
 const CIDADES_ES = ['Vitória','Vila Velha','Guarapari','Cariacica','Serra'];
 
@@ -18,6 +20,16 @@ const escapeRx = s => String(s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const norm = s => String(s || '')
   .normalize('NFD').replace(/\p{Diacritic}/gu, '')
   .toLowerCase().trim();
+
+  const noStore = (req, res, next) => {
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+    'Surrogate-Control': 'no-store'
+  });
+  next();
+};
 
 // ==== no topo do arquivo da rota home.js (ou equivalente) ====
 const IMG_HTTP_RX     = /^https?:\/\/.+/i;             // imagem http/https
@@ -55,7 +67,7 @@ router.get('/', async (req, res) => {
 
     if (!depAlvo?._id) {
       return res.render('pages/site/home.handlebars', {
-        layout: '',
+        layout:false,
         departamentosAtivos: depsAtivos,
         segmentoAtual: 'Departamento não encontrado',
         atividades: []
@@ -201,9 +213,10 @@ router.get('/produtos', async (req, res) => {
 });
 
 // BUSCA OS BAIRRO DO LOJISTA
-router.get('/bairros', async (req, res) => {
+router.get('/bairros',noStore, async (req, res) => {
   console.log('');
-  console.log( ' [ 205 ] => src/routes/site/home.js//bairros')
+  console.log( ' [ 205 ] => src/routes/site/home.js//bairros');
+  console.log(req.query)
   console.log('');
   ////////////////////////////////////////////////////////////
   try {
@@ -270,7 +283,7 @@ router.get('/buscar', async (req, res) => {
   }
 });
 //Pontos-chave que quebravam o filtro:
-router.get('/buscar-sugestoes', async (req, res) => {
+router.get('/buscar-sugestoes',noStore, async (req, res) => {
   try {
     const q = String(req.query.q || '').trim();
     if (q.length < 3) return res.json([]);
@@ -349,60 +362,55 @@ router.get('/setor/:idSetor', async (req, res) => {
 // GET /secao/:secaoId/produtos  -> JSON
 // GET /secao/:secaoId/produtos
 router.get('/secao/:secaoId/produtos', async (req, res) => {
-
-
-  console.log(req.params)
-   // paginação
-          const page  = Math.max(parseInt(req.query.page || '1', 10), 1);
-          const limit = 50;
-          const skip  = (page - 1) * limit;
-      
-  
-  
+    console.log(req.params)
+      // paginação
+      const page  = Math.max(parseInt(req.query.page || '1', 10), 1);
+      const limit = 50;
+      const skip  = (page - 1) * limit;
+    
   try {
-    const param = req.params.secaoId;
+      const param = req.params.secaoId;
 
-    // se for um ObjectId válido, procuramos por id
-    const isId = mongoose.Types.ObjectId.isValid(param);
-    const orConds = [];
-    console.log('isId',param)
-    if (isId) {
+      // se for um ObjectId válido, procuramos por id
+      const isId = mongoose.Types.ObjectId.isValid(param);
+      const orConds = [];
+      console.log('isId',param)
+      if (isId) {
+        orConds.push({
+          'localloja.setor.secao.nameSecao': new mongoose.Types.ObjectId(param)
+        });
+      }
+
+        // também aceitar "nome da seção" (ex.: "bicicleta") sem dar CastError
+        // evita "Path must be an array" usando $cond + $isArray
       orConds.push({
-        'localloja.setor.secao.nameSecao': new mongoose.Types.ObjectId(param)
-      });
-    }
-
-    // também aceitar "nome da seção" (ex.: "bicicleta") sem dar CastError
-    // evita "Path must be an array" usando $cond + $isArray
-    orConds.push({
-      $expr: {
-        $in: [
-          isId ? await (async () => {
-            const d = await DeptoSecao.findById(param, 'nomeSecao').lean();
-            return d?.nomeSecao || param;   // se não achar por id, cai pro próprio param
-          })() : param,
-          {
-            $cond: [
-              { $isArray: '$localloja.setor.secao.nameSecao' },
-              '$localloja.setor.secao.nameSecao',
-              [] // quando for null, ausente ou escalar, vira array vazio
+          $expr: {
+            $in: [
+              isId ? await (async () => {
+                const d = await DeptoSecao.findById(param, 'nomeSecao').lean();
+                return d?.nomeSecao || param;   // se não achar por id, cai pro próprio param
+              })() : param,
+              {
+                $cond: [
+                  { $isArray: '$localloja.setor.secao.nameSecao' },
+                  '$localloja.setor.secao.nameSecao',
+                  [] // quando for null, ausente ou escalar, vira array vazio
+                ]
+              }
             ]
           }
-        ]
-      }
-    });
+      });
 
-    const produtos = await Ddocumento.find({
-  localloja: { $elemMatch: {
-    setor: { $elemMatch: {
-      secao: { $elemMatch: { idSecao: param } }
-    }}
-  }}
-})
+     const produtos = await Ddocumento.find({
+              localloja: { $elemMatch: {
+                setor: { $elemMatch: {
+                  secao: { $elemMatch: { idSecao: param } }
+                }}
+              }}
+      })
 
-
-     console.log(produtos)
-    res.json({ ok: true, count: produtos.length, produtos });
+      console.log(produtos)
+      res.json({ ok: true, count: produtos.length, produtos });
   } catch (err) {
     console.error(err);
     res.status(500).json({ ok: false, error: 'Falha ao buscar por seção' });
@@ -410,7 +418,12 @@ router.get('/secao/:secaoId/produtos', async (req, res) => {
 });
 
 
-
+router.get('/sejacooperado',async (req,res)=>{
+  console.log('');
+  console.log(' 20000');
+  console.log('');
+  res.render("pages/site/seja-cooperado", { layout:false});
+});
 
 module.exports = router;
 

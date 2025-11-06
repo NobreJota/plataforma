@@ -3,11 +3,11 @@ document.addEventListener("DOMContentLoaded", async () => {
    
     //console.log(' [ 4 => js/empresa/cadastro.js => document.addEventListener("DOMContentLoaded');
         try {
-            document.getElementById('select_departamento').addEventListener("click",async(e)=>{
-               if (e.target && e.target.id === "selectSetor") {
+            document.getElementById('selDepartamento').addEventListener("click",async(e)=>{
+               if (e.target && e.target.id === "selSetor") {
                   const setorId = e.target.value;
             
-                  const selectetdepartamento = document.getElementById("select_departamento");
+                  const selectetdepartamento = document.getElementById("selDepartamento");
                   console.log(' [7]',selectetdepartamento) 
                   const response = await fetch("/segmento/selectlista");
             
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //BUSCA AS SEÇÕES QUANDO SE SELECIONA O SETOR
 document.addEventListener("DOMContentLoaded", function () {
-  const X=document.getElementById("selectSetor")
+  const X=document.getElementById("selSetor")
       X.addEventListener("change", async (e) => {
               if (e.target && e.target.id === "selectDepto") {
                     const setorId = e.target.value;
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (!setorId) return;
 
                     try {
-                      //console.log('10000')
+                      console.log('10000',setorId)
                           const response = await fetch(`/segmento/secoes/${setorId}`);
                           const secoes = await response.json();
                       //console.log('[ 1021 ]',secoes);
@@ -134,12 +134,28 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
           console.log(' [ vem de : views/page;empresa/produtos.handlebars ]');
           console.log('');
 
+          const depId   = document.getElementById('selDepartamento')?.value?.trim() || '';
+          const setorId = document.getElementById('selSetor')?.value?.trim() || '';
+          const secaoId = document.getElementById('selSecao')?.value?.trim() || '';
+          console.log(depId,' ',setorId,'  ',secaoId)
+          const isOid = (s) => /^[a-f0-9]{24}$/i.test(s);
+          const localloja = [{
+            departamento: isOid(depId) ? [depId] : [],
+            setor: isOid(setorId) ? [{
+              idSetor: setorId,
+              secao: isOid(secaoId) ? [{ idSecao: secaoId }] : []   // nunca null
+            }] : []
+          }];
+
+
           const select = document.getElementById("selectFornecedores");
           const loja_id = document.getElementById("IddoLojista").value;
            if ( !loja_id  ) {
                alert("Error: falta o _ID da loja.");
                return;
           }
+          console.log(select);
+
           const codigo = document.getElementById("cadastroCodigo").value;
            if ( !codigo  ) {
                alert("Preencha o campo codigo.");
@@ -150,6 +166,7 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
                 alert("Preencha o campo marcaloja.");
                 return;
           }
+          console.log('XZ')
           const descricao = document.getElementById("cadastroDescricao").value;
            if (  !descricao  ) {
                alert("Preencha o campo descrição.");
@@ -188,6 +205,7 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
                alert("Preencha o campo  qte.");
                return;
           }
+          console.log('12X')
           const qte_negativa=0
           const qte_reservada=0
           const e_max=0
@@ -207,13 +225,15 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
                alert("Preencha o campo  precoprazo.");
                return;
           }
-          const segmento = document.getElementById("select_departamento").value;
+          console.log('300Y')
+          const segmento = document.getElementById("selDepartamento").value;
           if ( !segmento ) {
                alert("Preencha o campo  segmento.");
                return;
           }
-          const setor = document.getElementById("selectSetor").value;
-          const secao = document.getElementById("selectSecao").value;
+          const setor = document.getElementById("selSetor").value;
+          const secao = document.getElementById("selSecao").value;
+          console.log('==>10X')
           const body = {
             loja_id,
             codigo,
@@ -235,26 +255,27 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
             precovista,
             precoprazo,
             similares: [],
-            localloja: [{
-                    departamento: [segmento], // ← array mesmo com um único valor
-                        setor: [
-                          {
-                            nameSetor: setor,
-                            secao: secao ? { nameSecao: secao } : null
-                          }
-                        ]
-                          }]
+            localloja,
+            // localloja: [{
+            //         departamento: [segmento], // ← array mesmo com um único valor
+            //             setor: [
+            //               {
+            //                 nameSetor: setor,
+            //                 secao: secao ? { nameSecao: secao } : null
+            //               }
+            //             ]
+            //               }]
           };
 
           try {
-              const response = await fetch("/produto/gravarproduto", {
+              const response = await fetch("/cadproduto/gravarproduto", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json"
                 },
                 body: JSON.stringify(body)
               });
-
+              
               if (response.ok) {
                 alert("Produto cadastrado com sucesso!");
                 // AQUI ABRE O MODAL PARA GRAVAR IMAGENS DO PRODUTO
@@ -527,5 +548,12 @@ function executarAcaoComDataset(selectEl) {
 
 
 
-
+  //abrirModalImagens para selecionar a imaagem a ser gravada
+  function abrirModalImagens(descricao, fornecedor, { produtoId, departamentoNome }) {
+        console.log(' [ 981 -abrirModalImagens]')
+        document.getElementById('miProdId').value=produtoId;
+        document.getElementById('miDescricao').value=descricao;
+        document.getElementById('miFornecedor').value=fornecedor;
+        document.getElementById('miDepartamento').value=departamentoNome;
+  }
 

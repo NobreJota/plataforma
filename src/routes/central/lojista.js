@@ -4,7 +4,6 @@ const router = express.Router();
 const Segmentos = require("../../models/departamento");
 const Lojista = require('../../models/lojista');
 const produtoController = require('../../controllers/produtoController');
-const Mconstrucao = require('../../models/ddocumento');
 const Departamento = require('../../models/departamento');
 
 

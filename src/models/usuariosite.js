@@ -17,5 +17,7 @@ UsuarioSiteSchema.methods.checkPassword = function (senha) {
   return bcrypt.compare(senha, this.senhaHash);
 };
 
-module.exports = mongoose.model('usuariosite', UsuarioSiteSchema);
+module.exports =
+  mongoose.models.UsuarioSite
+  || mongoose.model('UsuarioSite', UsuarioSiteSchema, 'usuariosites');
 

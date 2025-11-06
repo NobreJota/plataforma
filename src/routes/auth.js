@@ -6,23 +6,42 @@ const router = express.Router();
 const multer = require('multer');
 const upload = multer();
 
+// Lista de cidades usada pela HOME e pela página "Minha conta"
+async function listarCidades() {
+  // Troque depois por sua fonte real (distinct em produtos/lojas, etc.)
+  return ['Cariacica', 'Guarapari', 'Serra', 'Vila Velha', 'Vitória'];
+}
+
+
+
 router.get('/', async (req, res) => {
   const user = res.locals.userSite; // vem do middleware
 
   // Caso tenha filtros em querystring (ou sessão), eles prevalecem.
-  const cidadeSelecionada =
+  // const cidadeSelecionada =
+  //   req.query.municipio ||
+  //   (req.session?.filtros?.municipio) ||
+  //   (user?.cidadePadrao) || '';
+
+  // const bairroSelecionado =
+  //   req.query.loja ||
+  //   (req.session?.filtros?.bairro) ||
+  //   (user?.bairroPadrao) || '';
+
+    const cidadeSelecionada =
     req.query.municipio ||
     (req.session?.filtros?.municipio) ||
-    (user?.cidadePadrao) || '';
+    (res.locals.userSite?.cidadePadrao) ||
+    '';
 
   const bairroSelecionado =
     req.query.loja ||
     (req.session?.filtros?.bairro) ||
-    (user?.bairroPadrao) || '';
-
+    (res.locals.userSite?.bairroPadrao) ||
+    '';
   // Render
   res.render('pages/site/home', {
-    // ...
+    layout:flase,
     cidadeSelecionada,
     bairroSelecionado,
   });
@@ -30,6 +49,9 @@ router.get('/', async (req, res) => {
 
 /* GET /login */
 router.get('/login', (req, res) => {
+  console.log('');
+  console.log(' auth.js/get("/login"', req.session.userId);
+  console.log('');
   if (req.session?.userId) return res.redirect('/pos-login');
   res.render('pages/site/login.handlebars', { layout: false, erro: req.query.e });
 });
@@ -83,7 +105,7 @@ router.post('/site/registrar', async (req, res) => {
     const ja = await UsuarioSite.findOne({ email }).lean();
     if (ja) return res.status(400).render('pages/site/registrar-site.handlebars', { layout:false, erro: 'E-mail já cadastrado.' });
 
-    const bcrypt = require('bcryptjs');
+    // const bXcrypt = require('bcryptjs');
     const senhaHash = await bcrypt.hash(senha, 10);
 
     const novo = await UsuarioSite.create({
@@ -117,22 +139,21 @@ router.get('/logout', (req, res) => {
   }
 });
 
-/* middleware simples */
-function ensureAuth(req,res,next){
-  if (!req.session?.userId) return res.redirect('/login');
-  next();
-}
 
 /* decide se mostra modal de cadastro ou vai direto pra home-logado */
 router.get('/pos-login', ensureAuth, async (req,res)=>{
-  const u = await UsuarioSite.findById(req.session.userId).lean();
-  if (!u) return res.redirect('/login');
-
-  res.render('pages/site/home-logado.handlebars', {
-    layout: false,
-    userSite: { nome: u.nome || u.email, visitas: u.visitas },
-    showOnboarding: (!u.profileCompleted && !u.nome) 
+    if (!req.session?.userId) return res.redirect('/login');
+  const u = res.locals.userSite || {};
+  const cidades = await listarCidades();
+  res.render('pages/site/home-logado', {
+    layout:false,
+   userSite: u,
+    firstName: (u.nome || '').trim().split(/\s+/)[0] || 'Visitante',
+    cidades,
+    cidadeSelecionada: u.cidadePadrao || '',
+    bairroSelecionado: u.bairroPadrao || ''
   });
+
 });
 
 /* endpoint para marcar profileCompleted (quando salvar o mini cadastro) */
@@ -160,5 +181,42 @@ function ensureAuth(req,res,next){
   next();
 }
 
+router.get('/home-logado', async (req, res) => {
+    if (!req.session?.userId) return res.redirect('/login');
+
+    const u = res.locals.userSite || {};
+    const cidades = await listarCidades();
+
+    return res.render('pages/site/home-logado', {
+        layout:false,
+        userSite: u,
+        firstName: (u.nome || '').trim().split(/\s+/)[0] || 'Visitante',
+        cidades,
+        cidadeSelecionada: u.cidadePadrao || '',
+        bairroSelecionado: u.bairroPadrao || ''
+    });
+});
+
+// POST /home-logado -> salva padrões
+router.post('/home-logado', async (req, res) => {
+  if (!req.session?.userId) return res.redirect('/login');
+
+  const cidade = (req.body.cidade === '__ALL__') ? '' : (req.body.cidade || '').trim();
+  const bairro = (req.body.bairro === '__ALL__') ? '' : (req.body.bairro || '').trim();
+
+  await UsuarioSite.findByIdAndUpdate(
+    req.session.userId,
+    { cidadePadrao: cidade, bairroPadrao: bairro },
+    { new: true }
+  );
+
+  // opcional: espelha nos filtros de sessão para a HOME já usar
+  req.session.filtros = {
+    municipio: cidade || undefined,
+    bairro: bairro || undefined
+  };
+
+  return res.redirect('/'); // HOME
+});
 
 module.exports = { router, ensureAuth };

@@ -491,7 +491,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
         </div>
  </div> 
 <!-- MODAL Upload de Imagens -->
-<div id="modalImagem" class="backdrop" role="dialog" aria-modal="true" aria-hidden="true" style="width: 47vw;float: right;margin-right: 2%;">
+{{!-- <div id="modalImagem" class="backdrop" role="dialog" aria-modal="true" aria-hidden="true" style="width: 47vw;float: right;margin-right: 2%;">
       <div class="mi-dialog" style="width: 100%;">
             <!-- A: Cabeçalho -->
             <div class="mi-header">
@@ -524,6 +524,77 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
             </div>
             <!-- Corpo: C (slots) + D (banco) -->
               <div class="mi-body">
+                <!-- C: Slots de fotos -->
+                <section class="mi-slots">
+                  <div class="mi-slots-header">
+                        <div class="mi-slots-title">Seleção e Gravar Imagens</div>
+                        <div class="mi-toolbar">
+                          <button id="miClearAll" class="mi-btn danger">Limpar seleção</button>
+                        </div>
+                  </div>
+                  <div id="miSlotGrid" class="mi-slot-grid" style="background:transparent;"></div>
+                  <div id="miNoBankBanner" class="mi-nobank" style="display:block">
+                          Não há imagens no banco. Clique nas caixas acima para escolher do seu computador.
+                  </div>
+                  
+                </section>
+                <!-- D: Banco de imagens -->
+                <section class="mi-bank">
+                    <div class="mi-bank-title">banco de imagens</div>
+                    <div id="imgbcoImg" name="imgbcoImg" class="mi-bank-grid"></div>
+                    <div id="miBankEmpty" class="mi-empty-msg" style="display:none">
+                        Não há imagens.
+                    </div>
+                </section>
+            </div>
+            <div class="mi-footer">
+  <div class="mi-footer-left">
+    <button id="miBankMenuBtn" class="mi-btn flat" type="button">Bco Imagem ▾</button>
+    <div id="miBankMenu" class="mi-pop" hidden>
+      <button id="miBankMenuDesc" class="mi-pop-item" type="button">Buscar por descrição</button>
+      <button id="miBankMenuFor"  class="mi-pop-item" type="button">Buscar por fornecedor</button>
+    </div>
+  </div>
+
+  <div class="mi-footer-right">
+    <button id="btnGravarImagens" class="mi-btn primary" type="button">Gravar imagens</button>
+  </div>
+</div>
+      </div>
+</div> --}}
+<div id="modalImagem" class="backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="mi-dialog">
+            <!-- A: Cabeçalho -->
+            <div class="mi-header">
+                <button id="miClose" class="mi-close" title="Fechar">×</button>
+                <div class="mi-title">Tratando da imagem</div>
+                <div class="mi-actions">
+                <button id="miReloadBank" class="mi-btn flat" title="Recarregar banco de imagens">Recarregar Bco IMG</button>
+                </div>
+            </div>
+            <!-- B: Linha de informações do produto -->
+            <div class="mi-info">
+                <div class="mi-grid">
+                    <div class="mi-field">
+                      <label>id-produto</label>
+                      <input id="miProdId" type="text" readonly>
+                    </div>
+                    <div class="mi-field">
+                      <label>descrição</label>
+                      <input id="miDescricao" type="text" readonly>
+                    </div>
+                    <div class="mi-field">
+                      <label>fornecedor</label>
+                      <input id="miFornecedor" type="text" readonly>
+                    </div>
+                    <div class="mi-field">
+                      <label>departamento</label>
+                      <input id="miDepartamento" type="text" readonly>
+                    </div>
+                </div>
+            </div>
+            <!-- Corpo: C (slots) + D (banco) -->
+            <div class="mi-body">
                 <!-- C: Slots de fotos -->
                 <section class="mi-slots">
                   <div class="mi-slots-header">
@@ -1059,7 +1130,7 @@ document.getElementById('selDepartamento').addEventListener('change', async func
   document.addEventListener('DOMContentLoaded', () => carregarBancoImagens());
 })();
 </script>
-<input id="miHiddenFile" type="file" accept="image/*" style="display:none" />
+<input id="miHiddenFile" type="file" accept="image/*" style="display:block" />
 <script>
 // === CORE DOS SLOTS (precisa existir ANTES de usar resetSlots) ===
 const MAX_SLOTS = 7;

@@ -129,16 +129,21 @@ document.addEventListener("DOMContentLoaded", function () {
 document.getElementById("cadastroProdutoForm").addEventListener("submit", async function (e) {
       e.preventDefault();
       try{    
-          console.log("--------------------------------");
-          console.log(' [ 135 js/empresa/cadastro.js =>GRAVANDO PRODUTO ]');
-          console.log(' [ vem de : views/page;empresa/produtos.handlebars ]');
-          console.log('');
+          // console.log("--------------------------------");
+          // console.log(' [ 133 js/empresa/cadastro.js =>GRAVANDO PRODUTO ]');
+          console.log(' [ vem de : views/page;empresa/produtos.handlebars ]',document.getElementById('selDepartamento').value);
+          // console.log('');
 
           const depId   = document.getElementById('selDepartamento')?.value?.trim() || '';
           const setorId = document.getElementById('selSetor')?.value?.trim() || '';
           const secaoId = document.getElementById('selSecao')?.value?.trim() || '';
-          console.log(depId,' ',setorId,'  ',secaoId)
+
+          console.log('');
+          console.log(depId,' ',setorId,'  ',secaoId);
+          console.log('');
+          
           const isOid = (s) => /^[a-f0-9]{24}$/i.test(s);
+
           const localloja = [{
             departamento: isOid(depId) ? [depId] : [],
             setor: isOid(setorId) ? [{
@@ -146,7 +151,7 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
               secao: isOid(secaoId) ? [{ idSecao: secaoId }] : []   // nunca null
             }] : []
           }];
-
+          console.log('===> ',localloja)
 
           const select = document.getElementById("selectFornecedores");
           const loja_id = document.getElementById("IddoLojista").value;
@@ -154,7 +159,7 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
                alert("Error: falta o _ID da loja.");
                return;
           }
-          console.log(select);
+          // console.log(select);
 
           const codigo = document.getElementById("cadastroCodigo").value;
            if ( !codigo  ) {
@@ -166,7 +171,7 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
                 alert("Preencha o campo marcaloja.");
                 return;
           }
-          console.log('XZ')
+          // console.log('XZ')
           const descricao = document.getElementById("cadastroDescricao").value;
            if (  !descricao  ) {
                alert("Preencha o campo descrição.");
@@ -205,7 +210,7 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
                alert("Preencha o campo  qte.");
                return;
           }
-          console.log('12X')
+          // console.log('12X')
           const qte_negativa=0
           const qte_reservada=0
           const e_max=0
@@ -225,7 +230,7 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
                alert("Preencha o campo  precoprazo.");
                return;
           }
-          console.log('300Y')
+          // console.log('300Y')
           const segmento = document.getElementById("selDepartamento").value;
           if ( !segmento ) {
                alert("Preencha o campo  segmento.");
@@ -233,7 +238,7 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
           }
           const setor = document.getElementById("selSetor").value;
           const secao = document.getElementById("selSecao").value;
-          console.log('==>10X')
+          // console.log('==>10X')
           const body = {
             loja_id,
             codigo,

@@ -63,11 +63,11 @@ ProdutoImagemSchema.index(
 );
 
 // índices auxiliares que você já usava
-ProdutoImagemSchema.index({ codigoId: 1 });
-ProdutoImagemSchema.index({ key: 1 });
-ProdutoImagemSchema.index({ produtoNome: 1 });
-ProdutoImagemSchema.index({ fornecedor: 1 });
-ProdutoImagemSchema.index({ departamento: 1 });
+// ProdutoImagemSchema.index({ codigoId: 1 });
+// ProdutoImagemSchema.index({ key: 1 });
+// ProdutoImagemSchema.index({ produtoNome: 1 });
+// ProdutoImagemSchema.index({ fornecedor: 1 });
+// ProdutoImagemSchema.index({ departamento: 1 });
 
 // evita OverwriteModelError
 module.exports = mongoose.models.produtoImagem

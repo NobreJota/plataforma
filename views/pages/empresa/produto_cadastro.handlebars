@@ -406,9 +406,9 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
                         <label style="background-color:transparent;width: 800px;padding: 5px;color:#fff">Para ter mais acesso a departamentos entrar em contato com administrador:</label>
                         <label style="background-color:transparent;width: 150px;padding: 5px;font-weight: bold;">Departamento:</label>
                         <select name="departamento_id" id="selDepartamento" class="form-select form-select-sm" required>
-                            <option value="">Selecione o departamento</option>
+                            <option value="" disabled selected hidden>Selecione o departamento</option>
                             {{#each departamentos}}
-                                <option value="{{_id}}">{{nomeDepartamento}}</option>
+                                <option value="{{this._id}}">{{nomeDepartamento}}</option>
                             {{/each}}
                         </select>
                     </div>
@@ -523,7 +523,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
                 </div>
             </div>
             <!-- Corpo: C (slots) + D (banco) -->
-            <div class="mi-body">
+              <div class="mi-body">
                 <!-- C: Slots de fotos -->
                 <section class="mi-slots">
                   <div class="mi-slots-header">
@@ -533,7 +533,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
                         </div>
                   </div>
                   <div id="miSlotGrid" class="mi-slot-grid" style="background:transparent;"></div>
-                  <div id="miNoBankBanner" class="mi-nobank" style="display:none">
+                  <div id="miNoBankBanner" class="mi-nobank" style="display:block">
                           Não há imagens no banco. Clique nas caixas acima para escolher do seu computador.
                   </div>
                   
@@ -743,7 +743,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
             //console.log('');
             const select = document.getElementById("selDepartamento");
            // console.log('1000')
-            select.innerHTML = '<option disabled selected>Selecione um departamento</option>';
+            select.innerHTML<option value='disabled selected hidden>Selecione um departamento</option>';
             let cor='#100e0e'
             select.style.backgroundColor=cor;
             select.style.color="pink";
@@ -883,7 +883,7 @@ document.getElementById('selDepartamento').addEventListener('change', async func
   });
 </script>
 {{!-- MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM --}}
-{{!-- <script>
+<script>
 /* INIT — referências do modal de imagem, visíveis para os demais scripts */
 (() => {
   window.$backdrop       = document.getElementById('modalImagem');
@@ -925,7 +925,7 @@ document.getElementById('selDepartamento').addEventListener('change', async func
   };
 })();
 
-</script> --}}
+</script>
 <script>
 (() => {
   const $  = (s) => document.querySelector(s);
@@ -1058,4 +1058,67 @@ document.getElementById('selDepartamento').addEventListener('change', async func
   // opcional: carregue o banco ao abrir a página/modal
   document.addEventListener('DOMContentLoaded', () => carregarBancoImagens());
 })();
+</script>
+<input id="miHiddenFile" type="file" accept="image/*" style="display:none" />
+<script>
+// === CORE DOS SLOTS (precisa existir ANTES de usar resetSlots) ===
+const MAX_SLOTS = 7;
+const slots         = Array(MAX_SLOTS).fill(null);
+const originalSlots = Array(MAX_SLOTS).fill(null);
+let nextIdx = 0;
+
+function firstEmpty(){ for (let i=0;i<MAX_SLOTS;i++) if (!slots[i]) return i; return -1; }
+function recompute(){ nextIdx = firstEmpty(); }
+
+function addEmptySlot(i){
+  const slot = document.createElement('div');
+  slot.className = 'mi-slot empty';
+  slot.dataset.idx = i;
+  slot.dataset.num = i + 1;
+  slot.addEventListener('click', () => {
+    if (!window.$hiddenFile) return;
+    $hiddenFile.dataset.targetIdx = String(i);
+    $hiddenFile.value = '';
+    $hiddenFile.click();
+  });
+  const btn = document.createElement('button');
+  btn.className = 'mi-remove'; btn.title = 'Remover'; btn.textContent = '×';
+  btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
+  slot.appendChild(btn);
+  if (window.$miSlotGrid) $miSlotGrid.appendChild(slot);
+  slots[i] = null;
+}
+
+function resetSlots(){
+  if (!window.$miSlotGrid) return;
+  $miSlotGrid.innerHTML = '';
+  for (let i = 0; i < MAX_SLOTS; i++) addEmptySlot(i);
+  recompute();
+}
+
+function fillSlot(i, src){
+  const slot = $miSlotGrid?.children?.[i];
+  if (!slot) return;
+  slot.className = 'mi-slot filled';
+  slot.innerHTML = '';
+  const img = document.createElement('img'); img.src = src; slot.appendChild(img);
+  const btn = document.createElement('button');
+  btn.className = 'mi-remove'; btn.title = 'Remover'; btn.textContent = '×';
+  btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
+  slot.appendChild(btn);
+  recompute();
+}
+
+function clearSlot(i){
+  const slot = $miSlotGrid?.children?.[i];
+  if (!slot) return;
+  slot.className = 'mi-slot empty';
+  slot.innerHTML = '';
+  const btn = document.createElement('button');
+  btn.className = 'mi-remove'; btn.title = 'Remover'; btn.textContent = '×';
+  btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
+  slot.appendChild(btn);
+  slots[i] = null;
+  recompute();
+}
 </script>

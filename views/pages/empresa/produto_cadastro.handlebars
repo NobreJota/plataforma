@@ -250,7 +250,7 @@ padding: 0 10px; outline: none; background: #fff; color: #000;
 
 /* ====== Seção C: Slots de fotos ====== */
 .mi-slots {
-background: #ffe606; /* amarelo */
+background: #ff066a; /* amarelo */
 padding: 14px 14px 8px;
 overflow: hidden;
 
@@ -619,18 +619,18 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
                 </section>
             </div>
             <div class="mi-footer">
-  <div class="mi-footer-left">
-    <button id="miBankMenuBtn" class="mi-btn flat" type="button">Bco Imagem ▾</button>
-    <div id="miBankMenu" class="mi-pop" hidden>
-      <button id="miBankMenuDesc" class="mi-pop-item" type="button">Buscar por descrição</button>
-      <button id="miBankMenuFor"  class="mi-pop-item" type="button">Buscar por fornecedor</button>
-    </div>
-  </div>
+                  <div class="mi-footer-left">
+                    <button id="miBankMenuBtn" class="mi-btn flat" type="button">Bco Imagem ▾</button>
+                    <div id="miBankMenu" class="mi-pop" hidden>
+                      <button id="miBankMenuDesc" class="mi-pop-item" type="button">Buscar por descrição</button>
+                      <button id="miBankMenuFor"  class="mi-pop-item" type="button">Buscar por fornecedor</button>
+                    </div>
+                  </div>
 
-  <div class="mi-footer-right">
-    <button id="btnGravarImagens" class="mi-btn primary" type="button">Gravar imagens</button>
-  </div>
-</div>
+                  <div class="mi-footer-right">
+                    <button id="btnGravarImagens" class="mi-btn primary" type="button">Gravar imagens</button>
+                  </div>
+            </div>
       </div>
 </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
@@ -814,7 +814,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
             //console.log('');
             const select = document.getElementById("selDepartamento");
            // console.log('1000')
-            select.innerHTML<option value='disabled selected hidden>Selecione um departamento</option>';
+            select.innerHTML = "<option value='' disabled selected hidden>Selecione um departamento</option>";
             let cor='#100e0e'
             select.style.backgroundColor=cor;
             select.style.color="pink";
@@ -1132,6 +1132,10 @@ document.getElementById('selDepartamento').addEventListener('change', async func
 </script>
 <input id="miHiddenFile" type="file" accept="image/*" style="display:block" />
 <script>
+  window.$hiddenFile = document.getElementById('miHiddenFile');
+</script>
+<script>
+  
 // === CORE DOS SLOTS (precisa existir ANTES de usar resetSlots) ===
 const MAX_SLOTS = 7;
 const slots         = Array(MAX_SLOTS).fill(null);
@@ -1147,11 +1151,13 @@ function addEmptySlot(i){
   slot.dataset.idx = i;
   slot.dataset.num = i + 1;
   slot.addEventListener('click', () => {
-    if (!window.$hiddenFile) return;
-    $hiddenFile.dataset.targetIdx = String(i);
-    $hiddenFile.value = '';
-    $hiddenFile.click();
-  });
+  const hf = window.$hiddenFile || document.getElementById('miHiddenFile');
+  if (!hf) return;                 // se ainda não existir, não faz nada
+  hf.dataset.targetIdx = String(i);
+  hf.value = '';
+  hf.click();                      // abre o seletor de arquivos
+});
+
   const btn = document.createElement('button');
   btn.className = 'mi-remove'; btn.title = 'Remover'; btn.textContent = '×';
   btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
@@ -1192,4 +1198,148 @@ function clearSlot(i){
   slots[i] = null;
   recompute();
 }
+</script>
+
+{{!-- //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////// --}}
+<script>
+    // BLOCO 2 — Carregar vinculadas e abrir
+    async function carregarImagensDoProduto(produtoId, pageurls = []){
+          originalSlots.fill(null);
+
+          if (!produtoId) return;
+
+          let lista = [];
+          try {
+              // ajuste a rota se a sua for diferente
+              const r = await fetch(`/gravafoto/produtoImagem/buscar/${encodeURIComponent(produtoId)}`, { cache: 'no-store' });
+              if (r.ok) lista = await r.json();
+              console.log('');
+              console.log(lista);
+              console.log('');
+          } catch (e) {
+            console.warn('[carregarImagensDoProduto] falhou ao buscar por ID:', e);
+            return;
+          }
+
+          console.log(lista)
+
+          // 1) A API pode devolver o PRODUTO com 'pageurls' OU uma lista de imagens.
+          //    Detecta e normaliza para [{url, key}].
+          let docs = [];
+
+          // caso 1: veio um produto com pageurls
+          if (Array.isArray(lista) && lista.length && Array.isArray(lista[0].pageurls)) {
+            docs = lista[0].pageurls
+              .map(u => ({ url: String(u || '').trim(), key: null }))
+              .filter(d => !!d.url);
+
+          // caso 2: veio uma lista de registros de imagem
+          } else {
+            docs = (Array.isArray(lista) ? lista : [])
+              .map(x => ({
+                url: x.imagemUrl || x.url || '',
+                key: x.shortkey || x.key || x._id || ''
+              }))
+              .filter(x => !!x.url);
+          }
+
+          console.log('');
+          console.log('=> ',docs);
+          console.log('');
+          // 2) mescla 'pageurls' recebidos por parâmetro (se você passar da tela)
+          if (Array.isArray(pageurls)) {
+            pageurls.forEach(u => {
+              const s = String(u || '').trim();   // <— aqui é String, não string
+              if (!s) return;
+              if (!docs.some(d => d.url === s)) docs.push({ url: s, key: null });
+                          });
+          }
+
+
+          if (!$miSlotGrid || !$miSlotGrid.children.length) resetSlots();
+ 
+            for (const it of docs.slice(0, MAX_SLOTS)) {
+                  const i = firstEmpty();
+                  if (i === -1) break;
+
+                  console.log('it.url =>', it.url);
+
+                  slots[i]         = { type:'bank', url: it.url, key: it.key, origin:'existing' };
+                  originalSlots[i] = { url: it.url, key: it.key };
+                  fillSlot(i, it.url);   // usa sua função já existente
+            }
+             
+
+    }
+
+
+    async function _abrirModalImagemImpl({ produtoId='', descricao='', fornecedor='', departamento='', pagerUrls=[] } = {}){
+                console.log('[IMG] abrirModalImagemImpl()', { produtoId, descricao, fornecedor, departamento });
+                if (window.acoCloseMenus) window.acoCloseMenus();
+
+  // (se quiser) garante que nenhum select fique “preso”
+  // __resetSelectIfNeeded?.();
+
+  $miProdId.value       = String(produtoId||'');
+  $miDescricao.value    = String(descricao||'');
+  $miFornecedor.value   = String(fornecedor||'');
+  $miDepartamento.value = String(departamento||'');
+
+  clearBankUI(true);
+
+  if (typeof resetSlots === 'function') resetSlots();
+  else if (window.$miSlotGrid) $miSlotGrid.innerHTML = '';
+
+  originalSlots.fill(null);
+
+  try {
+    await carregarImagensDoProduto(produtoId);
+    console.log('[IMG] imagens vinculadas carregadas');
+  } catch (e) {
+    console.error('[IMG] erro carregarImagensDoProduto', e);
+  }
+
+  $backdrop.classList.add('show');
+  $backdrop.setAttribute('aria-hidden','false');
+}
+window.abrirModalImagem = _abrirModalImagemImpl; // mantém global
+
+
+               
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // garante que o grid exista
+  if (typeof resetSlots === 'function') resetSlots();
+
+  // quando o usuário escolhe arquivos, preenche os slots
+  if (window.$hiddenFile) {
+    $hiddenFile.addEventListener('change', (ev) => {
+      const files = Array.from(ev.target.files || []);
+      // slot alvo: o que foi clicado, senão o próximo vazio
+      let idx = Number($hiddenFile.dataset.targetIdx ?? nextIdx);
+      if (Number.isNaN(idx) || idx < 0 || idx >= MAX_SLOTS) idx = firstEmpty();
+
+      files.forEach((f) => {
+        if (!f || !/^image\//.test(f.type)) return;
+        const url = URL.createObjectURL(f);
+
+        // registra no array de controle
+        slots[idx] = { type: 'local', file: f, url };
+        // atualiza UI
+        fillSlot(idx, url);
+
+        // próximo slot vazio
+        idx = firstEmpty();
+      });
+
+      // limpa seleção para permitir re-escolher o mesmo arquivo depois
+      ev.target.value = '';
+      delete $hiddenFile.dataset.targetIdx;
+    });
+  }
+});
 </script>

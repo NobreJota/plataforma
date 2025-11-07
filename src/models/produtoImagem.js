@@ -24,9 +24,9 @@ const ProdutoImagemSchema = new Schema(
     size:         { type: Number },
 
     // ---- campos normalizados para busca sem acento
-    produtoNome_norm:  { type: String, index: true, default: "" },
-    fornecedor_norm:   { type: String, index: true, default: "" },
-    departamento_norm: { type: String, index: true, default: "" },
+    // produtoNome_norm:  { type: String, index: true, default: "" },
+    // fornecedor_norm:   { type: String, index: true, default: "" },
+    // departamento_norm: { type: String, index: true, default: "" },
   },
   { timestamps: { createdAt: "dataUpload", updatedAt: "dataAtualizacao" } }
 );

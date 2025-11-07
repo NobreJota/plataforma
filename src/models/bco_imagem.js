@@ -14,6 +14,6 @@ const BcoImagemSchema = new mongoose.Schema({
   departamento:{ type: mongoose.Schema.Types.ObjectId, ref: 'departamento', default: null },
 }, { timestamps: true });
 
-// BcoImagemSchema.index({ imagemUrl: 1 }, { unique: true });
+
 
 module.exports = mongoose.models.bco_imagem || mongoose.model('bco_imagem', BcoImagemSchema);

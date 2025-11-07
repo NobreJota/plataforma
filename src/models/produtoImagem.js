@@ -28,7 +28,7 @@ const ProdutoImagemSchema = new Schema(
     // fornecedor_norm:   { type: String, index: true, default: "" },
     // departamento_norm: { type: String, index: true, default: "" },
   },
-  { timestamps: { createdAt: "dataUpload", updatedAt: "dataAtualizacao" } }
+  { timestamps: { createdAt: "dataUpload", updatedAt: "dataAtualizacao" } ,autoIndex:false}
 );
 
 // >>> REMOVA QUALQUER índice antigo de texto (ex.: produtoNome/descricao)

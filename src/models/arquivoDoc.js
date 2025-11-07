@@ -88,10 +88,9 @@ const ArquivoDocSchema = new Schema({
 }, { timestamps: true });
 
 // campos usados nos filtros
-// ArquivoDocSchema.index({ loja_id: 1 });
+
 ArquivoDocSchema.index({ 'localloja.departamento': 1 });
 ArquivoDocSchema.index({ ativo: 1, datadel: 1 });
-
 
 // índice de texto para busca por palavra
 ArquivoDocSchema.index(

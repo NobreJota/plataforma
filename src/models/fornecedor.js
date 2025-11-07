@@ -57,5 +57,5 @@ const FornecedorSchema = new Schema({
   }
 });
 
-//module.exports = mongoose.model("fornec", FornecedorSchema);
+
 module.exports = mongoose.models.Fornecedor || mongoose.model('fornec', FornecedorSchema);

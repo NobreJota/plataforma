@@ -16,6 +16,7 @@
     "@fnando/cnpj": "^2.0.0",
     "aws-sdk": "^2.1692.0",
     "bcryptjs": "^3.0.2",
+    "cheerio": "^1.1.2",
     "connect-flash": "^0.1.1",
     "cors": "^2.8.5",
     "csvtojson": "^2.0.10",

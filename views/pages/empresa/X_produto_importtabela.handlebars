@@ -1,0 +1,441 @@
+x<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Importação de Tabelas — Preços por Fornecedor</title>
+
+  <style>
+    :root{
+      --vermelho:#7b0010;
+      --laranja:#ff8c00;
+      --cinza:#f7f7f7;
+      --borda:#dedede;
+      --texto:#222;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      color:var(--texto);
+      background:#fff;
+    }
+
+    /* ===== HEADER (topo vermelho) ===== */
+    header.topbar{
+      background:var(--vermelho);
+      color:#fff;
+      padding:10px 14px;
+      display:flex;
+      gap:16px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    header .campo{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    header .campo label{
+      font-weight:600;
+      white-space:nowrap;
+    }
+    header input[type="file"]{
+      background:#fff;
+      color:#000;
+      border-radius:4px;
+      padding:4px;
+    }
+    header select,
+    header input[type="date"]{
+      height:32px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      padding:0 8px;
+      background:#fff;
+      min-width:220px;
+    }
+    header .acoes{
+      margin-left:auto;
+      display:flex;
+      gap:8px;
+    }
+    header .btn{
+      height:32px;
+      padding:0 12px;
+      border-radius:6px;
+      border:1px solid rgba(255,255,255,.6);
+      background:#ffffff22;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+    }
+    header .btn[disabled]{ opacity:.5; cursor:not-allowed; }
+    header .btn.sec{ background:transparent; }
+    header .btn.pri{ background:#ffb400; color:#000; border-color:#ffb400; }
+
+    /* ===== MAIN ===== */
+    main{ padding:12px; }
+
+    /* bloco preview */
+    section.preview{
+      border:1px solid var(--borda);
+      border-radius:8px;
+      padding:8px 8px 12px 8px;
+      background:#fff;
+    }
+    section.preview h4{
+      margin:0 0 6px 0;
+      font-size:16px;
+    }
+    .table-responsive{
+      max-height:60vh;
+      overflow:auto;
+      border:1px solid var(--borda);
+      border-radius:4px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:12px;
+    }
+    thead th{
+      position:sticky;
+      top:0;
+      z-index:1;
+      background:#fafafa;
+      border-bottom:1px solid var(--borda);
+      padding:4px 6px;
+      text-align:left;
+      font-weight:700;
+      white-space:nowrap;
+    }
+    tbody td{
+      border-top:1px solid var(--borda);
+      padding:3px 6px;
+      vertical-align:top;
+      white-space:nowrap;
+    }
+
+    @media (max-width:800px){
+      header .campo label{ display:none; }
+      header select, header input[type="date"]{ min-width:160px; }
+    }
+  
+      .map-table{
+      width:50%;
+      border-collapse:collapse;
+      font-size:12px;
+      background: yellow;
+      height: 100vh;
+    }
+    .map-table th,
+    .map-table td{
+      border:1px solid var(--borda);
+      padding:4px 6px;
+      vertical-align:middle;
+    }
+    .map-table th{
+      background:#fafafa;
+      font-weight:700;
+    }
+    .map-table select{
+      width:100%;
+      font-size:12px;
+      padding:2px 4px;
+    }
+ </style>
+</head>
+
+<body>
+  <!-- ===== HEADER ===== -->
+  <header class="topbar" id="topbarImport">
+    <div class="campo">
+      <label for="inpArquivo">buscar arquivo :</label>
+      <!-- pode trocar accept se quiser permitir .html também -->
+      <input id="inpArquivo" name="arquivo" type="file" />
+    </div>
+
+    <div class="campo">
+      <label for="selFornecedor">fornecedor :</label>
+      <select id="selFornecedor" name="fornecedor">
+        <option value="">Selecione…</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="inpData">data :</label>
+      <input id="inpData" name="dataOperacao" type="date" />
+    </div>
+
+    <div class="acoes">
+      <button id="btnImportar" class="btn pri" disabled>Importar</button>
+      <button id="btnLimpar" class="btn sec">Limpar</button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN ===== -->
+  <main>
+    <h4>Mapeamento de colunas</h4>
+<p>
+  Na primeira coluna estão os títulos do arquivo importado.
+  Na segunda coluna escolha qual campo do sistema corresponde.
+</p>
+
+<table id="mappingTable" class="table table-sm table-bordered" style="font-size: 12px;">
+  <thead>
+    <tr>
+      <th style="width: 50%;">Coluna do arquivo</th>
+      <th>Nosso campo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- JS vai preencher: 1 linha por título de coluna -->
+  </tbody>
+</table>
+
+
+    <!-- por enquanto SEM mapeamento de colunas -->
+  </main>
+
+  <!-- ==================== JS ==================== -->
+  <script>
+    // Dados recebidos do backend
+    let previewHeader = [];
+    let previewRows   = [];
+
+    // Carregar fornecedores do lojista (rota já existe)
+    async function carregarFornecedoresDoLojista() {
+      try {
+        const params   = new URLSearchParams(location.search);
+        const lojistaId = params.get('lojista');
+        if (!lojistaId) return;
+
+        const resp = await fetch(`/importtabela/importacao/fornecedores?lojista=${encodeURIComponent(lojistaId)}`);
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+
+        const lista = Array.isArray(data.fornecedoresDocs)
+          ? data.fornecedoresDocs
+          : (Array.isArray(data.fornecedores) ? data.fornecedores : []);
+
+        const listaOrdenada = [...lista].sort((a,b) => {
+          const nomeA = (a.razao || a.nome || '').toUpperCase();
+          const nomeB = (b.razao || b.nome || '').toUpperCase();
+          return nomeA.localeCompare(nomeB, 'pt-BR');
+        });
+
+        const sel = document.getElementById('selFornecedor');
+        sel.innerHTML = '<option value="">Selecione…</option>' +
+          listaOrdenada.map(f => {
+            const label = `${f.razao} — ${f.cnpj}`;
+            return `<option value="${f._id}">${label}</option>`;
+          }).join('');
+      } catch (err) {
+        console.error('Falha ao carregar fornecedores:', err);
+        const sel = document.getElementById('selFornecedor');
+        if (sel) sel.innerHTML = '<option value="">(erro ao carregar)</option>';
+      }
+    }
+
+    // Desenhar a tabela na tela com header/rows
+    function desenharPreview() {
+      const table = document.getElementById('previewTable');
+      if (!table) return;
+
+      table.innerHTML = '';
+
+      // THEAD
+      if (previewHeader && previewHeader.length) {
+        const thead = document.createElement('thead');
+        const trHead = document.createElement('tr');
+        console.log(trHead)
+        previewHeader.forEach(text => {
+          const th = document.createElement('th');
+          console.log(th)
+          th.textContent = "campo importado";
+          trHead.appendChild(th);
+        });
+        thead.appendChild(trHead);
+        table.appendChild(thead);
+      }
+       console.log('passando por aqui',)
+      // TBODY
+      const tbody = document.createElement('tbody');
+      (previewRows || []).forEach(cols => {
+        const tr = document.createElement('tr');
+        cols.forEach(value => {
+          const td = document.createElement('td');
+          td.textContent = value;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+    }
+
+    // Enviar arquivo para o backend
+    async function enviarArquivo() {
+      const arquivoEl   = document.getElementById('inpArquivo');
+      const fornecedorEl= document.getElementById('selFornecedor');
+      const dataEl      = document.getElementById('inpData');
+
+      if (!arquivoEl.files[0]) {
+        alert('Escolha um arquivo.');
+        return;
+      }
+      if (!fornecedorEl.value) {
+        alert('Escolha um fornecedor.');
+        return;
+      }
+      if (!dataEl.value) {
+        alert('Informe a data.');
+        return;
+      }
+
+      const form = new FormData();
+      form.append('arquivo',   arquivoEl.files[0]);
+      form.append('fornecedor', fornecedorEl.value);
+      form.append('lojista',    new URLSearchParams(location.search).get('lojista'));
+      form.append('dataOperacao', dataEl.value);
+
+      const resp = await fetch('/importtabela/importacao/upload', {
+        method: 'POST',
+        body: form
+      });
+
+      const data = await resp.json();
+      console.log('RESPOSTA UPLOAD =>', data);
+
+      if (!resp.ok) {
+        alert(data.error || 'Erro ao importar arquivo.');
+        return;
+      }
+
+      // Esperando que o backend envie assim:
+      // { ok:true, header:[...], rows:[ [...], [...], ... ], ... }
+      previewHeader = Array.isArray(data.header) ? data.header : [];
+      previewRows   = Array.isArray(data.rows)   ? data.rows   : [];
+
+      desenharPreview();
+    }
+
+    // Controle de estado dos campos/botões
+    document.addEventListener('DOMContentLoaded', () => {
+      const selFornecedor = document.getElementById('selFornecedor');
+      const inpArquivo    = document.getElementById('inpArquivo');
+      const inpData       = document.getElementById('inpData');
+      const btnImportar   = document.getElementById('btnImportar');
+      const btnLimpar     = document.getElementById('btnLimpar');
+
+      const dataHoje = () => {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth()+1).padStart(2,'0');
+        const day = String(d.getDate()).padStart(2,'0');
+        return `${y}-${m}-${day}`;
+      };
+
+      function podeImportar() {
+        return !!(selFornecedor.value && inpData.value && inpArquivo.files[0]);
+      }
+      function aplicarEstado() {
+        inpArquivo.disabled  = !selFornecedor.value;
+        btnImportar.disabled = !podeImportar();
+      }
+
+      selFornecedor.addEventListener('change', () => {
+        if (selFornecedor.value) {
+          if (!inpData.value) inpData.value = dataHoje();
+          inpArquivo.disabled = false;
+          inpArquivo.focus();
+        } else {
+          inpArquivo.value = '';
+          inpArquivo.disabled = true;
+          inpData.value = '';
+        }
+        aplicarEstado();
+      });
+      inpArquivo.addEventListener('change', aplicarEstado);
+      inpData.addEventListener('input', aplicarEstado);
+
+      btnImportar.addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (!podeImportar()) return;
+        btnImportar.disabled = true;
+        btnImportar.textContent = 'Importando...';
+        try {
+          await enviarArquivo();
+        } finally {
+          btnImportar.textContent = 'Importar';
+          aplicarEstado();
+        }
+      });
+
+      btnLimpar.addEventListener('click', () => {
+        selFornecedor.value = '';
+        inpArquivo.value = '';
+        inpData.value = '';
+        previewHeader = [];
+        previewRows   = [];
+        desenharPreview();
+        aplicarEstado();
+      });
+
+      aplicarEstado();
+      carregarFornecedoresDoLojista();
+    });
+  </script>
+  <script>
+  // campos que existem no seu sistema para mapear
+const NOSSOS_CAMPOS = [
+  { value: '',           label: '(ignorar)' },
+  { value: 'codigo',     label: 'Código' },
+  { value: 'descricao',  label: 'Descrição' },
+  { value: 'estoqueQte', label: 'Estoque / Qte' },
+  { value: 'precoCusto', label: 'Preço de custo' },
+  { value: 'taxaPercent',label: 'Taxa / ICMS' },
+  { value: 'csosn',      label: 'CSOSN' },
+  { value: 'ncm',        label: 'NCM' }
+];
+
+// monta a tabela "Coluna do arquivo" x "Nosso campo"
+function montarTabelaMapeamento(headers) {
+  const table = document.getElementById('mappingTable');
+  if (!table) return;
+
+  const tbody = table.querySelector('tbody');
+  tbody.innerHTML = '';
+
+  headers.forEach((nomeColuna, idx) => {
+    const tr = document.createElement('tr');
+
+    // 1ª coluna: nome da coluna do arquivo
+    const tdArquivo = document.createElement('td');
+    tdArquivo.textContent = nomeColuna;
+    tr.appendChild(tdArquivo);
+
+    // 2ª coluna: select com "nosso campo"
+    const tdNosso = document.createElement('td');
+    const sel = document.createElement('select');
+    sel.className = 'form-select form-select-sm';
+    sel.id = `map_col_${idx}`;
+    sel.dataset.colIndex = idx;
+
+    NOSSOS_CAMPOS.forEach(campo => {
+      const opt = document.createElement('option');
+      opt.value = campo.value;
+      opt.textContent = campo.label;
+      sel.appendChild(opt);
+    });
+
+    tdNosso.appendChild(sel);
+    tr.appendChild(tdNosso);
+
+    tbody.appendChild(tr);
+  });
+}
+</script>
+</body>
+</html>

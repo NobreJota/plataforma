@@ -23,12 +23,12 @@ router.post('/login',async(req,res)=>{
     console.log('');
     console.log('___________________________________________');
     console.log('');
-    console.log(" [ 35 ]");
+    console.log(" [ 26 ]");
     console.log(' origem views : _cooperado/usuario/loginloja');
-    console.log(' origem route : /lojista/empresa/rotina');
+    console.log(' origem route : /central/menu-admin/login');
     console.log(' obs : ');
     console.log('');
-    console.log(' destino : _cooperado/admin/admincooperados');
+    console.log(' destino : page/central/centralMenu.handlebars');
     console.log('____________________________________________');
     console.log('');
    
@@ -37,7 +37,7 @@ router.post('/login',async(req,res)=>{
              const senha = String(req.body.senha || '');
      
                  // Se não tiver error então segue em frente
-                  console.log(' [ 73-central ]',senha)
+                  
                   const user = await Usuario.findOne({ email })
                                             .collation({ locale: 'pt', strength: 2 })
                                             .select('+senha nome email _id') // inclui a senha só aqui
@@ -53,7 +53,9 @@ router.post('/login',async(req,res)=>{
                                             req.flash('error_msg', 'Senha inválida.');
                                             return res.redirect('/usuarioloja/login');
                                             }
-                                            console.log('6000');
+                                            console.log('-----------------------------');
+                                            console.log(' vai carregar pages/central/centralMenu.handlebars');
+                                            console.log('-----------------------------');
                                             return res.render('pages/central/centralmenu.handlebars', {
                                                    layout: 'central/admin.handlebars',
                                                    usuarioNome: user.nome

@@ -111,6 +111,10 @@ hbs.registerHelper('pickImg', p => {
   return (s && String(s).trim()) || 'https://via.placeholder.com/480x360?text=Produto';
 });
 
+hbs.handlebars.registerHelper('includes', function(arr, val) {
+  return Array.isArray(arr) && arr.includes(val);
+});
+
 
 // -------------------------------------------------------------------
 // Sessão, flash e Passport
@@ -189,7 +193,7 @@ app.use((req, res, next) => {
 // -------------------------------------------------------------------
 const admin       = require('./src/routes/central/usuario');
 const central     = require('./src/routes/central/menu-admin');
-const atividades  = require('./src/routes/central/atividades');
+const atividades  = require('./src/routes/central/atividades'); // controla as foto dos departamentos e dos setores 
 const segmento    = require('./src/routes/central/rotacentral');
 const similares   = require('./src/routes/central/rotacentral');
 const simiproduto = require('./src/routes/empresa/similares');
@@ -201,7 +205,9 @@ const home        = require('./src/routes/site/home');
 const usuarioloja = require('./src/routes/empresa/usuario');
 const loja        = require('./src/routes/empresa/rotina');
 const produto     = require('./src/routes/empresa/produtos');
-const cadproduto  = require("./src/routes/empresa/produto_cadastro")
+const cadproduto  = require("./src/routes/empresa/produto_cadastro");
+const importtabela  = require("./src/routes/empresa/produto_import");
+const editimagem  = require("./src/routes/empresa/produtoeditimagem");
 const fornec      = require('./src/routes/empresa/fornecedores');
 const gravafoto   = require('./src/routes/empresa/upload_foto');
 const ajuste      = require('./src/routes/empresa/ajuste');
@@ -223,12 +229,13 @@ app.use('/usuarioloja', usuarioloja);
 app.use('/loja', loja);
 app.use('/produto', produto);
 app.use('/cadproduto',cadproduto);
+app.use('/importtabela',importtabela);
 app.use('/gravafoto', gravafoto);
 app.use('/fornec', fornec);
 app.use('/simiproduto', simiproduto);
 app.use('/ajuste',ajuste);
 app.use('/', auth.router);
-
+app.use('/editimagem',editimagem);
 
 // -------------------------------------------------------------------
 // Healthchecks (usam o MESMO mongoose importado no topo)

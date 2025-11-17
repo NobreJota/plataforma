@@ -11,7 +11,7 @@ const res = require('express/lib/response')
 
 module.exports = function (passport) {
     // Salvar os addos do usuário na sessão
-    console.log('A-1000');
+    //console.log('A-1000');
     passport.serializeUser((usuario,done) => {
         done(null,usuario.id)
     })

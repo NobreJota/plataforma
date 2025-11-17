@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{{!-- ESSE FORM É A ADMINISTRAÇÂO CENTRAL DOS PRODUTOS --}}
 <html lang="pt-br">
 {{!-- <head> --}}
     <meta http-equiv="Cache-Control" content="no-store" />
@@ -17,7 +18,7 @@
 
     {{!-- <link rel="stylesheet" href="/css/fontawesome.min.css"> --}}
     <link rel="stylesheet" href="/css/dashboard.css">
-    <link rel="stylesheet" href="/js/empresa/cadastro.js">
+    <link rel="stylesheet" href="/js/empresa/produtoedit-imagem.js">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
@@ -606,6 +607,7 @@ body {
     
     <div style="">
         <div id="painelLista" class="grade" style="display: block;background: #aea5ac;">
+            <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #df061f;display:block;">
             <div id="divTable" style="overflow:auto;width:98%;height:90vh;margin:auto;background-color:#100e0e;">
                   <table id="tabelaProdutos" class="table  table-bordered" style="font-size: small;">
                     <thead class="fixar-apos-paginacao" style="color: #df061f;width: 100%;font-size:x-small ;font-weight: 400;" >
@@ -700,6 +702,12 @@ body {
                     onclick="location.href='/cadproduto/cadastro?lojista={{lojista._id}}'">
               Cadastro de produtos
             </button>
+
+             <button class="btn btn-sm btn-primary"
+                    type="button"
+                    onclick="location.href='/importtabela/importdocumentos?lojista={{lojista._id}}'">
+              Importa tabela
+            </button>
             
           </div>
           <div style="height: 25vh;"></div>
@@ -724,13 +732,12 @@ body {
     document.fonts && document.fonts.addEventListener('loadingdone', setHeaderHeight);
   })();
 </script>
-
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
         <script src="/js/dashboard.js"></script>
         {{!-- <script type="module" src="/js/modal-imagem.js"></script> --}}
         {{!-- <script defer src="/js/modal-imagem.js"></script> --}}
         <script src="/js/empresa/bcoimagem.js" defer></script>
-        <script src="/js/empresa/cadastro.js" defer></script>
+        <script src="/js/empresa/produtoEdit-imagem.js" defer></script>
         <script src="/js/empresa/editecadastro.js" defer></script>
         <script src="/js/empresa/similares.js" defer></script>
         <script src="/js/rotinas/limpaSelect.js"></script>
@@ -926,49 +933,9 @@ function clearSlot(i){
 }
 </script>
 
-{{!-- <script>
-/* INIT — referências do modal de imagem, visíveis para os demais scripts */
-(() => {
-  window.$backdrop       = document.getElementById('modalImagem');
-  window.$miSlotGrid     = document.getElementById('miSlotGrid');
-  window.$miBankGrid     = document.getElementById('imgbcoImg');
-  window.$miBankEmpty    = document.getElementById('miBankEmpty');
-  window.$miNoBankBanner = document.getElementById('miNoBankBanner');
-  window.$miSlotsTitle   = document.querySelector('.mi-slots-title');
 
-  window.$miProdId       = document.getElementById('miProdId');
-  window.$miDescricao    = document.getElementById('miDescricao');
-  window.$miFornecedor   = document.getElementById('miFornecedor');
-  window.$miDepartamento = document.getElementById('miDepartamento');
 
-  window.$hiddenFile     = document.getElementById('miHiddenFile');
-  window.$miReloadBank   = document.getElementById('miReloadBank');
-  window.$miClearAll     = document.getElementById('miClearAll');
-  window.$miClose        = document.getElementById('miClose');
-  window.$btnGravar      = document.getElementById('btnGravarImagens');
 
-  // --- menu do banco de imagens ---
-  window.$miBankMenuBtn  = document.getElementById('miBankMenuBtn');
-  window.$miBankMenu     = document.getElementById('miBankMenu');
-  window.$miBankMenuDesc = document.getElementById('miBankMenuDesc');
-  window.$miBankMenuFor  = document.getElementById('miBankMenuFor');
-
-  // --- stubs seguros (caso os blocos de funções carreguem depois) ---
-  window.setBankEmptyState = window.setBankEmptyState || function(flag){
-    if (window.$miBankEmpty)    $miBankEmpty.style.display    = flag ? 'block' : 'none';
-    if (window.$miNoBankBanner) $miNoBankBanner.style.display = flag ? 'block' : 'none';
-    if (window.$miSlotsTitle)   $miSlotsTitle.textContent = flag
-      ? 'Nenhuma imagem no banco — clique nas caixas acima para buscar no computador'
-      : 'Seleção e Gravar Imagens';
-  };
-
-  window.clearBankUI = window.clearBankUI || function(showMsg = true){
-    if (window.$miBankGrid) $miBankGrid.innerHTML = '';
-    setBankEmptyState(!!showMsg);
-  };
-})();
-
-</script> --}}
 {{!-- <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> --}}
 {{!-- MOSTRANDO E ESCONDENDO MENU LATERAL --}}
 <script>
@@ -1092,18 +1059,13 @@ window.addEventListener("DOMContentLoaded", () => {
         const departamentoNome=departamento;
         switch (acao) {
           case "vincular":
-            console.log(' [ 479 ] executarAcao',id)
+            console.log(' [ 1057 ] executarAcao',id)
             abrirModalVinculoProduto(id);
             window.abrirModalVinculoProduto = abrirModalVinculoProduto;
             break;
           case "imagens":
-             window.abrirModalImagem({
-                produtoId,
-                descricao,
-                fornecedor,
-                departamento: departamentoNome
-              });
-              break;
+             window.location.href = `/editimagem/produto/${produtoId}/editar-imagens`;
+             break;
           case "editar":
             row?.classList.add("edit-row");
             openEditModal(id);
@@ -1118,15 +1080,15 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   //abrirModalImagens para selecionar a imaagem a ser gravada
-  function abrirModalImagens(descricao, fornecedor, { produtoId, departamentoNome }) {
-        console.log(' [ 981 -abrirModalImagens]')
-        window.abrirModalImagem({
-          produtoId,
-          descricao,
-          fornecedor,
-          departamento: departamentoNome
-        });
-  }
+  //function abrirModalImagens(descricao, fornecedor, { produtoId, departamentoNome }) {
+  //      console.log(' [ 981 -abrirModalImagens]')
+  //      window.abrirXModalImagem({
+  //        produtoId,
+  //        descricao,
+  //        fornecedor,
+  //        departamento: departamentoNome
+  //      });
+  //}
 </script>
 {{!-- openCadastroModal --}}
 <script>
@@ -1173,12 +1135,12 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     // Esconde o modal ao clicar fora
-    document.addEventListener("click", function (e) {
-      if (!e.target.classList.contains("departamento-click") &&
-          !modal.contains(e.target)) {
-        modal.style.display = "none";
-      }
-    });
+    //document.addEventListener("click", function (e) {
+    //  if (!e.target.classList.contains("departamento-click") &&
+    //      !modal.contains(e.target)) {
+    ///    modal.style.display = "none";
+    //  }
+    //});
   });
 </script>
  {{!-- FECHA CADASTROMODAL --}}
@@ -1187,591 +1149,192 @@ window.addEventListener("DOMContentLoaded", () => {
      document.getElementById("cadastroProdutoModal").style.display="none"
   }
 </script>
-{{!-- /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */ --}}
-{{!-- <script>
-        /** ====== BLOCO 1 — BUSCA NO COMPUTADOR (com filtro genérico) ====== */
-        $hiddenFile?.addEventListener('change', (ev)=>{
-                  const APLICAR_FILTRO_UPLOAD = true; 
-                  const file = ev.target.files?.[0];
-                  const idx  = Number(ev.target.dataset.targetIdx ?? '-1');
-                  if (!file || idx < 0) return;
+{{!-- ??????????????????????????????????????????????????????????????? --}}
+{{!-- /* ==== AÇÕES DO MENU (limpo + com logs) ==== */ --}}
+<script>
+(function(){
+  let __lastSelect = null;
 
-                  if (APLICAR_FILTRO_UPLOAD && $miDescricao?.value){
-                  if (!matchDescricaoTexto(file.name, $miDescricao.value)){
-                      alert('A imagem escolhida não parece do mesmo produto (pelo nome do arquivo).');
-                      ev.target.value = '';
-                      return;
-                  }
-                  }
-
-                  const reader = new FileReader();
-                  reader.onload = ()=>{ slots[idx] = { type:'file', file }; fillSlot(idx, reader.result); };
-                  reader.readAsDataURL(file);
-        });
-</script> --}}
-{{!-- // BLOCO 2 — CARREGA AS IMAGENS JÁ VINCULADAS (por produtoId) + ABRIR MODAL --}}
-{{!-- <script>
-    // BLOCO 2 — Carregar vinculadas e abrir
-    async function carregarImagensDoProduto(produtoId, pageurls = []){
-          originalSlots.fill(null);
-
-          if (!produtoId) return;
-
-          let lista = [];
-          try {
-              // ajuste a rota se a sua for diferente
-              const r = await fetch(`/gravafoto/produtoImagem/buscar/${encodeURIComponent(produtoId)}`, { cache: 'no-store' });
-              if (r.ok) lista = await r.json();
-              console.log('');
-              console.log(lista);
-              console.log('');
-          } catch (e) {
-            console.warn('[carregarImagensDoProduto] falhou ao buscar por ID:', e);
-            return;
-          }
-
-          console.log(lista)
-
-          // 1) A API pode devolver o PRODUTO com 'pageurls' OU uma lista de imagens.
-          //    Detecta e normaliza para [{url, key}].
-          let docs = [];
-
-          // caso 1: veio um produto com pageurls
-          if (Array.isArray(lista) && lista.length && Array.isArray(lista[0].pageurls)) {
-            docs = lista[0].pageurls
-              .map(u => ({ url: String(u || '').trim(), key: null }))
-              .filter(d => !!d.url);
-
-          // caso 2: veio uma lista de registros de imagem
-          } else {
-            docs = (Array.isArray(lista) ? lista : [])
-              .map(x => ({
-                url: x.imagemUrl || x.url || '',
-                key: x.shortkey || x.key || x._id || ''
-              }))
-              .filter(x => !!x.url);
-          }
-
-          console.log('');
-          console.log('=> ',docs);
-          console.log('');
-          // 2) mescla 'pageurls' recebidos por parâmetro (se você passar da tela)
-          if (Array.isArray(pageurls)) {
-            pageurls.forEach(u => {
-              const s = String(u || '').trim();   // <— aqui é String, não string
-              if (!s) return;
-              if (!docs.some(d => d.url === s)) docs.push({ url: s, key: null });
-                          });
-          }
-
-
-          if (!$miSlotGrid || !$miSlotGrid.children.length) resetSlots();
- 
-            for (const it of docs.slice(0, MAX_SLOTS)) {
-                  const i = firstEmpty();
-                  if (i === -1) break;
-
-                  console.log('it.url =>', it.url);
-
-                  slots[i]         = { type:'bank', url: it.url, key: it.key, origin:'existing' };
-                  originalSlots[i] = { url: it.url, key: it.key };
-                  fillSlot(i, it.url);   // usa sua função já existente
-            }
-             
-
-    }
-
-
-    async function _abrirModalImagemImpl({ produtoId='', descricao='', fornecedor='', departamento='', pagerUrls=[] } = {}){
-                console.log('[IMG] abrirModalImagemImpl()', { produtoId, descricao, fornecedor, departamento });
-                if (window.acoCloseMenus) window.acoCloseMenus();
-
-  // (se quiser) garante que nenhum select fique “preso”
-  // __resetSelectIfNeeded?.();
-
-  $miProdId.value       = String(produtoId||'');
-  $miDescricao.value    = String(descricao||'');
-  $miFornecedor.value   = String(fornecedor||'');
-  $miDepartamento.value = String(departamento||'');
-
-  clearBankUI(true);
-
-  if (typeof resetSlots === 'function') resetSlots();
-  else if (window.$miSlotGrid) $miSlotGrid.innerHTML = '';
-
-  originalSlots.fill(null);
-
-  try {
-    await carregarImagensDoProduto(produtoId);
-    console.log('[IMG] imagens vinculadas carregadas');
-  } catch (e) {
-    console.error('[IMG] erro carregarImagensDoProduto', e);
+  function resetSelect(sel){
+    try { sel.value = ''; sel.selectedIndex = 0; sel.blur(); } catch(_){}
   }
 
-  $backdrop.classList.add('show');
-  $backdrop.setAttribute('aria-hidden','false');
-}
-window.abrirModalImagem = _abrirModalImagemImpl; // mantém global
-
-
-               
-</script> --}}
-{{!-- <script>
-    // garante referências já criadas ($backdrop, resetSlots, etc.)
-    function __limparEstadoDoModal(){
-      try { if (typeof resetSlots === 'function') resetSlots(); } catch(e){}
-      try { originalSlots.fill(null); } catch(e){}
-      try { if ($miBankGrid) $miBankGrid.innerHTML = ''; } catch(e){}
-      try { if (typeof setBankEmptyState === 'function') setBankEmptyState(true); } catch(e){}
-      try { __lastBankCriteria = { descricao:'', fornecedor:'' }; } catch(e){}
-      try { if ($miBankMenu){ $miBankMenu.classList.remove('show'); $miBankMenu.setAttribute('hidden',''); } } catch(e){}
-      try { if ($hiddenFile){ $hiddenFile.value=''; if ($hiddenFile.dataset) delete $hiddenFile.dataset.targetIdx; } } catch(e){}
-    }
-
-    function __fecharModal(){
-      if (!$backdrop) return;
-      $backdrop.classList.remove('show');
-      $backdrop.setAttribute('aria-hidden','true');
-      __limparEstadoDoModal();
-
-      window.limparMenuAcoes?.();
-    }
-
-    // deixa disponível mesmo se os listeners forem definidos antes
-    window.__fecharModal = __fecharModal;
-</script>
-{{!-- // BLOCO 3 — BUSCA NO BANCO DE IMAGENS --}}
-<script>
-    // BLOCO 3 — Banco de imagens (filtro leve por descrição)
-    async function carregarBcoImagens({descricao, fornecedor, departamento}){
-        __lastBankCriteria = { descricao: descricao || '', fornecedor: fornecedor || '' };
-
-        $miBankGrid.innerHTML = '';
-        setBankEmptyState(false);
-
-        try{
-          const q = new URLSearchParams({
-            descricao: descricao || '',
-           // fornecedor: fornecedor || '',
-           // departamento: departamento || ''
-          }).toString();
-
-          console.log('');
-          console.log(' [1484] valor de q',q)
-          console.log('');
-          console.log('',descricao)
-          const r = await fetch(`/gravafoto/buscarBcoImg?${q}`, { cache: 'no-store' });
-          if (!r.ok) throw new Error('Falha ao buscar banco de imagens');
-          //console.log(' Retorno da consulta / Gravafoto/buscarBcoImg?',r.json())
-          let lista = await r.json();
-          if (!Array.isArray(lista)) lista = [];
-          console.log( 'LISTA => ',lista) 
-          // filtro leve por descrição do produto
-          if (descricao) lista = lista.filter(it => 
-                  matchDescricaoTexto(
-                    it?.produtoNome||it?.url||'', descricao
-                  )
-            );
-
-          if (!lista.length){ setBankEmptyState(true); return; }
-
-          $miBankGrid.innerHTML = '';              // garante limpar antes
-          setBankEmptyState(false); 
-
-          console.log('lista ',lista.length)
-
-          for (const it of lista){
-            const card = document.createElement('div'); 
-            card.className='mi-thumb';
-            const img  = document.createElement('img'); 
-            img.loading='lazy';
-            img.src = it.url || it.imagemUrl; 
-            card.appendChild(img);
-
-            card.addEventListener('click', ()=>{
-              const i = firstEmpty(); 
-              if (i===-1){ alert('Limite de 7 imagens.'); return; }
-
-              slots[i] = { type:'bank', url: it.url, key: it.key||null, origin:'bank' };
-              fillSlot(i, it.url);
-            });
-            console.log('');
-
-            console.log('')
-            console.log('',card);
-            console.log(firstEmpty());
-            console.log('')
-            $miBankGrid.appendChild(card);
-          }
-        }catch(e){
-          console.error(e);
-          setBankEmptyState(true);
-        }
-    }
-
-    // Recarregar usa o último critério (se existir), senão pega os inputs
-    $miReloadBank?.addEventListener('click', ()=>{
-      const hasLast = (__lastBankCriteria.descricao || __lastBankCriteria.fornecedor);
-      const crit = hasLast
-        ? { ...__lastBankCriteria, departamento: '' }
-        : { descricao: $miDescricao.value || '', fornecedor: $miFornecedor.value || '', departamento: $miDepartamento.value || '' };
-      carregarBcoImagens(crit);
-    });
-
-    function openBankMenu(){
-      if(!$miBankMenu || !$miBankMenuBtn) return;
-
-      // garante que o menu é filho do bloco da esquerda do rodapé
-      const anchorWrap = $miBankMenuBtn.closest('.mi-footer-left');
-      if (anchorWrap && $miBankMenu.parentElement !== anchorWrap) {
-        anchorWrap.appendChild($miBankMenu);
-      }
-
-      // força posição fixa no lado esquerdo
-      $miBankMenu.style.left   = '0';
-      $miBankMenu.style.right  = 'auto';
-      $miBankMenu.style.bottom = '56px';
-
-      $miBankMenu.classList.add('show');
-      $miBankMenu.removeAttribute('hidden');
-    }
-
-    function closeBankMenu(){
-      if(!$miBankMenu) return;
-      $miBankMenu.classList.remove('show');
-      $miBankMenu.setAttribute('hidden','');
-    }
-
-    $miBankMenuBtn?.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      if ($miBankMenu.classList.contains('show')) closeBankMenu();
-      else openBankMenu();
-    });
-
-    // fecha menu ao clicar fora
-    document.addEventListener('click', (e)=>{
-      if (!$miBankMenu?.classList.contains('show')) return;
-      const t = e.target;
-      if (!$miBankMenu.contains(t) && !$miBankMenuBtn.contains(t)) closeBankMenu();
-    });
-
-    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeBankMenu(); });
-
-    // ações do menu
-    $miBankMenuDesc?.addEventListener('click', ()=>{
-      closeBankMenu();
-      __lastBankCriteria = { descricao: $miDescricao.value || '', fornecedor: '' };
-      carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
-    });
-    $miBankMenuFor?.addEventListener('click', ()=>{
-      closeBankMenu();
-      __lastBankCriteria = { descricao: '', fornecedor: $miFornecedor.value || '' };
-      carregarBcoImagens({ ...__lastBankCriteria, departamento: '' });
-    });
-
-
-    // atalhos existentes (mantém)
-    $miClearAll?.addEventListener('click', resetSlots);
-
-    // botão X (fechar)
-    $miClose?.addEventListener('click', ()=>window.__fecharModal?.());
-    
-
-    // clique no fundo do backdrop
-    $backdrop?.addEventListener('click', (ev)=>{ if (ev.target === $backdrop) window.__fecharModal?.(); });
-
-    // ESC
-   window.addEventListener('keydown', (ev)=>{ if (ev.key === 'Escape' && $backdrop.classList.contains('show')) window.__fecharModal?.(); });
+  // Função chamada pelo onchange do <select>
+ function abrirModalImagem(produtoId,descricao,fornecedor,departamento){
   
+    const id   =produtoId;
+    alert("olâ!")
+       // await fetch('/editimagem/buscaproduto/`${id}`')
+    
+    }
 
+    // 2) Demais ações -> delega para sua função antiga (já testada no projeto)
+    ///if (typeof window.executarAcao === 'function'){
+    //  console.log('[AÇÕES] delegando para executarAcao()');
+    //  window.executarAcao(acao, id, desc, forn, dept);
+    //} else {
+    //  consoleX.error('[AÇÕES] executarAcao não encontrado no window');
+   // }
+  //};
 
-
-
+  // Fechou modal? garante reset do último select, por via das dúvidas
+  //['modalImagem','modalVinculo','editModal'].forEach(id=>{
+  //  const el = document.getElementById(id);
+  //  if (!el) return;
+  //  el.addEventListener('click', e => { if (e.target === el && __lastSelect) resetSelect(__lastSelect); });
+  //  el.querySelectorAll('.btn-close, #miClose').forEach(b => b.addEventListener('click', ()=>{ if (__lastSelect) resetSelect(__lastSelect); }));
+  //});
+  //window.addEventListener('keydown', e => { if (e.key === 'Escape' && __lastSelect) resetSelect(__lastSelect); });
+})();
 </script>
-{{!-- // BLOCO 4 — Gravar imagens (usa suas funções existentes) --}}
-<script>
-    // BLOCO 4 — Gravar imagens (usa suas funções existentes)
-    $btnGravar?.addEventListener('click', async ()=>{
-            const temAlgo = slots.some(Boolean);
-            if (!temAlgo){ alert('Nenhuma imagem selecionada.'); return; }
 
-            // --- diffs (igual ao que você já vinha usando) ---
-            const sameRef = (a,b)=> !!(a&&b) && (
-                (a.key && b.key && a.key===b.key) ||
-                (!a.key && !b.key && a.url && b.url && a.url===b.url)
-            );
+{{!-- </script> --}}
+{{!-- // Função chamada pelo onchange do <select> --}}
+{{!-- //  window.executarXAcaoComDataset = function(sel){
+//    const acao = (sel.value || '').trim();
+/    const id   = sel.dataset.id;
+    const desc = sel.dataset.descricao || '';
+    const forn = sel.dataset.fornecedor || '';
+    const dept = sel.dataset.departamento || '';
 
-            const removed=[], refsAdd=[], uploads=[];
-            for (let i=0;i<MAX_SLOTS;i++){
-                const orig = originalSlots[i];
-                const cur  = slots[i];
-                if (!orig && !cur) continue;
-                if (!orig && cur){ (cur.type==='file' ? uploads : refsAdd).push({idx:i, ...cur}); continue; }
-                if (orig && !cur){ removed.push({idx:i, ...orig}); continue; }
-                if (cur.type==='file'){ removed.push({idx:i, ...orig}); uploads.push({idx:i, ...cur}); }
-                else if (cur.type==='bank'){ sameRef(orig,cur) ? 0 : (removed.push({idx:i, ...orig}), refsAdd.push({idx:i, ...cur})); }
-            }
+    console.log('[AÇÕES] change =>', { acao, id, desc, forn, dept });
 
-            try{
-                // aqui você chama suas funções já existentes:
-                await salvarImagensCompat({
-                produtoId:    $miProdId.value,
-                descricao:    $miDescricao.value,
-                fornecedor:   $miFornecedor.value,
-                departamento: $miDepartamento.value,
-                refsAdd, uploads, removed,
-                order: slots.map((s,i)=> s ? (s.type==='bank'?{type:'bank',idx:i,key:s.key}:{type:'file',idx:i,filename:s.file?.name||null}) : null)
-                }, slots);
+    __lastSelect = sel;
+    resetSelect(sel);                 // limpa já, para permitir escolher a mesma ação depois
 
-                alert('Imagens gravadas com sucesso.');
-                //$backdrop.classList.remove('show');
-                //$backdrop.setAttribute('aria-hidden','true');
-                window.__fecharModal();
-            }catch(e){
-                console.error(e); alert('Erro ao gravar imagens. Veja o console.');
-            }
-    });
-</script> --}}
+    {{!-- // 1) Imagens -> modal novo --}}
+    if (acao === 'imagens'){
+      if (typeof window.abrirXModalImagem === 'function'){
+        console.log('[AÇÕES] abrirXModalImagem()');
+        window.abrirXModalImagem({ produtoId: id, descricao: desc, fornecedor: forn, departamento: dept });
+      } else {
+        consoleX.error('[AÇÕES] abrirXModalImagem não encontrado no window');
+      }
+      return;
+    }
 
-<script>
-function pad2(n){ return String(n+1).padStart(2,'0'); }
-
-/**
- * 1) Para cada upload: pega presigned, faz PUT e depois salva JSON
- * 2) Para cada ref nova: salva JSON direto
- * (Removed: deixamos logado por enquanto; plugamos quando houver rota)
- */
-async function salvarImagensCompat({ produtoId, descricao, fornecedor, departamento, refsAdd, uploads, removed, order },slotsRef){
-        // 1) uploads (presigned + PUT + salvar)
-        for (const u of uploads){
-                const idx  = u.idx;
-                const s    = slotsRef[idx];
-                const file = s?.file;
-                if (!file) continue;
-
-                // 1.1 pega presigned
-                const qs = new URLSearchParams({
-                  filename: file.name,
-                  filetype: file.type || 'image/png',
-                  ordem: pad2(idx)
-                });
-                const r = await fetch(`/gravafoto/getpresignedurl?${qs.toString()}`, { cache: 'no-store' });
-                console.log('R =====',r)
-                if (!r.ok) throw new Error('Falha ao obter URL de upload');
-                const { uploadUrl, key } = await r.json();
-
-                // 1.2 envia para o Space
-                const up = await fetch(uploadUrl, {
-                      method: 'PUT',
-                      body: file,
-                      headers: {
-                        'Content-Type': file.type,   // deve bater com filetype usado na assinatura
-                        'x-amz-acl': 'public-read'   // mantém público ao salvar
-                  }
-                });                
-
-                if (!up.ok) throw new Error('Falha ao enviar arquivo para o Space');
-
-                const publicUrl = uploadUrl.split('?')[0];
-
-                // 1.3 grava registro no seu banco
-                await postSalvarImagem({
-                  produtoId, descricao, fornecedor, departamento,
-                  imagemUrl: publicUrl,
-                  shortkey:  key,
-                  mimeType:  file.type || 'image/png',
-                  size:      file.size,
-                  ordem:     pad2(idx)
-                });
-        }
-
-        // 2) refs novas (não precisam de upload)
-        for (const r of refsAdd){
-          await postSalvarImagem({
-            produtoId, descricao, fornecedor, departamento,
-            imagemUrl: r.url,
-            shortkey:  r.key,
-            mimeType:  'image/*',
-            size:      0,
-            ordem:     pad2(r.idx)
-          });
-        }
-
-        // 3) removidos (se tiver rota depois plugamos aqui)
-        if (removed.length){
-          console.warn('[remove] pendente de integrar no servidor:', removed);
-        }
-
-        // 4) ordem final (se você quiser aplicar do lado do servidor)
-        console.info('[order] estado final pedido:', order);
-}
-
-/** POST JSON no endpoint que você já usa */
-async function postSalvarImagem({
-  produtoId, descricao, fornecedor, departamento,
-  imagemUrl, shortkey, mimeType, size, ordem
-}){
-  const body = {
-    codigoId:     produtoId,
-    produtoNome:  descricao,
-    fornecedor:   fornecedor,
-    departamento: departamento,
-    imagemUrl,
-    shortkey,
-    mimeType,
-    size,
-    ordem
+    {{!-- // 2) Demais ações -> delega para sua função antiga (já testada no projeto) --}}
+    if (typeof window.executarAcao === 'function'){
+      console.log('[AÇÕES] delegando para executarAcao()');
+      window.executarAcao(acao, id, desc, forn, dept);
+    } else {
+      consoleX.error('[AÇÕES] executarAcao não encontrado no window');
+    }
   };
 
-  const res = await fetch('/gravafoto/imagem/salvar', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+  {{!-- // Fechou modal? garante reset do último select, por via das dúvidas --}}
+  ['modalImagem','modalVinculo','editModal'].forEach(id=>{
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('click', e => { if (e.target === el && __lastSelect) resetSelect(__lastSelect); });
+    el.querySelectorAll('.btn-close, #miClose').forEach(b => b.addEventListener('click', ()=>{ if (__lastSelect) resetSelect(__lastSelect); }));
   });
-  if (!res.ok) {
-    const t = await res.text().catch(()=> '');
-    throw new Error(`Falha ao gravar imagens: ${res.status} ${t}`);
+  window.addEventListener('keydown', e => { if (e.key === 'Escape' && __lastSelect) resetSelect(__lastSelect); }); --}}
+{{!-- })(); --}}
+
+{{!-- </script> --}}
+<script>
+  //window.executarAcaoXComDataset = function(sel){
+  //const acao   = sel.value;
+  //const dados  = {
+  //  id:           sel.dataset.id,
+  //  descricao:    sel.dataset.descricao,
+  //  fornecedor:   sel.dataset.fornecedor,
+  //  departamento: sel.dataset.departamento
+  //};
+
+  // guarda qual foi o último select usado (se algum modal fechar “por fora”)
+  //__lastActionSelect = sel;
+
+  // *** IMPORTANTE: reseta AGORA para permitir escolher a MESMA opção depois ***
+  //__resetActionSelect(sel);
+
+  // fecha qualquer dropdown custom (se você tiver) — inócuo se não existir
+  if (window.acoCloseMenus) window.acoCloseMenus();
+
+  
+  
+
+    // Dispara a ação escolhida (com logs e fallbacks)
+  console.log('[acao]', acao, dados);
+
+  if (acao === 'imagens'){
+    //console.log('ação Imagem')
+    //if (typeof window.abriXrModalImagem === 'function'){
+    //  window.abrirXModalImagem({
+    //    produtoId:    dados.id,
+    //    descricao:    dados.descricao,
+    //    fornecedor:   dados.fornecedor,
+    //    departamento: dados.departamento
+    //  });
+    //  return;
+    console.log('dentro')
+    }
+  //}
+
+  else if (acao === 'vincular'){
+    console.log(' 1331')
+    // nome que você já usava
+    if (typeof window.abrirModalVinculoProduto === 'function'){
+      window.abrirModalVinculoProduto(dados.id);
+      return;
+    }
+    // fallback para um possível nome alternativo
+    if (typeof window.abrirModalVinculo === 'function'){
+      window.abrirModalVinculo(dados);
+      return;
+    }
   }
-  return res.json().catch(()=> ({}));
-}
 
-</script>
-
-<script>
-(function initSlotGrid() {
-  const grid = document.getElementById("miSlotGrid");
-  if (!grid) return;
-
-  const TOTAL_SLOTS = 7;
-  grid.innerHTML = "";
-
-  for (let i = 1; i <= TOTAL_SLOTS; i++) {
-    const slot = document.createElement("div");
-    slot.className = "mi-slot";
-    slot.dataset.index = i;
-
-    const img = document.createElement("img");
-    img.className = "mi-preview";
-    img.id = `preview_${i}`;
-    img.style.width = "100%";
-    img.style.height = "100%";
-    img.style.objectFit = "contain";
-    img.style.display = "none";
-
-    const span = document.createElement("span");
-    span.textContent = "Clique aqui para pegar a foto no computador";
-    span.className = "mi-label";
-
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.style.display = "none";
-
-    // clique no slot abre seletor
-    slot.addEventListener("click", () => {
-      input.click();
-    });
-
-    // ao escolher a imagem -> mostrar preview
-    input.addEventListener("change", () => {
-      const file = input.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        img.src = e.target.result;
-        img.style.display = "block";
-        span.style.display = "none";
-      };
-      reader.readAsDataURL(file);
-    });
-
-    slot.appendChild(img);
-    slot.appendChild(span);
-    slot.appendChild(input);
-    grid.appendChild(slot);
+  else if (acao === 'editar'){
+    if (typeof window.openEditModal === 'function'){
+      window.openEditModal(dados.id);
+      return;
+    }
+    if (typeof window.abrirModalEditar === 'function'){
+      window.abrirModalEditar(dados);
+      return;
+    }
   }
-})();
+
+  else if (acao === 'deletar'){
+    if (typeof window.deleteProduct === 'function'){
+      window.deleteProduct(dados.id);
+      return;
+    }
+    if (typeof window.excluirProduto === 'function'){
+      window.excluirProduto(dados.id);
+      return;
+    }
+  }
+
+  // Fallback definitivo: usa a função antiga que você já tinha
+  if (typeof window.executarAcao === 'function'){
+    console.warn('[fallback executarAcao()]');
+    window.executarAcao(acao, dados.id, dados.descricao, dados.fornecedor, dados.departamento);
+  } else {
+    console.error('Nenhuma função encontrada para a ação:', acao);
+  }
+
+};
 </script>
-{{!-- 1) Ao terminar o INIT, garanta que os slots existam --}}
-<script>
-// 🔗 1) Ao terminar o INIT, garanta que os slots existam
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.$miSlotGrid) resetSlots();
-});
-</script>
-{{!-- Listener do input oculto: transfere a imagem escolhida para o slot clicado --}}
-<script>
-// 🖼️ 2) Listener do input oculto: transfere a imagem escolhida para o slot clicado
+
 (() => {
-  if (!window.$hiddenFile) return;
+  window.executarAcaoComDataset = function(sel){
+    window.setLastActionSelect?.(sel);
 
-  $hiddenFile.addEventListener('change', function () {
-    const idx  = parseInt(this.dataset.targetIdx || '-1', 10);
-    const file = this.files && this.files[0];
-    if (idx < 0 || !file) return;
+    const acao = (sel.value || '').trim();
+    const id   = sel.dataset.id;
+    const desc = sel.dataset.descricao || '';
+    const forn = sel.dataset.fornecedor || '';
+    const dept = sel.dataset.departamento || '';
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      // preenche visualmente o slot
-      fillSlot(idx, e.target.result);
-
-      // registra no estado (se você usa depois para upload)
-      slots[idx] = { type: 'file', file };
-
-      recompute();
-    };
-    reader.readAsDataURL(file);
-
-    // permite escolher o MESMO arquivo novamente no futuro
-    this.value = '';
-  });
+    if (acao === 'imagens' && typeof window.abrirModalImagem === 'function') {
+      window.abrirModalImagem({ produtoId: id, descricao: desc, fornecedor: forn, departamento: dept });
+      return;
+    }
+    if (typeof window.executarAcao === 'function') {
+      window.executarAcao(acao, id, desc, forn, dept);
+    }
+  };
 })();
-</script>
-
-<script>
-// 🧹 3) Botão "Limpar seleção" reaproveitando o que você já tem
-(() => {
-  if (!window.$miClearAll) return;
-  $miClearAll.addEventListener('click', () => {
-    resetSlots();
-    // zera o estado também
-    for (let i = 0; i < MAX_SLOTS; i++) slots[i] = null;
-  });
-})();
-</script>
-<script>
-// === helpers globais (uma vez só) ===
-//(function(){
-  (function(){
-  if (!window.__norm) {
-    window.__norm = function(s){
-      return String(s || '')
-        .normalize('NFD')
-        .replace(/\p{Diacritic}/gu, '')
-        .toLowerCase()
-        .trim();
-    };
-  }
-
- if (!window.__STOP) {
-    window.__STOP = new Set(['de','da','do','das','dos','mm','cm','m','x','para','e']);
-  }
-
-  if (!window.matchDescricaoTexto) {
-    window.matchDescricaoTexto = function(texto, consulta){
-      const A = __norm(texto).split(/[^a-z0-9]+/g).filter(t => t && !__STOP.has(t) && !/^\d+$/.test(t));
-      const B = __norm(consulta).split(/[^a-z0-9]+/g).filter(t => t && !__STOP.has(t) && !/^\d+$/.test(t));
-      if (!B.length) return true;
-
-      let hits = 0;
-      for (const t of B){
-        if (A.some(a => a.includes(t) || t.includes(a))) hits++;
-      }
-      const need = Math.min(2, Math.ceil(B.length / 2));
-      return hits >= need;
-    };
-  }
-})();
-</script>
-

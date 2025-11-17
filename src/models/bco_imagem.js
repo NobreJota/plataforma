@@ -15,5 +15,5 @@ const BcoImagemSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-
+//Atende as fotos do DEPARTAMENTOS,SETORES E SEÇÕES
 module.exports = mongoose.models.bco_imagem || mongoose.model('bco_imagem', BcoImagemSchema);

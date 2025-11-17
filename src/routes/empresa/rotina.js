@@ -25,20 +25,20 @@ function ensureLojista(req, res, next) {
 //CONFERE SE O USUARIO É VERDADEIRO
 router.post('/cooperados',async(req,res)=>{
     console.log('');
-    console.log('[ 23-central ]',req.body)
+    //console.log('[ 23-central ]',req.body)
     console.log('');
     ////////////////////////////////////////////////////////////////////////
     // Confere o login do cooperado
     ////////////////////////////////////////////////////////////////////////
-    console.log('');
+    //console.log('');
     console.log('___________________________________________');
-    console.log('');
-    console.log(" [ 31 ]");
-    console.log(' origem views : _cooperado/usuario/loginloja');
-    console.log(' origem route : [loja=/lojista/empresa/rotina]');
-    console.log(' obs : ');
-    console.log('');
-    console.log(' destino : _cooperado/admin/admincooperados');
+    //console.log('');
+    //console.log(" [ 31 ]");
+    //console.log(' origem views : _cooperado/usuario/loginloja');
+    //console.log(' origem route : [loja=/lojista/empresa/rotina]');
+    //console.log(' obs : ');
+    //console.log('');
+    //console.log(' destino : _cooperado/admin/admincooperados');
     console.log('____________________________________________');
     console.log('');
     let errors = [];

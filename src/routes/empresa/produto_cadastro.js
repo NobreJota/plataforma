@@ -18,7 +18,7 @@ router.get('/cadastro', async (req, res) => {
     const lojista = lojistaId
       ? await Lojista.findById(lojistaId, { marca: 1,bairro:1,cidade:1 }).lean()
       : null;
-    console.log('lojista [18 ] ? ',lojista)
+    //console.log('lojista [18 ] ? ',lojista)
     return res.render('pages/empresa/produto_cadastro.handlebars', {
       layout: '',
       departamentos,
@@ -37,6 +37,7 @@ router.post('/gravarproduto',async(req,res)=>{
   console.log('');
   
   try {
+      // CRIA UM NOVO PRODUTO DENTRO DA MODEL=>arquivo_docs
       const doc = await Ddocumento.create(req.body); // ou payload montado
       // Pega o departamento (array ou singular)
       const depId = Array.isArray(doc.localloja?.[0]?.departamento)
@@ -48,7 +49,7 @@ router.post('/gravarproduto',async(req,res)=>{
         const dep = await Departamento.findById(depId).select("nomeDepartamento");
         depNome = dep?.nomeDepartamento || null;
       }
-
+      console.log('AQUI',doc._id)
       return res.status(201).json({
         ok: true,
         produtoId: doc._id,

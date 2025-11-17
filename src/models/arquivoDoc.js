@@ -82,6 +82,12 @@ const ArquivoDocSchema = new Schema({
   datadel: { type: Date, default: null },
   figure_mini: { type: String },
   figure_media: { type: String },
+  csosn: {type: String, default: ''},
+  ncm: {type: String,default: ''},
+  taxa: {type: String,default: ''},
+  cfop_ecf: {type: String,default: ''},// “CFOP ECF” (nome interno sem espaço)
+  cfop_nfe: {type: String,default: ''},
+
 
   localloja: [LocalizacaoRefSchema]
 

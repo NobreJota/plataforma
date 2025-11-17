@@ -33,7 +33,7 @@ const LojistaSchema = new Schema({
     required: true,
     match: [/^\S+@\S+\.\S+$/, 'Email inválido']
   },
-  senha: { type: String, required: true, select: true },
+  senha: { type: String, required: true, select: false },
   cep: { type: String },
   logradouro: { type: String },
   numero: { type: String },
@@ -67,6 +67,14 @@ LojistaSchema.pre('save', async function(next) {
     next(err);
   }
 });
+
+LojistaSchema.set('toJSON', {
+  transform(doc, ret) { delete ret.senha; return ret; }
+});
+LojistaSchema.set('toObject', {
+  transform(doc, ret) { delete ret.senha; return ret; }
+});
+
 
 LojistaSchema.methods.compararSenha = function(senhaDigitada) {
   return bcrypt.compare(senhaDigitada, this.senha);

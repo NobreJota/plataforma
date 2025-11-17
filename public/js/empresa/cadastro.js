@@ -130,10 +130,12 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
       e.preventDefault();
       try{    
           // console.log("--------------------------------");
-          // console.log(' [ 133 js/empresa/cadastro.js =>GRAVANDO PRODUTO ]');
+          console.log(' [ 133 js/empresa/cadastro.js =>GRAVANDO PRODUTO ]');
           console.log(' [ vem de : views/page;empresa/produtos.handlebars ]',document.getElementById('selDepartamento').value);
-          // console.log('');
-
+          
+          console.log(document.getElementById('selDepartamento'));
+          console.log(document.getElementById('selSetor'));
+          console.log(document.getElementById('selSecao'));
           const depId   = document.getElementById('selDepartamento')?.value?.trim() || '';
           const setorId = document.getElementById('selSetor')?.value?.trim() || '';
           const secaoId = document.getElementById('selSecao')?.value?.trim() || '';
@@ -238,6 +240,11 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
           }
           const setor = document.getElementById("selSetor").value;
           const secao = document.getElementById("selSecao").value;
+          const csosn ="";
+          const ncm ="";
+          const taxa="";
+          const cfop_ecf="";
+          const cfop_nfe="";
           // console.log('==>10X')
           const body = {
             loja_id,
@@ -260,16 +267,12 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
             precovista,
             precoprazo,
             similares: [],
+            csosn,
+            ncm,
+            taxa,
+            cfop_ecf,
+            cfop_nfe,
             localloja,
-            // localloja: [{
-            //         departamento: [segmento], // ← array mesmo com um único valor
-            //             setor: [
-            //               {
-            //                 nameSetor: setor,
-            //                 secao: secao ? { nameSecao: secao } : null
-            //               }
-            //             ]
-            //               }]
           };
 
           try {
@@ -286,7 +289,7 @@ document.getElementById("cadastroProdutoForm").addEventListener("submit", async 
                 // AQUI ABRE O MODAL PARA GRAVAR IMAGENS DO PRODUTO
                 const data = await response.json();
                 const { produtoId,  departamentoNome } = data;
-
+                console.log('dentro de cadastro.js ',data);
                 abrirModalImagens(descricao,fornecedor,{ produtoId,departamentoNome }); 
                 e.target.reset(); // limpa o formulário
                 // Não fecha o modal por que vai cadastrar mais um produto
@@ -329,9 +332,27 @@ async function enviarImagem(file, posicao) {
 
     if (upload.ok) {
       const publicUrl = data.uploadUrl.split("?")[0];
+
       alert("Upload realizado com sucesso!");
       document.getElementById("previewImg1").src = publicUrl;
       document.getElementById("imagemPrincipal").value = publicUrl;
+
+      const fd = new FormData();
+      fd.append('produtoId',    document.getElementById('miProdId')?.value || '');
+      fd.append('produtoNome',  document.getElementById('miDescricao')?.value || '');
+      fd.append('fornecedor',   document.getElementById('miFornecedor')?.value || '');
+      fd.append('departamento', document.getElementById('miDepartamento')?.value || '');
+      fd.append('imagemUrl',    publicUrl);
+      fd.append('shortkey',     data.key); 
+  
+      const salva = await fetch('/gravafoto/imagem/salvar', { method: 'POST', body: fd });
+        if (!salva.ok) {
+          const err = await salva.json().catch(() => ({}));
+          alert('Falha ao registrar imagem no banco: ' + (err.error || salva.status));
+        } else {
+          alert('Upload + registro concluídos!');
+        }
+
       alert("Imagem enviada com sucesso!");
     } else {
       alert("Erro no upload.");

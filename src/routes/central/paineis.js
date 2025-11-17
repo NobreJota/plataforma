@@ -20,9 +20,9 @@ const ENDPOINT    = (process.env.SPACE_ENDPOINT || '').trim();
 if (!BUCKET) {
   console.error('[Spaces] SPACES_BUCKET não definido!');
 }
-console.log('[Spaces] region:', REGION);
-console.log('[Spaces] endpoint:', ENDPOINT);
-console.log('[Spaces] bucket:', BUCKET);
+// console.log('[Spaces] region:', REGION);
+// console.log('[Spaces] endpoint:', ENDPOINT);
+// console.log('[Spaces] bucket:', BUCKET);
 
 const s3 = new S3Client({
   region: REGION,

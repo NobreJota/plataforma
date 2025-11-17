@@ -1,0 +1,943 @@
+x<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Importação de Tabelas — Preços por Fornecedor</title>
+
+  <style>
+    :root{
+      --vermelho:#7b0010;
+      --laranja:#ff8c00;
+      --cinza:#f7f7f7;
+      --borda:#dedede;
+      --texto:#222;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      color:var(--texto);
+      background:#fff;
+    }
+
+    /* ===== HEADER (topo vermelho) ===== */
+    header.topbar{
+      background:var(--vermelho);
+      color:#fff;
+      padding:10px 14px;
+      display:flex;
+      gap:16px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    header .campo{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    header .campo label{
+      font-weight:600;
+      white-space:nowrap;
+    }
+    header input[type="file"]{
+      background:#fff;
+      color:#000;
+      border-radius:4px;
+      padding:4px;
+    }
+    header select,
+    header input[type="date"]{
+      height:32px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      padding:0 8px;
+      background:#fff;
+      min-width:220px;
+    }
+    header .acoes{
+      margin-left:auto;
+      display:flex;
+      gap:8px;
+    }
+    header .btn{
+      height:32px;
+      padding:0 12px;
+      border-radius:6px;
+      border:1px solid rgba(255,255,255,.6);
+      background:#ffffff22;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+    }
+    header .btn[disabled]{ opacity:.5; cursor:not-allowed; }
+    header .btn.sec{ background:transparent; }
+    header .btn.pri{ background:#ffb400; color:#000; border-color:#ffb400; }
+
+    /* ===== MAIN ===== */
+    main{ padding:12px; }
+
+    /* bloco preview */
+    section.preview{
+      border:1px solid var(--borda);
+      border-radius:8px;
+      padding:8px 8px 12px 8px;
+      background:#fff;
+    }
+    section.preview h4{
+      margin:0 0 6px 0;
+      font-size:16px;
+    }
+    .table-responsive{
+      max-height:60vh;
+      overflow:auto;
+      border:1px solid var(--borda);
+      border-radius:4px;
+    }
+    table{
+      width:500%;
+      border-collapse:collapse;
+      font-size:12px;
+    }
+    thead th{
+      position:sticky;
+      top:0;
+      z-index:1;
+      background:#fafafa;
+      border-bottom:1px solid var(--borda);
+      padding:4px 6px;
+      text-align:left;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    tbody td{
+      border-top:1px solid var(--borda);
+      padding:3px 6px;
+      vertical-align:top;
+      white-space:nowrap;
+    }
+
+    .map-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.map-table th,
+.map-table td {
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  background: #e6e6d2;      /* fundo amarelo */
+}
+
+.map-table th {
+  font-weight: 600;
+  text-align: left;
+}
+
+
+    @media (max-width:800px){
+      header .campo label{ display:none; }
+      header select, header input[type="date"]{ min-width:160px; }
+    }
+  </style>
+  <style>
+    .map-layout{
+  display:flex;
+  gap:12px;
+}
+
+.painel-mapeamento{
+  width:320px;
+  min-width:280px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.painel-box{
+  border:1px solid #ccc;
+  border-radius:4px;
+  background:#fff8e1;
+  padding:6px;
+}
+
+.painel-titulo{
+  font-weight:600;
+  margin-bottom:4px;
+}
+
+.painel-conteudo{
+  min-height:32px;
+  padding:4px 6px;
+  background:#fff;
+  border:1px solid #ddd;
+}
+
+.lista-campos{
+  display:flex;
+  flex-direction:column;   /* 👈 agora fica em coluna */
+  gap:4px;
+  max-height:260px;        /* opcional: rolagem se ficar grande */
+  overflow-y:auto;
+}
+
+.lista-campos button{
+  padding:3px 6px;
+  border-radius:3px;
+  border:1px solid #999;
+  background:#f5f5f5;
+  font-size:11px;
+  cursor:pointer;
+  text-align:left;         /* botão “alinhado à esquerda” */
+  width:100%;    
+}
+
+.lista-campos button:hover{
+  background:#ffeaa7;
+}
+
+.map-table tr.selecionada td{
+  background:#ffeaa7;
+  font-weight:600;
+}
+
+  </style>
+</head>
+
+<body>
+  <!-- ===== HEADER ===== -->
+  <header class="topbar" id="topbarImport">
+    <div class="campo">
+      <label for="inpArquivo">buscar arquivo :</label>
+      <!-- pode trocar accept se quiser permitir .html também -->
+      <input id="inpArquivo" name="arquivo" type="file" />
+    </div>
+
+    <div class="campo">
+      <label for="selFornecedor">fornecedor :</label>
+      <select id="selFornecedor" name="fornecedor">
+        <option value="">Selecione…</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="inpData">data :</label>
+      <input id="inpData" name="dataOperacao" type="date" />
+    </div>
+
+    <div class="acoes">
+      <button id="btnImportar" class="btn pri" disabled>Importar</button>
+      <button id="btnLimpar" class="btn sec">Limpar</button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN ===== -->
+  <main>
+    <section class="preview">
+  <h4>Pré-visualização da tabela</h4>
+
+  <div class="map-layout" style="background-color: #ffb400;">
+          <!-- ESQUERDA: tabela com as colunas do arquivo -->
+         <div>
+        <div class="table-responsive" style="background-color: #7b0010;height: 60vh;">
+            <table id="mappingTable" class="map-table">
+              <thead>
+                <tr>
+                  <th style="background: #7b0010;color:#fff">Coluna do arquivo</th>
+                  <th>Nosso campo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- JS vai preencher as linhas aqui -->
+              </tbody>
+            </table>
+            
+        </div>
+        <div class="bloco-complementar" style="border: 1px solid gray;">
+            <div class="grid-2" style="display: flexbox;flex-direction: column;">
+                <div>
+                    <label>loja_id</label>
+                    <input type="text" value="{{lojista._id}}" readonly>
+                </div>  
+                
+                <div>
+                    <label>marcaloja </label>
+                    <input type="text" value="{{lojista.marca}}" readonly>
+                </div> 
+                <div>
+                    <label>cidade </label>
+                    <input type="text" value="{{lojista.cidade}}" readonly>
+                </div> 
+                <div>
+                    <label>bairro</label>
+                   <input type="text" value="{{lojista.bairro}}" readonly>
+                </div>
+            </div>
+        </div> 
+    </div>
+   
+    <!-- DIREITA: painel de seleção -->
+    <div class="painel-mapeamento">
+      <div class="painel-box">
+        <div class="painel-titulo">Campo do arquivo selecionado</div>
+        <div id="campoArquivoSelecionado" class="painel-conteudo">
+          (clique em uma linha à esquerda)
+        </div>
+      </div>
+
+      <div class="painel-box">
+        <div class="painel-titulo">Escolha o campo da nossa tabela</div>
+        <div id="listaCamposNossos" class="lista-campos">
+          <!-- JS vai listar NOSSOS_CAMPOS aqui -->
+        </div>
+      </div>
+      <!-- 👇 ADICIONE AQUI -->
+      <input id="nomeSoftware" type="text" placeholder="Nome da empresa do software">
+      <button type="button" id="btnSalvarMapeamento" class="btn pri"  disabled>
+        Salvar mapeamento
+      </button>
+    </div>
+  </div>
+  
+
+
+</section>
+
+
+    <!-- por enquanto SEM mapeamento de colunas -->
+  </main>
+
+  <!-- ==================== JS ==================== -->
+
+    <script>
+      
+
+  // Dados recebidos do backend
+  let previewHeader = [];
+  let previewRows   = [];
+  let loteIdImport = null;   // id do lote retornado pelo upload
+
+  // array vindo do backend (campos do model arquivoDoc)
+  const CAMPOS_ARQUIVODOC = {{{json camposArquivoDoc}}} || [];
+
+  // Monta NOSSOS_CAMPOS dinâmico
+  const NOSSOS_CAMPOS = [
+    { value: '', label: '(ignorar)' },
+    ...CAMPOS_ARQUIVODOC.map(nome => ({
+      value: nome,
+      label: nome
+    }))
+  ];
+
+  // estado do mapeamento
+  let linhaSelecionada = null;                // índice da linha clicada
+  let camposDisponiveis = [...NOSSOS_CAMPOS]; // vamos removendo à medida que usa
+  let mapaCampos = {};                        // { linhaIndex: 'campoDoSchema' }
+</script>
+  <script>
+    
+///////////////////////////////////////////////////////////////////////////////////////////
+
+    // Carregar fornecedores do lojista (rota já existe)
+    async function carregarFornecedoresDoLojista() {
+      console.log(1000)
+      try {
+        const params   = new URLSearchParams(location.search);
+        const lojistaId = params.get('lojista');
+        if (!lojistaId) return;
+
+        const resp = await fetch(`/importtabela/importacao/fornecedores?lojista=${encodeURIComponent(lojistaId)}`);
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+
+        const lista = Array.isArray(data.fornecedoresDocs)
+          ? data.fornecedoresDocs
+          : (Array.isArray(data.fornecedores) ? data.fornecedores : []);
+
+        const listaOrdenada = [...lista].sort((a,b) => {
+          const nomeA = (a.razao || a.nome || '').toUpperCase();
+          const nomeB = (b.razao || b.nome || '').toUpperCase();
+          return nomeA.localeCompare(nomeB, 'pt-BR');
+        });
+
+        const sel = document.getElementById('selFornecedor');
+        sel.innerHTML = '<option value="">Selecione…</option>' +
+          listaOrdenada.map(f => {
+            const label = `${f.razao} — ${f.cnpj}`;
+            return `<option value="${f._id}">${label}</option>`;
+          }).join('');
+      } catch (err) {
+        console.error('Falha ao carregar fornecedores:', err);
+        const sel = document.getElementById('selFornecedor');
+        if (sel) sel.innerHTML = '<option value="">(erro ao carregar)</option>';
+      }
+    }
+
+      // monta a tabela "Coluna do arquivo" x "Nosso campo"
+      function montarTabelaMapeamento(headers = []) {
+            const tbl = document.getElementById('mappingTable');
+            if (!tbl) return;
+
+            const tbody = tbl.querySelector('tbody');
+            tbody.innerHTML = '';
+            console.log(headers)
+            headers.forEach((nomeColuna, idx) => {
+              const tr = document.createElement('tr');
+
+              // 1ª coluna: nome da coluna do arquivo
+              const tdArquivo = document.createElement('td');
+              tdArquivo.textContent = nomeColuna;
+              tdArquivo.dataset.index = idx;
+              tr.appendChild(tdArquivo);
+
+              // 2ª coluna: texto do nosso campo (se já mapeado)
+              const tdNosso = document.createElement('td');
+              tdNosso.textContent = '';
+              tdNosso.dataset.index = idx;
+
+              // quando clicar, desfazer o mapeamento
+              tdNosso.addEventListener('click', (ev) => {
+                ev.stopPropagation();  // evita selecionar linha
+                desfazerMapeamento(idx);
+              });
+
+              tr.appendChild(tdNosso);
+
+              // clique na linha => seleciona essa linha
+              tr.addEventListener('click', () => selecionarLinhaMapa(idx));
+
+              tbody.appendChild(tr);
+              //const bloco=document.document.querySelector('.bloco-complementar').;
+             
+            });
+
+            // sempre que montar a tabela, refaz lista de campos
+            camposDisponiveis = [...NOSSOS_CAMPOS];
+            mapaCampos = {};
+            linhaSelecionada = null;
+            atualizarListaCamposNossos();
+            atualizarCampoArquivoSelecionado();
+      }
+
+      // destaca linha e mostra o nome da coluna do arquivo
+      function selecionarLinhaMapa(idx){
+            linhaSelecionada = idx;
+
+            const tbl = document.getElementById('mappingTable');
+            const tbody = tbl.querySelector('tbody');
+
+            [...tbody.rows].forEach((tr, i) => {
+              tr.classList.toggle('selecionada', i === idx);
+            });
+
+            const nomeColuna = tbody.rows[idx]?.cells[0]?.textContent || '';
+            const box = document.getElementById('campoArquivoSelecionado');
+            if (box) box.textContent = nomeColuna || '(sem coluna)';
+
+            atualizarListaCamposNossos();
+      }
+
+      // Clicar na célula "Nosso campo" devolve o campo para a lista
+      function desfazerMapeamento(linha) {
+
+          const campoRemover = mapaCampos[linha];
+          if (!campoRemover) return; // nada mapeado ali
+
+          // devolve o campo para a lista de disponíveis
+          const campoObj = NOSSOS_CAMPOS.find(c => c.value === campoRemover);
+          if (campoObj && !camposDisponiveis.some(c => c.value === campoRemover)) {
+            camposDisponiveis.push(campoObj);
+          }
+
+          // limpa o registro da linha
+          delete mapaCampos[linha];
+
+          // limpa texto da coluna
+          const tbl = document.getElementById('mappingTable');
+          const tbody = tbl.querySelector('tbody');
+          const tr = tbody.rows[linha];
+          if (tr) tr.cells[1].textContent = '';
+
+          // redesenha lista de campos disponíveis
+          atualizarListaCamposNossos();
+          atualizarEstadoBotaoSalvar(); 
+       }
+
+      // monta objeto limpo com o mapeamento feito
+      function montarPayloadMapeamento(){
+          const mapeamento = {};
+
+          Object.keys(mapaCampos).forEach(idxStr => {
+            const idx = Number(idxStr);
+            const campo = mapaCampos[idx];
+            if (!campo) return;
+
+            const nomeColuna = previewHeader[idx] || '';
+
+            mapeamento[idx] = {
+              colunaIndex: idx,
+              colunaNome:  nomeColuna,
+              campo:       campo     // campo do arquivoDoc
+            };
+          });
+
+          return mapeamento;
+      }
+  
+      // salvarMapeamento: grava no LOTE e depois grava o MODELO
+async function salvarMapeamento() {
+  if (!loteIdImport) {
+    alert('Lote ainda não definido. Importe o arquivo primeiro.');
+    return;
+  }
+
+  const mapeamento = montarPayloadMapeamento();
+  if (!Object.keys(mapeamento).length) {
+    alert('Nenhum campo mapeado.');
+    return;
+  }
+
+  console.log('[ 499 ]', loteIdImport);
+  console.log('[ 500 ]', mapeamento);
+
+  try {
+    // 1) salva mapeamento no LOTE
+    const resp = await fetch('/importtabela/importacao/salvar-lote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        loteId: loteIdImport,
+   //     mapeamento
+      })
+    });
+
+    const data = await resp.json();
+    console.log(data);
+    if (!resp.ok || !data.ok) {
+      console.error('Erro ao salvar mapeamento', data);
+      alert(data.msg || 'Erro ao salvar mapeamento.');
+      return;
+    }
+
+    // 2) aproveita o MESMO mapeamento para salvar o MODELO
+    console.log(' passando por salvarModeloImportacao')
+    await salvarModeloImportacao();   // não abre outro alert, só log
+
+  //  alert('Mapeamento salvo com sucesso!'); // lote + modelo ok
+  } catch (err) {
+    console.error('Falha ao salvar mapeamento:', err);
+    alert('Falha de comunicação ao salvar mapeamento.');
+  }
+}
+
+      // desenha a lista de campos nossos (botões) respeitando camposDisponiveis
+      function atualizarListaCamposNossos(){
+            const container = document.getElementById('listaCamposNossos');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            camposDisponiveis.forEach(campo => {
+              const btn = document.createElement('button');
+              btn.type = 'button';
+              btn.textContent = campo.label;
+
+              btn.addEventListener('click', () => {
+                if (linhaSelecionada === null){
+                  alert('Clique primeiro em uma linha da coluna do arquivo.');
+                  return;
+                }
+
+                const linha = linhaSelecionada;
+
+                // se já havia campo mapeado nessa linha, devolve para disponíveis
+                const antigoValue = mapaCampos[linha];
+                if (antigoValue && antigoValue !== campo.value){
+                  const antigo = NOSSOS_CAMPOS.find(c => c.value === antigoValue);
+                  if (antigo && !camposDisponiveis.some(c => c.value === antigo.value)){
+                    camposDisponiveis.push(antigo);
+                  }
+                }
+
+                // marca mapeamento
+                mapaCampos[linha] = campo.value;
+
+                // remove este campo dos disponíveis
+                camposDisponiveis = camposDisponiveis.filter(c => c.value !== campo.value);
+
+                // atualiza texto na coluna "Nosso campo"
+                const tbl = document.getElementById('mappingTable');
+                const tbody = tbl.querySelector('tbody');
+                const tr = tbody.rows[linha];
+                if (tr) tr.cells[1].textContent = campo.label;
+
+                // redesenha lista (já sem esse campo)
+                atualizarListaCamposNossos();
+                atualizarEstadoBotaoSalvar();
+              });
+
+              container.appendChild(btn);
+            });
+      }
+
+      //function atualizarXEstadoBotaoSalvar(){
+      //    const btn = document.getElementById('btnSalvarMapeamento');
+      //    if (!btn) return;
+
+      //    const temMapeamento = Object.keys(mapaCampos).some(idx => !!mapaCampos[idx]);
+      //    btn.disabled = !temMapeamento || !loteIdImport;
+      // }
+
+      function atualizarEstadoBotaoSalvar() {
+            const btn  = document.getElementById('btnSalvarMapeamento');
+            const inp  = document.getElementById('nomeSoftware');
+            if (!btn) return;
+
+            console.log('2000E')
+            const temMapeamento = Object.keys(mapaCampos).some(idx => !!mapaCampos[idx]);
+            const temLote       = !!loteIdImport;
+            const temSoftware   = inp && inp.value.trim().length > 0;
+            console.log('3000E')
+            // Só habilita se:
+            // 1) tiver pelo menos um campo mapeado
+            // 2) tiver um loteId
+            // 3) tiver nome do software preenchido
+            btn.disabled = !(temMapeamento && temLote && temSoftware);
+       }
+
+      // atualiza texto do box de cima quando limpamos tudo, etc.
+      function atualizarCampoArquivoSelecionado(){
+            const box = document.getElementById('campoArquivoSelecionado');
+            if (!box) return;
+
+            if (linhaSelecionada === null){
+              box.textContent = '(clique em uma linha à esquerda)';
+            }
+      }
+      /////////////////////////////////
+      // Desenhar a tabela na tela com header/rows
+    function desenharPreview() {
+          const table = document.getElementById('previewTable');
+          if (!table) return;
+
+          table.innerHTML = '';
+          console.log(' 575 ',previewHeader)
+          // THEAD
+          if (previewHeader && previewHeader.length) {
+            const thead = document.createElement('thead');
+            const trHead = document.createElement('tr');
+            
+            previewHeader.forEach(text => {
+            
+              const th = document.createElement('th');
+              
+              console.log('text')
+              th.textContent = text;
+              trHead.appendChild(th);
+            
+            });
+            thead.appendChild(trHead);
+            table.appendChild(thead);
+          }
+
+          // TBODY
+          const tbody = document.createElement('tbody');
+          (previewRows || []).forEach(cols => {
+            const tr = document.createElement('tr');
+            cols.forEach(value => {
+              const td = document.createElement('td');
+              td.textContent = value;
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+          table.appendChild(tbody);
+
+    }
+    ///////////////////////////////////////////
+
+    // Enviar arquivo para o backend
+    async function enviarArquivo() {
+          const arquivoEl   = document.getElementById('inpArquivo');
+          const fornecedorEl= document.getElementById('selFornecedor');
+          const dataEl      = document.getElementById('inpData');
+
+          if (!arquivoEl.files[0]) {
+            alert('Escolha um arquivo.');
+            return;
+          }
+          if (!fornecedorEl.value) {
+            alert('Escolha um fornecedor.');
+            return;
+          }
+          if (!dataEl.value) {
+            alert('Informe a data.');
+            return;
+          }
+
+          console.log(fornecedorEl.value)
+          const form = new FormData();
+          form.append('arquivo',   arquivoEl.files[0]);
+          form.append('fornecedor', fornecedorEl.value);
+          form.append('lojista',    new URLSearchParams(location.search).get('lojista'));
+          form.append('dataOperacao', dataEl.value);
+          console.log('');
+          console.log('enviando arquivo -upload');
+          console.log('');
+          const resp = await fetch('/importtabela/importacao/upload', {
+            method: 'POST',
+            body: form
+          });
+
+  
+          const data = await resp.json();
+          console.log('RESPOSTA UPLOAD =>', data);
+
+          if (resp.ok && Array.isArray(data.header)) {
+            previewHeader = data.header;
+            // previewRows   = data.rows;  // se quiser usar depois
+
+            // 👇 guarda o loteId que vem do backend (você já tem isso na resposta)
+            loteIdImport = data.loteId || null;
+
+            desenharPreview();
+            montarTabelaMapeamento(data.header);
+
+            atualizarEstadoBotaoSalvar();   // atualiza botão depois do upload
+          } else {
+            console.warn('Resposta sem header/rows =>', data);
+          }
+          ///////////////////////////////////////////////////////////////
+    }
+
+          // Controle de estado dos campos/botões
+          document.addEventListener('DOMContentLoaded', () => {
+                const selFornecedor = document.getElementById('selFornecedor');
+                const inpArquivo    = document.getElementById('inpArquivo');
+                const inpData       = document.getElementById('inpData');
+                const btnImportar   = document.getElementById('btnImportar');
+                const btnLimpar     = document.getElementById('btnLimpar');
+
+                const dataHoje = () => {
+                  const d = new Date();
+                  const y = d.getFullYear();
+                  const m = String(d.getMonth()+1).padStart(2,'0');
+                  const day = String(d.getDate()).padStart(2,'0');
+                  return `${y}-${m}-${day}`;
+                };
+                /////////////////////////////////////////////////////////
+                function podeImportar() {
+                  return !!(selFornecedor.value && inpData.value && inpArquivo.files[0]);
+                }
+                ////////////////////////////////////////////////////// 
+                function aplicarEstado() {
+                  inpArquivo.disabled  = !selFornecedor.value;
+                  btnImportar.disabled = !podeImportar();
+                }
+                /////////////////////////////////////////////////////////
+            selFornecedor.addEventListener('change', () => {
+              if (selFornecedor.value) {
+                if (!inpData.value) inpData.value = dataHoje();
+                inpArquivo.disabled = false;
+                inpArquivo.focus();
+              } else {
+                inpArquivo.value = '';
+                inpArquivo.disabled = true;
+                inpData.value = '';
+              }
+              aplicarEstado();
+            });
+                inpArquivo.addEventListener('change', aplicarEstado);
+                inpData.addEventListener('input', aplicarEstado);
+                ////////////////////////////////////////////////
+                btnImportar.addEventListener('click', async (e) => {
+                  e.preventDefault();
+                  if (!podeImportar()) return;
+                  btnImportar.disabled = true;
+                  btnImportar.textContent = 'Importando...';
+                  try {
+                    await enviarArquivo();
+                  } finally {
+                    btnImportar.textContent = 'Importar';
+                    aplicarEstado();
+                  }
+                });
+                //////////////////////////////////////////////////////////////////////////////////////
+                btnLimpar.addEventListener('click', () => {
+                  selFornecedor.value = '';
+                  inpArquivo.value = '';
+                  inpData.value = '';
+                  previewHeader = [];
+                  previewRows   = [];
+                  desenharPreview();
+                  aplicarEstado();
+                });
+                ////////////////////////////////////////////////////////////////////
+                const btnSalvarMap = document.getElementById('btnSalvarMapeamento');
+                if (btnSalvarMap){
+                  btnSalvarMap.addEventListener('click', salvarMapeamento);
+                }
+                /////////////////////////////////////////////////////////////////
+                const inpSoftware = document.getElementById('nomeSoftware');
+                if (inpSoftware) {
+                          inpSoftware.addEventListener('input', atualizarEstadoBotaoSalvar);
+                } 
+                //////////////////////////////////////////////////////////////////
+                aplicarEstado();
+                carregarFornecedoresDoLojista();
+          });
+          //   FIM => Controle de estado dos campos/botões
+    //}
+    //////////////////////////////////////////////
+</script>
+<script>
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --}}
+async function carregarModelo(software) {
+  const resp = await fetch(`/importcadastro/modelo?software=${encodeURIComponent(software)}&lojistaId={{lojista._id}}`);
+  const data = await resp.json();
+  if (!data.ok) return;
+
+  aplicarMapeamentoNaTela(data.mapeamento); // você seta os selects da direita
+}
+</script>
+
+<script>
+  // 1) Lê o mapeamento exibido na tela.
+  //    Aqui você adapta de acordo com a sua estrutura:
+  //    cada linha da esquerda (coluna arquivo) + select da direita (nosso campo)
+ // function coletarMapeamentoDaTela() {
+ //   const mapa = {};
+    // Exemplo: linhas da tabela com data-coluna e select
+ //   document.querySelectorAll('.linha-mapeamento').forEach(linha => {
+ //     const coluna = linha.dataset.colunaArquivo;             // "Pre�o", "C�digo", etc
+ //     const select = linha.querySelector('select');           // nosso campo
+ //     const campoInterno = select?.value || '(ignorar)';
+ //     mapa[coluna] = campoInterno;
+ //   });
+ //   return mapa;
+ // }
+
+///  async function salvarModeloImportacao() {
+//     const software = document.getElementById('nomeSoftware').value.trim();
+//      if (!software) {
+//        alert('Informe o nome da empresa/software.');
+//        return;
+//      }
+
+      // 1) Pega o mapeamento no FORMATO DO LOTE:
+      //    { "1": { colunaIndex, colunaNome, campo }, ... }
+//      const mapaLote = coletarMapeamentoDaTela();
+
+      // 2) Converte para o FORMATO DO MODELO:
+      //    { "Preço": "precovista", "Código": "codigo", ... }
+//      const mapeamento = {};
+//      for (const key of Object.keys(mapaLote)) {
+//          const cfg = mapaLote[key];
+///          if (!cfg || !cfg.campo || cfg.campo === '(ignorar)') continue;
+
+//          const colunaNome  = cfg.colunaNome; // ex.: "Preço"
+//          const campoInterno = cfg.campo;     // ex.: "precovista"
+
+//          if (!colunaNome || !campoInterno) continue;
+//          mapeamento[colunaNome] = campoInterno;
+//      }
+
+//      if (!Object.keys(mapeamento).length) {
+//        alert('Nenhum campo mapeado para salvar como modelo.');
+//        return;
+//      }
+
+//      console.log('mapeamento para modelo =>', mapeamento);
+
+//      try {
+//            const resp = await fetch('/importtabela/importcadastro/salvar-modelo', {
+//              method: 'POST',
+//              headers: { 'Content-Type': 'application/json' },
+//              body: JSON.stringify({
+//                software,
+//                mapeamento,
+//                lojistaId: '{{lojista._id}}',
+                // fornecedorId: '...'   // se quiser adicionar depois
+//              })
+//            });
+
+//            const data = await resp.json();
+//            if (!data.ok) throw new Error(data.error || data.msg || 'Falha ao salvar modelo');
+
+//            alert('Modelo de importação salvo com sucesso!');
+//      } catch (err) {
+//            console.error('Erro ao salvar modelo:', err);
+//            alert('Erro ao salvar modelo.');
+//      }
+//  }
+
+function coletarMapeamentoDaTela() {
+  return montarPayloadMapeamento();
+}
+  async function salvarModeloImportacao() {
+  try {
+    const inputSoftware = document.getElementById('nomeSoftware');
+    const software = inputSoftware ? inputSoftware.value.trim() : '';
+
+    // se não informar o nome do software, não grava modelo (só loga)
+    if (!software) {
+      console.warn('Nenhum nome de software informado — modelo não será salvo.');
+      return;
+    }
+
+    // pega o mesmo mapa usado para o lote
+    const mapaLote = coletarMapeamentoDaTela();
+
+    // converte para formato do MODELO:
+    // { "Preço": "precovista", "Código": "codigo", ... }
+    const mapeamento = {};
+    for (const key of Object.keys(mapaLote)) {
+      const cfg = mapaLote[key];
+      if (!cfg || !cfg.campo || cfg.campo === '(ignorar)') continue;
+
+      const colunaNome   = cfg.colunaNome;  // ex.: "Preço"
+      const campoInterno = cfg.campo;       // ex.: "precovista"
+
+      if (!colunaNome || !campoInterno) continue;
+      mapeamento[colunaNome] = campoInterno;
+    }
+
+    if (!Object.keys(mapeamento).length) {
+      console.warn('Nenhum campo mapeado para salvar como modelo.');
+      return;
+    }
+
+    console.log('mapeamento para modelo =>', mapeamento);
+
+    const resp = await fetch('/importtabela/importcadastro/salvar-modelo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        software,
+        mapeamento,
+        lojistaId: '{{lojista._id}}',
+        // fornecedorId: '...'  // se quiser salvar modelo por fornecedor depois
+      })
+    });
+
+    const data = await resp.json();
+    if (!resp.ok || !data.ok) {
+      console.error('Erro ao salvar modelo de importação:', data);
+      // não trava o fluxo (já salvou o lote), só loga
+      return;
+    }
+
+    alert('Modelo de importação salvo com sucesso!');
+  } catch (err) {
+    console.error('Erro ao salvar modelo:', err);
+    // idem: não joga erro pra cima, pra não quebrar salvarMapeamento
+  }
+}
+
+</script>
+
+</body>
+</html>

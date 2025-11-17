@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-{{!--  CADASTRA OS PRODUTOS E COLOCA AS FOTOS   --}}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">        
@@ -14,13 +13,14 @@
 
     {{!-- <link rel="stylesheet" href="/css/fontawesome.min.css"> --}}
     <link rel="stylesheet" href="/css/dashboard.css">
-    <link rel="stylesheet" href="/js/empresa/cadastro.js">
+    {{!-- <link rel="stylesheet" href="/js/empresa/cadastro.js"> --}}
+    <link rel="stylesheet" href="/js/empresa/produtoEdit-imagem.js">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     {{!-- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> --}}
-    {{!-- <script src=""></script> --}}
+    <script> src="https://"</script>
     <script defer>
       window.colacerto = function () { }
     </script>
@@ -162,219 +162,218 @@
   }
     </style>
     <style>
-#modalImagem.backdrop{
-  position: relative;           /* vira painel normal */
-  background: transparent;      /* sem fundo escuro */
-  width: 47%;                   /* igual ao form */
-  float: right;                 /* encosta à direita */
-  height: 97vh;                 /* mesmo “pé-direito” do form */
-  display: block;
-  z-index: auto;
-}
+        #modalImagem.backdrop{
+        position: relative;           /* vira painel normal */
+        background: transparent;      /* sem fundo escuro */
+        width: 47%;                   /* igual ao form */
+        float: right;                 /* encosta à direita */
+        height: 97vh;                 /* mesmo “pé-direito” do form */
+        display: block;
+        z-index: auto;
+        }
 
-#modalImagem.backdrop.show { display: block; }
+        #modalImagem.backdrop.show { display: block; }
 
-#modalImagem .mi-dialog{
-  position: static;             /* sai do absolute */
-  right: auto; top: auto;
-  width: 100%;
-  height: 97vh;                 /* acompanha o painel */
-  /* mantém seu visual interno */
-  background: #f10505;
-  color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0,0,0,.2); /* suaviza a sombra, opcional */
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-
-/* ====== Cabeçalho (A) ====== */
-.mi-header {
-background: #8d0037; /* vinho */
-padding: 14px 18px 10px;
-display: grid;
-grid-template-columns: auto 1fr auto;
-gap: 12px;
-align-items: center;
-border-bottom: 2px solid #330018;
-}
-.mi-title {
-font-size: 20px;
-font-weight: 700;
-letter-spacing: .3px;
-white-space: nowrap;
-}
-.mi-actions { display: flex; gap: 10px; align-items: center; }
-.mi-btn {
-border: 0; outline: 0; cursor: pointer;
-padding: 8px 12px; border-radius: 10px;
-background: #1976d2; color: #fff; font-weight: 600;
-}
-.mi-btn:hover { filter: brightness(1.05); }
-.mi-btn.flat { background: #3949ab; }
-.mi-btn.danger { background: #b71c1c; }
-.mi-close {
-background: #111; color: #fff; border: 1px solid #333; border-radius: 12px;
-font-weight: 800; width: 36px; height: 36px; display: grid; place-items: center; cursor: pointer;
-}
-.mi-close:hover { background: #222; }
+        #modalImagem .mi-dialog{
+        position: static;             /* sai do absolute */
+        right: auto; top: auto;
+        width: 100%;
+        height: 97vh;                 /* acompanha o painel */
+        /* mantém seu visual interno */
+        background: #f10505;
+        color: #fff;
+        border-radius: 16px;
+        box-shadow: 0 12px 40px rgba(0,0,0,.2); /* suaviza a sombra, opcional */
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        }
 
 
-/* ====== Linha de Informações (B) ====== */
-.mi-info {
-background: #19a204; /* verde vivo */
-padding: 10px 12px;
-border-bottom: 2px solid #0c5102;
-}
-.mi-grid {
-display: grid;
-grid-template-columns: 1.1fr 1.6fr 1.4fr 1.1fr;
-gap: 10px;
-}
-.mi-field { display: grid; gap: 4px; font-size: 12px; color: #122; }
-.mi-field label { font-weight: 700; color: #032d02; }
-.mi-field input {
-height: 34px; border: 0; border-radius: 8px;
-padding: 0 10px; outline: none; background: #fff; color: #000;
-}
-.mi-field input[readonly] { background: #f3f6f9; }
+        /* ====== Cabeçalho (A) ====== */
+        .mi-header {
+        background: #8d0037; /* vinho */
+        padding: 14px 18px 10px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 12px;
+        align-items: center;
+        border-bottom: 2px solid #330018;
+        }
+        .mi-title {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: .3px;
+        white-space: nowrap;
+        }
+        .mi-actions { display: flex; gap: 10px; align-items: center; }
+        .mi-btn {
+        border: 0; outline: 0; cursor: pointer;
+        padding: 8px 12px; border-radius: 10px;
+        background: #1976d2; color: #fff; font-weight: 600;
+        }
+        .mi-btn:hover { filter: brightness(1.05); }
+        .mi-btn.flat { background: #3949ab; }
+        .mi-btn.danger { background: #b71c1c; }
+        .mi-close {
+        background: #111; color: #fff; border: 1px solid #333; border-radius: 12px;
+        font-weight: 800; width: 36px; height: 36px; display: grid; place-items: center; cursor: pointer;
+        }
+        .mi-close:hover { background: #222; }
 
 
-/* ====== Corpo (C + D) ====== */
-
-/*.mi-body { flex: 1; display: grid; grid-template-rows: 220px 1fr; }  /* C ≈ 220px, D ocupa o resto */
-.mi-body { flex:1; display:grid; grid-template-rows: 220px 1fr; } 
-
-/* ====== Seção C: Slots de fotos ====== */
-.mi-slots {
-background: #ff066a; /* amarelo */
-padding: 14px 14px 8px;
-overflow: hidden;
-
-}
-
-.mi-slots-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.mi-slots-title { color: #1a1a1a; font-weight: 800; }
-.mi-nobank{
-  margin:8px 0 0;
-  background:rgba(176,0,32,.12);
-  border:1px dashed #b00020;
-  color:#2b0008;
-  font-weight:800;
-  padding:8px 10px;
-  border-radius:10px;
-}
-.mi-slot-grid {
-   display: grid; grid-template-columns: repeat(7, minmax(120px,1fr));
-   gap: 12px; align-items: stretch;
-}
-.mi-slot {
-background: #ffffff; /* magenta */
-border-radius: 14px; position: relative; overflow: hidden; cursor: pointer;
-display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606;color:#0b100f;
-}
-
-.mi-slot::before{
-  content: attr(data-num);
-  position: absolute; top: 6px; left: 10px;
-  font-weight: 900; font-size: 18px;
-  color: #8d0037; text-shadow: 0 1px 0 #fff;
-}
-
-.mi-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-.mi-slot.empty::after {
-   content: "Clique aqui para pegar a foto no computador";
-   color: #9c0808; font-weight: 400; text-align: center; padding: 10px; line-height: 1.1;
-}
-.mi-slot .mi-remove {
-    position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%;
-    display: none; place-items: center; background: rgba(0,0,0,.65); color: #fff; font-size: 14px; cursor: pointer;
-}
-.mi-slot.filled .mi-remove { display: grid; }
+        /* ====== Linha de Informações (B) ====== */
+        .mi-info {
+        background: #19a204; /* verde vivo */
+        padding: 10px 12px;
+        border-bottom: 2px solid #0c5102;
+        }
+        .mi-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 1.6fr 1.4fr 1.1fr;
+        gap: 10px;
+        }
+        .mi-field { display: grid; gap: 4px; font-size: 12px; color: #122; }
+        .mi-field label { font-weight: 700; color: #032d02; }
+        .mi-field input {
+        height: 34px; border: 0; border-radius: 8px;
+        padding: 0 10px; outline: none; background: #fff; color: #000;
+        }
+        .mi-field input[readonly] { background: #f3f6f9; }
 
 
-/* ====== Barra de ações (slots) ====== */
-.mi-toolbar { display: flex; gap: 10px; }
+        /* ====== Corpo (C + D) ====== */
+
+        /*.mi-body { flex: 1; display: grid; grid-template-rows: 220px 1fr; }  /* C ≈ 220px, D ocupa o resto */
+        .mi-body { flex:1; display:grid; grid-template-rows: 220px 1fr; } 
+
+        /* ====== Seção C: Slots de fotos ====== */
+        .mi-slots {
+        background: #ff066a; /* amarelo */
+        padding: 14px 14px 8px;
+        overflow: hidden;
+
+        }
+
+        .mi-slots-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .mi-slots-title { color: #1a1a1a; font-weight: 800; }
+        .mi-nobank{
+        margin:8px 0 0;
+        background:rgba(176,0,32,.12);
+        border:1px dashed #b00020;
+        color:#2b0008;
+        font-weight:800;
+        padding:8px 10px;
+        border-radius:10px;
+        }
+        .mi-slot-grid {
+        display: grid; grid-template-columns: repeat(7, minmax(120px,1fr));
+        gap: 12px; align-items: stretch;
+        }
+        .mi-slot {
+        background: #ffffff; /* magenta */
+        border-radius: 14px; position: relative; overflow: hidden; cursor: pointer;
+        display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606;color:#0b100f;
+        }
+
+        .mi-slot::before{
+        content: attr(data-num);
+        position: absolute; top: 6px; left: 10px;
+        font-weight: 900; font-size: 18px;
+        color: #8d0037; text-shadow: 0 1px 0 #fff;
+        }
+
+        .mi-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .mi-slot.empty::after {
+        content: "Clique aqui para pegar a foto no computador";
+        color: #9c0808; font-weight: 400; text-align: center; padding: 10px; line-height: 1.1;
+        }
+        .mi-slot .mi-remove {
+            position: absolute; top: 6px; right: 6px; width: 26px; height: 26px; border-radius: 50%;
+            display: none; place-items: center; background: rgba(0,0,0,.65); color: #fff; font-size: 14px; cursor: pointer;
+        }
+        .mi-slot.filled .mi-remove { display: grid; }
 
 
-/* ====== Seção D: Banco de Imagens ====== */
-.mi-bank {
-      background: #7da56b; /* verde musgo claro do mock */
-      border-top: 6px solid #8d0037; /* contorno vinho */
-      padding: 10px 12px 12px;
-      overflow: auto;
-}
-.mi-bank-title { font-weight: 800; color: #1b000a; margin-bottom: 8px; }
-.mi-bank-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
-.mi-thumb {
-    aspect-ratio: 1/1; background: #f2f2f2; border-radius: 10px; overflow: hidden; border: 3px solid #7b002e; cursor: pointer;
-    display: grid; place-items: center;
-}
-.mi-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.mi-empty-msg { opacity: .85; font-weight: 600; }
+        /* ====== Barra de ações (slots) ====== */
+        .mi-toolbar { display: flex; gap: 10px; }
 
-/* ====== Rodapé (gravar) ====== */
-.mi-footer {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;  /* deixa cada lado em sua ponta */
-  padding:12px 16px;
-  /* mantenha seu fundo atual se quiser */
-  /* background:#0b0b0b; */
-  overflow:visible;
-}
 
-.mi-footer-left{ position:relative; } 
+        /* ====== Seção D: Banco de Imagens ====== */
+        .mi-bank {
+            background: #7da56b; /* verde musgo claro do mock */
+            border-top: 6px solid #8d0037; /* contorno vinho */
+            padding: 10px 12px 12px;
+            overflow: auto;
+        }
+        .mi-bank-title { font-weight: 800; color: #1b000a; margin-bottom: 8px; }
+        .mi-bank-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
+        .mi-thumb {
+            aspect-ratio: 1/1; background: #f2f2f2; border-radius: 10px; overflow: hidden; border: 3px solid #7b002e; cursor: pointer;
+            display: grid; place-items: center;
+        }
+        .mi-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .mi-empty-msg { opacity: .85; font-weight: 600; }
 
-.mi-bankmenu{
-  position:absolute;
-  left:12px;             /* canto inferior esquerdo do modal */
-  bottom:58px;
-  display:none;
-  background:#fff;
-  padding:8px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  box-shadow:0 8px 18px rgba(0,0,0,.25);
-  z-index:1600;
-  gap:8px;
-  flex-direction:column;
-}
-.mi-bankmenu.show{ display:flex; }
-.mi-btn.small{ padding:6px 10px; font-size:.85rem; }
+        /* ====== Rodapé (gravar) ====== */
+        .mi-footer {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;  /* deixa cada lado em sua ponta */
+        padding:12px 16px;
+        /* mantenha seu fundo atual se quiser */
+        /* background:#0b0b0b; */
+        overflow:visible;
+        }
 
-.mi-pop[hidden]{ display:none; }
-.mi-pop{
-  position:absolute;
-  left:0;  
-  right:auto;                    /* gruda no botão à esquerda */
-  bottom:56px;                 /* sobe acima da barra vermelha */
-  z-index:50;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  width: 200px;
-  margin-left: 120px;
-}
-.mi-footer-left{ position:relative; }
-.mi-footer-right{ display:flex; gap:12px; }
+        .mi-footer-left{ position:relative; } 
 
-.mi-pop.show{ display:flex; }
-.mi-pop[hidden]{ display:none; }
+        .mi-bankmenu{
+        position:absolute;
+        left:12px;             /* canto inferior esquerdo do modal */
+        bottom:58px;
+        display:none;
+        background:#fff;
+        padding:8px;
+        border:1px solid #ddd;
+        border-radius:10px;
+        box-shadow:0 8px 18px rgba(0,0,0,.25);
+        z-index:1600;
+        gap:8px;
+        flex-direction:column;
+        }
+        .mi-bankmenu.show{ display:flex; }
+        .mi-btn.small{ padding:6px 10px; font-size:.85rem; }
 
-.mi-pop .mi-pop-item{
-  border:0; background:#1166ba; border-radius:8px; padding:8px 10px;
-  text-align:left; cursor:pointer; font-weight:300;margin-left: 2px;color:#ffffff;
-}
-.mi-pop .mi-pop-item:hover{ background:#0f4e8c; }
+        .mi-pop[hidden]{ display:none; }
+        .mi-pop{
+        position:absolute;
+        left:0;  
+        right:auto;                    /* gruda no botão à esquerda */
+        bottom:56px;                 /* sobe acima da barra vermelha */
+        z-index:50;
+        display:flex;
+        flex-direction:column;
+        gap:8px;
+        width: 200px;
+        margin-left: 120px;
+        }
+        .mi-footer-left{ position:relative; }
+        .mi-footer-right{ display:flex; gap:12px; }
 
+        .mi-pop.show{ display:flex; }
+        .mi-pop[hidden]{ display:none; }
+
+        .mi-pop .mi-pop-item{
+        border:0; background:#1166ba; border-radius:8px; padding:8px 10px;
+        text-align:left; cursor:pointer; font-weight:300;margin-left: 2px;color:#ffffff;
+        }
+        .mi-pop .mi-pop-item:hover{ background:#0f4e8c; }
     </style>
     <style>
   .formata_{
-    background:#959292; width:100%; height:97vh; padding:20px; border-radius:10px; box-shadow:0 5px 10px #00000080;margin: auto;
+    background:#959292; width:100%; height:97vh; padding:0px 6px 0px 6px; border-radius:10px; box-shadow:0 5px 10px #00000080;margin: auto;
   }
 
   .CidadeBairro{
@@ -385,114 +384,207 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
     text-align: center;
   }
     </style>
+    <style>
+      .duo {                 /* linha com 2 colunas */
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .duo .campo {         /* cada coluna */
+            flex: 1;
+            margin-bottom: 0;   /* já temos gap na linha */
+        }
+        .campo > label {
+            display:block;
+            margin: 2px 0 4px;
+            font-weight: 700;
+        }
+        .campo .form-control {
+            padding: 4px 8px;
+            height: 32px;
+            line-height: 30px;
+        }
+        /* empilha no mobile */
+        @media (max-width: 768px){
+            .duo { flex-direction: column; gap: 6px; }
+        }
+
+        .slot-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+  background-color: transparent;
+}
+
+.slot {
+  text-align: center;
+}
+
+.slot-box {
+  border: 2px solid #ff0077;
+  border-radius: 6px;
+  padding: 4px;
+  background-color: #ffff00;
+  cursor: pointer;
+  position: relative;
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.slot-num {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-weight: bold;
+  color: #d00;
+}
+
+.slot-label {
+  font-size: 11px;
+  line-height: 12px;
+  color: #000;
+}
+
+.slot-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+@media (max-width: 900px) {
+  .slot-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .slot-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+   
+</style>
+<style>
+  .img-card--blocked { opacity:.35; pointer-events:none; position:relative; }
+.img-card--blocked::after{
+  content:"🚫";
+  position:absolute; top:6px; right:6px; font-size:18px;
+}
+.img-badge{ position:absolute; bottom:6px; left:6px; background:#b30000; color:#fff; font-size:11px; padding:2px 6px; border-radius:4px;}
+
+</style>
+   
 </head>
 {{!-- /////////////////////////////////////////////////////////////////////////////// --}}
 <body   style="background-color: #ffffff;">
-    <div id="cadastroProdutoModal" class="" style="width: 47%;float: left;background-color: #848985;margin-left: 2%;">
+    <div id="cadastroProdutoModal" class="" style="width: 50%;float: left;background-color: #848985;margin:auto;height:99vh ;">
         <div class="formata_">
             <button type="button" id="fecharForm" style="position: absolute;top: 5px;right: 5px;border: none;background: transparent;font-size: 30px;cursor: pointer;" onclick="closeCadastroModal()">&times;</button>
-            <div style="width: 98%;height: 92vh;margin: auto;background-color: #000308;overflow-y: scroll ;margin-top: 2.5vh;padding: 5px;overflow-x: hidden;">
-            <h4 style="font-weight: 200;color: #ffffff;">Cadastro de produto</h4>
-                <form id="cadastroProdutoForm" style="background-color: #94af96;color:#fff;position: relative;height: 145vh;" >
-                    <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #df061f;display:none;">
-                    <div style="margin-bottom:10px;display:block;">
-                    <legend for="cadastroMarca" style="color:white">Marca loja:</legend>
-                    <label id="cadastroMarca" type="text"  name="marca" class="form-control" style="background-color: #fff;">{{lojista.marca}}</label>
+            <div style="width: 98%;height: 97vh;margin: auto;background-color: #000308;overflow-y: scroll ;margin-top: 1vh;padding: 5px;overflow-x: hidden;">
+            <h4 style="font-weight: 200;color: #ffffff;">Edição de imagem</h4>
+            <input type="hidden" name="produto_id" value="{{produtoId}}">
+                <form id="cadastroProdutoForm" style="background-color: #021c03;color:#fff;position: relative;height: 120vh;" >
+                    <div class="campo">
+                        <label style="font-weight:bold;">Marca loja :</label>
+                        <input value="{{produto.marcaloja}}" class="form-control fundo" readonly style="background: yellow;color:black">
                     </div>
-                    <fieldset class="fs">
-                      <legend style="background-color:transparent;width: 800px;padding: 5px;color:#e70606;font-size:medium;">Para ter mais acesso a departamentos entrar em contato com administrador:</legend>
-                    </fieldset>
-                    <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
-                        <legend style="background-color:transparent;width: 150px;padding: 5px;font-weight: bold;">Departamento:</legend>
-                        <select name="departamento_id" id="selDepartamento" class="form-select form-select-sm" required>
-                            <option value="" disabled selected hidden>Selecione o departamento</option>
-                            {{#each departamentos}}
-                                <option value="{{this._id}}">{{nomeDepartamento}}</option>
-                            {{/each}}
-                        </select>
+                    <div class="campo" >
+                        <label style="background-color:transparent;width: 110px;padding: 5px;font-weight:200;">Departamento :</label>
+                        <input value="{{departamentoNome}}" class="form-control" readonly style="">
                     </div>
                     {{!-- ========================================================================== --}}
-                    <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
-                        <label for="setor" style="background-color:transparent;width: 150px;padding: 5px;font-weight: bold;">Setor:</label>
-                        <select name="setor_id" id="selSetor" class="form-select form-select-sm" required >
-                            <option value="{{_id}}">Selecione o setor</option>
-                        </select>
+                    <div class="duo">
+                            <div class="campo">
+                                
+                                <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Setor:</label>
+                                <input class="form-control" value="{{nsetor}}" style="background: yellow;color:black;height: 3vh;font-size: small;" readonly>
+                            </div>
+                            <div class="campo">
+                                <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Seção:</label>
+                                <input class="form-control" value="{{secaoNomes}}" style="background: yellow;color:black;height: 3vh;font-size: small;" readonly>
+                            </div>
                     </div>
-                    {{!-- ========================================================================== --}}
-                    <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
-                    <label for="divSelect" style="background-color:transparent;width: 150px;padding: 5px;font-weight: bold;">Seção:</label>
-                        <select name="secao_id" id="selSecao" class="form-select form-select-sm" required >
-                            <option value="{{_id}}">Selecione a seção</option>
-                        </select>
+
+                    {{!-- <div class="campo">
+                        <label style="font-weight:bold;">Setor:</label>
+                        <input class="form-control" value="{setorNomes}}" style="background: yellow;color:black" readonly>
+                     </div>
+                    <div class="campo">
+                        <label style="font-weight:bold;">Seção:</label>
+                        <input class="form-control fundo" value="{{secaoNomes}}" style="background: yellow;color:black" readonly>
+                    </div> --}}
+                    <div class="campo" >
+                       <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Código:</label>
+                       <input id="cadastroCodigo" type="text" name="codigo" class="form-control fundo" style="background: yellow;color:black" value="{{produto.codigo}}" readonly>
                     </div>
-                    <div style="margin-bottom:10px;background-color blueviolet;">
-                    <label>Código:</label>
-                    <input id="cadastroCodigo" type="text"  name="codigo" class="form-control" tabindex="0" list="hist-codigo" 
-                                                                     autocomplete="new-password" inputmode="numeric" pattern="\d*"
-                                                                     autocapitalize="off" autocorrect="off" spellcheck="false">
-                    <datalist id="hist-codigo"></datalist>
+                    <div class="campo" >
+                       <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Descrição:</label>
+                      <input id="cadastroDescricao" type="text" name="descricao" class="form-control fundo" value="{{produto.descricao}}" style="background: yellow;color:black" readonly>
                     </div>
-                
-                    <div style="margin-bottom:10px;">
-                    <label>Descrição:</label>
-                    <input id="cadastroDescricao" type="text"  name="descricao" class="form-control">
-                    <small id="descricaoErr" class="text-warning" hidden></small>
+                    <div class="campo" >
+                       <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Complemento:</label>
+                      <input id="cadastroComplemento" type="text" name="complemento" class="form-control fundo" style="background: yellow;color:black;font-weight:200;" value="{{produto.complete}}" readonly>
                     </div>
-                    <div style="margin-bottom:10px;">
-                    <label>Complemento:</label>
-                    <input id="cadastroComplemento" type="text"  name="complemento" class="form-control">
+                    <div class="campo">
+                       <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Referência:</label>
+                       <input id="cadastroReferencia" type="text" name="referencia" class="form-control fundo" style="background: yellow;color:black;font-weight:200;" value="{{produto.referencia}}" readonly>
                     </div>
-                    <div style="margin-bottom:10px;">
-                    <label>Referência:</label>
-                    <input id="cadastroReferencia" type="text"  name="referencia" class="form-control">
+                    <div class="campo">
+                        <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Fornecedor:</label>
+                        <input class="form-control" value="{{fornecedorNome}}" style="background: yellow;color:black" readonly>
                     </div>
-                    <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
-                    <label style="background-color:transparent;width: 85px;padding: 5px;font-weight: bold;">Fornecedor:</label>
-                    <select id="selectFornecedores" name="fornecedores" style="height: 3.2vh;width:70%;margin: auto;margin-left: 6px;margin-top: 3px;">
-                            <option value="">Selecione:</option>
-                                {{#each f}}
-                                    <option value="{{_id}}">{{marca}}</option>
-                                {{/each}}
-                    </select>
+                    <div class="duo">
+                        <div class="campo">
+                                <label style="background-color:transparent;width: 85px;padding: 5px;font-weight: 200;">Cidade:</label>
+                                <input class="form-control" value="{{produto.cidade}}" style="background: yellow;color:black;font-weight: 200;" readonly>
+                            </div>
+                            <div class="campo">
+                                <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Bairro:</label>
+                                <input class="form-control" value="{{produto.bairro}}" style="background: yellow;color:black;font-weight: 200;" readonly>
+                            </div>
                     </div>
-                    {{!-- Os nomes cidade e bairro constam  na ficha do produto para facilitar a consulta --}}
-                    <div style="background-color:transparent;margin-bottom: 12px;margin-top: 6px;display: block;">
-                    <label style="background-color:transparent;width: 85px;padding: 3px;height: 3.5vh;font-weight: bold;">Cidade:</label>
-                    <label id="cadastroCidade" class="CidadeBairro" style="margin-top: -6px;padding-top: 0px;background-color: #02662d;color:#fff;height: 3.5vh;">{{lojista.cidade}}</label>
+                    <div class="campo">
+                        <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Quantidade:</label>
+                        <input id="cadastroQte" type="number"  name="qte" class="form-control" style="background: yellow;color:black;font-weight: 200;" value="{{produto.qte}}">
                     </div>
-                    <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;display:block;">
-                          <label name="nomeBairro" style="background-color:transparent;width: 85px;padding: 3px;height: 3.5vh;font-weight: bold;">Bairro</label>
-                          <label type="text" id="cadastroBairro" class="CidadeBairro" style="background-color:#02662d;color: #fff;height: 3.5vh;" >{{lojista.bairro}}</label>
+                    <div class="campo">
+                        <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Preço Custo:</label>
+                        <input id="cadastroPrecoCusto" type="number" name="precocusto" step="0.01" min="0" lang="pt-BR" style="background: yellow;color:black;font-weight: 200;"  class="form-control" value="{{produto.precocusto}}">
                     </div>
-                    <div style="margin-bottom:10px;">
-                    <label>Quantidade:</label>
-                    <input id="cadastroQte" type="number"  name="qte" class="form-control">
+                    <div class="campo">
+                        <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Preço Vista:</label>
+                        <input id="cadastroPrecoVista" type="number" name="precovista" step="0.01" min="0" lang="pt-BR" style="background: yellow;color:black;font-weight: 200;"  class="form-control" value="{{produto.precovista}}">
                     </div>
-                    <div style="margin-bottom:10px;">
-                    <label>Preço Custo:</label>
-                    <input id="cadastroPrecoCusto" type="number" name="precocusto" step="0.01" min="0" lang="pt-BR"   class="form-control">
+                    <div class="campo">
+                        <label style="background-color:transparent;width: 100px;padding: 5px;font-weight:200;">Preço Prazo:</label>
+                        <input id="cadastroPrecoPrazo" type="number" name="precoprazo" step="0.01" min="0" lang="pt-BR" style="background: yellow;color:black;font-weight: 200;"  class="form-control" value="{{produto.precoprazo}}">
+
+                    </div>    
+                    <div id="slotContainer" class="slot-grid">
+                          {{#each slots}}
+                            <div class="slot">
+                              <div class="slot-box">
+                                <span class="slot-num">{{n}}</span>
+
+                                {{#if url}}
+                                  <img class="slot-preview" src="{{url}}" alt="Imagem {{n}}">
+                                {{else}}
+                                  <div class="slot-empty" style="color:red">Sem imagem</div>
+                                {{/if}}
+
+                              </div>
+                            </div>
+                          {{/each}}
                     </div>
-                    <div style="margin-bottom:10px;">
-                    <label>Preço Vista:</label>
-                    <input id="cadastroPrecoVista" type="number" name="precovista" step="0.01" min="0" lang="pt-BR"   class="form-control">
-                    </div>
-                    <div style="margin-bottom:10px;">
-                    <label>Preço Prazo:</label>
-                    <input id="cadastroPrecoPrazo" type="number" name="precoprazo" step="0.01" min="0" lang="pt-BR"   class="form-control">
-                    </div>
-                    {{!-- ========================================================================== --}}
-                    
-                    {{!-- ========================================================================== --}}
                     <div style="display: flex;flex-direction: row;justify-content:space-around;justify-items: center;padding: o 10px 0 10px;margin-bottom: 10px;">
-                        <button type="button" class="btn btn-secondary" onclick="closeCadastroModal()">Cancelar</button>
-                        <button id="btnSalvar" type="submit" class="btn btn-primary">Salvar</button>
-                        {{!-- segue=>cadastro.js --}}
                     </div>
                 </form>
             </div>
         </div>
     </div> 
-    <div id="modalImagem" class="backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div id="modalImagem" class="backdrop" role="dialog" aria-modal="true" aria-hidden="true" style="width: 49.5%;float: left;background-color: #848985;margin:auto;height:99vh ;margin-right: 5px;">
       <div class="mi-dialog">
             <!-- A: Cabeçalho -->
             <div class="mi-header">
@@ -507,19 +599,19 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
                 <div class="mi-grid">
                     <div class="mi-field">
                       <label>id-produto</label>
-                      <input id="miProdId" type="text" readonly value="">
+                      <input id="miProdId" type="text" readonly value="{{mi.id}}">
                     </div>
                     <div class="mi-field">
                       <label>descrição</label>
-                      <input id="miDescricao" type="text" readonly value="">
+                      <input id="miDescricao" type="text" readonly value="{{mi.descricao}}">
                     </div>
                     <div class="mi-field">
                       <label>fornecedor</label>
-                      <input id="miFornecedor" type="text" readonly value="">
+                      <input id="miFornecedor" type="text" readonly value="{{mi.fornecedor}}">
                     </div>
                     <div class="mi-field">
                       <label>departamento</label>
-                      <input id="miDepartamento" type="text" readonly value="">
+                      <input id="miDepartamento" type="text" readonly value="{{mi.departamento}}">
                     </div>
                 </div>
             </div>
@@ -568,172 +660,14 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
         <script src="/js/dashboard.js"></script>
 
         {{!-- <script src="/js/empresa/bcoimagem.js" defer></script> --}}
-        <script src="/js/empresa/cadastro.js" defer></script>
+        {{!-- <script src="/js/empresa/produtoEdit-imagem.js" defer></script> --}}
         <script src="/js/rotinas/limpaSelect.js"></script>
-        <script src="/js/rotinas/produto-ImageModal.js"></script>
+        {{!-- <script src="/js/rotinas/produto-ImageModal.js"></script> --}}
         <script src="/js/rotinas/AcaoComDataset.js"></script>
   
 {{!-- /////////////////////////////////////////////////////////////////////////////////////
-                  // CADASTRO DO PRODUTO
+
 ////////////////////////////////////////////////////////////////////////////////////
-//BUSCAR OS DEPARTAMENTOS QUANDO O INPUTCODIGO ADQUIRIR FOCO --}}
-<script>
-  let departamentosCarregados = false;
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const inputCodigo = document.getElementById("cadastroDescricao");
-    let idLoja=document.getElementById("IddoLojista").value;
-    ///////////////////////////////////////////////
-    
-    if (inputCodigo) {
-      inputCodigo.addEventListener("focus", async () => {
-        
-        if (!departamentosCarregados) {
-          try {
-         
-            const response = await fetch(`/produto/lojistadepartamentos/${idLoja}`);
-            const departamentos = await response.json();
-           
-            const select = document.getElementById("selDepartamento");
-           
-            select.innerHTML = "<option value='' disabled selected hidden>Selecione um departamento</option>";
-            let cor='#100e0e'
-            select.style.backgroundColor=cor;
-            select.style.color="pink";
-            // Preenche o select com os dados recebidos
-            departamentos.forEach(dep => {
-              const opt = document.createElement("option");
-              opt.value = dep._id;
-              opt.textContent = dep.nomeDepartamento;
-              opt.classList.add("option-roxa");
-              select.appendChild(opt);
-            });
-           
-            select.style.backgroundColor="black";
-            select.style.color="red";
-
-            departamentosCarregados = true;
-          } catch (err) {
-            console.error("Erro ao carregar departamentos:", err);
-          }
-        }
-      });
-    }
-  });
-</script>
-{{!-- Selecionado um departamento para buscar aos setores pertinentes --}}
-<script>
-  //Quando se seleciona um departamento então vai-se buscar os setores pertinentes aquele departamento.
-  document.getElementById('selDepartamento').addEventListener('change', async function () {
-          
-          const departamentoId = this.value;
-          
-          const setorSelect = document.getElementById('selSetor');
-          setorSelect.innerHTML = '<option value="">Carregando setores...</option>';
-
-          if (departamentoId) {
-            try {
-                  const response = await fetch(`/produto/setores/${departamentoId}`);
-                  
-                  const data = await response.json();
-                  
-                  const setores = Array.isArray(data) ? data : (data.setores || []); 
-                  
-                  if (Array.isArray(setores)) {
-                    setorSelect.innerHTML = '<option value="">Selecione o setor:</option>';
-                    setores.forEach((setor) => {
-                        const opt = document.createElement('option');
-                        opt.value = String(setor.idSetor);                // garante string
-                        opt.textContent = setor.nomeDeptoSetor || ''; // texto visível
-                        opt.classList.add('option-roxa');
-                        setorSelect.appendChild(opt);
-                        
-                    });
-                  } else {
-                    setorSelect.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
-                  }
-            } catch (err) {
-                  setorSelect.innerHTML = '<option value="">Erro ao buscar setores</option>';
-                  console.error(err);
-            }
-          } else {
-            setorSelect.innerHTML = '<option value="">Selecione o setor:</option>';
-          }
-  });
-
-  //!-- Quando se seleciona um setor no ComboSetor então vai buscar as seções pertinentes --}}
-  document.getElementById('selSetor').addEventListener('change', async function () {
-      const setorId = this.value;
-      const setorSecao = document.getElementById('selSecao');
-      setorSecao.innerHTML = '<option value="">Carregando setores...</option>';
-      if (setorId) {
-        try {
-          
-          const { itens = [] } =await(await fetch(`/produto/secoes/${setorId}`)).json();
-          
-          //const secoes = itens //await response.json();
-          try{
-              setorSecao.innerHTML = '<option value="">Selecione a seção:</option>';
-              itens.forEach(secao => {
-                const opt = document.createElement('option');
-                opt.value = secao._id;
-                opt.textContent = secao.nameSecao;
-                setorSecao.appendChild(opt);
-          
-              });
-
-          
-          } catch(e) {
-             setorSecao.innerHTML = '<option value="">Nenhum setor encontrado.</option>';
-          }
-        }catch(e){
-          console.log('Error ao carregar a seção!')
-        }
-      }
-  })
-</script>
-{{!-- /////////////////////////////////////////////////////////////////////// --}}
-{{!-- BUSCAR FORNECEDORES QUANDO O INPUTCODIGO TIVER FOCO --}}
-<script>
-    let fornecedoresCarregados = false;
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const inputCodigo = document.getElementById("cadastroCodigo");
-      let lojistaId=document.getElementById("IddoLojista").value;
-      //{{!-- Pegando os fornecedores cadastradoLoja ID --}}
-      if (inputCodigo) {
-        inputCodigo.addEventListener("focus", async () => {
-          if (!fornecedoresCarregados) {
-            try {
-              const response = await fetch(`/fornec/fornecqlojista/${lojistaId}`);
-              const lista = await response.json();
-            
-              //console.log('');
-              const select = document.getElementById("selectFornecedores");
-
-              select.innerHTML = '<option disabled selected>Selecione um fornecedor</option>';
-
-              lista.forEach(dep => {
-                const opt = document.createElement("option");
-                opt.value = dep._id;
-                opt.textContent = dep.marca;
-                select.appendChild(opt);
-              });
-
-              fornecedoresCarregados = true; // para não buscar de novo
-            } catch (err) {
-              console.error("Erro ao buscar fornecedores:", err);
-            }
-          }
-        });
-      }
-    });
-</script>
-
-
-
-{{!-- /////////////////////////////////////////////////////////////////////////////////////
-
 ////////////////////////////////////////////////////////////////////////////////////
 /**
  * Blocos de IMAGENS do produto — migrados de cooperado-admin
@@ -1132,24 +1066,76 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
   //document.addEventListener('DOMContentLoaded', () => carregarBancoImagens());
 })();
 </script>
-<input id="miHiddenFile" type="file" accept="image/*" style="display:none" />
+<input id="miHiddenFile" type="file" accept="image/*" style="display:none" class="slot-input" />
+
+<input id="fileInput1" class="slot-input" type="file" accept="image/*" hidden>
+<input id="fileInput2" class="slot-input" type="file" accept="image/*" hidden>
+<input id="fileInput3" class="slot-input" type="file" accept="image/*" hidden>
+<input id="fileInput4" class="slot-input" type="file" accept="image/*" hidden>
+<input id="fileInput5" class="slot-input" type="file" accept="image/*" hidden>
+<input id="fileInput6" class="slot-input" type="file" accept="image/*" hidden>
+<input id="fileInput7" class="slot-input" type="file" accept="image/*" hidden>
+
 <script>
+/* util: normaliza texto */
+function norm(s=''){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9\s]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
 
-function norm(s=''){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim()}
-function tokens(s=''){return norm(s).split(' ').filter(w=>w.length>=3)}
-function temPalavraIgual(a,b){const A=new Set(tokens(a)); return tokens(b).some(w=>A.has(w))}
+/* util: tokens ≥ 3 letras (para o texto do produto) */
+function tokens(s=''){ return norm(s).split(' ').filter(w => w.length >= 3); }
 
-const produtoTexto = document.getElementById('miDescricao')?.value || ''; // vem do topo do modal
-console.log(produtoTexto)
-document.getElementById('miHiddenFile').addEventListener('change', e=>{
-  console.log(90000)
-  const f = e.target.files?.[0]; if(!f) return;
-  if(!temPalavraIgual(f.name, produtoTexto)){
-    alert('O nome do arquivo precisa ter pelo menos UMA palavra igual à descrição do produto.');
-    e.target.value=''; e.target.blur();
+/* valida: pelo menos UMA palavra do produto aparece como substring no nome do arquivo */
+function temPalavraIgual(nomeArquivo, textoProduto){
+  const nome = norm(nomeArquivo).replace(/\.[^.]+$/, ''); // tira extensão
+  return tokens(textoProduto).some(t => nome.includes(t));
+}
+
+/* apenas para exibir no alerta (sem “de/da/do/das/dos”, sem extensão, etc.) */
+function pretty(s=''){
+  const base = s.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
+  const stop = new Set(['de','da','do','das','dos']);
+  return base.split(' ').filter(w => !stop.has(w.toLowerCase())).join(' ');
+}
+
+const produtoTexto = document.getElementById('miDescricao')?.value || '';
+
+function onFileChange(e){
+  if (e.target.type !== 'file') return;
+  const files = e.target.files;
+  if (!files || files.length === 0) return;   // cancelou
+
+  const f = files[0];
+  if (!temPalavraIgual(f.name, produtoTexto)){
+    const nomeArquivo = pretty(f.name);
+    const nomeProduto = pretty(produtoTexto);
+    alert(
+      'O nome do arquivo precisa ter pelo menos UMA palavra igual à descrição do produto.\n\n' +
+      `Arquivo: ${nomeArquivo}\n` +
+      `Produto: ${nomeProduto}`
+    );
+    e.target.value = '';
+    e.target.blur();
   }
+}
+
+/* liga em TODOS os inputs type="file" desta página */
+document.querySelectorAll('input[type="file"]').forEach(inp=>{
+  inp.removeEventListener('change', onFileChange); // evita bind duplicado
+  inp.addEventListener('change', onFileChange);
+});
+
+/* opcional: log ao abrir seletor (ajuda debug) */
+document.querySelectorAll('input[type="file"]').forEach(inp=>{
+  inp.addEventListener('click', ()=>console.log('abrindo seletor de', inp.id));
 });
 </script>
+
+
 <script>
   window.$hiddenFile = document.getElementById('miHiddenFile');
 </script>
@@ -1295,6 +1281,7 @@ function clearSlot(i){
 
     }
 
+
     async function _abrirModalImagemImpl({ produtoId='', descricao='', fornecedor='', departamento='', pagerUrls=[] } = {}){
                 console.log('[IMG] abrirModalImagemImpl()', { produtoId, descricao, fornecedor, departamento });
                 if (window.acoCloseMenus) window.acoCloseMenus();
@@ -1407,7 +1394,7 @@ function clearSlot(i){
             console.log('');
 
             console.log('')
-            console.log('',card);
+           // console.log('',card);
             console.log(firstEmpty());
             console.log('')
             $miBankGrid.appendChild(card);
@@ -1693,10 +1680,11 @@ async function postSalvarImagem({
   }
 })();
 </script>
-<script>
+{{!-- conserva as últimas palavras digitadas no input --}}
+{{!-- <script>
 const KEY = 'hist_codigo';
 
-function carregarHist() {
+function carregarXHist() {
   const arr = JSON.parse(localStorage.getItem(KEY) || '[]');
   document.getElementById('hist-codigo').innerHTML =
     arr.map(v => `<option value="${v}">`).join('');
@@ -1710,9 +1698,31 @@ function salvarNoHist(valor) {
   if (i > -1) arr.splice(i, 1);   // remove duplicado
   arr.unshift(v);                  // coloca no topo
   localStorage.setItem(KEY, JSON.stringify(arr.slice(0, 5))); // só 5
-  carregarHist();
+  carregarXHist();
 }
 
-document.addEventListener('DOMContentLoaded', carregarHist);
+document.addEventListener('DOMContentLoaded', carregarXHist);
 document.getElementById('codigo').addEventListener('change', e => salvarNoHist(e.target.value));
-</script>
+</script> --}}
+
+{{!-- <script>
+  document.querySelectorAll('.slot-input').forEach(input => {
+  input.addEventListener('change', e => {
+    const file = e.target.files[0];
+    const slotIndex = e.target.id.replace('fileInput', '');
+    const preview = document.getElementById('preview' + slotIndex);
+    const label = e.target.previousElementSibling;
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        preview.src = ev.target.result;
+        preview.hidden = false;
+        label.hidden = true;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+});
+
+</script> --}}

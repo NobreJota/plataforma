@@ -14,7 +14,7 @@ function normalize(str = "") {
 
 const ProdutoImagemSchema = new Schema(
   {
-    codigoId:     { type: Schema.Types.ObjectId, ref: "m_construcao", index: true },
+    codigoId:     { type: Schema.Types.ObjectId, ref: "arquivo_doc", index: true },
     produtoNome:  { type: String, trim: true, index: true },
     fornecedor:   { type: String, trim: true, index: true },
     departamento: { type: String, trim: true, index: true },

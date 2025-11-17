@@ -531,6 +531,7 @@ display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606
   <div id="modalContentSetorSecao"></div>
 </div> 
 <div id="painelLista" class="grade" style="display: block;">
+    <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #df061f;display:block;">
     <div id="divTable" style="overflow-x: auto;width:100%;margin-top: 2.7vh;background-color: #e49b26;">
           <table id="tabelaProdutos" class="table  table-bordered" style="font-size: small;margin-top:0.3vh;">
             <thead class="fixar-apos-paginacao" style="color: #df061f;width: 100%;font-size:x-small ;font-weight: 400;" >
@@ -1006,9 +1007,9 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
-{{!-- executarAcao(acao, id, codigo, descricao,fornecedor) --}}
-<script>
-  function executarAcao(acao, id, descricao,fornecedor,departamento) {
+{{!-- XexecutarAcao(acao, id, codigo, descricao,fornecedor) --}}
+{{!-- <script>
+  function XexecutarAcao(acao, id, descricao,fornecedor,departamento) {
         const row = document.querySelector(`[data-id='${id}']`);
         const tableRows = document.querySelectorAll("tr");
 
@@ -1046,7 +1047,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   //abrirModalImagens para selecionar a imaagem a ser gravada
   function abrirModalImagens(descricao, fornecedor, { produtoId, departamentoNome }) {
-        console.log(' [ 981 -abrirModalImagens]')
+        console.log(' [ 1050 -abrirModalImagens]')
         window.abrirModalImagem({
           produtoId,
           descricao,
@@ -1054,7 +1055,7 @@ window.addEventListener("DOMContentLoaded", () => {
           departamento: departamentoNome
         });
   }
-</script>
+</script> --}}
 {{!-- openCadastroModal --}}
 <script>
   function openCadastroModal(){
@@ -1216,35 +1217,32 @@ window.addEventListener("DOMContentLoaded", () => {
                 console.log('[IMG] abrirModalImagemImpl()', { produtoId, descricao, fornecedor, departamento });
                 if (window.acoCloseMenus) window.acoCloseMenus();
 
-  // (se quiser) garante que nenhum select fique “preso”
-  // __resetSelectIfNeeded?.();
+                // (se quiser) garante que nenhum select fique “preso”
+                // __resetSelectIfNeeded?.();
 
-  $miProdId.value       = String(produtoId||'');
-  $miDescricao.value    = String(descricao||'');
-  $miFornecedor.value   = String(fornecedor||'');
-  $miDepartamento.value = String(departamento||'');
+                $miProdId.value       = String(produtoId||'');
+                $miDescricao.value    = String(descricao||'');
+                $miFornecedor.value   = String(fornecedor||'');
+                $miDepartamento.value = String(departamento||'');
 
-  clearBankUI(true);
+                clearBankUI(true);
 
-  if (typeof resetSlots === 'function') resetSlots();
-  else if (window.$miSlotGrid) $miSlotGrid.innerHTML = '';
+                if (typeof resetSlots === 'function') resetSlots();
+                else if (window.$miSlotGrid) $miSlotGrid.innerHTML = '';
 
-  originalSlots.fill(null);
+                originalSlots.fill(null);
 
-  try {
-    await carregarImagensDoProduto(produtoId);
-    console.log('[IMG] imagens vinculadas carregadas');
-  } catch (e) {
-    console.error('[IMG] erro carregarImagensDoProduto', e);
-  }
+                try {
+                  await carregarImagensDoProduto(produtoId);
+                  console.log('[IMG] imagens vinculadas carregadas');
+                } catch (e) {
+                  console.error('[IMG] erro carregarImagensDoProduto', e);
+                }
 
-  $backdrop.classList.add('show');
-  $backdrop.setAttribute('aria-hidden','false');
-}
-window.abrirModalImagem = _abrirModalImagemImpl; // mantém global
-
-
-               
+                $backdrop.classList.add('show');
+                $backdrop.setAttribute('aria-hidden','false');
+   }
+    window.abrirModalImagem = _abrirModalImagemImpl; // mantém global
 </script>
 <script>
 // garante referências já criadas ($backdrop, resetSlots, etc.)
@@ -1424,6 +1422,7 @@ window.__fecharModal = __fecharModal;
 <script>
     // BLOCO 4 — Gravar imagens (usa suas funções existentes)
     $btnGravar?.addEventListener('click', async ()=>{
+            
             const temAlgo = slots.some(Boolean);
             if (!temAlgo){ alert('Nenhuma imagem selecionada.'); return; }
 
@@ -1433,10 +1432,17 @@ window.__fecharModal = __fecharModal;
                 (!a.key && !b.key && a.url && b.url && a.url===b.url)
             );
 
+            let N=originalSlots[i];
+            let T= slots[i];
+
+            console.log(' N ',N)
+            console.log(' T ',T )
+
             const removed=[], refsAdd=[], uploads=[];
             for (let i=0;i<MAX_SLOTS;i++){
                 const orig = originalSlots[i];
                 const cur  = slots[i];
+                
                 if (!orig && !cur) continue;
                 if (!orig && cur){ (cur.type==='file' ? uploads : refsAdd).push({idx:i, ...cur}); continue; }
                 if (orig && !cur){ removed.push({idx:i, ...orig}); continue; }
@@ -1468,13 +1474,14 @@ window.__fecharModal = __fecharModal;
 <script>
 function pad2(n){ return String(n+1).padStart(2,'0'); }
 
-/**
- * 1) Para cada upload: pega presigned, faz PUT e depois salva JSON
- * 2) Para cada ref nova: salva JSON direto
- * (Removed: deixamos logado por enquanto; plugamos quando houver rota)
- */
+/// 1) uploads (presigned + PUT + salvar)
+ //* 1) Para cada upload: pega presigned, faz PUT e depois salva JSON
+ //* 2) Para cada ref nova: salva JSON direto
+ //* (Removed: deixamos logado por enquanto; plugamos quando houver rota)
+ //*/
 async function salvarImagensCompat({ produtoId, descricao, fornecedor, departamento, refsAdd, uploads, removed, order },slotsRef){
         // 1) uploads (presigned + PUT + salvar)
+        console.log(' [ 1475 30000 ]',uploads)
         for (const u of uploads){
                 const idx  = u.idx;
                 const s    = slotsRef[idx];
@@ -1674,7 +1681,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 <script>
 // === helpers globais (uma vez só) ===
-//(function(){
+
   (function(){
   if (!window.__norm) {
     window.__norm = function(s){

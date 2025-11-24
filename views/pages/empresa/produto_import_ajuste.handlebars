@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Ajuste de itens importados</title>
+  <style>
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      font-size: 14px;
+      padding: 16px;
+    }
+    table{
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td{
+      border: 1px solid #ddd;
+      padding: 4px 6px;
+    }
+    th{
+      background: #f2f2f2;
+    }
+
+    /* ================================
+   ÁREA VERDE (inputs do lojista)
+   ================================ */
+.barra-topo-ajuste {
+  width: 100%;
+  background-color: #3cff00;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: nowrap;       /* mantém os inputs na horizontal */
+  gap: 10px;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.barra-topo-ajuste .campo-topo {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+}
+
+.barra-topo-ajuste input {
+  width: 220px;
+  padding: 4px 6px;
+  border: 1px solid #666;
+  border-radius: 4px;
+}
+
+/* ================================
+   ÁREA DA TABELA – DIV CONTÊINER
+   ================================ */
+.tabela-container {
+  width: 100%;
+  max-width: 100%;              /* limita a largura ao tamanho da barra verde */
+  height: calc(100vh - 180px);  /* altura dinâmica */
+  border: 2px solid #888;
+  overflow-x: auto;             /* scroll horizontal */
+  overflow-y: auto;             /* scroll vertical */
+  margin-top: 15px;
+  box-sizing: border-box;
+  padding: 3px;
+  background: #888;
+}
+
+   /* ================================
+   TABELA
+   ================================ */
+        .table-ajuste {
+            border-collapse: collapse;
+            width: max-content;   /* faz a tabela crescer para fora se precisar */
+            min-width: 900px;     /* previne colunas espremidas */
+            background: #9e9da9;
+            table-layout: auto;
+            color:#fff;
+        }
+
+        /* Cabeçalho fixo */
+        .table-ajuste thead th {
+            position: sticky;
+            top: 0;
+            background-color: #ea920e;
+            z-index: 10;
+            padding: 6px;
+            border: 1px solid #999;
+            white-space: nowrap;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Células normais */
+        .table-ajuste td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            min-width: 120px;
+            white-space: nowrap;
+        }
+
+        /* Alternância de cores */
+        .table-ajuste tbody tr:nth-child(even) {
+           background-color: #f8f8f8;
+           color:#000000
+        }
+        .panel-colunas{
+            font-size: 11px;
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 4px 8px;
+            border-radius: 3px;
+            margin-bottom: 6px;
+            max-width: 420px;
+            display: none;
+        }
+
+        .panel-colunas li{
+           cursor: pointer;
+        }
+
+        .panel-colunas li:hover{
+          text-decoration: underline;
+        }
+</style>
+<style>
+    /* contêiner do botão + painel */
+.box-cols{
+  position: relative;              /* referência pro absolute do painel   */
+}
+
+/* painel flutuante */
+.panel-colunas{
+  font-size: 11px;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+  border-radius: 3px;
+  max-width: 320px;
+
+  position: absolute;              /* sai do fluxo, deixa de empurrar a barra verde */
+  top: 100%;                       /* logo abaixo do botão */
+  right: 0;                        /* alinhado à direita do quadrado */
+  margin-top: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  z-index: 999;
+
+  max-height: 250px;               /* se crescer muito, rola */
+  overflow-y: auto;
+
+  display: none;                   /* começa escondido (JS mostra/esconde) */
+}
+
+.panel-colunas ul{
+  margin: 4px 0 0 0;
+  padding-left: 18px;
+}
+
+.panel-colunas li{
+  cursor: pointer;
+}
+
+.panel-colunas li:hover{
+  text-decoration: underline;
+}
+
+</style>
+<style>
+    /* ================================
+   MODAL DE EDIÇÃO
+   ================================ */
+.modal-ajuste-backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  display: none;                 /* aparece quando tiver a classe .aberto */
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-ajuste-backdrop.aberto{
+  display: flex;
+}
+
+.modal-ajuste{
+  background: #fff;
+  min-width: 480px;
+  max-width: 800px;
+  max-height: 80vh;
+  border-radius: 6px;
+  box-shadow: 0 4px 18px rgba(0,0,0,.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.modal-ajuste-header,
+.modal-ajuste-footer{
+  padding: 8px 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-ajuste-footer{
+  border-top: 1px solid #ddd;
+  border-bottom: none;
+  text-align: right;
+}
+
+.modal-ajuste-body{
+  padding: 8px 12px;
+  overflow: auto;
+}
+
+.btn-fechar-modal{
+  border: none;
+  background: none;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.modal-ajuste-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.campo-modal{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.campo-modal label{
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.campo-modal input{
+  padding: 4px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* só para diferenciar visualmente o código, se quiser */
+.campo-modal input.campo-codigo{
+  background-color: #f4f4f4;
+  font-weight: 600;
+}
+
+</style>
+</head>
+<body>
+    {{!-- ............................................................................................. --}}
+    <div class="barra-topo-ajuste">
+            <div class="campo-topo">
+                <label>loja_id</label>
+                <input type="text" value="{{lojista._id}}" readonly>
+            </div>
+            <div class="campo-topo">
+                <label>marca</label>
+                <input type="text" value="{{lojista.marca}}" readonly>
+            </div>
+            <div class="campo-topo">
+                <label>cidade</label>
+                <input type="text" value="{{lojista.cidade}}" readonly>
+            </div>
+            <div class="campo-topo">
+                <label>bairro</label>
+                <input type="text" value="{{lojista.bairro}}" readonly>
+            </div>
+            <div class="campo-topo">
+                <label>fornecedor</label>
+                <input type="text" value="{{fornecedor._id}}" readonly>
+            </div>
+            <div class="campo-topo">
+                <div class="box-cols" style=" height:auto;display: flex;flex-direction: row;justify-content: space-between;">
+                        <div style="width: 100%;">
+                            <button id="btnMostrarColunas" class="btn-cols-ocultas" type="button" style="background:blue;color:#fff;border-radius: 3px;">
+                            <i class="fa fa-eye">Colunas</i> 
+                            </button>
+                        </div>
+
+                        <!-- tira o display e o width daqui; vamos controlar no CSS -->
+                        <div id="panelCols" class="panel-colunas" style="background:blue ;color:#fff;">
+                            <strong>Colunas ocultas:</strong>
+                            <ul id="listaColsOcultas" style="margin:4px 0 0 0; padding-left:18px;"></ul>
+                        </div>
+                </div>
+           </div>
+    </div>
+    {{!-- ........................................................................................... --}}
+ 
+   <div class="tabela-container">
+        <table id="tabelaAjuste" class="table-ajuste">
+            <thead >
+                <tr>
+                {{!-- CABEÇALHO DINÂMICO: TODOS OS CAMPOS DO arquivoDoc --}}
+                {{#each camposTabela}}
+                    <th>{{this}}</th>
+                {{/each}}
+                </tr>
+            </thead>
+            <tbody>
+                {{!-- PARA CADA ITEM IMPORTADO --}}
+                {{#each itens}}
+                <tr data-id="{{this._id}}">
+                    {{!-- PARA CADA CAMPO DO arquivoDoc, pega o valor dinâmico do item --}}
+                    {{#each ../camposTabela}}
+                    <td>{{lookup ../this this}}</td>
+                    {{/each}}
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <!-- ============================
+     MODAL DE EDIÇÃO DE ITENS
+     ============================ -->
+<div id="modalEdicao" class="modal-ajuste-backdrop">
+  <div class="modal-ajuste">
+    <div class="modal-ajuste-header">
+      <span id="modalEdicaoTitulo">Editar item</span>
+      <button type="button" id="btnFecharModal" class="btn-fechar-modal">&times;</button>
+    </div>
+
+    <div id="modalEdicaoBody" class="modal-ajuste-body">
+      <!-- campos gerados via JS -->
+    </div>
+
+    <div class="modal-ajuste-footer">
+      <button type="button" id="btnFecharModal2">Fechar</button>
+      <button type="button" id="btnSalvarModal">Salvar</button>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const table  = document.getElementById("tabelaAjuste");
+  if (!table) return;
+
+  const ths    = table.querySelectorAll("thead th");
+  const painel = document.getElementById("panelCols");
+  const lista  = document.getElementById("listaColsOcultas");
+  const btnAll = document.getElementById("btnMostrarColunas"); // botão "All col"
+  const btnEye = document.getElementById("btnToggleCols");      // botão do "olho" (se tiver)
+
+  /* ======================================
+     PARTE 1 – ESCONDER / MOSTRAR COLUNAS
+     ====================================== */
+
+  // cabeçalho clicável
+  ths.forEach((th, index) => {
+    th.style.cursor = "pointer";
+    th.title = "Clique para ocultar / mostrar esta coluna";
+
+    th.addEventListener("click", () => {
+      const nomeColuna = th.textContent.trim() || `col ${index + 1}`;
+      toggleColuna(index, nomeColuna);
+    });
+  });
+
+  function toggleColuna(idx, nome) {
+    const linhas = table.querySelectorAll("tr");
+    if (!linhas.length) return;
+
+    const primeiraCelula = linhas[0].children[idx];
+    const estaOculta = primeiraCelula && primeiraCelula.style.display === "none";
+
+    if (estaOculta) {
+      // mostrar
+      linhas.forEach(l => {
+        const cel = l.children[idx];
+        if (cel) cel.style.display = "";
+      });
+      removerDaLista(idx);
+    } else {
+      // ocultar
+      linhas.forEach(l => {
+        const cel = l.children[idx];
+        if (cel) cel.style.display = "none";
+      });
+      adicionarNaLista(idx, nome);
+    }
+  }
+
+  function adicionarNaLista(idx, nome) {
+    if (!lista) return;
+    if (lista.querySelector(`[data-idx="${idx}"]`)) return; // já existe
+
+    const li = document.createElement("li");
+    li.dataset.idx = idx;
+    li.textContent = nome;
+    li.title = "Clique para mostrar esta coluna";
+
+    li.addEventListener("click", () => {
+      mostrarColuna(idx);
+    });
+
+    lista.appendChild(li);
+    atualizarVisibilidadePainel();
+  }
+
+  function removerDaLista(idx) {
+    if (!lista) return;
+    const li = lista.querySelector(`[data-idx="${idx}"]`);
+    if (li) li.remove();
+    atualizarVisibilidadePainel();
+  }
+
+  function mostrarColuna(idx) {
+    const linhas = table.querySelectorAll("tr");
+    linhas.forEach(l => {
+      const cel = l.children[idx];
+      if (cel) cel.style.display = "";
+    });
+    removerDaLista(idx);
+  }
+
+  function atualizarVisibilidadePainel() {
+    if (!painel || !lista) return;
+    painel.style.display = lista.children.length ? "block" : "none";
+  }
+
+  // botão "All col"
+  if (btnAll) {
+    btnAll.addEventListener("click", () => {
+      const linhas = table.querySelectorAll("tr");
+      linhas.forEach(linha => {
+        Array.from(linha.children).forEach(cel => {
+          cel.style.display = "";
+        });
+      });
+      if (lista) lista.innerHTML = "";
+      atualizarVisibilidadePainel();
+    });
+  }
+
+  // botão do "olho" (mostrar/esconder painel manualmente)
+  if (btnEye && painel) {
+    btnEye.addEventListener("click", () => {
+      const visivel = painel.style.display === "block";
+      painel.style.display = visivel ? "none" : "block";
+    });
+  }
+
+  atualizarVisibilidadePainel();
+
+  /* ======================================
+     PARTE 2 – MODAL DE EDIÇÃO
+     ====================================== */
+
+  const modal       = document.getElementById("modalEdicao");
+  const modalBody   = document.getElementById("modalEdicaoBody");
+  const modalTitulo = document.getElementById("modalEdicaoTitulo");
+  const btnClose1   = document.getElementById("btnFecharModal");
+  const btnClose2   = document.getElementById("btnFecharModal2");
+  const btnSalvar   = document.getElementById("btnSalvarModal");
+
+  // guardamos qual linha está sendo editada
+  let linhaAtual = null;
+
+  // índice da coluna "codigo"
+  const idxCodigo = Array.from(ths).findIndex(th =>
+    th.textContent.trim().toLowerCase() === "codigo"
+  );
+
+  // adiciona evento de clique na coluna código
+  if (idxCodigo !== -1 && modal && modalBody) {
+    const linhas = table.querySelectorAll("tbody tr");
+
+    linhas.forEach(tr => {
+      const celCodigo = tr.children[idxCodigo];
+      if (!celCodigo) return;
+
+      celCodigo.style.cursor = "pointer";
+      celCodigo.title = "Clique para editar este item";
+
+      celCodigo.addEventListener("click", () => {
+        abrirModalEdicao(tr);
+      });
+    });
+  }
+
+  function abrirModalEdicao(tr) {
+    if (!modal || !modalBody) return;
+
+    linhaAtual = tr;
+    modalBody.innerHTML = "";
+
+    // título: "Editar item XXX"
+    if (modalTitulo) {
+      let codigo = "";
+      if (idxCodigo !== -1 && tr.children[idxCodigo]) {
+        codigo = tr.children[idxCodigo].textContent.trim();
+      }
+      modalTitulo.textContent = codigo
+        ? `Editar item ${codigo}`
+        : "Editar item";
+    }
+
+    // cria um input para cada coluna visível
+    ths.forEach((th, idx) => {
+      const visivel = th.style.display !== "none";
+      if (!visivel) return;
+
+      const labelTxt = th.textContent.trim();
+      const td       = tr.children[idx];
+      if (!td) return;
+
+      const valorTxt = td.textContent.trim();
+
+      const campoDiv = document.createElement("div");
+      campoDiv.className = "campo-modal";
+
+      const label = document.createElement("label");
+      label.textContent = labelTxt;
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.value = valorTxt;
+      input.dataset.colIndex = idx; // índice da coluna
+
+      // código somente leitura (se quiser)
+      if (idx === idxCodigo) {
+        input.readOnly = true;
+        input.classList.add("campo-codigo");
+      }
+
+      campoDiv.appendChild(label);
+      campoDiv.appendChild(input);
+      modalBody.appendChild(campoDiv);
+    });
+
+    modal.classList.add("aberto");
+  }
+
+  function fecharModalEdicao() {
+    if (modal) {
+      modal.classList.remove("aberto");
+    }
+    linhaAtual = null;
+  }
+
+  if (btnClose1) btnClose1.addEventListener("click", fecharModalEdicao);
+  if (btnClose2) btnClose2.addEventListener("click", fecharModalEdicao);
+
+  // fechar clicando fora
+  if (modal) {
+    modal.addEventListener("click", (ev) => {
+      if (ev.target === modal) fecharModalEdicao();
+    });
+  }
+
+  /* ======================================
+     PARTE 3 – SALVAR (POST PRO BACKEND)
+     ====================================== */
+
+  if (btnSalvar) {
+    btnSalvar.addEventListener("click", async () => {
+      if (!linhaAtual) {
+        alert("Nenhuma linha selecionada.");
+        return;
+      }
+
+      const idItem = linhaAtual.dataset.id;
+      if (!idItem) {
+        alert("ID do item não encontrado na linha.");
+        return;
+      }
+
+      // monta objeto de updates { campo: valor }
+      const inputs = modalBody.querySelectorAll("input");
+      const updates = {};
+
+      inputs.forEach(input => {
+        const idx = Number(input.dataset.colIndex);
+        if (Number.isNaN(idx)) return;
+
+        const campo = ths[idx].textContent.trim(); // nome do campo vem do cabeçalho
+        const valor = input.value;
+
+        // se não quiser permitir alterar o código, pode pular aqui também
+        updates[campo] = valor;
+      });
+
+      try {
+        const resp = await fetch("/importtabela/importacao/ajuste/salvar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idItem, updates })
+        });
+
+        if (!resp.ok) {
+          const erro = await resp.json().catch(() => ({}));
+          alert("Erro ao salvar: " + (erro.error || resp.statusText));
+          return;
+        }
+
+        const data = await resp.json(); // { ok:true, item: {...} }
+       
+        // atualiza a linha na tabela com os valores retornados
+        const item = data.item || {};
+        ths.forEach((th, idx) => {
+          const campo = th.textContent.trim();
+          if (!campo) return;
+
+          const novoValor = item[campo];
+          if (novoValor === undefined) return;
+
+          const td = linhaAtual.children[idx];
+          if (td) td.textContent = novoValor;
+        });
+
+        alert("Item atualizado com sucesso!");
+        fecharModalEdicao();
+      } catch (err) {
+        console.error("Erro ao salvar ajuste:", err);
+        alert("Erro de comunicação ao salvar ajuste.");
+      }
+    });
+  }
+});
+</script>
+
+
+    
+
+
+</body>
+</html>

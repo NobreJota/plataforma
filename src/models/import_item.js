@@ -1,29 +1,53 @@
-// src/models/import_item.js
-const mongoose = require('mongoose');
+// models/importItem.js
+const mongoose  = require('mongoose');
+const ArquivoDoc = require('./arquivoDoc'); // mesmo model que você já usa
+
 const { Schema } = mongoose;
 
-const ImportItemSchema = new Schema({
-  lote:        { type: Schema.Types.ObjectId, ref: 'import_lote', required: true },
-  lojista:     { type: Schema.Types.ObjectId, ref: 'lojista',     required: true },
-  fornecedor:  { type: Schema.Types.ObjectId, ref: 'fornec',      required: true },
-  dataOperacao:{ type: Date, required: true },
+// pega a definição dos campos de ArquivoDoc
+const baseCampos = ArquivoDoc.schema.obj;
 
-  codigo:      { type: String },
-  descricao:   { type: String },
-  estoqueQte:  { type: Number },
-  precoCusto:  { type: Number },
-  taxaPercent: { type: Number },
-  precoVista:  { type: Number },
-  precoMedio:  { type: Number },
-  precoPrazo:  { type: Number },
-  csosn:       { type: String },
-  ncm:         { type: String },
-  statusLinha: { type: String, default: 'ok' },
-  raw:         { type: Schema.Types.Mixed, default: {} },
-  erros:       [{ type: String }]
-}, { timestamps: true });
+const ImportItemSchema = new Schema(
+  {
+    // TODOS os campos que existem em arquivoDoc
+    ...baseCampos,
 
+    // metadados da importação
+    loja_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'lojistas',
+      required: true,
+    },
+    revisado: {
+    type: Boolean,
+    default: false,
+    index: true,
+  },
+    fornecedorId: {
+      type: Schema.Types.ObjectId,
+      ref: 'fornecedores',
+      required: true,
+    },
+    // loteId: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'ImportLote',
+    //   required: true,
+    // },
 
+    // linha original (texto bruto, só pra conferência/diagnóstico)
+    linhaBruta: { type: String },
 
-module.exports = mongoose.models['import_item']
-  || mongoose.model('import_item', ImportItemSchema);
+    // controle do fluxo
+    status: {
+      type: String,
+      enum: ['pendente', 'ajustado', 'migrado'],
+      default: 'pendente',
+    },
+  },
+  {
+    collection: 'import_itens',
+    timestamps: true,
+  }
+);
+
+module.exports = mongoose.model('ImportItem', ImportItemSchema);

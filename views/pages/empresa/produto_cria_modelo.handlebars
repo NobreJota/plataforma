@@ -1,0 +1,624 @@
+{{!-- views/pages/empresa/produto_cria_modelo.handlebars --}}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Criar modelo de importação</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <style>
+    body{
+      background:#fffaf0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .faixa-topo{
+      border-bottom: 2px solid #ccc;
+      padding: 1rem 0 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .lbl-topo{
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: .25rem;
+    }
+
+    /*.caixa-linha{
+      border: 4px solid #000;
+      min-height: 90px;
+      padding: .75rem;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: .95rem;
+      resize: vertical;
+    }*/
+
+    .preview-colunas{
+      margin-top: 1.5rem;
+    }
+
+    .preview-colunas h5{
+      font-weight: 600;
+      margin-bottom: .5rem;
+    }
+
+    /* --- BOX AMARELO COM OS BOTÕES DAS COLUNAS --- */
+    #box-colunas-detectadas{
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 6px 10px;
+        background-color: #fff9e6;
+        width: 100%;          /* ocupa toda a área disponível */
+        max-width: 100%;      /* não trava mais em 980px */
+        margin: 6px auto 12px;
+    }
+
+    /* Cada coluna detectada vira um “botão” retangular */
+    .chip-coluna{
+      display: inline-block;
+      padding: 3px 10px;
+      margin: 2px 3px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background:#ffffff;
+      font-size: 0.80rem;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .chip-coluna:active{
+      cursor: grabbing;
+    }
+
+    /* --- TABELA DE MAPEAMENTO --- */
+
+    /* primeira coluna mais estreita, segunda mais larga */
+    #tabelaMapeamento th:nth-child(1),
+    #tabelaMapeamento td:nth-child(1){
+      width: 45%;
+    }
+
+    #tabelaMapeamento th:nth-child(2),
+    #tabelaMapeamento td:nth-child(2){
+      width: 35%;
+    }
+
+    /* diminuir altura das linhas */
+    #tabelaMapeamento tbody tr{
+      height: 26px;
+    }
+
+    #tabelaMapeamento td{
+      padding: 4px 8px;
+      font-size: 0.9rem;
+    }
+
+    /* célula onde solta o botão (campo estrangeiro) */
+    .drop-zone{
+      background-color: #0033cc;
+      color:#fff;
+      font-family: monospace;
+      vertical-align: middle;
+    }
+
+    .drop-zone.drop-hover{
+      outline: 2px dashed #ffa500;
+      outline-offset: -2px;
+    }
+
+    .map-wrapper {
+        max-height: 320px;    /* ajuste a altura que quiser */
+        overflow-y: auto;     /* rola para cima/baixo */
+        overflow-x: hidden;
+    }
+
+    /* opcional, só para garantir que a tabela ocupe 100% da largura */
+    #tabelaMapeamento {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #tabelaMapeamento thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;                       /* fica por cima das linhas */
+        background-color: #ffc107;        /* mesma cor da faixa amarela */
+        text-align: center;
+        border-bottom: 2px solid #e0a800;
+    }
+
+    .titulo-bloco{
+        font-size: 1.05rem;     /* menor que o H4/H5 padrão */
+        font-weight: 600;
+        margin-bottom: .35rem;  /* encosta um pouco mais no conteúdo */
+    }
+
+    .caixa-linha{
+        border: 4px solid #000;
+        min-height: 90px;
+        padding: .75rem;
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: .85rem;   /* antes .95rem */
+        line-height: 1.25;   /* fica mais “compacto”, mas legível */
+        resize: vertical;
+        margin-bottom: .75rem; /* separa um pouco da área de colunas detectadas */
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container-fluid" style="background-color: #ffc107;">
+
+  {{!-- TOPO: dados fixos do lojista --}}
+  <div class="faixa-topo row">
+    <div class="col-md-4 mb-3">
+      <div class="lbl-topo">marca da loja</div>
+      <input type="text" class="form-control form-control-sm"
+             id="marcaLoja" name="marcaLoja"
+             value="{{lojista.marca}}" readonly>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <div class="lbl-topo">_id da loja</div>
+      <input type="hidden" id="cidadeLoja"  value="{{lojista.cidade}}">
+      <input type="hidden" id="bairroLoja"  value="{{lojista.bairro}}">
+      <input type="text" class="form-control form-control-sm"
+             id="lojistaId" name="lojistaId"
+             value="{{lojistaId}}" readonly>
+    </div>
+    <div class="col-md-4 mb-3">
+    <div class="lbl-topo">Carregar com os fornecedores</div>
+        <select class="form-control form-control-sm"
+                id="fornecedorSelect" name="fornecedorSelect">
+            <option value="">Selecione um fornecedor...</option>
+
+            {{!-- fornecedores veio do router cria_modelo --}}
+            {{#each fornecedores}}
+            <option value="{{this._id}}">
+                {{this.razao}} — {{this.cnpj}}
+            </option>
+            {{/each}}
+        </select>
+    </div>
+  </div>
+
+  <div class="row" style="background-color: #04439b;">
+    <div class="col-md-12">
+      <h4 class="titulo-bloco" style="color:#fff;">Colocar a linha selecionada.</h4>
+      <textarea id="linhaHeader"
+                class="caixa-linha w-100"
+                placeholder="Cole aqui a linha completa de cabeçalho (ex: Código; Descrição; Custo; ... )"></textarea>
+    </div>
+  </div>
+
+  {{!-- PRÉ-VISUALIZAÇÃO DAS COLUNAS --}}
+  <div class="row preview-colunas col-12" id="previewWrapper" style="visibility: hidden;width: 100%;background: #000;color:#fff;margin-top: -6px;">
+    <div class="col-12">
+      <h5 class="titulo-bloco" style="color:#fff;">Colunas detectadas:</h5>
+
+      <div id="box-colunas-detectadas">
+        <div id="chipsColunas"></div>
+      </div>
+
+      <small class="text-muted" style="color:#f50c0c">
+        Clique e arraste um botão para o <strong>campo estrangeiro</strong> correspondente na tabela abaixo.
+      </small>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row" style="background-color: #04439b;display: flex;flex-direction: column;">
+    
+        <div class="col-md-8" style="margin:auto;border: red 3px solid; padding: 10px;background: #ddd;">
+                <div class="map-wrapper">   {{!-- <- AQUI É O WRAPPER NOVO --}}
+                    <table class="table table-bordered" id="tabelaMapeamento" style="border: blueviolet;">
+                    <thead>
+                        <tr>
+                        <th style="width:35%;text-align:center;">campo estrangeiro</th>
+                        <th style="width:65%;text-align:center;">nosso campo</th>
+                        </tr>
+                    </thead>
+
+                    <tbody style="background:#04439b;color:#fff;border: cornflowerblue 4px solid;">
+                        {{#each camposInternos}}
+                        <tr data-interno="{{this}}">
+                            <td class="drop-zone"></td>
+                            <td style="font-family:monospace;">{{this}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                    </table>
+                </div>
+            
+        </div>
+        <div class="row mt-1 md-8" style="background: #ffa500;">
+                        <div class="col-md-5" style="margin:auto; text-align:center;">
+                            <button id="btnSalvarModelo" type="button"
+                                    class="btn btn-success "
+                                    disabled>
+                            Criar modelo
+                            </button>
+                        </div>
+        </div>
+     </form>
+    <p style="margin-top:10px;font-style:italic;">
+        <strong>Clico e arrasto</strong> uma coluna detectada (acima) para a linha do
+        <strong>campo correspondente</strong> na tabela.
+    </p>
+</div>
+<script>
+  // normaliza string
+  function limparLinhaHeader(txt = '') {
+    return String(txt)
+      .replace(/\r?\n/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function separarColunasHeader(txt = '') {
+    return limparLinhaHeader(txt)
+      .split(';')
+      .map(c => c.trim())
+      .filter(c => c.length > 0);
+  }
+
+  const linhaHeaderEl  = document.getElementById('linhaHeader');
+  const previewWrapper = document.getElementById('previewWrapper');
+  const chipsBox       = document.getElementById('chipsColunas');
+
+  // monta os botões (chips) a partir do texto da linha
+  function atualizarPreview() {
+    const texto   = linhaHeaderEl.value;
+    const colunas = separarColunasHeader(texto);
+
+    if (!colunas.length) {
+      previewWrapper.style.visibility = 'hidden';
+      chipsBox.innerHTML = '';
+      return;
+    }
+
+    previewWrapper.style.visibility = 'visible';
+    chipsBox.innerHTML = '';
+
+    colunas.forEach((nome) => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'chip-coluna';
+      chip.textContent = nome;
+      chip.draggable = true;
+      chip.dataset.coluna = nome;
+
+      chip.addEventListener('dragstart', (ev) => {
+        ev.dataTransfer.setData('text/plain', nome);
+        ev.dataTransfer.effectAllowed = 'move';
+      });
+
+      chipsBox.appendChild(chip);
+    });
+  }
+
+  linhaHeaderEl.addEventListener('input', atualizarPreview);
+
+  // ativa o drag & drop nas células azuis
+  
+  document.addEventListener('DOMContentLoaded', () => {
+        prepararDropZones();      // já existia
+        //carregarFornecedores();   // NOVO
+
+        const selForn = document.getElementById('fornecedorSelect');
+        if (selForn) {
+            selForn.addEventListener('change', preencherCamposFixos);
+        }
+
+        // Se quiser já preencher logo de cara (útil se um fornecedor vier pré-selecionado)
+        preencherCamposFixos();
+});
+
+  // REMOVE a primeira ocorrência de uma coluna do textarea
+// e recria os chips com base no novo texto
+function consumirColuna(nomeColuna) {
+  //console.log(' [ 324 - consumirColuna]')  
+  const cols = separarColunasHeader(linhaHeaderEl.value);
+  const resultado = [];
+  let removida = false;
+
+  for (const c of cols) {
+    if (!removida && c === nomeColuna) {
+      removida = true;      // remove só a PRIMEIRA vez que aparecer
+      continue;
+    }
+    resultado.push(c);
+  }
+
+  // monta de novo a linha, separada por ";"
+  linhaHeaderEl.value = resultado.join(' ; ');
+
+  // redesenha os botões de colunas
+  atualizarPreview();
+}
+
+// Todas as células azuis (campo estrangeiro) aceitam drop dos chips
+document.querySelectorAll('#tabelaMapeamento td.drop-zone').forEach((td) => {
+        //console.log('BB');
+        // Quando o cursor com o chip estiver em cima, permite o drop
+        td.addEventListener('dragover', (ev) => {
+            ev.preventDefault();              // necessário para permitir drop
+            td.style.backgroundColor = '#003399';
+        });
+
+        // Saiu de cima, volta a cor normal
+        td.addEventListener('dragleave', () => {
+            td.style.backgroundColor = 'blue';
+        });
+
+        // Soltou o chip aqui
+        td.addEventListener('drop', (ev) => {
+            ev.preventDefault();
+            td.style.backgroundColor = 'blue';
+
+            const nome = ev.dataTransfer.getData('text/plain').trim();
+            if (!nome) return;
+
+        //    console.log(' ',nome)
+            // 1) escreve o nome da coluna na célula azul
+            td.textContent = nome;
+            td.style.color = '#fff';
+            td.style.fontWeight = '600';
+
+            //console.log(' [ 371 antes de consunir coluna ]')
+            // 2) remove essa coluna do textarea e dos chips
+            consumirColuna(nome);
+        });
+});
+
+// Preenche automaticamente as linhas fixas: loja_id, marcaloja, cidade, bairro, idFornecedor
+function preencherCamposFixos() {
+  const lojistaId    = document.getElementById('lojistaId')?.value || '';
+  const marcaLoja    = document.getElementById('marcaLoja')?.value || '';
+  const cidadeLoja   = document.getElementById('cidadeLoja')?.value || '';
+  const bairroLoja   = document.getElementById('bairroLoja')?.value || '';
+  const fornecedorId = document.getElementById('fornecedorSelect')?.value || '';
+   console.log('fornec',fornecedorId);
+  const linhas = document.querySelectorAll('#tabelaMapeamento tbody tr');
+
+  linhas.forEach((tr) => {
+    const campo = tr.dataset.interno;           // vem do {{this}} lá no <tr>
+    const td    = tr.querySelector('.drop-zone');
+    if (!td) return;
+
+    switch (campo) {
+      case 'loja_id':
+        td.textContent = lojistaId;
+        break;
+      case 'marcaloja':
+        td.textContent = marcaLoja;
+        break;
+      case 'cidade':
+        td.textContent = cidadeLoja;
+        break;
+      case 'bairro':
+        td.textContent = bairroLoja;
+        break;
+      case 'idFornecedor':
+      case 'fornecedor':
+        td.textContent = fornecedorId;
+        break;
+    }
+  });
+}
+
+
+// Devolve uma coluna da tabela para a caixa de texto + chips
+function devolverColuna(nomeColuna) {
+        if (!nomeColuna) return;
+
+        // pega as colunas atuais
+        const cols = separarColunasHeader(linhaHeaderEl.value);
+        console.log(4000)
+        // adiciona essa coluna de volta (no final)
+        cols.push(nomeColuna.trim());
+
+        // remonta a linha de cabeçalho
+        linhaHeaderEl.value = cols.join(' ; ');
+
+        // redesenha os botões
+        atualizarPreview();
+}
+// ativa o drag & drop nas células azuis
+// ativa o drag & drop nas células azuis
+function prepararDropZones() {
+  const zonas = document.querySelectorAll('#tabelaMapeamento td.drop-zone');
+
+  zonas.forEach((td) => {
+
+    // visual de "aceitando drop"
+    td.addEventListener('dragover', (ev) => {
+      ev.preventDefault();
+      td.classList.add('drop-hover');
+    });
+
+    td.addEventListener('dragleave', () => {
+      td.classList.remove('drop-hover');
+    });
+
+    // ================= DROP ÚNICO (com devolução) =================
+    td.addEventListener('drop', (ev) => {
+      ev.preventDefault();
+      td.classList.remove('drop-hover');
+      td.style.backgroundColor = 'blue';
+
+      // 1) Ler primeiro o que já estava na célula
+      const antigoNome = (td.textContent || '').trim();
+      //console.log('antigoNome X', antigoNome);
+
+      // 2) Pegar o que veio do drag
+      const novoNome = (ev.dataTransfer.getData('text/plain') || '').trim();
+      //console.log('[ 460 novoNome ]', novoNome);
+      if (!novoNome) return;
+
+      // 3) Se já tinha um valor DIFERENTE, devolve para a caixa/cabeçalho
+      if (antigoNome !== novoNome) {
+        devolverColuna(antigoNome);
+      }
+
+      // 4) Se for exatamente o mesmo nome, não precisa trocar nada
+      //if (antigoNome === novoNome) return;
+      //console.log(' 470 ')
+      // 5) Agora sim, grava o novo nome na célula
+      td.textContent = novoNome;
+      td.style.color = '#fff';
+      td.style.fontWeight = '600';
+      // console.log(' 475 antes atualizarEstadoBotaoModelo')
+      // 6) Remove o novo nome do textarea / chips
+      atualizarEstadoBotaoModelo();
+      //console.log(' [ 477 ]')
+      consumirColuna(novoNome);
+      
+    });
+
+    // ================= CLICK: devolver coluna =================
+    td.addEventListener('click', () => {
+      const nome = (td.textContent || '').trim();
+      if (!nome) return;     // célula vazia: não faz nada
+
+      // limpa a célula
+      td.textContent = '';
+      td.style.color = '';
+      td.style.fontWeight = '';
+
+      // devolve a coluna para o header/chips
+      devolverColuna(nome);
+    });
+  });
+}
+
+
+// Conta quantas células azuis já têm algum texto
+function contarCamposPreenchidos() {
+  let total = 0;
+  document.querySelectorAll('#tabelaMapeamento td.drop-zone').forEach(td => {
+    if ((td.textContent || '').trim()) total++;
+  });
+  return total;
+}
+
+// Habilita / desabilita o botão conforme a quantidade de mapeamentos
+function atualizarEstadoBotaoModelo() {
+  //console.log(90000)  
+  const btn = document.getElementById('btnSalvarModelo');
+  if (!btn) return;
+
+  const total = contarCamposPreenchidos();
+  // Exemplo: só libera quando tiver pelo menos 3 colunas mapeadas
+  //console.log('A');
+  btn.disabled = total < 3;
+  //console.log('B');
+}
+
+// Monta o objeto que será enviado para o backend
+function coletarModeloDaTela() {
+  const software  = (document.getElementById('fornecedorSelect').value || '').trim();
+  const lojistaId = (document.getElementById('lojistaId').value || '').trim();
+
+  // tabela: colunaArquivo (campo estrangeiro) x campoInterno (nosso campo)
+  const campos = [];
+  document.querySelectorAll('#tabelaMapeamento tbody tr').forEach(tr => {
+    const tdEstrangeiro = tr.querySelector('td.drop-zone');
+    const tdInterno     = tr.querySelector('td:nth-child(2)');
+
+    const colunaArquivo = tdEstrangeiro ? (tdEstrangeiro.textContent || '').trim() : '';
+    const campoInterno  = tdInterno     ? (tdInterno.textContent     || '').trim() : '';
+
+    if (colunaArquivo && campoInterno) {
+      campos.push({ colunaArquivo, campoInterno });
+    }
+  });
+
+  return { software, lojistaId, campos };
+}
+
+const btn = document.getElementById('btnSalvarModelo');
+  if (btn) {
+    btn.addEventListener('click', async () => {
+      
+      const { software, lojistaId, campos } = coletarModeloDaTela();
+      const fornecedorId = document.getElementById('fornecedorSelect')?.value || '';
+      if (!software) {
+        alert('Informe o nome do software / fornecedor (campo "Carregar com os fornecedores").');
+        return;
+      }
+      //console.log(' 554',software)
+      if (!lojistaId) {
+        alert('ID do lojista não encontrado.');
+        return;
+      }
+      //console.log(' 559',lojistaId)
+      if (!campos.length) {
+        alert('Mapeie pelo menos uma coluna antes de salvar o modelo.');
+        return;
+      }
+      console.log(' 564',campos)
+      try {
+            const payload = {
+              software: software,  // id do software
+              lojistaId: lojistaId,      // vindo da página
+              fornecedorId,fornecedorId,
+              campos: campos         // array igual ao que apareceu no console
+             };
+
+        const resp = await fetch('/importtabela/importacao/salvar-modelo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        ;
+
+        const data = await resp.json();
+        console.log('salvar-modelo =>', data);
+        if (!resp.ok || !data.ok) {
+          throw new Error(data.error || 'Erro ao salvar modelo');
+        }
+
+        alert('Modelo salvo com sucesso!');
+        const url =
+          `/importtabela/importacao/itens` +
+          `?lojistaId=${encodeURIComponent(lojistaId)}` +
+          `&fornecedorId=${encodeURIComponent(fornecedorId)}` +
+          `&modeloId=${encodeURIComponent(data.modeloId)}` +
+          `&loteId=${encodeURIComponent(data.loteId)}`;
+
+        window.location.href = url;
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao salvar modelo: ' + err.message);
+      }
+    });
+  }
+
+</script>
+<script>
+  // Supondo que você já tenha um objeto global "mapeamento"
+  // Exemplo: { "Código": "codigo", "Descrição": "descricao", ... }
+
+  const formSalvarModelo = document.getElementById('formSalvarModelo');
+  const camposJsonInput  = document.getElementById('camposJson');
+
+  formSalvarModelo.addEventListener('submit', function () {
+    const mapa = window.mapeamento || {};
+    const campos = Object.entries(mapa).map(([colunaArquivo, campoInterno]) => ({
+      colunaArquivo,
+      campoInterno
+    }));
+    camposJsonInput.value = JSON.stringify(campos);
+    // não damos preventDefault: deixa o form enviar normalmente
+  });
+</script>
+
+</body>
+</html>

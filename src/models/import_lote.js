@@ -9,6 +9,7 @@ const { Schema } = mongoose;
 const ImportLoteSchema = new Schema({
   lojista:      { type: Schema.Types.ObjectId, ref: 'lojista', required: true },
   fornecedor:   { type: Schema.Types.ObjectId, ref: 'fornec',  required: true },
+   modelo:     { type: Schema.Types.ObjectId, ref: 'ImportModelo', required: true },
   dataOperacao: { type: Date, required: true },
 
   // metadados do arquivo
@@ -16,6 +17,8 @@ const ImportLoteSchema = new Schema({
   originalName: { type: String },
   mimetype:     { type: String },
   size:         { type: Number },
+   // guarda o HTML original do arquivo
+  html:         { type: String },           // 👈 ADICIONE ISSO
 
   // mapeamento opcional de cabeçalho
   headerMap:    { type: Schema.Types.Mixed, default: {} },

@@ -280,13 +280,20 @@ x<!DOCTYPE html>
    
     <!-- DIREITA: painel de seleção -->
     <div class="painel-mapeamento">
-      <div class="painel-box">
+      {{!-- <div class="painel-box">
         <div class="painel-titulo">Campo do arquivo selecionado</div>
-        <div id="campoArquivoSelecionado" class="painel-conteudo">
+        <div id="campoArquivoXSelecionado" class="painel-conteudo">
           (clique em uma linha à esquerda)
         </div>
+      </div> --}}
+      <div class="painel-box">
+        <div class="painel-titulo">Campo do arquivo selecionado</div>
+        <input
+          id="campoArquivoSelecionado"
+          class="painel-conteudo"
+          type="text"
+          placeholder="(clique em uma linha à esquerda)">
       </div>
-
       <div class="painel-box">
         <div class="painel-titulo">Escolha o campo da nossa tabela</div>
         <div id="listaCamposNossos" class="lista-campos">
@@ -318,6 +325,9 @@ x<!DOCTYPE html>
   let previewHeader = [];
   let previewRows   = [];
   let loteIdImport = null;   // id do lote retornado pelo upload
+  let linhaSelecionada = null;
+
+  let headerCorrigido = []; 
 
   // array vindo do backend (campos do model arquivoDoc)
   const CAMPOS_ARQUIVODOC = {{{json camposArquivoDoc}}} || [];
@@ -332,9 +342,9 @@ x<!DOCTYPE html>
   ];
 
   // estado do mapeamento
-  let linhaSelecionada = null;                // índice da linha clicada
   let camposDisponiveis = [...NOSSOS_CAMPOS]; // vamos removendo à medida que usa
   let mapaCampos = {};                        // { linhaIndex: 'campoDoSchema' }
+  
 </script>
   <script>
     
@@ -376,50 +386,53 @@ x<!DOCTYPE html>
     }
 
       // monta a tabela "Coluna do arquivo" x "Nosso campo"
-      function montarTabelaMapeamento(headers = []) {
-            const tbl = document.getElementById('mappingTable');
-            if (!tbl) return;
+       function montarTabelaMapeamento(headers = []) {
+  const tbl = document.getElementById('mappingTable');
+  if (!tbl) {
+    console.warn('mappingTable não encontrado');
+    return;
+  }
 
-            const tbody = tbl.querySelector('tbody');
-            tbody.innerHTML = '';
-            console.log(headers)
-            headers.forEach((nomeColuna, idx) => {
-              const tr = document.createElement('tr');
+  const tbody = tbl.querySelector('tbody');
+  if (!tbody) {
+    console.warn('tbody de mappingTable não encontrado');
+    return;
+  }
 
-              // 1ª coluna: nome da coluna do arquivo
-              const tdArquivo = document.createElement('td');
-              tdArquivo.textContent = nomeColuna;
-              tdArquivo.dataset.index = idx;
-              tr.appendChild(tdArquivo);
+  tbody.innerHTML = '';
 
-              // 2ª coluna: texto do nosso campo (se já mapeado)
-              const tdNosso = document.createElement('td');
-              tdNosso.textContent = '';
-              tdNosso.dataset.index = idx;
+  headers.forEach((nomeColuna, idx) => {
+    const tr = document.createElement('tr');
+    tr.classList.add('linha-mapeamento');
+    tr.dataset.colunaIndex   = idx;
+    tr.dataset.colunaArquivo = nomeColuna;
 
-              // quando clicar, desfazer o mapeamento
-              tdNosso.addEventListener('click', (ev) => {
-                ev.stopPropagation();  // evita selecionar linha
-                desfazerMapeamento(idx);
-              });
+    // 1ª coluna: nome do arquivo (pode ser editado depois)
+    const tdArquivo = document.createElement('td');
+    tdArquivo.textContent = nomeColuna;
+    tr.appendChild(tdArquivo);
 
-              tr.appendChild(tdNosso);
+    // 2ª coluna: nosso campo
+    const tdNosso = document.createElement('td');
+    tdNosso.textContent = '';        // ainda não mapeado
+    tr.appendChild(tdNosso);
 
-              // clique na linha => seleciona essa linha
-              tr.addEventListener('click', () => selecionarLinhaMapa(idx));
+    // clique na linha => seleciona para mapear
+    tr.addEventListener('click', () => selecionarLinhaMapa(idx));
 
-              tbody.appendChild(tr);
-              //const bloco=document.document.querySelector('.bloco-complementar').;
-             
-            });
+    tbody.appendChild(tr);
+  });
 
-            // sempre que montar a tabela, refaz lista de campos
-            camposDisponiveis = [...NOSSOS_CAMPOS];
-            mapaCampos = {};
-            linhaSelecionada = null;
-            atualizarListaCamposNossos();
-            atualizarCampoArquivoSelecionado();
-      }
+  // zera mapeamento atual
+  camposDisponiveis = [...NOSSOS_CAMPOS];
+  mapaCampos        = {};
+  linhaSelecionada  = null;
+
+  atualizarListaCamposNossos();
+  atualizarCampoArquivoSelecionado();
+  atualizarEstadoBotaoSalvar();
+}
+
 
       // destaca linha e mostra o nome da coluna do arquivo
       function selecionarLinhaMapa(idx){
@@ -432,12 +445,34 @@ x<!DOCTYPE html>
               tr.classList.toggle('selecionada', i === idx);
             });
 
-            const nomeColuna = tbody.rows[idx]?.cells[0]?.textContent || '';
+            
+            const nomeOriginal = previewHeader[idx] || '';
+            const nomeFinal = headerCorrigido[idx] || nomeOriginal;
+            
+            
             const box = document.getElementById('campoArquivoSelecionado');
-            if (box) box.textContent = nomeColuna || '(sem coluna)';
-
+            if (box){ box.value = nomeColuna || '(sem coluna)';
+                console.log('[ 451 nomeColuna]', nomeColuna);
+                console.log('');
+            }
             atualizarListaCamposNossos();
       }
+
+
+       function atualizarNomeColunaVisual(idx) {
+            const tbl = document.getElementById('mappingTable');
+            if (!tbl) return;
+            const tbody = tbl.querySelector('tbody');
+            if (!tbody) return;
+
+            const tr = tbody.rows[idx];
+            if (!tr || !tr.cells[0]) return;
+
+            const nomeOriginal = previewHeader[idx] || '';
+            const nomeFinal = headerCorrigido[idx] || nomeOriginal;
+
+            tr.cells[0].textContent = nomeFinal;
+       }
 
       // Clicar na célula "Nosso campo" devolve o campo para a lista
       function desfazerMapeamento(linha) {
@@ -474,7 +509,7 @@ x<!DOCTYPE html>
             const campo = mapaCampos[idx];
             if (!campo) return;
 
-            const nomeColuna = previewHeader[idx] || '';
+            const nomeColuna = headerCorrigido[idx] ?? previewHeader[idx] ?? '';
 
             mapeamento[idx] = {
               colunaIndex: idx,
@@ -499,7 +534,6 @@ async function salvarMapeamento() {
     return;
   }
 
-  console.log('[ 499 ]', loteIdImport);
   console.log('[ 500 ]', mapeamento);
 
   try {
@@ -550,7 +584,7 @@ async function salvarMapeamento() {
                   return;
                 }
 
-                const linha = linhaSelecionada;
+                linha = linhaSelecionada;
 
                 // se já havia campo mapeado nessa linha, devolve para disponíveis
                 const antigoValue = mapaCampos[linha];
@@ -582,24 +616,16 @@ async function salvarMapeamento() {
             });
       }
 
-      //function atualizarXEstadoBotaoSalvar(){
-      //    const btn = document.getElementById('btnSalvarMapeamento');
-      //    if (!btn) return;
-
-      //    const temMapeamento = Object.keys(mapaCampos).some(idx => !!mapaCampos[idx]);
-      //    btn.disabled = !temMapeamento || !loteIdImport;
-      // }
-
-      function atualizarEstadoBotaoSalvar() {
+           function atualizarEstadoBotaoSalvar() {
             const btn  = document.getElementById('btnSalvarMapeamento');
             const inp  = document.getElementById('nomeSoftware');
             if (!btn) return;
 
-            console.log('2000E')
+            
             const temMapeamento = Object.keys(mapaCampos).some(idx => !!mapaCampos[idx]);
             const temLote       = !!loteIdImport;
             const temSoftware   = inp && inp.value.trim().length > 0;
-            console.log('3000E')
+            
             // Só habilita se:
             // 1) tiver pelo menos um campo mapeado
             // 2) tiver um loteId
@@ -612,8 +638,12 @@ async function salvarMapeamento() {
             const box = document.getElementById('campoArquivoSelecionado');
             if (!box) return;
 
+            //if (linhaSelecionada === null){
+            //  box.textContent = '(clique em uma linha à esquerda)';
+            //}
             if (linhaSelecionada === null){
-              box.textContent = '(clique em uma linha à esquerda)';
+                box.value = '';
+               box.placeholder = '(clique em uma linha à esquerda)';
             }
       }
       /////////////////////////////////
@@ -660,57 +690,61 @@ async function salvarMapeamento() {
 
     // Enviar arquivo para o backend
     async function enviarArquivo() {
-          const arquivoEl   = document.getElementById('inpArquivo');
-          const fornecedorEl= document.getElementById('selFornecedor');
-          const dataEl      = document.getElementById('inpData');
+  const arquivoEl    = document.getElementById('inpArquivo');
+  const fornecedorEl = document.getElementById('selFornecedor');
+  const dataEl       = document.getElementById('inpData');
 
-          if (!arquivoEl.files[0]) {
-            alert('Escolha um arquivo.');
-            return;
-          }
-          if (!fornecedorEl.value) {
-            alert('Escolha um fornecedor.');
-            return;
-          }
-          if (!dataEl.value) {
-            alert('Informe a data.');
-            return;
-          }
+  if (!arquivoEl.files[0]) {
+    alert('Escolha um arquivo.');
+    return;
+  }
+  if (!fornecedorEl.value) {
+    alert('Escolha um fornecedor.');
+    return;
+  }
+  if (!dataEl.value) {
+    alert('Informe a data.');
+    return;
+  }
 
-          console.log(fornecedorEl.value)
-          const form = new FormData();
-          form.append('arquivo',   arquivoEl.files[0]);
-          form.append('fornecedor', fornecedorEl.value);
-          form.append('lojista',    new URLSearchParams(location.search).get('lojista'));
-          form.append('dataOperacao', dataEl.value);
-          console.log('');
-          console.log('enviando arquivo -upload');
-          console.log('');
-          const resp = await fetch('/importtabela/importacao/upload', {
-            method: 'POST',
-            body: form
-          });
+  const form = new FormData();
+  form.append('arquivo',    arquivoEl.files[0]);
+  form.append('fornecedor', fornecedorEl.value);
+  form.append('lojista',    new URLSearchParams(location.search).get('lojista'));
+  form.append('dataOperacao', dataEl.value);
 
-  
-          const data = await resp.json();
-          console.log('RESPOSTA UPLOAD =>', data);
+  const resp = await fetch('/importtabela/importacao/upload', {
+    method: 'POST',
+    body: form
+  });
 
-          if (resp.ok && Array.isArray(data.header)) {
-            previewHeader = data.header;
-            // previewRows   = data.rows;  // se quiser usar depois
+  const data = await resp.json();
+  console.log('RESPOSTA UPLOAD =>', data);
 
-            // 👇 guarda o loteId que vem do backend (você já tem isso na resposta)
-            loteIdImport = data.loteId || null;
+  if (!resp.ok || !data.ok) {
+    alert(data.error || 'Erro no upload.');
+    return;
+  }
 
-            desenharPreview();
-            montarTabelaMapeamento(data.header);
+  if (!Array.isArray(data.header)) {
+    console.warn('Resposta não trouxe header:', data);
+    alert('Resposta do servidor sem cabeçalho de colunas.');
+    return;
+  }
 
-            atualizarEstadoBotaoSalvar();   // atualiza botão depois do upload
-          } else {
-            console.warn('Resposta sem header/rows =>', data);
-          }
-          ///////////////////////////////////////////////////////////////
-    }
+  // guarda o lote e o header
+  loteIdImport    = data.loteId || null;
+  previewHeader   = data.header;
+  headerCorrigido = [...previewHeader]; // inicialmente igual
+
+  // monta a tabela de mapeamento
+  montarTabelaMapeamento(headerCorrigido);
+
+  // se você ainda usa preview de linhas em outra tabela:
+  // previewRows = data.rows || [];
+  // desenharPreview();
+}
+
 
           // Controle de estado dos campos/botões
           document.addEventListener('DOMContentLoaded', () => {
@@ -736,6 +770,36 @@ async function salvarMapeamento() {
                   inpArquivo.disabled  = !selFornecedor.value;
                   btnImportar.disabled = !podeImportar();
                 }
+                //////////////////////////////////////////////////////////
+                const campoSel = document.getElementById('campoArquivoSelecionado');
+                
+                
+                campoSel.addEventListener('input', () => {
+                if (linhaSelecionada === null) return;
+                  headerCorrigido[linhaSelecionada] = campoSel.value.trim();
+                  atualizarNomeColunaVisual(linhaSelecionada);
+                });
+
+                // ENTER confirma
+                campoSel.addEventListener('keydown', (ev) => {
+                  if (ev.key === 'Enter') {
+                    ev.preventDefault();
+                    if (linhaSelecionada !== null) {
+                      headerCorrigido[linhaSelecionada] = campoSel.value.trim();
+                      atualizarNomeColunaVisual(linhaSelecionada);
+                      console.log('[451 nomeColunaCorrigido]', headerCorrigido[linhaSelecionada]);
+                    }
+                  }
+                });  
+
+                // sair do campo também confirma
+                campoSel.addEventListener('blur', () => {
+                  if (linhaSelecionada !== null) {
+                    headerCorrigido[linhaSelecionada] = campoSel.value.trim();
+                    atualizarNomeColunaVisual(linhaSelecionada);
+                    console.log('[451 nomeColunaCorrigido]', headerCorrigido[linhaSelecionada]);
+                  }
+                });    
                 /////////////////////////////////////////////////////////
             selFornecedor.addEventListener('change', () => {
               if (selFornecedor.value) {
@@ -782,7 +846,7 @@ async function salvarMapeamento() {
                 /////////////////////////////////////////////////////////////////
                 const inpSoftware = document.getElementById('nomeSoftware');
                 if (inpSoftware) {
-                          inpSoftware.addEventListener('input', atualizarEstadoBotaoSalvar);
+                    inpSoftware.addEventListener('input', atualizarEstadoBotaoSalvar);
                 } 
                 //////////////////////////////////////////////////////////////////
                 aplicarEstado();
@@ -805,139 +869,109 @@ async function carregarModelo(software) {
 </script>
 
 <script>
-  // 1) Lê o mapeamento exibido na tela.
-  //    Aqui você adapta de acordo com a sua estrutura:
-  //    cada linha da esquerda (coluna arquivo) + select da direita (nosso campo)
- // function coletarMapeamentoDaTela() {
- //   const mapa = {};
-    // Exemplo: linhas da tabela com data-coluna e select
- //   document.querySelectorAll('.linha-mapeamento').forEach(linha => {
- //     const coluna = linha.dataset.colunaArquivo;             // "Pre�o", "C�digo", etc
- //     const select = linha.querySelector('select');           // nosso campo
- //     const campoInterno = select?.value || '(ignorar)';
- //     mapa[coluna] = campoInterno;
- //   });
- //   return mapa;
- // }
-
-///  async function salvarModeloImportacao() {
-//     const software = document.getElementById('nomeSoftware').value.trim();
-//      if (!software) {
-//        alert('Informe o nome da empresa/software.');
-//        return;
-//      }
-
-      // 1) Pega o mapeamento no FORMATO DO LOTE:
-      //    { "1": { colunaIndex, colunaNome, campo }, ... }
-//      const mapaLote = coletarMapeamentoDaTela();
-
-      // 2) Converte para o FORMATO DO MODELO:
-      //    { "Preço": "precovista", "Código": "codigo", ... }
-//      const mapeamento = {};
-//      for (const key of Object.keys(mapaLote)) {
-//          const cfg = mapaLote[key];
-///          if (!cfg || !cfg.campo || cfg.campo === '(ignorar)') continue;
-
-//          const colunaNome  = cfg.colunaNome; // ex.: "Preço"
-//          const campoInterno = cfg.campo;     // ex.: "precovista"
-
-//          if (!colunaNome || !campoInterno) continue;
-//          mapeamento[colunaNome] = campoInterno;
-//      }
-
-//      if (!Object.keys(mapeamento).length) {
-//        alert('Nenhum campo mapeado para salvar como modelo.');
-//        return;
-//      }
-
-//      console.log('mapeamento para modelo =>', mapeamento);
-
-//      try {
-//            const resp = await fetch('/importtabela/importcadastro/salvar-modelo', {
-//              method: 'POST',
-//              headers: { 'Content-Type': 'application/json' },
-//              body: JSON.stringify({
-//                software,
-//                mapeamento,
-//                lojistaId: '{{lojista._id}}',
-                // fornecedorId: '...'   // se quiser adicionar depois
-//              })
-//            });
-
-//            const data = await resp.json();
-//            if (!data.ok) throw new Error(data.error || data.msg || 'Falha ao salvar modelo');
-
-//            alert('Modelo de importação salvo com sucesso!');
-//      } catch (err) {
-//            console.error('Erro ao salvar modelo:', err);
-//            alert('Erro ao salvar modelo.');
-//      }
-//  }
+  
 
 function coletarMapeamentoDaTela() {
   return montarPayloadMapeamento();
 }
+  
   async function salvarModeloImportacao() {
+  const software = document.getElementById('nomeSoftware').value.trim();
+  if (!software) {
+    alert('Informe o nome da empresa/software.');
+    return;
+  }
+
+  // 1) Pega o mapeamento no FORMATO DO LOTE:
+  //    { "1": { colunaIndex, colunaNome, campo }, ... }
+  const mapaLote = coletarMapeamentoDaTela();
+
+  // 2) Converte para o FORMATO DO MODELO:
+  //    { "Preço": "precovista", "Código": "codigo", ... }
+  const mapeamento = {};
+  for (const key of Object.keys(mapaLote)) {
+    const cfg = mapaLote[key];
+    if (!cfg || !cfg.campo || cfg.campo === '(ignorar)') continue;
+
+    const colunaNome   = cfg.colunaNome; // ex.: "Preço"
+    const campoInterno = cfg.campo;      // ex.: "precovista"
+
+    if (!colunaNome || !campoInterno) continue;
+    mapeamento[colunaNome] = campoInterno;
+  }
+
+  if (!Object.keys(mapeamento).length) {
+    alert('Nenhum campo mapeado para salvar como modelo.');
+    return;
+  }
+
+  //console.log('mapeamento para modelo =>', mapeamento);
   try {
-    const inputSoftware = document.getElementById('nomeSoftware');
-    const software = inputSoftware ? inputSoftware.value.trim() : '';
-
-    // se não informar o nome do software, não grava modelo (só loga)
-    if (!software) {
-      console.warn('Nenhum nome de software informado — modelo não será salvo.');
-      return;
-    }
-
-    // pega o mesmo mapa usado para o lote
-    const mapaLote = coletarMapeamentoDaTela();
-
-    // converte para formato do MODELO:
-    // { "Preço": "precovista", "Código": "codigo", ... }
-    const mapeamento = {};
-    for (const key of Object.keys(mapaLote)) {
-      const cfg = mapaLote[key];
-      if (!cfg || !cfg.campo || cfg.campo === '(ignorar)') continue;
-
-      const colunaNome   = cfg.colunaNome;  // ex.: "Preço"
-      const campoInterno = cfg.campo;       // ex.: "precovista"
-
-      if (!colunaNome || !campoInterno) continue;
-      mapeamento[colunaNome] = campoInterno;
-    }
-
-    if (!Object.keys(mapeamento).length) {
-      console.warn('Nenhum campo mapeado para salvar como modelo.');
-      return;
-    }
-
-    console.log('mapeamento para modelo =>', mapeamento);
-
+    // 1️⃣ Salva o MODELO
     const resp = await fetch('/importtabela/importcadastro/salvar-modelo', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         software,
         mapeamento,
-        lojistaId: '{{lojista._id}}',
-        // fornecedorId: '...'  // se quiser salvar modelo por fornecedor depois
+        lojistaId: '{{lojista._id}}'
+        // fornecedorId: '...'   // se quiser adicionar depois
       })
     });
 
     const data = await resp.json();
+    console.log(' [ 925 ]  OK data ',data)
     if (!resp.ok || !data.ok) {
-      console.error('Erro ao salvar modelo de importação:', data);
-      // não trava o fluxo (já salvou o lote), só loga
-      return;
+      throw new Error(data.error || data.msg || 'Falha ao salvar modelo');
     }
 
-    alert('Modelo de importação salvo com sucesso!');
+    console.log('Modelo salvo com sucesso, agora vou importar os itens...');
+
+    // 2️⃣ Logo depois que o modelo foi salvo, salva os ITENS do lote
+    const resultadoItens = await salvarItensLote(software);
+
+    alert(
+      `Modelo de importação salvo e itens importados com sucesso!\n` +
+      `Total de documentos: ${resultadoItens.inseridos || 0}`
+    );
+
   } catch (err) {
-    console.error('Erro ao salvar modelo:', err);
-    // idem: não joga erro pra cima, pra não quebrar salvarMapeamento
+    console.error('Erro ao salvar modelo / itens:', err);
+    alert('Erro ao salvar modelo ou importar itens: ' + err.message);
   }
 }
 
 </script>
+<script>
 
+async function salvarItensLote(software) {
+  if (!loteIdImport) {
+    throw new Error('Lote ainda não definido. Importe o arquivo primeiro.');
+  }
+
+  console.log('Chamando /importacao/salvar-itens com', { loteId: loteIdImport, software });
+
+  console.log(' 787878',software)
+
+  const resp = await fetch('/importtabela/importacao/salvar-itens', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      loteId: loteIdImport,
+      software
+    })
+  });
+
+  const data = await resp.json();
+  console.log('Resposta salvar-itens =>', data);
+
+  if (!resp.ok || !data.ok) {
+    throw new Error(data.msg || data.error || 'Erro ao salvar itens do lote.');
+  }
+
+  return data; // { ok: true, inseridos: ... }
+}
+
+</script>
 </body>
 </html>

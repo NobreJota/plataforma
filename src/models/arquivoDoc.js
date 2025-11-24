@@ -78,7 +78,7 @@ const ArquivoDocSchema = new Schema({
       default: []
   },
   pageok: { type: Boolean, default: false },
-  ativo: { type: Number, enum: [1, 9], default: 1, index: true },
+  ativo: { type: Boolean, default: true, index: true },
   datadel: { type: Date, default: null },
   figure_mini: { type: String },
   figure_media: { type: String },

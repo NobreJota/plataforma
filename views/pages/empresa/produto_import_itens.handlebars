@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Importação de itens</title>
+
+  <style>
+    :root{
+      --azul:   #215783;
+      --branco: #ffffff;
+      --borda:  #215783;
+    }
+
+    *{ box-sizing: border-box; }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu,
+                   "Helvetica Neue", Arial, sans-serif;
+      color: var(--azul);
+      background:#f5f5f5;
+    }
+
+    /* FAIXA SUPERIOR */
+    .faixa-topo{
+      background: var(--azul);
+      color: var(--branco);
+      padding: 12px 40px;
+      display:flex;
+      gap: 48px;
+      align-items:flex-end;
+    }
+
+    .campo-topo{
+      display:flex;
+      flex-direction:column;
+      font-size:14px;
+    }
+
+    .campo-topo label{
+      margin-bottom:4px;
+    }
+
+    .campo-topo input{
+      border:2px solid var(--branco);
+      background:transparent;
+      color:var(--branco);
+      padding:2px 6px;
+      min-width:180px;
+      font-size:14px;
+    }
+
+    .campo-topo input[readonly]{
+      opacity:.9;
+    }
+
+    /* CONTEÚDO PRINCIPAL */
+    .main-container{
+      padding:16px 40px;
+    }
+
+    .main-container h1{
+      margin:0 0 8px;
+      font-size:20px;
+      font-weight:500;
+      color:var(--azul);
+    }
+
+    .caixa-textarea{
+      border:3px solid var(--borda);
+      background:#ffffff;
+      min-height:420px;
+      padding:8px;
+    }
+
+    .caixa-textarea textarea{
+      width:100%;
+      height:100%;
+      min-height:400px;
+      border:none;
+      resize:vertical;
+      font-size:16px;
+      color:var(--azul);
+    }
+
+    .caixa-textarea textarea:focus{
+      outline:none;
+    }
+
+    .natureza-group{
+  margin-bottom: 8px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+}
+
+.natureza-group input[type="text"]{
+  padding:2px 6px;
+  min-width:260px;
+  border:1px solid var(--borda);
+  border-radius:3px;
+}
+
+.natureza-hint{
+  font-size:12px;
+  opacity:.7;
+}
+
+.caixa-botoes-arquivo{
+  margin: 8px 0;
+  padding: 6px 8px;
+  border: 2px dashed #2e7d32;
+  background: #fdfdfd;
+  min-height: 34px;
+}
+
+.caixa-botoes-arquivo .btn-campo-arquivo{
+  margin: 2px 4px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #2e7d32;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+/* estados visuais do mapeamento */
+.btn-campo-arquivo.selecionado{
+  outline: 2px solid #1565c0;
+}
+
+.btn-campo-arquivo.mapeado{
+  background: #2e7d32;
+  color: #fff;
+}
+
+.btn-campo-interno.mapeado{
+  background: #1565c0;
+  color:#fff;
+}
+
+.btn-campo-arquivo.selecionado{
+  outline: 2px solid #ff9800;
+}
+
+.btn-campo-arquivo.mapeado{
+  background:#2e7d32;
+  color:#fff;
+}
+
+.btn-campo-interno.mapeado{
+  background:#ffc107;
+  color:#000;
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- CABEÇALHO AZUL -->
+  <header class="faixa-topo">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <div style="display: flex;flex-direction: row;justify-content:space-between ;width: 90%;margin: auto;">
+        <div class="campo-topo">
+          <label>_id da loja</label>
+          <input type="text" value="{{lojistaId}}" readonly>
+        </div>
+
+        <div class="campo-topo">
+          <label>marca da loja</label>
+          <input type="text" value="{{lojista.marca}}" readonly>
+        </div>
+
+        <div class="campo-topo">
+          <label>cidade</label>
+          <input type="text" value="{{lojista.cidade}}" readonly>
+        </div>
+
+        <div class="campo-topo">
+          <label>bairro</label>
+          <input type="text" value="{{lojista.bairro}}" readonly>
+        </div>
+
+        <div class="campo-topo">
+            <label>fornecedor</label>
+            <select id="fornecedorId" name="fornecedorId">
+              <option value="">-- selecione o fornecedor --</option>
+              {{#each fornecedores}}
+                <option value="{{this._id}}">
+                  {{this.marca}}
+                </option>
+              {{/each}}
+            </select>
+        </div>
+  </div>
+  </header>
+  <div style="width: 95%;margin: auto;background-color: #1565c0;display: flex;flex-direction: row;justify-content: space-between;height: 4vh;padding: 0.5vh;">
+    <input type="file" id="inputArquivo" name="arquivo" disabled style="color:#000;background: #fdfdfd;">
+    <button type="button" id="btnLerArquivo" disabled>Ler arquivo</button>
+    <button type="button" id="btnAjuste" style="width: 10%;background:#f2a900 ;color:black">ajuste</button>
+  </div>
+   <!-- ÁREA DE ITENS -->
+  <main class="main-container">
+    <h1>colar os itens para importação.</h1>
+
+    <textarea id="txtItens" name="itens"
+          rows="20"
+          style="width:100%;"
+          disabled>
+          Cole aqui os itens da planilha, uma linha por produto.
+    </textarea>
+
+    <button id="btnProcessar" type="button" disabled>Processar</button>
+    <button id="btnGravarItens" type="button" disabled>Gravar itens</button>
+
+    {{!-- <button type="button" id="btnProXcessar">Processar</button> --}}
+    <div id="botoesHeaderArquivo" class="caixa-botoes-arquivo">
+      <!-- os botões da 1ª linha serão criados aqui via JS -->
+    </div>
+
+    <!-- aqui continua o que você já tem, a faixa verde dos campos do modelo -->
+    <div id="botoesCamposModelo" class="caixa-botoes-modelo">
+      {{!-- //... --}}
+    </div>
+
+    <div id="boxBotoesModelo" style="border: 3px solid #056eb9; padding:8px; margin-top:8px;">
+      <!-- botões do modelo vão ser criados via JS -->
+    </div>
+    <div id="boxResumoMapeamento"
+         style="border: 3px solid #f2a900; margin-top:8px; padding:6px; min-height:32px; background:#fff;">
+           (nenhum mapeamento ainda)
+    </div>
+    <!-- hidden para mandar o JSON na requisição -->
+    <input type="hidden" id="mapeamentoJson" name="mapeamentoJson" value="[]">
+    <input type="hidden" id="mapeamentoJson" name="mapeamentoJson">
+  </main>
+  <input type="text" id="hLojaId"    value="{{lojista._id}}">
+  <input type="text" id="hMarca"     value="{{lojista.marca}}">
+  <input type="textn" id="hCidade"    value="{{lojista.cidade}}">
+  <input type="text" id="hBairro"    value="{{lojista.bairro}}">
+<script>
+// ================== ELEMENTOS BÁSICOS ==================
+const txtItens          = document.getElementById('txtItens');
+const boxHeader         = document.getElementById('botoesHeaderArquivo');   // faixa verde
+const boxCamposInternos = document.getElementById('boxBotoesModelo');      // faixa azul
+const boxResumo         = document.getElementById('boxResumoMapeamento');  // faixa amarela
+const btnProcessar      = document.getElementById('btnProcessar');
+const btnGravarItens    = document.getElementById('btnGravarItens');
+const inputMapeamento   = document.getElementById('mapeamentoJson');
+
+const inputArquivo      = document.getElementById('inputArquivo');
+const btnLerArquivo     = document.getElementById('btnLerArquivo');
+
+const selectFornecedor  = document.getElementById('fornecedorId');
+const btnAjuste         = document.getElementById('btnAjuste');   // botão amarelo no topo
+
+const hLojaId = document.getElementById('hLojaId');
+const hMarca  = document.getElementById('hMarca');
+const hCidade = document.getElementById('hCidade');
+const hBairro = document.getElementById('hBairro');
+
+
+let colunaSelecionada = null;         // botão de cabeçalho selecionado
+const MAPEAMENTO      = {};           // campoInterno -> { colunaArquivo, indiceColuna }
+let ITENS_PROCESSADOS = [];           // linhas do arquivo já “processadas” (por enquanto só texto)
+// ================== HABILITAÇÃO POR FORNECEDOR ==================
+function atualizarHabilitacaoImportacao() {
+  const temFornecedor = !!(selectFornecedor && selectFornecedor.value);
+
+  if (txtItens)        txtItens.disabled        = !temFornecedor;
+  if (btnProcessar)    btnProcessar.disabled    = !temFornecedor;
+  if (btnGravarItens)  btnGravarItens.disabled  = !temFornecedor;
+  if (inputArquivo)    inputArquivo.disabled    = !temFornecedor;
+  if (btnLerArquivo)   btnLerArquivo.disabled   = !temFornecedor;
+  if (btnAjuste)       btnAjuste.disabled       = !temFornecedor;
+}
+
+if (selectFornecedor) {
+  selectFornecedor.addEventListener('change', atualizarHabilitacaoImportacao);
+}
+// estado inicial (ao carregar a página)
+atualizarHabilitacaoImportacao();
+
+// ================== CAMPOS DO ARQUIVODOC (FAIXA AZUL) ==================
+// Ajuste essa lista conforme o schema de arquivoDoc
+const CAMPOS_ARQUIVO = [
+  'loja_id',
+  'marcaloja',
+  'cidade',
+  'bairro',
+  'codigo',
+  'descricao',
+  'complete',
+  'ecf',
+  'refer1',
+  'e_min',
+  'e_max',
+  'ativo',
+  'qte',
+  'precocusto',
+  'precoprazo',
+  'artig',
+  'marcaltrem',
+  'page',
+  'pageposicao',
+  'pageurls',
+  'pageok',
+  'ativo',
+  'datadel',
+  'figure_mini',
+  'figure_media',
+  'csosn',
+  'ncm',
+  'taxa'
+];
+
+// ================== CABEÇALHO DO ARQUIVO -> BOTÕES (FAIXA VERDE) ==================
+function gerarBotoesHeader() {
+  if (!boxHeader || !txtItens) return;
+
+  boxHeader.innerHTML = '';
+  colunaSelecionada = null;
+
+  const texto  = txtItens.value || '';
+  const linhas = texto
+    .split(/\r?\n/)
+    .map(l => l.trim())
+    .filter(Boolean);
+
+  if (!linhas.length) {
+    boxHeader.textContent = '(nenhum cabeçalho encontrado)';
+    return;
+  }
+
+  // primeira linha não vazia = cabeçalho
+  const header = linhas[0];
+
+  let partes;
+  if (header.includes(';')) {
+    partes = header.split(';');
+  } else {
+    partes = header.split(/\s{2,}/);
+  }
+
+  partes
+    .map(p => p.trim())
+    .filter(Boolean)
+    .forEach((nome, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn-campo-arquivo';
+      btn.dataset.col = String(idx); // índice da coluna
+      btn.textContent = nome;
+      boxHeader.appendChild(btn);
+    });
+}
+
+// ================== BOTÕES DOS CAMPOS INTERNOS (ARQUIVODOC, FAIXA AZUL) ==================
+function montarBotoesCamposInternos() {
+  if (!boxCamposInternos) return;
+
+  boxCamposInternos.innerHTML = '';
+
+  CAMPOS_ARQUIVO.forEach((nomeCampo) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn-campo-interno';
+    btn.dataset.campo = nomeCampo;
+    btn.textContent = nomeCampo;
+    btn.style.marginRight  = '4px';
+    btn.style.marginBottom = '4px';
+    boxCamposInternos.appendChild(btn);
+  });
+}
+
+// ================== RESUMO DO MAPEAMENTO (FAIXA AMARELA + HIDDEN) ==================
+function atualizarResumoEMapeamentoJson() {
+  const entries = Object.entries(MAPEAMENTO);
+
+  if (!entries.length) {
+    if (boxResumo) boxResumo.textContent = '(nenhum mapeamento ainda)';
+    if (inputMapeamento) inputMapeamento.value = '[]';
+    return;
+  }
+
+  const linhasResumo = entries.map(([campo, info]) => {
+    const numCol = (Number(info.indiceColuna) + 1) || info.indiceColuna;
+    return `${campo} ← ${info.colunaArquivo} (coluna ${numCol})`;
+  });
+
+  if (boxResumo) {
+    boxResumo.innerHTML = linhasResumo.join('<br>');
+  }
+
+  const arrJson = entries.map(([campoInterno, info]) => ({
+    campoInterno,
+    colunaArquivo: info.colunaArquivo,
+    indiceColuna: info.indiceColuna
+  }));
+
+  if (inputMapeamento) {
+    inputMapeamento.value = JSON.stringify(arrJson);
+  }
+
+  console.log('MAPEAMENTO =>', arrJson);
+}
+
+// ================== FAZER O VÍNCULO CABEÇALHO ↔ CAMPO INTERNO ==================
+function vincularCampo(btnModelo, btnHeader) {
+  const campo   = btnModelo.dataset.campo;
+  const colIdx  = btnHeader.dataset.col;
+  const colNome = btnHeader.textContent.trim();
+
+  if (!campo || colIdx == null) return;
+
+  // Se esse campo já estava mapeado, desmarca o header antigo
+  if (MAPEAMENTO[campo]) {
+    const oldIdx = MAPEAMENTO[campo].indiceColuna;
+    const oldBtnHeader = boxHeader.querySelector(
+      `.btn-campo-arquivo[data-col="${oldIdx}"]`
+    );
+    if (oldBtnHeader) oldBtnHeader.classList.remove('mapeado');
+  }
+
+  // grava novo mapeamento
+  MAPEAMENTO[campo] = {
+    colunaArquivo: colNome,
+    indiceColuna: colIdx
+  };
+
+  // marca visual
+  btnHeader.classList.add('mapeado');
+  btnModelo.classList.add('mapeado');
+
+  // mostra no texto do botão do modelo
+  btnModelo.textContent = `${campo} ← ${colNome}`;
+
+  atualizarResumoEMapeamentoJson();
+}
+
+// ================== EVENTOS DA FAIXA VERDE (HEADER DO ARQUIVO) ==================
+if (boxHeader) {
+  boxHeader.addEventListener('click', (ev) => {
+    const btn = ev.target.closest('.btn-campo-arquivo');
+    if (!btn) return;
+
+    // limpa seleção anterior
+    boxHeader.querySelectorAll('.btn-campo-arquivo.selecionado')
+      .forEach(b => b.classList.remove('selecionado'));
+
+    btn.classList.add('selecionado');
+    colunaSelecionada = btn;
+  });
+}
+
+// ================== EVENTOS DA FAIXA AZUL (CAMPOS INTERNOS) ==================
+if (boxCamposInternos) {
+  boxCamposInternos.addEventListener('click', (ev) => {
+    const btnModelo = ev.target.closest('.btn-campo-interno');
+    if (!btnModelo) return;
+    if (!colunaSelecionada) {
+      // se quiser pode mudar para toast, etc.
+      alert('Clique primeiro em uma coluna do cabeçalho (faixa verde).');
+      return;
+    }
+
+    vincularCampo(btnModelo, colunaSelecionada);
+
+    // limpa seleção do header
+    colunaSelecionada.classList.remove('selecionado');
+    colunaSelecionada = null;
+  });
+}
+
+// ================== PROCESSAR TEXTO DO TEXTAREA ==================
+function processarItens() {
+  const texto = txtItens.value || '';
+  const linhas = texto
+    .split(/\r?\n/)
+    .map(l => l.trim())
+    .filter(Boolean);
+
+  if (!linhas.length) {
+    ITENS_PROCESSADOS = [];
+    return;
+  }
+
+  // Por enquanto: guarda todas as linhas menos o cabeçalho
+  // Depois, quando o mapeamento estiver fechado, montamos objetos usando o MAPEAMENTO
+  ITENS_PROCESSADOS = linhas.slice(1); // [ 'linha produto 1', 'linha produto 2', ... ]
+  console.log('ITENS_PROCESSADOS =>', ITENS_PROCESSADOS);
+}
+
+// ================== BOTÃO PROCESSAR ==================
+if (btnProcessar) {
+  btnProcessar.addEventListener('click', () => {
+    gerarBotoesHeader();  // monta a faixa verde
+    processarItens();     // prepara ITENS_PROCESSADOS
+    // mapeamento continua o mesmo, só reexibimos
+    atualizarResumoEMapeamentoJson();
+  });
+}
+
+// ================== BOTÃO GRAVAR ITENS (ENVIA PARA ROTA POST) ==================
+async function gravarImportItens() {
+      if (!Array.isArray(ITENS_PROCESSADOS) || ITENS_PROCESSADOS.length === 0) {
+        alert('Nenhum item processado. Clique em "Processar" antes de gravar.');
+        return;
+      }
+
+      const fornecedorSelect = document.getElementById('fornecedorId');
+      console.log('fornecedorSelect 9000000',fornecedorSelect);
+      const fornecedorNumero = fornecedorSelect ? fornecedorSelect.value : '';
+      console.log('x ', fornecedorNumero)
+
+      const loja_id   = hLojaId ? hLojaId.value : '';
+      const marcaloja = hMarca  ? hMarca.value  : '';
+      const cidade    = hCidade ? hCidade.value : '';
+      const bairro    = hBairro ? hBairro.value : '';
+      console.log('loja_id',loja_id);
+      console.log('marcaloja',marcaloja);
+      console.log('cidade',cidade);
+      console.log('bairro',bairro);
+      let fornecedorId   = '';
+      let fornecedorNome = '';
+  
+      if (fornecedorSelect) {
+        fornecedorId = fornecedorSelect.value || '';
+        const optSel = fornecedorSelect.options[fornecedorSelect.selectedIndex];
+        fornecedorNome = optSel ? optSel.text.trim() : '';
+      }
+  
+      console.log('fornecedorId',fornecedorId);
+      // --- mapeamento (json que está no hidden mapeamentoJson) ---
+  
+      let mapeamento = [];
+      console.log('');
+      console.log('inputMapeamento',inputMapeamento);
+      console.log('');
+      console.log('inputMapeamento.value',inputMapeamento.value);
+
+      if (inputMapeamento && inputMapeamento.value) {
+                console.log(' passando AQUI')
+                try {
+                  mapeamento = JSON.parse(inputMapeamento.value);
+                } catch (e) {
+                  console.warn('mapeamentoJson inválido, usando array vazio.', e);
+                  mapeamento = [];
+                }
+                console.log()
+
+                const payload = {
+                  loja_id,
+                  marcaloja,
+                  cidade,
+                  bairro,
+                  fornecedorId,
+                  fornecedorNome,
+                  itens: ITENS_PROCESSADOS,
+                  mapeamento
+                };
+
+                console.log('Payload a gravar =>', payload);
+
+                
+
+              try {
+                    const resp = await fetch('/importtabela/importacao/itens/gravar', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(payload)
+                    });
+
+                    let data = {};
+                    try {
+                      data = await resp.json();
+                    } catch (e) {
+                      // se não veio JSON, mantém objeto vazio
+                    }
+
+                    if (!resp.ok) {
+                      alert('Erro ao gravar itens: ' + (data.error || 'Erro desconhecido'));
+                      console.error('Erro ao gravar itens:', data);
+                      return;
+                    }
+
+                    alert('Itens gravados com sucesso!');
+
+                    // 👉 após o OK, leva direto para a página de ajuste
+                    const urlAjuste = `/importtabela/importacao/ajuste?lojista=${encodeURIComponent(loja_id)}&fornecedor=${encodeURIComponent(fornecedorId)}`;
+                    window.location.href = urlAjuste;
+
+                } catch (err) {
+                  console.error('Erro de comunicação ao gravar itens:', err);
+                  alert('Erro de comunicação ao gravar itens.');
+                }
+      }
+
+  }
+//}
+if (btnGravarItens) {
+  btnGravarItens.addEventListener('click', gravarImportItens);
+}
+
+// ================== INICIALIZAÇÃO AO CARREGAR A PÁGINA ==================
+montarBotoesCamposInternos();   // monta faixa azul logo de cara
+atualizarResumoEMapeamentoJson();
+
+
+    if (btnLerArquivo) {
+        btnLerArquivo.addEventListener('click', () => {
+        if (!selectFornecedor || !selectFornecedor.value) {
+          alert('Selecione o fornecedor antes de ler o arquivo.');
+          return;
+        }
+
+        const file = inputArquivo ? inputArquivo.files[0] : null;
+        if (!file) {
+          alert('Escolha um arquivo primeiro.');
+          return;
+        }
+
+        const nome = file.name.toLowerCase();
+        const ext  = nome.split('.').pop();
+
+        // TXT ou CSV simples
+        if (ext === 'txt' || ext === 'csv') {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            let conteudo = e.target.result;
+
+            // se for CSV, troca vírgula por ponto e vírgula (opcional)
+            if (ext === 'csv') {
+              conteudo = conteudo.replace(/,/g, ';');
+            }
+
+            if (txtItens) {
+              txtItens.value = conteudo;
+            }
+          };
+          reader.readAsText(file, 'utf-8');
+          return;
+        }
+
+        // XLS / XLSX (Excel) usando XLSX (SheetJS)
+        if (ext === 'xlsx' || ext === 'xls') {
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                // primeira planilha
+                const firstSheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[firstSheetName];
+
+                // converte para matriz de linhas/colunas
+                const rows = XLSX.utils.sheet_to_json(sheet, {
+                  header: 1,   // retorna array de arrays
+                  raw: false
+                });
+
+                // junta colunas com ";" e linhas com "\n"
+                const texto = rows
+                  .map(row => (row || []).join(';'))
+                  .join('\n');
+
+                if (txtItens) {
+                  txtItens.value = texto;
+                }
+              };
+              reader.readAsArrayBuffer(file);
+              return;
+        }
+
+    alert('Tipo de arquivo não suportado. Use TXT, CSV ou Excel.');
+  });
+}
+
+// ================== BOTÃO AJUSTE ==================
+if (btnAjuste) {
+  btnAjuste.addEventListener('click', () => {
+    const loja_id      = hLojaId ? hLojaId.value : '';
+    const fornecedorId = selectFornecedor ? selectFornecedor.value : '';
+
+    if (!loja_id || !fornecedorId) {
+      alert('Selecione o fornecedor antes de abrir a tela de ajuste.');
+      return;
+    }
+
+    const url = `/importtabela/importacao/ajuste?lojista=${encodeURIComponent(loja_id)}&fornecedor=${encodeURIComponent(fornecedorId)}`;
+    window.location.href = url;
+  });
+}
+
+</script>
+</body>
+</html>

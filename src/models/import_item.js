@@ -18,31 +18,22 @@ const ImportItemSchema = new Schema(
       ref: 'lojistas',
       required: true,
     },
-    revisado: {
-    type: Boolean,
-    default: false,
-    index: true,
-  },
-    fornecedorId: {
-      type: Schema.Types.ObjectId,
-      ref: 'fornecedores',
-      required: true,
-    },
-    // loteId: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'ImportLote',
-    //   required: true,
-    // },
-
-    // linha original (texto bruto, só pra conferência/diagnóstico)
-    linhaBruta: { type: String },
-
-    // controle do fluxo
-    status: {
+     linhaBruta: { type: String },          // linha original (texto bruto, só pra conferência/diagnóstico)
+      status: {                             // controle do fluxo
       type: String,
       enum: ['pendente', 'ajustado', 'migrado'],
       default: 'pendente',
     },
+      revisado: {
+         type: Boolean,
+        default: false,
+       index: true,
+  },
+   transferido: {
+    type: Boolean,
+    default: false,   // começa como NÃO transferido
+    index: true       // facilita filtrar "pendentes" depois
+  },
   },
   {
     collection: 'import_itens',

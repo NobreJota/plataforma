@@ -249,31 +249,30 @@
 
         /* ====== Seção C: Slots de fotos ====== */
         .mi-slots {
-        background: #ff066a; /* amarelo */
-        padding: 14px 14px 8px;
-        overflow: hidden;
-
+          background: #fff; /* amarelo */
+          padding: 14px 14px 8px;
+          overflow: hidden;
         }
 
         .mi-slots-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .mi-slots-title { color: #1a1a1a; font-weight: 800; }
+        .mi-slots-title { color: #1a1a1a; font-weight: 200; }
         .mi-nobank{
-        margin:8px 0 0;
-        background:rgba(176,0,32,.12);
-        border:1px dashed #b00020;
-        color:#2b0008;
-        font-weight:800;
-        padding:8px 10px;
-        border-radius:10px;
+          margin:8px 0 0;
+          background:rgba(176,0,32,.12);
+          border:1px dashed #b00020;
+          color:#2b0008;
+          font-weight:800;
+          padding:8px 10px;
+          border-radius:10px;
         }
         .mi-slot-grid {
-        display: grid; grid-template-columns: repeat(7, minmax(120px,1fr));
-        gap: 12px; align-items: stretch;
+          display: grid; grid-template-columns: repeat(7, minmax(120px,1fr));
+          gap: 12px; align-items: stretch;
         }
         .mi-slot {
         background: #ffffff; /* magenta */
         border-radius: 14px; position: relative; overflow: hidden; cursor: pointer;
-        display: grid; place-items: center; min-height: 150px; border: 4px solid #ffe606;color:#0b100f;
+        display: grid; place-items: center; min-height: 150px; border: 2px solid #555554;color:#0b100f;
         }
 
         .mi-slot::before{
@@ -302,7 +301,7 @@
 
         /* ====== Seção D: Banco de Imagens ====== */
         .mi-bank {
-            background: #7da56b; /* verde musgo claro do mock */
+            background: #dfe7db; /* verde musgo claro do mock */
             border-top: 6px solid #8d0037; /* contorno vinho */
             padding: 10px 12px 12px;
             overflow: auto;
@@ -310,7 +309,7 @@
         .mi-bank-title { font-weight: 800; color: #1b000a; margin-bottom: 8px; }
         .mi-bank-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
         .mi-thumb {
-            aspect-ratio: 1/1; background: #f2f2f2; border-radius: 10px; overflow: hidden; border: 3px solid #7b002e; cursor: pointer;
+            aspect-ratio: 1/1; background: #f2f2f2; border-radius: 10px; overflow: hidden; border: 2px solid #7d7276; cursor: pointer;
             display: grid; place-items: center;
         }
         .mi-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -383,8 +382,8 @@
     color: #4e4d4d;
     text-align: center;
   }
-    </style>
-    <style>
+ </style>
+<style>
       .duo {                 /* linha com 2 colunas */
             display: flex;
             gap: 12px;
@@ -423,10 +422,10 @@
 }
 
 .slot-box {
-  border: 2px solid #ff0077;
+  border: 2px solid #9f9b9d;
   border-radius: 6px;
   padding: 4px;
-  background-color: #ffff00;
+  background-color: #fff;
   cursor: pointer;
   position: relative;
   min-height: 90px;
@@ -475,93 +474,111 @@
 .img-badge{ position:absolute; bottom:6px; left:6px; background:#b30000; color:#fff; font-size:11px; padding:2px 6px; border-radius:4px;}
 
 </style>
-   
+   <style>
+    .edit-top-row {
+      display: flex;
+      gap: 12px;
+     margin-bottom: 8px;
+}
+
+.edit-top-col {
+  flex: 1;
+}
+
+/* caixinha do ID (laranja) */
+.edit-id-box {
+  background: #fff;
+  color: #0d0d0d;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 12px;
+}
+   </style>
 </head>
 {{!-- /////////////////////////////////////////////////////////////////////////////// --}}
 <body   style="background-color: #ffffff;">
     <div id="cadastroProdutoModal" class="" style="width: 50%;float: left;background-color: #848985;margin:auto;height:99vh ;">
         <div class="formata_">
             <button type="button" id="fecharForm" style="position: absolute;top: 5px;right: 5px;border: none;background: transparent;font-size: 30px;cursor: pointer;" onclick="closeCadastroModal()">&times;</button>
-            <div style="width: 98%;height: 97vh;margin: auto;background-color: #000308;overflow-y: scroll ;margin-top: 1vh;padding: 5px;overflow-x: hidden;">
+            <div style="width: 98%;height: 97vh;margin: auto;background-color: #0b5deb;overflow-y: scroll ;margin-top: 1vh;padding: 5px;overflow-x: hidden;">
             <h4 style="font-weight: 200;color: #ffffff;">Edição de imagem</h4>
             <input type="hidden" name="produto_id" value="{{produtoId}}">
-                <form id="cadastroProdutoForm" style="background-color: #021c03;color:#fff;position: relative;height: 120vh;" >
+                <form id="cadastroProdutoForm" style="background-color:transparent;color:#fff;position: relative;height: 93vh;" >
                     <div class="campo">
                         <label style="font-weight:bold;">Marca loja :</label>
-                        <input value="{{produto.marcaloja}}" class="form-control fundo" readonly style="background: yellow;color:black">
+                        <input value="{{produto.marcaloja}}" class="form-control fundo" readonly style="background:#9a9b9d;color:#fff;height: 3vh;">
                     </div>
                     <div class="campo" >
-                        <label style="background-color:transparent;width: 110px;padding: 5px;font-weight:200;">Departamento :</label>
-                        <input value="{{departamentoNome}}" class="form-control" readonly style="">
+                        <label style="background-color:transparent;width: 110px;padding: 5px;font-weight:200;height: 3vh;">Departamento :</label>
+                        <input value="{{departamentoNome}}" class="form-control" readonly style="height: 3vh;">
                     </div>
                     {{!-- ========================================================================== --}}
                     <div class="duo">
                             <div class="campo">
-                                
-                                <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Setor:</label>
-                                <input class="form-control" value="{{nsetor}}" style="background: yellow;color:black;height: 3vh;font-size: small;" readonly>
+                               <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Setor:</label>
+                                <input class="form-control" value="{{nsetor}}" style="background:#9a9b9d;color:#fff;height: 3vh;font-size: small;" readonly>
                             </div>
                             <div class="campo">
                                 <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Seção:</label>
-                                <input class="form-control" value="{{secaoNomes}}" style="background: yellow;color:black;height: 3vh;font-size: small;" readonly>
+                                <input class="form-control" value="{{secaoNomes}}" style="background:#9a9b9d;color:#fff;height: 3vh;font-size: small;" readonly>
                             </div>
                     </div>
-
-                    {{!-- <div class="campo">
-                        <label style="font-weight:bold;">Setor:</label>
-                        <input class="form-control" value="{setorNomes}}" style="background: yellow;color:black" readonly>
-                     </div>
-                    <div class="campo">
-                        <label style="font-weight:bold;">Seção:</label>
-                        <input class="form-control fundo" value="{{secaoNomes}}" style="background: yellow;color:black" readonly>
-                    </div> --}}
-                    <div class="campo" >
-                       <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Código:</label>
-                       <input id="cadastroCodigo" type="text" name="codigo" class="form-control fundo" style="background: yellow;color:black" value="{{produto.codigo}}" readonly>
+                    <div class="edit-top-row">
+                        <div class="campo edit-top-col" >
+                          <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Código:</label>
+                          <input id="cadastroCodigo" type="text" name="codigo" class="form-control fundo" style="height: 3vh;" value="{{produto.codigo}}" readonly>
+                        </div>
+                        <div class="campo edit-top-col">
+                            <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Fornecedor:</label>
+                            <input class="form-control" value="{{fornecedorNome}}" style="height: 3vh;" readonly>
+                        </div>
                     </div>
-                    <div class="campo" >
-                       <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Descrição:</label>
-                      <input id="cadastroDescricao" type="text" name="descricao" class="form-control fundo" value="{{produto.descricao}}" style="background: yellow;color:black" readonly>
+                    <div class="edit-top-row">
+                        <div class="campo edit-top-col" >
+                          <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Descrição:</label>
+                          <input id="cadastroDescricao" type="text" name="descricao" class="form-control fundo" value="{{produto.descricao}}" style="background:#9a9b9d;color:#fff;height: 3vh;" readonly>
+                        </div>
+                        <div class="campo edit-top-col" >
+                          <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Complemento:</label>
+                          <input id="cadastroComplemento" type="text" name="complemento" class="form-control fundo" style="background:#9a9b9d;color:#fff;font-weight:200;height: 3vh;" value="{{produto.complete}}" readonly>
+                        </div>
                     </div>
-                    <div class="campo" >
-                       <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Complemento:</label>
-                      <input id="cadastroComplemento" type="text" name="complemento" class="form-control fundo" style="background: yellow;color:black;font-weight:200;" value="{{produto.complete}}" readonly>
+                    <div class="edit-top-row">
+                      <div class="campo edit-top-col">
+                        <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Referência:</label>
+                        <input id="cadastroReferencia" type="text" name="referencia" class="form-control fundo" style="font-weight:200;height: 3vh;" value="{{produto.referencia}}" readonly>
+                      </div>
+                      <div class="campo edit-top-col">
+                          <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Quantidade:</label>
+                          <input id="cadastroQte" type="number"  name="qte" class="form-control" style="color:black;font-weight: 200;height: 3vh;" value="{{produto.qte}}">
+                      </div>
                     </div>
-                    <div class="campo">
-                       <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Referência:</label>
-                       <input id="cadastroReferencia" type="text" name="referencia" class="form-control fundo" style="background: yellow;color:black;font-weight:200;" value="{{produto.referencia}}" readonly>
-                    </div>
-                    <div class="campo">
-                        <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Fornecedor:</label>
-                        <input class="form-control" value="{{fornecedorNome}}" style="background: yellow;color:black" readonly>
-                    </div>
+                   
                     <div class="duo">
                         <div class="campo">
-                                <label style="background-color:transparent;width: 85px;padding: 5px;font-weight: 200;">Cidade:</label>
-                                <input class="form-control" value="{{produto.cidade}}" style="background: yellow;color:black;font-weight: 200;" readonly>
-                            </div>
-                            <div class="campo">
-                                <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Bairro:</label>
-                                <input class="form-control" value="{{produto.bairro}}" style="background: yellow;color:black;font-weight: 200;" readonly>
-                            </div>
+                            <label style="background-color:transparent;width: 85px;padding: 5px;font-weight: 200;">Cidade:</label>
+                            <input class="form-control" value="{{produto.cidade}}" style="font-weight: 200;height: 3vh;" readonly>
+                        </div>
+                        <div class="campo">
+                            <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Bairro:</label>
+                            <input class="form-control" value="{{produto.bairro}}" style="font-weight: 200;height: 3vh;" readonly>
+                        </div>
                     </div>
-                    <div class="campo">
-                        <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Quantidade:</label>
-                        <input id="cadastroQte" type="number"  name="qte" class="form-control" style="background: yellow;color:black;font-weight: 200;" value="{{produto.qte}}">
+                    
+                    <div class="edit-top-row">
+                        <div class="edit-top-col">
+                            <label style="background-color:transparent;width: 100px;padding: 5px;font-weight:200;">Preço Custo:</label>
+                            <input id="cadastroPrecoCusto" type="number" name="precocusto" step="0.01" min="0" lang="pt-BR" style="font-weight: 200;text-align: right;height: 3vh;"  class="form-control edit-id-box" value="{{produto.precocusto}}">
+                        </div>
+                        <div class="campo edit-top-col">
+                            <label style="background-color:transparent;width: 100px;padding: 5px;font-weight:200;">Preço Vista:</label>
+                            <input id="cadastroPrecoVista" type="number" name="precovista" step="0.01" min="0" lang="pt-BR" style="font-weight:200;text-align: right;height: 3vh;"  class="form-control edit-id-box" value="{{produto.precovista}}">
+                        </div>
+                        <div class="campo edit-top-col">
+                            <label style="background-color:transparent;width: 100px;padding: 5px;font-weight:200;">Preço Prazo:</label>
+                            <input id="cadastroPrecoPrazo" type="number" name="precoprazo" step="0.01" min="0" lang="pt-BR" style="font-weight: 200;text-align: right;height: 3vh;"  class="form-control edit-id-box" value="{{produto.precoprazo}}">
+                        </div>    
                     </div>
-                    <div class="campo">
-                        <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Preço Custo:</label>
-                        <input id="cadastroPrecoCusto" type="number" name="precocusto" step="0.01" min="0" lang="pt-BR" style="background: yellow;color:black;font-weight: 200;"  class="form-control" value="{{produto.precocusto}}">
-                    </div>
-                    <div class="campo">
-                        <label style="background-color:transparent;width: 85px;padding: 5px;font-weight:200;">Preço Vista:</label>
-                        <input id="cadastroPrecoVista" type="number" name="precovista" step="0.01" min="0" lang="pt-BR" style="background: yellow;color:black;font-weight: 200;"  class="form-control" value="{{produto.precovista}}">
-                    </div>
-                    <div class="campo">
-                        <label style="background-color:transparent;width: 100px;padding: 5px;font-weight:200;">Preço Prazo:</label>
-                        <input id="cadastroPrecoPrazo" type="number" name="precoprazo" step="0.01" min="0" lang="pt-BR" style="background: yellow;color:black;font-weight: 200;"  class="form-control" value="{{produto.precoprazo}}">
-
-                    </div>    
                     <div id="slotContainer" class="slot-grid">
                           {{#each slots}}
                             <div class="slot">
@@ -658,16 +675,9 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
         <script src="/js/dashboard.js"></script>
-
-        {{!-- <script src="/js/empresa/bcoimagem.js" defer></script> --}}
-        {{!-- <script src="/js/empresa/produtoEdit-imagem.js" defer></script> --}}
         <script src="/js/rotinas/limpaSelect.js"></script>
-        {{!-- <script src="/js/rotinas/produto-ImageModal.js"></script> --}}
         <script src="/js/rotinas/AcaoComDataset.js"></script>
-  
-{{!-- /////////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////////
+{{!-- ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
 /**
  * Blocos de IMAGENS do produto — migrados de cooperado-admin

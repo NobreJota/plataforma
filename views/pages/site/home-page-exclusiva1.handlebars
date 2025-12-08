@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Página exclusiva - {{produto.descricao}}</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <style>
+    /* pode reaproveitar seu CSS global, isso aqui é só garantia mínima */
+    .produto-info-home {
+      font-size: 0.8rem;
+      line-height: 1.25;
+      margin-top: 0.25rem;
+      padding-top: 0.25rem;
+      border-top: 1px solid #eee;
+    }
+    .pih-row {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 0.1rem;
+    }
+    .pih-label {
+      color: #666;
+      font-weight: 500;
+      min-width: 3.4rem;
+    }
+    .pih-value {
+      color: #222;
+    }
+    .produto-info-home .btn {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.55rem;
+      margin-top: 0.25rem;
+      margin-right: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+<div class="container my-3">
+  <div class="row">
+
+    {{!-- MENU LATERAL ESQUERDO --}}
+    <aside class="col-md-3 mb-3">
+         <div class="card mb-3">
+    <div class="card-header py-2">
+      <strong>Outros departamentos</strong>
+    </div>
+    <div class="list-group list-group-flush">
+      {{#each departamentosMenu}}
+        <a href="?dep={{this._id}}"
+           class="list-group-item list-group-item-action">
+          {{this.nome}}
+        </a>
+      {{/each}}
+    </div>
+  </div>
+
+          {{#if setoresMenu.length}}
+            <div class="card mb-3">
+              <div class="card-header py-2">
+                <strong>Setores</strong>
+              </div>
+              <div class="list-group list-group-flush">
+                {{#each setoresMenu}}
+                  <a href="/home-page-exclusiva/{{../produto._id}}?dep={{../depSelecionado}}&setor={{this._id}}"
+                    class="list-group-item list-group-item-action">
+                    {{this.nome}}
+                  </a>
+                {{/each}}
+              </div>
+            </div>
+          {{/if}}
+
+          {{#if secoesMenu.length}}
+            <div class="card mb-3">
+              <div class="card-header py-2">
+                <strong>Seções</strong>
+              </div>
+              <div class="list-group list-group-flush">
+                {{#each secoesMenu}}
+                  <a href="/home-page-exclusiva/{{../produto._id}}?dep={{../depSelecionado}}&setor={{../setorSelecionado}}&secao={{this._id}}"
+                    class="list-group-item list-group-item-action">
+                    {{this.nome}}
+                  </a>
+                {{/each}}
+              </div>
+            </div>
+          {{/if}}
+    </aside>
+
+
+    {{!-- CONTEÚDO PRINCIPAL (cards) --}}
+    <main class="col-md-9">
+      <h3 class="mb-3">
+        Bem vindo à loja :
+        <a href="/loja/{{produto.loja_id}}">{{produto.marcaloja}}</a>
+      </h3>
+
+      <h5 class="mb-3">Outros produtos desta loja</h5>
+
+      <div class="row g-3">
+        {{#if produtosLoja.length}}
+          {{#each produtosLoja}}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+              <article class="card h-100 card-product">
+
+                <a class="ratio ratio-4x3" href="/produto/{{this._id}}" aria-label="{{this.descricao}}">
+                  <img class="w-100 h-100 object-fit-contain p-2"
+                       src="{{this.pageurls.[0]}}"
+                       alt="{{this.descricao}}" loading="lazy">
+                </a>
+
+                <div class="card-body">
+                  <h6 class="card-title mb-2 text-truncate" title="{{this.descricao}}">
+                    {{this.descricao}}
+                  </h6>
+
+                  <div class="produto-info-home">
+                    <div class="pih-row">
+                      <span class="pih-label">Cód.</span>
+                      <span class="pih-value">{{this.codigo}}</span>
+                    </div>
+
+                    <div class="pih-row">
+                      <span class="pih-label">À vista</span>
+                      <span class="pih-value">
+                        {{#if this.precovista}}
+                          R$ {{formatCurrency this.precovista}}
+                        {{else}}
+                          sob consulta
+                        {{/if}}
+                      </span>
+                    </div>
+
+                    <div class="pih-row">
+                      <span class="pih-label">Desc.</span>
+                      <span class="pih-value">
+                        {{this.descricao}} {{this.complete}}
+                      </span>
+                    </div>
+
+                    <div class="pih-row">
+                      <span class="pih-label">Loja</span>
+                      <span class="pih-value">
+                        <a href="/loja/{{this.loja_id}}">{{this.marcaloja}}</a>
+                      </span>
+                    </div>
+
+                    <div class="mt-1">
+                      <a class="btn btn-sm btn-outline-primary"
+                         href="/home-detalhe/{{this._id}}">
+                        Detalhes / Conversar
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+              </article>
+            </div>
+          {{/each}}
+        {{else}}
+          <div class="col-12">
+            <p class="text-muted">Não há produtos para essa seleção.</p>
+          </div>
+        {{/if}}
+      </div>
+
+    </main>
+
+  </div>
+</div>
+
+</body>
+</html>

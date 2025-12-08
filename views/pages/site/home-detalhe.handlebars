@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Detalhes do produto</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container my-4">
+  <a href="/" class="btn btn-link">&laquo; Voltar para Home</a>
+
+  <div class="row mt-3">
+    <div class="col-md-5">
+      {{!-- FOTO PRINCIPAL (ajuste o campo da imagem que você já usa) --}}
+      <img src="{{produto.imagemUrl}}" class="img-fluid" alt="{{produto.descricao}}">
+    </div>
+
+    <div class="col-md-7">
+      <h3>{{produto.descricao}} {{produto.complete}}</h3>
+
+      <p><strong>Código:</strong> {{produto.codigo}}</p>
+
+      <p>
+        <strong>Preço à vista:</strong>
+        {{#if produto.precovista}}
+          R$ {{formatCurrency produto.precovista}}
+        {{else}}
+          sob consulta
+        {{/if}}
+      </p>
+
+      <p>
+        <strong>Loja:</strong>
+        <a href="/loja/{{produto.loja_id}}">
+          {{produto.marcaloja}}
+        </a>
+        <br>
+        <small>{{produto.cidade}} - {{produto.bairro}}</small>
+      </p>
+
+      <hr>
+
+      <h5>Conversar com vendedor</h5>
+      {{!-- aqui depois você coloca WhatsApp, formulário, etc. --}}
+      <p>Colocar aqui os canais de contato da loja.</p>
+
+      <hr>
+
+      <h5>Especificações do produto</h5>
+      <p>
+        {{!-- campo futuro: produto.especificacoes, ficha técnica etc. --}}
+        (Área para texto de especificações técnicas.)
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <h5>Histórico / informações adicionais</h5>
+    <p>(Área para históricos diversos, comentários, observações...)</p>
+  </div>
+</div>
+
+</body>
+</html>

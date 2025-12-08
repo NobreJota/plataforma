@@ -2,6 +2,8 @@
 <html lang="pt-br">
 <head>
   <meta charset="utf-8">
+  {{!--[29/11/2025]=> Essa page contém o conteúdo a ser importado para nosso sistema --}}
+  {{!-- aqui nós modelamos as colunas para imprtação do iens --}}
   <title>Importação de itens</title>
 
   <style>
@@ -225,7 +227,7 @@
       {{!-- //... --}}
     </div>
 
-    <div id="boxBotoesModelo" style="border: 3px solid #056eb9; padding:8px; margin-top:8px;">
+    <div id="boxBotoesModelo" style="border: 3px solid #b90523; padding:8px; margin-top:8px;">
       <!-- botões do modelo vão ser criados via JS -->
     </div>
     <div id="boxResumoMapeamento"
@@ -260,6 +262,7 @@ const hLojaId = document.getElementById('hLojaId');
 const hMarca  = document.getElementById('hMarca');
 const hCidade = document.getElementById('hCidade');
 const hBairro = document.getElementById('hBairro');
+const camposInternos = {{{camposInternosJson}}};
 
 
 let colunaSelecionada = null;         // botão de cabeçalho selecionado
@@ -285,36 +288,36 @@ atualizarHabilitacaoImportacao();
 
 // ================== CAMPOS DO ARQUIVODOC (FAIXA AZUL) ==================
 // Ajuste essa lista conforme o schema de arquivoDoc
-const CAMPOS_ARQUIVO = [
-  'loja_id',
-  'marcaloja',
-  'cidade',
-  'bairro',
-  'codigo',
-  'descricao',
-  'complete',
-  'ecf',
-  'refer1',
-  'e_min',
-  'e_max',
-  'ativo',
-  'qte',
-  'precocusto',
-  'precoprazo',
-  'artig',
-  'marcaltrem',
-  'page',
-  'pageposicao',
-  'pageurls',
-  'pageok',
-  'ativo',
-  'datadel',
-  'figure_mini',
-  'figure_media',
-  'csosn',
-  'ncm',
-  'taxa'
-];
+//const CAMPOS_ARQUIVO = [
+//  'loja_id',
+//  'marcaloja',
+//  'cidade',
+//  'bairro',
+//  'codigo',
+//  'descricao',
+//  'complete',
+//  'ecf',
+ // 'refer1',
+//  'e_min',
+//  'e_max',
+//  'ativo',
+//  'qte',
+//  'precocusto',
+//  'precoprazo',
+//  'artig',
+///  'marcaltrem',
+//  'page',
+//  'pageposicao',
+//  'pageurls',
+//  'pageok',
+//  'ativo',
+//  'datadel',
+///  'figure_mini',
+ // 'figure_media',
+//  'csosn',
+//  'ncm',
+//  'taxa'
+//];
 
 // ================== CABEÇALHO DO ARQUIVO -> BOTÕES (FAIXA VERDE) ==================
 function gerarBotoesHeader() {
@@ -359,11 +362,12 @@ function gerarBotoesHeader() {
 
 // ================== BOTÕES DOS CAMPOS INTERNOS (ARQUIVODOC, FAIXA AZUL) ==================
 function montarBotoesCamposInternos() {
+  
   if (!boxCamposInternos) return;
 
   boxCamposInternos.innerHTML = '';
 
-  CAMPOS_ARQUIVO.forEach((nomeCampo) => {
+  camposInternos.forEach((nomeCampo) => {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'btn-campo-interno';
@@ -519,10 +523,7 @@ async function gravarImportItens() {
       const marcaloja = hMarca  ? hMarca.value  : '';
       const cidade    = hCidade ? hCidade.value : '';
       const bairro    = hBairro ? hBairro.value : '';
-      console.log('loja_id',loja_id);
-      console.log('marcaloja',marcaloja);
-      console.log('cidade',cidade);
-      console.log('bairro',bairro);
+     
       let fornecedorId   = '';
       let fornecedorNome = '';
   
@@ -532,9 +533,7 @@ async function gravarImportItens() {
         fornecedorNome = optSel ? optSel.text.trim() : '';
       }
   
-      console.log('fornecedorId',fornecedorId);
       // --- mapeamento (json que está no hidden mapeamentoJson) ---
-  
       let mapeamento = [];
       console.log('');
       console.log('inputMapeamento',inputMapeamento);
@@ -542,51 +541,50 @@ async function gravarImportItens() {
       console.log('inputMapeamento.value',inputMapeamento.value);
 
       if (inputMapeamento && inputMapeamento.value) {
-                console.log(' passando AQUI')
+            console.log(' passando AQUI')
+            try {
+              mapeamento = JSON.parse(inputMapeamento.value);
+            } catch (e) {
+              console.warn('mapeamentoJson inválido, usando array vazio.', e);
+              mapeamento = [];
+            }
+            console.log()
+
+            const payload = {
+              loja_id,
+              marcaloja,
+              cidade,
+              bairro,
+              fornecedor: fornecedorId,
+              fornecedorNome,
+              itens: ITENS_PROCESSADOS,
+              mapeamento
+            };
+            console.log('--------------------------------------');
+            console.log('Payload a gravar =>', payload);
+            console.log('--------------------------------------');
+            ///////////////////////////////////////////////////////////////////////////////
+            try {
+                const resp = await fetch('/importtabela/importacao/itens/gravar', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+                });
+
+                let data = {};
                 try {
-                  mapeamento = JSON.parse(inputMapeamento.value);
+                  data = await resp.json();
                 } catch (e) {
-                  console.warn('mapeamentoJson inválido, usando array vazio.', e);
-                  mapeamento = [];
+                  // se não veio JSON, mantém objeto vazio
                 }
-                console.log()
 
-                const payload = {
-                  loja_id,
-                  marcaloja,
-                  cidade,
-                  bairro,
-                  fornecedorId,
-                  fornecedorNome,
-                  itens: ITENS_PROCESSADOS,
-                  mapeamento
-                };
+                if (!resp.ok) {
+                  alert('Erro ao gravar itens: ' + (data.error || 'Erro desconhecido'));
+                  console.error('Erro ao gravar itens:', data);
+                  return;
+                }
 
-                console.log('Payload a gravar =>', payload);
-
-                
-
-              try {
-                    const resp = await fetch('/importtabela/importacao/itens/gravar', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify(payload)
-                    });
-
-                    let data = {};
-                    try {
-                      data = await resp.json();
-                    } catch (e) {
-                      // se não veio JSON, mantém objeto vazio
-                    }
-
-                    if (!resp.ok) {
-                      alert('Erro ao gravar itens: ' + (data.error || 'Erro desconhecido'));
-                      console.error('Erro ao gravar itens:', data);
-                      return;
-                    }
-
-                    alert('Itens gravados com sucesso!');
+                alert('Itens gravados com sucesso!');
 
                     // 👉 após o OK, leva direto para a página de ajuste
                     const urlAjuste = `/importtabela/importacao/ajuste?lojista=${encodeURIComponent(loja_id)}&fornecedor=${encodeURIComponent(fornecedorId)}`;

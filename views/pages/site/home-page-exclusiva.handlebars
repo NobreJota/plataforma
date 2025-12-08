@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <title>Página exclusiva - {{produto.descricao}}</title>
+
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+  <style>
+    /* HEADER AZUL NO TOPO (100%) */
+    #headerLojaExclusiva {
+      width: 100%;
+      background: #0069a8;
+      color: #fff;
+      padding: 10px 10px;
+      font-size: 1.4rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    #headerLojaExclusiva a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    #headerLojaExclusiva a:hover {
+      text-decoration: underline;
+    }
+
+    /* ÁREA PRINCIPAL */
+    .page-wrapper {
+      min-height: 80vh;      /* altura mínima da área escura */
+      padding-top: 15px;
+      padding-bottom: 20px;
+    }
+
+    .page-wrapper .row {
+      align-items: flex-start;  /* menu e cards alinhados no topo */
+    }
+
+   .page-wrapper aside.col-md-3 {
+      flex: 0 0 230px;      /* largura fixa aproximada */
+      max-width: 230px;
+    }
+
+    /* MAIN pega o restante da largura */
+    .page-wrapper main.col-md-9 {
+    flex: 1 0 auto;
+    max-width: calc(100% - 230px);
+    }
+
+    page-wrapper .row > [class*='col-'] {
+    padding-left: 2px;
+    padding-right: 2px;
+    }
+
+    /* Compensa a margem negativa padrão da row */
+    .page-wrapper .cards-row {
+    margin-left: 0;
+    margin-right: -8px;
+    }
+
+    .produto-info-home {
+      font-size: 0.8rem;
+      line-height: 1.25;
+      margin-top: 0.25rem;
+      padding-top: 0.25rem;
+      border-top: 1px solid #eee;
+    }
+    .pih-row {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 0.1rem;
+    }
+    .pih-label {
+      color: #666;
+      font-weight: 500;
+      min-width: 3.4rem;
+    }
+    .pih-value {
+      color: #222;
+    }
+    .card-product img {
+      object-fit: contain;
+    }
+
+    .card-product .btn-detalhe {
+        padding: 2px 18px;      /* ↓ altura (vertical) | ↑ largura (horizontal) */
+        font-size: 0.8rem;      /* levemente menor */
+        line-height: 1.2;
+        min-width: 110px;       /* garante uma largura mínima */
+        text-align: center;
+        width: 80%;
+        margin: auto;
+        display: block;
+    }
+  </style>
+  <style>
+    /* Caixa de busca centralizada */
+.search-loja-wrapper {
+  max-width: 520px;
+  margin: 0 auto 8px;
+  position: relative;
+}
+
+/* Dropdown de sugestões */
+.busca-sugestoes {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 30;
+  max-height: 260px;
+  overflow-y: auto;
+  display: none;
+}
+
+.busca-sugestoes .sug-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 4px 8px;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.busca-sugestoes .sug-item small {
+  color: #888;
+}
+
+.busca-sugestoes .sug-item:hover {
+  background: #f1f1f1;
+}
+
+.search-loja-wrapper {
+  max-width: 520px;
+  margin: 0 auto 8px;
+}
+
+/* Caixa de busca centralizada */
+.search-loja-wrapper {
+  max-width: 520px;
+  margin: 0 auto 8px;
+  position: relative;
+}
+
+/* Dropdown de sugestões abaixo da caixa */
+.busca-sugestoes {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 30;
+  max-height: 260px;
+  overflow-y: auto;
+  display: none;
+}
+
+.busca-sugestoes .sug-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 4px 8px;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.busca-sugestoes .sug-item small {
+  color: #888;
+}
+
+.busca-sugestoes .sug-item:hover {
+  background: #f1f1f1;
+}
+
+/* Container geral da busca */
+.search-loja-wrapper {
+  max-width: 700px;
+  margin: 0 auto 14px;
+  text-align: center;
+}
+
+/* Título em cima da caixa */
+.search-loja-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #0b6fa4;
+  margin-bottom: 4px;
+}
+
+/* “Pílula” azul envolvendo o input + lupa */
+.search-loja-inner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #0b6fa4;
+  border-radius: 999px;
+  padding: 4px 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+}
+
+/* Lupa (unicode – não precisa de fonte extra) */
+.search-loja-icon {
+  color: #ffffff;
+  font-size: 1rem;
+  flex: 0 0 auto;
+}
+
+/* Próprio campo de texto */
+.search-loja-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+
+/* remove borda “default” do input (para não brigar com o azul) */
+.search-loja-input:focus {
+  box-shadow: none;
+}
+
+/* placeholder mais clarinho */
+.search-loja-input::placeholder {
+  color: #999;
+}
+
+/* Dropdown de sugestões continua funcionando */
+.busca-sugestoes {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 700px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 30;
+  max-height: 260px;
+  overflow-y: auto;
+  display: none;
+}
+
+
+  </style>
+</head>
+<body>
+
+  {{!-- ===================== HEADER 100% ===================== --}}
+  <div class="container-fluid my-0">
+        <div id="headerLojaExclusiva">
+            Bem vindo à loja :
+            <a href="/loja/{{produto.loja_id}}">{{produto.marcaloja}}</a>
+        </div>
+        {{!-- BUSCA DENTRO DA LOJA --}}
+        <div class="container my-1">
+            <div class="search-loja-wrapper">
+                {{!-- <span class="search-loja-label">
+                Buscar produtos nesta loja
+                </span> --}}
+
+                <div class="search-loja-inner">
+                    <span class="search-loja-icon">🔍</span>
+
+                    <input type="text"
+                            id="buscaLoja"
+                            class="search-loja-input"
+                            placeholder="O que você procura?"
+                            autocomplete="off">
+                </div>
+                <div id="buscaLojaSugestoes" class="busca-sugestoes"></div>
+            </div>
+        </div>
+  </div>
+
+  {{!-- ===================== CONTAINER PRINCIPAL ===================== --}}
+  <div class="container-fluid my-3 page-wrapper" style="background: #fff;margin-left: 20px;border-left: 2px black solid;margin-right: 20px;">
+    <div class="row">
+
+      {{!-- ===================== MENU LATERAL (1 COLUNA) ===================== --}}
+      <aside class="col-md-3 mb-3">
+            {{!-- DEPARTAMENTOS --}}
+            <div class="card mb-3">
+            <div class="card-header py-2">
+                <strong>Outros departamentos</strong>
+            </div>
+            <div class="list-group list-group-flush">
+                {{#each departamentosMenu}}
+                <a href="?dep={{this._id}}"
+                    class="list-group-item list-group-item-action">
+                    {{this.nome}}
+                </a>
+                {{/each}}
+            </div>
+            </div>
+
+            {{!-- SETORES (aparecem só após escolher DEP) --}}
+            {{#if setoresMenu.length}}
+            <div class="card mb-3">
+                <div class="card-header py-2">
+                <strong>Setores</strong>
+                </div>
+                <div class="list-group list-group-flush">
+                {{#each setoresMenu}}
+                    <a href="?dep={{../depSelecionado}}&setor={{this._id}}"
+                    class="list-group-item list-group-item-action">
+                    {{this.nome}}
+                    </a>
+                {{/each}}
+                </div>
+            </div>
+            {{/if}}
+
+            {{!-- SEÇÕES (aparecem só após escolher SETOR) --}}
+            {{#if secoesMenu.length}}
+            <div class="card mb-3">
+                <div class="card-header py-2">
+                <strong>Seções</strong>
+                </div>
+                <div class="list-group list-group-flush">
+                {{#each secoesMenu}}
+                    <a href="?dep={{../depSelecionado}}&setor={{../setorSelecionado}}&secao={{this._id}}"
+                    class="list-group-item list-group-item-action">
+                    {{this.nome}}
+                    </a>
+                {{/each}}
+                </div>
+            </div>
+            {{/if}}
+      </aside>
+
+      {{!-- ===================== CARDS (4 COLUNAS) ===================== --}}
+      <main class="col-md-9">
+        <div class="row cards-row" id="cardsRow">
+          {{#if produtosLoja.length}}
+            {{#each produtosLoja}}
+              <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+                <article class="card h-100 card-product">
+                    {{!-- /produto/{{this._id}} --}}
+                  <a href="" class="d-block">
+                    <img class="w-100 h-100 p-2"
+                         src="{{this.pageurls.[0]}}"
+                         alt="{{this.descricao}}"
+                         loading="lazy">
+                  </a>
+
+                  <div class="card-body">
+                    {{!-- <h6 class="card-title mb-2 text-truncate"
+                        title="{{this.descricao}}">
+                      {{this.descricao}}{{this.complete}}
+                    </h6> --}}
+                     <div class="pih-row">
+                        {{!-- <span class="pih-label">Desc.</span> --}}
+                        <span class="pih-value">
+                          {{this.descricao}} {{this.complete}}
+                        </span>
+                      </div>
+
+                    <div class="produto-info-home">
+                      <div class="pih-row">
+                        <span class="pih-label">Cód.</span>
+                        <span class="pih-value">{{this.codigo}}</span>
+                      </div>
+
+                      <div class="pih-row">
+                        <span class="pih-label">À vista</span>
+                        <span class="pih-value">
+                          {{#if this.precovista}}
+                            R$ {{formatCurrency this.precovista}}
+                          {{else}}
+                            sob consulta
+                          {{/if}}
+                        </span>
+                      </div>
+
+                     
+
+                      <div class="pih-row" style="margin-top: 10px;margin-bottom: -5px;background: #fff;">
+                        <span class="pih-label"></span>
+                        <span class="pih-value">
+                          {{!-- <a href="/loja/{{this.loja_id}}">{{this.marcaloja}}</a> --}}
+                        </span>
+                      </div>
+
+                      <div class="mt-1">
+                        <a class="btn btn-sm btn-outline-primary btn-detalhe"
+                           href="/home-detalhe/{{this._id}}">
+                          Detalhes / vendedor
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            {{/each}}
+          {{else}}
+            <div class="col-12">
+              <p class="text-muted">Nenhum produto encontrado para este filtro.</p>
+            </div>
+          {{/if}}
+        </div>
+      </main>
+
+    </div>
+  </div>
+<script>
+(function () {
+  const lojaId   = '{{produto.loja_id}}';
+  const input    = document.getElementById('buscaLoja');
+  const sugBox   = document.getElementById('buscaLojaSugestoes');
+  const cardsRow = document.getElementById('cardsRow');
+  if (!input || !sugBox || !cardsRow) return;
+
+  const originalHTML = cardsRow.innerHTML;  // salva os cards originais
+  const placeholderImg = '';                // se quiser, coloque uma URL de placeholder
+  let timer = null;
+
+  // ================== FUNÇÃO AUXILIAR PARA MONTAR CARDS ==================
+  async function carregarCards(q) {
+    if (!q || q.trim().length < 3) {
+      // volta pros cards originais
+      cardsRow.innerHTML = originalHTML;
+      return;
+    }
+
+    try {
+      const url = `/home-page-exclusiva/busca?loja=${encodeURIComponent(lojaId)}&q=${encodeURIComponent(q.trim())}`;
+      const resp = await fetch(url);
+      const itens = await resp.json();
+
+      if (!Array.isArray(itens) || itens.length === 0) {
+        cardsRow.innerHTML = `
+          <div class="col-12">
+            <p class="text-muted mb-0">Nenhum produto encontrado para "${q}".</p>
+          </div>`;
+        return;
+      }
+
+      const html = itens.map(p => {
+        const img = (p.pageurls && p.pageurls[0]) ? p.pageurls[0] : placeholderImg;
+        const preco = p.precovista
+          ? 'R$ ' + Number(p.precovista).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+          : 'sob consulta';
+
+        return `
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+            <article class="card h-100 card-product">
+              <a href="/produto/${p._id}" class="d-block">
+                <img class="w-100 h-100 p-2"
+                     src="${img}"
+                     alt="${p.descricao || ''}"
+                     loading="lazy">
+              </a>
+
+              <div class="card-body">
+                <h6 class="card-title mb-2 text-truncate"
+                    title="${p.descricao || ''}">
+                  ${p.descricao || ''}
+                </h6>
+
+                <div class="produto-info-home">
+                  <div class="pih-row">
+                    <span class="pih-label">Cód.</span>
+                    <span class="pih-value">${p.codigo || ''}</span>
+                  </div>
+
+                  <div class="pih-row">
+                    <span class="pih-label">À vista</span>
+                    <span class="pih-value">${preco}</span>
+                  </div>
+
+                  <div class="pih-row">
+                    <span class="pih-label">Desc.</span>
+                    <span class="pih-value">
+                      ${p.descricao || ''} ${p.complete || ''}
+                    </span>
+                  </div>
+
+                  <div class="pih-row">
+                    <span class="pih-label">Loja</span>
+                    <span class="pih-value">
+                      <a href="/loja/${p.loja_id}">${p.marcaloja || ''}</a>
+                    </span>
+                  </div>
+
+                  <div class="mt-1">
+                    <a class="btn btn-sm btn-outline-primary btn-detalhe"
+                       href="/home-detalhe/${p._id}">
+                      Detalhes
+                    </a>
+                    <a class="btn btn-sm btn-outline-secondary"
+                       href="/home-page-exclusiva/${p._id}">
+                      Página exclusiva
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>`;
+      }).join('');
+
+      cardsRow.innerHTML = html;
+    } catch (e) {
+      console.error('Erro na busca AJAX:', e);
+    }
+  }
+
+  // ================== INPUT: APENAS MOSTRA SUGESTÕES ==================
+  input.addEventListener('input', function () {
+    const q = this.value.trim();
+    clearTimeout(timer);
+
+    if (q.length < 3) {
+      sugBox.innerHTML = '';
+      sugBox.style.display = 'none';
+      // NÃO mexe nos cards aqui!
+      return;
+    }
+
+    timer = setTimeout(async () => {
+      try {
+        const url = `/home-page-exclusiva/busca?loja=${encodeURIComponent(lojaId)}&q=${encodeURIComponent(q)}`;
+        const resp = await fetch(url);
+        const itens = await resp.json();
+
+        if (!Array.isArray(itens) || itens.length === 0) {
+          sugBox.innerHTML = '';
+          sugBox.style.display = 'none';
+          return;
+        }
+
+        // monta lista de sugestões (sem mexer nos cards)
+        sugBox.innerHTML = itens.map(p => `
+          <button type="button"
+                  class="sug-item"
+                  data-desc="${(p.descricao || '').replace(/"/g, '&quot;')}">
+            ${p.descricao || ''}
+            <small>(${p.codigo || ''})</small>
+          </button>
+        `).join('');
+
+        sugBox.style.display = 'block';
+      } catch (e) {
+        console.error(e);
+      }
+    }, 250);
+  });
+
+  // ================== CLIQUE NA SUGESTÃO: AÍ SIM BUSCA E TROCA OS CARDS ==================
+  sugBox.addEventListener('click', function (ev) {
+    const btn = ev.target.closest('.sug-item');
+    if (!btn) return;
+
+    const desc = btn.dataset.desc || '';
+    input.value = desc;        // coloca o texto escolhido no input
+    sugBox.style.display = 'none';
+
+    // agora sim: limpa e recarrega os cards só com o resultado dessa descrição
+    carregarCards(desc);
+  });
+
+  // clicar fora fecha o dropdown
+  document.addEventListener('click', function (ev) {
+    if (ev.target !== input && !sugBox.contains(ev.target)) {
+      sugBox.style.display = 'none';
+    }
+  });
+})();
+</script>
+
+
+
+</body>
+</html>

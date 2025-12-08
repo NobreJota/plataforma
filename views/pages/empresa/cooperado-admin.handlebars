@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 {{!-- ESSE FORM É A ADMINISTRAÇÂO CENTRAL DOS PRODUTOS --}}
+{{!-- AQUI nós listamos os produtos,selecionamos fornecedores,editamos imagens,e importamos produtos --}}
 <html lang="pt-br">
-{{!-- <head> --}}
+ <head>
     <meta http-equiv="Cache-Control" content="no-store" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {{!-- cooperado-admin.handlebars --}}
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">       
@@ -498,8 +500,96 @@ body {
     .selected-row {
       background-color: unset;
     }
-  </style>
 
+    td.alinhar-center,
+th.alinhar-center {
+  text-align: center;
+}
+
+td.alinhar-direita,
+th.alinhar-direita {
+  text-align: right !important;   /* força ficar à direita */
+  padding-right: 6px;             /* opcional: um espacinho da borda */
+  font-variant-numeric: tabular-nums; /* opcional: números alinhados bonitos */
+}
+  </style>
+  <style>
+    /* ==============================
+   AJUSTES GERAIS DO EDIT MODAL
+   ============================== */
+#editModal .modal-ajuste-body {
+  font-size: 13px;
+}
+
+/* linha com ID e CODIGO lado a lado */
+#editModal .edit-top-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+#editModal .edit-top-col {
+  flex: 1;
+}
+
+/* caixinha do ID (laranja) */
+#editModal .edit-id-box {
+  background: #c8cd32;
+  color: #fff;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 12px;
+}
+
+/* input do código (amarelo) */
+
+
+/* labels menores */
+#editModal label {
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+/* inputs mais baixos e com fonte menor */
+#editModal input.form-control,
+#editModal select.form-control {
+  font-size: 13px;
+  padding: 2px 6px;
+  height: 28px;          /* altura menor */
+  line-height: 1.2;
+  background: #c8cd32;
+}
+
+/* espaço entre os campos gerados via JS */
+#editModal .campo-modal {
+  margin-bottom: 6px;
+}
+
+#editModal .localizacao-bloco {
+  background: #f8f8ff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+#editModal .localizacao-bloco h6 {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+#editModal .localizacao-bloco label {
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+#editModal .localizacao-bloco select {
+  font-size: 13px;
+  padding: 2px 6px;
+  height: auto;
+}
+
+  </style>
+ </head>
 {{!-- ///////////////////////////////////////////////////////////////////////////// --}}
 <header class="topbar">
   <div class="container-fluid py-2">
@@ -514,23 +604,29 @@ body {
   <div class="container-fluid py-2">
     <div class="toolbar">
       <!-- Ativos -->
-      <div class="d-flex align-items-center">
-        <span class="label-pill">Ativos:</span>
-        <select class="form-select form-select-sm">
-          <option>Todos</option>
-          <option>Somente ativos</option>
-          <option>Inativos</option>
+      {{!-- d-flex align-items-center --}}
+      <div class=" form-group mr-3">
+        <label for="filtroAtivo" style="color:#fff;">Ativos:</label>
+        <select id="filtroAtivo" class="form-select form-select-sm">
+          <option value="S" {{#if (eq filtroAtivo "S")}}selected{{/if}}>Ativos</option>
+          <option value="N" {{#if (eq filtroAtivo "N")}}selected{{/if}}>Inativos</option>
+          <option value="T" {{#if (eq filtroAtivo "T")}}selected{{/if}}>Todos</option>
         </select>
       </div>
 
       <!-- Fornecedores -->
-      <div class="d-flex align-items-center">
-        <span class="label-pill">Fornecedores:</span>
-        <select class="form-select form-select-sm">
-          <option>Todos</option>
-          {{!-- opções reais aqui --}}
-        </select>
-      </div>
+     <div class="form-group ml-4">
+  <label for="filtroFornecedor" style="color:#fff;">Fornecedores:</label>
+  <select id="filtroFornecedor" class="form-control form-control-sm">
+    <option value="todos">Todos</option>
+    {{#each fornecedores}}
+      <option value="{{this._id}}"
+        {{#if (eq ../filtroFornecedor this._id)}}selected{{/if}}>
+        {{this.fantasia}} {{this.razao}}
+      </option>
+    {{/each}}
+  </select>
+</div>
 
       <!-- Imagens -->
       <div class="d-flex align-items-center">
@@ -629,14 +725,16 @@ body {
                 </thead>
                     <tbody id="produtoTable">
                       {{#each produtos}}
-                      <tr data-id="{{_id}}">
+                      <tr data-id="{{_id}}"
+                          data-ativo="{{#if this.ativo}}Ativo{{else}}Inativo{{/if}}"
+                          >
                         <td class="alinhar-center">{{inc @index}}</td>
                         <td style="display: none">{{_id}}</td>
                         <td>{{codigo}}</td>
                         <td>{{descricao}}</td>
                         <td>{{complete}}</td>
                         <td>{{referencia}}</td>
-                        <td>{{fornecedor.marca}}</td>
+                        <td>{{ativo}}</td>
                         <td>
                           {{#each localloja}}
                               {{#each departamento}}
@@ -647,9 +745,9 @@ body {
                             {{/each}}
                         </td>
                         <td class="alinhar-center">{{qte}}</td>
-                        <td class="alinhar-direita">{{formatarDecimal precocusto}}</td>
-                        <td class="alinhar-direita">{{formatarDecimal precovista}}</td>
-                        <td class="alinhar-direita">{{formatarDecimal precoprazo}}</td>
+                        <td class="alinhar-direita">{{formatarDecimal_precocusto}}</td>
+                        <td class="alinhar-direita">{{formatarDecimal_precovista}}</td>
+                        <td class="alinhar-direita">{{formatarDecimal_precoprazo}}</td>
                         <td>
                           <div style="display: flex;flex-direction: row;justify-content:space-around;gap: 4px; flex-wrap: wrap;background-color:transparent;">
                             <select 
@@ -677,7 +775,7 @@ body {
         </div>
     </div>
   </div>
-
+ 
 
 </main>
 <div id="menuLateral" class="" style="z-index: 1000;height: 100vh;background-color: #fff;margin-top:-0.6vh;">
@@ -708,7 +806,7 @@ body {
                     onclick="location.href='/importtabela/importacao/import-itens?lojista={{lojista._id}}'">
               Importa tabela
             </button>
-            
+            {{!-- onclick="location.href='/importtabela/importacao/import-itens?lojista={{lojista._id}}'" --}}
           </div>
           <div style="height: 25vh;"></div>
         </div>
@@ -716,8 +814,8 @@ body {
           <h2 id="H2menuLateral" style="font-size: 1vw; text-align: end; color: #fff;">Menu lateral</h2>
         </div>
 </div>
-
 <script>
+  //const Handlebars = require('handlebars');
   // mede a altura real do header e atualiza a variável CSS --h-top
   (function(){
     const root = document.documentElement;
@@ -731,6 +829,38 @@ body {
     // se tiver fontes web que alteram a altura mais tarde:
     document.fonts && document.fonts.addEventListener('loadingdone', setHeaderHeight);
   })();
+
+  // de centavos (int) para string "83,43"
+//function formatarReaisDeCentavos(v) {
+//  if (v == null) return "";
+//  const num = Number(v) / 100;
+//  return num.toLocaleString('pt-BR', {
+//    minimumFractionDigits: 2,
+//    maximumFractionDigits: 2
+//  });
+//}
+
+// de string "83,43" para centavos (int)
+function parseReaisParaCentavos(str) {
+  if (!str) return null;
+  // tira pontos de milhar e troca vírgula por ponto
+  const limpo = String(str).replace(/\./g, '').replace(',', '.');
+  const num = Number(limpo);
+  if (Number.isNaN(num)) return null;
+  return Math.round(num * 100);
+}
+
+//Handlebars.registerHelper('formatarDecimal_precocusto', function (valor) {
+//  return formatarDecimalDeCentavos(this.precocusto);
+//});
+
+//Handlebars.registerHelper('formatarDecimal_precovista', function (valor) {
+//  return formatarDecimalDeCentavos(this.precovista);
+//});
+
+//Handlebars.registerHelper('formatarDecimal_precoprazo', function (valor) {
+//  return formatarDecimalDeCentavos(this.precoprazo);
+//});
 </script>
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
         <script src="/js/dashboard.js"></script>
@@ -746,9 +876,6 @@ body {
         <script src="/js/rotinas/produto-editModal.js"></script>
         <script src="/js/rotinas/produto-DeleteModal.js"></script>
         <script src="/js/rotinas/AcaoComDataset.js"></script>
-</body>
-</html>    
-
 <!-- Modal para edição -->
 <div id="editModal"
   style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:9999;">
@@ -757,52 +884,128 @@ body {
     <h4>Editar Produto ??</h4>
     <form id="editForm">
       {{!-- <input type="text" id="editId" value=""> --}}
-      <div style="margin-bottom:10px;" >
-        <label>Id:</label>
-        <label type="text" id="editId" name="editid" class="form-control" style="background-color: rgb(223, 138, 11);color:#121010"></label>
+      <div class="edit-top-row" >
+            <div class="edit-top-col">
+              <label for="editId">Id:</label>
+              <div id="edit-Id" class="edit-id-box"></div>
+            </div>
+
+            <div class="edit-top-col">
+              <label for="editCodigo">Código J:</label>
+              <input type="text" id="editCodigo" name="codigo" class="form-control " >
+            </div>
       </div>
-      <div style="margin-bottom:10px;" >
-        <label>Código:</label>
-        <input type="text" id="editCodigo" name="codigo" class="form-control" style="background-color: yellow;color:#110b0b">
+      <div class="edit-top-row" >
+          <div class="edit-top-col" style="margin-bottom:10px;" >
+            <label for="editDescricao">Descrição:</label>
+            <input type="text" id="editDescricao" name="descricao" class="form-control">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;" >
+            <label for="editComplemento">Complemento:</label>
+            <input type="text" id="editComplemento" name="complemento" class="form-control">
+          </div>
       </div>
-      <div style="margin-bottom:10px;" >
-        <label>Descrição:</label>
-        <input type="text" id="editDescricao" name="descricao" class="form-control">
+      <div class="edit-top-row" >
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Refer:</label>
+            <input type="text" id="editRefer" name="refer" class="form-control">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Quantidade:</label>
+            <input type="number" id="editQte" name="qte" class="form-control">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label for="editAtivo">Ativar:</label>
+            <select id="editAtivo" name="ativo" class="form-control">
+                <option value="ATUAL"></option>   <!-- será preenchido via JS -->
+                <option value="true">Ativar</option>
+                <option value="false">Desativar</option>
+            </select>
+          </div>
       </div>
-       <div style="margin-bottom:10px;" >
-        <label>Complemento:</label>
-        <input type="text" id="editComplemento" name="complemento" class="form-control">
+      <div class="edit-top-row" >
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Preço Custo:</label>
+            <input type="text" step="any" id="editPrecoCusto" name="precocusto" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Preço Vista:</label>
+            <input type="textr" step="any" id="editPrecoVista" name="precovista" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Preço Prazo:</label>
+            <input type="text" step="any" id="editPrecoPrazo" name="precoprazo" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
       </div>
-      <div style="margin-bottom:10px;">
-        <label>Refer:</label>
-        <input type="text" id="editRefer" name="refer" class="form-control">
+       <legend style="font-size:small;color:#4d74ff">Localização atual</legend>
+       <hr class="mt-3 mb-2">
+       <div class="edit-top-row" style="margin-top: -5px;background:transparent;height: 7vh;padding-top: 0px;">
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Departamento atual:</label>
+            <input type="text" step="any" id="departamento-atual" name="departamento-atual" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Setores:</label>
+            <input type="textr" step="any" id="setor-atual" name="setor-atual" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Seções:</label>
+            <input type="text" step="any" id="secao-atual" name="secao-atual" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
       </div>
-       <div style="margin-bottom:10px;background-color:transparent;margin-bottom: 6px;">
-            <label style="background-color:transparent;width: 85px;padding: 5px;color:#110b0b">Fornecedor:</label>
-            <select id="editFornec" name="fornecedor" style="height: 3.2vh;width:70%;margin: auto;margin-left: 6px;margin-top: 3px;">
-              <option value="">Selecione:</option>
-                {{#each f}}
-                   <option value="{{_id}}">{{razao}} - {{marca}}</option>
-                {{/each}}
-        </select>
-        
-        {{!-- <input type="text" id="editFornec" name="fornec" class="form-control"> --}}
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Quantidade:</label>
-        <input type="number" id="editQte" name="qte" class="form-control">
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Preço Custo:</label>
-        <input type="number" step="any" id="editPrecoCusto" name="precocusto" class="form-control">
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Preço Vista:</label>
-        <input type="number" step="any" id="editPrecoVista" name="precovista" class="form-control">
-      </div>
-      <div style="margin-bottom:10px;">
-        <label>Preço Prazo:</label>
-        <input type="number" step="any" id="editPrecoPrazo" name="precoprazo" class="form-control">
+      <hr class="mt-3 mb-2">
+      <div class="localizacao-bloco mt-2 p-2 border rounded bg-light">
+        <h6 class="mb-2" style="font-weight:600;">Localização na loja</h6>
+
+        <div class="form-row">
+          <!-- DEPARTAMENTO -->
+          <div class="form-group col-md-4">
+            <label for="editDepartamento">Departamento</label>
+            <select
+              id="editDepartamento"
+              class="form-control form-control-sm"
+              data-campo="departamento"
+            >
+              <option value="">-- selecione --</option>
+              {{!-- departamentos deve vir do backend --}}
+              {{#each departamentos}}
+                <option value="{{this._id}}">
+                  {{this.nomeDepartamento}}
+                </option>
+              {{/each}}
+            </select>
+          </div>
+
+          <!-- SETOR -->
+          <div class="form-group col-md-4">
+            <label for="editSetor">Setor</label>
+            <select
+              id="editSetor"
+              class="form-control form-control-sm"
+              data-campo="setor"
+              disabled
+            >
+              <option value="">-- selecione --</option>
+            </select>
+          </div>
+
+          <!-- SEÇÃO (1 ou mais) -->
+          <div class="form-group col-md-4">
+            <label for="editSecao">Seção(s)</label>
+            <select
+              id="editSecao"
+              class="form-control form-control-sm"
+              data-campo="secao"
+              multiple
+              size="4"
+              disabled
+            >
+            </select>
+            <small class="form-text text-muted">
+              Use Ctrl (ou Shift) para selecionar mais de uma seção.
+            </small>
+          </div>
+        </div>
       </div>
       <button type="button" class="btn btn-secondary" onclick="closeEditModal(); window.limparMenuAcoes?.();">Cancelar</button>
       <button type="submit" class="btn btn-primary">Salvar</button>
@@ -870,6 +1073,13 @@ body {
 </div>
 
 <input id="miHiddenFile" type="file" accept="image/*" style="display:none" />
+</body>
+</html>   
+<script>
+  window.SETORES_POR_DEPTO = {{{json setoresPorDepto}}};
+  window.SECOES_POR_SETOR  = {{{json secoesPorSetor}}};
+  //console.log(window.SETORES_POR_DEPTO)
+</script>
 <script>
 // === CORE DOS SLOTS (precisa existir ANTES de usar resetSlots) ===
 const MAX_SLOTS = 7;
@@ -932,10 +1142,6 @@ function clearSlot(i){
   recompute();
 }
 </script>
-
-
-
-
 {{!-- <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> --}}
 {{!-- MOSTRANDO E ESCONDENDO MENU LATERAL --}}
 <script>
@@ -1054,7 +1260,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
         // limpa os destaques anteriores
         tableRows.forEach(r => r.classList.remove("edit-row", "delete-row"));
-        console.log('');
+        console.log('executarAcao');
         const produtoId=id;
         const departamentoNome=departamento;
         switch (acao) {
@@ -1155,17 +1361,17 @@ window.addEventListener("DOMContentLoaded", () => {
 (function(){
   let __lastSelect = null;
 
-  function resetSelect(sel){
+    function resetSelect(sel){
     try { sel.value = ''; sel.selectedIndex = 0; sel.blur(); } catch(_){}
   }
 
-  // Função chamada pelo onchange do <select>
- function abrirModalImagem(produtoId,descricao,fornecedor,departamento){
-  
-    const id   =produtoId;
-    alert("olâ!")
-       // await fetch('/editimagem/buscaproduto/`${id}`')
-    
+      // Função chamada pelo onchange do <select>
+    function abrirModalImagem(produtoId,descricao,fornecedor,departamento){
+      
+        const id   =produtoId;
+        alert("olâ!")
+          // await fetch('/editimagem/buscaproduto/`${id}`')
+        
     }
 
     // 2) Demais ações -> delega para sua função antiga (já testada no projeto)
@@ -1188,51 +1394,6 @@ window.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 
-{{!-- </script> --}}
-{{!-- // Função chamada pelo onchange do <select> --}}
-{{!-- //  window.executarXAcaoComDataset = function(sel){
-//    const acao = (sel.value || '').trim();
-/    const id   = sel.dataset.id;
-    const desc = sel.dataset.descricao || '';
-    const forn = sel.dataset.fornecedor || '';
-    const dept = sel.dataset.departamento || '';
-
-    console.log('[AÇÕES] change =>', { acao, id, desc, forn, dept });
-
-    __lastSelect = sel;
-    resetSelect(sel);                 // limpa já, para permitir escolher a mesma ação depois
-
-    {{!-- // 1) Imagens -> modal novo --}}
-    if (acao === 'imagens'){
-      if (typeof window.abrirXModalImagem === 'function'){
-        console.log('[AÇÕES] abrirXModalImagem()');
-        window.abrirXModalImagem({ produtoId: id, descricao: desc, fornecedor: forn, departamento: dept });
-      } else {
-        consoleX.error('[AÇÕES] abrirXModalImagem não encontrado no window');
-      }
-      return;
-    }
-
-    {{!-- // 2) Demais ações -> delega para sua função antiga (já testada no projeto) --}}
-    if (typeof window.executarAcao === 'function'){
-      console.log('[AÇÕES] delegando para executarAcao()');
-      window.executarAcao(acao, id, desc, forn, dept);
-    } else {
-      consoleX.error('[AÇÕES] executarAcao não encontrado no window');
-    }
-  };
-
-  {{!-- // Fechou modal? garante reset do último select, por via das dúvidas --}}
-  ['modalImagem','modalVinculo','editModal'].forEach(id=>{
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener('click', e => { if (e.target === el && __lastSelect) resetSelect(__lastSelect); });
-    el.querySelectorAll('.btn-close, #miClose').forEach(b => b.addEventListener('click', ()=>{ if (__lastSelect) resetSelect(__lastSelect); }));
-  });
-  window.addEventListener('keydown', e => { if (e.key === 'Escape' && __lastSelect) resetSelect(__lastSelect); }); --}}
-{{!-- })(); --}}
-
-{{!-- </script> --}}
 <script>
   //window.executarAcaoXComDataset = function(sel){
   //const acao   = sel.value;
@@ -1256,69 +1417,68 @@ window.addEventListener("DOMContentLoaded", () => {
   
 
     // Dispara a ação escolhida (com logs e fallbacks)
-  console.log('[acao]', acao, dados);
+  //console.log('[acao]', acao, dados);
 
-  if (acao === 'imagens'){
+  //if (acao === 'imagens'){
     //console.log('ação Imagem')
-    //if (typeof window.abriXrModalImagem === 'function'){
-    //  window.abrirXModalImagem({
-    //    produtoId:    dados.id,
-    //    descricao:    dados.descricao,
-    //    fornecedor:   dados.fornecedor,
-    //    departamento: dados.departamento
-    //  });
-    //  return;
-    console.log('dentro')
-    }
+  //    if (typeof window.abriXrModalImagem === 'function'){
+  //      window.abrirXModalImagem({
+  //        produtoId:    dados.id,
+  //        descricao:    dados.descricao,
+  //        fornecedor:   dados.fornecedor,
+  //        departamento: dados.departamento
+  //        
+  //      })  
+        //return;
+        
+  //    }
+  //}
+  //else if (acao === 'vincular'){
+  //  console.log(' 1331')
+    // nome que você já usava
+  //  if (typeof window.abrirModalVinculoProduto === 'function'){
+  //    window.abrirModalVinculoProduto(dados.id);
+      //return;
+  //  }
+    // fallback para um possível nome alternativo
+  //  if (typeof window.abrirModalVinculo === 'function'){
+  //    window.abrirModalVinculo(dados);
+      //return;
+   // }
+  //}
+  //else if (acao === 'editar'){
+  //  console.log(' dados Id',dados.id)
+  //  if (typeof window.openEditModal === 'function'){
+  //    window.openEditModal(dados.id);
+      //return;
+  //  }
+  //  if (typeof window.abrirModalEditar === 'function'){
+  //    window.abrirModalEditar(dados);
+  //    //return;
+  //  }
+  //}
+  //else if (acao === 'deletar'){
+  //  if (typeof window.deleteProduct === 'function'){
+  //    window.deleteProduct(dados.id);
+      //return;
+  //  }
+  //  if (typeof window.excluirProduto === 'function'){
+   //   window.excluirProduto(dados.id);
+      //return;
+   // }
   //}
 
-  else if (acao === 'vincular'){
-    console.log(' 1331')
-    // nome que você já usava
-    if (typeof window.abrirModalVinculoProduto === 'function'){
-      window.abrirModalVinculoProduto(dados.id);
-      return;
-    }
-    // fallback para um possível nome alternativo
-    if (typeof window.abrirModalVinculo === 'function'){
-      window.abrirModalVinculo(dados);
-      return;
-    }
-  }
-
-  else if (acao === 'editar'){
-    if (typeof window.openEditModal === 'function'){
-      window.openEditModal(dados.id);
-      return;
-    }
-    if (typeof window.abrirModalEditar === 'function'){
-      window.abrirModalEditar(dados);
-      return;
-    }
-  }
-
-  else if (acao === 'deletar'){
-    if (typeof window.deleteProduct === 'function'){
-      window.deleteProduct(dados.id);
-      return;
-    }
-    if (typeof window.excluirProduto === 'function'){
-      window.excluirProduto(dados.id);
-      return;
-    }
-  }
-
   // Fallback definitivo: usa a função antiga que você já tinha
-  if (typeof window.executarAcao === 'function'){
-    console.warn('[fallback executarAcao()]');
-    window.executarAcao(acao, dados.id, dados.descricao, dados.fornecedor, dados.departamento);
-  } else {
-    console.error('Nenhuma função encontrada para a ação:', acao);
-  }
+//  if (typeof window.executarAcao === 'function'){
+//    console.warn('[fallback executarAcao()]');
+//    window.executarAcao(acao, dados.id, dados.descricao, dados.fornecedor, dados.departamento);
+//  } else {
+//    console.error('Nenhuma função encontrada para a ação:', acao);
+ // }
 
-};
+//};
 </script>
-
+<script>
 (() => {
   window.executarAcaoComDataset = function(sel){
     window.setLastActionSelect?.(sel);
@@ -1338,3 +1498,46 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   };
 })();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const selAtivo      = document.getElementById('filtroAtivo');
+  const selFornecedor = document.getElementById('filtroFornecedor');
+
+  if (selAtivo) {
+    selAtivo.addEventListener('change', aplicarFiltros);
+  }
+  if (selFornecedor) {
+    selFornecedor.addEventListener('change', aplicarFiltros);
+  }
+
+  function aplicarFiltros() {
+    const ativo       = selAtivo ? selAtivo.value : 'S';
+    const fornecedor  = selFornecedor ? selFornecedor.value : 'todos';
+
+    const url = new URL(window.location.href);
+
+    // lojista já está na URL (não mexe)
+    // Ativo
+    if (ativo && ativo !== 'S') {
+      url.searchParams.set('ativo', ativo);
+    } else {
+      // se for "S", nem precisa mandar (é o default no backend)
+      url.searchParams.delete('ativo');
+    }
+
+    // Fornecedor
+    if (fornecedor && fornecedor !== 'todos') {
+      url.searchParams.set('fornecedor', fornecedor);
+    } else {
+      url.searchParams.delete('fornecedor');
+    }
+
+    // volta pra página 1 sempre que mudar filtro
+    url.searchParams.set('page', 1);
+
+    window.location.href = url.toString();
+  }
+});
+</script>
+

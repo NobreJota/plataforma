@@ -10,8 +10,8 @@ const Departamento = require('../../models/departamento');
 ////////////////////////////////////////////////
 require('../../models/lojista');
 const Lojista = mongoose.model('lojista');
-require('../../models/deptosetores');
-require('../../models/deptosecao');
+const DeptoSetores=require('../../models/deptosetores');
+const DeptoSecoes=require('../../models/deptosecao');
 
 //require('../../models/ddocumento');
 const Ddocumento=mongoose.model('arquivo_doc');
@@ -25,20 +25,10 @@ function ensureLojista(req, res, next) {
 //CONFERE SE O USUARIO É VERDADEIRO
 router.post('/cooperados',async(req,res)=>{
     console.log('');
-    //console.log('[ 23-central ]',req.body)
     console.log('');
     ////////////////////////////////////////////////////////////////////////
     // Confere o login do cooperado
     ////////////////////////////////////////////////////////////////////////
-    //console.log('');
-    console.log('___________________________________________');
-    //console.log('');
-    //console.log(" [ 31 ]");
-    //console.log(' origem views : _cooperado/usuario/loginloja');
-    //console.log(' origem route : [loja=/lojista/empresa/rotina]');
-    //console.log(' obs : ');
-    //console.log('');
-    //console.log(' destino : _cooperado/admin/admincooperados');
     console.log('____________________________________________');
     console.log('');
     let errors = [];
@@ -94,27 +84,39 @@ router.post('/cooperados',async(req,res)=>{
          }
 });
 
-
-
-            // GET /loja/cooperados — lista paginada com filtros
+// GET /loja/cooperados — lista paginada com filtros
 router.get('/cooperados', ensureLojista, async (req, res) => {
     try {
           const loja_number = req.session.lojistaId; // vem da sessão
-
+          //////////////////////////////////////////////////////////////////
+          console.log(req.query)
+          // console.log('[ 93 /cooperados=>loja-number ]',loja_number);
+          console.log('');
+          ///////////////////////////////////////////////////////////////////
           // paginação
           const page  = Math.max(parseInt(req.query.page || '1', 10), 1);
           const limit = 50;
           const skip  = (page - 1) * limit;
 
           // filtros
-          const status = String(req.query.status || '').toLowerCase(); // '' | 'ativos' | 'inativos'
+          const statusAtivo = String(req.query.ativo || 'S').toUpperCase(); // '' | 'ativos' | 'inativos'
+
           const fornId = String(req.query.fornecedor || '').trim();
           const modo   = String(req.query.modo || 'lista').toLowerCase();
+          console.log('-------------------------------------------------');
+          console.log('fornId [ 106 ] /cooperados CORRIGIR-sem valor fornId',fornId);
+          console.log('');
 
           const filtro = { loja_id: loja_number };
-          if (status === 'ativos')   filtro.$or   = [{ ativo: 1 }, { ativo: { $exists: false } }];
-          if (status === 'inativos') filtro.ativo = 9;
-          if (fornId)                filtro.fornecedor = fornId;
+
+          if (statusAtivo === 'S') {
+            filtro.ativo = true;          // só ATIVOS
+          } else if (statusAtivo === 'N') {
+            filtro.ativo = false;         // só INATIVOS
+          }
+          if (fornId) {
+            filtro.fornecedor = fornId;
+          }
 
           // count + busca
           const [total, produtos, fornecedores, lojista] = await Promise.all([
@@ -142,11 +144,65 @@ router.get('/cooperados', ensureLojista, async (req, res) => {
 
           // query base sem 'page'
           const params = new URLSearchParams();
-          if (status) params.set('status', status);
+          //if (statusAtivo) params.set('status', statusAtivo);
+          if (statusAtivo) params.set('ativo', statusAtivo);    // 'N' ou 'T'
           if (fornId) params.set('fornecedor', fornId);
           if (modo)   params.set('modo',   modo);
           const qsNoPage = params.toString();
+          //////////////////////////////////////////////////////////////////////
+                    // ===============================
+          //   DEPARTAMENTOS / SETORES / SEÇÕES
+          // ===============================
+          const departamentos = await Departamento.find({}).lean();
+          const setores       = await DeptoSetores.find({loja_id:loja_number}).lean();
+          const secoes        = await DeptoSecoes.find({}).lean();
 
+          //console.log('[]',setores)
+          // monta os mapas para os selects em cascata
+          const SETORES_POR_DEPTO = {};
+          setores.forEach(setor => {
+            const depIdRaw =
+              setor.departamentoId ||
+              setor.idDepto ||
+              (setor.departamento && setor.departamento._id) ||
+              null;
+
+            const depId = depIdRaw ? String(depIdRaw) : null;
+            if (!depId) return;
+
+            if (!SETORES_POR_DEPTO[depId]) SETORES_POR_DEPTO[depId] = [];
+
+            SETORES_POR_DEPTO[depId].push({
+              _id: setor._id,
+              nomeSetor:
+                setor.nomeDeptoSetor ||
+                setor.nomeDeptoSetor ||
+                setor.descricao ||
+                "(sem nome)",
+            });
+          });
+
+          //console.log('SETORES_POR_DEPTO',SETORES_POR_DEPTO)
+          const SECOES_POR_SETOR = {};
+          secoes.forEach(sec => {
+            const setorIdRaw =
+              sec.idSetor ||
+              sec.setorId ||
+              (sec.setor && sec.setor._id) ||
+              null;
+
+            const setorId = setorIdRaw ? String(setorIdRaw) : null;
+            if (!setorId) return;
+
+            if (!SECOES_POR_SETOR[setorId]) SECOES_POR_SETOR[setorId] = [];
+
+            SECOES_POR_SETOR[setorId].push({
+              _id: sec._id,
+              nomeSecao: sec.nameSecao || sec.descricao || "(sem nome)",
+            });
+          });
+          /////////////////////////////////////////////////////////////////////////
+          //////////////////////////////////////////////////////////////////////////
           // render
           // 'empresa/empresa-produto.handlebars'
           res.render('pages/empresa/cooperado-admin.handlebars', {
@@ -157,18 +213,19 @@ router.get('/cooperados', ensureLojista, async (req, res) => {
             lojista,
             total, page, pages, limit,
             pageNumbers, qsNoPage,
-            statusSelecionado: status,
+            filtroAtivo: statusAtivo,
+            //statusSelecionado: status,
             fornecedorSelecionado: fornId,
-            modoSelecionado: modo
+             modoSelecionado: modo,
+             departamentos,
+             setoresPorDepto: SETORES_POR_DEPTO,
+             secoesPorSetor:  SECOES_POR_SETOR,
           });
     } catch (err) {
           console.error(err);
             res.status(500).send('Erro ao carregar a lista.');
     }
 });
-
-                          // }); 
-
 
 router.get("/produtos", async (req, res) => {
   console.log('');
@@ -242,7 +299,6 @@ router.get("/produtos", async (req, res) => {
       //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       
 });
- 
 
 router.post('/usuarioloja/login', async (req, res) => {
   try {

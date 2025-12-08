@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="utf-8" />
+  {{!-- essa page é para ajustar/editar algun campos que foram importados que estão diferente do nosso modelo --}}
   <title>Ajuste de itens importados</title>
   <style>
     body{
@@ -188,9 +189,10 @@
 
 .modal-ajuste{
   background: #fff;
+  width: 90vh;
   min-width: 480px;
   max-width: 800px;
-  max-height: 80vh;
+  max-height: 90vh;
   border-radius: 6px;
   box-shadow: 0 4px 18px rgba(0,0,0,.35);
   display: flex;
@@ -199,11 +201,20 @@
   font-size: 14px;
 }
 
-.modal-ajuste-header,
+.modal-ajuste-header{
+  background: #f5f5f5;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+/*.modal-ajuste-header,
 .modal-ajuste-footer{
   padding: 8px 12px;
   border-bottom: 1px solid #ddd;
-}
+}*/
 
 .modal-ajuste-footer{
   border-top: 1px solid #ddd;
@@ -212,14 +223,16 @@
 }
 
 .modal-ajuste-body{
-  padding: 8px 12px;
-  overflow: auto;
+   padding: 10px 12px;
+  overflow-y: auto;
+  max-height: 70vh; 
+  background: #3cff00;
 }
 
 .btn-fechar-modal{
   border: none;
-  background: none;
-  font-size: 20px;
+  background:transparent;
+  font-size: 1.4rem;
   line-height: 1;
   cursor: pointer;
   padding: 0 4px;
@@ -231,7 +244,7 @@
   justify-content: space-between;
   gap: 8px;
 }
-
+/*////////////////////////////////////////////////////////////*/
 .campo-modal{
   display: flex;
   flex-direction: column;
@@ -255,6 +268,139 @@
   font-weight: 600;
 }
 
+.linha-editada {
+    background-color: #c62828 !important; /* vermelho */
+    color: #fff !important;               /* texto branco */
+  }
+
+  /* se quiser que os <td> também forcem texto branco */
+  .linha-editada td {
+    color: #fff !important;
+  }
+
+  /* ===========================
+   BLOCO LOCALIZAÇÃO NO MODAL
+   =========================== */
+
+.localizacao-bloco {
+  background-color: #6a0273;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 10px;
+  margin: 0 12px 8px;
+  margin-top: 8px;
+}
+
+/* Título “Localização na loja” */
+.localizacao-bloco h6 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color:red;
+  margin: 0 0 6px 0;
+}
+
+.localizacao-bloco label{
+  color: #fff;
+  font-weight: 500;
+}
+
+
+.localizacao-bloco select{
+  background: #3b0043;
+  color: #fff;
+  border-color: #c3bbaf;
+}
+
+/* texto de ajuda das seções */
+.localizacao-bloco small.form-text{
+  color: #f3e2ff;
+}
+
+/* BOTÕES */
+.btn-salvar,
+.btn-fechar{
+  padding: 5px 14px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.btn-salvar{
+  background: #007bff;
+  color: #fff;
+}
+
+.btn-salvar:hover{
+  background: #005ec4;
+}
+
+.btn-fechar{
+  background: #6c757d;
+  color: #fff;
+}
+
+.btn-fechar:hover{
+  background: #545b62;
+}
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/* Ajuste de espaçamento entre os 3 selects */
+.localizacao-bloco .form-row {
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.localizacao-bloco .form-group {
+  padding-right: 5px;
+  padding-left: 5px;
+  margin-bottom: 6px;
+}
+
+/* Deixa os selects mais compactos */
+.localizacao-bloco .form-control {
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  height: calc(1.6em + 0.5rem + 2px);
+  background: #045172;
+  color:#fff;
+}
+
+/* Select múltiplo de Seções: um pouco mais alto */
+#selSecao.form-control {
+  height: auto;           /* deixa o size="4" mandar na altura */
+  min-height: 90px;
+}
+
+/* Texto de ajuda embaixo do select de seções */
+.localizacao-bloco small.form-text {
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+
+/* Quando o select estiver desabilitado, deixa visualmente mais apagado */
+.localizacao-bloco select:disabled {
+  background-color: #eee;
+  cursor: not-allowed;
+}
+
+/* Opcional: linha do modal mais “separada” dos campos anteriores */
+.localizacao-bloco + * {
+  margin-top: 6px;
+  background:transparent;
+}
+
+.tirahorizontal{
+  width: 99%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: #007bff;
+  border-bottom: 2px solid #fff;
+}
 </style>
 </head>
 <body>
@@ -262,7 +408,7 @@
     <div class="barra-topo-ajuste">
             <div class="campo-topo">
                 <label>loja_id</label>
-                <input type="text" value="{{lojista._id}}" readonly>
+                <input type="text" id="loja_id" value="{{lojista._id}}" readonly>
             </div>
             <div class="campo-topo">
                 <label>marca</label>
@@ -278,7 +424,7 @@
             </div>
             <div class="campo-topo">
                 <label>fornecedor</label>
-                <input type="text" value="{{fornecedor._id}}" readonly>
+                <input type="text" id="fornecedor-id" value="{{fornecedor._id}}" readonly>
             </div>
             <div class="campo-topo">
                 <div class="box-cols" style=" height:auto;display: flex;flex-direction: row;justify-content: space-between;">
@@ -298,8 +444,8 @@
     </div>
     {{!-- ........................................................................................... --}}
  
-   <div class="tabela-container">
-        <table id="tabelaAjuste" class="table-ajuste">
+    <div class="tabela-container">
+        <table id="tabelaAjuste" class="table-ajuste" style="background-color: #7d817c;">
             <thead >
                 <tr>
                 {{!-- CABEÇALHO DINÂMICO: TODOS OS CAMPOS DO arquivoDoc --}}
@@ -309,54 +455,201 @@
                 </tr>
             </thead>
             <tbody>
-                {{!-- PARA CADA ITEM IMPORTADO --}}
                 {{#each itens}}
-                <tr data-id="{{this._id}}">
-                    {{!-- PARA CADA CAMPO DO arquivoDoc, pega o valor dinâmico do item --}}
+                  <tr data-id="{{this._id}}">
                     {{#each ../camposTabela}}
-                    <td>{{lookup ../this this}}</td>
+                      <td>
+                       {{#if (eq this "localloja")}}
+                            {{formatLocalloja ../this}}
+                          {{else}}
+                            {{lookup ../this this}}
+                       {{/if}}
+                      </td>
                     {{/each}}
-                </tr>
+                  </tr>
                 {{/each}}
             </tbody>
         </table>
     </div>
-    <!-- ============================
-     MODAL DE EDIÇÃO DE ITENS
-     ============================ -->
+    <div class="text-center my-3">
+     <button id="btnTransferirItens"
+          class="btn btn-primary btn-lg"
+          style="min-width: 260px; font-weight: 600;">
+       transferir itens
+     </button>
+    </div>
+<!-- ============================
+   MODAL DE EDIÇÃO DE ITENS
+============================ -->
 <div id="modalEdicao" class="modal-ajuste-backdrop">
-  <div class="modal-ajuste">
-    <div class="modal-ajuste-header">
-      <span id="modalEdicaoTitulo">Editar item</span>
-      <button type="button" id="btnFecharModal" class="btn-fechar-modal">&times;</button>
-    </div>
+      <div class="modal-ajuste">
+        <div class="modal-ajuste-header">
+          <span id="modalEdicaoTitulo">Editar item</span>
+          <button type="button" id="btnFecharModal" class="btn-fechar-modal">&times;</button>
+        </div>
+        <div id="modalEdicaoBody" class="modal-ajuste-body">   <!-- campos gerados via JS --></div>
+            <hr class="mt-3 mb-2">
+            <input type="text" id="idItemEditar">
+            <div class="localizacao-bloco">
+              <h6>
+                Localização na loja
+              </h6>
+              <div class="form-row" style="">
+                  <!-- DEPARTAMENTO -->
+                  <div class="form-group col-md-4 tirahorizontal" >
+                        <div style="width: 30%;background:transparent;padding: 4px;">
+                          <label for="selDepartamento">Departamento</label>
+                        </div>
+                        <div style="width: 69%;background: #045172;">
+                            <select id="selDepartamento" class="form-control form-control-sm" data-campo="departamento" style="width: 100%;">
+                              <option value="">-- selecione --</option>
+                              {{#each departamentos}}
+                                <option value="{{this._id}}">
+                                  {{this.nomeDepartamento}}
+                                </option>
+                              {{/each}}
+                            </select>
+                        </div>
+                  </div>
+                  <!-- SETOR (depende do departamento) -->
+                  <div class="form-group col-md-4 tirahorizontal" >
+                    <div style="width: 30%;background:transparent;padding: 4px;">
+                      <label for="selSetor" style="color:#fff;">Setor :</label>
+                    </div>
+                    <div style="width: 69%;background: #045172;">
+                    <select id="selSetor" class="form-control form-control-sm" data-campo="setor" disabled style="width: 100%;color:#fff;" >
+                      <option value="">-- selecione --</option>
+                      {{!-- opções serão carregadas via JS quando escolher o departamento --}}
+                    </select>
+                    </div>
+                  </div>
+                  <!-- SEÇÃO (1 ou mais, depende do setor) -->
+                  <div class="form-group col-md-4 tirahorizontal" >
+                     <div style="width: 30%;background:transparent;padding: 4px;">
+                    <label for="selSecao" style="width: 28%;">Seção(s)</label>
+                    </div>
+                    <div style="width: 69%;background: #045172;">
+                    <select  id="selSecao"  class="form-control form-control-sm"  data-campo="secao" multiple size="4"  disabled style="width: 100%;margin-right: 3px;height: 20vh;">
+                      {{!-- opções serão carregadas via JS quando escolher o setor --}}
+                    </select>
+                    </div>
+                   
+                  </div>
+                   <div>
+                    <small class="form-text text-muted">
+                      Use Ctrl (ou Shift) para selecionar mais de uma seção.
+                    </small>
+                    </div>
+              </div>
+            </div>
+            {{!-- <div class="modal-ajuste-footer" > --}}
+                    {{!-- <button type="button"
+                            id=""
+                            class="btn-fechar" style="margin-right: 10px;">
+                      Fechar
+                    </button> --}}
+            <div class="modal-ajuste-footer text-right" style="margin-bottom: 10px;">
+                <button type="button" id="btnFecharModalFooter" class="btn-salvar" style="background: #000000;">Fechar</button>
+                <button type="button" id="btnDelete" class="btn-salvar" style="background: red;color:#fff;">Delete</button>
+                <button type="button" id="btnSalvarEdicao" class=" btn-salvar">Salvar alterações</button>
+            </div>
 
-    <div id="modalEdicaoBody" class="modal-ajuste-body">
-      <!-- campos gerados via JS -->
-    </div>
-
-    <div class="modal-ajuste-footer">
-      <button type="button" id="btnFecharModal2">Fechar</button>
-      <button type="button" id="btnSalvarModal">Salvar</button>
-    </div>
-  </div>
+                    {{!-- <button type="button"
+                            id=""
+                            class="" style="margin-right: 20px;">
+                      Salvar alterações
+                    </button>
+            </div> --}}
+      </div>
 </div>
 <script>
+  window.SETORES_POR_DEPTO = {{{setoresPorDeptoJson}}} || {};
+  window.SECOES_POR_SETOR  = {{{secoesPorSetorJson}}}  || {};
+  let itemEditandoId = null;
+</script>
+
+<script>
 document.addEventListener("DOMContentLoaded", () => {
-  const table  = document.getElementById("tabelaAjuste");
-  if (!table) return;
+  /* =====================================================
+     PARTE 0 – ELEMENTOS PRINCIPAIS
+     ===================================================== */
+  const table        = document.getElementById("tabelaAjuste");
+  const painel       = document.getElementById("panelCols");
+  const lista        = document.getElementById("listaColsOcultas");
+  const btnAll       = document.getElementById("btnMostrarColunas"); // botão "All col"
+  const btnEye       = document.getElementById("btnToggleCols");      // botão do "olho"
+  const ths          = table ? table.querySelectorAll("thead th") : [];
+  
+  // Modal
+  const modal        = document.getElementById("modalEdicao");
+  const modalBody    = document.getElementById("modalEdicaoBody");
+  const modalTitulo  = document.getElementById("modalEdicaoTitulo");
+  const btnClose1    = document.getElementById("btnFecharModal");
+  const btnClose2    = document.getElementById("btnFecharModal2");
+  const btnSalvar    = document.getElementById("btnSalvarEdicao");
+  const btnDelete = document.getElementById("btnDeleteItem");
 
-  const ths    = table.querySelectorAll("thead th");
-  const painel = document.getElementById("panelCols");
-  const lista  = document.getElementById("listaColsOcultas");
-  const btnAll = document.getElementById("btnMostrarColunas"); // botão "All col"
-  const btnEye = document.getElementById("btnToggleCols");      // botão do "olho" (se tiver)
+  // Selects de localização
+  const selDepartamento = document.getElementById("selDepartamento");
+  const selSetor        = document.getElementById("selSetor");
+  const selSecao        = document.getElementById("selSecao");
 
-  /* ======================================
-     PARTE 1 – ESCONDER / MOSTRAR COLUNAS
-     ====================================== */
+  function limparLocalizacaoModal() {
+          // departamento volta para a primeira opção
+          if (selDepartamento) {
+            selDepartamento.value = "";
+          }
 
-  // cabeçalho clicável
+          // setor: limpa opções e desabilita
+          if (selSetor) {
+            selSetor.innerHTML = '<option value="">-- selecione --</option>';
+            selSetor.disabled = true;
+          }
+
+          // seções: limpa opções e desabilita
+          if (selSecao) {
+            selSecao.innerHTML = "";
+            selSecao.disabled = true;
+          }
+  }
+
+  function limparModalEdicaoCampos() {
+    if (modalBody) {
+      modalBody.innerHTML = "";
+    }
+    limparLocalizacaoModal();
+  }
+
+  const btnFecharModal = document.getElementById("btnFecharModal"); // X
+  const btnFechar      = document.getElementById("btnFechar"); 
+
+  function fecharModalEdicao() {
+      document.getElementById("modalEdicao").style.display = "none";
+  }
+
+  btnFecharModal?.addEventListener("click", () => {
+    limparModalEdicaoCampos();   // ou limparLocalizacaoModal();
+    fecharModalEdicao();
+  });
+
+  btnFechar?.addEventListener("click", () => {
+    limparModalEdicaoCampos();   // ou limparLocalizacaoModal();
+    fecharModalEdicao();
+  });
+  // Dados de apoio vindos do backend (se existirem)
+  //const SETO-RES_POR_DEPTO = {{{ json setoresPorDepto }}};
+  //const SE-COES_POR_SETOR  = {{{ json secoesPorSetor }}};
+
+  // Guarda qual linha está sendo editada
+  let linhaAtual = null;
+
+  if (!table) return; // segurança
+  
+  /* =====================================================
+     PARTE 1 – ESCONDER / MOSTRAR COLUNAS (CABEÇALHO)
+     ===================================================== */
+
+  // deixa todos os TH clicáveis
   ths.forEach((th, index) => {
     th.style.cursor = "pointer";
     th.title = "Clique para ocultar / mostrar esta coluna";
@@ -429,7 +722,7 @@ document.addEventListener("DOMContentLoaded", () => {
     painel.style.display = lista.children.length ? "block" : "none";
   }
 
-  // botão "All col"
+  // Botão "All col" – mostra tudo de volta
   if (btnAll) {
     btnAll.addEventListener("click", () => {
       const linhas = table.querySelectorAll("tr");
@@ -443,7 +736,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // botão do "olho" (mostrar/esconder painel manualmente)
+  // Botão do olho – abre/fecha o painel manualmente
   if (btnEye && painel) {
     btnEye.addEventListener("click", () => {
       const visivel = painel.style.display === "block";
@@ -451,31 +744,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // estado inicial do painel
   atualizarVisibilidadePainel();
 
-  /* ======================================
-     PARTE 2 – MODAL DE EDIÇÃO
-     ====================================== */
+  /* =====================================================
+     PARTE 2 – MODAL DE EDIÇÃO (ABRIR AO CLICAR NO CÓDIGO)
+     ===================================================== */
 
-  const modal       = document.getElementById("modalEdicao");
-  const modalBody   = document.getElementById("modalEdicaoBody");
-  const modalTitulo = document.getElementById("modalEdicaoTitulo");
-  const btnClose1   = document.getElementById("btnFecharModal");
-  const btnClose2   = document.getElementById("btnFecharModal2");
-  const btnSalvar   = document.getElementById("btnSalvarModal");
-
-  // guardamos qual linha está sendo editada
-  let linhaAtual = null;
-
-  // índice da coluna "codigo"
+  // Descobre índice da coluna "codigo"
   const idxCodigo = Array.from(ths).findIndex(th =>
     th.textContent.trim().toLowerCase() === "codigo"
   );
 
-  // adiciona evento de clique na coluna código
+  // coloca o clique na coluna código para abrir o modal
   if (idxCodigo !== -1 && modal && modalBody) {
     const linhas = table.querySelectorAll("tbody tr");
-
+   
     linhas.forEach(tr => {
       const celCodigo = tr.children[idxCodigo];
       if (!celCodigo) return;
@@ -495,7 +779,10 @@ document.addEventListener("DOMContentLoaded", () => {
     linhaAtual = tr;
     modalBody.innerHTML = "";
 
-    // título: "Editar item XXX"
+    const idItem=linhaAtual.dataset.id
+    document.getElementById('idItemEditar').value = idItem;
+
+    // título do modal
     if (modalTitulo) {
       let codigo = "";
       if (idxCodigo !== -1 && tr.children[idxCodigo]) {
@@ -506,7 +793,7 @@ document.addEventListener("DOMContentLoaded", () => {
         : "Editar item";
     }
 
-    // cria um input para cada coluna visível
+    // Cria um input simples para cada coluna visível
     ths.forEach((th, idx) => {
       const visivel = th.style.display !== "none";
       if (!visivel) return;
@@ -528,7 +815,7 @@ document.addEventListener("DOMContentLoaded", () => {
       input.value = valorTxt;
       input.dataset.colIndex = idx; // índice da coluna
 
-      // código somente leitura (se quiser)
+      // código somente leitura
       if (idx === idxCodigo) {
         input.readOnly = true;
         input.classList.add("campo-codigo");
@@ -539,6 +826,7 @@ document.addEventListener("DOMContentLoaded", () => {
       modalBody.appendChild(campoDiv);
     });
 
+    // (os selects de departamento/setor/seção já estão fixos no HTML do modal)
     modal.classList.add("aberto");
   }
 
@@ -558,80 +846,553 @@ document.addEventListener("DOMContentLoaded", () => {
       if (ev.target === modal) fecharModalEdicao();
     });
   }
+  ///////////////////////////////////////////////////////////////////////
+  function abrirModalEditarItem(item){
+  itemEditandoId = item._id;       // <-- guarda o id
 
-  /* ======================================
-     PARTE 3 – SALVAR (POST PRO BACKEND)
-     ====================================== */
+  document.getElementById('edtNumeroItem').textContent = item.codigo || '';
+  document.getElementById('edtCodigo').value      = item.codigo      || '';
+  // ...preencher os demais campos...
 
+  // preencher selects de localização se já vierem do item
+  // (ajuste os nomes conforme seu objeto "item")
+  if (item.localloja) {
+    if (item.localloja.departamento) {
+      document.getElementById('selDepartamento').value = item.localloja.departamento;
+    }
+    // depois você pode disparar o carregamento dos setores/ seções aqui...
+  }
+
+  $('#modalEditarItem').modal('show'); // se estiver usando Bootstrap+jQuery
+}
+
+/////////////////////////////////////////////////////////////////////////////
+document.addEventListener('DOMContentLoaded', () => {
+  const btnSalvar = document.getElementById('btnSalvarEdicao');
+   alert("dentro!")
   if (btnSalvar) {
-    btnSalvar.addEventListener("click", async () => {
-      if (!linhaAtual) {
-        alert("Nenhuma linha selecionada.");
+    btnSalvar.addEventListener('click', async () => {
+      if (!itemEditandoId) {
+        alert('Nenhum item selecionado para edição.');
         return;
       }
 
-      const idItem = linhaAtual.dataset.id;
-      if (!idItem) {
-        alert("ID do item não encontrado na linha.");
-        return;
-      }
-
-      // monta objeto de updates { campo: valor }
-      const inputs = modalBody.querySelectorAll("input");
-      const updates = {};
-
-      inputs.forEach(input => {
-        const idx = Number(input.dataset.colIndex);
-        if (Number.isNaN(idx)) return;
-
-        const campo = ths[idx].textContent.trim(); // nome do campo vem do cabeçalho
-        const valor = input.value;
-
-        // se não quiser permitir alterar o código, pode pular aqui também
-        updates[campo] = valor;
-      });
-
+      const body = {
+        _id: itemEditandoId,
+        codigo:     document.getElementById('edtCodigo').value.trim(),
+        // coloque aqui os outros campos do topo do modal:
+        // descricao, complete, referencia1, similares etc.
+        descricao:  document.getElementById('edtDescricao')?.value.trim() || '',
+        complete:   document.getElementById('edtComplete')?.value.trim() || '',
+        referencia1:document.getElementById('edtReferencia1')?.value.trim() || '',
+        similares:  document.getElementById('edtSimilares')?.value.trim() || '',
+        // Localização
+        departamento: document.getElementById('selDepartamento').value || null,
+        setor:        document.getElementById('selSetor').value        || null,
+        secoes: Array.from(
+          document.getElementById('selSecao').selectedOptions || []
+        ).map(o => o.value)
+      };
+      console.log('=============================================================')
+      console.log(body);
+      console.log('=============================================================')
+      //{{!-- AQUI ESTÁ DESATIVADA --}}
       try {
-        const resp = await fetch("/importtabela/importacao/ajuste/salvar", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ idItem, updates })
+        const resp = await fetch(`/importtabela/importacao/ajuste/item/${itemEditandoId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
         });
 
         if (!resp.ok) {
-          const erro = await resp.json().catch(() => ({}));
-          alert("Erro ao salvar: " + (erro.error || resp.statusText));
-          return;
+          throw new Error('Erro na gravação');
         }
 
-        const data = await resp.json(); // { ok:true, item: {...} }
-       
-        // atualiza a linha na tabela com os valores retornados
-        const item = data.item || {};
-        ths.forEach((th, idx) => {
-          const campo = th.textContent.trim();
-          if (!campo) return;
+        const atualizado = await resp.json();
 
-          const novoValor = item[campo];
-          if (novoValor === undefined) return;
+        // aqui você pode atualizar a linha da tabela na tela se quiser
+        // por enquanto, só fecha o modal:
+        $('#modalEditarItem').modal('hide');
 
-          const td = linhaAtual.children[idx];
-          if (td) td.textContent = novoValor;
-        });
-
-        alert("Item atualizado com sucesso!");
-        fecharModalEdicao();
       } catch (err) {
-        console.error("Erro ao salvar ajuste:", err);
-        alert("Erro de comunicação ao salvar ajuste.");
+        console.error(err);
+        alert('Erro ao salvar alterações: ' + err.message);
       }
     });
   }
 });
+
+
+////////////////////////////////////////////////////////////////////////////
+
+  /* =====================================================
+     PARTE 3 – LOCALIZAÇÃO: SELECTS EM CASCATA
+     ===================================================== */
+
+  // quando trocar o DEPARTAMENTO
+  if (selDepartamento) {
+    selDepartamento.addEventListener("change", () => {
+      const depId = selDepartamento.value || "";
+      console.log('=== ',depId)
+      preencherSetores(depId);
+      limparSecoes();
+    });
+  }
+
+  // quando trocar o SETOR
+  if (selSetor) {
+    selSetor.addEventListener("change", () => {
+      const setorId = selSetor.value || "";
+      preencherSecoes(setorId);
+    });
+  }
+
+  function preencherSetores(depId) {
+    //console.log('1000',depId)
+    if (!selSetor) return;
+
+    selSetor.innerHTML = '<option value="">-- selecione --</option>';
+    selSetor.disabled = !depId;
+
+    if (!depId) return;
+    //console.log('2000',depId)
+    const lista = SETORES_POR_DEPTO[depId] || [];
+    //console.log('LISTA ',lista);
+    lista.forEach(setor => {
+      const opt = document.createElement("option");
+      opt.value = setor._id;
+      opt.textContent = setor.nomeSetor || "(sem nome)";
+      selSetor.appendChild(opt);
+    });
+  }
+
+  function limparSecoes() {
+    if (!selSecao) return;
+    selSecao.innerHTML = "";
+    selSecao.disabled  = true;
+  }
+
+  function preencherSecoes(setorId) {
+    if (!selSecao) return;
+
+    selSecao.innerHTML = "";
+    selSecao.disabled  = !setorId;
+
+    if (!setorId) return;
+
+    const lista = SECOES_POR_SETOR[setorId] || [];
+    //console.log('12',lista)
+    lista.forEach(sec => {
+      const opt = document.createElement("option");
+      opt.value = sec._id;
+      opt.textContent = sec.nameSecao || "(sem nome)";
+      selSecao.appendChild(opt);
+    });
+  }
+
+  /* =====================================================
+     PARTE 4 – SALVAR (POST PARA BACKEND) + DESTACAR LINHA
+     ===================================================== */
+async function salvarAjuste(url, method, bodyObj) {
+  try {
+    const resp = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bodyObj)
+    });
+
+    if (!resp.ok) {
+      const erro = await resp.json().catch(() => ({}));
+      alert("Erro ao salvar: " + (erro.error || resp.statusText));
+      return null; // indica erro
+    }
+
+    // Se o back retornar algo útil, você pega aqui:
+    const data = await resp.json().catch(() => ({}));
+    return data;
+  } catch (e) {
+    console.error(e);
+    alert('Erro na gravação');
+    return null;
+  }
+}
+
+if (btnSalvar) {
+    btnSalvar.addEventListener("click", async () => {
+            if (!linhaAtual) {
+              alert("Nenhuma linha selecionada.");
+              return;
+            }
+
+            const idItem = linhaAtual.dataset.id;
+            if (!idItem) {
+              alert("ID do item não encontrado na linha.");
+              return;
+            }
+
+            // Monta objeto de updates { campo: valor } a partir dos inputs do modal
+            const inputs  = modalBody.querySelectorAll("input");
+            const updates = {};
+
+            inputs.forEach(input => {
+              const idx = Number(input.dataset.colIndex);
+              if (Number.isNaN(idx)) return;
+
+              const campo = ths[idx].textContent.trim(); // nome do campo = cabeçalho
+
+              // segurança extra: nunca mandar texto de localloja
+              if (campo === 'localloja') return;
+
+              const valor = input.value;
+              updates[campo] = valor;          // se quiser, aqui você pode tratar número, etc.
+            });
+
+            // também mandar departamento / setor / seções selecionadas
+            if (selDepartamento && selDepartamento.value) {
+              updates.departamentoId = selDepartamento.value;
+            }
+
+            if (selSetor && selSetor.value) {
+              updates.setorId = selSetor.value;
+            }
+
+            if (selSecao) {
+              const selecionadas = Array.from(selSecao.selectedOptions).map(o => o.value);
+              updates.secoesIds = selecionadas;
+            }
+
+            try {
+              const resp = await fetch("/importtabela/importacao/ajuste/salvar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idItem, updates })
+              });
+
+              if (!resp.ok) {
+                const erro = await resp.json().catch(() => ({}));
+                alert("Erro ao salvar: " + (erro.error || resp.statusText));
+                return;
+              }
+
+              const data = await resp.json(); // { ok:true, item: {...} }
+              const item = data.item || {};
+
+              aplicarEdicaoNaLinha(idItem, item);
+
+              alert("Item atualizado com sucesso!");
+              limparModalEdicaoCampos();
+              fecharModalEdicao();
+            } catch (err) {
+              console.error("Erro ao salvar ajuste:", err);
+              alert("Erro de comunicação ao salvar ajuste.");
+            }
+    });
+  } 
+
+  // Atualiza a linha da tabela com os dados editados e marca como "linha-editada"
+  function aplicarEdicaoNaLinha(idItem, updates) {
+        console.log('');
+        console.log('----------------------------------------------------------');
+        console.log(' [10101] função aplicarEdicaoNaLinha(idItem,updates)');
+        console.log('', updates);
+        console.log('----------------------------------------------------------');
+        console.log('');
+
+        // acha a linha pelo data-id (cada <tr> tem data-id="{{_id}}")
+        const tr = document.querySelector(
+          '#tabelaAjuste tbody tr[data-id="' + idItem + '"]'
+        );
+        if (!tr) return;
+
+        // pega os nomes das colunas a partir do cabeçalho
+        const thsLocal = document.querySelectorAll('#tabelaAjuste thead th');
+        const campos   = Array.from(thsLocal).map(th => th.textContent.trim());
+
+        // para cada campo que foi alterado, atualiza a célula correspondente
+        campos.forEach((campo, idx) => {
+              if (!(campo in updates)) return;
+
+              const td = tr.children[idx];
+              if (!td) return;
+
+              let valor = updates[campo];
+
+              // ===== CASO ESPECIAL: LOCALLOJA =====
+              if (campo === 'localloja') {
+                const textoAntigo = td.textContent || '';
+                let textoNovo = montarTextoLocalLoja(valor);  // valor é o array localloja
+
+                // se não consegui montar (veio só ID, sem nomes), mantém o que já estava
+                if (!textoNovo) {
+                  textoNovo = textoAntigo;
+                }
+
+                td.textContent = textoNovo;
+                return; // não deixa cair nas regras genéricas
+              }
+
+              // 1) Nulo / indefinido
+              if (valor === null || valor === undefined) {
+                valor = '';
+              }
+              // 2) Decimal128 vindo do Mongo: { $numberDecimal: "12345" }
+              else if (typeof valor === 'object' && valor !== null && '$numberDecimal' in valor) {
+                valor = valor.$numberDecimal; // se quiser, aqui você formata para BR
+              }
+              // 3) Arrays (ex.: secoesIds)
+              else if (Array.isArray(valor)) {
+                valor = valor.join(', ');
+              }
+              // 4) Qualquer outro objeto genérico
+              else if (typeof valor === 'object') {
+                valor = JSON.stringify(valor); // aqui não cai mais o localloja
+              }
+
+              td.textContent = valor;
+        
+        }); 
+        // remove destaque de qualquer outra linha editada antes
+        document
+          .querySelectorAll('#tabelaAjuste tbody tr.linha-editada')
+          .forEach(linha => linha.classList.remove('linha-editada'));
+
+        // marca esta como a última editada
+        tr.classList.add('linha-editada');
+    }
+});
+
+
+  
+
+// Monta o texto "Depto / Setor / Seção" a partir do item
+// Monta o texto "Depto / Setor / Seção" a partir do localloja (Array)
+// Monta o texto "Depto / Setor / Seção" a partir do localloja (Array)
+function montarTextoLocalLoja(localloja) {
+  console.log('');
+  console.log('----------------------------------------------------------');
+  console.log(' montarTextoLocalLoja', localloja);
+  console.log('----------------------------------------------------------');
+  console.log('');
+
+  // parâmetro JÁ é o array localloja
+  if (!Array.isArray(localloja) || localloja.length === 0) {
+    return "";
+  }
+
+  const loc = localloja[0];   // { departamento, setor, secao, ... }
+  console.log(' loc => ', loc);
+
+  // ============ 1) DEPARTAMENTO ============
+  let deptNome = "";
+  if (Array.isArray(loc.departamento) && loc.departamento.length > 0) {
+    const d = loc.departamento[0];
+
+    // se vier só o ID (string), não tem nome aqui mesmo
+    if (d && typeof d === "object") {
+      deptNome =
+        d.nomeDepartamento ||
+        d.nome ||
+        d.descricao ||
+        "";
+    }
+  }
+  console.log('nomeDepartamento:', deptNome);
+
+  // ============ 2) SETOR ============
+  let setorNome = "";
+  
+  if (Array.isArray(loc.setor) && loc.setor.length > 0) {
+    let s = loc.setor[0];
+    console.log(s)
+    // em alguns casos você usa { idSetor: ... }
+    if (s && typeof s === "object" && s.idSetor) {
+      s = s.idSetor;
+    }
+
+    if (s && typeof s === "object") {
+      setorNome =
+        s.nomeDeptoSetor ||
+        s.nome ||
+        s.descricao ||
+        s.material ||
+        "";
+    }
+  }
+  
+    console.log('nomeSetor:', setorNome);
+
+
+    ///////////////////////////////////////////////////////
+     let secaoNome = "";
+     let secaoArr = [];
+
+    // 1) Caso o backend um dia mande direto em loc.secao
+    if (Array.isArray(loc.secao) && loc.secao.length > 0) {
+      secaoArr = loc.secao;
+    }
+    // 2) Situação atual: secao vem dentro do primeiro setor
+    else if (Array.isArray(loc.setor) && loc.setor.length > 0) {
+      const setor0 = loc.setor[0];
+      if (setor0 && Array.isArray(setor0.secao) && setor0.secao.length > 0) {
+        secaoArr = setor0.secao;
+      }
+    }
+
+
+      console.log(">>> TESTE SECAO <<<", secaoArr);
+      console.log("[1135] é array? ", Array.isArray(secaoArr));
+      console.log("[1136] length:", secaoArr.length);
+
+      // ============ 3) SEÇÃO ============
+      //let secaoNome = "";
+
+      if (secaoArr.length > 0) {
+      let x = secaoArr[0];
+      console.log('x :', x);
+
+      // idem: pode vir { idSecao: ... }
+      if (x && typeof x === "object" && x.idSecao) {
+        x = x.idSecao;
+      }
+
+      if (x && typeof x === "object") {
+        secaoNome =
+          x.nameSecao ||
+          x.nomeSecao ||
+          x.nome ||
+          x.descricao ||
+          "";
+        }
+      }
+  
+     console.log('nomeSecao:', secaoNome);
+
+  // Junta o que existir: "Depto / Setor / Seção"
+  return [deptNome, setorNome, secaoNome].filter(Boolean).join(" / ");
+}
+
+
 </script>
+<script>
+  // IDs vindos do Handlebars (ajuste os nomes das variáveis se forem diferentes)
 
 
-    
+
+
+
+
+
+btnDelete?.addEventListener("click", async () => {
+ 
+  const idItem=document.getElementById("idItemEditar").value;
+
+  
+  if (!idItem) {
+    alert("ID do item não encontrado na linha.");
+    return;
+  }
+
+  if (!confirm("Excluir DEFINITIVAMENTE este item importado?\nEssa ação não poderá ser desfeita.")) {
+    return;
+  }
+
+  const textoOriginal = btnDelete.textContent;
+  btnDelete.disabled = true;
+  btnDelete.textContent = "Excluindo...";
+
+  try {
+    const resp = await fetch("/importtabela/importacao/ajuste/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idItem })
+    });
+
+    const json = await resp.json();
+    console.log('json',json)
+
+    if (!resp.ok || !json.ok) {
+      throw new Error(json.error || "Erro ao excluir item.");
+    }
+
+    linhaAtual = tabelaAjuste.querySelector(`tr[data-id="${idItem}"]`);
+    // remover linha da tabela
+    linhaAtual.remove();
+    linhaAtual = null;
+
+    // limpar e fechar modal
+    if (typeof limparModalEdicaoCampos === "function") {
+      limparModalEdicaoCampos();
+    }
+    if (typeof fecharModalEdicao === "function") {
+      fecharModalEdicao();
+    }
+
+  } catch (err) {
+    console.error("Erro ao excluir item:", err);
+    alert("Erro ao excluir item: " + err.message);
+  } finally {
+    btnDelete.disabled = false;
+    btnDelete.textContent = textoOriginal;
+  }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const btnTransferir = document.getElementById('btnTransferirItens');
+  if (!btnTransferir) return;
+
+  btnTransferir.addEventListener('click', async () => {
+    if (!confirm('Transferir itens pendentes para a tabela ArquivoDoc?')) {
+      return;
+    }
+
+    // AJUSTE OS IDs DOS INPUTS CONFORME SUA TELA
+    const lojaInput = document.getElementById('loja_id')      // ex: <input id="loja_id">
+                     
+
+    const fornInput = document.getElementById('fornecedor-id') // ex: <input id="fornecedorId">
+                     || document.getElementById('fornecedor'); 
+
+    const loja_id      = lojaInput  ? lojaInput.value.trim()  : '';
+    const fornecedorId = fornInput  ? fornInput.value.trim()  : '';
+
+    if (!loja_id) {
+      alert('loja_id não encontrado na tela.');
+      return;
+    }
+    if (!fornecedorId) {
+      alert('ID do fornecedor não encontrado na tela.');
+      return;
+    }
+
+    const payload = { loja_id, fornecedorId };
+    console.log('Transferir payload =>', payload);
+
+    try {
+      const resp = await fetch('/importtabela/importacao/itens/transferir', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await resp.json().catch(() => ({}));
+
+      if (!resp.ok || !data.ok) {
+        alert('Erro ao transferir: ' + (data.error || resp.statusText));
+        return;
+      }
+
+      alert(`Transferidos ${data.inseridos} itens para ArquivoDoc.`);
+
+      // Se quiser atualizar a grid ou mostrar só pendentes:
+      // location.reload();
+    } catch (err) {
+      console.error('Erro de comunicação ao transferir:', err);
+      alert('Erro de comunicação ao transferir itens.');
+    }
+  });
+});
+</script>
 
 
 </body>

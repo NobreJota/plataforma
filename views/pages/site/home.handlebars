@@ -396,6 +396,68 @@
 }
 
 </style>
+<style>
+  
+
+.produto-info-home {
+  font-size: 0.8rem;
+  line-height: 1.25;
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid #eee;
+}
+
+.produto-info-home p {
+  margin: 0.1rem 0;
+}
+
+.produto-info-home strong {
+  font-weight: 600;
+}
+
+/* links da loja */
+.produto-info-home a {
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.produto-info-home a:hover {
+  text-decoration: underline;
+}
+
+/* botões */
+.produto-info-home .btn {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.55rem;
+  margin-top: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+/* cada linha (Cód., À vista, Desc., Loja...) */
+.pih-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 0.1rem;
+}
+
+/* “títulos” menores e suaves */
+.pih-label {
+  color: #666;
+  font-weight: 500;
+  min-width: 3.4rem; /* alinha as colunas */
+}
+
+/* valores */
+.pih-value {
+  color: #222;
+}
+
+/* descrição pode quebrar linha normal */
+.pih-desc .pih-value {
+  white-space: normal;
+}
+
+</style>
 </head>
 <body>
 <header class="topbar">
@@ -497,18 +559,9 @@
         {{#if produtos.length}}
             <div class="row g-3" id="gridProdutos">
               {{#each produtos}}
-              <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <article class="card h-100 product-card shadow-sm">
-                  <div class="ratio ratio-4x3">
-                    <img src="{{this.pageurls}}" alt="{{this.descricao}}" class="card-img-top p-2 object-fit-contain">
+                  <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    
                   </div>
-                  <div class="card-body d-flex flex-column">
-                    <h6 class="card-title text-center product-title">{{this.descricao}}</h6>
-                    <p class="price text-center mb-3">{{moeda this.preco}}</p>
-                    <button class="btn btn-success w-100 mt-auto" onclick="adicionarCarrinho('{{this._id}}')">Comprar ?</button>
-                  </div>
-                </article>
-              </div>
               {{/each}}
             
               {{#each anuncios}}
@@ -786,7 +839,7 @@ document.addEventListener('DOMContentLoaded', function(){
   function renderProdutos(data){
     const $prod = document.getElementById('produtos');
     if (!$prod) return;
-
+    console.log('6000', $prod)
     const nomeSecao = (data?.secao?.nomeSecao) || data?.secao || '';
     const prods = Array.isArray(data?.produtos) ? data.produtos : [];
 
@@ -806,36 +859,112 @@ document.addEventListener('DOMContentLoaded', function(){
       return PLACEHOLDER;
     };
 
-    const cards = prods.map(p=>{
-      const img   = pickImage(p);
-      const preco = brl(p.preco1 || p.preco || p.precoavista);
-      const href  = p.href || `/produto/${p._id}`;
-      return `
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-          <article class="card h-100 card-product">
-            <a class="ratio ratio-4x3" href="${href}" aria-label="${esc(p.descricao||'')}">
-              <img class="w-100 h-100 object-fit-contain p-2"
-                   src="${img}" alt="${esc(p.descricao||'')}" loading="lazy"
-                   referrerpolicy="no-referrer"
-                   onerror="this.src='${PLACEHOLDER}'">
-            </a>
-            <div class="card-body d-flex flex-column">
-              <h6 class="card-title mb-2 text-truncate" title="${esc(p.descricao||'')}">${esc(p.descricao||'')}</h6>
-              ${preco ? `<div class="mt-auto fw-semibold">${preco}</div>`
-                      : `<div class="mt-auto text-muted small">preço sob consulta</div>`}
+    const cards = prods.map(p => {
+          const img        = pickImage(p);
+          //const precoVista = p.precovista ? brl(p.precovista) : '';
+          const raw =
+              p.precovista && typeof p.precovista === 'object' && '$numberDecimal' in p.precovista
+                ? p.precovista.$numberDecimal
+                : p.precovista;
+
+         let precoVista = '';
+
+          if (raw !== undefined && raw !== null && raw !== '') {
+            let num = Number(raw);
+
+              if (!Number.isNaN(num)) {
+                // se veio em centavos (ex: 17234) divide por 100
+                // (assumindo que esse campo SEMPRE está em centavos)
+                num = num / 100;
+
+                precoVista = num.toLocaleString('pt-BR', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                });
+              }
+          }
+
+          const href       = p.href || `/produto/${p._id}`;
+
+          return `
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+              <article class="card h-100 card-product">
+
+                <a class="ratio ratio-4x3" href="${href}" aria-label="${esc(p.descricao||'')}">
+                  <img class="w-100 h-100 object-fit-contain p-2"
+                      src="${img}" alt="${esc(p.descricao || '')}" loading="lazy"
+                      referrerpolicy="no-referrer"
+                      onerror="this.src='${PLACEHOLDER}'">
+                </a>
+
+                <div class="card-body">
+                  <h6 class="card-title mb-2 text-truncate" title="${esc(p.descricao || '')}">
+                    ${esc(p.descricao || '')}
+                  </h6>
+
+                  <div class="produto-info-home">
+                    <div class="pih-row">
+                      <span class="pih-label">Cód.</span>
+                      <span class="pih-value">${esc(p.codigo || '')}</span>
+                    </div>
+
+                    <div class="pih-row">
+                      <span class="pih-label">À vista</span>
+                      <span class="pih-value">
+                        ${precoVista || 'sob consulta'}
+                      </span>
+                    </div>
+
+                    <div class="pih-row pih-desc">
+                      <span class="pih-label">Desc.</span>
+                      <span class="pih-value">
+                        ${esc(p.descricao || '')}
+                        ${p.complete ? ' ' + esc(p.complete) : ''}
+                      </span>
+                    </div>
+
+                    <div class="pih-row">
+                      <span class="pih-label">Loja</span>
+                      <span class="pih-value">
+                        <a href="/loja/${p.loja_id || ''}">
+                          ${esc(p.marcaloja || '')}
+                        </a>
+                      </span>
+                    </div>
+
+                    <div class="mt-1">
+                      <a class="btn btn-sm btn-outline-primary"
+                        href="/home-detalhe/${p._id}">
+                        Detalhes / Conversar
+                      </a>
+
+                      <a class="btn btn-sm btn-outline-secondary"
+                        href="/home-page-exclusiva/${p._id}"
+                        target="_blank" rel="noopener">
+                        Página exclusiva
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+              </article>
             </div>
-          </article>
-        </div>`;
-    }).join('');
+          `;
+        }).join('');
 
     $prod.innerHTML = `
       <section class="container-fluid px-0">
-        <div class="d-flex align-items-center justify-content-between mb-2 px-2">
-          <h2 class="h6 mb-0">${nomeSecao ? `Produtos · ${esc(nomeSecao)}` : 'Produtos'}</h2>
-          <span class="text-muted small">${prods.length} itens</span>
-        </div>
-        <div class="row g-3 px-2">${cards}</div>
-      </section>`;
+          <div class="d-flex align-items-center justify-content-between mb-2 px-2">
+            <h2 class="h6 mb-0">
+              ${nomeSecao ? `Produtos · ${esc(nomeSecao)}` : 'Produtos'}
+            </h2>
+            <span class="text-muted small">${prods.length} itens</span>
+          </div>
+
+          <div class="row g-3 px-2">
+            ${cards}
+          </div>
+     </section>`;
   }
 
 })();

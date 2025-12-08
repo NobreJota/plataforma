@@ -54,21 +54,22 @@ const ArquivoDocSchema = new Schema({
       }
   },
   complete: { type: String, default: false },
-  referencia: { type: String },
+  referencia: { type: String ,default: ''},
+  referencia2: { type: String,default: ''},
+  codEcf: { type: String,default: '' },
+  localloja: [LocalizacaoRefSchema],
   fornecedor: { type: Schema.Types.ObjectId, ref: "fornec" },
-  similares: [{ type: mongoose.Schema.Types.ObjectId, ref: "m_construcao" }],
-  qte: { type: Number, min: 0 },
-  qte_negativa: { type: Number },
-  qte_reservada: { type: Number, min: 0 },
-  e_max: { type: Number, min: 0 },
-  e_min: { type: Number, min: 0 },
-  precocusto: { type: mongoose.Types.Decimal128 },
-  precovista: { type: mongoose.Types.Decimal128 },
-  precoprazo: { type: mongoose.Types.Decimal128 },
-  artigo: { type: String },
-  marcaItem: { type: String },
-  page: { type: String },
-  pageposicao: { type: Number },
+  similares: [{ type: mongoose.Schema.Types.ObjectId, ref: "arquivo_doc" }],
+  qte: { type: Number, min: 0 ,default:0},
+  qte_negativa: { type: Number ,min:0,default:0},
+  qte_reservada: { type: Number, min: 0,default:0 },
+  e_max: { type: Number, min: 0 ,default:0},
+  e_min: { type: Number, min: 0 ,default:0},
+  precocusto: { type: mongoose.Types.Decimal128,default: null  },
+  precovista: { type: mongoose.Types.Decimal128 ,default: null },
+  precoprazo: { type: mongoose.Types.Decimal128 ,default: null },
+  artigo: { type: String,default: '' },
+  pageposicao: { type: Number ,min:0,default:0},
   pageurls: {
       type: [String],
       validate: {
@@ -80,16 +81,16 @@ const ArquivoDocSchema = new Schema({
   pageok: { type: Boolean, default: false },
   ativo: { type: Boolean, default: true, index: true },
   datadel: { type: Date, default: null },
-  figure_mini: { type: String },
-  figure_media: { type: String },
+  figure_mini: { type: String ,default: false},
+  figure_media: { type: String,default: false },
   csosn: {type: String, default: ''},
   ncm: {type: String,default: ''},
-  taxa: {type: String,default: ''},
+  taxa: {type: mongoose.Types.Decimal128 ,default: 0},
   cfop_ecf: {type: String,default: ''},// “CFOP ECF” (nome interno sem espaço)
   cfop_nfe: {type: String,default: ''},
 
 
-  localloja: [LocalizacaoRefSchema]
+  
 
 }, { timestamps: true });
 

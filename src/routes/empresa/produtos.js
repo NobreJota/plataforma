@@ -7,6 +7,23 @@ const Departamento = require("../../models/departamento");
 const DeptoSetor = require('../../models/deptosetores');
 const DeptoSecoes= require('../../models/deptosecao')
 const Lojista = require('../../models/lojista');
+/////////////////////////////////////////////////////////////
+// converte string/number => Decimal128, tratando vazio
+function toDecimal128(valor) {
+  if (valor === undefined || valor === null) return undefined;
+
+  const txt = String(valor).trim();
+  if (!txt) return mongoose.Types.Decimal128.fromString('0');
+
+  // se quiser aceitar ponto de milhar + vírgula:
+  const normalizado = txt
+    .replace(/\./g, '')   // remove separador de milhar
+    .replace(',', '.');   // vírgula -> ponto
+
+  return mongoose.Types.Decimal128.fromString(normalizado);
+}
+
+/////////////////////////////////////////////////////////////////
 //const segmentoSetor= require('../../models/deptosetores')
 
 //  busca os produto conforme a cidade
@@ -165,4 +182,46 @@ router.get("/secoes/:setorId", async (req, res) => {
     res.status(500).json({ error: 'Falha ao carregar seções' });
   }
 });
+
+router.put('/produto/alterar/:id', async (req, res) => {
+  console.log(2000)
+  try {
+    const id    = req.params.id;
+    const dados = { ...req.body };
+
+    console.log("=== ALTERAR PRODUTO ===");
+    console.log("ID:", id);
+    console.log("Body recebido:", dados);
+
+    // 🔹 campos decimais que precisam virar Decimal128
+    const camposDecimais = ['precocusto', 'precovista', 'precoprazo', 'taxa'];
+
+    camposDecimais.forEach(campo => {
+      if (campo in dados) {
+        dados[campo] = toDecimal128(dados[campo]);
+      }
+    });
+
+    const atualizado = await ArquivoDoc.findByIdAndUpdate(
+      id,
+      { $set: dados },
+      { new: true }
+    );
+
+    if (!atualizado) {
+      return res.status(404).json({ erro: "Produto não encontrado" });
+    }
+
+    return res.json({
+      sucesso: true,
+      mensagem: "Produto atualizado com sucesso",
+      produto: atualizado
+    });
+
+  } catch (err) {
+    console.error("Erro ao alterar produto:", err);
+    return res.status(500).json({ erro: "Erro interno ao alterar produto" });
+  }
+});
+
 module.exports = router;

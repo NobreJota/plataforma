@@ -19,7 +19,7 @@ router.get('/login',(req,res)=>{
     console.log(' origem route : /empresa/usuario.js(get(/login))');
     console.log(' obs : renderizou a page do login.handlebars"');
     console.log('');
-    console.log(' destino :loja/usuario/lojalogin ????');
+    console.log(' destino :page/empresa/lojalogin.handlebars');
     console.log('');
     console.log('__________________________________________________');
     console.log('')

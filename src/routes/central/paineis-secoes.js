@@ -122,7 +122,6 @@ router.get('/secoes', async (req, res) => {
   }
 });
 // ... (importes iguais)
-
 router.get('/secoes/data', async (req, res) => {
   console.log('');
   console.log('AQUI ??');  
@@ -177,7 +176,7 @@ router.get('/secoes/data', async (req, res) => {
     }));
 
     console.log('LISTA', lista);
-    console.log('4000', saida);
+    console.log('4001', saida);
 
     return res.json({ lista: saida });
   } catch (e) {

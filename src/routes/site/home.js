@@ -56,8 +56,8 @@ router.get('/', async (req, res) => {
 
     console.log('');  
     //console.log('GET/2001',depsAtivos)
-    console.log('');
-    console.log(' req.query : ',req.query);
+    //console.log('');
+    //console.log(' req.query : ',req.query);
     // 2️⃣ define departamento alvo
     const segmentoIn = (req.query.segmento || '').trim();
     const isFirstLoad = !segmentoIn;
@@ -68,7 +68,7 @@ router.get('/', async (req, res) => {
       nomeDepartamento: { $regex: new RegExp(`^${alvoNome}$`, 'i') }
     }, '_id nomeDepartamento ativado ').lean();
 
-    console.log('depAlvo :',depAlvo)
+    //console.log('depAlvo :',depAlvo)
     if (depAlvo.ativado !== 1) return res.redirect('/');
 
     if (!depAlvo?._id) {
@@ -227,6 +227,7 @@ router.get('/bairros',noStore, async (req, res) => {
 
 // VAI BUSCAR OS PRODUTOS DE ACORDO COM A CIDADE BAIRRO
 router.get('/buscar', async (req, res) => {
+
   try {
     const { q = '', municipio = '', bairro = '' } = req.query;
 
@@ -242,9 +243,10 @@ router.get('/buscar', async (req, res) => {
     const produtos = await Ddocumento.find(filtro)
       .populate('fornecedor', 'razao')
       .lean();
+
      console.log('');
-     console.log('/buscar'); 
-     console.log('produtos',);
+     console.log('/buscar/produtos'); 
+     console.log(produtos);
      console.log('');
     // monte as listas para repovoar a UI
     const CIDADES_ES = ['Vitória','Vila Velha','Guarapari','Cariacica','Serra']; // ou busque do BD
@@ -266,30 +268,57 @@ router.get('/buscar', async (req, res) => {
   }
 });
 //Pontos-chave que quebravam o filtro:
-router.get('/buscar-sugestoes',noStore, async (req, res) => {
+// SUBSTITUA a rota antiga /buscar-sugestoes por esta
+router.get('/buscar-sugestoes', noStore, async (req, res) => {
   try {
     const q = String(req.query.q || '').trim();
     if (q.length < 3) return res.json([]);
 
-    // tokens -> regex tolerante: termo1 .* termo2 (acentos ignorados)
-    const pattern = norm(q).split(/\s+/).filter(Boolean).map(escapeRx).join('.*');
+    // monta regex tolerante (como já estava)
+    const pattern = norm(q)
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(escapeRx)
+      .join('.*');
     const rx = new RegExp(pattern, 'i');
 
     const docs = await Ddocumento.find(
       { descricao: { $regex: rx } },
-      { _id: 0, descricao: 1 }
+      {
+        descricao: 1,
+        marcaloja: 1,
+        localloja: 1,      // para pegar cidade do 1º localloja
+        cidade:1
+      }
     )
-    .collation({ locale: 'pt', strength: 1 })
-    .limit(30)
-    .lean();
+      .collation({ locale: 'pt', strength: 1 })
+      .limit(30)
+      .lean();
 
-    const sugestoes = [...new Set(docs.map(d => d.descricao).filter(Boolean))].slice(0, 10);
+    // transforma em objetos já no formato que o front vai usar
+    const sugestoes = docs
+      .map(d => ({
+        descricao: d.descricao || '',
+        loja: d.marcaloja || '',
+        cidade:d.cidade
+          // (d.localloja &&
+          //   d.localloja[0] &&
+          //   (d.localloja[0].cidade || d.localloja[0].localidade)) ||
+          // '',
+      }))
+      .filter(s => s.descricao)        // garante descrição
+      .slice(0, 10);                   // no máx. 10 linhas
+
+      console.log(' ', sugestoes)
+
+    // ex: [{descricao:'vaso...', loja:'Loja Tal', cidade:'Vitória'}, ...]
     res.json(sugestoes);
   } catch (e) {
     console.error('erro /buscar-sugestoes', e);
     res.json([]);
   }
 });
+
 
 router.get('/setor/:idSetor', async (req, res) => {
   console.log('');

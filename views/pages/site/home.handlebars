@@ -397,9 +397,7 @@
 
 </style>
 <style>
-  
-
-.produto-info-home {
+  .produto-info-home {
   font-size: 0.8rem;
   line-height: 1.25;
   margin-top: 0.25rem;
@@ -457,6 +455,41 @@
   white-space: normal;
 }
 
+#sugestoesLista {
+  position:absolute; top:100%; left:0; right:0;
+  background:#fff; border:1px solid #cfcfcf; border-top:none;
+  z-index: 1000; max-height: 240px; overflow:auto; display:none;
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+
+#sugestoesLista .sug-item{
+  padding:8px 10px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-top:1px solid #eee;
+  background:#fff;
+}
+
+#sugestoesLista .sug-item:hover,
+#sugestoesLista .sug-item.active{
+  background:#f6f6f6;
+}
+
+#sugestoesLista .sug-desc{
+  color:#b30000;              /* vermelho da descrição */
+  font-weight:500;
+}
+
+#sugestoesLista .sug-local{
+  color:#128c3b;              /* verde loja + cidade */
+  font-size:.85rem;
+  margin-left:8px;
+  white-space:nowrap;
+}
+
+
 </style>
 </head>
 <body>
@@ -467,22 +500,34 @@
       <span>Rota</span><span class="brand-accent">es</span>
     </a>
     <!-- BUSCA + FILTROS -->
-    <form class="search-form" action="/buscar" method="get" autocomplete="off">
-          <input class="form-control" name="q" id="inputBusca" placeholder="O que você procura?" autocomplete="off" />
+        <form class="search-form" action="/buscar" method="get" autocomplete="off" style="background: #ffff00;">
+            <div class="position-relative" id="buscaWrapper" style="background: #ff4dc4;width: 90%;margin: auto;">
+              <input
+                class="form-control"
+                name="q"
+                id="inputBusca"
+                placeholder="O que você procura?"
+                autocomplete="off"
+               
+              >
+              <div id="sugestoesLista"></div>
+           </div>
+           {{!-- <select id="selectCidade" class="form-select" name="municipio">
+             <option value="" {{#unless cidadeSelecionada}}selected{{/unless}}>Município</option>
+             {{#each cidades}}
+               <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
+             {{/each}}
+           </select>
 
-          <select id="selectCidade" class="form-select" name="municipio">
-              <option value="" {{#unless cidadeSelecionada}}selected{{/unless}}>Município</option>
-              {{#each cidades}}
-                <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
-              {{/each}}
-          </select>
-          <select id="selectBairro" class="form-select" name="loja">
-            <option value="" {{#unless bairroSelecionado}}selected{{/unless}}>Bairros</option>
-            {{#each bairros}}
-              <option value="{{this}}" {{#if (eq ../bairroSelecionado this)}}selected{{/if}}>{{this}}</option>
-            {{/each}}
-          </select>
-</form>
+           <select id="selectBairro" class="form-select" name="loja">
+             <option value="" {{#unless bairroSelecionado}}selected{{/unless}}>Bairros</option>
+             {{#each bairros}}
+               <option value="{{this}}" {{#if (eq ../bairroSelecionado this)}}selected{{/if}}>{{this}}</option>
+             {{/each}}
+           </select> --}} 
+      </form>
+
+
    <!-- AÇÕES -->
    <nav class="actions" style="background: #333;">
         {{#if userSite}}
@@ -508,47 +553,56 @@
   </div>
 </header>
 <label id="vpLabel" aria-live="polite"></label>
-<div class="quickbar bg-light border-bottom" >
-  <div class="container my-2">
-      <div class="home-depto-bar" role="toolbar" aria-label="Departamentos" >
-        {{#if departamentosAtivos.length}}
-          {{#each departamentosAtivos}}
-            {{!-- botão navega mudando ?segmento= --}}
-            <a class="btn btn-depto {{#if (eq ../segmentoAtual this.nomeDepartamento)}}btn-depto-active{{/if}}"
-              href="/?segmento={{encodeURIComponent this.nomeDepartamento}}">
-              {{this.nomeDepartamento}}
-            </a>
-          {{/each}}
+
+{{!-- Só mostra departamentos / setores quando NÃO está em modo busca (sem q) --}}
+{{#unless q}}
+
+  <div class="quickbar bg-light border-bottom" >
+    <div class="container my-2">
+        <div class="home-depto-bar" role="toolbar" aria-label="Departamentos" >
+          {{#if departamentosAtivos.length}}
+            {{#each departamentosAtivos}}
+              <a class="btn btn-depto {{#if (eq ../segmentoAtual this.nomeDepartamento)}}btn-depto-active{{/if}}"
+                href="/?segmento={{encodeURIComponent this.nomeDepartamento}}">
+                {{this.nomeDepartamento}}
+              </a>
+            {{/each}}
+          {{else}}
+            <div class="alert alert-warning m-0">Nenhum departamento ativado.</div>
+          {{/if}}
+        </div>
+    </div>
+  </div>
+
+  <div id="Setores" style="display:block;">
+    <section class="home-atividades">
+      <div class="container">
+        <h2 class="home-title">Setores</h2>
+        {{#if atividades.length}}
+          <div class="atividades-grid">
+            {{#each atividades}}
+                <a class="atividade-card js-open-setor"
+                  href="/setor/{{_id}}"
+                  data-setor-id="{{_id}}"
+                  aria-label="{{nome}}">
+                  <div class="atividade-thumb"><img src="{{imagemUrl}}" alt="{{nome}}"></div>
+                  <div class="atividade-name">{{titulo}}</div>
+                </a>
+            {{/each}}
+          </div>
         {{else}}
-          <div class="alert alert-warning m-0">Nenhum departamento ativado.</div>
+          <p class="text-muted">Nenhum setor encontrado para {{segmentoAtual}}.</p>
         {{/if}}
       </div>
+    </section>
   </div>
-</div>
-<div id="Setores" style="display:block;">
-  <section class="home-atividades">
-    <div class="container">
-      <h2 class="home-title">Setores</h2>
-      {{#if atividades.length}}
-        <div class="atividades-grid">
-          {{#each atividades}}
-              <a class="atividade-card js-open-setor"
-                href="/setor/{{_id}}"
-                data-setor-id="{{_id}}"
-                aria-label="{{nome}}">
-                <div class="atividade-thumb"><img src="{{imagemUrl}}" alt="{{nome}}"></div>
-                <div class="atividade-name">{{titulo}}</div>
-              </a>
-          {{/each}}
-        </div>
-      {{else}}
-        <p class="text-muted">Nenhum setor encontrado para {{segmentoAtual}}.</p>
-      {{/if}}
-    </div>
-  </section>
-</div>
-<div id="secoesPane" class="container my-3" hidden></div>
-<div id="produtos" class="container my-4" style="background-color: #fbfafa;display: none;">
+
+  <div id="secoesPane" class="container my-3" hidden></div>
+
+{{/unless}}
+
+{{!-- <div id="secoesPane" class="container my-3" hidden></div> --}}
+{{!-- <div id="produtos" class="container my-4" style="background-color: #fbfafa;display: none;">
         {{#if banner}}
             <div class="row mb-3">
               <div class="col">
@@ -583,7 +637,34 @@
                   <a href="/">Limpar filtros</a>
             </div>
         {{/if}}
+</div> --}}
+<div id="produtos"
+     class="container my-4"
+     style="background-color:#fbfafa;{{#if produtos.length}}display:block;{{else}}display:none;{{/if}}">
+  {{#if banner}}
+    ...
+  {{/if}}
+
+  {{#if produtos.length}}
+    <div class="row g-3" id="gridProdutos">
+      {{#each produtos}}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <!-- aqui você já monta o card, ou deixa pro JS -->
+        </div>
+      {{/each}}
+
+      {{#each anuncios}}
+        ...
+      {{/each}}
+    </div>
+  {{else}}
+    <div class="alert alert-info">
+      Nenhum produto encontrado {{#if q}}para “{{q}}”{{/if}}.
+      <a href="/">Limpar filtros</a>
+    </div>
+  {{/if}}
 </div>
+
 
 <!-- linha anterior existente -->
 {{!-- <script>
@@ -966,6 +1047,147 @@ document.addEventListener('DOMContentLoaded', function(){
           </div>
      </section>`;
   }
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////
+  (function initAutocompleteBusca(){
+  const input  = document.getElementById('inputBusca');
+  const lista  = document.getElementById('sugestoesLista');
+  const form   = document.querySelector('form.search-form');
+  const selCid = document.getElementById('selectCidade');
+  const selBai = document.getElementById('selectBairro');
+
+  if (!input || !lista || !form) return;
+
+  let lastQuery      = '';
+  let abortCtrl      = null;
+  let cacheSugestoes = [];   // <<< guarda os objetos vindos do backend
+
+  function hideLista(){
+    lista.style.display = 'none';
+    lista.innerHTML = '';
+  }
+
+  async function buscarSugestoes(q){
+    if (abortCtrl) abortCtrl.abort();
+    abortCtrl = new AbortController();
+
+    const cidade = selCid?.value || '';
+    const bairro = selBai?.value || '';
+
+    const url = `/buscar-sugestoes?q=${encodeURIComponent(q)}`
+              + `&cidade=${encodeURIComponent(cidade)}`
+              + `&bairro=${encodeURIComponent(bairro)}`;
+
+    const resp = await fetch(url, {
+      signal: abortCtrl.signal,
+      cache: 'no-store',
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (!resp.ok) return [];
+
+    const data = await resp.json();
+
+    // aceita array simples de strings ou array de objetos
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data.itens)) return data.itens;
+    if (Array.isArray(data.items)) return data.items;
+    return [];
+  }
+
+  // quando digita no campo
+  on(input, 'input', async e => {
+    const q = (e.target.value || '').trim();
+    if (q.length < 3) {
+      hideLista();
+      return;
+    }
+
+    // evita chamadas duplicadas pra mesma palavra
+    if (q === lastQuery) return;
+    lastQuery = q;
+
+    try{
+      const sugestoes = await buscarSugestoes(q);
+      if (!sugestoes.length){
+        hideLista();
+        return;
+      }
+
+      cacheSugestoes = sugestoes; // <<< guarda tudo
+
+      lista.innerHTML = sugestoes.map((item, idx) => {
+        // item pode ser string ou objeto
+        const desc = (typeof item === 'string')
+          ? item
+          : (item.descricao || item.texto || item.nome || '');
+
+        const loja = (typeof item === 'object' && item)
+          ? (item.loja || item.marcaloja || '')
+          : '';
+
+        const cidade = (typeof item === 'object' && item)
+          ? (item.cidade || item.municipio || '')
+          : '';
+
+        const partesLocal = [];
+        if (loja)   partesLocal.push(loja);
+        if (cidade) partesLocal.push(cidade);
+
+        const localStr = partesLocal.join(' - '); // "Loja Tal - Vitória"
+
+        const val = desc || '';
+
+        return `
+          <div class="sug-item"
+               data-index="${idx}"
+               data-value="${att(val)}">
+            <span class="sug-desc">${esc(val)}</span>
+            ${localStr
+              ? `<span class="sug-local">${esc(localStr)}</span>`
+              : ''}
+          </div>`;
+      }).join('');
+
+      lista.style.display = 'block';
+    }catch(err){
+      console.error('autocomplete erro', err);
+      hideLista();
+    }
+  });
+
+  // clicar em uma sugestão: coloca no input, ajusta cidade e busca
+  on(lista, 'click', ev => {
+    const el = ev.target.closest('.sug-item');
+    if (!el) return;
+
+    const idx   = Number(el.dataset.index);
+    const sug   = cacheSugestoes[idx] || null;
+    const texto = el.getAttribute('data-value') || el.textContent.trim();
+
+    // texto principal no input
+    input.value = texto;
+
+    // se o backend mandou cidade, já seleciona no combo
+    if (sug && selCid && typeof sug === 'object' && sug.cidade) {
+      selCid.value = sug.cidade;
+      // se você quiser recarregar bairros:
+      if (typeof window.carregarBairros === 'function') {
+        carregarBairros(sug.cidade, '');
+      }
+    }
+
+    hideLista();
+    form.submit();       // faz a busca ao clicar
+  });
+
+  // se clicar fora, esconde a lista
+  on(document, 'click', ev => {
+    if (ev.target === input || lista.contains(ev.target)) return;
+    hideLista();
+  });
+})();
+
+  ///////////////////////////////////////////////////////////////////////
 
 })();
 </script>

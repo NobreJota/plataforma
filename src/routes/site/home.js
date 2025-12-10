@@ -55,9 +55,7 @@ router.get('/', async (req, res) => {
       .lean();
 
     console.log('');  
-    //console.log('GET/2001',depsAtivos)
-    //console.log('');
-    //console.log(' req.query : ',req.query);
+    
     // 2️⃣ define departamento alvo
     const segmentoIn = (req.query.segmento || '').trim();
     const isFirstLoad = !segmentoIn;
@@ -68,7 +66,7 @@ router.get('/', async (req, res) => {
       nomeDepartamento: { $regex: new RegExp(`^${alvoNome}$`, 'i') }
     }, '_id nomeDepartamento ativado ').lean();
 
-    //console.log('depAlvo :',depAlvo)
+    
     if (depAlvo.ativado !== 1) return res.redirect('/');
 
     if (!depAlvo?._id) {
@@ -197,10 +195,10 @@ try {
 
 // BUSCA OS BAIRRO DO LOJISTA
 router.get('/bairros',noStore, async (req, res) => {
-  console.log('');
-  console.log( ' [ 205 ] => src/routes/site/home.js//bairros');
-  console.log(req.query)
-  console.log('');
+  // consolxe.log('');
+  // consolxe.log( ' [ 205 ] => src/routes/site/home.js//bairros');
+  // consoxxe.log(req.query)
+  // consolxe.log('');
   ////////////////////////////////////////////////////////////
   try {
    const cidade = (req.query.cidade || '').trim();
@@ -227,15 +225,13 @@ router.get('/bairros',noStore, async (req, res) => {
 
 // VAI BUSCAR OS PRODUTOS DE ACORDO COM A CIDADE BAIRRO
 router.get('/buscar', async (req, res) => {
-
+  console.log('[ 230 ] /buscar');
   try {
     const { q = '', municipio = '', bairro = '' } = req.query;
 
     const filtro = {};
     if (q.trim()) {
-      // se você não tem índice de texto, troque por regex:
-      // filtro.descricao = new RegExp(escapeRegExp(q.trim()), 'i');
-      filtro.$text = { $search: q.trim() };
+      // ... teu filtro por descrição / norm etc ...
     }
     if (municipio) filtro['localloja.cidade'] = municipio;
     if (bairro)    filtro['localloja.bairro'] = bairro;
@@ -244,31 +240,50 @@ router.get('/buscar', async (req, res) => {
       .populate('fornecedor', 'razao')
       .lean();
 
-     console.log('');
-     console.log('/buscar/produtos'); 
-     console.log(produtos);
-     console.log('');
-    // monte as listas para repovoar a UI
-    const CIDADES_ES = ['Vitória','Vila Velha','Guarapari','Cariacica','Serra']; // ou busque do BD
+   // console.log('[ 252 ] /buscar/produtos');
+   // console.log(produtos);
+
+    // >>> NOVO: mesmos departamentos que você usa na rota "/"
+    const departamentosAtivos = await Departamento
+      .find({ ativado: true })       // se na tua rota "/" tiver outro filtro (exibehome, etc),
+      .sort({ ordem: 1 })          // copie exatamente o mesmo aqui
+      .lean();
+
+
+    // monta as listas para re-popular a UI
+    const CIDADES_ES      = ['Vitória','Vila Velha','Guarapari','Cariacica','Serra'];
     const bairrosDaCidade = municipio
       ? await Lojista.distinct('endereco.bairro', { 'endereco.cidade': municipio })
       : [];
 
+    console.log(' dentro de /buscar')  
     res.render('pages/site/home', {
       layout: 'site/home',
-      q, cidades: CIDADES_ES,
+      q,
+      cidades: CIDADES_ES,
       cidadeSelecionada: municipio,
       bairros: (bairrosDaCidade || []).filter(Boolean).sort((a, b) => a.localeCompare(b, 'pt-BR')),
       bairroSelecionado: bairro,
-      produtos
+      produtos,
+      // >>> NOVO: manda os departamentos para a view
+      departamentosAtivos,
+      segmentoAtual: ''   // aqui não precisa ativar nenhum botão; fica tudo “neutro”
     });
   } catch (e) {
     console.error('Erro em /buscar', e);
-    res.status(500).send('Erro ao aplicar filtros');
+    res.status(500).render('pages/site/home', {
+      layout: 'site/home',
+      q: req.query.q || '',
+      cidades: ['Vitória','Vila Velha','Guarapari','Cariacica','Serra'],
+      produtos: [],
+      departamentosAtivos: [],
+      segmentoAtual: ''
+    });
   }
 });
+
 //Pontos-chave que quebravam o filtro:
-// SUBSTITUA a rota antiga /buscar-sugestoes por esta
+// SUBSTITUA a rota antiga /buscar-sugesXtoes por esta
 router.get('/buscar-sugestoes', noStore, async (req, res) => {
   try {
     const q = String(req.query.q || '').trim();
@@ -281,7 +296,7 @@ router.get('/buscar-sugestoes', noStore, async (req, res) => {
       .map(escapeRx)
       .join('.*');
     const rx = new RegExp(pattern, 'i');
-
+    // _ ?????????????????????????????????????????????????????????????????????????????
     const docs = await Ddocumento.find(
       { descricao: { $regex: rx } },
       {
@@ -294,22 +309,20 @@ router.get('/buscar-sugestoes', noStore, async (req, res) => {
       .collation({ locale: 'pt', strength: 1 })
       .limit(30)
       .lean();
-
+    // _ ?????????????????????????????????????????????????????????????????????????????
     // transforma em objetos já no formato que o front vai usar
     const sugestoes = docs
       .map(d => ({
+        id:String(d._id),
         descricao: d.descricao || '',
         loja: d.marcaloja || '',
-        cidade:d.cidade
-          // (d.localloja &&
-          //   d.localloja[0] &&
-          //   (d.localloja[0].cidade || d.localloja[0].localidade)) ||
-          // '',
+        cidade:d.cidade,
+        lojaId : d.loja_id ? String(d.loja_id) : ''
       }))
       .filter(s => s.descricao)        // garante descrição
       .slice(0, 10);                   // no máx. 10 linhas
 
-      console.log(' ', sugestoes)
+     // console.log(' ', sugestoes)
 
     // ex: [{descricao:'vaso...', loja:'Loja Tal', cidade:'Vitória'}, ...]
     res.json(sugestoes);
@@ -549,9 +562,6 @@ router.get('/home-page-exclusiva/busca', async (req, res) => {
     res.status(500).json([]);
   }
 });
-
-
-
 
 // /home-page-exclusiva/:id -> página exclusiva do produto
 router.get('/home-page-exclusiva/:id', async (req, res) => {

@@ -194,9 +194,9 @@
   /*.topbar .container-wide{ padding:0 12px; }*/
 }
 </style>
-<style>
-  .quickbar { padding-top: 0px; padding-bottom: 10px; } 
-</style>
+{{!-- <style>
+  .quicbkbar { padding-top: 0px; padding-bottom: 10px; } 
+</style> --}}
 <style>
 #sugestoesLista{
   position:absolute; top:100%; left:0; right:0;
@@ -489,77 +489,89 @@
   white-space:nowrap;
 }
 
+.colorloja{
+   background: red;color:#ffffff;
+}
+.sug-loja{
+   background: red;
+   color:#ffffff;
+   font-size: small;
+   padding: 1px 10px;
+}
 
+.quickbar { padding-top: 0px; padding-bottom: 10px; } 
+
+.quickbar-sticky{
+  position: sticky;
+  top: 60px;           /* altura aproximada da .topbar – ajuste fino se precisar */
+  z-index: 900;
+  background: #f8f9fa; /* mesma cor de fundo da barra */
+}
 </style>
 </head>
 <body>
 <header class="topbar">
-  <div class="topbar-row container-wide" >
-    <!-- LOGO -->
-    <a class="brand" href="/">
-      <span>Rota</span><span class="brand-accent">es</span>
-    </a>
-    <!-- BUSCA + FILTROS -->
-        <form class="search-form" action="/buscar" method="get" autocomplete="off" style="background: #ffff00;">
-            <div class="position-relative" id="buscaWrapper" style="background: #ff4dc4;width: 90%;margin: auto;">
-              <input
-                class="form-control"
-                name="q"
-                id="inputBusca"
-                placeholder="O que você procura?"
-                autocomplete="off"
-               
-              >
-              <div id="sugestoesLista"></div>
-           </div>
-           {{!-- <select id="selectCidade" class="form-select" name="municipio">
-             <option value="" {{#unless cidadeSelecionada}}selected{{/unless}}>Município</option>
-             {{#each cidades}}
-               <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
-             {{/each}}
-           </select>
+    <div class="topbar-row container-wide" >
+        <!-- LOGO -->
+        <a class="brand" href="/">
+          <span>Rota</span><span class="brand-accent">es</span>
+        </a>
+        <!-- BUSCA + FILTROS -->
+        <form class="search-form" action="/buscar" method="get" autocomplete="off" style="background: #fff;">
+                <div class="position-relative" id="buscaWrapper" style="background: #fff;width: 90%;margin: auto;">
+                  <input
+                    class="form-control"
+                    name="q"
+                    id="inputBusca"
+                    placeholder="O que você procura?"
+                    autocomplete="off"
+                  
+                  >
+                  <input type="hidden" name="idProduto" id="inputIdProduto">
+                  <div id="sugestoesLista"></div>
+              </div>
+              <select id="selectCidade" class="form-select" name="municipio">
+                <option value="" {{#unless cidadeSelecionada}}selected{{/unless}}>Município</option>
+                {{#each cidades}}
+                  <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
+                {{/each}}
+              </select>
 
-           <select id="selectBairro" class="form-select" name="loja">
-             <option value="" {{#unless bairroSelecionado}}selected{{/unless}}>Bairros</option>
-             {{#each bairros}}
-               <option value="{{this}}" {{#if (eq ../bairroSelecionado this)}}selected{{/if}}>{{this}}</option>
-             {{/each}}
-           </select> --}} 
-      </form>
+              <select id="selectBairro" class="form-select" name="loja">
+                <option value="" {{#unless bairroSelecionado}}selected{{/unless}}>Bairros</option>
+                {{#each bairros}}
+                  <option value="{{this}}" {{#if (eq ../bairroSelecionado this)}}selected{{/if}}>{{this}}</option>
+                {{/each}}
+              </select> 
+        </form>
+        <!-- AÇÕES -->
+       <nav class="actions" style="background: #333;">
+            {{#if userSite}}
+                <div class="user-menu" style="display:inline-flex;align-items:center;gap:10px;">
+                    <i class="fa-regular fa-user" aria-hidden="true" style="margin-left:4px;margin-right:8px;"></i>
+                    <label for="userMenu" class="visually-hidden">Menu do usuário</label>
 
-
-   <!-- AÇÕES -->
-   <nav class="actions" style="background: #333;">
-        {{#if userSite}}
-            <div class="user-menu" style="display:inline-flex;align-items:center;gap:10px;">
-                <i class="fa-regular fa-user" aria-hidden="true" style="margin-left:4px;margin-right:8px;"></i>
-                <label for="userMenu" class="visually-hidden">Menu do usuário</label>
-
-                <!-- select sem borda e com fundo da cor do botão -->
-                <select id="userMenu" class="user-select"
-                        onchange="if(this.value){ location.href=this.value; this.value=''; }"
-                        style="background:transparent;color:#fff;border:none;border-radius:16px;
-                              padding:4px 12px;height:28px;line-height:28px;font-size:.9rem;outline:none;">
-                  <option value="" selected>{{firstName userSite.nome}}</option>
-                  <option value="/home-logado">Minha conta</option>
-                  <option value="/logout">Sair</option>
-                </select>
-            </div>
-        {{else}}
-           <a href="/login" class="action-link"><i class="fa-regular fa-user"></i> Login</a>
-        {{/if}}
-          <a href="/sejacooperado" class="action-link"><i class="fa-regular fa-id-badge"></i> Seja um cooperado</a>
-    </nav>
-  </div>
+                    <!-- select sem borda e com fundo da cor do botão -->
+                    <select id="userMenu" class="user-select"
+                            onchange="if(this.value){ location.href=this.value; this.value=''; }"
+                            style="background:transparent;color:#fff;border:none;border-radius:16px;
+                                  padding:4px 12px;height:28px;line-height:28px;font-size:.9rem;outline:none;">
+                      <option value="" selected>{{firstName userSite.nome}}</option>
+                      <option value="/home-logado">Minha conta</option>
+                      <option value="/logout">Sair</option>
+                    </select>
+                </div>
+            {{else}}
+              <a href="/login" class="action-link"><i class="fa-regular fa-user"></i> Login</a>
+            {{/if}}
+              <a href="/sejacooperado" class="action-link"><i class="fa-regular fa-id-badge"></i> Seja um cooperado</a>
+       </nav>
+    </div>
 </header>
 <label id="vpLabel" aria-live="polite"></label>
-
-{{!-- Só mostra departamentos / setores quando NÃO está em modo busca (sem q) --}}
-{{#unless q}}
-
-  <div class="quickbar bg-light border-bottom" >
-    <div class="container my-2">
-        <div class="home-depto-bar" role="toolbar" aria-label="Departamentos" >
+<div class="quickbar quickbar-sticky bg-light border-bottom" style="background:#fff;padding: -20px;">
+    <div class="container my-0" style="background-color: #fff;">
+        <div class="home-depto-bar" role="toolbar" aria-label="Departamentos" style="background: #fff;" >
           {{#if departamentosAtivos.length}}
             {{#each departamentosAtivos}}
               <a class="btn btn-depto {{#if (eq ../segmentoAtual this.nomeDepartamento)}}btn-depto-active{{/if}}"
@@ -572,9 +584,11 @@
           {{/if}}
         </div>
     </div>
-  </div>
-
-  <div id="Setores" style="display:block;">
+</div>
+{{!-- Só mostra departamentos / setores quando NÃO está em modo busca (sem q) --}}
+{{#unless q}}
+  
+ <div id="Setores" style="display:block;">
     <section class="home-atividades">
       <div class="container">
         <h2 class="home-title">Setores</h2>
@@ -595,141 +609,109 @@
         {{/if}}
       </div>
     </section>
-  </div>
-
-  <div id="secoesPane" class="container my-3" hidden></div>
-
+</div>
+<div id="secoesPane" class="container my-3" hidden></div>
 {{/unless}}
 
-{{!-- <div id="secoesPane" class="container my-3" hidden></div> --}}
-{{!-- <div id="produtos" class="container my-4" style="background-color: #fbfafa;display: none;">
-        {{#if banner}}
-            <div class="row mb-3">
-              <div class="col">
-                <img src="{{banner.url}}" alt="{{banner.alt}}" class="img-fluid rounded shadow-sm w-100">
-              </div>
-            </div>
-        {{/if}}
-        {{#if produtos.length}}
-            <div class="row g-3" id="gridProdutos">
-              {{#each produtos}}
-                  <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    
-                  </div>
-              {{/each}}
+{{!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --}}
+    <div id="produtos"
+        class="container my-4"
+        style="background-color:#fbfafa;{{#if produtos.length}}display:block;{{else}}display:none;{{/if}}">
+            {{#if banner}}
+              ...
+            {{/if}}
             
-              {{#each anuncios}}
-              <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <aside class="card h-100 product-card d-flex align-items-center justify-content-center p-2 shadow-sm">
-                  <img src="{{this.logo}}" alt="{{this.nome}}" class="img-fluid p-3" style="max-height:120px;">
-                  <div class="card-body text-center">
-                    <h6 class="mb-1">{{this.nome}}</h6>
-                    <small class="text-muted">{{this.segmento}}</small>
-                    <a href="{{this.url}}" class="btn btn-success w-100 mt-3">Ir</a>
+            {{#if produtos.length}}
+              <div class="row g-3" id="gridProdutos">
+                {{#each produtos}}
+                  <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+                    <article class="card h-100 card-product">
+
+                      <a class="ratio ratio-4x3"
+                        href="/home-detalhe/{{_id}}"
+                        aria-label="{{descricao}}">
+                        <img class="w-100 h-100 object-fit-contain p-2"
+                            src="{{#if pageurls.[0]}}{{pageurls.[0]}}{{else}}https://via.placeholder.com/480x360?text=Produto{{/if}}"
+                            alt="{{descricao}}"
+                            loading="lazy">
+                      </a>
+
+                      <div class="card-body">
+                        <h6 class="card-title mb-2 text-truncate"
+                            title="{{descricao}}">
+                          {{descricao}}
+                        </h6>
+
+                        <div class="produto-info-home">
+                          <div class="pih-row">
+                            <span class="pih-label">Cód.</span>
+                            <span class="pih-value">{{codigo}}</span>
+                          </div>
+
+                          <div class="pih-row">
+                            <span class="pih-label">À vista</span>
+                            <span class="pih-value">
+                              {{#if precovista}}
+                                R$ {{formatCurrency precovista}}
+                              {{else}}
+                                sob consulta
+                              {{/if}}
+                            </span>
+                          </div>
+
+                          <div class="pih-row pih-desc">
+                            <span class="pih-label">Desc.</span>
+                            <span class="pih-value">
+                              {{descricao}} {{complete}}
+                            </span>
+                          </div>
+
+                          <div class="pih-row">
+                            <span class="pih-label">Loja</span>
+                            <span class="pih-value">
+                              <a href="/loja/{{loja_id}}">{{marcaloja}}</a>
+                            </span>
+                          </div>
+
+                          <div class="mt-1">
+                            <a class="btn btn-sm btn-outline-primary"
+                              href="/home-detalhe/{{_id}}">
+                              Detalhes / Conversar
+                            </a>
+
+                            <a class="btn btn-sm btn-outline-secondary"
+                              href="/home-page-exclusiva/{{_id}}">
+                              Página exclusiva
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                    </article>
                   </div>
-                </aside>
+                {{/each}}
+
+                {{#each anuncios}}
+                  <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <aside class="card h-100 product-card d-flex align-items-center justify-content-center p-2 shadow-sm">
+                      <img src="{{this.logo}}" alt="{{this.nome}}" class="img-fluid p-3" style="max-height:120px;">
+                      <div class="card-body text-center">
+                        <h6 class="mb-1">{{this.nome}}</h6>
+                        <small class="text-muted">{{this.segmento}}</small>
+                        <a href="{{this.url}}" class="btn btn-success w-100 mt-3">Ir</a>
+                      </div>
+                    </aside>
+                  </div>
+                {{/each}}
               </div>
-              {{/each}}
-            </div>
-        {{else}}
-            <div class="alert alert-info">
-                  Nenhum produto encontrado {{#if q}}para “{{q}}”{{/if}}.
-                  <a href="/">Limpar filtros</a>
-            </div>
-        {{/if}}
-</div> --}}
-<div id="produtos"
-     class="container my-4"
-     style="background-color:#fbfafa;{{#if produtos.length}}display:block;{{else}}display:none;{{/if}}">
-  {{#if banner}}
-    ...
-  {{/if}}
-
-  {{#if produtos.length}}
-    <div class="row g-3" id="gridProdutos">
-      {{#each produtos}}
-        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <!-- aqui você já monta o card, ou deixa pro JS -->
-        </div>
-      {{/each}}
-
-      {{#each anuncios}}
-        ...
-      {{/each}}
+            {{else}}
+              <div class="alert alert-info">
+                Nenhum produto encontrado {{#if q}}para “{{q}}”{{/if}}.
+                <a href="/">Limpar filtros</a>
+              </div>
+            {{/if}}
     </div>
-  {{else}}
-    <div class="alert alert-info">
-      Nenhum produto encontrado {{#if q}}para “{{q}}”{{/if}}.
-      <a href="/">Limpar filtros</a>
-    </div>
-  {{/if}}
-</div>
-
-
-<!-- linha anterior existente -->
-{{!-- <script>
-////////////////////////////////////////////////////////////
-(function(){
-  const el = document.getElementById('vpLabel') || (function(){
-    const n = document.createElement('label'); n.id = 'vpLabel'; document.body.appendChild(n); return n;
-  })();
-
-  const fmt = n => String(n|0);
-  function draw(){
-    const w = window.innerWidth, h = window.innerHeight, dpr = window.devicePixelRatio || 1;
-    el.innerHTML = `${fmt(w)}×${fmt(h)} <small>@${dpr.toFixed(2)}x</small>`;
-  }
-
-  let ticking = false;
-  const raf = window.requestAnimationFrame || (fn=>setTimeout(fn,16));
-  function onResize(){
-    if (ticking) return;
-    ticking = true; raf(()=>{ draw(); ticking = false; });
-  }
-
-  window.addEventListener('resize', onResize, {passive:true});
-  window.addEventListener('orientationchange', onResize, {passive:true});
-  window.addEventListener('load', draw, {once:true});
-  draw();
-})();
-</script> --}}
-
-{{!-- <script>
-document.addEventListener('DOMContentLoaded', function(){
-  var menu = document.getElementById('userMenu');
-  if (!menu) return;
-  console.log('menu X10',menu)
-  //////////////////////////////////////////////////////////////
-  function go(v){
-    console.log('valor de v',v)
-    if (v === 'logout') {
-      window.location.href = '/logout';
-    } else if (v === 'profile') {
-      window.location.href = '/home-logado'; // ✅ com hífen
-    }
-    // volta a exibir o primeiro nome
-    menu.value = '';
-  }
-
-  // dispara em troca real de opção
-  menu.addEventListener('change', function(e){
-    // log para confirmar que o handler está ativo
-    console.log('[userMenu change]', e.target.value);
-    go(e.target.value);
-  });
-
-  // fallback (alguns navegadores disparam 'input' ao abrir/confirmar)
-  menu.addEventListener('input', function(e){
-     console.log('[userMenu input]', e.target.value);
-    if (e.target.value === 'logout' || e.target.value === 'profile') {
-      go(e.target.value);
-    }
-  });
-});
-</script> --}}
 </body>
-
-
 </html>
 <script id="home-bundle">
 (() => {
@@ -1049,17 +1031,17 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   (function initAutocompleteBusca(){
-  const input  = document.getElementById('inputBusca');
-  const lista  = document.getElementById('sugestoesLista');
-  const form   = document.querySelector('form.search-form');
-  const selCid = document.getElementById('selectCidade');
-  const selBai = document.getElementById('selectBairro');
+  const input   = document.getElementById('inputBusca');
+  const lista   = document.getElementById('sugestoesLista');
+  const form    = document.querySelector('form.search-form');
+  const selCid  = document.getElementById('selectCidade');
+  const selBai  = document.getElementById('selectBairro');
+  const hiddenId = document.getElementById('inputIdProduto'); // << novo
 
   if (!input || !lista || !form) return;
 
-  let lastQuery      = '';
-  let abortCtrl      = null;
-  let cacheSugestoes = [];   // <<< guarda os objetos vindos do backend
+  let lastQuery = '';
+  let abortCtrl = null;
 
   function hideLista(){
     lista.style.display = 'none';
@@ -1084,25 +1066,23 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
     if (!resp.ok) return [];
-
     const data = await resp.json();
 
-    // aceita array simples de strings ou array de objetos
     if (Array.isArray(data)) return data;
     if (Array.isArray(data.itens)) return data.itens;
     if (Array.isArray(data.items)) return data.items;
     return [];
   }
 
-  // quando digita no campo
+  // ===== input: digitação =====
   on(input, 'input', async e => {
     const q = (e.target.value || '').trim();
     if (q.length < 3) {
       hideLista();
+      if (hiddenId) hiddenId.value = '';   // limpa id se o usuário apagar
       return;
     }
 
-    // evita chamadas duplicadas pra mesma palavra
     if (q === lastQuery) return;
     lastQuery = q;
 
@@ -1110,82 +1090,87 @@ document.addEventListener('DOMContentLoaded', function(){
       const sugestoes = await buscarSugestoes(q);
       if (!sugestoes.length){
         hideLista();
+        if (hiddenId) hiddenId.value = '';
         return;
       }
+      //___________________________________________________________________________
+      lista.innerHTML = sugestoes.map(item => {
+            const texto  = item.texto  || item.descricao || item.nome || '';
+            const loja   = item.loja   || '';
+            const cidade = item.cidade || '';
+            const right  = [loja, cidade].filter(Boolean).join(' - ');
 
-      cacheSugestoes = sugestoes; // <<< guarda tudo
-
-      lista.innerHTML = sugestoes.map((item, idx) => {
-        // item pode ser string ou objeto
-        const desc = (typeof item === 'string')
-          ? item
-          : (item.descricao || item.texto || item.nome || '');
-
-        const loja = (typeof item === 'object' && item)
-          ? (item.loja || item.marcaloja || '')
-          : '';
-
-        const cidade = (typeof item === 'object' && item)
-          ? (item.cidade || item.municipio || '')
-          : '';
-
-        const partesLocal = [];
-        if (loja)   partesLocal.push(loja);
-        if (cidade) partesLocal.push(cidade);
-
-        const localStr = partesLocal.join(' - '); // "Loja Tal - Vitória"
-
-        const val = desc || '';
-
-        return `
-          <div class="sug-item"
-               data-index="${idx}"
-               data-value="${att(val)}">
-            <span class="sug-desc">${esc(val)}</span>
-            ${localStr
-              ? `<span class="sug-local">${esc(localStr)}</span>`
-              : ''}
-          </div>`;
+            return `
+              <div class="sug-item"
+                  data-texto="${att(texto)}"
+                  data-loja-id="${att(item.lojaId || '')}"
+                  data-loja-nome="${att(loja)}"
+                  data-cidade="${att(cidade)}">
+                <span class="sug-prod js-sug-prod">${esc(texto)}</span>
+                ${right
+                  ? `<span class="sug-loja js-sug-loja colorloja">${esc(right)}</span>`
+                  : ''
+                }
+              </div>
+            `;
       }).join('');
-
+      //__________________________________________________________________________
       lista.style.display = 'block';
     }catch(err){
       console.error('autocomplete erro', err);
       hideLista();
+      if (hiddenId) hiddenId.value = '';
     }
   });
 
-  // clicar em uma sugestão: coloca no input, ajusta cidade e busca
+  // ===== clique na sugestão =====
   on(lista, 'click', ev => {
-    const el = ev.target.closest('.sug-item');
-    if (!el) return;
+  const item = ev.target.closest('.sug-item');
+  if (!item) return;
 
-    const idx   = Number(el.dataset.index);
-    const sug   = cacheSugestoes[idx] || null;
-    const texto = el.getAttribute('data-value') || el.textContent.trim();
+  const clicouProd = ev.target.closest('.js-sug-prod');
+  const clicouLoja = ev.target.closest('.js-sug-loja');
 
-    // texto principal no input
-    input.value = texto;
+  const texto    = item.dataset.texto || '';
+  const lojaId   = item.dataset.lojaId || '';
+  const lojaNome = item.dataset.lojaNome || '';
+  const cidade   = item.dataset.cidade || '';
 
-    // se o backend mandou cidade, já seleciona no combo
-    if (sug && selCid && typeof sug === 'object' && sug.cidade) {
-      selCid.value = sug.cidade;
-      // se você quiser recarregar bairros:
-      if (typeof window.carregarBairros === 'function') {
-        carregarBairros(sug.cidade, '');
-      }
+  hideLista();
+  input.value = texto;   // mostra o texto digitado no campo
+
+  // 1) CLICOU NA PRIMEIRA COLUNA -> busca esse produto em TODAS as lojas
+  if (clicouProd) {
+    const url = `/buscar?q=${encodeURIComponent(texto)}`;
+    window.location.href = url;
+    return;
+  }
+
+  // 2) CLICOU NA SEGUNDA COLUNA -> busca esse produto SOMENTE nessa loja
+  if (clicouLoja) {
+    // se tiver id da loja, usamos ele. Senão, mandamos nome+cidade.
+    let url;
+    if (lojaId) {
+      url = `/buscar?q=${encodeURIComponent(texto)}&lojaId=${encodeURIComponent(lojaId)}`;
+    } else {
+      const filtroLoja = [lojaNome, cidade].filter(Boolean).join(' - ');
+      url = `/buscar?q=${encodeURIComponent(texto)}&loja=${encodeURIComponent(filtroLoja)}`;
     }
+    window.location.href = url;
+    return;
+  }
 
-    hideLista();
-    form.submit();       // faz a busca ao clicar
-  });
+  // fallback: se clicar em algum lugar estranho dentro do item, usa busca normal
+  form.submit();
+});
 
-  // se clicar fora, esconde a lista
+  // clique fora: esconde a lista
   on(document, 'click', ev => {
     if (ev.target === input || lista.contains(ev.target)) return;
     hideLista();
   });
 })();
+
 
   ///////////////////////////////////////////////////////////////////////
 

@@ -1,6 +1,14 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema;
+// <<< NOVO: função de normalização da descrição
+function normDesc(s = '') {
+  return String(s || '')
+    .normalize('NFD')                // separa acentos
+    .replace(/\p{Diacritic}/gu, '')  // remove acentos
+    .toLowerCase()
+    .trim();
+}
 
 // LocalizacaoRefSchema (apenas o trecho)
 const LocalizacaoRefSchema = new Schema({
@@ -53,6 +61,7 @@ const ArquivoDocSchema = new Schema({
         message: 'Descrição não pode conter números; use os campos "complemento" ou "referência".'
       }
   },
+  descricaoNorm: { type: String, trim: true, index: true }, // <<< NOVO
   complete: { type: String, default: false },
   referencia: { type: String ,default: ''},
   referencia2: { type: String,default: ''},
@@ -93,6 +102,26 @@ const ArquivoDocSchema = new Schema({
   
 
 }, { timestamps: true });
+
+
+// <<< NOVO: sempre que salvar UM documento, preenche descricaoNorm
+ArquivoDocSchema.pre('save', function(next) {
+  if (this.descricao) {
+    this.descricaoNorm = normDesc(this.descricao);
+  }
+  next();
+});
+
+// <<< NOVO: em importações em lote (insertMany), também preenche descricaoNorm
+ArquivoDocSchema.pre('insertMany', function(docs, next) {
+  docs.forEach(d => {
+    if (d.descricao) {
+      d.descricaoNorm = normDesc(d.descricao);
+    }
+  });
+  next();
+});
+
 
 // campos usados nos filtros
 

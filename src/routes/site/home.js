@@ -9,6 +9,16 @@ const Departamento = require('../../models/departamento');    // segmentos
 const DeptoSetor   = require('../../models/deptosetores');    // admin.deptosetores
 const DeptoSecao = require('../../models/deptosecao');
 const ArquivoDoc=require('../../models/arquivoDoc')
+
+
+// <<< função de normalizar descrição (igual ao schema)
+function normDesc(s = '') {
+  return String(s || '')
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '') // tira acentos
+    .toLowerCase()
+    .trim();
+}
 const { render } = require('express/lib/response');
 
 const CIDADES_ES = ['Vitória','Vila Velha','Guarapari','Cariacica','Serra'];
@@ -17,6 +27,27 @@ const CIDADES_ES = ['Vitória','Vila Velha','Guarapari','Cariacica','Serra'];
 const escapeRegExp = (s = '') => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 // helper para escapar caracteres especiais de RegExp
 const escapeRx = s => String(s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const ACCENT_GROUPS = {
+      a: 'aáàâãä',
+      e: 'eéèêë',
+      i: 'iíìîï',
+      o: 'oóòôõö',
+      u: 'uúùûü',
+      c: 'cç',
+      n: 'nñ'
+    };
+function makeAccentPattern(q = '') {
+  const base = normDesc(q);
+  if (!base) return '';
+
+  const termos = base
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (!termos.length) return '';
+
+  return termos.join('.*');
+}
 
 const norm = s => String(s || '')
   .normalize('NFD').replace(/\p{Diacritic}/gu, '')
@@ -91,7 +122,7 @@ router.get('/', async (req, res) => {
       .lean();
 
     console.log('');  
-    console.log('',setores);
+    console.log('[ line 125 ] router.get("/buscar") => setores :',setores);
     console.log('');
     // 4️⃣ monta cards
     const atividades = setores.map(s => ({
@@ -225,25 +256,64 @@ router.get('/bairros',noStore, async (req, res) => {
 
 // VAI BUSCAR OS PRODUTOS DE ACORDO COM A CIDADE BAIRRO
 router.get('/buscar', async (req, res) => {
-  console.log('[ 230 ] /buscar');
+  console.log('');
+  console.log('router.get("/buscar,"',req.query)
+  console.log('');
   try {
-    const { q = '', municipio = '', bairro = '' } = req.query;
+    const { q = '', municipio = '', bairro = '', IdProd = '',lojaId    = '' } = req.query;
 
-    const filtro = {};
-    if (q.trim()) {
-      // ... teu filtro por descrição / norm etc ...
+    const filtro= {
+      ativo: true,                      // só produto ativado
+      qte:   { $gt: 0 },                // só quem tem estoque
+      pageurls: {                       // pelo menos 1 imagem
+        $exists: true,
+        $not: { $size: 0 }
+      }
+    };
+
+    if (municipio) filtro.cidade = municipio;
+    if (bairro)    filtro.bairro = bairro;
+    
+
+
+    if (IdProd) {
+      // busca o produto base para copiar descrição / seção
+      const base = await Ddocumento.findById(IdProd).lean();
+
+      if (base) {
+        // se você tiver um campo normalizado, use ele aqui
+        // ex.: filtro.descricaoNorm = base.descricaoNorm;
+        filtro.descricao = base.descricao;
+
+        // se tiver id da seção / categoria, filtre também
+        if (base.idSecao) {
+          filtro.idSecao = base.idSecao;    // ajuste pro nome real
+        }
+      }
+
+      // limitar para a mesma loja, se você estiver enviando isso
+      if (lojaId) {
+        filtro.loja_id = lojaId;            // campo real no schema
+      } 
     }
-    if (municipio) filtro['localloja.cidade'] = municipio;
-    if (bairro)    filtro['localloja.bairro'] = bairro;
-
+    else if (q.trim()) {
+         const pattern = makeAccentPattern(q);   // <<< NOVO
+         if (pattern) {
+            const rx = new RegExp(pattern, 'i');
+            filtro.descricao = { $regex: rx };
+          }
+    }
+  
+   
+    console.log('FILTRO /buscar', filtro)
     const produtos = await Ddocumento.find(filtro)
       .populate('fornecedor', 'razao')
       .lean();
-
-   // console.log('[ 252 ] /buscar/produtos');
-   // console.log(produtos);
-
-    // >>> NOVO: mesmos departamentos que você usa na rota "/"
+     console.log('');
+     console.log('1000 /buscar produtos.length =>', produtos.length);
+     console.log('');
+     console.log('_______________________________________________');
+      // >>> NOVO: mesmos departamentos que você usa na rota "/"
     const departamentosAtivos = await Departamento
       .find({ ativado: true })       // se na tua rota "/" tiver outro filtro (exibehome, etc),
       .sort({ ordem: 1 })          // copie exatamente o mesmo aqui
@@ -289,54 +359,79 @@ router.get('/buscar-sugestoes', noStore, async (req, res) => {
     const q = String(req.query.q || '').trim();
     if (q.length < 3) return res.json([]);
 
-    // monta regex tolerante (como já estava)
-    const pattern = norm(q)
-      .split(/\s+/)
-      .filter(Boolean)
-      .map(escapeRx)
-      .join('.*');
-    const rx = new RegExp(pattern, 'i');
-    // _ ?????????????????????????????????????????????????????????????????????????????
+    // filtro base
+    const filtroBase = {
+      ativo: true,
+      qte: { $gt: 0 },
+      pageurls: { $exists: true, $not: { $size: 0 } }
+    };
+
+    // =============================
+    // 1) Montar regex de pesquisa
+    // =============================
+    const pattern = makeAccentPattern(q);  
+    let rx = null;
+
+    if (pattern) {
+      rx = new RegExp(pattern, 'i');
+    }
+
+    if (rx) {
+      filtroBase.descricao = { $regex: rx };
+    } else {
+      // se algo der errado, retorna vazio
+      return res.json([]);
+    }
+
+    // =============================
+    // 2) Consulta ao Mongo
+    // =============================
     const docs = await Ddocumento.find(
-      { descricao: { $regex: rx } },
+      filtroBase,
       {
         descricao: 1,
+        codigo: 1,
+        qte: 1,
         marcaloja: 1,
-        localloja: 1,      // para pegar cidade do 1º localloja
-        cidade:1
+        cidade: 1,
+        bairro: 1,
+        loja_id: 1
       }
     )
       .collation({ locale: 'pt', strength: 1 })
       .limit(30)
       .lean();
-    // _ ?????????????????????????????????????????????????????????????????????????????
-    // transforma em objetos já no formato que o front vai usar
+
+    // =============================
+    // 3) Formatar sugestões
+    // =============================
     const sugestoes = docs
       .map(d => ({
-        id:String(d._id),
+        idProd: String(d._id),
         descricao: d.descricao || '',
         loja: d.marcaloja || '',
-        cidade:d.cidade,
-        lojaId : d.loja_id ? String(d.loja_id) : ''
+        cidade: d.cidade || '',
+        bairro: d.bairro || '',
+        lojaId: d.loja_id ? String(d.loja_id) : ''
       }))
-      .filter(s => s.descricao)        // garante descrição
-      .slice(0, 10);                   // no máx. 10 linhas
+      .filter(s => s.descricao)   // garante texto
+      .slice(0, 10);
 
-     // console.log(' ', sugestoes)
+    return res.json(sugestoes);
 
-    // ex: [{descricao:'vaso...', loja:'Loja Tal', cidade:'Vitória'}, ...]
-    res.json(sugestoes);
   } catch (e) {
     console.error('erro /buscar-sugestoes', e);
-    res.json([]);
+    return res.json([]);
   }
 });
 
 
 router.get('/setor/:idSetor', async (req, res) => {
   console.log('');
-  console.log(' [ 299 ] src/routes/site/home.js//setor/:idSetor');
-  console.log(' [ 297 ] ',req.params);
+  console.log(' [ line 389 ] src/routes/site/home.js//setor/:idSetor');
+  console.log('');
+  console.log(' [ line 391 ] ',req.params);
+  console.log('_____________________________________________________________________');
   try {
         const idSetor=req.params.idSetor
         //const n=req.params.idSetor//
@@ -384,7 +479,9 @@ router.get('/setor/:idSetor', async (req, res) => {
 });
 
 router.get('/secao/:secaoId/produtos', async (req, res) => {
-       console.log('secao/:secaoId/produto',req.params)
+    console.log('450');
+    console.log('secao/:secaoId/produto ?',req.params);
+    console.log('');
       // paginação
       const page  = Math.max(parseInt(req.query.page || '1', 10), 1);
       const limit = 50;
@@ -681,5 +778,376 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
 });
 
 
+
+// ====================================================================
+// BUSCA 1: clique na DESCRIÇÃO do produto (todas as lojas)
+// GET /buscar-por-texto?q=...&municipio=...&bairro=...
+// ====================================================================
+router.get('/buscar-por-texto', async (req, res) => {
+  console.log('');
+  console.log('[ line 796 ] /buscar-por-texto');
+  console.log('');
+  console.log('');
+  console.log('[ line 796 ] /buscar-por-texto');
+  console.log('');
+  try {
+          const {
+            q = '',
+            municipio = '',
+            bairro = ''
+          } = req.query;
+
+          // ===== filtro base: só produto válido =====
+          const filtro = {
+            ativo: true,                 // só produto ativado
+            qte: { $gt: 0 },             // só quem tem estoque
+            pageurls: {                  // pelo menos 1 imagem
+              $exists: true,
+              $not: { $size: 0 }
+            }
+          };
+
+          // cidade/bairro simples (sem localloja)
+          if (municipio) filtro.cidade = municipio;
+          if (bairro)    filtro.bairro = bairro;
+
+          // ====== FILTRO DE TEXTO USANDO descricaoNorm ======
+          if (q.trim()) {
+            const pattern = makeAccentPattern(q);   // usa helper que normaliza
+
+            if (pattern) {
+              const rx = new RegExp(pattern, 'i');
+
+              // ATENÇÃO: agora filtramos em descricaoNorm (campo normalizado do schema)
+              filtro.descricaoNorm = { $regex: rx };
+              // se quiser manter o antigo também, poderia fazer um $or,
+              // mas como estamos migrando pra descricaoNorm, não vou misturar aqui.
+            }
+          }
+
+          console.log('[ line 831 ] FILTRO /buscar-por-texto =>', filtro);
+
+          const produtos = await Ddocumento.find(filtro)
+            .populate('fornecedor', 'razao')
+            .lean();
+          console.log('');
+          console.log('', produtos);
+          console.log('1000 /buscar-por-texto produtos =>', produtos.length);
+          console.log('_________________________________________');
+          console.log('');
+
+          let secaoIds = [];
+
+          if (produtos.length > 0) {
+              const p = produtos[0];
+              console.log('produtos :',produtos)   
+              try {
+                const loc = p.localloja?.[0];
+                const setor = loc?.setor?.[0];
+                const secoes = setor?.secao || [];
+
+                secaoIds = secoes.map(s => s.idSecao?.toString()).filter(Boolean);
+
+                console.log("Seções detectadas:", secaoIds);
+
+              } catch (err) {
+                console.log("Erro ao extrair idSecao:", err);
+              }
+          }
+
+          // mesmos departamentos da home
+          const departamentosAtivos = await Departamento
+            .find({ ativado: true })
+            .sort({ ordem: 1 })
+            .lean();
+
+          const CIDADES_ES = ['Vitória', 'Vila Velha', 'Guarapari', 'Cariacica', 'Serra'];
+          const bairrosDaCidade = municipio
+            ? await Lojista.distinct('endereco.bairro', { 'endereco.cidade': municipio })
+            : [];
+
+          let relacionados = [];
+
+          if (secaoIds.length > 0) {
+            relacionados = await Ddocumento.find({
+              ativo: true,
+              qte: { $gt: 0 },
+              pageurls: { $exists: true, $not: { $size: 0 } },
+
+              // FILTRO pela mesma seção
+              'localloja.setor.secao.idSecao': { $in: secaoIds },
+
+              // evita incluir novamente o produto principal
+              _id: { $ne: produtos[0]._id }
+            })
+              .limit(40)
+              .lean();
+
+            console.log("Relacionados encontrados:", relacionados.length);
+          }
+
+          // =======================================================
+          // 3) Resultado final: produto principal + relacionados
+          // =======================================================
+          const resultadoFinal = [...produtos, ...relacionados];
+
+          console.log(
+            `TOTAL enviado para o frontend => ${resultadoFinal.length}`
+          );
+
+          res.render('pages/site/home', {
+            layout: 'site/home',
+            q,
+            cidades: CIDADES_ES,
+            cidadeSelecionada: municipio,
+            bairros: bairrosDaCidade,
+            bairroSelecionado: bairro,
+            produtos: resultadoFinal,
+            departamentosAtivos,
+            segmentoAtual: ''
+          });
+    
+  } catch (e) {
+          console.error('Erro em /buscar-por-texto', e);
+          res.status(500).render('pages/site/home', {
+          layout: 'site/home',
+          q: req.query.q || '',
+          cidades: ['Vitória','Vila Velha','Guarapari','Cariacica','Serra'],
+          produtos: [],
+          departamentosAtivos: [],
+          segmentoAtual: ''
+    });
+  }
+
+});
+
+// ====================================================================
+// BUSCA 2: clique na LOJA (mesma loja + mesma seção do produto)
+// GET /buscar-por-loja?IdProd=...&lojaId=...&municipio=...&bairro=...
+// ====================================================================
+router.get('/buscar-por-loja', async (req, res) => {
+  console.log('');
+  console.log('[ 872 ] /buscar-por-loja',req.query);
+  console.log('');
+
+  try {
+    const {
+      IdProd   = '',
+      lojaId   = '',
+      municipio = '',
+      bairro    = ''
+    } = req.query;
+
+    // sem produto base → volta pra home
+    if (!IdProd) {
+     // return res.redirect('/');
+    }
+
+    // pega produto base (o que o usuário clicou na sugestão)
+    const base = await Ddocumento.findById(IdProd).lean();
+    if (!base) {
+      //return res.redirect('/');
+    }
+
+    // ============================
+    // 1) FILTRO BASE (produto válido)
+    // ============================
+    const filtro = {
+      ativo: true,                 // só produto ativado
+      qte: { $gt: 0 },             // só quem tem estoque
+      pageurls: {                  // pelo menos 1 imagem
+        $exists: true,
+        $not: { $size: 0 }
+      }
+    };
+
+    // cidade/bairro simples
+    if (municipio) filtro.cidade = municipio;
+    if (bairro)    filtro.bairro = bairro;
+
+    // ============================
+    // 2) MESMA LOJA
+    // ============================
+    if (lojaId) {
+      filtro.loja_id = lojaId;         // veio pela query
+    } else if (base.loja_id) {
+      filtro.loja_id = base.loja_id;   // fallback: usa a do produto base
+    }
+
+    // ============================
+    // 3) MESMA(S) SEÇÃO(ÕES)
+    // ============================
+    let secaoIds = [];
+
+    if (Array.isArray(base.localloja) && base.localloja.length) {
+      for (const loc of base.localloja) {
+        if (!Array.isArray(loc.setor)) continue;
+        for (const s of loc.setor) {
+          if (!Array.isArray(s.secao)) continue;
+          for (const sec of s.secao) {
+            if (sec.idSecao) {
+              secaoIds.push(String(sec.idSecao));
+            }
+          }
+        }
+      }
+    }
+
+    // remove duplicados
+    secaoIds = [...new Set(secaoIds)];
+
+    if (secaoIds.length > 0) {
+      filtro['localloja.setor.secao.idSecao'] = { $in: secaoIds };
+    }
+
+    console.log('FILTRO /buscar-por-loja =>', filtro);
+
+    // ============================
+    // 4) BUSCA PRODUTOS
+    // ============================
+    const produtos = await Ddocumento.find(filtro)
+      .populate('fornecedor', 'razao')
+      .lean();
+
+    console.log('');
+    console.log('1000 /buscar-por-loja produtos =>', produtos.length);
+    console.log('');
+    console.log('<><><><><><><><><><><><><><><><><><><><>');
+
+    // ============================
+    // 5) MESMOS DEPARTAMENTOS DA HOME
+    // ============================
+    const departamentosAtivos = await Departamento
+      .find({ ativado: true })
+      .sort({ ordem: 1 })
+      .lean();
+
+    const CIDADES_ES = ['Vitória', 'Vila Velha', 'Guarapari', 'Cariacica', 'Serra'];
+    const bairrosDaCidade = municipio
+      ? await Lojista.distinct('endereco.bairro', { 'endereco.cidade': municipio })
+      : [];
+
+    // usa descrição do produto base só para aparecer na barra de busca
+    const q = base.descricao || '';
+
+    res.render('pages/site/home', {
+      layout: 'site/home',
+      q,
+      cidades: CIDADES_ES,
+      cidadeSelecionada: municipio,
+      bairros: (bairrosDaCidade || [])
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b, 'pt-BR')),
+      bairroSelecionado: bairro,
+      produtos,
+      departamentosAtivos,
+      segmentoAtual: ''
+    });
+
+  } catch (e) {
+    console.error('Erro em /buscar-por-loja', e);
+    res.status(500).render('pages/site/home', {
+      layout: 'site/home',
+      q: '',
+      cidades: ['Vitória','Vila Velha','Guarapari','Cariacica','Serra'],
+      produtos: [],
+      departamentosAtivos: [],
+      segmentoAtual: ''
+    });
+  }
+});
+
+
+// ROTA PROVISÓRIA: atualiza descricaoNorm dos itens antigos
+router.get('/atualizar-descricao-norm', async (req, res) => {
+  console.log('5000-s')
+  try {
+    // pega só quem tem descricao mas ainda não tem descricaoNorm
+    const docs = await Ddocumento.find({
+      descricao: { $exists: true, $ne: '' },
+      $or: [
+        { descricaoNorm: { $exists: false } },
+        { descricaoNorm: '' }
+      ]
+    }).lean(false); // importante: queremos documentos Mongoose, não plain JS
+
+    if (!docs.length) {
+      return res.send('Nenhum documento para atualizar. 👍');
+    }
+
+    let atualizados = 0;
+
+    for (const doc of docs) {
+      const nova = normDesc(doc.descricao || '');
+
+      // se por algum motivo ficar vazio, pula
+      if (!nova) continue;
+
+      // só atualiza se mudou de fato
+      if (doc.descricaoNorm !== nova) {
+        doc.descricaoNorm = nova;
+        await doc.save();
+        atualizados++;
+      }
+    }
+
+    res.send(`OK! Atualizados ${atualizados} documentos de ${docs.length} encontrados.`);
+  } catch (err) {
+    console.error('Erro em /atualizar-descricao-norm', err);
+    res.status(500).send('Erro ao atualizar descricaoNorm. Veja o console do servidor.');
+  }
+});
+
+
 module.exports = router;
 
+// router.get('/buscar-relacionados', async (req, res) => {
+//   try {
+//     const { idProd = '', lojaId = '' } = req.query;
+
+//     if (!idProd) {
+//       return res.redirect('/');
+//     }
+
+//     // produto base
+//     const base = await Ddocumento.findById(idProd).lean();
+//     if (!base) {
+//       return res.redirect('/');
+//     }
+
+//     const filtro = {
+//       ativo: true,
+//       qte: { $gt: 0 },
+//       pageurls: { $exists: true, $not: { $size: 0 } },
+//       descricao: base.descricao,        // mesma descrição base
+//       idSecao: base.idSecao || null     // mesma seção, se existir
+//     };
+
+//     if (lojaId) filtro.loja_id = lojaId;
+
+//     const produtos = await Ddocumento.find(filtro)
+//       .populate('fornecedor', 'razao')
+//       .lean();
+
+//     const departamentosAtivos = await Departamento
+//       .find({ ativado: true })
+//       .sort({ ordem: 1 })
+//       .lean();
+
+//     res.render('pages/site/home', {
+//       layout: 'site/home',
+//       q: '',
+//       cidades: ['Vitória','Vila Velha','Guarapari','Cariacica','Serra'],
+//       cidadeSelecionada: '',
+//       bairros: [],
+//       bairroSelecionado: '',
+//       produtos,
+//       departamentosAtivos,
+//       segmentoAtual: ''
+//     });
+
+//   } catch (e) {
+//     console.error('ERRO /buscar-relacionados', e);
+//     res.redirect('/');
+//   }
+// });

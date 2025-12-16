@@ -1,0 +1,181 @@
+Boa, agora entendi a ideia: ele paga assinatura e você dá um “espaço” dentro do seu site, mas o usuário continua no Urutal.
+O jeito mais elegante é ter uma página interna do Urutal para cada parceiro, com seu topo, seu layout, e dentro dela:
+
+
+ou um iframe com o site do parceiro
+
+
+ou uma mini-vitrine com logo, texto, fotos e um botão “Ir para a loja”.
+
+
+Vou te montar um fluxo simples e direto.
+
+1. Modelo do parceiro (Mongo)
+Algo bem pequeno pra começar:
+// models/Parceiro.js
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+const ParceiroSchema = new Schema({
+  nome:      { type: String, required: true, trim: true },
+  slug:      { type: String, required: true, unique: true, index: true }, // ex: "armacao"
+  url:       { type: String, required: true }, // link da loja parceira
+  logo:      { type: String, default: '' },    // opcional: url da logo
+  descricao: { type: String, default: '' },
+  ativo:     { type: Boolean, default: true },
+}, { timestamps: true });
+
+module.exports =
+  mongoose.models.Parceiro || mongoose.model('Parceiro', ParceiroSchema);
+
+
+O slug é o que você usa na URL: /parceiro/armacao, /parceiro/padaria-x, etc.
+
+
+2. Rota da página do parceiro
+No mesmo arquivo onde você tem as rotas da home (routes/site/home.js):
+const Parceiro = require('../../models/Parceiro');
+
+// ...
+
+router.get('/parceiro/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const parceiro = await Parceiro.findOne({ slug, ativo: true }).lean();
+    if (!parceiro) {
+      return res.redirect('/');    // se não achar, volta pra home
+    }
+
+    // você pode aproveitar os mesmos dados da home (cidades, departamentos etc)
+    const CIDADES_ES = ['Vitória','Vila Velha','Guarapari','Cariacica','Serra'];
+    const departamentosAtivos = await Departamento
+      .find({ ativado: true })
+      .sort({ ordem: 1 })
+      .lean();
+
+    res.render('pages/site/parceiro', {
+      layout: 'site/home',     // usa o mesmo layout da home
+      parceiro,
+      cidades: CIDADES_ES,
+      departamentosAtivos,
+      segmentoAtual: '',
+      q: ''                    // campo de busca vazio
+    });
+
+  } catch (e) {
+    console.error('Erro em /parceiro/:slug', e);
+    res.redirect('/');
+  }
+});
+
+
+3. View parceiro.handlebars
+Cria views/pages/site/parceiro.handlebars reaproveitando o topo e a barra de departamentos.
+Exemplo simples com iframe + mini vitrine:
+<div class="container my-3">
+  <div class="row">
+    <div class="col-12 mb-3">
+      <h1 class="h5 mb-2">
+        Loja parceira · {{parceiro.nome}}
+      </h1>
+      {{#if parceiro.descricao}}
+        <p class="text-muted small">{{parceiro.descricao}}</p>
+      {{/if}}
+    </div>
+
+    <div class="col-12 col-md-3 mb-3">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          {{#if parceiro.logo}}
+            <img src="{{parceiro.logo}}" alt="{{parceiro.nome}}" class="img-fluid mb-2">
+          {{/if}}
+          <p class="small text-muted mb-2">Conteúdo externo da loja parceira.</p>
+          <a href="{{parceiro.url}}" target="_blank" rel="noopener"
+             class="btn btn-sm btn-primary w-100">
+            Abrir em nova aba
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-9">
+      <div class="parceiro-frame-wrapper">
+        <iframe
+          src="{{parceiro.url}}"
+          class="parceiro-frame"
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+CSS (pode ir no seu home.css):
+.parceiro-frame-wrapper {
+  width: 100%;
+  min-height: calc(100vh - 180px); /* ajusta conforme altura do topo */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.parceiro-frame {
+  width: 100%;
+  height: calc(100vh - 200px);
+  border: 0;
+}
+
+Assim:
+
+
+O usuário vê sempre o topo do Urutal (logo, busca, departamentos, etc).
+
+
+A loja abre dentro desse retângulo (iframe).
+
+
+Ainda tem um botão “Abrir em nova aba” se ele quiser ver tela cheia.
+
+
+
+4. Como vender isso pro lojista
+Você pode vender como:
+
+“Página de vitrine exclusiva dentro do Urutal, com link direto para o seu site, mantendo o usuário dentro do portal.”
+
+E aí:
+
+
+Você mostra o logotipo + descrição da loja.
+
+
+Deixa o site dele carregando no iframe.
+
+
+Pode futuramente adicionar estatísticas de visualizações/cliques (salvar num collection ParceiroStats toda vez que alguém acessa /parceiro/:slug).
+
+
+
+5. Um detalhe importante (técnico)
+Alguns sites colocam cabeçalho de segurança (X-Frame-Options, Content-Security-Policy) que bloqueia iframes.
+Se a loja parceira usar isso, o iframe pode aparecer em branco ou mostrar aviso do navegador.
+Nesses casos você tem duas alternativas:
+
+
+Fazer uma mini-página de apresentação (logo, texto, fotos) e um botão grande “Ir para a loja” que abre em nova aba.
+
+
+Pedir para o lojista ajustar o site dele pra permitir iframe vindo do seu domínio (mais avançado, depende do programador dele).
+
+
+
+Se quiser, no próximo passo posso:
+
+
+Ajustar essas rotas/layout pro mesmo padrão de código que você já está usando.
+
+
+Montar o Mongoose Parceiro já com um scriptzinho pra você cadastrar um parceiro direto no Node (sem painel ainda).
+

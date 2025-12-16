@@ -60,11 +60,22 @@
   button[type="submit"]:hover {
     background: #08235f;
   }
+
+  .fundo-input{
+    width: 250px;background-color:#ffffff;color:brown;"
+  }
 </style>
 <div>
 <form id="formFornecedor">
               <h1>Cadastro de Fornecedor</h1>
-              <input value="{{lojaId}}" type="text" name="qlojistas" >
+              <div class="form-row" style="margin-top: 10px;">
+                <label>Loja:
+                  <input type="text" name="qlojistas" value="{{lojaId}}" required>
+                </label>
+                {{!-- <label>CNPJ:
+                  <input class="fundo-input" type="text" id="inputCNPJ" name="cnpj" placeholder="Digite o CNPJ"  />
+                </label> --}}
+             </div>
               <div class="form-row">
                 <label>Razão Social:
                   <input type="text" name="razao" required>

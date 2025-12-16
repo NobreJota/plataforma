@@ -9,13 +9,13 @@ const ContatoSchema = new Schema({
 }, { _id: false });
 
 // Sub-schema para lojistas relacionados
-const LojistaSchema = new Schema({
-  lojaid: { type: String },
-  lojaname: { type: String },
-  lojasegmento: { type: String },
-  number_contabil: { type: String },
-  ativo: { type: Number }
-}, { _id: false });
+// const LojistaSchema = new Schema({
+//   lojaid: { type: String },
+//   lojaname: { type: String },
+//   lojasegmento: { type: String },
+//   number_contabil: { type: String },
+//   ativo: { type: Number }
+// }, { _id: false });
 
 // Sub-schema para endereço
 const EnderecoSchema = new Schema({
@@ -36,10 +36,11 @@ const FornecedorSchema = new Schema({
   marca: { type: String },
   email: { type: String },
 
-  qlojistas: [{
-    type: Schema.Types.ObjectId,
-    ref: "lojista"
-  }],
+  qlojistas:{  
+     type: [{type:Schema.Types.ObjectId,ref: "lojista"}],
+     default: [],
+     index: true
+  },
   address: EnderecoSchema,
 
   contato: {

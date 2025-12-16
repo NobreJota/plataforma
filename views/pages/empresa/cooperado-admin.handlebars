@@ -699,11 +699,11 @@ th.alinhar-direita {
 </header>
 <body>
 <main class="content-wrap">
-  <div class="container-fluid">
+  <div class="container-fluid" style="background: red;overflow-y: auto;">
     
-    <div style="">
-        <div id="painelLista" class="grade" style="display: block;background: #aea5ac;">
-            <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #df061f;display:block;">
+    <div style="margin-bottom: 20px;">
+        <div id="painelLista" class="grade" style="display: block;background: #aea5ac;overflow-y:visible;">
+            <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #19bc2a;display:block;">
             <div id="divTable" style="overflow:auto;width:98%;height:90vh;margin:auto;background-color:#100e0e;">
                   <table id="tabelaProdutos" class="table  table-bordered" style="font-size: small;">
                     <thead class="fixar-apos-paginacao" style="color: #df061f;width: 100%;font-size:x-small ;font-weight: 400;" >
@@ -714,7 +714,8 @@ th.alinhar-direita {
                       <th onclick="ordenarTabela(3)" style="width: 13.4vw;">Descrição</th>
                       <th onclick="ordenarTabela(4)" style="width: 13.8vw;">Complemento</th>
                       <th onclick="ordenarTabela(5)" style="width: 5.5vw;">Refer</th>
-                      <th onclick="ordenarTabela(6)" style="width: 13vw;">Fornecedor</th>
+                      <th onclick="ordenarTabela(6)" style="width: 13vw;">Ativo</th>
+                      <th onclick="ordenarTabela(6)" style="width: 13vw;">Url</th>
                       <th onclick="ordenarTabela(7)">Segmento</th>
                       <th onclick="ordenarTabela(8)">Qte</th>
                       <th onclick="ordenarTabela(9)">Custo</th>
@@ -735,6 +736,33 @@ th.alinhar-direita {
                         <td>{{complete}}</td>
                         <td>{{referencia}}</td>
                         <td>{{ativo}}</td>
+                        <td class="alinhar-centro">
+                          {{#if pageurls.length}}
+                            {{!-- <a href="{{pageurls.[0]}}" target="_blank" title="Abrir imagem"> --}}
+                               <a href="{{pageurls.[0]}}" class="js-open-img"
+                              data-img="{{pageurls.[0]}}"
+                              data-title="{{descricao}}">
+                               <img 
+                                src="{{pageurls.[0]}}" 
+                                alt="Imagem do produto"
+                                style="
+                                  width: 48px;
+                                  height: 48px;
+                                  object-fit: contain;
+                                  border: 1px solid #ccc;
+                                  background: #fff;
+                                "
+                              >
+                            </a>
+                            
+                            {{!-- </a> --}}
+                            <span class="badge bg-secondary ms-2" title="Qtd. de imagens">
+                              {{pageurls.length}}
+                            </span>
+                          {{else}}
+                            <span style="color:#c00;font-weight:bold">sem imagem</span>
+                          {{/if}}
+                        </td>
                         <td>
                           {{#each localloja}}
                               {{#each departamento}}
@@ -781,7 +809,13 @@ th.alinhar-direita {
 <div id="menuLateral" class="" style="z-index: 1000;height: 100vh;background-color: #fff;margin-top:-0.6vh;">
         <div id="menulista" style="width: 10vw; height: 98vh;display: flex; flex-direction: column; justify-content: space-around; transition: margin-left 0.4s ease;">
           <!-- Conteúdo do menu -->
-          <div style="height: 15vh;background-color:#fff;"></div>
+          <div style="height: 15vh;background-color:#fff;">
+              <div id="imgStats" style="margin:10px 0;font-weight:600;">
+                  Total: <span id="stTotal">0</span> |
+                  Com imagem: <span id="stCom">0</span> |
+                  Sem imagem: <span id="stSem">0</span>
+              </div>
+          </div>
           <div style="display: flex; flex-direction: column; justify-content: space-between;background-color:#fff;text-align: left;margin: auto;height: 30vh;padding-top: 5vh;">
              <button style="border: block;background-color:#0833a2;color:#fff">
                <a id="passa-cadastrofornec" href="" style="text-decoration: none;color:#ffffff;">Cadastro fornecedor</a>
@@ -876,6 +910,9 @@ function parseReaisParaCentavos(str) {
         <script src="/js/rotinas/produto-editModal.js"></script>
         <script src="/js/rotinas/produto-DeleteModal.js"></script>
         <script src="/js/rotinas/AcaoComDataset.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <!-- Modal para edição -->
 <div id="editModal"
   style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:9999;">
@@ -1073,6 +1110,89 @@ function parseReaisParaCentavos(str) {
 </div>
 
 <input id="miHiddenFile" type="file" accept="image/*" style="display:none" />
+<!-- Modal imagem (Bootstrap 5) -->
+<div class="modal fade" id="modalImg" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+
+      <div class="modal-header py-2">
+        <h6 class="modal-title" id="modalImgTitle">Imagem do produto</h6>
+
+        <!-- X do Bootstrap (perfeito) -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+
+        <!-- Se quiser o seu X grandão, use este e remova o btn-close acima:
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal" aria-label="Fechar"
+          style="font-size:22px;line-height:1;padding:2px 10px;border:1px solid #ddd;">&times;</button>
+        -->
+      </div>
+
+      <div class="modal-body text-center">
+        <img id="modalImgEl" src="" alt="Imagem"
+             style="max-width:100%;max-height:75vh;object-fit:contain;">
+        <div class="mt-2">
+          {{!-- <a id="modalImgLink" href="#" target="_blank" rel="noopener">Abrir em nova aba</a> --}}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function atualizarContadorImagens(){
+  const tbody = document.getElementById('produtoTable');
+  if(!tbody) return;
+
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const total = rows.length;
+
+  let com = 0;
+  let sem = 0;
+
+  rows.forEach(tr => {
+    // se tiver miniatura dentro da linha, conta como "com imagem"
+    const temImg = !!tr.querySelector('a.js-open-img[data-img]');
+    if(temImg) com++;
+    else sem++;
+  });
+
+  document.getElementById('stTotal').textContent = total;
+  document.getElementById('stCom').textContent   = com;
+  document.getElementById('stSem').textContent   = sem;
+}
+
+// roda quando carregar
+document.addEventListener('DOMContentLoaded', atualizarContadorImagens);
+
+// se você re-renderiza a tabela via JS, chame atualizarContadorImagens() depois do render
+</script>
+
+<script>
+document.addEventListener('click', function(ev){
+  const a = ev.target.closest('.js-open-img');
+  if(!a) return;
+
+  ev.preventDefault();
+
+  const url = a.dataset.img || '';
+  const titulo = a.dataset.titulo || 'Imagem do produto';
+
+  if(!url) return;
+
+  const imgEl  = document.getElementById('modalImgEl');
+  const linkEl = document.getElementById('modalImgLink');
+  const titleEl= document.getElementById('modalImgTitle');
+
+  imgEl.src = url;
+  //linkEl.href = url;
+  titleEl.textContent = titulo;
+
+  const modal = new bootstrap.Modal(document.getElementById('modalImg'));
+  modal.show();
+});
+</script>
+
 </body>
 </html>   
 <script>

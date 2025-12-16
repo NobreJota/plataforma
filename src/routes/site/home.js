@@ -8,7 +8,9 @@ const Lojista = require('../../models/lojista');              // lojas
 const Departamento = require('../../models/departamento');    // segmentos
 const DeptoSetor   = require('../../models/deptosetores');    // admin.deptosetores
 const DeptoSecao = require('../../models/deptosecao');
-const ArquivoDoc=require('../../models/arquivoDoc')
+const ArquivoDoc=require('../../models/arquivoDoc');
+const Parceiro = require('../../models/parceiro');
+
 
 
 // <<< função de normalizar descrição (igual ao schema)
@@ -425,7 +427,6 @@ router.get('/buscar-sugestoes', noStore, async (req, res) => {
   }
 });
 
-
 router.get('/setor/:idSetor', async (req, res) => {
   console.log('');
   console.log(' [ line 389 ] src/routes/site/home.js//setor/:idSetor');
@@ -628,7 +629,6 @@ async function montarMenus(baseFilter, depSelecionado, setorSelecionado) {
 
   return { departamentosMenu, setoresMenu, secoesMenu };
 }
-
 // BUSCA DE PRODUTOS NA LOJA (AJAX)
 router.get('/home-page-exclusiva/busca', async (req, res) => {
   try {
@@ -659,7 +659,6 @@ router.get('/home-page-exclusiva/busca', async (req, res) => {
     res.status(500).json([]);
   }
 });
-
 // /home-page-exclusiva/:id -> página exclusiva do produto
 router.get('/home-page-exclusiva/:id', async (req, res) => {
   console.log('');
@@ -776,8 +775,6 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
 
 
 });
-
-
 
 // ====================================================================
 // BUSCA 1: clique na DESCRIÇÃO do produto (todas as lojas)
@@ -1057,7 +1054,6 @@ router.get('/buscar-por-loja', async (req, res) => {
   }
 });
 
-
 // ROTA PROVISÓRIA: atualiza descricaoNorm dos itens antigos
 router.get('/atualizar-descricao-norm', async (req, res) => {
   console.log('5000-s')
@@ -1097,6 +1093,50 @@ router.get('/atualizar-descricao-norm', async (req, res) => {
     res.status(500).send('Erro ao atualizar descricaoNorm. Veja o console do servidor.');
   }
 });
+
+router.get('/parceiro/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const parceiro = await Parceiro.findOne({ slug, ativo: true }).lean();
+    if (!parceiro) return res.redirect('/');
+
+    // mesmos departamentos (igual sua home)
+    const departamentosAtivos = await Departamento
+      .find({ ativado: true })
+      .sort({ ordem: 1 })
+      .lean();
+
+    // cidades (igual você usa)
+    const CIDADES_ES = ['Vitória', 'Vila Velha', 'Guarapari', 'Cariacica', 'Serra'];
+
+    // bairros (se você quiser deixar funcionando nessa tela também)
+    const municipio = String(req.query.municipio || '');
+    const bairrosDaCidade = municipio
+      ? await Lojista.distinct('endereco.bairro', { 'endereco.cidade': municipio })
+      : [];
+
+    res.render('pages/site/parceiro', {
+      layout: 'site/home',
+      parceiro,
+
+      // mantém sua barra/topo como na home:
+      q: '',
+      cidades: CIDADES_ES,
+      cidadeSelecionada: municipio,
+      bairros: (bairrosDaCidade || []).filter(Boolean).sort((a, b) => a.localeCompare(b, 'pt-BR')),
+      bairroSelecionado: String(req.query.bairro || ''),
+
+      departamentosAtivos,
+      segmentoAtual: ''
+    });
+
+  } catch (e) {
+    console.error('Erro em /parceiro/:slug', e);
+    return res.redirect('/');
+  }
+});
+
 
 
 module.exports = router;

@@ -113,21 +113,23 @@ ArquivoDocSchema.pre('save', function(next) {
 });
 
 // <<< NOVO: em importações em lote (insertMany), também preenche descricaoNorm
-ArquivoDocSchema.pre('insertMany', function(docs, next) {
-  docs.forEach(d => {
-    if (d.descricao) {
-      d.descricaoNorm = normDesc(d.descricao);
-    }
-  });
-  next();
+ArquivoDocSchema.pre('insertMany',async function( next,docs) {
+   try {
+          if (!Array.isArray(docs)) return next();
+          docs.forEach(d => {
+                if (d && d.descricao ) {
+                  d.descricaoNorm = normDesc(d.descricao);
+                }
+          });
+        next();
+    }catch(e){
+        next(e);
+     }
 });
 
-
 // campos usados nos filtros
-
 ArquivoDocSchema.index({ 'localloja.departamento': 1 });
 ArquivoDocSchema.index({ ativo: 1, datadel: 1 });
-
 // índice de texto para busca por palavra
 ArquivoDocSchema.index(
   { descricao: 'text', referencia: 'text' },

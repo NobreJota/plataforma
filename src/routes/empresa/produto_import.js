@@ -17,7 +17,7 @@ const CAMPOS_ARQUIVO = Object.keys(ArquivoDoc.schema.paths).filter(n =>
 );
 
 function montarDocArquivoAPartirDoItem(item) {
-  console.log('1000',item)
+  //console.log('1000',item)
   const doc = {};
 
   CAMPOS_ARQUIVO.forEach(campo => {
@@ -314,6 +314,8 @@ router.post('/importacao/upload', upload.single('arquivo'), async (req, res) => 
         docs.push(doc);
       }
 
+      
+
       if (docs.length) {
         const result = await ImportItem.insertMany(docs, { ordered: false });
         inseridos = result.length;
@@ -352,16 +354,24 @@ router.post('/importacao/upload', upload.single('arquivo'), async (req, res) => 
 router.get('/importacao/import-itens', async (req, res) => {
      try {
     const lojistaId = req.query.lojista || '';
-
+    console.log('');
+    console.log('lojistaId',lojistaId);
+    console.log('___________________________________________');
     let lojista = null;
     let fornecedores = [];
 
     if (lojistaId) {
       lojista = await Lojista.findById(lojistaId).lean();
-      fornecedores = await Fornecedor.find({ datadel: null }).sort({ razao: 1 }).lean();
+      fornecedores = await Fornecedor.find({
+                      datadel: null,
+                      qlojistas: lojistaId
+                    }).sort({ razao: 1 }).lean();
     }
+    console.log('  => ',fornecedores) 
     ///////////////////////////////////////////////////////
-    console.log('-----------------------------------------------')
+    
+    console.log('-----------------------------------------------');
+    console.log('src/routes/empresa/produto_import.js')
     console.log(' [310] router.get(/importacao/import-itens")',lojista);
     console.log(' vem de "cooperado-admin.handlebars"');
     console.log(' vai fornecer dados para load "produto_import_itens" ')
@@ -1008,6 +1018,18 @@ router.post('/importacao/itens/transferir', async (req, res) => {
       montarDocArquivoAPartirDoItem(item)
     );
 
+    // 2) Montar docs de ArquivoDoc de forma genérica
+      // const docsArquivo = itensPendentes.map(item => montarDocArquivoApartirDoItem(item));
+
+      // ✅ NOVO: limpar pageurls para não gravar [""] e nem strings com espaços
+      docsArquivo.forEach(d => {
+        const arr = Array.isArray(d.pageurls) ? d.pageurls : [];
+        d.pageurls = arr
+          .map(x => String(x || '').trim())
+          .filter(Boolean); // remove "" e "   "
+      });
+
+
     // 3) Inserir em ArquivoDoc
     const inseridos = await ArquivoDoc.insertMany(docsArquivo);
     console.log('Inseridos em ArquivoDoc =>', inseridos.length);
@@ -1032,9 +1054,6 @@ router.post('/importacao/itens/transferir', async (req, res) => {
   }
 });
 
-// });
-
-
 router.post('/importacao/ajuste/delete', async (req, res) => {
   try {
     const { idItem } = req.body;
@@ -1055,6 +1074,30 @@ router.post('/importacao/ajuste/delete', async (req, res) => {
     console.error('Erro ao excluir item importado:', err);
     return res.status(500).json({ ok: false, error: 'Erro interno ao excluir item.' });
   }
+});
+
+router.get('/empresa/cadfornecedores', async (req, res) => {
+  const { lojistaId = '' } = req.query;
+
+  // se quiser, aqui você pode carregar o lojista e mandar pra view
+  // const lojista = lojistaId ? await Lojista.findById(lojistaId).lean() : null;
+
+  // res.render('pages/empresa/cadfornecedores', {
+  //   layout: 'central/admin',   // ou o layout que você usa nessa área
+  //   lojistaId,
+  //   // lojista
+  // });
+
+    const menuItens = [
+    { nome: "Cadastrar clientes", link: "/cliente/cadastro" },
+    { nome: "Relatórios", link: "/relatorios" },
+    { nome: "Fornecedores", link: "/fornecedor/cadastro" }
+  ];
+
+  res.render("pages/empresa/cadfornecedores",
+     { layout: false, menuItens,
+       lojaId :lojistaId
+     });
 });
 
 module.exports = router;

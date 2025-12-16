@@ -235,12 +235,15 @@ router.get("/novocadastro/:id",async(req,res)=>{
    let numberId=req.params.id;
    console.log('-------------------------------');
    console.log('ATENÇÃO =>  ',numberId)
+  
+
 
    console.log('-------------------------------');
    res.render("pages/empresa/cadfornecedores",  {
     layout:"central/admin" ,
   //  numberId
   });
+  
 })
 
 module.exports = router;

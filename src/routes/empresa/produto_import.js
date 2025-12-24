@@ -364,7 +364,7 @@ router.get('/importacao/import-itens', async (req, res) => {
       lojista = await Lojista.findById(lojistaId).lean();
       fornecedores = await Fornecedor.find({
                       datadel: null,
-                      qlojistas: lojistaId
+                      'lojistas.loja': lojistaId
                     }).sort({ razao: 1 }).lean();
     }
     console.log('  => ',fornecedores) 
@@ -1077,12 +1077,18 @@ router.post('/importacao/ajuste/delete', async (req, res) => {
 });
 
 router.get('/empresa/cadfornecedores', async (req, res) => {
-  const { lojistaId = '' } = req.query;
 
+  const { lojistaId = '' } = req.query;
+  console.log('');
+  console.log('7000',req.query);
+  console.log('');
+  const Id=req.query.lojistaId;
+  const M=req.query.lojistamarca;
+  console.log('55555',M)
   // se quiser, aqui você pode carregar o lojista e mandar pra view
   // const lojista = lojistaId ? await Lojista.findById(lojistaId).lean() : null;
 
-  // res.render('pages/empresa/cadfornecedores', {
+  // res.render('pages/empresa/cadforneXcedores', {
   //   layout: 'central/admin',   // ou o layout que você usa nessa área
   //   lojistaId,
   //   // lojista
@@ -1096,7 +1102,8 @@ router.get('/empresa/cadfornecedores', async (req, res) => {
 
   res.render("pages/empresa/cadfornecedores",
      { layout: false, menuItens,
-       lojaId :lojistaId
+       lojaId :Id,
+       lojistaMarca:M
      });
 });
 

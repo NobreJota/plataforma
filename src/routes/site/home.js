@@ -65,6 +65,89 @@ const norm = s => String(s || '')
   next();
 };
 
+function decToNumber(v){
+  if (v == null) return null;
+
+  // Decimal128 no mongoose tem .toString()
+  const n = (typeof v === 'object' && typeof v.toString === 'function')
+    ? Number(v.toString())
+    : Number(v);
+
+  if (!Number.isFinite(n)) return null;
+
+  return n / 100;
+}
+
+async function montarMenus(baseFilter, depSelecionado, setorSelecionado) {
+  // 1) Departamentos – já estava ok
+  const depIds = await ArquivoDoc.distinct('localloja.departamento', baseFilter);
+
+  let departamentosMenu = [];
+  if (depIds && depIds.length) {
+    const deps = await Departamento
+      .find({ _id: { $in: depIds } })
+      .sort('nomeDepartamento')
+      .lean();
+
+    departamentosMenu = deps.map(d => ({
+      _id:  d._id.toString(),
+      nome: d.nomeDepartamento
+    }));
+  }
+
+  // 2) SETORES — só os que aparecem em ArquivoDoc dessa LOJA + DEP
+  let setoresMenu = [];
+  if (depSelecionado) {
+    const filtroSetor = {
+      ...baseFilter,
+      'localloja.departamento': depSelecionado
+    };
+
+    const setorIds = await ArquivoDoc.distinct('localloja.setor.idSetor', filtroSetor);
+    console.log('');
+    //console.log(' [ 449 ] => ',setorIds)
+    
+    if (setorIds && setorIds.length) {
+      const setores = await DeptoSetor
+        .find({ _id: { $in: setorIds } })
+        .sort('nomeDeptoSetor')
+        .lean();
+
+      setoresMenu = setores.map(s => ({
+        _id:  s._id.toString(),
+        nome: s.nomeDeptoSetor
+      }));
+    }
+  }
+
+  // 3) SEÇÕES — só as que aparecem em ArquivoDoc dessa LOJA + SETOR
+  let secoesMenu = [];
+  if (setorSelecionado) {
+    const filtroSecao = {
+      ...baseFilter,
+      'localloja.setor.idSetor': setorSelecionado
+    };
+
+    const secaoIds = await ArquivoDoc.distinct('localloja.setor.secao.idSecao', filtroSecao);
+    console.log('secaoId',secaoIds)
+
+    if (secaoIds && secaoIds.length) {
+      //console.log('dentro!')
+      const secoes = await DeptoSecao
+        .find({ _id: { $in: secaoIds } })
+        .sort('nameSecao')
+        .lean();
+      // console.log(' ===> ',secoes)
+      secoesMenu = secoes.map(s => ({
+        _id:  s._id.toString(),
+        nome: s.nameSecao
+      }));
+    }
+  }
+
+  return { departamentosMenu, setoresMenu, secoesMenu };
+}
+
 // ==== no topo do arquivo da rota home.js (ou equivalente) ====
 const IMG_HTTP_RX     = /^https?:\/\/.+/i;             // imagem http/https
 // ?????????????????????????????????????????????????????????????????????????????????????????
@@ -354,73 +437,64 @@ router.get('/buscar', async (req, res) => {
   }
 });
 
-//Pontos-chave que quebravam o filtro:
-// SUBSTITUA a rota antiga /buscar-sugesXtoes por esta
+// busca sugestões de palavra acima de 3 letras
 router.get('/buscar-sugestoes', noStore, async (req, res) => {
   try {
+    console.log("AQUI")
     const q = String(req.query.q || '').trim();
+    const municipio = String(req.query.cidade || req.query.municipio || '').trim();
+    const bairro = String(req.query.bairro || '').trim();
+
     if (q.length < 3) return res.json([]);
 
-    // filtro base
-    const filtroBase = {
+    const pattern = makeAccentPattern(q);
+    if (!pattern) return res.json([]);
+    const rx = new RegExp(pattern, 'i');
+
+    const match = {
       ativo: true,
       qte: { $gt: 0 },
-      pageurls: { $exists: true, $not: { $size: 0 } }
+      pageurls: { $exists: true, $not: { $size: 0 } },
+      descricaoNorm: { $regex: rx },
     };
 
-    // =============================
-    // 1) Montar regex de pesquisa
-    // =============================
-    const pattern = makeAccentPattern(q);  
-    let rx = null;
+    if (municipio) match.cidade = municipio;
+    if (bairro) match.bairro = bairro;
 
-    if (pattern) {
-      rx = new RegExp(pattern, 'i');
-    }
+    const docs = await Ddocumento.aggregate([
+      { $match: match },
 
-    if (rx) {
-      filtroBase.descricao = { $regex: rx };
-    } else {
-      // se algo der errado, retorna vazio
-      return res.json([]);
-    }
+      // opcional: melhora consistência de acento
+      { $sort: { loja_id: 1, qte: -1, updatedAt: -1 } },
 
-    // =============================
-    // 2) Consulta ao Mongo
-    // =============================
-    const docs = await Ddocumento.find(
-      filtroBase,
-      {
+      // 1 resultado por loja
+      { $group: { _id: "$loja_id", doc: { $first: "$$ROOT" } } },
+      { $replaceRoot: { newRoot: "$doc" } },
+
+      { $limit: 10 },
+
+      { $project: {
+        _id: 1,
+        loja_id: 1,
         descricao: 1,
-        codigo: 1,
-        qte: 1,
         marcaloja: 1,
         cidade: 1,
         bairro: 1,
-        loja_id: 1
-      }
-    )
-      .collation({ locale: 'pt', strength: 1 })
-      .limit(30)
-      .lean();
+        precoprazo:1
+      }}
+    ]);
 
-    // =============================
-    // 3) Formatar sugestões
-    // =============================
-    const sugestoes = docs
-      .map(d => ({
-        idProd: String(d._id),
-        descricao: d.descricao || '',
-        loja: d.marcaloja || '',
-        cidade: d.cidade || '',
-        bairro: d.bairro || '',
-        lojaId: d.loja_id ? String(d.loja_id) : ''
-      }))
-      .filter(s => s.descricao)   // garante texto
-      .slice(0, 10);
-
+    const sugestoes = docs.map(d => ({
+      idProd: String(d._id),
+      descricao: d.descricao || '',
+      loja: d.marcaloja || '',
+      cidade: d.cidade || '',
+      bairro: d.bairro || '',
+      preco: d.precoprazo || '',
+      lojaId: d.loja_id ? String(d.loja_id) : ''
+    }));
+    console.log('5000',sugestoes)
     return res.json(sugestoes);
-
   } catch (e) {
     console.error('erro /buscar-sugestoes', e);
     return res.json([]);
@@ -560,109 +634,57 @@ router.get('/home-detalhe/:id', async (req, res) => {
   }
 });
 
-async function montarMenus(baseFilter, depSelecionado, setorSelecionado) {
-  // 1) Departamentos – já estava ok
-  const depIds = await ArquivoDoc.distinct('localloja.departamento', baseFilter);
-
-  let departamentosMenu = [];
-  if (depIds && depIds.length) {
-    const deps = await Departamento
-      .find({ _id: { $in: depIds } })
-      .sort('nomeDepartamento')
-      .lean();
-
-    departamentosMenu = deps.map(d => ({
-      _id:  d._id.toString(),
-      nome: d.nomeDepartamento
-    }));
-  }
-
-  // 2) SETORES — só os que aparecem em ArquivoDoc dessa LOJA + DEP
-  let setoresMenu = [];
-  if (depSelecionado) {
-    const filtroSetor = {
-      ...baseFilter,
-      'localloja.departamento': depSelecionado
-    };
-
-    const setorIds = await ArquivoDoc.distinct('localloja.setor.idSetor', filtroSetor);
-    console.log('');
-    console.log(' [ 449 ] => ',setorIds)
-    
-    if (setorIds && setorIds.length) {
-      const setores = await DeptoSetor
-        .find({ _id: { $in: setorIds } })
-        .sort('nomeDeptoSetor')
-        .lean();
-
-      setoresMenu = setores.map(s => ({
-        _id:  s._id.toString(),
-        nome: s.nomeDeptoSetor
-      }));
-    }
-  }
-
-  // 3) SEÇÕES — só as que aparecem em ArquivoDoc dessa LOJA + SETOR
-  let secoesMenu = [];
-  if (setorSelecionado) {
-    const filtroSecao = {
-      ...baseFilter,
-      'localloja.setor.idSetor': setorSelecionado
-    };
-
-    const secaoIds = await ArquivoDoc.distinct('localloja.setor.secao.idSecao', filtroSecao);
-    console.log('secaoId',secaoIds)
-
-    if (secaoIds && secaoIds.length) {
-      console.log('dentro!')
-      const secoes = await DeptoSecao
-        .find({ _id: { $in: secaoIds } })
-        .sort('nameSecao')
-        .lean();
-       console.log(' ===> ',secoes)
-      secoesMenu = secoes.map(s => ({
-        _id:  s._id.toString(),
-        nome: s.nameSecao
-      }));
-    }
-  }
-
-  return { departamentosMenu, setoresMenu, secoesMenu };
-}
 // BUSCA DE PRODUTOS NA LOJA (AJAX)
 router.get('/home-page-exclusiva/busca', async (req, res) => {
-  try {
-    const lojaId = req.query.loja;
-    const qRaw  = (req.query.q || '').trim();
+      console.log('');
+      console.log('[ 640 ]=> /home-page-exclusiva/busca');
+      console.log('',req.params);
+      console.log('');
+      try {
+            const lojaId = req.query.loja;
+            const qRaw  = (req.query.q || '').trim();
 
-    if (!lojaId || qRaw.length < 3) {
-      return res.json([]);
-    }
+            if (!lojaId || qRaw.length < 3) {
+              return res.json([]);
+            }
 
-    const qEsc = qRaw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(qEsc, 'i');
+            const qEsc = qRaw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(qEsc, 'i');
 
-    const docs = await ArquivoDoc.find({
-      loja_id: lojaId,
-      ativo: true,
-      qte: { $gt: 0 },
-      pageurls: { $exists: true, $type: 'array', $ne: [] },
-      descricao: regex
-    })
-      .select('_id descricao codigo precovista complete marcaloja loja_id pageurls')
-      .limit(40)
-      .lean();
+            const docs = await ArquivoDoc.find({
+                                loja_id: lojaId,
+                                ativo: true,
+                                qte: { $gt: 0 },
+                                pageurls: { $exists: true, $type: 'array', $ne: [] },
+                                descricao: regex,
+                                descricaoNorm:{ $regex: qRaw, $options: 'i' }
+                          })
+                          .select('_id loja_id marcaloja codigo descricao  complete precoprazo  pageurls')
+                          .limit(10)
+                          .lean();
 
-    res.json(docs);
-  } catch (err) {
-    console.error('Erro na busca da página exclusiva:', err);
-    res.status(500).json([]);
-  }
+            const itens = docs.map(d => ({
+                        idProd: d._id,
+                        lojaId: d.loja_id,
+                        codigo: d.codigo,
+                        descricao: d.descricao,
+                        complete: d.complete,
+                        pageurls: d.pageurls,
+                        precovista: decToNumber(d.precovista),
+                        precoprazo: decToNumber(d.precoprazo),
+              }));
+
+              console.log('',itens)
+              res.json(itens);
+      } catch (err) {
+        console.error('Erro na busca da página exclusiva:', err);
+        res.status(500).json([]);
+      }
 });
 // /home-page-exclusiva/:id -> página exclusiva do produto
 router.get('/home-page-exclusiva/:id', async (req, res) => {
   console.log('');
-  console.log('[ 493 ]=> /home-page-exclusiva/:id');
+  console.log('[ 683 ]=> /home-page-exclusiva/:id');
   console.log('',req.params.id);
   console.log('');
  
@@ -725,7 +747,6 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
         }).lean();
       }
     }
-
     // ===================================================
     // MODO B → Usuário clicou em DEP / SETOR / SEÇÃO
     // (tour pela loja – ignora totalmente a seção do produto)
@@ -750,7 +771,6 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
 
       produtosLoja = await ArquivoDoc.find(filtro).lean();
     }
-
     // ===================================================
     // MENUS (sempre montados)
     // ===================================================
@@ -772,8 +792,6 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
     console.error('ERRO /home-page-exclusiva:', err);
     res.status(500).send('Erro ao abrir página exclusiva');
   }
-
-
 });
 
 // ====================================================================
@@ -782,11 +800,9 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
 // ====================================================================
 router.get('/buscar-por-texto', async (req, res) => {
   console.log('');
-  console.log('[ line 796 ] /buscar-por-texto');
+  console.log('[ line 803 ] /buscar-por-texto');
   console.log('');
-  console.log('');
-  console.log('[ line 796 ] /buscar-por-texto');
-  console.log('');
+  //---------------------------------------------------------
   try {
           const {
             q = '',
@@ -924,7 +940,7 @@ router.get('/buscar-por-texto', async (req, res) => {
 // ====================================================================
 router.get('/buscar-por-loja', async (req, res) => {
   console.log('');
-  console.log('[ 872 ] /buscar-por-loja',req.query);
+  console.log('[ 943 ] /buscar-por-loja',req.query);
   console.log('');
 
   try {

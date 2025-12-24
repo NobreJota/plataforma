@@ -27,35 +27,30 @@ const EnderecoSchema = new Schema({
   estado: { type: String }
 }, { _id: false });
 
-// Schema principal do fornecedor
 const FornecedorSchema = new Schema({
   razao: { type: String },
-  cnpj: { type: String, required: true, unique: true },
+  // ✅ CNPJ padronizado: só dígitos
+  cnpj: { type: String, required: true, index: true, unique: true },
+  // ✅ vínculo único (sem qlojistas)
+  lojistas: [{
+    loja: { type: mongoose.Schema.Types.ObjectId, ref: 'lojistas', required: true },
+    marcaLoja: { type: String, default: '' }
+  }],
+
   inscricao: { type: String },
   ncontabil: { type: String },
   marca: { type: String },
   email: { type: String },
 
-  qlojistas:{  
-     type: [{type:Schema.Types.ObjectId,ref: "lojista"}],
-     default: [],
-     index: true
-  },
   address: EnderecoSchema,
-
   contato: {
     representante: ContatoSchema,
     comercial: ContatoSchema,
     tecnica: ContatoSchema
   },
 
-  createAt: {
-    type: Date,
-    default: Date.now
-  },
-  updateAt: {
-    type: Date
-  }
+  createAt: { type: Date, default: Date.now },
+  updateAt: { type: Date }
 });
 
 

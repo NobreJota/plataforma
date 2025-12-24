@@ -1,5 +1,5 @@
-const express = require('express');
-const router = express.Router();
+//const express = require('express');
+//const router = express.Router();
 const mongoose = require('mongoose');
 
 // Modelo do banco (reaproveite o seu existente se já tiver)

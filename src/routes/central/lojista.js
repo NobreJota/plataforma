@@ -6,22 +6,24 @@ const Lojista = require('../../models/lojista');
 const produtoController = require('../../controllers/produtoController');
 const Departamento = require('../../models/departamento');
 
-
+//Pega os dados dos lojista para colocar na tabela Lista
 router.get('/lojista', async (req, res) => {
    console.log('');
-   console.log(" [ 8 passando por lojista ] ");
-   console.log(" [ vem de => src/routes/cetral/lojista.js ]");
-   console.log(" [ vem de => views/pages/central/loginCentral.handlebars ] ")
+   console.log(" [ 12  ] ");
+   console.log(" [ vem de => views/pages/central/centralMenu.handlebars ] ")
+   console.log(" [ vem de => src/routes/central/lojista.js ]");
+   console.log(' destino =>  views/pages/central/listaLojista.handlebars');
    console.log('');
    try {
     const lojistas = await Lojista.find()
       .populate("departamentos", "nomeDepartamento")
       .lean();
 
-    console.log('[ 11 lojista ]:', lojistas);
+    console.log('[ 22 lista de lojistas para listaLojista.handlebars ]:');
+    console.log(' segue :', lojistas)
     
     res.render("pages/central/listaLojista.handlebars", {
-      layout: 'empresa/admin-empresa.handlebars',
+      layout: false,
       lojista: lojistas
     });
 
@@ -30,7 +32,7 @@ router.get('/lojista', async (req, res) => {
 
     // Renderiza mesmo com erro, apenas com lista vazia
     res.render("pages/central/listaLojista.handlebars", {
-      layout: 'empresa/admin-empresa.handlebars',
+      layout: false,
       lojista: [],
       erro: 'Erro ao carregar lojistas'
     });
@@ -152,72 +154,64 @@ router.post('/salvar', async (req, res) => {
   }
 });
 
+// router.get("/departamento-selecao", (req, res) => {
+//    console.log(' [ 15600 ]')
+//    res.render("pages/central/departamento-selecao",{ layout: "central/admin"}); // caminho completo até o handlebars);});
+// });
 
-router.get("/departamento-selecao", (req, res) => {
-   res.render("pages/central/departamento-selecao",{ layout: "central/admin"}); // caminho completo até o handlebars);});
+router.get("/cadastro-cooperado", (req, res) => {
+  console.log(5050)
+  return res.render("pages/central/cadastro-cooperado.handlebars",{
+    layout:false,
+  });
 });
 
+// grava lojista/cooperados
 router.post("/gravar", async (req, res) => {
-  console.log('[ 159 ] /gravar lojista',req.body)
+  console.log('');
+  console.log('[ 172 ]');
+  console.log(' Vem : views/pages/central/cadastro-cooperados.handlebars');
+  console.log(' router:/routes/central/lojista.js/gravar');
+  console.log(' => :');
+  console.log('',req.body)
+  console.log('---------------------------------------------------');
   try {
       const novoLojista = new Lojista({
-      razao: req.body.inputrazao,
-      nomeresponsavel: req.body.responsavel,
-      cpfresponsavel: req.body.cpf,
-      cnpj: req.body.inputCNPJ,
-      inscricao: req.body.inscricao,
-      site: req.body.site,
-      marca: req.body.marca,
-      celular: req.body.celular,
-      telefone: req.body.fone,
-      email: req.body.email,
-      senha: req.body.senha,
-      cep: req.body.cep,
-      logradouro: req.body.logradouro,
-      complemento: req.body.complemento,
-      bairro: req.body.bairro,
-      cidade: req.body.cidade,
-      estado: req.body.estado,
-      assinante: "padrao",
-      situacao: "ativo",
-      template: "base",
-      atividade: "não informada",
-      departamentos:req.body.departamentos_ids,
+          razao: req.body.inputrazao,
+          nomeresponsavel: req.body.responsavel,
+          cpfresponsavel: req.body.cpf,
+          cnpj: req.body.inputCNPJ,
+          inscricao: req.body.inscricao,
+          site: req.body.site,
+          marca: req.body.marca,
+          celular: req.body.celular,
+          telefone: req.body.fone,
+          email: req.body.email,
+          senha: req.body.senha,
+          cep: req.body.cep,
+          logradouro: req.body.logradouro,
+          complemento: req.body.complemento,
+          bairro: req.body.bairro,
+          cidade: req.body.cidade,
+          estado: req.body.estado,
+          assinante: "padrao",
+          situacao: "ativo",
+          template: "base",
+          atividade: "não informada",
+          departamentos:req.body.departamentos_ids,
     });
-    // Defaults temporários (pode ajustar conforme seu fluxo depois) 
-    await novoLojista.save();
-    console.log('');
-    console.log('[ 216 ] novoLojista.save');
-    console.log('');
-    res.redirect("/lojista/lojista"); // ajuste para onde redirecionar após salvar
+        // Defaults temporários (pode ajustar conforme seu fluxo depois) 
+        await novoLojista.save();
+        console.log('');
+        console.log('[ 206 ] novoLojista.save');
+        console.log('');
+        res.redirect("/lojista/lojista"); // ajuste para onde redirecionar após salvar
   } catch (err) {
     console.error("❌ Erro ao salvar lojista:", err);
     res.status(500).send("Erro ao salvar lojista.");
   }
 });
 
-router.get('/consulta-cnpj/:cnpj', async (req, res) => {
-  console.log(' ');
-  console.log(' [ 225 ]');
-  console.log(' origem views :pages/central/departamento-seleção:Cadastro de Lojista');
-  console.log(' origem route :Quando digitado CNPJ para cadastrar o lojista" ');
-  console.log(' obs : ');
-  console.log('');
-  console.log(' destino :mesmo??');
-  console.log('');
-  const cnpj = req.params.cnpj;
-  console.log('===>',cnpj)
-  try {
-    const response = await fetch(`https://www.receitaws.com.br/v1/cnpj/${cnpj}`);
-    console.log(' 236 ');
-   // console.log('++++++++++++++++++',response.json());
-    console.log('');
-    const data = await response.json();
-    res.json(data); // devolve pro front-end
-    } catch (error) {
-    res.status(500).json({ error: 'Erro ao consultar CNPJ' });
-  }
-});
 
 // PERTENCE A CADASTRO DE LOJISTA
 router.get("/selectlista-depto", async (req, res) => {
@@ -249,6 +243,7 @@ if (!fetchFn) {
   fetchFn = fetch;
 }
 
+//consulta secretaria da fazenda Espírito Santo
 router.get('/consulta-ie-es/:cnpj', async (req, res) => {
   try {
     const cnpj = (req.params.cnpj || '').replace(/\D/g, '');
@@ -306,6 +301,30 @@ router.get('/consulta-ie-es/:cnpj', async (req, res) => {
       ok: false,
       message: isAbort ? 'Timeout ao consultar provedor IE' : 'Falha na consulta IE (SEFAZ-ES)'
     });
+  }
+});
+
+//está consultando o cnpj do lojista que está sendo cadastrado
+router.get('/consulta-cnpj/:cnpj', async (req, res) => {
+  console.log(' ');
+  console.log(' [ 201 ]');
+  console.log(' origem views :pages/central/departamento-seleção:Cadastro de Lojista');
+  console.log(' origem route :routes/central/lojista/consulta-cnpj ');
+  console.log(' obs :busca na receita federal os dados para cadastrar o lojista na central ');
+  console.log('');
+  console.log(' destino : departamento-selecao.handlebars');
+  console.log('');
+  const cnpj = req.params.cnpj;
+  console.log('===>',cnpj)
+  try {
+    const response = await fetch(`https://www.receitaws.com.br/v1/cnpj/${cnpj}`);
+    console.log(' 236 ');
+   // console.log('++++++++++++++++++',response.json());
+    console.log('');
+    const data = await response.json();
+    res.json(data); // devolve pro front-end
+    } catch (error) {
+    res.status(500).json({ error: 'Erro ao consultar CNPJ' });
   }
 });
 

@@ -28,7 +28,8 @@
     #headerLojaExclusiva a:hover {
       text-decoration: underline;
     }
-
+</style>
+<style>
     /* ÁREA PRINCIPAL */
     .page-wrapper {
       min-height: 80vh;      /* altura mínima da área escura */
@@ -81,6 +82,8 @@
     }
     .pih-value {
       color: #222;
+      font-weight: 200;
+      font-size: smaller;
     }
     .card-product img {
       object-fit: contain;
@@ -105,20 +108,20 @@
   position: relative;
 }
 
-/* Dropdown de sugestões */
-.busca-sugestoes {
+/* Dropdown de sugestões
+.busca-sugesxtoes {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  background: #fff;
+  background: #e40a0a;
   border: 1px solid #ccc;
   border-top: none;
   z-index: 30;
   max-height: 260px;
   overflow-y: auto;
   display: none;
-}
+}*/
 
 .busca-sugestoes .sug-item {
   display: block;
@@ -151,7 +154,7 @@
   position: relative;
 }
 
-/* Dropdown de sugestões abaixo da caixa */
+/* Dropdown de sugestões abaixo da caixa 
 .busca-sugestoes {
   position: absolute;
   top: 100%;
@@ -164,7 +167,7 @@
   max-height: 260px;
   overflow-y: auto;
   display: none;
-}
+}*/
 
 .busca-sugestoes .sug-item {
   display: block;
@@ -209,7 +212,7 @@
   align-items: center;
   gap: 6px;
   background: #0b6fa4;
-  border-radius: 999px;
+  border-radius: 2px;
   padding: 4px 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,.25);
 }
@@ -226,7 +229,7 @@
   flex: 1;
   border: none;
   outline: none;
-  border-radius: 999px;
+  border-radius: 2px;
   padding: 6px 10px;
   font-size: 0.9rem;
 }
@@ -240,6 +243,8 @@
 .search-loja-input::placeholder {
   color: #999;
 }
+
+/*!-- ///////////////////////////////////////////////////////////////////////////////// --}}*/
 
 /* Dropdown de sugestões continua funcionando */
 .busca-sugestoes {
@@ -255,7 +260,113 @@
   overflow-y: auto;
   display: none;
 }
+ 
+.search-input,
+#searchInput,
+input[type="search"] {
+  border-radius: 0 !important;
+}
 
+.search-wrapper,
+.search-box {
+  border-radius: 0 !important;
+}
+
+
+
+/* descrição */
+.sug-desc {
+  font-weight: 600;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* preço */
+.sug-preco {
+  text-align: right;
+  font-weight: 700;
+  color: #0a7c2f;
+  white-space: nowrap;
+}
+
+/* código */
+.sug-codigo {
+  text-align: right;
+  font-size: 11px;
+  color: #666;
+}
+
+
+/*////////////////////////////////////////////////////////////////////////////////
+       COMEÇOU AQUI
+////////////////////////////////////////////////////////////////////////////////*/
+/* caixa da lista (sugestões) - aumenta largura */
+#sugBox, .sug-box {
+  width: 620px;            /* ajuste aqui */
+  max-width: 92vw;
+}
+
+
+/* ITEM DA SUGESTÃO */
+.sug-item {
+  display: grid;
+  grid-template-columns: 1fr 180px 120px; /* descrição | preço | código */
+  gap: 10px;
+  padding: 8px 10px;
+  font-size: 12px;
+  align-items: center;
+  border-bottom: 1px solid #e5e5e5;
+  background: #0a7c2f;
+  color:#dd1111;
+}
+
+/* tipografia menor p/ caber */
+.sug-desc{ font-size: 13px;color:burlywood }
+.sug-preco, .sug-codigo{
+  font-size: 12px;
+  text-align: right;
+  white-space: nowrap;
+  color:#0a7c2f;
+}
+/*
+#buscaInput, .search-loja-input, input[type="search"]{
+  border-radius: 0 !important;
+}*/
+.search-loja-inner { border-radius: 0 !important; }
+.search-loja-input { border-radius: 0 !important; }
+
+/* dropdown alinhado com a caixa de busca e mais largo */
+#buscaLojaSugestoes{
+  width: 760px;          /* AUMENTA AQUI */
+  max-width: 92vw;
+  left: 50%;
+  transform: translateX(-50%);
+  right: auto;
+  border: 1px solid #ccc;
+  border-top: none;
+  background: #fff;
+}
+
+/* item com 3 colunas */
+#buscaLojaSugestoes .sug-item{
+  display: grid;
+  grid-template-columns: 1fr 120px 90px; /* desc | preço | código */
+  gap: 10px;
+  padding: 8px 10px;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* tipografia e alinhamentos */
+#buscaLojaSugestoes .sug-desc{ font-weight: 600; }
+#buscaLojaSugestoes .sug-preco{ text-align:right; font-weight:700; white-space:nowrap; color:#0a7c2f; }
+#buscaLojaSugestoes .sug-codigo{ text-align:right; white-space:nowrap; color:#666; font-size:12px; }
+
+#buscaLojaSugestoes .sug-item:hover{ background:#f4f4f4; }
 
   </style>
 </head>
@@ -380,16 +491,13 @@
                       <div class="pih-row">
                         <span class="pih-label">À vista</span>
                         <span class="pih-value">
-                          {{#if this.precovista}}
-                            R$ {{formatCurrency this.precovista}}
+                          {{#if this.precoprazo}}
+                            R$ {{formatCurrency this.precoprazo}}
                           {{else}}
                             sob consulta
                           {{/if}}
                         </span>
                       </div>
-
-                     
-
                       <div class="pih-row" style="margin-top: 10px;margin-bottom: -5px;background: #fff;">
                         <span class="pih-label"></span>
                         <span class="pih-value">
@@ -442,7 +550,7 @@
       const url = `/home-page-exclusiva/busca?loja=${encodeURIComponent(lojaId)}&q=${encodeURIComponent(q.trim())}`;
       const resp = await fetch(url);
       const itens = await resp.json();
-
+      console.log('itens',itens)
       if (!Array.isArray(itens) || itens.length === 0) {
         cardsRow.innerHTML = `
           <div class="col-12">
@@ -453,9 +561,9 @@
 
       const html = itens.map(p => {
         const img = (p.pageurls && p.pageurls[0]) ? p.pageurls[0] : placeholderImg;
-        const preco = p.precovista
-          ? 'R$ ' + Number(p.precovista).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
-          : 'sob consulta';
+        const preco = p.precoprazo
+          ? 'R$ ' + Number(p.precoprazo).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+          : '0,00';
 
         return `
           <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
@@ -491,21 +599,12 @@
                     </span>
                   </div>
 
-                  <div class="pih-row">
-                    <span class="pih-label">Loja</span>
-                    <span class="pih-value">
-                      <a href="/loja/${p.loja_id}">${p.marcaloja || ''}</a>
-                    </span>
-                  </div>
+                 
 
                   <div class="mt-1">
                     <a class="btn btn-sm btn-outline-primary btn-detalhe"
                        href="/home-detalhe/${p._id}">
                       Detalhes
-                    </a>
-                    <a class="btn btn-sm btn-outline-secondary"
-                       href="/home-page-exclusiva/${p._id}">
-                      Página exclusiva
                     </a>
                   </div>
                 </div>
@@ -537,21 +636,37 @@
         const url = `/home-page-exclusiva/busca?loja=${encodeURIComponent(lojaId)}&q=${encodeURIComponent(q)}`;
         const resp = await fetch(url);
         const itens = await resp.json();
-
+        console.log('');
+        console.log('3000',itens);
+        console.log('');
         if (!Array.isArray(itens) || itens.length === 0) {
           sugBox.innerHTML = '';
           sugBox.style.display = 'none';
           return;
         }
 
+        // escape básico pra não quebrar o HTML (e evitar XSS)
+        function esc(v = '') {
+          return String(v).replace(/[&<>"']/g, (ch) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+          }[ch]));
+        }
+
+
         // monta lista de sugestões (sem mexer nos cards)
         sugBox.innerHTML = itens.map(p => `
-          <button type="button"
-                  class="sug-item"
-                  data-desc="${(p.descricao || '').replace(/"/g, '&quot;')}">
-            ${p.descricao || ''}
-            <small>(${p.codigo || ''})</small>
-          </button>
+            <div class="sug-item"
+              data-desc="${esc(p.descricao || '')}"
+              data-codigo="${esc(p.codigo || '')}"
+              data-preco="${esc(p.precoprazo || '')}">
+              <div class="sug-desc">${esc(p.descricao || '')}</div>
+              <div class="sug-preco">${p.precoprazo ? esc(p.precoprazo) : '0,00'}</div>
+              <div class="sug-codigo">(${esc(p.codigo || '')})</div>
+          </div>
         `).join('');
 
         sugBox.style.display = 'block';

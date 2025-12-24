@@ -172,7 +172,7 @@
 
         <div class="campo-topo">
           <label>marca da loja</label>
-          <input type="text" value="{{lojista.marca}}" readonly>
+          <input id="lojista_marca" type="text" value="{{lojista.marca}}" readonly>
         </div>
 
         <div class="campo-topo">
@@ -703,14 +703,14 @@ if (btnAjuste) {
 <script>
   document.getElementById('btnCadFornecedor')?.addEventListener('click', () => {
   const lojistaId = document.getElementById("lojistaId").value;
-    
+  const marca=document.getElementById("lojista_marca").value;  
 
   if (!lojistaId) {
     alert('LojistaId não encontrado na tela.');
     return;
   }
 
-  window.location.href = `/empresa/cadfornecedores?lojistaId=${encodeURIComponent(lojistaId)}`;
+  window.location.href = `/empresa/cadfornecedores?lojistaId=${encodeURIComponent(lojistaId)}&lojistamarca=${marca}`;
 });
 
 </script>

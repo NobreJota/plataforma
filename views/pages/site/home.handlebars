@@ -574,6 +574,32 @@
   opacity: 0.95;
   border-radius: 3px;
 }
+/* container da lista */
+#sugestoes, .sug-list {
+  width: 520px;          /* aumenta */
+  max-width: 90vw;       /* não estoura no mobile */
+  max-height: 360px;     /* scroll */
+  overflow: auto;
+}
+
+
+.sug-item { 
+  font-size: 12px;       /* diminui */
+  line-height: 1.15;
+  padding: 8px 10px;
+}
+
+.sug-prod { 
+  display:block;
+  font-weight: 600;
+  white-space: normal;   /* deixa quebrar linha */
+  word-break: break-word;
+}
+
+.sug-loja { 
+  font-size: 11px;
+  opacity: .9;
+}
 </style>
 </head>
 <body>

@@ -1,61 +1,83 @@
-<style>
-   .cabecalho-tabela th {
-    background-color: #f8f9fa;
-    color: #333;
-    padding: 10px;
-    font-weight: 100;
-    font-size: smaller;
-  }
-  table td{
-    background-color: #068648;
-  }
+<!DOCTYPE html>
+{{!-- ESSE FORM É A ADMINISTRAÇÂO CENTRAL DOS PRODUTOS --}}
+{{!-- AQUI nós listamos os produtos,selecionamos fornecedores,editamos imagens,e importamos produtos --}}
+<html lang="pt-br">
+ <head>
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">       
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/js/empresa/produtoedit-imagem.js">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    
+    <script defer>
+        window.colacerto = function () { }
+    </script>
+    <title>Rotaes  : Admin : lojista</title>
+  <style>
+      .cabecalho-tabela th {
+        background-color: #f8f9fa;
+        color: #333;
+        padding: 10px;
+        font-weight: 100;
+        font-size: smaller;
+      }
+      table td{
+        background-color: #068648;
+      }
 
-  .row{
-    margin-bottom:5px;background-color: #d9c9c9;color: #0d0d0d;height: 5vh;font-weight: 100;
-  }
+      .row{
+        margin-bottom:5px;background-color: #d9c9c9;color: #0d0d0d;height: 5vh;font-weight: 100;
+      }
 
-  .row label {
-    font-weight: 100;
-    height: 2vh;
-    padding-left: 10px;
-  }
+      .row label {
+        font-weight: 100;
+        height: 2vh;
+        padding-left: 10px;
+      }
 
-  .row input {
-    font-weight: 600;
-    height: 3vh;background-color: #f0f3f2;
-  }
+      .row input {
+        font-weight: 600;
+        height: 3vh;background-color: #f0f3f2;
+      }
 
-  .longa{
-    width: 10vw;
-    background-color: #068648;
-  }
+      .longa{
+        width: 10vw;
+        background-color: #068648;
+      }
 
 
 
-  .curta{
-    width: 5vw;
-    background-color: brown;
-  }
+      .curta{
+        width: 5vw;
+        background-color: brown;
+      }
 
-  .ajusteRow{
-     min-width: 100px; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
+      .ajusteRow{
+        min-width: 100px; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
 
 </style>
+ </head>
+
 <script>
   let =jaCarregouDepartamentos=false;
   let selecionados = [];
 </script>
 <div id="corpo" style="width: 99vw;height: 96vh;margin: auto;background-color: #d0d3d0;">
-  
-  {{!-- <div>
-     <h1 >Lista de Lojistas</h1>  
-  </div>   --}}
     <div id="cadastroLojistaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#bbbcbb80; justify-content:center; align-items:center; z-index:9999;padding: 5px;">
         <div style="background:#fff; width:50%; height:92vh;margin: auto;padding:10px; border-radius:10px; box-shadow:0 5px 10px #00000080;overflow-x: scroll;overflow-y: auto;">
             <h4 style="font-weight: 200;color: #141414;">Cadastro de Lojista</h4>
             <div id="divForm" style="background-color:transparent;height:90vh ;">
-                <form id="cadastroLojistaForm" style="padding-left: 10px;width: 95%;margin: auto;background-color: #ffffff;">
+                <form id="cadastroLojistaForm" style="padding-left: 10px;width: 95%;margin: auto;background-color: #cc0b0b;">
                         <input type="hidden" id="editId" name="_id">
                         <div class="row">
                             <label>Razao:</label>
@@ -182,7 +204,7 @@
                     <div>
                       {{!-- {{lojista.segmentos}} --}}
                     </div>    
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" spellcheck="false">
                           <thead>
                               <tr class="cabecalho-tabela">
                                   <th class="click-hide" data-column="0"><i data-lucide="eye-off"></i>Razão</th>
@@ -310,7 +332,7 @@
         const field = cell.dataset.field;
         const value = cell.textContent.trim();
         try {
-          console.log("RRRRRRRRRRRRRRRRRRRRR",id)
+          console.log("Update lojista /:id",id)
           const response = await fetch(`/lojista/lojista/update/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -373,11 +395,10 @@ function  openCadLojistaModal() {
 <script>
    function openCadastroLojistaModal(){
       //document.getElementById("cadastroLojistaModal").style.display="block";
-       window.location.href = "/lojista/departamento-selecao";
+       window.location.href = "/lojista/cadastro-cooperado";
    }  
 </script>
 {{!-- //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX --}}
-
 <script>
 /* ===============================
    ROTINA 1: Variáveis globais
@@ -388,15 +409,115 @@ let listaDepartamentos = [];
 let jaCarregouDepartamentos = false;
 let contador = 1; // controla a quantidade de departamentos adicionados
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-================================ */
 const maxDepartamentos = 10;
 //const seleciXonados = [];
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("cadastroLojistaForm");
+  if (!form) return;
 
+  // preposições/conjunções que ficam minúsculas no meio
+  const minusculas = new Set([
+    'de','da','do','das','dos',
+    'e','em','na','no','nas','nos',
+    'por','para','com','sem','a','o','as','os'
+  ]);
 
+  function toTitleCaseSmart(str=''){
+    return (str || '')
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g,' ')
+      .split(' ')
+      .filter(Boolean)
+      .map((p, idx) => {
+        if (idx > 0 && minusculas.has(p)) return p;
+        return p.charAt(0).toUpperCase() + p.slice(1);
+      })
+      .join(' ');
+  }
 
+   console.log(' [ 420 ]')
+  // IDs/Names que NÃO serão formatados
+  const ignorarIds = new Set(['cnpj','cpf']); // seus ids são exatamente esses
+  const ignorarNames = new Set(['cnpj','cpf']);
+
+  form.addEventListener("input", (e) => {
+    const el = e.target;
+    if (!el || el.tagName !== "INPUT") return;
+    if (el.type !== "text") return;
+
+    if (ignorarIds.has(el.id) || ignorarNames.has(el.name)) return;
+
+    el.value = toTitleCaseSmart(el.value);
+  });
+
+  // se algum outro script quiser usar
+  window.toTitleCaseSmart = toTitleCaseSmart;
+});
 </script>
 
+
+<script>
+(function () {
+  console.log("[lojista] script carregou");
+
+  // se o DOM já carregou, executa; senão espera
+  function init() {
+    const form = document.getElementById("cadastroLojistaForm");
+    console.log("[lojista] form encontrado?", !!form);
+
+    if (!form) return;
+
+    const minusculas = new Set([
+      "de","da","do","das","dos",
+      "e","em","na","no","nas","nos",
+      "por","para","com","sem","a","o","as","os"
+    ]);
+
+    function toTitleCaseSmart(str="") {
+      return (str || "")
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, " ")
+        .split(" ")
+        .filter(Boolean)
+        .map((p, idx) => (idx > 0 && minusculas.has(p))
+          ? p
+          : p.charAt(0).toUpperCase() + p.slice(1)
+        )
+        .join(" ");
+    }
+
+    form.addEventListener("input", (e) => {
+      const el = e.target;
+      if (!el || el.tagName !== "INPUT") return;
+      if (el.type !== "text") return;
+
+      // NÃO formatar CPF/CNPJ
+      if (el.id === "cpf" || el.name === "cpf") return;
+      if (el.id === "cnpj" || el.name === "cnpj") return;
+
+      const before = el.value;
+      el.value = toTitleCaseSmart(el.value);
+
+      // debug mínimo
+      if (before !== el.value) {
+        console.log("[lojista] formatou:", el.id || el.name, "=>", el.value);
+      }
+    });
+
+    console.log("[lojista] listener input instalado");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
 
 
  

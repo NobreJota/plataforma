@@ -89,9 +89,10 @@ router.get('/cooperados', ensureLojista, async (req, res) => {
     try {
           const loja_number = req.session.lojistaId; // vem da sessão
           //////////////////////////////////////////////////////////////////
-          console.log(req.query)
-          // console.log('[ 93 /cooperados=>loja-number ]',loja_number);
-          console.log('');
+          console.log('---------------------------------------------------');
+          console.log(req.session.lojistaId);
+          console.log('[ 93 /routes/empresa/rotina.js/cooperados:  ]',loja_number);
+          console.log('---------------------------------------------------');
           ///////////////////////////////////////////////////////////////////
           // paginação
           const page  = Math.max(parseInt(req.query.page || '1', 10), 1);
@@ -204,6 +205,7 @@ router.get('/cooperados', ensureLojista, async (req, res) => {
           /////////////////////////////////////////////////////////////////////////
           //////////////////////////////////////////////////////////////////////////
           // render
+          console.log(' ',produtos.length)
           // 'empresa/empresa-produto.handlebars'
           res.render('pages/empresa/cooperado-admin.handlebars', {
             layout:false ,
@@ -301,6 +303,11 @@ router.get("/produtos", async (req, res) => {
 });
 
 router.post('/usuarioloja/login', async (req, res) => {
+  console.log('');
+  console.log(' Origem:routes/empresa/rotina.js/usuarioloja/login');
+  console.log(' Vai :');
+  console.log(' obs:');
+  console.log('');
   try {
     const emailIn = String(req.body.email || '').trim().toLowerCase();
     const senhaIn = String(req.body.senha || '');

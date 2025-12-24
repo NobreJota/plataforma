@@ -10,6 +10,7 @@ function normDesc(s = '') {
     .trim();
 }
 
+
 // LocalizacaoRefSchema (apenas o trecho)
 const LocalizacaoRefSchema = new Schema({
   departamento: {
@@ -51,6 +52,7 @@ const ArquivoDocSchema = new Schema({
   cidade: { type: String },
   bairro: { type: String },
   codigo: { type: String, index: true },
+  marcaproduto: { type: String },
   // NOVO: validação que proíbe dígitos
   descricao: {
       type: String,
@@ -61,12 +63,11 @@ const ArquivoDocSchema = new Schema({
         message: 'Descrição não pode conter números; use os campos "complemento" ou "referência".'
       }
   },
-  descricaoNorm: { type: String, trim: true, index: true }, // <<< NOVO
+  descricaoNorm: { type: String, trim: true, index: true ,select:false}, // <<< NOVO
   complete: { type: String, default: false },
   referencia: { type: String ,default: ''},
   referencia2: { type: String,default: ''},
   codEcf: { type: String,default: '' },
-  localloja: [LocalizacaoRefSchema],
   fornecedor: { type: Schema.Types.ObjectId, ref: "fornec" },
   similares: [{ type: mongoose.Schema.Types.ObjectId, ref: "arquivo_doc" }],
   qte: { type: Number, min: 0 ,default:0},
@@ -77,6 +78,7 @@ const ArquivoDocSchema = new Schema({
   precocusto: { type: mongoose.Types.Decimal128,default: null  },
   precovista: { type: mongoose.Types.Decimal128 ,default: null },
   precoprazo: { type: mongoose.Types.Decimal128 ,default: null },
+  localloja: [LocalizacaoRefSchema],
   artigo: { type: String,default: '' },
   pageposicao: { type: Number ,min:0,default:0},
   pageurls: {
@@ -127,6 +129,20 @@ ArquivoDocSchema.pre('insertMany',async function( next,docs) {
      }
 });
 
+ArquivoDocSchema.set('toJSON', {
+  transform: (doc, ret) => {
+    delete ret.descricaoNorm;
+    return ret;
+  }
+});
+
+ArquivoDocSchema.set('toObject', {
+  transform: (doc, ret) => {
+    delete ret.descricaoNorm;
+    return ret;
+  }
+});
+// ??????????????????????????????????????????
 // campos usados nos filtros
 ArquivoDocSchema.index({ 'localloja.departamento': 1 });
 ArquivoDocSchema.index({ ativo: 1, datadel: 1 });

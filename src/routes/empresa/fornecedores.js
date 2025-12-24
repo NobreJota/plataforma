@@ -6,9 +6,8 @@ require("../../../database/index"); // ajuste para seu caminho
 
 
 const Departamento =require("../../models/departamento");
-
 const Fornecedor =require('../../models/fornecedor');
-
+const Lojista = require("../../models/lojista"); // <-- se ainda não tem
 
 
 // Listar todos os fornecedores
@@ -71,21 +70,66 @@ router.get("/buscacep/:cep", async (req, res) => {
       }
 });
 
-// Gravar fornecedor
+
 router.post("/gravarfornec", async (req, res) => {
+  console.log('');
+  console.log(' vem : views/pages/empresa/cadfornecedor.handlebars');
+  console.log(' router: routes/empresa/fornecedores.js/gravarfornec');
+  console.log('');
+  console.log('');
+  
   try {
-    let n1=req.body;
-    console.log("=> ",n1)
-    const fornecedor = new Fornecedor(req.body);
+    // pega dados do vínculo (não faz parte do schema do fornecedor)
+    const { lojaId, marcaLoja } = req.body;
+    
+    // remove do body antes de criar o fornecedor (pra não “poluir”)
+    const fornecedorData = { ...req.body };
+   
+    delete fornecedorData.lojaId;
+    delete fornecedorData.marcaLoja;
+    console.log(' fornecedorData :');
+    console.log('',fornecedorData);
+    const fornecedor = new Fornecedor(fornecedorData);
     await fornecedor.save();
-    res.status(201).json(fornecedor);
+
+    // se veio lojaId, grava o vínculo nos 2 lados
+    if (lojaId) {
+      // 1) INSERE fornecedor no lojista.fornecedores[]
+      await Lojista.findByIdAndUpdate(
+        lojaId,
+        {
+          $addToSet: {
+            fornecedores: {
+              fornecId: String(fornecedor._id),
+              fornecName: fornecedor.razao || ""
+            }
+          }
+        },
+        { new: true }
+      );
+
+      // 2) INSERE loja no fornecedor.lojistas[]
+      await Fornecedor.updateOne(
+        { _id: fornecedor._id },
+        {
+          $addToSet: {
+            lojistas: {
+              loja: lojaId,
+              marcaLoja: marcaLoja || ""
+            }
+          }
+        }
+      );
+    }
+
+    return res.status(201).json(fornecedor);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    return res.status(400).json({ error: err.message });
   }
 });
 
 // Gravar fornecedor
-router.post("/", async (req, res) => {
+router.post("/A231225", async (req, res) => {
   try {
     const fornecedor = new Fornecedor(req.body);
     await fornecedor.save();
@@ -158,8 +202,9 @@ router.get("/addfornec/:id",async(req,res)=>{
 })
 
 router.get("/departamentos", async (req, res) => {
-  console.log(40000)
-
+  console.log('');
+  console.log('routes/empresa/fornecedores.js/departamento [ 162 ]')
+  console.log('');
   try {
     const departamentos = await Departamento.find().lean();
     console.log('');
@@ -245,5 +290,126 @@ router.get("/novocadastro/:id",async(req,res)=>{
   });
   
 })
+
+//No cadfornecedores.handlebars  checa se já está cadastrado
+router.get('/checar-cnpj/:cnpj/:lojaId', async (req, res) => {
+  console.log('');
+  console.log('vem de : routes/empresa/fornecedores.js/checar=cnpj');
+  console.log(' req.params.cnpj   :',req.params.cnpj );
+  console.log(' req.params.lojaId :',req.params.lojaId)
+  console.log('');
+  //..........................................................................
+  try {
+    let cnpjNum = String(req.params.cnpj || '').replace(/\D/g,'');
+    const lojaId  = req.params.lojaId;
+
+    if (cnpjNum.length !== 14) {
+      return res.json({ ok:false, error:'CNPJ inválido' });
+    }
+
+    console.log('cnpjNum do fornecedor novo',cnpjNum);
+    console.log('numero do lojista =>lojaId',lojaId);
+    console.log('');
+    console.log('---------------------------------------------------------');
+    
+    function maskCNPJ(num14) {
+        return String(num14).replace(
+          /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+          "$1.$2.$3/$4-$5"
+        );
+    }
+
+    const cnpjMask = maskCNPJ(cnpjNum);
+    
+    // ✅ busca correta
+    // const forn = await Fornecedor.findOne({ cnpj: cnpjNum }).lean();
+    const forn = await Fornecedor.findOne({
+          $or: [
+            { cnpj: cnpjNum },   // caso você tenha algum salvo sem máscara
+            { cnpj: cnpjMask }   // caso esteja salvo com máscara (seu caso agora)
+          ]
+    }).lean();
+
+    console.log(' [ 267 passando ',forn)
+
+    if (!forn) {
+      return res.json({ ok:true, exists:false });
+    }
+
+    // ✅ checa vínculo
+    const jaVinculado = Array.isArray(forn.lojistas) &&
+      forn.lojistas.some(l => String(l.loja) === String(lojaId));
+
+    console.log('');  
+    console.log('jaVinculado',jaVinculado);
+
+
+    // if (!jaVinculado) {
+    //   await Fornecedor.updateOne(
+    //     { _id: forn._id, 'lojistas.loja': { $ne: lojaId } },
+    //     { $push: { lojistas: { loja: lojaId, marcaLoja: '' } } }
+    //   );
+    // }
+
+    console.log('');
+    console.log('-----------------------------------------------------');
+    // return res.json({ ok:true, exists:true, fornecedor: forn });
+    return res.json({
+       ok: true,
+       exists: true,
+       fornecedor: forn,
+       jaVinculado,
+});
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ ok:false, error:'Erro interno' });
+  }
+});
+
+//Aqui a consulta é para o CNPJ do fornecedor do lojista
+router.get('/consulta-cnpj/:cnpj', async (req, res) => {
+  console.log(' ');
+  console.log('________________________________________________________________________ ');
+  console.log(' [ 314 ]');
+  console.log(' origem views :pages/empresa/cadfornecedor.handlebars');
+  console.log(' .................................................................');
+  console.log(' origem route :routes/empresa/fornecedores/consulta-cnpj ');
+  console.log(' obs :consulta o cnpj na receita federal para buscar os dados reais ');
+  console.log('');
+  console.log(' destino : cadfornecedor.handlebars');
+  console.log('');
+  const cnpj = req.params.cnpj;
+  console.log('consultando o cnpj nº :',cnpj)
+  try {
+    const response = await fetch(`https://www.receitaws.com.br/v1/cnpj/${cnpj}`);
+    console.log(' 312 ', response);
+   // console.log('++++++++++++++++++',response.json());
+    console.log('');
+    const data = await response.json();
+    res.json(data); // devolve pro front-end
+    } catch (error) {
+    res.status(500).json({ error: 'Erro ao consultar CNPJ' });
+  }
+});
+
+router.post('/vincular-fornecedor', async (req, res) => {
+  try {
+    const { fornecedorId, lojaId, marcaLoja = '' } = req.body || {};
+    if (!fornecedorId || !lojaId) {
+      return res.status(400).json({ ok:false, error:'fornecedorId e lojaId são obrigatórios' });
+    }
+
+    await Fornecedor.updateOne(
+      { _id: fornecedorId, 'lojistas.loja': { $ne: lojaId } },
+      { $push: { lojistas: { loja: lojaId, marcaLoja } } }
+    );
+
+    return res.json({ ok:true });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ ok:false, error:'Erro ao vincular fornecedor' });
+  }
+});
 
 module.exports = router;

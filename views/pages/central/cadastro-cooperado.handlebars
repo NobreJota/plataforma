@@ -1,124 +1,171 @@
-<style>
-  .row input.form-control {
-    height: 30px; /* ou menos, ex: 28px */
-    font-size: 14px;
-    padding: 2px 6px;
-    color:blue ;
-  }
-
-  .row label {
-    font-size: 14px;
-    margin-bottom: 2px;
-    line-height: 1.2;
-    color: blue;
-  }
-
-  .row {
-    margin-bottom: 5px;
-  }
-</style>
-<style>
-    .gravaSubmit{
-      padding-left: 10px;
-      width: 95%;
-      margin: auto;
-      background-color: #ffffff;
-    }
+<!DOCTYPE html>
+{{!-- ESSE FORM É A ADMINISTRAÇÂO CENTRAL DOS PRODUTOS --}}
+{{!-- AQUI nós listamos os produtos,selecionamos fornecedores,editamos imagens,e importamos produtos --}}
+<html lang="pt-br">
+ <head>
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">       
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/js/empresa/produtoedit-imagem.js">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     
-    .letra{
-      color: black;
+    {{!-- <script defer>
+        window.colacerto = function () { }
+    </script> --}}
+    <title>Rotaes  : Admin : lojista</title>
+
+    <style>
+      .row input.form-control {
+        height: 30px; /* ou menos, ex: 28px */
+        font-size: 14px;
+        padding: 2px 6px;
+        color:blue ;
+      }
+
+      .row label {
+        font-size: 14px;
+        margin-bottom: 2px;
+        line-height: 1.2;
+        color: blue;
+      }
+
+      .row {
+        margin-bottom: 5px;
+      }
+    </style>
+    <style>
+        .gravaSubmit{
+          padding-left: 10px;
+          width: 95%;
+          margin: auto;
+          background-color: #ffffff;
+        }
+        
+        .letra{
+          color: black;
+        }
+    </style>
+    <style>
+      /* classes utilitárias, com !important para vencer estilos inline antigos
+      .inputU-focus  { background: yellow !important; color: #000 !important; }
+      .input-filled { background: red    !important; color: #fff !important; } */
+    </style>
+
+    <style>
+      /* Mantém sua base atual */
+    .row input.form-control {
+      height: 30px;
+      font-size: 14px;
+      padding: 2px 6px;
+      color: blue;
     }
-</style>
-<style>
-  /* classes utilitárias, com !important para vencer estilos inline antigos */
-  .input-focus  { background: yellow !important; color: #000 !important; }
-  .input-filled { background: red    !important; color: #fff !important; }
-</style>
+    .row label {
+      font-size: 14px;
+      margin-bottom: 2px;
+      line-height: 1.2;
+      color: blue;
+    }
+    .row { margin-bottom: 5px; }
 
-<style>
-  /* Mantém sua base atual */
-.row input.form-control {
-  height: 30px;
-  font-size: 14px;
-  padding: 2px 6px;
-  color: blue;
-}
-.row label {
-  font-size: 14px;
-  margin-bottom: 2px;
-  line-height: 1.2;
-  color: blue;
-}
-.row { margin-bottom: 5px; }
+    /* ===== NOVO: linha com dois inputs lado a lado ===== */
+    .row-dupla {
+      display: grid;
+      grid-template-columns: 120px 1fr; /* label fixo + área dos inputs */
+      column-gap: 10px;
+      align-items: center;
+    }
+    .row-dupla > label {
+      grid-column: 1;
+    }
+    .row-dupla .dupla {
+      grid-column: 2;
+      display: flex;
+      gap: 10px;         /* espaço entre os dois inputs */
+    }
+    .row-dupla .dupla .form-control {
+      flex: 1;           /* divide igualmente o espaço */
+      min-width: 0;      /* evita quebra por conteúdo longo */
+      box-sizing: border-box;
+    }
 
-/* ===== NOVO: linha com dois inputs lado a lado ===== */
-.row-dupla {
-  display: grid;
-  grid-template-columns: 120px 1fr; /* label fixo + área dos inputs */
-  column-gap: 10px;
-  align-items: center;
-}
-.row-dupla > label {
-  grid-column: 1;
-}
-.row-dupla .dupla {
-  grid-column: 2;
-  display: flex;
-  gap: 10px;         /* espaço entre os dois inputs */
-}
-.row-dupla .dupla .form-control {
-  flex: 1;           /* divide igualmente o espaço */
-  min-width: 0;      /* evita quebra por conteúdo longo */
-  box-sizing: border-box;
-}
+    /* Responsivo: se a tela for estreita, empilha os campos */
+    @media (max-width: 600px) {
+      .row-dupla {
+        grid-template-columns: 1fr;     /* label e inputs em uma coluna */
+      }
+      .row-dupla > label {
+        margin-bottom: 4px;              /* um respiro entre label e inputs */
+      }
+      .row-dupla .dupla {
+        flex-direction: column;          /* inputs um abaixo do outro */
+      }
+    }
 
-/* Responsivo: se a tela for estreita, empilha os campos */
-@media (max-width: 600px) {
-  .row-dupla {
-    grid-template-columns: 1fr;     /* label e inputs em uma coluna */
-  }
-  .row-dupla > label {
-    margin-bottom: 4px;              /* um respiro entre label e inputs */
-  }
-  .row-dupla .dupla {
-    flex-direction: column;          /* inputs um abaixo do outro */
-  }
-}
+    /* Linha com dois campos lado a lado, cada um com label em cima */
+    .row-dupla-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* dois blocos iguais */
+      gap: 10px;
+      align-items: start;
+    }
 
-/* Linha com dois campos lado a lado, cada um com label em cima */
-.row-dupla-top {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* dois blocos iguais */
-  gap: 10px;
-  align-items: start;
-}
+    .row-dupla-top .campo {
+      display: flex;
+      flex-direction: column; /* label em cima, input embaixo */
+      min-width: 0;           /* evita overflow quando o conteúdo é longo */
+    }
 
-.row-dupla-top .campo {
-  display: flex;
-  flex-direction: column; /* label em cima, input embaixo */
-  min-width: 0;           /* evita overflow quando o conteúdo é longo */
-}
+    .row-dupla-top .campo label {
+      font-size: 14px;        /* mantém seu padrão */
+      margin-bottom: 2px;
+      line-height: 1.2;
+      color: blue;            /* combina com seu tema atual */
+    }
 
-.row-dupla-top .campo label {
-  font-size: 14px;        /* mantém seu padrão */
-  margin-bottom: 2px;
-  line-height: 1.2;
-  color: blue;            /* combina com seu tema atual */
-}
-
-/* Responsivo: empilha em telas estreitas */
-@media (max-width: 600px) {
-  .row-dupla-top {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
+    /* Responsivo: empilha em telas estreitas */
+    @media (max-width: 600px) {
+      .row-dupla-top {
+        grid-template-columns: 1fr;
+      }
+    }
+    </style>
+    <style>
+      /* classes utilitárias para visual */
+      .is-focus  { background: yellow !important; color: #000 !important; }
+      .is-filled { background: red    !important; color: #fff !important; }
+    </style> 
+ </head>   
  {{!-- CADASTRO DE LOJISTA --}}
-<div id="cadastroLojistaModal" style="display:block; position:fixed; top:7.2vh; left:0; width:100%; height:100%; background:#bbbcbb80; justify-content:center; align-items:center;padding: 5px;">
+ <body>
+<div id="cadastroLojistaModal" style="display:block; position:fixed; top:0.5vh; left:0; width:100%; height:100%; background:#0ccc0c80; justify-content:center; align-items:center;padding: 5px;">
         <div style="background:#fff; width:50%; height:92vh;margin: auto;padding:10px; border-radius:10px; box-shadow:0 5px 10px #00000080;overflow-x: scroll;overflow-y: auto;">
+             <div id="menuFornecedor" style="background:#7f7fbf;padding:8px 16px;display:flex;gap:20px;
+                                                                                                              border-radius:6px 6px 0 0;
+                                                                                                              margin-bottom:15px;
+                                                                                                            ">
+                          {{!-- <a href="/" style="color:#fff;text-decoration:none;font-weight:600;">Home</a> --}}
+
+                          <a href="" style="color:#fff;text-decoration:none;font-weight:600;">
+                            Loja
+                          </a>
+
+                          <a href="#" id="btnLimparForm"
+                            style="color:#fff;text-decoration:none;font-weight:600;">
+                            Limpar
+                    </a>
+                  </div>
             <h4 style="font-weight: 200;color: #141414;">Cadastro de Lojista</h4>
             <div id="divForm" style="background-color:transparent;height:90vh ;">
-                <form id="cadastroLojistaForm" class="gravaSubmit" method="POST" action="/lojista/gravar">
+                <form id="cadastroLojistaForm" class="gravaSubmit" method="POST" action="/lojista/gravar" spellcheck="false" autocomplete="off">
                         <input type="hidden" id="editId" name="_id">
                         <div class="row">
                             <label>CNPJ:</label>
@@ -230,7 +277,65 @@
             </div>
         </div>
 </div>
+<script>
+(function(){
+  // preposições/conjunções que ficam minúsculas no meio
+  const minusculas = new Set([
+    'de','da','do','das','dos',
+    'e','em','na','no','nas','nos',
+    'por','para','com','sem','a','o','as','os'
+  ]);
 
+  window.toTitleCaseSmart = function(str=''){
+    return String(str || '')
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g,' ')
+      .split(' ')
+      .filter(Boolean)
+      .map((p, idx) => {
+        if (idx > 0 && minusculas.has(p)) return p;
+        return p.charAt(0).toUpperCase() + p.slice(1);
+      })
+      .join(' ');
+  };
+
+  const form = document.getElementById("cadastroLojistaForm");
+  if (!form) return;
+
+  // só formatar estes campos (mínimo, sem bagunça)
+  const idsFormatar = new Set([
+    "inputrazao",
+    "responsavel",
+    "site",
+    "marca",
+    "logradouro",
+    "complemento",
+    "bairro",
+    "cidade"
+  ]);
+
+  // formata ao digitar (somente nesses campos)
+  form.addEventListener("input", (e) => {
+    const el = e.target;
+    if (!el || el.tagName !== "INPUT") return;
+    if (el.type !== "text") return;
+    if (!idsFormatar.has(el.id)) return;
+
+    const pos = el.selectionStart;     // tenta manter cursor
+    el.value = window.toTitleCaseSmart(el.value);
+    try { el.setSelectionRange(pos, pos); } catch {}
+  }, true);
+
+  idsFormatar.forEach((id) => {
+  const el = document.getElementById(id);
+  if (el && el.value) el.value = window.toTitleCaseSmart(el.value);
+});
+})();
+</script>
+
+</body>
+ </html>
 <!-- HTML: Campos para selecionar departamentos e exibir os escolhidos em <ul> -->
 <script>
 const inputs = document.querySelectorAll("#cadastroLojistaForm input");
@@ -243,7 +348,7 @@ const inputs = document.querySelectorAll("#cadastroLojistaForm input");
   // Quando a razão social receber foco, carrega os departamentos uma única vez
   let jaCarregouDepartamentos = false;
   document.getElementById("inputrazao").addEventListener("focus", async () => {
-    //break
+    
     if (jaCarregouDepartamentos) return;
     try {
       console.log('--------------------------');
@@ -448,242 +553,131 @@ function extrairDepartamentosSelecionados(req) {
 <script>
   document.addEventListener("DOMContentLoaded", function () {
   const input_A=document.getElementById("inputCNPJ");
-  
-  
-  
-  input_A.addEventListener("keydown", async function (e) {
-      if (e.key === "Enter") {
-        const cnpj = input_A.value.replace(/\D/g, ""); // Remove tudo que não for número
-  
-        if (cnpj.length !== 14) {
-           alert("Favor verificar o CNPJ válido!")
-          return;
-        }
-        //"🔍 Buscando dados...";
-        try {
-        const res = await fetch(`/lojista/consulta-cnpj/${cnpj}`);
-        const data = await res.json();
-        console.log('{ }', data)
-        if (data.status === "ERROR") {
-          //resultadoDiv.innerHTML = `<span style="color:red;">Erro: ${data.message}</span>`;
-          
-        } else {
-                const razao = data?.nome || '';
-                document.getElementsByName('inputrazao')[0].value=`${razao}`,
-                document.getElementsByName('inputrazao')[0].style.backgroundColor="red";
-                document.getElementsByName('inputrazao')[0].style.color="white";
+    
+      input_A.addEventListener("keydown", async function (e) {
+          if (e.key === "Enter") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const cnpj = input_A.value.replace(/\D/g, ""); // Remove tudo que não for número
+      
+                  if (cnpj.length !== 14) {
+                    alert("Favor verificar o CNPJ válido!")
+                    return;
+                  }
+            //"🔍 Buscando dados...";
+            try {
+                    const res = await fetch(`/lojista/consulta-cnpj/${cnpj}`);
+                    const data = await res.json();
 
-                const nome = data?.qsa?.[0]?.nome?.trim?.() || ''
-                document.getElementsByName('responsavel')[0].value=`${nome}`,
-                document.getElementsByName('responsavel')[0].style.backgroundColor="red";
-                document.getElementsByName('responsavel')[0].style.color="white";
-                
-                const cpf = data?.cpf || '';
-                document.getElementsByName('cpf')[0].value=`${cpf}`,
-                document.getElementsByName('cpf')[0].style.backgroundColor="red";
-                document.getElementsByName('cpf')[0].style.color="white";
+                    console.log('{ }', data)
+                    if (data.status === "ERROR") {
+                      //resultadoDiv.innerHTML = `<span style="color:red;">Erro: ${data.message}</span>`;
+                    }else {
+                            const razao = data?.nome || '';
+                            document.getElementsByName('inputrazao')[0].value=toTitleCaseSmart(razao);
+                            document.getElementsByName('inputrazao')[0].style.backgroundColor="red";
+                            document.getElementsByName('inputrazao')[0].style.color="white";
 
-                const inscricao=0
-                document.getElementsByName('inscricao')[0].value=`${inscricao}`,
-                document.getElementsByName('inscricao')[0].style.backgroundColor="red";
-                document.getElementsByName('inscricao')[0].style.color="white";
-               
-                const fantasia = data?.fantasia || '';
-                document.getElementsByName('marca')[0].value=`${fantasia}`,
-                document.getElementsByName('marca')[0].style.backgroundColor="red";
-                document.getElementsByName('marca')[0].style.color="white";
+                            const nome = data?.qsa?.[0]?.nome?.trim?.() || ''
+                            document.getElementsByName('responsavel')[0].value=toTitleCaseSmart(nome);
+                            document.getElementsByName('responsavel')[0].style.backgroundColor="red";
+                            document.getElementsByName('responsavel')[0].style.color="white";
+                            
+                            const cpf = data?.cpf || 0;
+                            document.getElementsByName('cpf')[0].value=cpf,
+                            document.getElementsByName('cpf')[0].style.backgroundColor="red";
+                            document.getElementsByName('cpf')[0].style.color="white";
 
-                document.getElementsByName('celular')[0].value=`${""}`,
-                document.getElementsByName('celular')[0].style.backgroundColor="red";
-                document.getElementsByName('celular')[0].style.color="white";
+                            const inscricao=data?.inscricao || 0
+                            document.getElementsByName('inscricao')[0].value=inscricao;
+                            document.getElementsByName('inscricao')[0].style.backgroundColor="red";
+                            document.getElementsByName('inscricao')[0].style.color="white";
+                          
+                            const fantasia = data?.fantasia || '';
+                            document.getElementsByName('marca')[0].value=toTitleCaseSmart(fantasia);
+                            document.getElementsByName('marca')[0].style.backgroundColor="red";
+                            document.getElementsByName('marca')[0].style.color="white";
 
-                const telefone = data?.telefone || '';
-                document.getElementsByName('fone')[0].value=`${telefone}`,
-                document.getElementsByName('fone')[0].style.backgroundColor="red";
-                document.getElementsByName('fone')[0].style.color="white";
-                 
-                const email = data?.email || ''; 
-                document.getElementsByName('email')[0].value=`${email}`,
-                document.getElementsByName('email')[0].style.backgroundColor="red";
-                document.getElementsByName('email')[0].style.color="white";
-                
-                const cep = data?.cep || '';
-                document.getElementsByName('cep')[0].value=`${cep}`,
-                document.getElementsByName('cep')[0].style.backgroundColor="red";
-                document.getElementsByName('cep')[0].style.color="white";
+                            const celular = data?.celular || 0;
+                            document.getElementsByName('celular')[0].value=celular;
+                            document.getElementsByName('celular')[0].style.backgroundColor="red";
+                            document.getElementsByName('celular')[0].style.color="white";
 
-                const logradouro = data?.logradouro || '';
-                document.getElementsByName('logradouro')[0].value=`${logradouro}`
-                document.getElementsByName('logradouro')[0].style.backgroundColor="red";
-                document.getElementsByName('logradouro')[0].style.color="white";
+                            const telefone = data?.telefone || '';
+                            document.getElementsByName('fone')[0].value=telefone;
+                            document.getElementsByName('fone')[0].style.backgroundColor="red";
+                            document.getElementsByName('fone')[0].style.color="white";
+                            
+                            const email = data?.email || ''; 
+                            document.getElementsByName('email')[0].value=email;
+                            document.getElementsByName('email')[0].style.backgroundColor="red";
+                            document.getElementsByName('email')[0].style.color="white";
+                            
+                            const cep = data?.cep || '';
+                            document.getElementsByName('cep')[0].value=cep;
+                            document.getElementsByName('cep')[0].style.backgroundColor="red";
+                            document.getElementsByName('cep')[0].style.color="white";
 
-                const numero = data?.numero || '';
-                document.getElementsByName('numero')[0].value=`${numero}`
-                document.getElementsByName('numero')[0].style.backgroundColor="red";
-                document.getElementsByName('numero')[0].style.color="white";
+                            const logradouro = data?.logradouro || '';
+                            document.getElementsByName('logradouro')[0].value=toTitleCaseSmart(logradouro);
+                            document.getElementsByName('logradouro')[0].style.backgroundColor="red";
+                            document.getElementsByName('logradouro')[0].style.color="white";
 
-                const bairro = data?.bairro || '';
-                document.getElementsByName('bairro')[0].value=`${bairro}`
-                document.getElementsByName('bairro')[0].style.backgroundColor="red";
-                document.getElementsByName('bairro')[0].style.color="white";
+                            const numero = data?.numero || '';
+                            document.getElementsByName('numero')[0].value=numero;
+                            document.getElementsByName('numero')[0].style.backgroundColor="red";
+                            document.getElementsByName('numero')[0].style.color="white";
 
-                const municipio = data?.municipio || '';
-                document.getElementsByName('cidade')[0].value=`${data.municipio}`
-                document.getElementsByName('cidade')[0].style.backgroundColor="red";
-                document.getElementsByName('cidade')[0].style.color="white";
+                            const bairro = data?.bairro || '';
+                            document.getElementsByName('bairro')[0].value=toTitleCaseSmart(bairro);
+                            document.getElementsByName('bairro')[0].style.backgroundColor="red";
+                            document.getElementsByName('bairro')[0].style.color="white";
 
-                const uf = data?.uf || '';
-                document.getElementsByName('estado')[0].value=`${uf}` 
-                document.getElementsByName('estado')[0].style.backgroundColor="red";
-                document.getElementsByName('estado')[0].style.color="white";
+                            const municipio = data?.municipio || '';
+                            document.getElementsByName('cidade')[0].value=toTitleCaseSmart(municipio);
+                            document.getElementsByName('cidade')[0].style.backgroundColor="red";
+                            document.getElementsByName('cidade')[0].style.color="white";
+
+                            const uf = data?.uf || '';
+                            document.getElementsByName('estado')[0].value=toTitleCaseSmart(uf); 
+                            document.getElementsByName('estado')[0].style.backgroundColor="red";
+                            document.getElementsByName('estado')[0].style.color="white";
+                      }
+                        ///////////////////////////////////////////////////////////
+            } catch (err) {
+                alert(err)
+                console.error(err);
             }
-        } catch (err) {
-            alert(err)
-            console.error(err);
-        }
-      }
-  
-  })
+          }
+      
+      })
   })
 </script>
-<script>
-
-//document.querySelectorAll("cadastroLojistaForm").forEach((input, index, inputs) => {
-//          input.addEventListener("keydown", (e) => {
-//                  if (e.key === "Enter") {
-//                          e.preventDefault(); // evita submit do form
-
-//                          if (input.value.trim() === "") {
-//                            alert("⚠️ Este campo não pode ficar vazio!");
-//                            input.focus();
-//                            return;
-//                          }
-
-                          // Campo preenchido → vermelho
-//                          input.style.backgroundColor = "red";
-
-                          // Próximo input
-//                          const next = inputs[index + 1];
-//                          if (next) {
-//                            next.focus();
-//                            next.style.backgroundColor = "green";
-//                            next.style.color="black";
-//                          }
-//                  }
-//          });
-//});
-
-
-
-//inputs.forEach((input, index) => {
-  
-  // Quando pressionar tecla dentro do input
-//  input.addEventListener("keydown", (e) => {
-//    if (e.key === "Enter") {
-//      e.preventDefault(); // evita submit do form
-
-//      if (input.value.trim() === "") {
-//        alert("⚠️ Este campo não pode ficar vazio!");
-//        input.focus();
-//        return;
-//      }
-
-      // Preenchido → vermelho
-//      input.style.backgroundColor = "red";
-
-      // Vai para o próximo
-//      const next = inputs[index + 1];
-//      if (next) {
-//        next.focus();
-//      }
-//    }
-//  });
-
-  // Quando o input recebe foco → amarelo
-//  input.addEventListener("focus", () => {
-//    input.style.backgroundColor = "brown";
-//    input.style.color = "black";
-//  });
-
-  // Quando o input perde o foco → vermelho se preenchido, normal se vazio
-//  input.addEventListener("blur", () => {
-//    if (input.value.trim() !== "") {
-//      input.style.backgroundColor = "red";
-//    } else {
-//      input.style.backgroundColor = ""; // volta ao padrão
-//    }
-//  });
-
-//});
-</script>
-
-
 
 <script>
-//const inputs = document.querySelectorAll("#meuForm input");
+    //const inputs = document.querySelectorAll("#meuForm input");
 
-// utilitário para limpar classes e estilos herdados (ex: color branco da busca CNPJ)
-function resetStyles(el) {
-  el.classList.remove("input-focus", "input-filled");
-  el.style.backgroundColor = "";  // limpa inline
-  el.style.color = "";            // limpa inline (força voltar para o padrão)
-  el.style.caretColor = "";       // cursor volta ao padrão
-}
+    // utilitário para limpar classes e estilos herdados (ex: color branco da busca CNPJ)
+    //function resetStyles(el) {
+    //  el.classList.remove("inputX-focus", "input-filled");
+    //  el.style.backgroundColor = "";  // limpa inline
+    //  el.style.color = "";            // limpa inline (força voltar para o padrão)
+    //  el.style.caretColor = "";       // cursor volta ao padrão
+    //}
 
-// aplica “preenchido”
-function markFilled(el) {
-  resetStyles(el);
-  el.classList.add("input-filled");
-}
+    // aplica “preenchido”
+    function markFilled(el) {
+      resetStyles(el);
+      el.classList.add("input-filled");
+    }
 
-// aplica “foco”
-function markFocus(el) {
-  resetStyles(el);
-  el.classList.add("input-focus");
-}
-
-//inputs.forEach((input, index) => {
-//  input.addEventListener("keydown", (e) => {
-//    if (e.key !== "Enter") return;
-//    e.preventDefault();
-
-//    if (input.value.trim() === "") {
-//      alert("⚠️ Este campo não pode ficar vazio!");
-//      markFocus(input);           // garante foco amarelo e texto preto ao permanecer
-//      input.focus();
-//      return;
-//    }
-
-    // atual fica preenchido (vermelho com texto branco)
-//    markFilled(input);
-
-    // vai para o próximo já garantindo texto preto (amarelo)
-//    const next = inputs[index + 1];
-//    if (next) {
-//      next.focus();
-//      markFocus(next);
-//    }
-//  });
-
-//  input.addEventListener("focus", () => {
-    // sempre que ganhar foco: amarelo e texto preto (mesmo se veio de uma função que deixou branco)
-//    markFocus(input);
-//  });
-
-//  input.addEventListener("blur", () => {
-//    if (input.value.trim() !== "") {
-//      markFilled(input);   // vermelho com texto branco
-//    } else {
-//      resetStyles(input);  // volta ao padrão
-//    }
-//  });
-//});
+    // aplica “foco”
+   // function markFocus(el) {
+   //   resetStyles(el);
+   //   el.classList.add("input-focus");
+   // }
 </script>
-<style>
-  /* classes utilitárias para visual */
-  .is-focus  { background: yellow !important; color: #000 !important; }
-  .is-filled { background: red    !important; color: #fff !important; }
-</style>
+
 
 <script>
 (function () {
@@ -766,7 +760,7 @@ function markFocus(el) {
 
 <script>
 (function(){
-  break
+  //break
   const ieInput   = document.getElementById('inscricao');
   const cnpjInput = document.getElementById('inputCNPJ');
   if (!ieInput || !cnpjInput) return;
@@ -843,3 +837,44 @@ function markFocus(el) {
 })();
 </script>
 
+{{!-- LIMPAR OS CAMPOS --}}
+<script>
+document.getElementById("btnLimparForm")?.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  const form = document.getElementById("formFornecedor");
+  if (!form) return;
+
+  form.querySelectorAll("input").forEach(input => {
+    // NÃO limpar esses
+    if (input.name === "qlojistas") return;
+    if (input.id === "nomeLojista") return;
+
+    input.value = "";
+    input.style.backgroundColor = "";
+    input.style.color = "";
+  });
+
+  // botão cadastrar volta a aparecer
+  const btn = form.querySelector("button[type='submit']");
+  if (btn) btn.style.display = "";
+
+  // foco volta pro CNPJ
+  document.getElementById("inputCNPJ")?.focus();
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const ncontabil = document.querySelector("input[name='ncontabil']");
+  const marca     = document.querySelector("input[name='marca']");
+
+  if (!ncontabil || !marca) return;
+
+  ncontabil.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    marca.focus();
+  });
+});
+</script>
+ 

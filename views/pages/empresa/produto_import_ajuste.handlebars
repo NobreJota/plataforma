@@ -843,7 +843,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // fechar clicando fora
   if (modal) {
     modal.addEventListener("click", (ev) => {
-      if (ev.target === modal) fecharModalEdicao();
+      if (ev.target === modal) {
+          ev.stopPropagation();
+          ev.preventDefault();
+      }
+      //fecharModalEdicao();
     });
   }
   ///////////////////////////////////////////////////////////////////////

@@ -1,0 +1,9 @@
+Enumerar a lista de títulos png
+ $i = 1 
+  Get-ChildItem *.png | Sort-Object Name | ForEach-Object {
+   Rename-Item $_ -NewName ("{0:D2}_{1}" -f $i, $_.Name)
+   $i++
+ }
+
+transforma para png => txt
+Get-ChildItem *.png | Select-Object -ExpandProperty Name > lista-imagens.txt

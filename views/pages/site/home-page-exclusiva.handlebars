@@ -33,35 +33,48 @@
     /* ÁREA PRINCIPAL */
     .page-wrapper {
       min-height: 80vh;      /* altura mínima da área escura */
-      padding-top: 15px;
-      padding-bottom: 20px;
+      padding-left: clamp(16px, 3vw, 60px);
+      padding-right:clamp(24px, 5vw, 90px);
+
+      display: grid;
+      grid-template-columns:clamp(180px, 22vw, 300px) minmax(0, 1fr);
+      gap: 16px;
     }
 
-    .page-wrapper .row {
-      align-items: flex-start;  /* menu e cards alinhados no topo */
+    .page-wrapper aside{
+       width: auto;
+       min-width: 0;
     }
 
-   .page-wrapper aside.col-md-3 {
-      flex: 0 0 230px;      /* largura fixa aproximada */
-      max-width: 230px;
+    .page-wrapper main{
+      min-width: 0;        /* ESSENCIAL: permite o conteúdo encolher sem quebrar */
     }
 
-    /* MAIN pega o restante da largura */
-    .page-wrapper main.col-md-9 {
-    flex: 1 0 auto;
-    max-width: calc(100% - 230px);
+     /* Centraliza os cards quando sobra espaço (ex: 3→2 colunas) */
+    .page-wrapper .cards-row{
+      justify-content: center;
     }
 
-    page-wrapper .row > [class*='col-'] {
-    padding-left: 2px;
-    padding-right: 2px;
+    .page-wrapper .cards-row > [class*="col-"]{
+        max-width: 320px;   /* ajuste fino */
     }
 
-    /* Compensa a margem negativa padrão da row */
-    .page-wrapper .cards-row {
-    margin-left: 0;
-    margin-right: -8px;
+    /* CAIXA CENTRAL (simetria do conteúdo) */
+    .page-inner{
+      max-width: 1280px;                 /* ajuste: 1200/1280/1360 */
+      margin: 0 auto;                    /* centraliza a caixa */
+      padding-left: clamp(16px, 3vw, 48px);
+      padding-right: clamp(16px, 3vw, 48px);
     }
+
+    /* Layout interno (menu + cards) */
+    .page-inner.page-wrapper{
+      display: grid;
+      grid-template-columns: clamp(180px, 22vw, 300px) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
 
     .produto-info-home {
       font-size: 0.8rem;
@@ -368,7 +381,38 @@ input[type="search"] {
 
 #buscaLojaSugestoes .sug-item:hover{ background:#f4f4f4; }
 
+@media (max-width: 992px){
+  .page-wrapper .row{
+    grid-template-columns: 1fr; /* menu vai virar sanduíche depois */
+  }
+
+  .page-wrapper aside{
+    width: auto;
+    min-width: 0;
+  }
+
+  .page-wrapper .cards-row{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (min-width: 993px){
+  .page-wrapper aside{
+    position: sticky;
+    top: 12px;
+    align-self: start;
+  }
+}
+
+@media (max-width: 360px){
+  .page-wrapper .cards-row{
+    grid-template-columns: 1fr;
+  }
+}
+
   </style>
+
 </head>
 <body>
 
@@ -400,11 +444,10 @@ input[type="search"] {
   </div>
 
   {{!-- ===================== CONTAINER PRINCIPAL ===================== --}}
-  <div class="container-fluid my-3 page-wrapper" style="background: #fff;margin-left: 20px;border-left: 2px black solid;margin-right: 20px;">
-    <div class="row">
-
+  <div class="container-fluid my-3 page-wrapper" style="background: #fff;border-left: 2px rgb(154, 151, 151) solid;">
+     {{!-- <div class="page-inner page-wrapper"> --}}
       {{!-- ===================== MENU LATERAL (1 COLUNA) ===================== --}}
-      <aside class="col-md-3 mb-3">
+      <aside class="mb-3">
             {{!-- DEPARTAMENTOS --}}
             <div class="card mb-3">
             <div class="card-header py-2">
@@ -456,11 +499,11 @@ input[type="search"] {
       </aside>
 
       {{!-- ===================== CARDS (4 COLUNAS) ===================== --}}
-      <main class="col-md-9">
+      <main >
         <div class="row cards-row" id="cardsRow">
           {{#if produtosLoja.length}}
             {{#each produtosLoja}}
-              <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+              <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-3">
                 <article class="card h-100 card-product">
                     {{!-- /produto/{{this._id}} --}}
                   <a href="" class="d-block">
@@ -523,8 +566,7 @@ input[type="search"] {
           {{/if}}
         </div>
       </main>
-
-    </div>
+    {{!-- </div> --}}
   </div>
 <script>
 (function () {

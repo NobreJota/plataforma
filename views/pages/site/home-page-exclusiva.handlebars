@@ -32,39 +32,47 @@
 <style>
     /* ÁREA PRINCIPAL */
     .page-wrapper {
-      min-height: 80vh;      /* altura mínima da área escura */
+      /* min-height: 80vh;      altura mínima da área escura 
       padding-left: clamp(16px, 3vw, 60px);
-      padding-right:clamp(24px, 5vw, 90px);
+      padding-right:clamp(24px, 5vw, 90px);*/
 
       display: grid;
-      grid-template-columns:clamp(180px, 22vw, 300px) minmax(0, 1fr);
+      grid-template-columns:clamp(220px, 22vw, 280) minmax(0, 1fr);
       gap: 16px;
+      align-items: start;
     }
 
-    .page-wrapper aside{
-       width: auto;
-       min-width: 0;
-    }
+    .page-shell{
+  padding-inline: clamp(16px, 4vw, 80px);
+}
+
+    .page-wrapper aside{min-width: 0;}
 
     .page-wrapper main{
       min-width: 0;        /* ESSENCIAL: permite o conteúdo encolher sem quebrar */
     }
 
-     /* Centraliza os cards quando sobra espaço (ex: 3→2 colunas) */
-    .page-wrapper .cards-row{
-      justify-content: center;
+     .cards-row{
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(220px, 1fr));
+        gap: 16px;
+        margin: 0 !important;   /* mata margin negativa do .row */
+        justify-content: center; /* <- resolve “jogado pra esquerda” */
     }
 
-    .page-wrapper .cards-row > [class*="col-"]{
-        max-width: 320px;   /* ajuste fino */
+    /* remove o “col-” interferindo no grid */
+    .cards-row > [class*="col-"]{
+      padding: 0 !important;
+      max-width: none !important;
+      flex: initial !important;
     }
 
     /* CAIXA CENTRAL (simetria do conteúdo) */
     .page-inner{
-      max-width: 1280px;                 /* ajuste: 1200/1280/1360 */
+      max-width: 1320px;                 /* ajuste: 1200/1280/1360 */
       margin: 0 auto;                    /* centraliza a caixa */
-      padding-left: clamp(16px, 3vw, 48px);
-      padding-right: clamp(16px, 3vw, 48px);
+      padding:0 16px;
+      boz-sizing:border-box;
     }
 
     /* Layout interno (menu + cards) */
@@ -381,20 +389,8 @@ input[type="search"] {
 
 #buscaLojaSugestoes .sug-item:hover{ background:#f4f4f4; }
 
-@media (max-width: 992px){
-  .page-wrapper .row{
-    grid-template-columns: 1fr; /* menu vai virar sanduíche depois */
-  }
-
-  .page-wrapper aside{
-    width: auto;
-    min-width: 0;
-  }
-
-  .page-wrapper .cards-row{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
+@media (max-width: 1200px){
+  .cards-row{ grid-template-columns: repeat(3, minmax(220px, 1fr)); }
 }
 
 @media (min-width: 993px){
@@ -405,6 +401,22 @@ input[type="search"] {
   }
 }
 
+
+@media (max-width: 992px){
+  .page-wrapper{ grid-template-columns: 1fr; } /* menu em cima, cards embaixo */
+  .cards-row{ grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+}
+
+@media (max-width: 991px){
+  .page-wrapper{
+    grid-template-columns: 1fr;   /* menu em cima, conteúdo embaixo */
+  }
+}
+
+@media (max-width: 520px){
+  .cards-row{ grid-template-columns: 1fr; }
+}
+
 @media (max-width: 360px){
   .page-wrapper .cards-row{
     grid-template-columns: 1fr;
@@ -412,18 +424,100 @@ input[type="search"] {
 }
 
   </style>
+<style>
+  /* ===== BOTÃO ☰ (só aparece no mobile) ===== */
+.btn-menu-mobile{
+  display:none;
+  border:0;
+  background:#0b6fa4;
+  color:#fff;
+  font-size:20px;
+  padding:6px 12px;
+  line-height:1;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  margin-bottom:8px;
+}
 
+/* backdrop */
+.menu-backdrop{
+  display:none;
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,.35);
+  z-index: 1040;
+}
+
+/* botão X no menu */
+.btn-fechar-menu{
+  display:none;           /* só mobile */
+  border:0;
+  background:transparent;
+  font-size:22px;
+  line-height:1;
+  padding:10px 12px;
+  cursor:pointer;
+}
+
+/* ===== MOBILE/TABLET: vira drawer ===== */
+@media (max-width: 991px){
+
+  /* botão ☰ aparece */
+  .btn-menu-mobile{ display:inline-flex; align-items:center; justify-content:center; }
+
+  /* seu layout vira 1 coluna (conteúdo) */
+  .page-wrapper{
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ASIDE vira drawer fixo */
+  .page-wrapper aside{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: min(320px, 86vw);
+    background: #fff;
+    z-index: 1050;
+
+    transform: translateX(-110%);
+    transition: transform .22s ease;
+
+    padding: 10px;
+    overflow-y: auto;
+    box-shadow: 8px 0 22px rgba(0,0,0,.25);
+  }
+
+  .btn-fechar-menu{ display:block; }
+
+  /* quando abre */
+  body.menu-open .page-wrapper aside{
+    transform: translateX(0);
+  }
+  body.menu-open .menu-backdrop{
+    display:block;
+  }
+
+  /* trava scroll do body ao abrir */
+  body.menu-open{
+    overflow:hidden;
+  }
+}
+
+</style>
 </head>
 <body>
 
   {{!-- ===================== HEADER 100% ===================== --}}
   <div class="container-fluid my-0">
         <div id="headerLojaExclusiva">
-            Bem vindo à loja :
+            {{!-- Bem vindo à loja : --}}
             <a href="/loja/{{produto.loja_id}}">{{produto.marcaloja}}</a>
         </div>
         {{!-- BUSCA DENTRO DA LOJA --}}
         <div class="container my-1">
+            <button type="button" id="btnMenuMobile" class="btn-menu-mobile" aria-label="Abrir menu">
+              ☰
+            </button>
             <div class="search-loja-wrapper">
                 {{!-- <span class="search-loja-label">
                 Buscar produtos nesta loja
@@ -442,27 +536,28 @@ input[type="search"] {
             </div>
         </div>
   </div>
-
+  
   {{!-- ===================== CONTAINER PRINCIPAL ===================== --}}
-  <div class="container-fluid my-3 page-wrapper" style="background: #fff;border-left: 2px rgb(154, 151, 151) solid;">
-     {{!-- <div class="page-inner page-wrapper"> --}}
+  <div class="container-fluid my-3 pagee-shell" style="background: #a2a1a1;border-left: 2px #9a9797 solid;">
+     <div class="page-inner page-wrapper" style="background:#fff;">
       {{!-- ===================== MENU LATERAL (1 COLUNA) ===================== --}}
       <aside class="mb-3">
+          <button type="button" id="btnFecharMenu" class="btn-fechar-menu" aria-label="Fechar menu">✕</button>
+
             {{!-- DEPARTAMENTOS --}}
             <div class="card mb-3">
-            <div class="card-header py-2">
-                <strong>Outros departamentos</strong>
+                <div class="card-header py-2">
+                    <strong>Outros departamentos</strong>
+                </div>
+                <div class="list-group list-group-flush">
+                    {{#each departamentosMenu}}
+                    <a href="?dep={{this._id}}"
+                        class="list-group-item list-group-item-action">
+                        {{this.nome}}
+                    </a>
+                    {{/each}}
+                </div>
             </div>
-            <div class="list-group list-group-flush">
-                {{#each departamentosMenu}}
-                <a href="?dep={{this._id}}"
-                    class="list-group-item list-group-item-action">
-                    {{this.nome}}
-                </a>
-                {{/each}}
-            </div>
-            </div>
-
             {{!-- SETORES (aparecem só após escolher DEP) --}}
             {{#if setoresMenu.length}}
             <div class="card mb-3">
@@ -479,7 +574,6 @@ input[type="search"] {
                 </div>
             </div>
             {{/if}}
-
             {{!-- SEÇÕES (aparecem só após escolher SETOR) --}}
             {{#if secoesMenu.length}}
             <div class="card mb-3">
@@ -568,6 +662,7 @@ input[type="search"] {
       </main>
     {{!-- </div> --}}
   </div>
+  <div id="menuBackdrop" class="menu-backdrop" aria-hidden="true"></div>
 <script>
 (function () {
   const lojaId   = '{{produto.loja_id}}';
@@ -741,6 +836,45 @@ input[type="search"] {
 </script>
 
 
+<script>
+(function(){
+  const btnOpen  = document.getElementById('btnMenuMobile');
+  const btnClose = document.getElementById('btnFecharMenu');
+  const backdrop = document.getElementById('menuBackdrop');
+  const aside    = document.querySelector('.page-wrapper aside');
+
+  if(!btnOpen || !btnClose || !backdrop || !aside) return;
+
+  function abrir(){
+    document.body.classList.add('menu-open');
+  }
+  function fechar(){
+    document.body.classList.remove('menu-open');
+  }
+
+  btnOpen.addEventListener('click', abrir);
+  btnClose.addEventListener('click', fechar);
+  backdrop.addEventListener('click', fechar);
+
+  // ESC fecha
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape') fechar();
+  });
+
+  // Clicar em item do menu fecha (mobile)
+  aside.addEventListener('click', (e)=>{
+    const a = e.target.closest('a');
+    if(a && window.matchMedia('(max-width: 991px)').matches){
+      fechar();
+    }
+  });
+
+  // se aumentar a tela, garante fechado
+  window.addEventListener('resize', ()=>{
+    if(window.innerWidth >= 992) fechar();
+  });
+})();
+</script>
 
 </body>
 </html>

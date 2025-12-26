@@ -550,11 +550,11 @@ input[type="search"] {
 .btn-menu-mobile{
   display: none; /* desktop */
   border: none;
-  background: #0d6efd;
+  background: #0069a8;
   color: #fff;
   font-size: 20px;
   width: 44px;
-  height: 44px;
+  height: 42px;
   border-radius: 6px;
   cursor: pointer;
 }
@@ -569,7 +569,7 @@ input[type="search"] {
 <body>
 
   {{!-- ===================== HEADER 100% ===================== --}}
-  <div class="container-fluid my-0" style="background: red;">
+  <div class="container-fluid my-0" style="background:#ffffff;">
         <div id="headerLojaExclusiva">
             {{!-- Bem vindo à loja : --}}
             <a href="/loja/{{produto.loja_id}}">{{produto.marcaloja}}</a>
@@ -601,10 +601,11 @@ input[type="search"] {
   </div>
   
   {{!-- ===================== CONTAINER PRINCIPAL ===================== --}}
-  <div class="container-fluid my-3 page-shell" style="background: #0ce153;border-left: 2px #9a9797 solid;">
+  <div class="container-fluid my-3 page-shell" style="background: #ffffff;border-left: 2px #9a9797 solid;">
      <div class="page-inner page-wrapper" style="background:#fff;">
       {{!-- ===================== MENU LATERAL (1 COLUNA) ===================== --}}
-      <aside class="mb-3">
+      {{!-- <div id="menuOverlay" class="menu-overlay"></div> --}}
+      <aside class="mb-3" id="menuLateral">
           <button type="button" id="btnFecharMenu" class="btn-fechar-menu" aria-label="Fechar menu">✕</button>
 
             {{!-- DEPARTAMENTOS --}}

@@ -43,8 +43,11 @@
     }
 
     .page-shell{
-  padding-inline: clamp(16px, 4vw, 80px);
-}
+      /*padding-inline: clamp(16px, 4vw, 80px);*/
+      background: #a2a1a1;
+      border-left: 2px solid #9a9797;
+      padding: 0 16px;         /* respiro lateral */
+    }
 
     .page-wrapper aside{min-width: 0;}
 
@@ -71,8 +74,9 @@
     .page-inner{
       max-width: 1320px;                 /* ajuste: 1200/1280/1360 */
       margin: 0 auto;                    /* centraliza a caixa */
-      padding:0 16px;
-      boz-sizing:border-box;
+     /* padding:0 16px;
+      box-sizing:border-box;*/
+      background: violet;
     }
 
     /* Layout interno (menu + cards) */
@@ -98,16 +102,32 @@
     }
     .pih-label {
       color: #666;
-      font-weight: 500;
+      font-weight: bold;
       min-width: 3.4rem;
     }
     .pih-value {
-      color: #222;
-      font-weight: 200;
-      font-size: smaller;
+      color: #050000;
+      font-weight: bold;
+      font-size: medium;
     }
+
+    .card-product{
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .card-product .card-body{
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
     .card-product img {
-      object-fit: contain;
+       width: 100%;
+       height: 230px; 
+       object-fit: cover;
+       display: block;
     }
 
     .card-product .btn-detalhe {
@@ -119,7 +139,12 @@
         width: 80%;
         margin: auto;
         display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;   /* empurra pro fundo */
     }
+
+    
   </style>
   <style>
     /* Caixa de busca centralizada */
@@ -405,6 +430,18 @@ input[type="search"] {
 @media (max-width: 992px){
   .page-wrapper{ grid-template-columns: 1fr; } /* menu em cima, cards embaixo */
   .cards-row{ grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+
+  .btn-menu-mobile{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+   #btnMenuMobile.btn-menu-mobile{
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 991px){
@@ -503,42 +540,68 @@ input[type="search"] {
   }
 }
 
+.top-bar-loja{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* botão sanduíche */
+.btn-menu-mobile{
+  display: none; /* desktop */
+  border: none;
+  background: #0d6efd;
+  color: #fff;
+  font-size: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* busca ocupa todo espaço restante */
+.search-loja-wrapper{
+  flex: 1;
+}
+
 </style>
 </head>
 <body>
 
   {{!-- ===================== HEADER 100% ===================== --}}
-  <div class="container-fluid my-0">
+  <div class="container-fluid my-0" style="background: red;">
         <div id="headerLojaExclusiva">
             {{!-- Bem vindo à loja : --}}
             <a href="/loja/{{produto.loja_id}}">{{produto.marcaloja}}</a>
         </div>
         {{!-- BUSCA DENTRO DA LOJA --}}
         <div class="container my-1">
-            <button type="button" id="btnMenuMobile" class="btn-menu-mobile" aria-label="Abrir menu">
-              ☰
-            </button>
-            <div class="search-loja-wrapper">
-                {{!-- <span class="search-loja-label">
-                Buscar produtos nesta loja
-                </span> --}}
+            <div class="top-bar-loja" style="background:transparent;">
+                  <button type="button" id="btnMenuMobile" class="btn-menu-mobile" aria-label="Abrir menu">
+                    ☰
+                  </button>
+                  <div class="search-loja-wrapper">
+                      {{!-- <span class="search-loja-label">
+                      Buscar produtos nesta loja
+                      </span> --}}
 
-                <div class="search-loja-inner">
-                    <span class="search-loja-icon">🔍</span>
+                      <div class="search-loja-inner">
+                          <span class="search-loja-icon">🔍</span>
 
-                    <input type="text"
-                            id="buscaLoja"
-                            class="search-loja-input"
-                            placeholder="O que você procura?"
-                            autocomplete="off">
-                </div>
-                <div id="buscaLojaSugestoes" class="busca-sugestoes"></div>
+                          <input type="text"
+                                  id="buscaLoja"
+                                  class="search-loja-input"
+                                  placeholder="O que você procura?"
+                                  autocomplete="off">
+                      </div>
+                      <div id="buscaLojaSugestoes" class="busca-sugestoes"></div>
+                  </div>
             </div>
         </div>
   </div>
   
   {{!-- ===================== CONTAINER PRINCIPAL ===================== --}}
-  <div class="container-fluid my-3 pagee-shell" style="background: #a2a1a1;border-left: 2px #9a9797 solid;">
+  <div class="container-fluid my-3 page-shell" style="background: #0ce153;border-left: 2px #9a9797 solid;">
      <div class="page-inner page-wrapper" style="background:#fff;">
       {{!-- ===================== MENU LATERAL (1 COLUNA) ===================== --}}
       <aside class="mb-3">
@@ -598,22 +661,17 @@ input[type="search"] {
           {{#if produtosLoja.length}}
             {{#each produtosLoja}}
               <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-3">
-                <article class="card h-100 card-product">
+                <article class="card h-100 card-product" style="background:#ffffff;">
                     {{!-- /produto/{{this._id}} --}}
                   <a href="" class="d-block">
-                    <img class="w-100 h-100 p-2"
+                    <img class="w-100 p-2"
                          src="{{this.pageurls.[0]}}"
                          alt="{{this.descricao}}"
                          loading="lazy">
                   </a>
 
-                  <div class="card-body">
-                    {{!-- <h6 class="card-title mb-2 text-truncate"
-                        title="{{this.descricao}}">
-                      {{this.descricao}}{{this.complete}}
-                    </h6> --}}
-                     <div class="pih-row">
-                        {{!-- <span class="pih-label">Desc.</span> --}}
+                  <div class="card-body" style="background:#ffffff;">
+                      <div class="pih-row">
                         <span class="pih-value">
                           {{this.descricao}} {{this.complete}}
                         </span>
@@ -621,12 +679,12 @@ input[type="search"] {
 
                     <div class="produto-info-home">
                       <div class="pih-row">
-                        <span class="pih-label">Cód.</span>
+                        <span class="pih-label">código</span>
                         <span class="pih-value">{{this.codigo}}</span>
                       </div>
 
                       <div class="pih-row">
-                        <span class="pih-label">À vista</span>
+                        <span class="pih-label">à vista</span>
                         <span class="pih-value">
                           {{#if this.precoprazo}}
                             R$ {{formatCurrency this.precoprazo}}

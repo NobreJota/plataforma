@@ -446,13 +446,13 @@
 
     /* nome/descrição do produto */
     .pih-value{
-     /* font-size: 1.05rem;*/
-      line-height: 1.2;
+      font-size: 1.1rem;
+      line-height: 1.25;
     }
 
     /* labels "código" / "à vista" */
     .pih-label{
-      font-size: 0.95rem;
+      font-size: 1rem;
     }
 
     /* valores (01 / R$ ...) */
@@ -480,9 +480,18 @@
       gap: 10px;          /* 🟢 mais compacto */
     }
 
-     .card-product a.d-block{
-    height: 170px;         /* ajuste fino: 160~190 */
-  }
+    .card-product a.d-block{
+      height: 170px;         /* ajuste fino: 160~190 */
+    }
+
+    .pih.row{
+       margin-bottom: 0.25rem;
+    }
+
+    .card-product .pih-value{
+      -webkit-line-clamp: 3;
+      min-height: calc(1.25em * 3);
+    }
   }
 
 

@@ -116,7 +116,7 @@
     .pih-value{
       color: #222;
       font-weight: 600;
-      font-size: 1.05rem;
+      /*font-size: 1.05rem;*/
     }
 
     .card-product{
@@ -129,13 +129,6 @@
       display: flex;
       flex-direction: column;
       flex: 1;
-    }
-
-    .card-product img {
-       width: 100%;
-       height: 230px; 
-       object-fit: cover;
-       display: block;
     }
 
     .card-product .pih-desc{
@@ -188,7 +181,19 @@
     background: #f1f1f1;
   }
 
-  
+  .card-product a.d-block{
+      display:block;
+      height: 230px;           /* desktop */
+      background:#fff;
+    }
+
+    /* Imagem encaixa sem cortar */
+    .card-product a.d-block img{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;     /* <- NÃO CORTA */
+      display: block;
+    }
 
   .busca-sugestoes .sug-item {
     display: block;
@@ -408,6 +413,7 @@
       align-items: center;
       justify-content: center;
     }
+
     .card-product .pih-value{
       -webkit-line-clamp: 2;
       min-height: calc(1.25em * 2);
@@ -440,7 +446,7 @@
 
     /* nome/descrição do produto */
     .pih-value{
-      font-size: 1.05rem;
+     /* font-size: 1.05rem;*/
       line-height: 1.2;
     }
 
@@ -473,6 +479,10 @@
     .cards-row{
       gap: 10px;          /* 🟢 mais compacto */
     }
+
+     .card-product a.d-block{
+    height: 170px;         /* ajuste fino: 160~190 */
+  }
   }
 
 
@@ -641,6 +651,39 @@
       justify-content: center;
       margin-top: 10px;
     }
+</style>
+<style>
+  /* (A) Descrição do produto (topo do card) */
+.card-product .card-body > .pih-row:first-child .pih-value{
+  font-size: 1.05rem;
+  font-weight: 700;
+  color:#222;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+
+  line-height: 1.25;
+  min-height: calc(1.25em * 2); /* reserva 2 linhas -> cards iguais */
+}
+
+/* (B) Valores (código e preço) dentro do bloco de info */
+.card-product .produto-info-home .pih-value{
+  font-size: 1.05rem;
+  font-weight: 700;
+  color:#111;
+}
+
+/* Mobile: um pouco maior pra leitura */
+@media (max-width: 576px){
+  .card-product .card-body > .pih-row:first-child .pih-value{
+    -webkit-line-clamp: 3;
+    min-height: calc(1.25em * 3);
+    font-size: 1.08rem;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -842,7 +885,7 @@
           <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
             <article class="card h-100 card-product">
               <a href="/produto/${p._id}" class="d-block">
-                <img class="w-100 h-100 p-2"
+                <img class="w-100 p-2"
                      src="${img}"
                      alt="${p.descricao || ''}"
                      loading="lazy">

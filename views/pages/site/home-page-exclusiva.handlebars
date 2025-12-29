@@ -486,12 +486,29 @@
 
     .pih.row{
        margin-bottom: 0.25rem;
+       gap:8px
     }
 
     .card-product .pih-value{
       -webkit-line-clamp: 3;
       min-height: calc(1.25em * 3);
     }
+
+    .card-product .card-body{
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+
+    .card-product .card-body > .pih-row:first-child .pih-value{
+      -webkit-line-clamp: 3;
+      min-height: calc(1.25em * 3);
+      font-size: 1.08rem;
+    }
+
+    .card-product .pih-titulo .pih-value{
+    -webkit-line-clamp: 3;
+    min-height: calc(1.25em * 3);
+  }
   }
 
 
@@ -603,11 +620,20 @@
   }
 
     /* Nome/descrição (primeira informação forte) */
-    .card-product .pih-value{
-      color: #111;
-      font-weight: 700;
-      letter-spacing: .1px;
-    }
+   
+     /* só a descrição (título do card) */
+ .card-product .pih-titulo .pih-value{
+   font-weight: 700;
+   color: #111;
+   line-height: 1.25;
+ }
+
+ /* valores do bloco (código e preço) ficam normais */
+ .card-product .produto-info-home .pih-value{
+   font-weight: 600;
+   color: #222;
+ }
+
 
     /* Labels menores e mais “cinza” */
     .card-product .pih-label{
@@ -616,6 +642,15 @@
       font-size: 0.95rem;
       min-width: 3.2rem; /* mantém alinhado "cód.", "à vista" */
     }
+
+   .card-product .pih-titulo .pih-value{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: calc(1.25em * 2);
+}
+
 
     /* Valores (código e preço) */
     .card-product .produto-info-home .pih-row .pih-value{
@@ -684,13 +719,98 @@
   color:#111;
 }
 
-/* Mobile: um pouco maior pra leitura */
-@media (max-width: 576px){
-  .card-product .card-body > .pih-row:first-child .pih-value{
-    -webkit-line-clamp: 3;
-    min-height: calc(1.25em * 3);
-    font-size: 1.08rem;
+
+
+/* 🟢 (BASE) melhora leitura em tudo */
+.card-product .card-body{
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+.card-product .produto-info-home{
+  margin-top: 10px;
+}
+
+.pih-row{
+  gap: 6px;
+  margin-bottom: 0.25rem;
+}
+
+</style>
+<style>
+  /* ===================== PREMIUM (LIGHT) ===================== */
+
+/* dá mais “respiro” e leitura */
+.card-product .card-body{
+  padding: 14px 16px;
+}
+
+/* título/descrição: mais forte e previsível */
+/*.card-product .pih-value{
+  font-weight: 700;
+  color: #111;
+  line-height: 1.25;
+}*/
+
+/* labels (cód, à vista) mais discretos */
+.card-product .pih-label{
+  color: #7a7a7a;
+  font-weight: 600;
+  font-size: .92rem;
+}
+
+/* valor do preço destacado (2ª linha do bloco info) */
+.card-product .produto-info-home .pih-row:nth-child(2) .pih-value{
+  font-weight: 800;
+}
+
+/* garante que o bloco de info “cola” no fundo e o botão fica alinhado */
+.card-product{
+  display: flex;
+  flex-direction: column;
+}
+.card-product .card-body{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.card-product .produto-info-home{
+  margin-top: auto;
+}
+
+/* card com “acabamento” */
+.card-product{
+  border: 1px solid #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+@media (hover:hover){
+  .card-product:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0,0,0,.10);
   }
+}
+
+/* imagem com fundo neutro p/ ficar sempre apresentável */
+.card-product a.d-block{
+  background: #fafafa;
+}
+.card-product img{
+  background: #fafafa;
+}
+
+/* botão com “peso” melhor */
+.card-product .btn-detalhe{
+  font-weight: 700;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 240px;
+}
+.card-product .mt-1{
+  display:flex;
+  justify-content:center;
+  margin-top: 10px;
 }
 
 </style>
@@ -698,7 +818,7 @@
 <body>
 
   {{!-- ===================== HEADER 100% ===================== --}}
-  <div class="container-fluid my-0" style="background:#ffffff;">
+  <div class="container-fluid my-0" style="background:#0069a8;">
         <div id="headerLojaExclusiva">
             {{!-- Bem vindo à loja : --}}
             <a href="/loja/{{produto.loja_id}}">{{produto.marcaloja}}</a>
@@ -802,6 +922,7 @@
 
                   <div class="card-body" style="background:#ffffff;">
                       <div class="pih-row">
+                        <div class="pih-row pih-titulo"></div>
                         <span class="pih-value">
                           {{this.descricao}} {{this.complete}}
                         </span>

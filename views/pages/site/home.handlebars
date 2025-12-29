@@ -19,587 +19,1003 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Seu CSS por último para sobrescrever o Bootstrap -->
         <link rel="stylesheet" href="/css/home.css">
+        {{!-- <link rel="stylesheet" href="/public/css/home-layout.css"> --}}
         
 <style>
-
   /* ====== topo ====== */
-.topbar{
-  position: sticky; top:0; z-index:1000;
-  background:#080808; color:#fff;
-  box-shadow:0 2px 10px rgba(0,0,0,.15);
-  font-size:clamp(14px,1.3vw,16px);
-  margin-bottom: 4px; 
-}
+    .topbar{
+      position: sticky; top:0; z-index:1000;
+      background:#080808; color:#fff;
+      box-shadow:0 2px 10px rgba(0,0,0,.15);
+      font-size:clamp(14px,1.3vw,16px);
+      margin-bottom: 4px; 
+    }
 
-/*DETALHES*/
-.topbar-row{
-  display: grid;
-  grid-template-columns: minmax(120px,1fr) minmax(420px,6fr) minmax(280px,3fr); /* <<< 1 / 6 / 3 */
-  align-items: center;
-  flex-wrap: wrap;
-  gap: clamp(8px, 2vw, 16px);
-  background:#d12b94;
-}
+    .topbar-row{
+      display: flex !important;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: nowrap;
+    }
 
-/* ====== container centralizado (desktop e mobile) ====== */
-.container-wide{
-  width: 100%;                      /* <<< força 100% da viewport */
-  max-width: none;                  /* <<< remove limite artificial */
-  margin: auto;
-  padding-left: clamp(16px, 3vw, 36px);
-  padding-right: clamp(16px, 3vw, 36px);
-  background: rgb(17, 17, 16);
+    /* ====== container centralizado (desktop e mobile) ====== */
+    .container-wide{
+      width: 100%;                      /* <<< força 100% da viewport */
+      max-width: none;                  /* <<< remove limite artificial */
+      margin: auto;
+      padding-left: clamp(16px, 3vw, 36px);
+      padding-right: clamp(16px, 3vw, 36px);
+      background: rgb(17, 17, 16);
+      }
+
+    /* logo */
+    .brand{
+      display:inline-flex; align-items:baseline; font-weight:800;
+      font-size:clamp(18px,2vw,24px); color:#2a82e6; text-decoration:none;
+    }
+
+    .brand-accent{ color: #ff4dc4; }           /* cor do "es" */
+
+    /*.actiXons{
+      display:flex; align-items:center; justify-content:flex-end;
+      gap: clamp(6px, 1vw, 12px);
+      flex-wrap: nowrap;
+      min-width: 300px;        /* <<< reserva justa p/ 3 pills */
+      /*white-space: nowrap;
+    }*/
+
+    /* ações sempre à direita */
+    .actions{
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      white-space: nowrap;
+    }
+
+    .action-link{
+      color:#ecf3ff; text-decoration:none; font-weight:600;
+      display:inline-flex; align-items:center; gap:6px;
+      background: rgba(255,255,255,.08);
+      border-radius: 999px; padding:4px 10px 4px 12px;   /* <<< menor */
+      white-space: nowrap; font-size: clamp(12px,.95vw,14px); /* <<< menor */
+    }
+    .action-link:hover{ background:rgba(255,255,255,.15); }
+
+    .fa-cart-shopping{ font-size: 18px; }
+
+    /* ====== busca + filtros ====== */
+    .search-wrap{ display:flex; flex-direction:column; }
+
+    .search-wrap{ justify-self: stretch; }
+
+    .search-form{
+      display:grid; gap:8px; align-items:center;
+      grid-template-columns:
+      minmax(440px, 1fr)  /* <- input cresce */
+      minmax(120px, 14vw)
+      minmax(120px, 14vw)
+      auto;
+      background: #04eadb;
+      margin: 5px;
+    }
+
+    /* meio (form) ocupa o espaço */
+    .search-form{
+      flex: 1 1 auto;
+      display: grid;
+      grid-template-columns: 2.6fr 1fr 1fr; /* BUSCA manda */
+      gap: 12px;
+      align-items: center;
+      background: #fff;
+    }
+
+    /* form desce e ocupa 100% */
+    .search-form input.form-control{ min-width: 0; }  /* <<< NOVO */
+
+    .search-form .form-control,
+    .search-form .form-select{
+      min-height: 40px;
+      font-size: clamp(14px, 1.2vw, 16px);
+      margin: 0;
+    }
+
+    .search-form .btn{
+      min-height: 38px;
+      font-size: clamp(13px, 1.1vw, 15px);
+      padding: 6px 10px;                      /* <<< botão mais compacto */
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .search-form > *{ min-width: 0; }
+
+    /* se quiser esconder o botão sem quebrar o grid */
+    .search-form .btn[hidden]{ display:none !important; }
+    /* OU: temporariamente esconda visualmente mas preserve altura horizontal */
+    .hide-submit{ visibility:hidden; width:0; padding:0; margin:0; }
+
+    @media (min-width: 1200px){ .container{ max-width: 1320px; } }
+    @media (min-width: 1400px){ .container{ max-width: 1440px; } }
+    @media (max-width: 1100px){
+      .topbar-row{
+        grid-template-columns: 1fr;           /* tudo empilha */
+        gap: 10px;
+        text-align: center;
+      }
+      .brand{
+        justify-self: center;
+      }
+      .search-form{
+        grid-template-columns: 1fr 1fr;       /* duas colunas compactas */
+      }
+      .search-form .btn{
+        grid-column: 1 / -1;                  /* botão ocupa linha toda */
+      }
+      .actions{
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+    }
+
+    /* ====== responsivo ====== */
+    @media (max-width: 992px){
+      .topbar-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .actions {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .search-form {
+        grid-template-columns: 1fr 1fr;
+      }
+      .search-form .btn {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 576px){
+      .topbar-row{ grid-template-columns: 1fr; gap: 6px; }
+      .actions{ justify-content: center; }
+      .brand{ justify-self: center; }
+      .search-form{ grid-template-columns: 1fr; }
+      .btn-depto{flex: 1 1 100%;}
+      .quickbar .home-depto-bar .btn-depto{
+        flex:1 1 100%;   /* no mobile, um por linha */
+      }
+    }
+
+    /* opcional: remove sombra/linhas da faixa abaixo se houver */
+    .header-shadow-bridge{ display:none; }
+
+
+    /* DEPOIS (alternativa segura) */
+    .topbar .container-wide{
+      width:100%;
+      max-width:none;
+      margin:0;
+      padding-left: clamp(16px, 3vw, 36px);
+      padding-right: clamp(16px, 3vw, 36px);
+    }
+   
+</style>
+<style>
+    #sugestoesLista{
+      position:absolute; top:100%; left:0; right:0;
+      background:#fff; border:1px solid #cfcfcf; border-top:none;
+      z-index: 1000; max-height: 240px; overflow:auto; display:none;
+      box-shadow: 0 6px 16px rgba(0,0,0,.08);
+    }
+
+    #sugestoesLista .sug-item{
+      padding:8px 10px; cursor:pointer; color:#900; /* seu vermelho */
+      border-top:1px solid #eee;
+      background:#fff;
+    }
+
+    #sugestoesLista .sug-item:hover,
+    #sugestoesLista .sug-item.active{
+      background:#f6f6f6;
+    }
+</style>
+<style>
+    /* antes: aspect-ratio: 16 / 9; object-fit: cover;  */
+    /* garante espaço pro texto e evita sobreposição */
+    .atividade-name{
+      margin-top: 6px;
+      font-size: .95rem;
+      font-weight: 600;
+      color: #222;
+      text-align: center;
+    }
+
+    @supports not (aspect-ratio: 1 / 1){
+      .atividade-thumb{ position: relative; }
+      .atividade-thumb::before{
+        content: ""; display: block; padding-top: 100%; /* mantém quadrado */
+      }
+      .atividade-thumb img{
+        position: absolute; inset: 8px;
+        width: calc(100% - 16px);
+        height: calc(100% - 16px);
+        object-fit: contain;
+      }
+    }
+</style>
+<style>
+    .home-depto-bar{
+       display:flex; gap:8px; flex-wrap:wrap;
+    }
+
+    .btn-depto{
+      flex:1 1 0;           /* ocupa largura; se tiver 1 só, expande a linha inteira */
+      text-align:center;
+      padding: 4px 16px;
+      font-size: 0.9rem;
+      font-weight:600;
+      line-height: 1.1;
+      background:#053095;
+      color:#fff;
+      border-radius:6px;
+      border:0;
+      text-decoration:none;
+      white-space: nowrap;
+    }
+    .btn-depto:hover{ filter:brightness(0.95); }
+    .btn-depto-active{ outline:2px solid #2b5dd1; }
+
+    .home-atividades .atividades-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+      gap:16px;
+    }
+    .atividade-card{
+      display:block;
+      border:1px solid #eee; border-radius:10px; padding:10px;
+      text-decoration:none; color:#333; background:#fff;
+      transition:transform .08s ease, box-shadow .08s ease;
+    }
+    .atividade-card:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.08); }
+    .atividade-thumb{ height:130px; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:8px; }
+    .atividade-thumb img{ width:100%; height:100%; object-fit:cover; }
+    .atividade-name{ margin-top:8px; text-align:center; font-weight:600; }
+</style>
+<style>
+      .home-atividades { padding-top: 2px;padding-bottom: 2px; }
+      .home-title { font-size: 1.25rem; font-weight: 600; margin: 8px 0 16px; }
+
+      .atividades-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 16px;
+      }
+
+      .atividade-card {
+        display: flex; flex-direction: column; gap: 8px;
+        text-decoration: none; border: 1px solid #eee; border-radius: 12px;
+        padding: 10px; background: #fff; transition: transform .12s ease, box-shadow .12s ease;
+      }
+      .atividade-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+
+      .atividade-thumb {
+        aspect-ratio: 16 / 9; width: 100%; overflow: hidden; border-radius: 10px; background: #f6f7f9;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .atividade-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+      .atividade-name {
+        font-size: .95rem; font-weight: 600; color: #222; text-align: center; min-height: 2.2em;
+      }
+
+      /* responsivo */
+      @media (max-width: 768px) {
+        .atividades-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+      }
+
+</style>
+<style>
+    .btn-depto-sub{
+      display:inline-block;
+      margin-top:6px;
+      padding:6px 10px;
+      font-size:.95rem;
+      opacity:.9;
+      pointer-events:none; /* apenas indicativo, não clicável */
+    }
+
+    /* cabeçalho do painel de seções */
+    .secoes-header{
+      display:flex; align-items:center; gap:8px;
+      margin-top: 0px;          /* encosta no topo */
+      margin-bottom: 4px;       /* menos espaço antes do grid */
+      background: #034590;
+    }
+
+    /* chips menores */
+    .btn-depto{ padding:4px 10px; font-size:.9rem; }
+    .btn-depto-sub{ padding:4px 10px; font-size:.9rem; margin-top:0; }
+
+    /* título com menos margem */
+    .home-title{ margin-top: 0px;margin-bottom:2px; }
+    .card-product img { max-height: 220px; }
+    @media (min-width: 1200px){ .card-product img { max-height: 200px; } }
+</style>
+<style>
+    .atividade-thumb{
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #f6f7f9;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .atividade-thumb img{
+      width: 100%; height: 100%; object-fit: contain; display: block;
+    }
+
+    /* tipografia que acompanha a tela */
+    .topbar{ font-size: clamp(14px, 1.4vw, 16px); }
+    #vpLabel{
+      position: fixed;
+      top: 6px; right: 8px;
+      z-index: 3000;
+      background: rgba(0,0,0,.65);
+      color: #fff;
+      font: 600 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      padding: 4px 8px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+      pointer-events: none;     /* não intercepta cliques */
+    }
+    #vpLabel small{ opacity:.8; font-weight:500; }
+    .fa-cart-shopping{ font-size: 18px; }
+
+    #userMenu option { background:#b30000; color:#fff; }
+</style>
+<style>
+      /* Mobile-first (até 575px) */
+      @media (max-width: 575.98px){
+        .topbar-row{ grid-template-columns:1fr; text-align:center; }
+        .search-form{ grid-template-columns:1fr; gap:10px; }
+        .actions{ justify-content:center; flex-wrap:wrap; }
+        .home-depto-bar{ gap:4px; }
+        .atividade-thumb{ aspect-ratio: 1/1; }
+      }
+
+      /* ≥576px (sm) */
+      @media (min-width: 576px) and (max-width: 767.98px){
+        .search-form{ grid-template-columns: 1fr 1fr; }
+      }
+
+      /* ≥768px (md) */
+      @media (min-width: 768px) and (max-width: 991.98px){
+        .topbar-row{ grid-template-columns: 1fr 1fr; }
+        .search-form{ grid-template-columns: 1fr 1fr 1fr; }
+      }
+
+      /* ≥992px (lg) */
+      @media (min-width: 992px) and (max-width: 1199.98px){
+        .topbar-row{
+          grid-template-columns: minmax(140px,1fr) minmax(420px,6fr) minmax(280px,3fr);
+        }
+      }
+
+      /* ≥1200px (xl) — desktop “cheio” */
+      @media (min-width: 1200px){
+        .topbar-row{
+          grid-template-columns: minmax(120px,1fr) minmax(420px,6fr) minmax(280px,3fr);
+        }
+      }
+
+</style>
+<style>
+    .produto-info-home {
+      font-size: 0.8rem;
+      line-height: 1.25;
+      margin-top: 0.25rem;
+      padding-top: 0.25rem;
+      border-top: 1px solid #eee;
+    }
+
+      .produto-info-home p {
+        margin: 0.1rem 0;
+      }
+
+      .produto-info-home strong {
+        font-weight: 600;
+      }
+
+      /* links da loja */
+      .produto-info-home a {
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .produto-info-home a:hover {
+        text-decoration: underline;
+      }
+
+      /* botões */
+      .produto-info-home .btn {
+        font-size: 0.75rem;
+        padding: 0.15rem 0.55rem;
+        margin-top: 0.25rem;
+        margin-right: 0.25rem;
+      }
+
+      /* cada linha (Cód., À vista, Desc., Loja...) */
+      .pih-row {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 0.1rem;
+      }
+
+      /* “títulos” menores e suaves */
+      .pih-label {
+        color: #666;
+        font-weight: 500;
+        min-width: 3.4rem; /* alinha as colunas */
+      }
+
+      /* valores */
+      .pih-value {
+        color: #222;
+      }
+
+      /* descrição pode quebrar linha normal */
+      .pih-desc .pih-value {
+        white-space: normal;
+      }
+
+      #sugestoesLista {
+        position:absolute; top:100%; left:0; right:0;
+        background:#fff; border:1px solid #cfcfcf; border-top:none;
+        z-index: 1000; max-height: 240px; overflow:auto; display:none;
+        box-shadow: 0 6px 16px rgba(0,0,0,.08);
+      }
+
+      #sugestoesLista .sug-item{
+        padding:8px 10px;
+        cursor:pointer;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        border-top:1px solid #eee;
+        background:#fff;
+      }
+
+      #sugestoesLista .sug-item:hover,
+      #sugestoesLista .sug-item.active{
+        background:#f6f6f6;
+      }
+
+      #sugestoesLista .sug-desc{
+        color:#2e2727;              /* vermelho da descrição */
+        font-weight:500;
+      }
+
+      #sugestoesLista .sug-local{
+        color:#fffff;              /* verde loja + cidade */
+        font-size:.85rem;
+        margin-left:8px;
+        white-space:nowrap;
+      }
+
+      .js-sug-prod{
+        color:#070101;
+      }
+
+      .sug-loja{
+        background: #ffffff;
+        color:#ff0000;
+        font-size: small;
+        padding: 1px 10px;
+      }
+ 
+      :root{ --topbar-h: 0px; }
+
+      .quickbar{
+          position: sticky;
+          top: var(--topbar-h);
+          z-index: 900;
+          background: #f8f9fa;
+          border-top:3px solid #ffffff;
+          padding-top: 2px;
+          padding-bottom: 3px;
+      }
+
+
+      .quickbar .container{
+        margin-top:0;
+        margin-bottom:0;
+      }
+      /*
+      .quickbar-sticky .container.my-2{
+        margin-top: 0px;         /* era 0.5rem (my-2) */
+      /* margin-bottom: 0px;
+      }*/
+      .quickbar .home-depto-bar{
+        display:flex;
+        gap:8px;
+        flex-wrap:wrap;
+      }
+
+      .quickbar .home-depto-bar .btn-depto{
+        flex:1 1 0;                 /* todos dividem o espaço igualmente */
+        text-align:center;
+        padding:4px 16px;
+        font-size:0.9rem;
+        line-height:1.1;
+        background:#0b4f9c;         /* azul mais forte */
+        color:#fff;
+        border-radius:4px;        /* pílula */
+        border:none;
+        white-space:nowrap;         /* não quebrar o texto */
+      }
+
+      .quickbar .home-depto-bar .btn-depto-active{
+        outline:2px solid #002b62;  /* realce do ativo */
+      }
+
+      .btn-depto{
+        flex: 0 0 auto;              /* não cresce demais */
+        padding: 4px 16px;           /* antes era mais alto/largo */
+        font-size: 0.8rem;
+        line-height: 1.1;
+        background: #024c7d;         /* azul mais forte */
+        color: #fff;
+        border-radius: 3px;
+      }
+
+      /* “sub-botão” do setor (o da linha de Seções) ainda mais fino */
+      .btn-depto-sub{
+        padding: 2px 12px;
+        font-size: 0.8rem;
+        line-height: 1.1;
+        opacity: 0.95;
+        border-radius: 3px;
+      }
+      /* container da lista */
+      #sugestoes, .sug-list {
+        width: 520px;          /* aumenta */
+        max-width: 90vw;       /* não estoura no mobile */
+        max-height: 360px;     /* scroll */
+        overflow: auto;
+      }
+
+
+      .sug-item { 
+        font-size: 12px;       /* diminui */
+        line-height: 1.15;
+        padding: 8px 10px;
+      }
+
+      .sug-prod { 
+        display:block;
+        font-weight: 600;
+        white-space: normal;   /* deixa quebrar linha */
+        word-break: break-word;
+      }
+
+      .sug-loja { 
+        font-size: 11px;
+        opacity: .9;
+      }
+</style>
+<style>
+   /* Busca tem que “mandar”: mais largura que os selects */
+/*    ???????????????????????????????????????????????????????????*/
+
+    /* wrapper da busca já existe: #buscaWrapper */
+    #buscaWrapper{
+      position: relative;
+      width: 100% !important;   /* tira o “aperto” */
+      margin: 0 !important;     /* evita centralizar demais */
+    }
+
+    /* autocomplete estilo Amazon */
+    #sugestoesLista{
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      width: 100%;
+      max-width: 780px;         /* opcional */
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 0px;
+      box-shadow: 0 14px 30px rgba(0,0,0,.12);
+      z-index: 9999;
+      overflow: hidden;
+      display: none;
+    }
+
+    /* Itens da lista: mais “forte” e legível */
+    #sugestoesLista .item-sugestao,
+    #sugestoesLista .top-search-item{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;         /* << letras mais fortes */
+    }
+
+    #sugestoesLista .item-sugestao:hover,
+    #sugestoesLista .top-search-item:hover{
+      background: #f5f5f5;
+    }
+
+    /* Evita o “sumir” se algum container tiver overflow hidden */
+    header, .topbar, .topbar-row{ overflow: visible !important; }
+</style>
+<style>
+  /* =========================
+   DESKTOP (padrão)
+  ========================= */
+  /* input principal */
+  #inputBusca{
+    font-size: 18px;
+    padding: 12px 14px;
+    /*border-radius: 10px;*/
+    background:red;
   }
 
-/* logo */
-.brand{
-  display:inline-flex; align-items:baseline; font-weight:800;
-  font-size:clamp(18px,2vw,24px); color:#066bdf; text-decoration:none;
-}
+  /* itens (serve para div/a/li) */
+  #sugestoesLista > div,
+  #sugestoesLista > a,
+  #sugestoesLista li{
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  #sugestoesLista > div:hover,
+  #sugestoesLista > a:hover,
+  #sugestoesLista li:hover{
+    background: #f5f5f5;
+  }
 
-.brand-accent{ color: #ff4dc4; }           /* cor do "es" */
-
-.actions{
-  display:flex; align-items:center; justify-content:flex-end;
-  gap: clamp(6px, 1vw, 12px);
-  flex-wrap: nowrap;
-  min-width: 300px;        /* <<< reserva justa p/ 3 pills */
-  white-space: nowrap;
-}
-
-/*.actions{ justify-self: end; }*/
-
-.action-link{
-  color:#ecf3ff; text-decoration:none; font-weight:600;
-  display:inline-flex; align-items:center; gap:6px;
-  background: rgba(255,255,255,.08);
-  border-radius: 999px; padding:4px 10px 4px 12px;   /* <<< menor */
-  white-space: nowrap; font-size: clamp(12px,.95vw,14px); /* <<< menor */
-}
-.action-link:hover{ background:rgba(255,255,255,.15); }
-
-.fa-cart-shopping{ font-size: 18px; }
-
-/* ====== busca + filtros ====== */
-.search-wrap{ display:flex; flex-direction:column; }
-
-.search-wrap{ justify-self: stretch; }
-
-.search-form{
-  display:grid; gap:8px; align-items:center;
-  grid-template-columns:
-  minmax(440px, 1fr)  /* <- input cresce */
-  minmax(120px, 14vw)
-  minmax(120px, 14vw)
-  auto;
-  background: #04eadb;
-  margin: 5px;
-}
-
-.search-form input.form-control{ min-width: 0; }  /* <<< NOVO */
-
-.search-form .form-control,
-.search-form .form-select{
-   min-height: 40px;
-  font-size: clamp(14px, 1.2vw, 16px);
-  margin: 0;
-}
-
-
-.search-form .btn{
-    min-height: 38px;
-  font-size: clamp(13px, 1.1vw, 15px);
-  padding: 6px 10px;                      /* <<< botão mais compacto */
-  margin: 0;
-  white-space: nowrap;
-}
-.search-form .form-control,.search-form .form-select{ border-color:#d0d0d0; };
-.search-form > *{ min-width: 0; } 
-.search-form input.form-control{ min-width: 0; }
-
-/* se quiser esconder o botão sem quebrar o grid */
-.search-form .btn[hidden]{ display:none !important; }
-/* OU: temporariamente esconda visualmente mas preserve altura horizontal */
-.hide-submit{ visibility:hidden; width:0; padding:0; margin:0; }
-
-
-
-
-@media (min-width: 1200px){ .container{ max-width: 1320px; } }
-@media (min-width: 1400px){ .container{ max-width: 1440px; } }
-@media (max-width: 1100px){
+  /* evita cortar a lista */
+  header, .topbar, .topbar-row{ overflow: visible !important; }
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 768px){
+  /* topo vira 2 linhas: (logo+ações) e depois o form */
   .topbar-row{
-    grid-template-columns: 1fr;           /* tudo empilha */
+    flex-wrap: wrap;
     gap: 10px;
-    text-align: center;
   }
+  /* logo fica na esquerda */
   .brand{
-    justify-self: center;
+    order: 1;
   }
-  .search-form{
-    grid-template-columns: 1fr 1fr;       /* duas colunas compactas */
-  }
-  .search-form .btn{
-    grid-column: 1 / -1;                  /* botão ocupa linha toda */
-  }
+  /* ações sobem e ficam na direita */
   .actions{
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 6px;
+    order: 2;
+    margin-left: auto;
   }
-}
 
+  /* form desce e ocupa 100% */
+    .search-form{
+      order: 3;
+      flex: 0 0 100%;
+      width: 100%;
+      grid-template-columns: 1fr 1fr; /* 2 colunas no mobile */
+      gap: 10px;
+    }
 
-/* ====== responsivo ====== */
-@media (max-width: 992px){
-  .topbar-row {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .actions {
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .search-form {
-    grid-template-columns: 1fr 1fr;
-  }
-  .search-form .btn {
+  /* busca ocupa a linha toda */
+  #buscaWrapper{
     grid-column: 1 / -1;
   }
-}
 
+  /* cidade e bairro 50/50 */
+  #selectCidade{ grid-column: 1 / 2; }
+  #selectBairro{ grid-column: 2 / 3; }
 
-@media (max-width: 576px){
-  .topbar-row{ grid-template-columns: 1fr; gap: 6px; }
-  .actions{ justify-content: center; }
-  .brand{ justify-self: center; }
-  .search-form{ grid-template-columns: 1fr; }
-  .btn-depto{flex: 1 1 100%;}
-  .quickbar .home-depto-bar .btn-depto{
-    flex:1 1 100%;   /* no mobile, um por linha */
+  /* input um pouco menor no mobile */
+  #inputBusca{
+    font-size: 16px;
+    padding: 11px 12px;
   }
 }
 
-/* opcional: remove sombra/linhas da faixa abaixo se houver */
-.header-shadow-bridge{ display:none; }
-
-
-/* DEPOIS (alternativa segura) */
-.topbar .container-wide{
-  width:100%;
-  max-width:none;
-  margin:0;
-  padding-left: clamp(16px, 3vw, 36px);
-  padding-right: clamp(16px, 3vw, 36px);
-}
-
-
-@media (max-width:576px){
-  /*.topbar .container-wide{ padding:0 12px; }*/
-}
 </style>
-{{!-- <style>
-  .quicbkbar { padding-top: 0px; padding-bottom: 10px; } 
-</style> --}}
 <style>
+  /* garante que a lista vire dropdown e fique por cima */
+#buscaWrapper { position: relative !important; }
+
 #sugestoesLista{
-  position:absolute; top:100%; left:0; right:0;
-  background:#fff; border:1px solid #cfcfcf; border-top:none;
-  z-index: 1000; max-height: 240px; overflow:auto; display:none;
-  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+  position: absolute !important;
+  top: calc(100% + 8px) !important;  /* separação do input */
+  left: 0 !important;
+  width: 100% !important;           /* mesma largura do input */
+  background: #fff !important;
+  border: 1px solid #d9d9d9 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 14px 30px rgba(0,0,0,.14) !important;
+  z-index: 999999 !important;
+  overflow: hidden !important;
+  padding: 6px 0 !important;
 }
+
+/* cada item (o seu é .sug-item) */
 #sugestoesLista .sug-item{
-  padding:8px 10px; cursor:pointer; color:#900; /* seu vermelho */
-  border-top:1px solid #eee;
-  background:#fff;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 10px 14px !important;
+  cursor: pointer !important;
 }
-#sugestoesLista .sug-item:hover,
-#sugestoesLista .sug-item.active{
-  background:#f6f6f6;
+
+#sugestoesLista .sug-item:hover{
+  background: #f3f3f3 !important;
 }
+
+/* letras fortes (Amazon) */
+#sugestoesLista .sug-prod{
+  font-size: 15px !important;
+  font-weight: 800 !important;  /* bem visível */
+  color: #111 !important;
+}
+
+/* segunda linha / lado direito (loja-cidade-bairro) */
+#sugestoesLista .sug-loja{
+  margin-left: auto !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #666 !important;
+  white-space: nowrap !important;
+}
+
+/* evita qualquer "linha colada" */
+header, .topbar, .topbar-row { overflow: visible !important; }
+#sugestoesLista .sug-ico{
+  opacity: .7;
+  font-size: 14px;
+}
+
+#inputBusca.form-control{
+  height: 42px !important;
+  padding: 6px 12px !important;
+  line-height: 1.2 !important;
+  font-size: 16px !important;
+  /*border-radius: 0px !important;*/
+}
+
+/* se o wrapper estiver esticando */
+#buscaWrapper{ align-self: center; }
+.search-form{ min-height: 0 !important; }
 </style>
 <style>
-/* antes: aspect-ratio: 16 / 9; object-fit: cover;  */
-/* garante espaço pro texto e evita sobreposição */
-.atividade-name{
-  margin-top: 6px;
-  font-size: .95rem;
-  font-weight: 600;
-  color: #222;
-  text-align: center;
-}
-
-@supports not (aspect-ratio: 1 / 1){
-  .atividade-thumb{ position: relative; }
-  .atividade-thumb::before{
-    content: ""; display: block; padding-top: 100%; /* mantém quadrado */
-  }
-  .atividade-thumb img{
-    position: absolute; inset: 8px;
-    width: calc(100% - 16px);
-    height: calc(100% - 16px);
-    object-fit: contain;
-  }
-}
+  #sugestoesLista{ position:absolute; top:calc(100% + 8px); left:0; width:100%; background:#fff; border:1px solid #d9d9d9; border-radius:10px; box-shadow:0 14px 30px rgba(0,0,0,.14); z-index:999999; overflow:hidden; padding:6px 0; }
+  #sugestoesLista .sug-item{ display:flex; align-items:center; gap:10px; padding:10px 14px; cursor:pointer; }
+  #sugestoesLista .sug-item:hover{ background:#f3f3f3; }
+  #sugestoesLista .sug-ico{ opacity:.7; font-size:14px; }
+  #sugestoesLista .sug-prod{ font-size:15px; font-weight:800; color:#111; }
+  #sugestoesLista .sug-loja{ margin-left:auto; font-size:12px; font-weight:600; color:#666; white-space:nowrap; }
 </style>
 <style>
-  .home-depto-bar{
-  display:flex; gap:8px; flex-wrap:wrap;
+  /* Desktop: 2 colunas (conteúdo + lateral) */
+.home-wrap{
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+  padding: 14px 0;
 }
-.btn-depto{
-  flex:1 1 0;           /* ocupa largura; se tiver 1 só, expande a linha inteira */
-  text-align:center;
-  padding: 4px 16px;
-  font-size: 0.9rem;
-  font-weight:600;
-  line-height: 1.1;
-  background:#053095;
-  color:#fff;
-  border-radius:6px;
-  border:0;
-  text-decoration:none;
-  white-space: nowrap;
-}
-.btn-depto:hover{ filter:brightness(0.95); }
-.btn-depto-active{ outline:2px solid #2b5dd1; }
+.home-main{ min-width: 0; }
 
-.home-atividades .atividades-grid{
-  display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
-  gap:16px;
-}
-.atividade-card{
-  display:block;
-  border:1px solid #eee; border-radius:10px; padding:10px;
-  text-decoration:none; color:#333; background:#fff;
-  transition:transform .08s ease, box-shadow .08s ease;
-}
-.atividade-card:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.08); }
-.atividade-thumb{ height:130px; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:8px; }
-.atividade-thumb img{ width:100%; height:100%; object-fit:cover; }
-.atividade-name{ margin-top:8px; text-align:center; font-weight:600; }
-
-</style>
-<style>
-  .home-atividades { padding-top: 2px;padding-bottom: 2px; }
-  .home-title { font-size: 1.25rem; font-weight: 600; margin: 8px 0 16px; }
-
-  .atividades-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 16px;
-  }
-
-  .atividade-card {
-    display: flex; flex-direction: column; gap: 8px;
-    text-decoration: none; border: 1px solid #eee; border-radius: 12px;
-    padding: 10px; background: #fff; transition: transform .12s ease, box-shadow .12s ease;
-  }
-  .atividade-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
-
-  .atividade-thumb {
-    aspect-ratio: 16 / 9; width: 100%; overflow: hidden; border-radius: 10px; background: #f6f7f9;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .atividade-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-  .atividade-name {
-    font-size: .95rem; font-weight: 600; color: #222; text-align: center; min-height: 2.2em;
-  }
-
-  /* responsivo */
-  @media (max-width: 768px) {
-    .atividades-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-  }
-</style>
-<style>
-.btn-depto-sub{
-  display:inline-block;
-  margin-top:6px;
-  padding:6px 10px;
-  font-size:.95rem;
-  opacity:.9;
-  pointer-events:none; /* apenas indicativo, não clicável */
-}
-
-/* cabeçalho do painel de seções */
-.secoes-header{
-  display:flex; align-items:center; gap:8px;
-  margin-top: 0px;          /* encosta no topo */
-  margin-bottom: 4px;       /* menos espaço antes do grid */
-  background: #034590;
-}
-
-/* chips menores */
-.btn-depto{ padding:4px 10px; font-size:.9rem; }
-.btn-depto-sub{ padding:4px 10px; font-size:.9rem; margin-top:0; }
-
-/* título com menos margem */
-.home-title{ margin-top: 0px;margin-bottom:2px; }
-.card-product img { max-height: 220px; }
-@media (min-width: 1200px){ .card-product img { max-height: 200px; } }
-</style>
-<style>
-  .atividade-thumb{
-  aspect-ratio: 1 / 1;
-  width: 100%;
+/* HERO */
+.home-hero{
+  border-radius: 14px;
+  border: 1px solid #eee;
   overflow: hidden;
-  border-radius: 10px;
-  background: #f6f7f9;
-  display: flex; align-items: center; justify-content: center;
+  background: #fff;
+  margin-bottom: 14px;
 }
-.atividade-thumb img{
-  width: 100%; height: 100%; object-fit: contain; display: block;
-}
-
-/* tipografia que acompanha a tela */
-.topbar{ font-size: clamp(14px, 1.4vw, 16px); }
-#vpLabel{
-  position: fixed;
-  top: 6px; right: 8px;
-  z-index: 3000;
-  background: rgba(0,0,0,.65);
-  color: #fff;
-  font: 600 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  padding: 4px 8px;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.15);
-  pointer-events: none;     /* não intercepta cliques */
-}
-#vpLabel small{ opacity:.8; font-weight:500; }
-.fa-cart-shopping{ font-size: 18px; }
-
-#userMenu option { background:#b30000; color:#fff; }
-
-</style>
-<style>
-  /* Mobile-first (até 575px) */
-@media (max-width: 575.98px){
-  .topbar-row{ grid-template-columns:1fr; text-align:center; }
-  .search-form{ grid-template-columns:1fr; gap:10px; }
-  .actions{ justify-content:center; flex-wrap:wrap; }
-  .home-depto-bar{ gap:4px; }
-  .atividade-thumb{ aspect-ratio: 1/1; }
-}
-
-/* ≥576px (sm) */
-@media (min-width: 576px) and (max-width: 767.98px){
-  .search-form{ grid-template-columns: 1fr 1fr; }
-}
-
-/* ≥768px (md) */
-@media (min-width: 768px) and (max-width: 991.98px){
-  .topbar-row{ grid-template-columns: 1fr 1fr; }
-  .search-form{ grid-template-columns: 1fr 1fr 1fr; }
-}
-
-/* ≥992px (lg) */
-@media (min-width: 992px) and (max-width: 1199.98px){
-  .topbar-row{
-    grid-template-columns: minmax(140px,1fr) minmax(420px,6fr) minmax(280px,3fr);
-  }
-}
-
-/* ≥1200px (xl) — desktop “cheio” */
-@media (min-width: 1200px){
-  .topbar-row{
-    grid-template-columns: minmax(120px,1fr) minmax(420px,6fr) minmax(280px,3fr);
-  }
-}
-
-</style>
-<style>
-  .produto-info-home {
-  font-size: 0.8rem;
-  line-height: 1.25;
-  margin-top: 0.25rem;
-  padding-top: 0.25rem;
-  border-top: 1px solid #eee;
-}
-
-.produto-info-home p {
-  margin: 0.1rem 0;
-}
-
-.produto-info-home strong {
-  font-weight: 600;
-}
-
-/* links da loja */
-.produto-info-home a {
+.home-hero-slide{
+  position: relative;
+  display: block;
+  height: 220px;
   text-decoration: none;
-  font-weight: 500;
+  color: inherit;
+}
+.home-hero-slide img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.home-hero-text{
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  background: rgba(255,255,255,.86);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.home-hero-title{ font-weight: 900; font-size: 18px; }
+.home-hero-sub{ font-size: 13px; opacity: .8; }
+
+/* GRID promoções: 4 colunas no desktop largo */
+.home-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 12px;
+}
+.home-card{
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.home-card-img{ height: 140px; background: #f7f7f7; }
+.home-card-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+.home-card-body{ padding: 10px 12px; }
+.home-card-title{ font-weight: 800; font-size: 14px; }
+.home-card-sub{ font-size: 12px; opacity: .75; margin-top: 3px; }
+
+/* LATERAL */
+.home-side{
+  position: sticky;
+  top: 12px;
+  align-self: start;
+}
+.home-side-title{ font-weight: 900; margin-bottom: 8px; }
+.home-side-card{
+  display: grid;
+  grid-template-columns: 86px 1fr;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 10px;
+}
+.home-side-card img{ width:86px; height:86px; object-fit:cover; display:block; }
+.home-side-body{ padding: 10px 10px 10px 0; }
+.home-side-h{ font-weight: 900; font-size: 13px; }
+.home-side-p{ font-size: 12px; opacity: .75; margin-top: 2px; }
+
+/* 3 colunas desktop médio */
+@media (max-width: 1200px){
+  .home-grid{ grid-template-columns: repeat(3, 1fr); }
 }
 
-.produto-info-home a:hover {
-  text-decoration: underline;
+/* tablet/mobile: vira 1 coluna (lateral desce) e grid 2 colunas */
+@media (max-width: 900px){
+  .home-wrap{ grid-template-columns: 1fr; }
+  .home-side{ position: static; }
+  .home-grid{ grid-template-columns: repeat(2, 1fr); }
 }
 
-/* botões */
-.produto-info-home .btn {
-  font-size: 0.75rem;
-  padding: 0.15rem 0.55rem;
-  margin-top: 0.25rem;
-  margin-right: 0.25rem;
+/* celular: 1 coluna */
+@media (max-width: 520px){
+  .home-grid{ grid-template-columns: 1fr; }
+  .home-hero-slide{ height: 180px; }
 }
-
-/* cada linha (Cód., À vista, Desc., Loja...) */
-.pih-row {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 0.1rem;
-}
-
-/* “títulos” menores e suaves */
-.pih-label {
-  color: #666;
-  font-weight: 500;
-  min-width: 3.4rem; /* alinha as colunas */
-}
-
-/* valores */
-.pih-value {
-  color: #222;
-}
-
-/* descrição pode quebrar linha normal */
-.pih-desc .pih-value {
-  white-space: normal;
-}
-
-#sugestoesLista {
-  position:absolute; top:100%; left:0; right:0;
-  background:#fff; border:1px solid #cfcfcf; border-top:none;
-  z-index: 1000; max-height: 240px; overflow:auto; display:none;
-  box-shadow: 0 6px 16px rgba(0,0,0,.08);
-}
-
-#sugestoesLista .sug-item{
-  padding:8px 10px;
-  cursor:pointer;
+/*//////////////////////////////////////////////////////////////////////////*/
+/* Tabs de departamentos (botões azuis) */
+.dept-tabs{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-top:1px solid #eee;
-  background:#fff;
+  gap:10px;
+  padding:10px 0 6px;
+  overflow:auto;
+  scrollbar-width: thin;
 }
 
-#sugestoesLista .sug-item:hover,
-#sugestoesLista .sug-item.active{
-  background:#f6f6f6;
-}
-
-#sugestoesLista .sug-desc{
-  color:#2e2727;              /* vermelho da descrição */
-  font-weight:500;
-}
-
-#sugestoesLista .sug-local{
-  color:#128c3b;              /* verde loja + cidade */
-  font-size:.85rem;
-  margin-left:8px;
+.dept-tabs a{
+  flex:0 0 auto;
+  padding:8px 14px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:700;
+  line-height:1;
+  text-decoration:none;
   white-space:nowrap;
 }
 
-.js-sug-prod{
-  color:#070101;
+@media (max-width: 520px){
+  .dept-tabs a{
+    padding:7px 12px;
+    font-size:12px;
+  }
 }
+/*////////////////////////////////////////////////////////////////////*/
+.sec-title{ margin:16px 0 10px; font-weight:900; }
 
-.sug-loja{
-   background: #887f7f;
-   color:#ffffff;
-   font-size: small;
-   padding: 1px 10px;
+.setores-grid{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:12px;
 }
-
-
- 
-.quickbar{
-  position: sticky;
-  top: 48px;           /* altura aproximada da .topbar – ajuste fino se precisar */
-  z-index: 900;
-  background: #f8f9fa; /* mesma cor de fundo da barra */
-  border-top:3px solid #ffffff; 
-  padding-top: 2px;
-  padding-bottom: 3px;
-}
-
-.quickbar .container{
-  margin-top:0;
-  margin-bottom:0;
-}
-/*
-.quickbar-sticky .container.my-2{
-  margin-top: 0px;         /* era 0.5rem (my-2) */
- /* margin-bottom: 0px;
-}*/
-.quickbar .home-depto-bar{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.quickbar .home-depto-bar .btn-depto{
-  flex:1 1 0;                 /* todos dividem o espaço igualmente */
-  text-align:center;
-  padding:4px 16px;
-  font-size:0.9rem;
-  line-height:1.1;
-  background:#0b4f9c;         /* azul mais forte */
-  color:#fff;
-  border-radius:4px;        /* pílula */
-  border:none;
-  white-space:nowrap;         /* não quebrar o texto */
-}
-
-.quickbar .home-depto-bar .btn-depto-active{
-  outline:2px solid #002b62;  /* realce do ativo */
-}
-
-.btn-depto{
-  flex: 0 0 auto;              /* não cresce demais */
-  padding: 4px 16px;           /* antes era mais alto/largo */
-  font-size: 0.8rem;
-  line-height: 1.1;
-  background: #024c7d;         /* azul mais forte */
-  color: #fff;
-  border-radius: 3px;
-}
-
-/* “sub-botão” do setor (o da linha de Seções) ainda mais fino */
-.btn-depto-sub{
-  padding: 2px 12px;
-  font-size: 0.8rem;
-  line-height: 1.1;
-  opacity: 0.95;
-  border-radius: 3px;
-}
-/* container da lista */
-#sugestoes, .sug-list {
-  width: 520px;          /* aumenta */
-  max-width: 90vw;       /* não estoura no mobile */
-  max-height: 360px;     /* scroll */
-  overflow: auto;
-}
-
-
-.sug-item { 
-  font-size: 12px;       /* diminui */
-  line-height: 1.15;
-  padding: 8px 10px;
-}
-
-.sug-prod { 
+.setor-card{
   display:block;
-  font-weight: 600;
-  white-space: normal;   /* deixa quebrar linha */
-  word-break: break-word;
+  border:1px solid #eee;
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+  text-decoration:none;
+  color:inherit;
+}
+.setor-img{ height:120px; background:#f6f6f6; }
+.setor-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+.setor-txt{ padding:10px 12px; font-weight:800; font-size:13px; }
+
+@media (max-width: 1100px){ .setores-grid{ grid-template-columns:repeat(3,1fr);} }
+@media (max-width: 900px){  .setores-grid{ grid-template-columns:repeat(2,1fr);} }
+@media (max-width: 520px){  .setores-grid{ grid-template-columns:1fr;} }
+
+.dept-disabled{
+  opacity:.45;
+  cursor:not-allowed;
 }
 
-.sug-loja { 
-  font-size: 11px;
-  opacity: .9;
+</style>
+<style>
+  /* GRID dos departamentos (cards) */
+.setores-grid{
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(4, minmax(250px, 1fr)); /* desktop */
+  align-items: start;
 }
+
+/* Card */
+.setor-card{
+  display: block;
+  text-decoration: none;
+}
+
+/* Caixa da imagem: força 250x250 */
+.setor-img{
+  width: 250px;
+  height: 250px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin: 0 auto;           /* centraliza dentro do card */
+  background: #f2f2f2;
+}
+
+/* A imagem ocupa o espaço todo sem distorcer */
+.setor-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Título */
+.setor-txt{
+  margin-top: 10px;
+  font-weight: 700;
+  text-align: center;
+  color: #111;
+}
+
+/* Responsivo */
+@media (max-width: 1200px){
+  .setores-grid{ grid-template-columns: repeat(3, minmax(250px, 1fr)); }
+}
+@media (max-width: 900px){
+  .setores-grid{ grid-template-columns: repeat(2, minmax(250px, 1fr)); }
+}
+@media (max-width: 560px){
+  .setores-grid{ grid-template-columns: 1fr; }
+  .setor-img{ width: 100%; height: 250px; } /* no celular ocupa a largura */
+}
+
 </style>
 </head>
 <body>
@@ -607,21 +1023,21 @@
     <div class="topbar-row container-wide" >
         <!-- LOGO -->
         <a class="brand" href="/">
-          <span style="color: #ffff00;">Urutal</span><span class="brand-accent"></span>
+          <span style="">Rota</span><span class="brand-accent">es</span><span class="brand-accent" style="font-size: xx-small;">.com.br</span>
         </a>
         {{!-- <!-- BUSCA + FILTROS --> /buxscar --}}
         <form class="search-form" action="" method="get" autocomplete="off" style="background: #fff;">
-                <div class="position-relative" id="buscaWrapper" style="background: #fff;width: 90%;margin: auto;">
+                <div class="position-relative top-search-wrap" id="buscaWrapper" style="background: #fff;">
                   <input
-                    class="form-control"
+                    class="form-control top-search-input"
                     name="q"
                     id="inputBusca"
                     placeholder="O que você procura?"
                     autocomplete="off"
-                  
+                    style="background: #ffffff;"
                   >
                   <input type="hidden" name="idProduto" id="inputIdProduto">
-                  <div id="sugestoesLista"></div>
+                  <div id="sugestoesLista" class="top-search-list"></div>
               </div>
               <select id="selectCidade" class="form-select" name="municipio">
                 <option value="" {{#unless cidadeSelecionada}}selected{{/unless}}>Município</option>
@@ -638,7 +1054,7 @@
               </select> 
         </form>
         <!-- AÇÕES -->
-       <nav class="actions" style="background: #333;">
+        <nav class="actions" style="background: #333;">
             {{#if userSite}}
                 <div class="user-menu" style="display:inline-flex;align-items:center;gap:10px;">
                     <i class="fa-regular fa-user" aria-hidden="true" style="margin-left:4px;margin-right:8px;"></i>
@@ -658,11 +1074,89 @@
               <a href="/login" class="action-link"><i class="fa-regular fa-user"></i> Login</a>
             {{/if}}
               <a href="/sejacooperado" class="action-link"><i class="fa-regular fa-id-badge"></i> Seja um cooperado</a>
-       </nav>
+        </nav>
     </div>
 </header>
+
+
+<div class="home-wrap" style="background: red;">
+
+  <main class="home-main" style="background-color: black;">
+
+    {{!-- HERO --}}
+    {{#if homeHero.length}}
+      <div class="home-hero">
+        {{#each homeHero}}
+          <a class="home-hero-slide" href="{{this.linkUrl}}">
+            <img src="{{this.imgUrl}}" alt="{{this.titulo}}">
+            <div class="home-hero-text">
+              <div class="home-hero-title">{{this.titulo}}</div>
+              {{#if this.subtitulo}}<div class="home-hero-sub">{{this.subtitulo}}</div>{{/if}}
+            </div>
+          </a>
+        {{/each}}
+      </div>
+    {{/if}}
+
+    {{!-- DESTAQUES --}}
+    {{#if homeDestaques.length}}
+      <div class="home-grid">
+        {{#each homeDestaques}}
+          <a class="home-card" href="{{this.linkUrl}}">
+            <div class="home-card-img">
+              <img src="{{this.imgUrl}}" alt="{{this.titulo}}">
+            </div>
+            <div class="home-card-body">
+              <div class="home-card-title">{{this.titulo}}</div>
+              {{#if this.subtitulo}}<div class="home-card-sub">{{this.subtitulo}}</div>{{/if}}
+            </div>
+          </a>
+        {{/each}}
+      </div>
+    {{/if}}
+
+  </main>
+
+  <aside class="home-side">
+    {{#if homeLateral.length}}
+      <div class="home-side-title">Publicidade</div>
+      {{#each homeLateral}}
+        <a class="home-side-card" href="{{this.linkUrl}}">
+          <img src="{{this.imgUrl}}" alt="{{this.titulo}}">
+          <div class="home-side-body">
+            <div class="home-side-h">{{this.titulo}}</div>
+            {{#if this.subtitulo}}<div class="home-side-p">{{this.subtitulo}}</div>{{/if}}
+          </div>
+        </a>
+      {{/each}}
+    {{/if}}
+  </aside>
+
+</div>
+<h2 class="sec-title">Departamentos</h2>
+
+<div class="setores-grid">
+  {{#each departamentos}}
+    <a class="setor-card" href="{{href}}">
+      <div class="setor-img">
+        <img src="{{imagemUrl}}" alt="{{titulo}}">
+      </div>
+      <div class="setor-txt">{{titulo}}</div>
+    </a>
+  {{/each}}
+</div>
+<div class="dept-list">
+  {{#each departamentosView}}
+    {{#if ativado}}
+      <a class="dept-item" href="{{href}}">{{nome}}</a>
+    {{else}}
+      <div class="dept-item dept-disabled" title="Em breve">{{nome}}</div>
+    {{/if}}
+  {{/each}}
+</div>
+
 <label id="vpLabel" aria-live="polite"></label>
-<div class="quickbar quickbar-sticky bg-light border-bottom" style="background:#fff;padding: -20px;">
+{{!-- <div class="quickbar quickbar-sticky bg-light border-bottom" style="background:#fff;padding: -20px;">
     <div class="container my-0" style="background-color: #fff;">
         <div class="home-depto-bar" role="toolbar" aria-label="Departamentos" style="background: #fff;" >
           {{#if departamentosAtivos.length}}
@@ -677,11 +1171,11 @@
           {{/if}}
         </div>
     </div>
-</div>
+</div> --}}
 {{!-- Só mostra departamentos / setores quando NÃO está em modo busca (sem q) --}}
 {{#unless q}}
   
- <div id="Setores" style="display:block;">
+ {{!-- <div id="Setores" style="display:block;">
     <section class="home-atividades">
       <div class="container">
         <h2 class="home-title">Setores</h2>
@@ -702,7 +1196,7 @@
         {{/if}}
       </div>
     </section>
-</div>
+</div> --}}
 <div id="secoesPane" class="container my-3" hidden></div>
 {{/unless}}
 
@@ -738,7 +1232,7 @@
 
                         <div class="produto-info-home">
                           <div class="pih-row">
-                            <span class="pih-label">CódX.</span>
+                            <span class="pih-label">Cód.</span>
                             <span class="pih-value">{{codigo}}</span>
                           </div>
 
@@ -1102,48 +1596,50 @@
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   (function initAutocompleteBusca(){
-  const input   = document.getElementById('inputBusca');
-  const lista   = document.getElementById('sugestoesLista');
-  const form    = document.querySelector('form.search-form');
-  const selCid  = document.getElementById('selectCidade');
-  const selBai  = document.getElementById('selectBairro');
-  const hiddenId = document.getElementById('inputIdProduto'); // << novo
+        
+      const input   = document.getElementById('inputBusca');
+      const lista   = document.getElementById('sugestoesLista');
+      const hiddenId = document.getElementById('inputIdProduto'); // << novo
+      const form    = document.querySelector('form.search-form');
+      const selCid  = document.getElementById('selectCidade');
+      const selBai  = document.getElementById('selectBairro');
+      
 
-  if (!input || !lista || !form) return;
+      if (!input || !lista || !form) return;
 
-  let lastQuery = '';
-  let abortCtrl = null;
+      let lastQuery = '';
+      let abortCtrl = null;
 
-  function hideLista(){
-    lista.style.display = 'none';
-    lista.innerHTML = '';
-  }
+      function hideLista(){
+        lista.style.display = 'none';
+        lista.innerHTML = '';
+      }
 
-  async function buscarSugestoes(q){
-    if (abortCtrl) abortCtrl.abort();
-    abortCtrl = new AbortController();
+      async function buscarSugestoes(q){
+        if (abortCtrl) abortCtrl.abort();
+        abortCtrl = new AbortController();
 
-    const cidade = selCid?.value || '';
-    const bairro = selBai?.value || '';
+        const cidade = selCid?.value || '';
+        const bairro = selBai?.value || '';
 
-    const url = `/buscar-sugestoes?q=${encodeURIComponent(q)}`
-              + `&cidade=${encodeURIComponent(cidade)}`
-              + `&bairro=${encodeURIComponent(bairro)}`;
+        const url = `/buscar-sugestoes?q=${encodeURIComponent(q)}`
+                  + `&cidade=${encodeURIComponent(cidade)}`
+                  + `&bairro=${encodeURIComponent(bairro)}`;
 
-    const resp = await fetch(url, {
-      signal: abortCtrl.signal,
-      cache: 'no-store',
-      headers: { 'Accept': 'application/json' }
-    });
+        const resp = await fetch(url, {
+          signal: abortCtrl.signal,
+          cache: 'no-store',
+          headers: { 'Accept': 'application/json' }
+        });
 
-    if (!resp.ok) return [];
-    const data = await resp.json();
+        if (!resp.ok) return [];
+        const data = await resp.json();
 
-    if (Array.isArray(data)) return data;
-    if (Array.isArray(data.itens)) return data.itens;
-    if (Array.isArray(data.items)) return data.items;
-    return [];
-  }
+        if (Array.isArray(data)) return data;
+        if (Array.isArray(data.itens)) return data.itens;
+        if (Array.isArray(data.items)) return data.items;
+        return [];
+      }
 
   // ===== input: digitação =====
   on(input, 'input', async e => {
@@ -1183,16 +1679,19 @@
                   data-cidade="${att(cidade)}"
                   data-bairro="${att(bairro)}"
                   >
-                <span class="sug-prod js-sug-prod">${esc(texto)}</span>
-                ${right
-                  ? `<span class="sug-loja js-sug-loja">${esc(right)}</span>`
-                  : ''
-                }
+                  <span class="sug-ico">🔍</span>
+                  <span class="sug-prod js-sug-prod">${esc(texto)}</span>
+                  ${right
+                    ? `<span class="sug-loja js-sug-loja">${esc(right)}</span>`
+                    : ''
+                  }
               </div>
             `;
+           
       }).join('');
       //__________________________________________________________________________
-      lista.style.display = 'block';
+      //lista.style.display = 'block';
+      lista.style.display = sugestoes.length ? 'block' : 'none';
     }catch(err){
       console.error('autocomplete erro', err);
       hideLista();
@@ -1254,27 +1753,12 @@
     hideLista();
   });
 })();
-
-
   ///////////////////////////////////////////////////////////////////////
 
 })();
 </script>
 <script>
-   //<div class="pih-row">
-   //   <span class="pih-label">Loja</span>
-   //       <span class="pih-value">
-   //       <a href="/loja/${p.loja_id || ''}">
-   //       ${esc(p.marcaloja || '')}
-   //     </a>
-   //   </span>
-   // </div>
-
-  //   <div class="pih-row pih-desc">
-  //    <span class="pih-label">Desc.</span>
-  ///    <span class="pih-value">
-  //      ${esc(p.descricao || '')}
-  //      ${p.complete ? ' ' + esc(p.complete) : ''}
-  //    </span>
-  //  </div>
+  function Catalogo(){
+    window.open("/catalogo-teste", "_blank");
+  }
 </script>

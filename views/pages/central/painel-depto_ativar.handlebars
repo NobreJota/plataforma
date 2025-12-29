@@ -1,45 +1,200 @@
 <style>
   .table thead th { background:#6a3a7a; color:#fff; }
 </style>
+<style>
+    /* Faz a coluna Ações ficar organizada e não estourar a linha */
+.acoes-cell{
+  vertical-align: middle;
+}
 
+.acoes-cell .acoes-top{
+  margin-bottom: 6px;
+}
+
+/* Form da foto vira uma linha: input + botão */
+.acoes-cell .acoes-foto{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+}
+
+/* O culpado do “bagunçar” é o form-control=100% */
+.acoes-cell .foto-input{
+  width: 220px;     /* ajuste fino aqui */
+  max-width: 100%;
+}
+
+/* Evita o botão quebrar */
+.acoes-cell .btn{
+  white-space: nowrap;
+}
+
+@media (max-width: 768px){
+  .acoes-cell .acoes-foto{ flex-wrap: wrap; }
+  .acoes-cell .foto-input{ width: 100%; }
+}
+
+</style>
+<style>
+    .acoes-cell { vertical-align: middle; }
+
+.acoes-wrap{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.acoes-top form{ margin:0; }
+
+.acoes-foto{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin:0;
+}
+
+.foto-input{
+  width: 240px;
+  max-width: 100%;
+}
+
+.acoes-cell .btn{ white-space: nowrap; }
+.acoes-cell{
+  white-space: nowrap;
+}
+
+.acoes-inline{
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.acoes-inline form{
+  margin: 0;
+}
+
+
+</style>
 <div class="container-fluid px-3 py-2" style="width: 80%;height: 85vh;margin: auto;background-color: darkblue;overflow-y: auto;">
-<div class="container py-3">
-<h3 class="mb-3" style="color:#ffffff;">{{title}}</h3>
-
-
-<table class="table table-sm table-bordered align-middle">
-<thead class="table-primary">
-<tr>
-<th style="width:60%">Departamentos</th>
-<th style="width:10%" class="text-center">Ativados</th>
-<th style="width:30%" class="text-center">Ações</th>
-</tr>
-</thead>
-<tbody>
-{{#each departamentos}}
+        <div class="container py-3">
+        <h3 class="mb-3" style="color:#ffffff;">{{title}}</h3>
+        </div>
+        <table class="table table-bordered table-hover">
+  <thead>
     <tr>
-        <td>{{this.nomeDepartamento}}</td>
-        <td class="text-center">{{#if this.ativado}}1{{else}}0{{/if}}</td>
-        <td class="text-center">
-            {{#if this.ativado}}
-                <form method="POST" action="/segmento/departamentos/{{this._id}}/desativar" class="d-inline">
-                    <button class="btn btn-sm btn-outline-danger">desativar</button>
-                </form>
-            {{else}}
-                <form method="POST" action="/segmento/departamentos/{{this._id}}/ativar" class="d-inline">
-                    <button class="btn btn-sm btn-outline-success">ativar</button>
-                </form>
-            {{/if}}
-        </td>
+      <th style="display:none" class="text-center">_id</th>
+      <th style="width:55%;">Departamentos</th>
+      <th style="width:15%;" class="text-center">Imagem</th>
+      <th style="width:10%;" class="text-center">Ativados</th>
+      <th style="width:20%;" class="text-center">Ações</th>
     </tr>
-{{/each}}
-</tbody>
-</table>
-</div>
+  </thead>
 
-    
+  <tbody>
+    {{#each departamentos}}
+    <tr>
+      <td class="text-center" style="display:none;">{{this._id}}</td>
+
+      <td>{{this.nomeDepartamento}}</td>
+
+      <!-- IMAGEM (preview) -->
+      <td class="text-center">
+        {{#if this.imagemUrl}}
+          <img
+            src="{{this.imagemUrl}}"
+            alt="{{this.nomeDepartamento}}"
+            style="width:90px;height:45px;object-fit:cover;border-radius:8px;border:1px solid #ddd;"
+          >
+        {{else}}
+          <span style="opacity:.6;">(sem foto)</span>
+        {{/if}}
+      </td>
+
+      <!-- ATIVADO -->
+      <td class="text-center">
+        {{#if this.ativado}}1{{else}}0{{/if}}
+      </td>
+
+      <!-- AÇÕES -->
+    <td class="text-center acoes-cell">
+
+  <div class="acoes-inline">
+
+    {{!-- ATIVAR / DESATIVAR --}}
+    {{#if this.ativado}}
+      <form method="POST" action="/segmento/departamentos/{{this._id}}/desativar">
+        <button class="btn btn-sm btn-outline-danger">desativar</button>
+      </form>
+    {{else}}
+      <form method="POST" action="/segmento/departamentos/{{this._id}}/ativar">
+        <button class="btn btn-sm btn-outline-success">ativar</button>
+      </form>
+    {{/if}}
+
+    {{!-- BOTÃO FOTO (abre modal) --}}
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-primary"
+      onclick="abrirModalFoto('{{this._id}}','{{this.nomeDepartamento}}')">
+      Foto
+    </button>
+
+  </div>
+
+</td>
+
+
+
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+</div>
+<div class="modal fade" id="modalFotoDepto" tabindex="-1">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+
+      <form action="/gravafoto/depto-foto-upload" method="POST" enctype="multipart/form-data">
+
+        <div class="modal-header">
+          <h6 class="modal-title">Foto do departamento</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <input type="hidden" name="id" id="fotoDeptoId">
+
+          <input
+            type="file"
+            name="foto"
+            class="form-control form-control-sm"
+            accept="image/*"
+            required>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button class="btn btn-sm btn-primary">Salvar</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
 </div>
 
 <script>
   const n=await Departamento.updateMany({ ativado: { $exists: false } }, { $set: { ativado: 0 } });
+</script>
+<script>
+function abrirModalFoto(id, nome){
+  document.getElementById('fotoDeptoId').value = id;
+  const modal = new bootstrap.Modal(document.getElementById('modalFotoDepto'));
+  modal.show();
+}
 </script>

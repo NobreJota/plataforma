@@ -251,44 +251,63 @@ router.get('/produtos/:id', async (req, res) => {
 });
 // [GET] Painel de ativação
 router.get('/ativardepto', async (req, res) => {
+  console.log('');
+   console.log('9000');
+   console.log('');
     try {
     const departamentos = await Departamento
-    .find({}, 'nomeDepartamento ativado')
+    .find({}, 'nomeDepartamento ativado imagemUrl')
     .sort({ nomeDepartamento: 1 })
     .lean();
 
 
     return res.render('pages/central/painel-depto_ativar.handlebars', {
-    layout: 'central/segmento',
-    title: 'Ativar/Desativar Departamentos',
-    departamentos
+        layout: 'central/segmento',
+        title: 'Ativar/Desativar Departamentos',
+        departamentos
     });
     } catch (err) {
-    console.error('[GET painel.depto_ativar]', err);
+      console.error('[GET painel.depto_ativar]', err);
     return res.status(500).send('Erro ao carregar lista');
     }
 });
 
 // [POST] Ativar
 router.post('/departamentos/:id/ativar', async (req, res) => {
-try {
-await Departamento.updateOne({ _id: req.params.id }, { $set: { ativado: 1 } });
-return res.redirect('back');
-} catch (err) {
-console.error('[POST ativar departamento]', err);
-return res.status(500).send('Falha ao ativar');
-}
+    try {
+      await Departamento.updateOne({ _id: req.params.id }, { $set: { ativado: 1 } });
+      return res.redirect('back');
+    } catch (err) {
+      console.error('[POST ativar departamento]', err);
+    return res.status(500).send('Falha ao ativar');
+    }
 });
 
 // [POST] Desativar
 router.post('/departamentos/:id/desativar', async (req, res) => {
-try {
-await Departamento.updateOne({ _id: req.params.id }, { $set: { ativado: 0 } });
-return res.redirect('back');
-} catch (err) {
-console.error('[POST desativar departamento]', err);
-return res.status(500).send('Falha ao desativar');
-}
+      try {
+      await Departamento.updateOne({ _id: req.params.id }, { $set: { ativado: 0 } });
+      return res.redirect('back');
+      } catch (err) {
+      console.error('[POST desativar departamento]', err);
+      return res.status(500).send('Falha ao desativar');
+      }
+});
+
+router.post('/depto-foto', async (req, res) => {
+  try {
+    const { id, imagemUrl } = req.body;
+
+    await Departamento.updateOne(
+      { _id: id },
+      { $set: { imagemUrl: (imagemUrl || '').trim() } }
+    );
+
+    return res.redirect('/segmento/ativardepto');
+  } catch (err) {
+    console.error('[POST /segmento/depto-foto]', err);
+    return res.status(500).send('Erro ao salvar foto do departamento');
+  }
 });
 
 module.exports = router;

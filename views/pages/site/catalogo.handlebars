@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+.cat4-wrap{
+  display:grid;
+  grid-template-columns: 320px 1fr;
+  gap: 16px;
+  padding: 16px;
+}
+
+.cat4-filtros{ position: sticky; top: 12px; height: calc(100vh - 24px); overflow:auto; }
+.cat4-box{ background:#fff; border:1px solid #e6e6e6; border-radius:12px; padding:14px; }
+.cat4-title{ font-weight:700; font-size:18px; margin-bottom:10px; }
+
+.cat4-label{ display:block; font-size:12px; color:#555; margin:10px 0 6px; }
+.cat4-input{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:10px;
+  padding:10px 10px;
+  outline: none;
+}
+.cat4-input:focus{ border-color:#999; }
+
+.cat4-row{ display:flex; gap:10px; }
+.cat4-col{ flex:1; }
+
+.cat4-check{ display:flex; gap:8px; align-items:center; margin:12px 0; font-size:14px; color:#333; }
+
+.cat4-actions{ display:flex; gap:10px; margin-top:8px; }
+.cat4-btn{
+  flex:1;
+  border:0;
+  border-radius:10px;
+  padding:10px 12px;
+  cursor:pointer;
+  background:#222;
+  color:#fff;
+  font-weight:600;
+}
+.cat4-btn-light{ background:#eee; color:#222; }
+
+.cat4-main{ min-width: 0; }
+.cat4-topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom: 12px;
+}
+.cat4-h1{ font-size:22px; font-weight:800; }
+
+.cat4-top-actions{ display:flex; align-items:center; gap:10px; }
+.cat4-ordena{ width: 240px; }
+
+.cat4-count{ font-size:13px; color:#555; }
+
+.cat4-grid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.cat4-card{
+  background:#fff;
+  border:1px solid #e6e6e6;
+  border-radius:14px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  min-height: 240px;
+}
+.cat4-img{
+  height:120px;
+  background: linear-gradient(135deg, #f2f2f2, #fafafa);
+}
+.cat4-card-body{ padding:12px; display:flex; flex-direction:column; gap:6px; flex:1; }
+.cat4-desc{ font-weight:700; line-height:1.15; }
+.cat4-meta{ font-size:12px; color:#666; }
+.cat4-price{ margin-top:auto; font-weight:800; }
+
+.cat4-cta{
+  margin-top:10px;
+  width:100%;
+  border:1px solid #222;
+  background:#fff;
+  color:#222;
+  border-radius:10px;
+  padding:9px 10px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.cat4-empty{
+  margin-top: 12px;
+  background:#fff;
+  border:1px dashed #ccc;
+  border-radius:12px;
+  padding: 14px;
+  color:#555;
+}
+
+/* Responsivo */
+@media (max-width: 1100px){
+  .cat4-grid{ grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+}
+@media (max-width: 900px){
+  .cat4-wrap{ grid-template-columns: 1fr; }
+  .cat4-filtros{ position: static; height:auto; }
+  .cat4-grid{ grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+}
+@media (max-width: 520px){
+  .cat4-grid{ grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="cat4-wrap">
+
+  <!-- Sidebar filtros -->
+  <aside class="cat4-filtros">
+    <div class="cat4-box">
+      <div class="cat4-title">Filtros</div>
+
+      <label class="cat4-label">Buscar</label>
+      <input id="fBusca" class="cat4-input" type="text" placeholder="descrição / código / marca">
+
+      <label class="cat4-label">Departamento</label>
+      <select id="fDepto" class="cat4-input">
+        <option value="">Todos</option>
+        <option value="hidraulica">Hidráulica</option>
+        <option value="eletrica">Elétrica</option>
+        <option value="ferramentas">Ferramentas</option>
+      </select>
+
+      <label class="cat4-label">Fornecedor</label>
+      <select id="fForn" class="cat4-input">
+        <option value="">Todos</option>
+        <option value="acme">ACME</option>
+        <option value="mega">Mega</option>
+        <option value="brasil">Brasil</option>
+      </select>
+
+      <div class="cat4-row">
+        <div class="cat4-col">
+          <label class="cat4-label">Preço mín</label>
+          <input id="fMin" class="cat4-input" type="number" step="0.01" placeholder="0,00">
+        </div>
+        <div class="cat4-col">
+          <label class="cat4-label">Preço máx</label>
+          <input id="fMax" class="cat4-input" type="number" step="0.01" placeholder="9999,00">
+        </div>
+      </div>
+
+      <label class="cat4-check">
+        <input id="fEstoque" type="checkbox">
+        Somente com estoque
+      </label>
+
+      <div class="cat4-actions">
+        <button id="btnLimpar" class="cat4-btn cat4-btn-light" type="button">Limpar</button>
+        <button id="btnAplicar" class="cat4-btn" type="button">Aplicar</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Conteúdo -->
+  <main class="cat4-main">
+    <div class="cat4-topbar">
+      <div class="cat4-h1">Catálogo</div>
+
+      <div class="cat4-top-actions">
+        <select id="fOrdena" class="cat4-input cat4-ordena">
+          <option value="relev">Ordenar: relevância</option>
+          <option value="preco_asc">Preço: menor → maior</option>
+          <option value="preco_desc">Preço: maior → menor</option>
+          <option value="desc_asc">Descrição: A → Z</option>
+        </select>
+
+        <div class="cat4-count">
+          <span id="qtdVisiveis">0</span> itens
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid de cards -->
+    <section id="gridProdutos" class="cat4-grid">
+
+      {{!-- TESTE: cards fake. Depois você troca por {{#each produtos}} --}}
+      <article class="cat4-card" data-codigo="1001" data-desc="Tubo PVC 100mm" data-marca="Tigre" data-depto="hidraulica" data-forn="acme" data-preco="39.90" data-estoque="1">
+        <div class="cat4-img"></div>
+        <div class="cat4-card-body">
+          <div class="cat4-desc">Tubo PVC 100mm</div>
+          <div class="cat4-meta">Cód: 1001 • Tigre • ACME</div>
+          <div class="cat4-price">R$ 39,90</div>
+          <button class="cat4-cta" type="button">Ver</button>
+        </div>
+      </article>
+
+      <article class="cat4-card" data-codigo="2002" data-desc="Disjuntor 20A" data-marca="Siemens" data-depto="eletrica" data-forn="mega" data-preco="27.50" data-estoque="0">
+        <div class="cat4-img"></div>
+        <div class="cat4-card-body">
+          <div class="cat4-desc">Disjuntor 20A</div>
+          <div class="cat4-meta">Cód: 2002 • Siemens • Mega</div>
+          <div class="cat4-price">R$ 27,50</div>
+          <button class="cat4-cta" type="button">Ver</button>
+        </div>
+      </article>
+
+      <article class="cat4-card" data-codigo="3003" data-desc="Furadeira Impacto 650W" data-marca="Bosch" data-depto="ferramentas" data-forn="brasil" data-preco="319.00" data-estoque="1">
+        <div class="cat4-img"></div>
+        <div class="cat4-card-body">
+          <div class="cat4-desc">Furadeira Impacto 650W</div>
+          <div class="cat4-meta">Cód: 3003 • Bosch • Brasil</div>
+          <div class="cat4-price">R$ 319,00</div>
+          <button class="cat4-cta" type="button">Ver</button>
+        </div>
+      </article>
+
+    </section>
+
+    <div id="msgVazio" class="cat4-empty" style="display:none;">
+      Nenhum item encontrado com esses filtros.
+    </div>
+  </main>
+
+</div>
+
+<link rel="stylesheet" href="/css/catalogo4.css">
+<script src="/js/catalogo4.js"></script>
+</body>
+</html>
+<script>
+(function(){
+  const $ = (id) => document.getElementById(id);
+
+  const els = {
+    busca: $("fBusca"),
+    depto: $("fDepto"),
+    forn: $("fForn"),
+    min: $("fMin"),
+    max: $("fMax"),
+    estoque: $("fEstoque"),
+    ordenar: $("fOrdena"),
+    aplicar: $("btnAplicar"),
+    limpar: $("btnLimpar"),
+    grid: $("gridProdutos"),
+    qtd: $("qtdVisiveis"),
+    vazio: $("msgVazio"),
+  };
+
+  function getCards(){
+    return Array.from(els.grid.querySelectorAll(".cat4-card"));
+  }
+
+  function norm(s=""){
+    return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  }
+
+  function aplicaFiltro(){
+    const q = norm(els.busca.value.trim());
+    const depto = els.depto.value;
+    const forn  = els.forn.value;
+    const min   = parseFloat(els.min.value || "");
+    const max   = parseFloat(els.max.value || "");
+    const soEstoque = els.estoque.checked;
+
+    let visiveis = 0;
+
+    getCards().forEach(card=>{
+      const codigo = norm(card.dataset.codigo || "");
+      const desc   = norm(card.dataset.desc || "");
+      const marca  = norm(card.dataset.marca || "");
+      const cDepto = card.dataset.depto || "";
+      const cForn  = card.dataset.forn || "";
+      const preco  = parseFloat(card.dataset.preco || "0");
+      const estoque = (card.dataset.estoque === "1");
+
+      let ok = true;
+
+      if(q){
+        ok = (codigo.includes(q) || desc.includes(q) || marca.includes(q));
+      }
+      if(ok && depto) ok = (cDepto === depto);
+      if(ok && forn)  ok = (cForn === forn);
+      if(ok && !Number.isNaN(min)) ok = (preco >= min);
+      if(ok && !Number.isNaN(max)) ok = (preco <= max);
+      if(ok && soEstoque) ok = estoque;
+
+      card.style.display = ok ? "" : "none";
+      if(ok) visiveis++;
+    });
+
+    els.qtd.textContent = String(visiveis);
+    els.vazio.style.display = visiveis ? "none" : "";
+  }
+
+  function ordenar(){
+    const modo = els.ordenar.value;
+    const cards = getCards();
+
+    const vis = cards.filter(c => c.style.display !== "none");
+    const hid = cards.filter(c => c.style.display === "none");
+
+    const by = {
+      relev: () => 0,
+      preco_asc:  (a,b)=> parseFloat(a.dataset.preco||0) - parseFloat(b.dataset.preco||0),
+      preco_desc: (a,b)=> parseFloat(b.dataset.preco||0) - parseFloat(a.dataset.preco||0),
+      desc_asc:   (a,b)=> (a.dataset.desc||"").localeCompare((b.dataset.desc||""), "pt-BR"),
+    };
+
+    vis.sort(by[modo] || by.relev);
+
+    // reanexa mantendo os escondidos no final
+    [...vis, ...hid].forEach(c => els.grid.appendChild(c));
+  }
+
+  function limpar(){
+    els.busca.value = "";
+    els.depto.value = "";
+    els.forn.value  = "";
+    els.min.value   = "";
+    els.max.value   = "";
+    els.estoque.checked = false;
+    els.ordenar.value = "relev";
+    aplicaFiltro();
+    ordenar();
+  }
+
+  // Eventos
+  els.aplicar.addEventListener("click", ()=>{ aplicaFiltro(); ordenar(); });
+  els.limpar.addEventListener("click", limpar);
+
+  // opcional: aplicar em tempo real
+  ["input","change"].forEach(ev=>{
+    els.busca.addEventListener(ev, aplicaFiltro);
+    els.depto.addEventListener(ev, ()=>{ aplicaFiltro(); ordenar(); });
+    els.forn.addEventListener(ev, ()=>{ aplicaFiltro(); ordenar(); });
+    els.min.addEventListener(ev, ()=>{ aplicaFiltro(); ordenar(); });
+    els.max.addEventListener(ev, ()=>{ aplicaFiltro(); ordenar(); });
+    els.estoque.addEventListener(ev, ()=>{ aplicaFiltro(); ordenar(); });
+    els.ordenar.addEventListener(ev, ordenar);
+  });
+
+  // inicializa
+  aplicaFiltro();
+})();
+</script>

@@ -4,13 +4,19 @@ const router = express.Router();
 require("dotenv").config();
 const mongoose = require("mongoose");
 const path = require("path");
+const crypto = require("crypto");
 
 const multer = require("multer");
 const { Types } = require('mongoose');
 
+
+
 const { S3Client, PutObjectCommand, ListObjectsV2Command } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const ProdutoImagem = require("../../models/produtoImagem");
+const Departamento= require('../../models/departamento');
+
+const HomeLayout = require("../../models/home_layout"); // ajuste
 
 const doc_Arquivo=mongoose.model('arquivo_doc');
 
@@ -20,6 +26,8 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => cb(null, Date.now() + "_" + file.originalname)
 });
 const upload = multer({ storage });
+const uploadMem = multer({ storage: multer.memoryStorage() });
+
 
 // Configure seu cliente do Spaces
 const s3 = new S3Client({
@@ -127,7 +135,7 @@ router.get("/", async (req, res) => {
 // AQUI VAMOS SALVAR A IMAGEM NO BCOIMAGEM E FAZER UPLOAD EM MODELS=>PRODUTO
 router.post("/imagem/salvar", upload.array("imagens", 7), async (req, res) => {
   console.log('');
-  console.log(' [ 129 ] routes/empresa/upload_foto.js==>imagem/salvar',req.body);
+  console.log(' [ 131 ] routes/empresa/upload_foto.js==>imagem/salvar',req.body);
   console.log('');
   console.log('');
  
@@ -405,4 +413,153 @@ router.get("/buscarBcoImg", async (req, res) => {
       return res.json(resp);
 
       });
+
+router.post("/depto-foto-upload", uploadMem.single("foto"), async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) return res.status(400).send("Faltou o id do departamento.");
+    if (!req.file) return res.status(400).send("Nenhuma foto enviada.");
+
+    // valida depto
+    const depto = await Departamento.findById(id).lean();
+    if (!depto) return res.status(404).send("Departamento não encontrado.");
+
+    // extensão segura
+    const ext = path.extname(req.file.originalname || "").toLowerCase() || ".jpg";
+    const safeExt = [".jpg", ".jpeg", ".png", ".webp"].includes(ext) ? ext : ".jpg";
+
+    // key
+    const hash = crypto.randomBytes(8).toString("hex");
+    const key = `departamentos/${id}/${Date.now()}_${hash}${safeExt}`;
+
+    // upload
+    await s3.send(new PutObjectCommand({
+      Bucket: process.env.BUCKET_NAME,      // <- igual seu arquivo todo
+      Key: key,
+      Body: req.file.buffer,               // <- agora existe (memoryStorage)
+      ACL: "public-read",
+      ContentType: req.file.mimetype || "image/jpeg",
+    }));
+
+    // URL pública
+    const urlPublica = `https://${process.env.BUCKET_NAME}.nyc3.digitaloceanspaces.com/${key}`;
+
+    console.log('',urlPublica);
+    console.log('',id);
+    // grava no Mongo
+    await Departamento.updateOne(
+      { _id: id },
+      { $set: { imagemUrl: urlPublica } }
+    );
+
+    return res.redirect("/segmento/ativardepto");
+  } catch (err) {
+    console.error('[POST /depto-foto-upload]', err);
+    return res.status(500).send("Erro ao salvar foto do departamento.");
+  }
+});
+
+
+// cria slot
+router.post("/home-layout/slot/criar", async (req, res) => {
+  try {
+    const { tipo, ordem, titulo } = req.body;
+
+    const doc = await HomeLayout.findOneAndUpdate(
+      { nome: "default" },
+      {
+        $setOnInsert: { nome: "default" },
+        $push: {
+          slots: {
+            tipo,
+            ordem: Number(ordem) || 0,
+            titulo: titulo || "",
+            ativo: true,
+          },
+        },
+      },
+      { upsert: true, new: true }
+    );
+
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error("[POST /home-layout/slot/criar]", err);
+    return res.status(500).json({ ok: false });
+  }
+});
+
+// salva textos
+router.post("/home-layout/slot/salvar-textos", async (req, res) => {
+  try {
+    const { slotId, titulo, subtitulo, link } = req.body;
+
+    await HomeLayout.updateOne(
+      { nome: "default", "slots._id": slotId },
+      {
+        $set: {
+          "slots.$.titulo": titulo || "",
+          "slots.$.subtitulo": subtitulo || "",
+          "slots.$.link": link || "",
+        },
+      }
+    );
+
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error("[POST /home-layout/slot/salvar-textos]", err);
+    return res.status(500).json({ ok: false });
+  }
+});
+
+// remove slot
+router.post("/home-layout/slot/remover", async (req, res) => {
+  try {
+    const { slotId } = req.body;
+    await HomeLayout.updateOne(
+      { nome: "default" },
+      { $pull: { slots: { _id: slotId } } }
+    );
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error("[POST /home-layout/slot/remover]", err);
+    return res.status(500).json({ ok: false });
+  }
+});
+
+// upload da foto do slot (PC -> Spaces -> grava URL no Mongo)
+router.post("/home-layout/slot/upload", upload.single("foto"), async (req, res) => {
+  try {
+    const { slotId } = req.body;
+    if (!slotId) return res.status(400).json({ ok: false, error: "slotId" });
+    if (!req.file) return res.status(400).json({ ok: false, error: "foto" });
+
+    const ext = (path.extname(req.file.originalname || "") || ".jpg").toLowerCase();
+    const safeExt = [".jpg", ".jpeg", ".png", ".webp"].includes(ext) ? ext : ".jpg";
+
+    const hash = crypto.randomBytes(8).toString("hex");
+    const key = `home-layout/${slotId}/${Date.now()}_${hash}${safeExt}`;
+
+    await s3.send(new PutObjectCommand({
+      Bucket: process.env.BUCKET_NAME, // você já usa esse
+      Key: key,
+      Body: req.file.buffer,           // ⚠️ isso exige memoryStorage; abaixo tem a correção
+      ACL: "public-read",
+      ContentType: req.file.mimetype || "image/jpeg",
+    }));
+
+    const urlPublica = `https://${process.env.BUCKET_NAME}.nyc3.digitaloceanspaces.com/${key}`;
+
+    await HomeLayout.updateOne(
+      { nome: "default", "slots._id": slotId },
+      { $set: { "slots.$.imagemUrl": urlPublica } }
+    );
+
+    return res.json({ ok: true, url: urlPublica });
+  } catch (err) {
+    console.error("[POST /home-layout/slot/upload]", err);
+    return res.status(500).json({ ok: false });
+  }
+});
+
 module.exports = router;

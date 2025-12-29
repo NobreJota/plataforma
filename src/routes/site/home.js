@@ -10,8 +10,7 @@ const DeptoSetor   = require('../../models/deptosetores');    // admin.deptoseto
 const DeptoSecao = require('../../models/deptosecao');
 const ArquivoDoc=require('../../models/arquivoDoc');
 const Parceiro = require('../../models/parceiro');
-
-
+const HomeLayout = require('../../models/home_layout'); 
 
 // <<< função de normalizar descrição (igual ao schema)
 function normDesc(s = '') {
@@ -164,66 +163,102 @@ const PLACEHOLDER_IMG =
 // CARREGA A PADE COMPRAS ONLINE COMO PADRÂO /
 router.get('/', async (req, res) => {
      try {
-    // 1️⃣ todos os departamentos ativados → botões do topo
-    const depsAtivos = await Departamento
-      .find({ ativado: 1 }, 'nomeDepartamento')
-      .sort({ nomeDepartamento: 1 })
-      .lean();
+          // 1️⃣ todos os departamentos ativados → botões do topo
+          const deps = await Departamento
+            .find({ }, 'nomeDepartamento ativado imagemUrl')
+            .sort({ nomeDepartamento: 1 })
+            .lean();
 
-    console.log('');  
-    
-    // 2️⃣ define departamento alvo
-    const segmentoIn = (req.query.segmento || '').trim();
-    const isFirstLoad = !segmentoIn;
-    const alvoNome = segmentoIn || 'Construção Civil';
+          const departamentosView = deps.map(d => ({
+            nome: d.nomeDepartamento,
+            ativado: d.ativado === 1,
+            href: d.ativado === 1 ? `/?segmento=${encodeURIComponent(d.nomeDepartamento)}` : null
+          }));  
+          console.log('',departamentosView);  
+          
+          // 2️⃣ define departamento alvo
+          const segmentoIn = (req.query.segmento || '').trim();
+          const isFirstLoad = !segmentoIn;
+          const alvoNome = segmentoIn || 'Construção Civil';
 
-    // 🔍 busca o documento real do departamento (por nome, mas para capturar o _id)
-    const depAlvo = await Departamento.findOne({
-      nomeDepartamento: { $regex: new RegExp(`^${alvoNome}$`, 'i') }
-    }, '_id nomeDepartamento ativado ').lean();
+          // 2.1) HOME LAYOUT (hero / destaques / lateral) — NÃO altera seu fluxo
+      const layoutHome = await HomeLayout.findOne({ nome: 'default' }).lean();
 
-    
-    if (depAlvo.ativado !== 1) return res.redirect('/');
+      const agora = new Date();
+      const slots = layoutHome?.slots || [];
 
-    if (!depAlvo?._id) {
-      return res.render('pages/site/home.handlebars', {
-        layout:false,
-        departamentosAtivos: depsAtivos,
-        segmentoAtual: 'Departamento não encontrado',
-        atividades: []
+      // filtro por ativo + janela de data + (opcional) segmento
+      const slotsAtivos = slots.filter(s => {
+        if (!s?.ativo) return false;
+        if (s.startAt && agora < new Date(s.startAt)) return false;
+        if (s.endAt && agora > new Date(s.endAt)) return false;
+
+        // se o slot tiver segmento preenchido, só aparece quando segmentoIn bater
+        if (s.segmento && s.segmento.trim() && s.segmento.trim().toLowerCase() !== (segmentoIn || '').trim().toLowerCase()) {
+          return false;
+        }
+
+        return true;
       });
-    }
+
+      const homeHero      = slotsAtivos.filter(s => s.tipo === 'hero').sort((a,b)=> (a.ordem||0)-(b.ordem||0));
+      const homeDestaques = slotsAtivos.filter(s => s.tipo === 'destaque').sort((a,b)=> (a.ordem||0)-(b.ordem||0));
+      const homeLateral   = slotsAtivos.filter(s => s.tipo === 'lateral').sort((a,b)=> (a.ordem||0)-(b.ordem||0));
+
+          // 🔍 busca o documento real do departamento (por nome, mas para capturar o _id)
+          const depAlvo = await Departamento.findOne({
+            nomeDepartamento: { $regex: new RegExp(`^${alvoNome}$`, 'i') }
+          }, '_id nomeDepartamento ativado ').lean();
+
+          
+          if (!depAlvo?._id) {
+            return res.render('pages/site/home.handlebars', {
+              layout:false,
+              departamentosAtivos: deps,
+              segmentoAtual: 'Departamento não encontrado',
+              atividades: [],
+              homeHero,
+              homeDestaques,
+              homeLateral,
+            });
+          }
+
+          if (depAlvo.ativado !== 1) return res.redirect('/');
     
-    // 3️⃣ agora filtra SETORES pelo _id do departamento (e não pelo nome!)
-    const IMG_HTTP_RX = /^https?:\/\/.+/i;
-    const setoresQuery = {
-        idDepto: depAlvo._id,
-        imagemUrl: { $regex: IMG_HTTP_RX }  // <- sempre exigindo URL completa
-    };
+          // 3️⃣ agora filtra SETORES pelo _id do departamento (e não pelo nome!)
+          const IMG_HTTP_RX = /^https?:\/\/.+/i;
+          const setoresQuery = {
+              idDepto: depAlvo._id,
+              imagemUrl: { $regex: IMG_HTTP_RX }  // <- sempre exigindo URL completa
+          };
 
-    const setores = await DeptoSetor
-      .find(setoresQuery, '_id nomeDeptoSetor imagemUrl idDepto slug')
-      .sort({ nomeDeptoSetor: 1 })
-      .lean();
+          // const setores = await DeptoSetor
+          //   .find(setoresQuery, '_id nomeDeptoSetor imagemUrl idDepto slug')
+          //   .sort({ nomeDeptoSetor: 1 })
+          //   .lean();
 
-    console.log('');  
-    console.log('[ line 125 ] router.get("/buscar") => setores :',setores);
-    console.log('');
-    // 4️⃣ monta cards
-    const atividades = setores.map(s => ({
-      _id:s._id,
-      nome: s.nomeDeptoSetor,
-      titulo: s.nomeDeptoSetor,
-      imagemUrl: (s.imagemUrl && IMG_HTTP_RX.test(s.imagemUrl)) ? s.imagemUrl : '/img/placeholder.png',
-      href: `/produtos?segmento=${encodeURIComponent(depAlvo.nomeDepartamento)}&setor=${encodeURIComponent(s.nomeDeptoSetor)}`
-    }));
+          // console.log('');  
+          // console.log('[ line 242 ] router.get("/buscar") => setores :',setores);
+          // console.log('');
+          // // 4️⃣ monta cards
+          // const atividades = setores.map(s => ({
+          //   _id:s._id,
+          //   nome: s.nomeDeptoSetor,
+          //   titulo: s.nomeDeptoSetor,
+          //   imagemUrl: (s.imagemUrl && IMG_HTTP_RX.test(s.imagemUrl)) ? s.imagemUrl : '/img/placeholder.png',
+          //   href: `/produtos?segmento=${encodeURIComponent(depAlvo.nomeDepartamento)}&setor=${encodeURIComponent(s.nomeDeptoSetor)}`
+          // }));
 
-    // 5️⃣ renderiza
-      return res.render('pages/site/home.handlebars', {
-      layout: 'site/home.handlebars',      // ajuste se seu layout for outro
-      departamentosAtivos: depsAtivos,     // p/ botões
-      segmentoAtual: depAlvo?.nomeDepartamento || 'E-commerce',
-      atividades });
+          // 5️⃣ renderiza
+            return res.render('pages/site/home.handlebars', {
+            layout: 'site/home.handlebars',      // ajuste se seu layout for outro
+            departamentos: deps,     // p/ botões
+            segmentoAtual: depAlvo?.nomeDepartamento || 'E-commerce',
+//            atividades,
+            homeHero,
+            homeDestaques,
+            homeLateral,
+          });
 
   } catch (err) {
     console.error('[GET /home]', err);
@@ -440,7 +475,8 @@ router.get('/buscar', async (req, res) => {
 // busca sugestões de palavra acima de 3 letras
 router.get('/buscar-sugestoes', noStore, async (req, res) => {
   try {
-    console.log("AQUI")
+    console.log("AQUI => /buscar-sugestoes :");
+    console.log('req.query',req.query)
     const q = String(req.query.q || '').trim();
     const municipio = String(req.query.cidade || req.query.municipio || '').trim();
     const bairro = String(req.query.bairro || '').trim();
@@ -903,7 +939,8 @@ router.get('/buscar-por-texto', async (req, res) => {
           // 3) Resultado final: produto principal + relacionados
           // =======================================================
           const resultadoFinal = [...produtos, ...relacionados];
-
+          console.log('');
+          console.log('', resultadoFinal)
           console.log(
             `TOTAL enviado para o frontend => ${resultadoFinal.length}`
           );
@@ -1153,7 +1190,25 @@ router.get('/parceiro/:slug', async (req, res) => {
   }
 });
 
+router.get('/catalogo-teste', (req, res) => {
+  console.log('olá!')
+  res.render('pages/site/catalogo', { layout: false });
+});
 
+
+
+router.get("/home-layout", async (req, res) => {
+  try {
+    const doc = await HomeLayout.findOne({ nome: "default" }).lean();
+    return res.render("pages/site/admin-home-layout.handlebars", {
+      layout: false, // você está usando HTML completo
+      home: doc || { nome: "default", slots: [] },
+    });
+  } catch (err) {
+    console.error("[GET /admin/home-layout]", err);
+    return res.status(500).send("Erro ao carregar admin da HOME");
+  }
+});
 
 module.exports = router;
 

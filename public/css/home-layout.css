@@ -1,0 +1,103 @@
+/* Desktop: 2 colunas (conteúdo + lateral) */
+.home-wrap{
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+  padding: 14px 0;
+}
+.home-main{ min-width: 0; }
+
+/* HERO */
+.home-hero{
+  border-radius: 14px;
+  border: 1px solid #eee;
+  overflow: hidden;
+  background: #fff;
+  margin-bottom: 14px;
+}
+.home-hero-slide{
+  position: relative;
+  display: block;
+  height: 220px;
+  text-decoration: none;
+  color: inherit;
+}
+.home-hero-slide img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.home-hero-text{
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  background: rgba(255,255,255,.86);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.home-hero-title{ font-weight: 900; font-size: 18px; }
+.home-hero-sub{ font-size: 13px; opacity: .8; }
+
+/* GRID promoções: 4 colunas no desktop largo */
+.home-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 12px;
+}
+.home-card{
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.home-card-img{ height: 140px; background: #f7f7f7; }
+.home-card-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+.home-card-body{ padding: 10px 12px; }
+.home-card-title{ font-weight: 800; font-size: 14px; }
+.home-card-sub{ font-size: 12px; opacity: .75; margin-top: 3px; }
+
+/* LATERAL */
+.home-side{
+  position: sticky;
+  top: 12px;
+  align-self: start;
+}
+.home-side-title{ font-weight: 900; margin-bottom: 8px; }
+.home-side-card{
+  display: grid;
+  grid-template-columns: 86px 1fr;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 10px;
+}
+.home-side-card img{ width:86px; height:86px; object-fit:cover; display:block; }
+.home-side-body{ padding: 10px 10px 10px 0; }
+.home-side-h{ font-weight: 900; font-size: 13px; }
+.home-side-p{ font-size: 12px; opacity: .75; margin-top: 2px; }
+
+/* 3 colunas desktop médio */
+@media (max-width: 1200px){
+  .home-grid{ grid-template-columns: repeat(3, 1fr); }
+}
+
+/* tablet/mobile: vira 1 coluna (lateral desce) e grid 2 colunas */
+@media (max-width: 900px){
+  .home-wrap{ grid-template-columns: 1fr; }
+  .home-side{ position: static; }
+  .home-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+
+/* celular: 1 coluna */
+@media (max-width: 520px){
+  .home-grid{ grid-template-columns: 1fr; }
+  .home-hero-slide{ height: 180px; }
+}

@@ -187,7 +187,6 @@ router.post('/secao/salvar', async (req, res) => {
 
 });
 
-
 router.get("/secoes/:deptoSetorId", async (req, res) => {
   console.log('');
   console.log(' [ 128 ] ',req.params)

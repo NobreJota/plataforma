@@ -63,6 +63,11 @@ function looseRE(token) { return new RegExp(token.split("").join(".{0,2}"), "i")
 // Rota para gerar a URL assinada
 // Vem de produto_cadastro.handlebars da FUNÇÃO SALVARIMAGENSCOMPAT
 router.get("/getpresignedurl", async (req, res) => {
+   console.log('');
+   console.log('----------------------------------');
+   console.log(' [ 68 = > uplaod.js => router.get("/get_presignedurl');
+   console.log('');
+   console.log('----------------------------------');
    try {
     const { filename = "", filetype = "", ordem = "01" } = req.query;
     const num  = String(ordem).padStart(2, "0");
@@ -81,20 +86,48 @@ router.get("/getpresignedurl", async (req, res) => {
 
     // logs opcionais (válidos)
     console.log('');
-    console.log('[getpresignedurl] key:', key);
+    console.log('[get_presignedurl] key:', key);
     console.log('.........................................................');
-    console.log('[getpresignedurl] url:', uploadUrl);
-    console.log('');
+     console.log('');
   } catch (err) {
     console.error("Erro ao gerar URL assinada:", err);
     res.status(500).json({ error: "Erro ao gerar URL" });
   }
-   console.log('');
-   console.log('----------------------------------');
-   console.log(' [ 60 = > uplaod.js => router.get("/getpresignedurl');
-   console.log('');
-   console.log('----------------------------------');
+});
 
+router.get("/home-getpresignedurl", async (req, res) => {
+   console.log('');
+   console.log('----------------------------------');
+   console.log(' [ 101 = > uplaod.js => router.get("/get_presignedurl');
+   console.log('');
+   console.log('----------------------------------');
+   console.log('home-getpresignedurl');
+   try {
+    const { filename = "", filetype = "", ordem = "01" } = req.query;
+    const num  = String(ordem).padStart(2, "0");
+    const safe = String(filename).replace(/\s+/g, "_");
+    const key  = `home/${num}_${Date.now()}_${safe}`;
+
+    const command = new PutObjectCommand({
+      Bucket: process.env.BUCKET_NAME,
+      Key: key,
+      ContentType: filetype,
+      ACL: "public-read",          // OK
+      "x-amz-acl":"public-read",
+    });
+
+    const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
+    res.json({ uploadUrl, key });
+
+    // logs opcionais (válidos)
+    console.log('');
+    console.log('[get_presignedurl] key:', key);
+    console.log('.........................................................');
+     console.log('');
+  } catch (err) {
+    console.error("Erro ao gerar URL assinada:", err);
+    res.status(500).json({ error: "Erro ao gerar URL" });
+  }
 });
 
 router.get("/listararquivos", async (req, res) => {
@@ -223,7 +256,6 @@ router.post("/upload", upload.array("imagens", 7), async (req, res) => {
     res.status(500).json({ error: "Erro ao salvar imagens." });
   }
 });
-
 
 // VEM DE produto_cadastro.handlebars função =>'carregarBancoImagens'
 router.get("/produtoImagem/buscar/:termo", async (req, res) => {
@@ -460,7 +492,6 @@ router.post("/depto-foto-upload", uploadMem.single("foto"), async (req, res) => 
   }
 });
 
-
 // cria slot
 router.post("/home-layout/slot/criar", async (req, res) => {
   try {
@@ -491,23 +522,25 @@ router.post("/home-layout/slot/criar", async (req, res) => {
 
 // salva textos
 router.post("/home-layout/slot/salvar-textos", async (req, res) => {
-  try {
+    console.log('1000')
+    try {
+      console.log('',req.body);
     const { slotId, titulo, subtitulo, link } = req.body;
 
     await HomeLayout.updateOne(
       { nome: "default", "slots._id": slotId },
       {
         $set: {
-          "slots.$.titulo": titulo || "",
-          "slots.$.subtitulo": subtitulo || "",
-          "slots.$.link": link || "",
-        },
+          "slots.$.titulo": titulo,
+          "slots.$.subtitulo": subtitulo,
+          "slots.$.linkUrl": link
+        }
       }
     );
 
     return res.json({ ok: true });
   } catch (err) {
-    console.error("[POST /home-layout/slot/salvar-textos]", err);
+    console.error("Erro salvar textos:", err);
     return res.status(500).json({ ok: false });
   }
 });
@@ -527,38 +560,157 @@ router.post("/home-layout/slot/remover", async (req, res) => {
   }
 });
 
-// upload da foto do slot (PC -> Spaces -> grava URL no Mongo)
-router.post("/home-layout/slot/upload", upload.single("foto"), async (req, res) => {
-  try {
-    const { slotId } = req.body;
-    if (!slotId) return res.status(400).json({ ok: false, error: "slotId" });
-    if (!req.file) return res.status(400).json({ ok: false, error: "foto" });
+router.post("/home-layout/slot/foto", async (req, res) => {
+   console.log('');
+   console.log(req.body, "33");
+   console.log('________________________________________________');
+  // return
+   try {
+        const { slotId, imgUrl } = req.body;
+        console.log('');
+        console.log('req.body',req.body);
+        console.log('');
+        console.log('',slotId);
+        if (!slotId) return res.status(400).json({ ok:false, error:"slotId" });
+        if (!imgUrl)  return res.status(400).json({ ok:false, error:"imgUrl" });
 
-    const ext = (path.extname(req.file.originalname || "") || ".jpg").toLowerCase();
+    const r = await HomeLayout.updateOne(
+      { nome: "default", "slots._id": slotId },
+      { $set: { "slots.$.imgUrl": imgUrl } }
+    );
+
+    return res.json({ ok:true, matched:r.matchedCount, modified:r.modifiedCount });
+  } catch (e) {
+    return res.status(500).json({ ok:false, error: e.message });
+  }
+});
+
+// upload da foto do slot (PC -> Spaces -> grava URL no Mongo)
+// router.post("/home-layout/slot/uXpload", uploadMem.single("foto"), async (req, res) =>
+router.post("/home-layout/slot/upload", upload.single("foto"), async (req, res) => {
+  console.log('');
+  console.log('[ 533 ]=>  routes/empresa/upload_foto.js/=> home-layout/slot/upload');
+  console.log('-------------------------------------------------------------------------');
+  console.log('',req.body);
+  console.log('-------------------------------------------------------------------------');
+  console.log('-------------------------------------------------------------------------');
+  console.log("FILE:", req.file ? { fieldname: req.file.fieldname, originalname: req.file.originalname, mimetype: req.file.mimetype, size: req.file.size } : null);
+   try {
+        //const { slotId } = req.body;
+        //if (!slotId) return res.status(400).json({ ok: false, error: "slotId" });
+        //if (!req.file) return res.status(400).json({ ok: false, error: "foto" });
+        const { slotKey } = req.body;             // "hero|1"
+        if (!slotKey) return res.status(400).json({ ok:false, error:"slotKey" });
+        if (!req.file) return res.status(400).json({ ok:false, error:"foto" });
+
+        const [tipo, ordemStr] = String(slotKey).split("|");
+        const ordem = Number(ordemStr);
+        if (!tipo || !ordem) return res.status(400).json({ ok:false, error:"slotKey_invalida" });
+        //////////////////////////////////////////////////////////////////////////
+        const ext = (path.extname(req.file.originalname || "") || ".jpg").toLowerCase();
+        const safeExt = [".jpg", ".jpeg", ".png", ".webp"].includes(ext) ? ext : ".jpg";
+
+        const hash = crypto.randomBytes(8).toString("hex");
+        const key = `home-layout/${slotId}/${Date.now()}_${hash}${safeExt}`;
+
+        await s3.send(new PutObjectCommand({
+          Bucket: process.env.BUCKET_NAME, // você já usa esse
+          Key: key,
+          Body: req.file.buffer,           // ⚠️ isso exige memoryStorage; abaixo tem a correção
+          ACL: "public-read",
+          ContentType: req.file.mimetype || "image/jpeg",
+        }));
+
+        const urlPublica = `https://${process.env.BUCKET_NAME}.nyc3.digitaloceanspaces.com/${key}`;
+
+       // await HomeLayout.updateOne(
+       //   { nome: "default", "slots._id": slotId },
+       //  / { $set: { "slots.$.imagemUrl": urlPublica } }
+       // );
+       await HomeLayout.updateOne(
+            { nome: "default", "slots.tipo": tipo, "slots.ordem": ordem },
+            { $set: { "slots.$.imgUrl": urlPublica } }
+        );
+        return res.json({ ok: true, url: urlPublica });
+  } catch (err) {
+        console.error("[POST /home-layout/slot/upload]", err);
+        return res.status(500).json({ ok: false });
+  }
+});
+
+router.post("/ping", (req, res) => {
+  console.log("PING body =>", req.body);
+  return res.json({ ok: true, body: req.body });
+});
+
+router.post("/_homelayout-upload", uploadMem.single("foto"), async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    if (!id) return res.status(400).send("Faltou o id do departamento.");
+    if (!req.file) return res.status(400).send("Nenhuma foto enviada.");
+
+    // valida depto
+    const depto = await Departamento.findById(id).lean();
+    if (!depto) return res.status(404).send("Departamento não encontrado.");
+
+    // extensão segura
+    const ext = path.extname(req.file.originalname || "").toLowerCase() || ".jpg";
     const safeExt = [".jpg", ".jpeg", ".png", ".webp"].includes(ext) ? ext : ".jpg";
 
+    // key
     const hash = crypto.randomBytes(8).toString("hex");
-    const key = `home-layout/${slotId}/${Date.now()}_${hash}${safeExt}`;
+    const key = `departamentos/${id}/${Date.now()}_${hash}${safeExt}`;
 
+    // upload
     await s3.send(new PutObjectCommand({
-      Bucket: process.env.BUCKET_NAME, // você já usa esse
+      Bucket: process.env.BUCKET_NAME,      // <- igual seu arquivo todo
       Key: key,
-      Body: req.file.buffer,           // ⚠️ isso exige memoryStorage; abaixo tem a correção
+      Body: req.file.buffer,               // <- agora existe (memoryStorage)
       ACL: "public-read",
       ContentType: req.file.mimetype || "image/jpeg",
     }));
 
+    // URL pública
     const urlPublica = `https://${process.env.BUCKET_NAME}.nyc3.digitaloceanspaces.com/${key}`;
 
-    await HomeLayout.updateOne(
-      { nome: "default", "slots._id": slotId },
-      { $set: { "slots.$.imagemUrl": urlPublica } }
+    console.log('',urlPublica);
+    console.log('',id);
+    // grava no Mongo
+    await Departamento.updateOne(
+      { _id: id },
+      { $set: { imagemUrl: urlPublica } }
     );
 
-    return res.json({ ok: true, url: urlPublica });
+    return res.redirect("/segmento/ativardepto");
   } catch (err) {
-    console.error("[POST /home-layout/slot/upload]", err);
-    return res.status(500).json({ ok: false });
+    console.error('[POST /depto-foto-upload]', err);
+    return res.status(500).send("Erro ao salvar foto do departamento.");
+  }
+});
+
+// HOME - presigned PUT (cópia, isolado)
+router.get("/home_getpresignedurl", async (req, res) => {
+  try {
+    const { filename = "", filetype = "", ordem = "01" } = req.query;
+
+    const num  = String(ordem).padStart(2, "0");
+    const safe = String(filename).replace(/[^\w.\-]+/g, "_"); // bem seguro
+    const key  = `home/${num}_${Date.now()}_${safe}`;         // <<< PASTA home/
+
+    const command = new PutObjectCommand({
+      Bucket: process.env.BUCKET_NAME,
+      Key: key,
+      ContentType: filetype,
+      ACL: "public-read",               // mantém
+    });
+
+    const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
+
+    return res.json({ uploadUrl, key });
+  } catch (err) {
+    console.error("home_getpresignedurl error:", err);
+    return res.status(500).json({ error: "Falha ao gerar presigned HOME" });
   }
 });
 

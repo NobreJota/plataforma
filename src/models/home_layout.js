@@ -1,33 +1,37 @@
-// models/HomeLayout.js
+// src/models/home_layout.js
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const HomeSlotSchema = new Schema({
   tipo: { type: String, enum: ['hero', 'destaque', 'lateral'], required: true },
-  ordem: { type: Number, default: 0 },
+  ordem: { type: Number, required: true },
 
   titulo: { type: String, default: '' },
   subtitulo: { type: String, default: '' },
 
-  imgUrl: { type: String, required: true },
-  linkUrl: { type: String, default: '/' },
+  imgUrl: { type: String, default: '' },   // não force required agora
+  linkUrl: { type: String, default: '' },
 
-  // opcional: amarrar a um produto (quando você quiser)
-  produtoId: { type: Schema.Types.ObjectId, ref: 'Produto', default: null },
-
-  // exibição/segmento
-  segmento: { type: String, default: '' },     // "Imóveis", "Construção Civil" etc.
   ativo: { type: Boolean, default: true },
 
-  // janela de tempo (para promoções)
+  // janela de tempo (campanha)
   startAt: { type: Date, default: null },
   endAt: { type: Date, default: null },
-}, { _id: false });
+}); // <-- SEM { _id:false }
 
 const HomeLayoutSchema = new Schema({
-  nome: { type: String, default: 'default' }, // pode ter múltiplas homes no futuro
+  nome: { type: String, default: 'default' },
+
+  // liga a uma campanha (é isso que você quer)
+  campanhaId: { type: Schema.Types.ObjectId, ref: 'Campanha', default: null },
+
+  // dono da campanha (lojista ou empresa “de fora”)
+  lojistaId: { type: Schema.Types.ObjectId, ref: 'lojistas', default: null },
+  empresaNome: { type: String, default: '' },
+
   slots: [HomeSlotSchema],
-  updatedAt: { type: Date, default: Date.now }
+
+  updatedAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model('HomeLayout', HomeLayoutSchema);

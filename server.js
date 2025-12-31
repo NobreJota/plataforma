@@ -355,6 +355,7 @@ app.use((req, res, next) => {
 // Rotas
 // -------------------------------------------------------------------
 const admin       = require('./src/routes/central/usuario');
+const homeadmin   = require('./src/routes/site/home_layout_admin');
 const central     = require('./src/routes/central/menu-admin');
 const atividades  = require('./src/routes/central/atividades'); // controla as foto dos departamentos e dos setores 
 const segmento    = require('./src/routes/central/rotacentral');
@@ -380,6 +381,7 @@ const auth = require('./src/routes/auth');
 
 
 app.use('/admin', admin);
+app.use('/homeadmin', homeadmin);
 app.use('/central', central);
 app.use('/lojista', lojista);
 app.use('/segmento', segmento);

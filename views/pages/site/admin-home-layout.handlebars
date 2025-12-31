@@ -41,35 +41,50 @@
 
               <div class="col-md-9">
                 <div class="row g-2">
-                  <div class="col-md-4">
+                  <div class="col-md-4" style="background:#ffffff;">
                     <label class="form-label">Título</label>
-                    <input class="form-control form-control-sm slotTitulo" value="{{this.titulo}}" data-id="{{this._id}}">
+                    <input class="form-control form-control-sm slotTitulo"
+                          data-slot-id="{{this._id}}"
+                          value="{{this.titulo}}" placeholder="Título">
                   </div>
                   <div class="col-md-4">
                     <label class="form-label">Subtítulo</label>
-                    <input class="form-control form-control-sm slotSubtitulo" value="{{this.subtitulo}}" data-id="{{this._id}}">
+                    <input class="form-control form-control-sm slotSubtitulo" 
+                          data-slot-id="{{this._id}}"
+                          value="{{this.subtitulo}}" placeholder="Subtítulo">
                   </div>
                   <div class="col-md-4">
                     <label class="form-label">Link</label>
-                    <input class="form-control form-control-sm slotLink" value="{{this.link}}" data-id="{{this._id}}">
+                    <input class="form-control form-control-sm slotLink" 
+                          data-slot-id="{{this._id}}"
+                         value="{{this.linkUrl}}" placeholder="Link">
                   </div>
                 </div>
-
                 <div class="d-flex gap-2 align-items-center mt-3">
-                  <input type="file" class="form-control form-control-sm slotFile" accept="image/*" data-id="{{this._id}}" style="max-width:360px;">
-                  <button class="btn btn-sm btn-primary btnUpload" data-id="{{this._id}}" data-tipo="{{this.tipo}}">
-                    Enviar foto (PC) e salvar
-                  </button>
-
-                  <button class="btn btn-sm btn-success btnSalvarTextos" data-id="{{this._id}}">
-                    Salvar textos (título/link)
-                  </button>
+                        <input
+                            type="file"
+                            class="form-control form-control-sm slotFile"
+                            accept="image/*"
+                            data-slotkey="{{this.tipo}}|{{this.ordem}}"
+                            data-id="{{this._id}}"
+                            style="max-width:360px;background:#ffffff;color:rgb(2, 69, 28)"
+                            
+                            >
+                        <button
+                            class="btn btn-sm btn-primary btnUpload"
+                            data-slotkey="{{this.tipo}}|{{this.ordem}}"
+                            data-id="{{this._id}}"
+                            style="background:red;"
+                            >
+                        Enviar foto (PC) e salvar
+                        </button>
+                        <button class="btn btn-sm btn-success btnSalvarTextos"  data-slot-id="{{this._id}}">
+                           Salvar textos (título/link)
+                        </button>
                 </div>
-
                 <div class="small text-muted mt-2">
-                  URL atual: <span class="text-break">{{this.imagemUrl}}</span>
+                        URL atual: <span class="text-break">{{this.imagemUrl}}</span>
                 </div>
-
               </div>
             </div>
           </div>
@@ -103,3 +118,10 @@
   <script src="/js/site/admin-home-layout.js"></script>
 </body>
 </html>
+<script>
+
+
+
+
+
+</script>

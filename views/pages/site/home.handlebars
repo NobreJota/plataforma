@@ -828,7 +828,7 @@ header, .topbar, .topbar-row { overflow: visible !important; }
 .home-hero-slide img{
   width: 100%;
   height: auto !important;
-  object-fit: cover;
+  object-fit: contain;
   overflow: visible;
   display: block;
 }
@@ -1017,6 +1017,18 @@ header, .topbar, .topbar-row { overflow: visible !important; }
   .setor-img{ width: 100%; height: 250px; } /* no celular ocupa a largura */
 }
 
+</style>
+<style>
+.home-hero {
+  aspect-ratio: 16 / 9; /* ou 3 / 1 para banner */
+  overflow: hidden;
+}
+
+.home-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* ⚠️ NÃO use cover */
+}
 </style>
 </head>
 <body>

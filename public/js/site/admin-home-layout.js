@@ -63,6 +63,7 @@ document.addEventListener("click", async (e) => {
 });
 
 async function uploadToSpacesHomeViaPresigned(file, ordem = "01") {
+  alert(3000)
   const qs = new URLSearchParams({
     filename: file.name,
     filetype: file.type || "application/octet-stream",
@@ -137,7 +138,7 @@ async function uploadToSpacesViaPresigned(file, ordem = "01") {
 async function salvarFotoNoSlot({ slotId, imgUrl }) {
   console.log('');
   console.log('__________________________________________________');
-  console.log(' [103 ] => salvarFotoNoSlotX');
+  alert(' [103 ] => salvarFotoNoSlotX')
   console.log(slotId);
   console.log(imgUrl);
   console.log('__________________________________________________');

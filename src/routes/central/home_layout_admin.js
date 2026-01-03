@@ -6,7 +6,7 @@ router.get("/home-layout", async (req, res) => {
   try {
     const doc = await HomeLayout.findOne({ nome: "default" }).lean();
     console.log(' [ 8 ] valor de doc =',doc)
-    return res.render("pages/site/admin-home-layout.handlebars", {
+    return res.render("pages/central/admin-home-layout.handlebars", {
       layout: false, // você está usando HTML completo
       home: doc || { nome: "default", slots: [] },
     });

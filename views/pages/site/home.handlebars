@@ -812,26 +812,41 @@ header, .topbar, .topbar-row { overflow: visible !important; }
 .home-main{ min-width: 0; }
 
 /* HERO */
-.home-hero{
-  border-radius: 14px;
-  border: 1px solid #eee;
-  overflow: hidden;
-  background: #fff;
+.home-hero {
+  /*aspect-ratio: 16 / 9; /* ou 3 / 1 para banner 
+  overflow:auto;
+  object-fit: contain;
+  height: auto !important;
+  display: block;
   margin-bottom: 14px;
+  background: #fff;*/
+  width: 100%;
 }
+
 .home-hero-slide{
   position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
   display: block;
   text-decoration: none;
   color: inherit;
 }
 .home-hero-slide img{
   width: 100%;
-  height: auto !important;
-  object-fit: contain;
-  overflow: visible;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
+
+
+/*
+.home-hero img {
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* ⚠️ NÃO use cover 
+  display: block;
+}*/
 
 .home-hero-text{
   position: absolute;
@@ -843,6 +858,8 @@ header, .topbar, .topbar-row { overflow: visible !important; }
 }
 .home-hero-title{ font-weight: 900; font-size: 18px; }
 .home-hero-sub{ font-size: 13px; opacity: .8; }
+
+/**************************************************************************/
 
 /* GRID promoções: 4 colunas no desktop largo */
 .home-grid{
@@ -859,9 +876,29 @@ header, .topbar, .topbar-row { overflow: visible !important; }
   color: inherit;
   display: block;
 }
-.home-card-img{ height: 140px; background: #f7f7f7; }
-.home-card-img img{ width:100%; height:100%; object-fit:cover; display:block; }
-.home-card-body{ padding: 10px 12px; }
+
+.home-card-img{  
+     width: 100%;
+  aspect-ratio: 4 / 3;   /* padrão de vitrine */
+  background: #f7f7f7;
+  overflow: hidden;
+}
+
+.home-card-img img.fit-contain{
+  object-fit: contain;
+  background: #f7f7f7;
+  padding: 3px;
+}
+
+.home-card-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;  /* não corta produto */
+  display: block;
+}
+
+.home-card-body{ padding: 10px 12px;background: #fff; }
+
 .home-card-title{ font-weight: 800; font-size: 14px; }
 .home-card-sub{ font-size: 12px; opacity: .75; margin-top: 3px; }
 
@@ -1019,16 +1056,9 @@ header, .topbar, .topbar-row { overflow: visible !important; }
 
 </style>
 <style>
-.home-hero {
-  aspect-ratio: 16 / 9; /* ou 3 / 1 para banner */
-  overflow: hidden;
-}
 
-.home-hero img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; /* ⚠️ NÃO use cover */
-}
+
+
 </style>
 </head>
 <body>
@@ -1094,15 +1124,15 @@ header, .topbar, .topbar-row { overflow: visible !important; }
 
 <div class="home-wrap" style="background:#fff;">
 
-  <main class="home-main" style="background-color: black;">
+  <main class="home-main" style="background-color:#fff;">
 
     {{!-- HERO --}}
     {{#if homeHero.length}}
       <div class="home-hero">
         {{#each homeHero}}
           <a class="home-hero-slide" href="{{this.linkUrl}}">
-            <img src="{{this.imgUrl}}" alt="{{this.titulo}}">
-            <div class="home-hero-text">
+            <img src="{{this.imgUrl}}" alt="{{this.titulo}}" style="padding: 6px;">
+            <div class="home-hero-text" style="padding: 5px;background:#fff;">
               <div class="home-hero-title">{{this.titulo}}</div>
               {{#if this.subtitulo}}<div class="home-hero-sub">{{this.subtitulo}}</div>{{/if}}
             </div>
@@ -1774,4 +1804,52 @@ header, .topbar, .topbar-row { overflow: visible !important; }
   function Catalogo(){
     window.open("/catalogo-teste", "_blank");
   }
+</script>
+<script>
+document.querySelectorAll('.home-hero-slide img').forEach(img => {
+  img.addEventListener('load', () => {
+    const imgRatio = img.naturalWidth / img.naturalHeight; // ex: 900/600=1.5
+    const heroRatio = img.parentElement.clientWidth / img.parentElement.clientHeight; // ex: largura/300
+    if (imgRatio < heroRatio) {
+      // imagem "alta" pro hero -> contain pra não cortar
+      img.classList.add('fit-contain');
+    } else {
+      img.classList.remove('fit-contain');
+    }
+  });
+});
+
+document.querySelectorAll('.home-card-img img').forEach(img => {
+  img.addEventListener('load', () => {
+    const r = img.naturalWidth / img.naturalHeight;
+    // se for muito "alta/quadrada", evita corte
+    if (r < 1.4) img.classList.add('fit-contain');
+    else img.classList.remove('fit-contain');
+  });
+});
+
+function ajustarDestaquesAuto() {
+  document.querySelectorAll('.home-card-img img').forEach((img) => {
+    const apply = () => {
+      const w = img.naturalWidth || 0;
+      const h = img.naturalHeight || 0;
+      if (!w || !h) return;
+
+      const r = w / h;
+
+      // ✅ regra prática:
+      // - se for muito alta/quadrada -> contain (evita cortar muito)
+      // - se for banner -> cover
+      if (r < 1.45) img.classList.add('fit-contain');
+      else img.classList.remove('fit-contain');
+    };
+
+    if (img.complete) apply();
+    else img.addEventListener('load', apply, { once: true });
+  });
+}
+
+// roda quando a página estiver pronta
+document.addEventListener('DOMContentLoaded', ajustarDestaquesAuto);
+
 </script>

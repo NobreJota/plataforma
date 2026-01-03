@@ -813,40 +813,51 @@ header, .topbar, .topbar-row { overflow: visible !important; }
 
 /* HERO */
 .home-hero {
-  /*aspect-ratio: 16 / 9; /* ou 3 / 1 para banner 
-  overflow:auto;
-  object-fit: contain;
-  height: auto !important;
-  display: block;
-  margin-bottom: 14px;
-  background: #fff;*/
-  width: 100%;
+   width: 100%;
+   max-width: 100%;
+   overflow: hidden;
 }
 
 .home-hero-slide{
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
   display: block;
-  text-decoration: none;
-  color: inherit;
+  width: 100%;
+  height: auto;
+  background: #000;
 }
 .home-hero-slide img{
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  max-height: 590px;
+  object-fit: contain;
   display: block;
+  margin: 0 auto;
+  background: #000;
 }
 
+.home-hero-slide {
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    #111 100%
+  );
+}
 
-/*
-.home-hero img {
-  width: 100%;
-  height: auto;
-  object-fit: contain; /* ⚠️ NÃO use cover 
-  display: block;
-}*/
+.home-hero-slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: inherit;
+  background-size: cover;
+  filter: blur(20px);
+  opacity: 0.4;
+  z-index: 0;
+}
+.home-hero-slide img {
+  position: relative;
+  z-index: 1;
+}
+
 
 .home-hero-text{
   position: absolute;

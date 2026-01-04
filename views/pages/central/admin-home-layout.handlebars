@@ -19,11 +19,135 @@
     }
 
   </style>
+  <style>
+    /* =========================================================
+   HERO (banners grandes)
+   - NÃO corta (contain)
+   - Altura controlada por variável + responsivo
+========================================================= */
+
+:root{
+  --hero-max-h: 590px;   /* desktop */
+  --hero-max-h-md: 420px;
+  --hero-max-h-sm: 300px; /* mobile */
+}
+
+.home-hero{
+  width: 100%;
+  overflow: hidden;
+  border-radius: 14px;      /* opcional */
+  background: #000;         /* fallback */
+}
+
+.home-hero-slide{
+  position: relative;
+  display: block;
+  width: 100%;
+  background: #000;         /* área “sobrando” fica bonita */
+}
+
+.home-hero-slide img{
+  width: 100%;
+  height: auto;
+  max-height: var(--hero-max-h);
+  object-fit: contain;      /* 🔴 chave: não corta */
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 1200px){
+  :root{ --hero-max-h: var(--hero-max-h-md); }
+}
+
+@media (max-width: 768px){
+  :root{ --hero-max-h: var(--hero-max-h-sm); }
+
+  .home-hero{
+    border-radius: 10px;
+  }
+}
+
+/* =========================================================
+   DESTAQUES / PROMO GRID
+========================================================= */
+
+.home-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.home-card{
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.home-card-img{
+  height: 140px;
+  background: #f7f7f7;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+/* ✅ Destaques: eu recomendo CONTAIN (não corta produto) */
+.home-card-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display:block;
+}
+
+/* textos */
+.home-card-body{ padding: 10px 12px; }
+.home-card-title{ font-weight: 800; font-size: 14px; }
+.home-card-sub{ font-size: 12px; opacity: .75; margin-top: 3px; }
+@media (max-width: 1200px){
+  .home-grid{ grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+}
+
+@media (max-width: 900px){
+  .home-grid{ grid-template-columns: repeat(2, minmax(160px, 1fr)); }
+}
+
+@media (max-width: 520px){
+  .home-grid{ grid-template-columns: 1fr; }
+  .home-card-img{ height: 180px; } /* dá mais respiro no mobile */
+}
+
+/* =========================================================
+   PRODUTOS (catálogo)
+========================================================= */
+
+.product-card-img{
+  aspect-ratio: 1 / 1;     /* 🔴 padrão 1:1 */
+  background: #f7f7f7;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.product-card-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;     /* produto inteiro */
+  display: block;
+}
+
+
+  </style>
 </head>
 <body class="p-4">
 
   <h3 class="mb-3">Admin — HOME Layout</h3>
   <h1 style="font-size: smaller;color:red">1200 x 350 = 1920 x 550 para manter a proporção dos banner / 600 x 400 ou 800 x 533 para destaques  </h1>
+  <hr>
+  <h1 style="font-size: smaller;color:red">regra:object-fit:contain=> tam recomendado </h1>
   <p class="text-muted mb-4">
     Aqui você altera: Hero / Destaques / Publicidade lateral.
     As imagens são enviadas do computador para o Spaces e a URL é gravada no Mongo (HomeLayout.slots).

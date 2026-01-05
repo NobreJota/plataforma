@@ -20,7 +20,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Seu CSS por último para sobrescrever o Bootstrap -->
         <link rel="stylesheet" href="/css/home.css">
-        {{!-- <link rel="stylesheet" href="/public/css/home-layout.css"> --}}
+        <link rel="stylesheet" href="/public/css/home-layout.css">
         
 <style>
   /* ====== topo ====== */
@@ -1271,6 +1271,59 @@ home-side-card::after{
     border-radius: 12px;
   }
 }
+
+</style>
+<style>
+  /* ===== MOBILE: aumenta área de toque de ícones (sem aumentar o ícone) ===== */
+/*@media (max-width: 576px) {
+  /* classes genéricas para botões/ícones clicáveis */
+ /* .tap-btn,
+  .icon-btn,
+  .top-icon-btn {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* micro feedback (impacto visual “premium”) */
+ /* .tap-btn:active,
+  .icon-btn:active,
+  .top-icon-btn:active {
+    transform: scale(0.97);
+  }
+}*/
+
+/* ===== MOBILE – tap area premium para ícones do topo ===== */
+@media (max-width: 576px) {
+
+  .topbar .actions i,
+  .topbar .actions a,
+  .topbar .actions button {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* feedback tátil elegante */
+  .topbar .actions i:active,
+  .topbar .actions a:active,
+  .topbar .actions button:active {
+    transform: scale(0.96);
+    opacity: 0.85;
+  }
+}
+
 
 </style>
 </head>

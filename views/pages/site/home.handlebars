@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
   <title>{{ 'Sua revista eletrônica' }}</title>
           <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -87,8 +88,9 @@
     /* ====== busca + filtros ====== */
     .search-wrap{ display:flex; flex-direction:column; }
 
-    .search-wrap{ justify-self: stretch; }
+    .search-wrap{ justify-self: stretch; };
 
+    .search-wrap { position: relative; } /* o wrapper do input */
     .search-form{
       display:grid; gap:8px; align-items:center;
       grid-template-columns:
@@ -1176,7 +1178,99 @@ home-side-card::after{
   display:none;
 }
 
+/* =========================
+   BUSCA - SUGESTÕES (GERAL)
+========================= */
+.search-wrap { position: relative; } /* o wrapper do input */
 
+#sugestoesLista{
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 14px;
+  overflow: hidden;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+}
+
+#sugestoes .sug-item{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 12px;
+  cursor: pointer;
+
+  /* 👉 impede “vertical” */
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+  writing-mode: horizontal-tb; /* garante horizontal */
+}
+
+#sugestoes .sug-item:hover{
+  background: #f6f6f6;
+}
+
+/* se você tiver ícone + texto */
+#sugestoes .sug-text{
+  flex: 1;
+  min-width: 0;
+
+  /* 👉 aqui é o principal: não quebrar letra por letra */
+  white-space: normal;
+  word-break: keep-all;        /* mantém palavras */
+  overflow-wrap: break-word;   /* se precisar, quebra por palavra */
+  line-height: 1.15;
+}
+
+/* =========================
+   MOBILE: dropdown “quase tela toda”
+========================= */
+@media (max-width: 576px){
+  #sugestoesLista{
+    position: fixed;           /* solta do layout e vira “faixa” */
+    left: 8px;
+    right: 8px;
+    width: auto;
+
+    /* ajuste esse TOP conforme a altura do seu header */
+    top: 60px;
+    max-height: 55vh;
+    overflow: auto;
+  }
+
+  #sugestoes .sug-item{
+    padding: 12px 12px;
+  }
+
+  #sugestoes .sug-text{
+    font-size: 14px;
+  }
+}
+
+/*//////////////////////   05/01/26 /////////////////////////////////*/
+/* MOBILE: aumenta área preta e o input */
+@media (max-width: 576px) {
+  .top-search-wrap {
+    min-height: 56px;        /* aumenta a “faixa” */
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+  }
+
+  .top-search-input {
+    height: 44px;            /* input com tamanho bom p/ digitar */
+    font-size: 16px;         /* evita zoom do iPhone e melhora leitura */
+    padding: 10px 12px;
+    border-radius: 12px;
+  }
+}
 
 </style>
 </head>
@@ -1974,5 +2068,27 @@ document.addEventListener('DOMContentLoaded', ajustarDestaquesAuto);
 document.querySelectorAll('.home-hero-slide img').forEach(img=>{
   img.style.height = '';
 });
+
+</script>
+<script>
+  function ajustarSugestoesMobile(){
+  const sug = document.getElementById('sugestoes');
+  if(!sug) return;
+
+  if (window.matchMedia('(max-width: 576px)').matches) {
+    // garante a largura “quase tela toda”
+    sug.style.left = '8px';
+    sug.style.right = '8px';
+    sug.style.width = 'auto';
+  } else {
+    // volta ao normal no desktop
+    sug.style.left = '';
+    sug.style.right = '';
+    sug.style.width = '';
+  }
+}
+
+window.addEventListener('resize', ajustarSugestoesMobile);
+window.addEventListener('load', ajustarSugestoesMobile);
 
 </script>

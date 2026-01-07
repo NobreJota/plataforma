@@ -1469,6 +1469,63 @@ home-side-card::after{
 }
 
 </style>
+{{!-- <style>
+  /* ===== GRID PRODUTOS: 2 colunas no mobile, cresce automático ===== */
+
+#produtos{
+  display: grid !important;
+  gap: 14px;
+  align-items: stretch;
+
+  /* Base (desktop/tablet): cria o máximo de colunas que couber */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* Mobile: força 2 colunas */
+@media (max-width: 575.98px){
+  #produtos{
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px;
+  }
+}
+
+/* ===== IMAGEM DO PRODUTO: padrão visual, sem distorcer ===== */
+
+/* ajuste este seletor para o seu card real */
+#produtos .card img,
+#produtos .produto-card img,
+#produtos .produto-img{
+  width: 100%;
+  height: 160px;           /* altura padrão desktop */
+  object-fit: cover;     /* não corta, não distorce */
+  display: block;
+  padding: 10px;           /* “respiro” dentro do card */
+}
+
+/* Mobile: um pouco menor pra caber 2 colunas bonito */
+@media (max-width: 575.98px){
+  #produtos .card img,
+  #produtos .produto-card img,
+  #produtos .produto-img{
+    height: 120px;
+    padding: 8px;
+  }
+}
+
+.home-wrap{
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+@media (max-width: 575.98px){
+  .home-wrap{
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+
+</style> --}}
 </head>
 <body>
 <header class="topbar" style="padding: 6px;">
@@ -1611,22 +1668,7 @@ home-side-card::after{
 </div>
 
 <label id="vpLabel" aria-live="polite"></label>
-{{!-- <div class="quickbar quickbar-sticky bg-light border-bottom" style="background:#fff;padding: -20px;">
-    <div class="container my-0" style="background-color: #fff;">
-        <div class="home-depto-bar" role="toolbar" aria-label="Departamentos" style="background: #fff;" >
-          {{#if departamentosAtivos.length}}
-            {{#each departamentosAtivos}}
-              <a class="btn btn-depto {{#if (eq ../segmentoAtual this.nomeDepartamento)}}btn-depto-active{{/if}}"
-                href="/?segmento={{encodeURIComponent this.nomeDepartamento}}">
-                {{this.nomeDepartamento}}
-              </a>
-            {{/each}}
-          {{else}}
-            <div class="alert alert-warning m-0">Nenhum departamento ativado.</div>
-          {{/if}}
-        </div>
-    </div>
-</div> --}}
+
 {{!-- Só mostra departamentos / setores quando NÃO está em modo busca (sem q) --}}
 {{#unless q}}
   
@@ -1657,8 +1699,7 @@ home-side-card::after{
 
 {{!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --}}
     <div id="produtos"
-        class="container my-4"
-        style="background-color:#fbfafa;{{#if produtos.length}}display:block;{{else}}display:none;{{/if}}">
+        class="container my-4" style="background-color:#fbfafa;{{#if produtos.length}}display:block;{{else}}display:none;{{/if}}">
             {{#if banner}}
               ...
             {{/if}}
@@ -1666,7 +1707,7 @@ home-side-card::after{
             {{#if produtos.length}}
               <div class="row g-3" id="gridProdutos">
                 {{#each produtos}}
-                  <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
+                  <div class="col-6 col-sm-6 col-md-4  col-lg-3 col-xl-2    mb-3">
                     <article class="card h-100 card-product">
 
                       <a class="ratio ratio-4x3"

@@ -20,7 +20,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Seu CSS por último para sobrescrever o Bootstrap -->
         <link rel="stylesheet" href="/css/home.css">
-        <link rel="stylesheet" href="/public/css/home-layout.css">
+        {{!-- <link rel="stylesheet" href="/public/css/home-layout.css"> --}}
         
 <style>
   /* ====== topo ====== */
@@ -56,14 +56,6 @@
     }
 
     .brand-accent{ color: #ff4dc4; }           /* cor do "es" */
-
-    /*.actiXons{
-      display:flex; align-items:center; justify-content:flex-end;
-      gap: clamp(6px, 1vw, 12px);
-      flex-wrap: nowrap;
-      min-width: 300px;        /* <<< reserva justa p/ 3 pills */
-      /*white-space: nowrap;
-    }*/
 
     /* ações sempre à direita */
     .actions{
@@ -1275,55 +1267,47 @@ home-side-card::after{
 </style>
 <style>
   /* ===== MOBILE: aumenta área de toque de ícones (sem aumentar o ícone) ===== */
-/*@media (max-width: 576px) {
-  /* classes genéricas para botões/ícones clicáveis */
- /* .tap-btn,
-  .icon-btn,
-  .top-icon-btn {
-    min-width: 44px;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
+  /* ===== MOBILE – tap area premium para ícones do topo ===== */
+  @media (max-width: 576px) {
+        .topbar .actions i,
+        .topbar .actions a,
+        .topbar .actions button {
+            min-width: 44px;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        /* micro feedback (impacto visual “premium”) */
+        .tap-btn:active,
+        .icon-btn:active,
+        .top-icon-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* feedback tátil elegante */
+        .topbar .actions i:active,
+        .topbar .actions a:active,
+        .topbar .actions button:active {
+          transform: scale(0.96);
+          opacity: 0.85;
+        }
   }
 
-  /* micro feedback (impacto visual “premium”) */
- /* .tap-btn:active,
-  .icon-btn:active,
-  .top-icon-btn:active {
-    transform: scale(0.97);
-  }
-}*/
-
-/* ===== MOBILE – tap area premium para ícones do topo ===== */
-@media (max-width: 576px) {
-
-  .topbar .actions i,
-  .topbar .actions a,
-  .topbar .actions button {
-    min-width: 44px;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
-
-  /* feedback tátil elegante */
-  .topbar .actions i:active,
-  .topbar .actions a:active,
-  .topbar .actions button:active {
-    transform: scale(0.96);
-    opacity: 0.85;
-  }
+  /* ===== MENU SANDUÍCHE NO TOPO ===== */
+.top-hamburger{
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
 }
-
 
 </style>
 </head>
@@ -1363,27 +1347,32 @@ home-side-card::after{
               </select> 
         </form>
         <!-- AÇÕES -->
-        <nav class="actions" style="background: #333;">
-            {{#if userSite}}
-                <div class="user-menu" style="display:inline-flex;align-items:center;gap:10px;">
-                    <i class="fa-regular fa-user" aria-hidden="true" style="margin-left:4px;margin-right:8px;"></i>
-                    <label for="userMenu" class="visually-hidden">Menu do usuário</label>
+        <!-- AÇÕES (MENU SANDUÍCHE) -->
+          <nav class="actions">
+            <button
+              class="btn btn-dark top-hamburger"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#topMenu"
+              aria-controls="topMenu"
+              aria-label="Abrir menu"
+            >
+              <i class="fa-solid fa-bars"></i>
+            </button>
+          </nav>
 
-                    <!-- select sem borda e com fundo da cor do botão -->
-                    <select id="userMenu" class="user-select"
-                            onchange="if(this.value){ location.href=this.value; this.value=''; }"
-                            style="background:transparent;color:#fff;border:none;border-radius:16px;
-                                  padding:4px 12px;height:28px;line-height:28px;font-size:.9rem;outline:none;">
-                      <option value="" selected>{{firstName userSite.nome}}</option>
-                      <option value="/home-logado">Minha conta</option>
-                      <option value="/logout">Sair</option>
-                    </select>
-                </div>
-            {{else}}
-              <a href="/login" class="action-link"><i class="fa-regular fa-user"></i> Login</a>
-            {{/if}}
-              <a href="/sejacooperado" class="action-link"><i class="fa-regular fa-id-badge"></i> Seja um cooperado</a>
-        </nav>
+          <!-- OFFCANVAS MENU -->
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="topMenu" aria-labelledby="topMenuLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="topMenuLabel">Menu</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+            </div>
+            <div class="offcanvas-body">
+              <a class="btn btn-outline-dark w-100 mb-2" href="/login">Login</a>
+              <a class="btn btn-dark w-100" href="/sejacooperado">Seja um cooperado</a>
+            </div>
+          </div>
+
     </div>
 </header>
 
@@ -1903,26 +1892,25 @@ home-side-card::after{
   }
   /////////////////////////////////////////////////////////////////////////////////////////////////////////
   (function initAutocompleteBusca(){
-        
-      const input   = document.getElementById('inputBusca');
-      const lista   = document.getElementById('sugestoesLista');
-      const hiddenId = document.getElementById('inputIdProduto'); // << novo
-      const form    = document.querySelector('form.search-form');
-      const selCid  = document.getElementById('selectCidade');
-      const selBai  = document.getElementById('selectBairro');
+          const input   = document.getElementById('inputBusca');
+          const lista   = document.getElementById('sugestoesLista');
+          const hiddenId = document.getElementById('inputIdProduto'); // << novo
+          const form    = document.querySelector('form.search-form');
+          const selCid  = document.getElementById('selectCidade');
+          const selBai  = document.getElementById('selectBairro');
       
 
-      if (!input || !lista || !form) return;
+          if (!input || !lista || !form) return;
 
-      let lastQuery = '';
-      let abortCtrl = null;
+          let lastQuery = '';
+          let abortCtrl = null;
 
-      function hideLista(){
-        lista.style.display = 'none';
-        lista.innerHTML = '';
-      }
+          function hideLista(){
+            lista.style.display = 'none';
+            lista.innerHTML = '';
+          }
 
-      async function buscarSugestoes(q){
+          async function buscarSugestoes(q){
         if (abortCtrl) abortCtrl.abort();
         abortCtrl = new AbortController();
 
@@ -1948,117 +1936,222 @@ home-side-card::after{
         return [];
       }
 
-  // ===== input: digitação =====
-  on(input, 'input', async e => {
-    const q = (e.target.value || '').trim();
+          // ===== input: digitação =====
+          on(input, 'input', async e => {
+                const q = (e.target.value || '').trim();
 
-    if (q.length < 3) {
-      hideLista();
-      if (hiddenId) hiddenId.value = '';   // limpa id se o usuário apagar
-      return;
-    }
+                if (q.length < 3) {
+                  hideLista();
+                  if (hiddenId) hiddenId.value = '';   // limpa id se o usuário apagar
+                  return;
+                }
 
-    if (q === lastQuery) return;
-    lastQuery = q;
+                if (q === lastQuery) return;
+                lastQuery = q;
 
-    try{
-      const sugestoes = await buscarSugestoes(q);
-      if (!sugestoes.length){
-        hideLista();
-        if (hiddenId) hiddenId.value = '';
-        return;
-      }
-      console.log(' [ line 1141 => sugestoes]',sugestoes)
-      //___________________________________________________________________________
-      lista.innerHTML = sugestoes.map(item => {
-            const texto  = item.texto  || item.descricao || item.nome || '';
-            const loja   = item.loja   || '';
-            const cidade = item.cidade || '';
-            const bairro = item.bairro || '';
-            const right  = [loja, cidade,bairro].filter(Boolean).join(' - ');
-
-            return `
-              <div class="sug-item"
-                  data-texto="${att(texto)}"
-                  data-prod-id="${att(item.idProd || '')}" 
-                  data-loja-id="${att(item.lojaId || '')}"
-                  data-loja-nome="${att(loja)}"
-                  data-cidade="${att(cidade)}"
-                  data-bairro="${att(bairro)}"
-                  >
-                  <span class="sug-ico">🔍</span>
-                  <span class="sug-prod js-sug-prod">${esc(texto)}</span>
-                  ${right
-                    ? `<span class="sug-loja js-sug-loja">${esc(right)}</span>`
-                    : ''
+                try{
+                  const sugestoes = await buscarSugestoes(q);
+                  if (!sugestoes.length){
+                    hideLista();
+                    if (hiddenId) hiddenId.value = '';
+                    return;
                   }
-              </div>
-            `;
-           
-      }).join('');
-      //__________________________________________________________________________
-      //lista.style.display = 'block';
-      lista.style.display = sugestoes.length ? 'block' : 'none';
-    }catch(err){
-      console.error('autocomplete erro', err);
-      hideLista();
-      if (hiddenId) hiddenId.value = '';
-    }
-  });
+                  console.log(' [ line 1141 => sugestoes]',sugestoes)
+                  lista.innerHTML = sugestoes.map(item => {
+                    const texto = item.texto || item.descricao || item.nome || '';
+                    return `<div class="sug-item">${texto}</div>`;
+                  }).join('');
 
-  // ===== clique na sugestão =====
-  on(lista, 'click', ev => {
-      console.log(' clicou na lista')
-      const item = ev.target.closest('.sug-item');
-      if (!item) return;
+                  lista.style.display = 'block';
 
-      const clicouProd = ev.target.closest('.js-sug-prod');
-      const clicouLoja = ev.target.closest('.js-sug-loja');
-      console.log('230',clicouLoja)
-      const texto    = item.dataset.texto || '';
-      const cidade   = item.dataset.cidade || '';
-      const bairro   = item.dataset.bairro || '';
-      const lojaId   = item.dataset.lojaId || '';
-      const lojaNome = item.dataset.lojaNome || '';
-      const prodId    = item.dataset.prodId  || ''; 
+                  console.log('PASSO 1 OK -> itens:', lista.querySelectorAll('.sug-item').length);
+                  //___________________________________________________________________________
+                  //lista.innerHTML = sugestoes.map(item => {
+                  ///      const texto  = item.texto  || item.descricao || item.nome || '';
+                  //      const loja   = item.loja   || '';
+                  //      const cidade = item.cidade || '';
+                  //      const bairro = item.bairro || '';
+                  //      const right  = [loja, cidade,bairro].filter(Boolean).join(' - ');
 
-      hideLista();
-      input.value = texto;
+                  //      return `
+                  //        <div class="sug-item"
+                  //            data-texto="${att(texto)}"
+                  //            data-prod-id="${att(item.idProd || '')}" 
+                  //            data-loja-id="${att(item.lojaId || '')}"
+                  //            data-loja-nome="${att(loja)}"
+                  //            data-cidade="${att(cidade)}"
+                  //            data-bairro="${att(bairro)}"
+                  //            >
+                  //            <span class="sug-ico">🔍</span>
+                  //            <span class="sug-prod js-sug-prod">${esc(texto)}</span>
+                  //            ${right
+                  //              ? `<span class="sug-loja js-sug-loja">${esc(right)}</span>`
+                  //              : ''
+                  ///            }
+                  //        </div>
+                  //      `;
+                  //     
+                  //}).join('');
+                  //__________________________________________________________________________
+                  //lista.style.display = 'block';
+                  // ======= UTILITÁRIOS (ESCAPE) =======
+                  function escHtml(str = "") {
+                    return String(str)
+                      .replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+                  }
 
-      // 1) CLICOU NA PRIMEIRA COLUNA -> rota /buscar-por-texto
-      if (clicouProd) {
+                  function escAttr(str = "") {
+                    // mesmo escape, mas mantido como função separada por clareza
+                    return escHtml(str);
+                  }
 
-        console.log('clicou no Produto!')
-        const url = `/buscar-por-texto` +
-          `?q=${encodeURIComponent(texto)}` +
-          `&municipio=${encodeURIComponent(cidade)}` +
-          `&bairro=${encodeURIComponent(selBai?.value || '')}`;
-        window.location.href = url;
-        return;
-      }
+                  // ======= RENDERIZA SUGESTÕES =======
+                  function renderSugestoes(listaEl, sugestoes = []) {
+                    if (!listaEl) return;
 
-      // 2) CLICOU NA SEGUNDA COLUNA (LOJA) -> rota /buscar-xpor-loja
-      if (clicouLoja) {
-        console.log('clicou no Produto!')
-        const url = `/buscar-por-loja` +
-          `?IdProd=${encodeURIComponent(prodId)}` +
-          `&lojaId=${encodeURIComponent(lojaId)}` +
-          `&municipio=${encodeURIComponent(cidade)}` +
-          `&bairro=${encodeURIComponent(selBai?.value || '')}`;
-        window.location.href = url;
-        return;
-      }
-  // fallback: se clicar em algum lugar estranho dentro do item, usa busca normal
-    if (!clicouProd && !clicouLoja) {
-          // form.submit();
-    }
-});
+                    if (!Array.isArray(sugestoes) || sugestoes.length === 0) {
+                      listaEl.innerHTML = "";
+                      listaEl.style.display = "none";
+                      return;
+                    }
 
-  // clique fora: esconde a lista
-  on(document, 'click', ev => {
-    if (ev.target === input || lista.contains(ev.target)) return;
-    hideLista();
-  });
+                    listaEl.innerHTML = sugestoes
+                      .map((item) => {
+                        const texto = item?.texto || item?.descricao || item?.nome || "";
+                        const loja = item?.loja || "";
+                        const cidade = item?.cidade || "";
+                        const bairro = item?.bairro || "";
+
+                        const right = [loja, cidade, bairro].filter(Boolean).join(" - ");
+
+                        const prodId = item?.idProd || item?._id || "";
+                        const lojaId = item?.lojaId || "";
+
+                        return `
+                          <div class="sug-item"
+                            data-texto="${escAttr(texto)}"
+                            data-prod-id="${escAttr(prodId)}"
+                            data-loja-id="${escAttr(lojaId)}"
+                            data-loja-nome="${escAttr(loja)}"
+                            data-cidade="${escAttr(cidade)}"
+                            data-bairro="${escAttr(bairro)}"
+                          >
+                            <span class="sug-ico">🔍</span>
+                            <span class="sug-prod js-sug-prod">${escHtml(texto)}</span>
+                            ${
+                              right
+                                ? `<span class="sug-loja js-sug-loja">${escHtml(right)}</span>`
+                                : ""
+                            }
+                          </div>
+                        `;
+                      })
+                      .join("");
+
+                    listaEl.style.display = "block";
+                  }
+
+            // ======= EXEMPLO DE USO (onde você recebe "sugestoes") =======
+            // renderSugestoes(lista, sugestoes);
+
+
+            // ======= CLIQUE NAS SUGESTÕES (opcional, mas geralmente necessário) =======
+            // Ajuste os IDs se os seus forem diferentes.
+            function bindSugestoesClick({
+              listaEl,
+              inputBuscaEl,
+              inputIdProdutoEl,
+              selectCidadeEl,
+              selectBairroEl
+            }) {
+              if (!listaEl) return;
+
+              listaEl.addEventListener("click", (e) => {
+                const itemEl = e.target.closest(".sug-item");
+                if (!itemEl) return;
+
+                const texto = itemEl.dataset.texto || "";
+                const prodId = itemEl.dataset.prodId || "";
+                const cidade = itemEl.dataset.cidade || "";
+                const bairro = itemEl.dataset.bairro || "";
+
+                if (inputBuscaEl) inputBuscaEl.value = texto;
+                if (inputIdProdutoEl) inputIdProdutoEl.value = prodId;
+
+                // Se você usa selects de cidade/bairro, tenta setar
+                if (selectCidadeEl && cidade) selectCidadeEl.value = cidade;
+                if (selectBairroEl && bairro) selectBairroEl.value = bairro;
+
+                // some lista
+                listaEl.style.display = "none";
+              });
+            }
+
+                  lista.style.display = sugestoes.length ? 'block' : 'none';
+                }catch(err){
+                  console.error('autocomplete erro', err);
+                  hideLista();
+                  if (hiddenId) hiddenId.value = '';
+                }
+          });
+
+    // ===== clique na sugestão =====
+    on(lista, 'click', ev => {
+          console.log(' clicou na lista')
+          const item = ev.target.closest('.sug-item');
+          if (!item) return;
+
+          const clicouProd = ev.target.closest('.js-sug-prod');
+          const clicouLoja = ev.target.closest('.js-sug-loja');
+          console.log('230',clicouLoja)
+          const texto    = item.dataset.texto || '';
+          const cidade   = item.dataset.cidade || '';
+          const bairro   = item.dataset.bairro || '';
+          const lojaId   = item.dataset.lojaId || '';
+          const lojaNome = item.dataset.lojaNome || '';
+          const prodId    = item.dataset.prodId  || ''; 
+
+          hideLista();
+          input.value = texto;
+
+          // 1) CLICOU NA PRIMEIRA COLUNA -> rota /buscar-por-texto
+          if (clicouProd) {
+
+            console.log('clicou no Produto!')
+            const url = `/buscar-por-texto` +
+              `?q=${encodeURIComponent(texto)}` +
+              `&municipio=${encodeURIComponent(cidade)}` +
+              `&bairro=${encodeURIComponent(selBai?.value || '')}`;
+            window.location.href = url;
+            return;
+          }
+
+          // 2) CLICOU NA SEGUNDA COLUNA (LOJA) -> rota /buscar-xpor-loja
+          if (clicouLoja) {
+            console.log('clicou no Produto!')
+            const url = `/buscar-por-loja` +
+              `?IdProd=${encodeURIComponent(prodId)}` +
+              `&lojaId=${encodeURIComponent(lojaId)}` +
+              `&municipio=${encodeURIComponent(cidade)}` +
+              `&bairro=${encodeURIComponent(selBai?.value || '')}`;
+            window.location.href = url;
+            return;
+          }
+          // fallback: se clicar em algum lugar estranho dentro do item, usa busca normal
+            if (!clicouProd && !clicouLoja) {
+                  // form.submit();
+            }
+    });
+
+          // clique fora: esconde a lista
+          on(document, 'click', ev => {
+            if (ev.target === input || lista.contains(ev.target)) return;
+            hideLista();
+          });
 })();
   ///////////////////////////////////////////////////////////////////////
 

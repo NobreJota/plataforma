@@ -338,7 +338,11 @@
 
     /* título com menos margem */
     .home-title{ margin-top: 0px;margin-bottom:2px; }
-    .card-product img { max-height: 220px; }
+    .card-product img { 
+      max-height: 220px;
+    }
+
+
     @media (min-width: 1200px){ .card-product img { max-height: 200px; } }
 </style>
 <style>
@@ -1007,7 +1011,7 @@ home-side-card::after{
   }
 }
 /*////////////////////////////////////////////////////////////////////*/
-.sec-title{ margin:16px 0 10px; font-weight:900; }
+.sec-title{ margin:16px 0 10px; font-weight:900;margin-top: 24px;margin-bottom: 20px; background-color: #fff;padding-left: 20px;}
 
 .setores-grid{
   display:grid;
@@ -1550,11 +1554,13 @@ home-side-card::after{
   object-fit: contain;
   object-position: center;
   transform: scale(1.18);
+  padding-top: 3px;
 }
 
 .home-wrap{
-  padding-left: 18px;
-  padding-right: 18px;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 32px;
 }
 
 @media (max-width: 575.98px){
@@ -1563,6 +1569,212 @@ home-side-card::after{
     padding-right: 12px;
   }
 }
+
+.card-product {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-product .card-body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-product .btn {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.card-product .btn + .btn {
+  margin-top: 6px;
+}
+
+.btn-pagina-exclusiva {
+  background: transparent;
+  border: 1px solid #ccc;
+  color: #666;
+  font-size: 12px;
+}
+
+@media (min-width: 1400px) {
+  #gridProdutos > div {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+}
+
+/* bloco dos botões sempre igual */
+.card-product .card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* empurra os botões para baixo e alinha */
+.card-product .card-body .actions,
+.card-product .card-body .btn-wrap {
+  margin-top: auto;
+  display: grid;
+  gap: 8px;
+}
+
+/* botões com MESMA largura */
+.card-product .card-body .btn,
+.card-product .card-body a.btn {
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+
+</style>
+<style>
+  /* CARD do produto: fundo degradê azul + texto branco */
+.card-product{
+  /*background: linear-gradient(135deg, #46b3ff 0%, #0b2a8a 100%);
+  
+/*  background: linear-gradient(135deg, #5cc8ff 0%, #1237b6 40%, #071a63 100%);*/
+
+  color: #111010;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+
+/* garantir que tudo dentro herde branco */
+.card-product .card-body,
+.card-product .card-body *{
+  color: #181818;
+}
+
+/* linhas de info (Código, À vista, etc.) menos “forte” */
+.card-product .pih-label{
+  color: rgba(17, 16, 16, 0.82) !important;
+}
+.card-product .pih-value{
+  color: #100f0f !important;
+}
+
+/* título */
+.card-product .card-title{
+  color: #0c0c0c !important;
+}
+
+/* separador/miolo onde você tem fundo branco (aquele div mt-1) */
+.card-product .mt-1{
+  background: rgba(255,255,255,.10) !important;
+  border-top: 1px solid rgba(255,255,255,.16);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+/* botões no fundo azul: invertendo para ficar bonito */
+.card-product .btn-outline-primary,
+.card-product .btn-outline-secondary{
+  width: 100%;
+  display: block;
+  border-color: rgba(255,255,255,.75) !important;
+  color: #fff !important;
+  background: linear-gradient(135deg, #62c9ff 0%, #0b49c7 45%, #062a7a 100%) !important;
+}
+
+.card-product .btn-outline-primary:hover,
+.card-product .btn-outline-secondary:hover{
+ /* filter: brightness(1.07);
+  background: rgba(255,255,255,.14) !important;
+  border-color: rgba(255,255,255,.95) !important;
+  color: #fff !important;*/
+}
+
+/* NÃO deixar o hover apagar o conteúdo do card */
+.card-product:hover{
+  color: inherit !important;
+  background: inherit !important;
+}
+
+/* se algum hover estiver pintando tudo de branco via seletor global */
+.card-product:hover *{
+  color: inherit !important;
+  opacity: 1 !important;
+}
+
+/* se os botões/links estiverem mudando cor no hover */
+.card-product a:hover{
+  color: inherit !important;
+}
+
+.card-product{
+  transition: transform .08s ease, box-shadow .08s ease;
+}
+
+
+/*/////////////////////////////////////////////////////////////////////////*/
+/* ===== BOTÕES do card (Detalhes/Conversar e Página exclusiva) ===== */
+.card-product .card-body .btn{
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+/* garante que no hover/focus/active NÃO fica preto */
+.card-product .card-body .btn:hover,
+.card-product .card-body .btn:focus,
+.card-product .card-body .btn:active,
+.card-product .card-body .btn:focus-visible{
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+/* se algum browser/Bootstrap estiver mexendo no <a> por ser link */
+.card-product .card-body a.btn{
+  color: #fff !important;
+}
+
+.card-product:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.08);
+}
+
+/* === FIX: nada pode "vazar" pra fora do card === */
+.card-product{
+  background: #fff;
+  overflow: hidden;            /* <- isso impede a imagem/sombra vazar */
+  border-radius: 12px;         /* ajuste se quiser */
+  box-shadow: 0 12px 26px rgba(0,0,0,.08); /* sombra só "pra baixo" */
+}
+
+/* área da imagem sempre branca e também não deixa vazar */
+.card-product .ratio{
+  background: #fff;
+  overflow: hidden;
+}
+
+/* garante que a imagem respeite o bloco */
+.card-product .ratio img{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* === AREA DOS BOTOES: azul degrade + hover funcionando === */
+.card-product .card-body .btn{
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  color: #fff !important;
+  background: linear-gradient(180deg, #3aa7ff 0%, #003b9b 100%);
+  transition: filter .12s ease, transform .12s ease;
+}
+
+.card-product .card-body .btn:hover{
+  filter: brightness(.92);
+  transform: translateY(-1px);
+}
+
+.card-product .card-body .btn:active{
+  transform: translateY(0);
+}
+
+.card:hover { background: #c21212; color:#fff; }
 
 </style>
 </head>
@@ -1767,12 +1979,12 @@ home-side-card::after{
 
                         <div class="produto-info-home">
                           <div class="pih-row">
-                            <span class="pih-label">Cód.</span>
+                            <span class="pih-label">código</span>
                             <span class="pih-value">{{codigo}}</span>
                           </div>
 
                           <div class="pih-row">
-                            <span class="pih-label">À vista</span>
+                            <span class="pih-label">à vista</span>
                             <span class="pih-value">
                               {{#if precovista}}
                                 R$ {{formatCurrency precovista}}
@@ -1784,7 +1996,7 @@ home-side-card::after{
 
 
                           <div class="pih-row">
-                            <span class="pih-label">Loja:</span>
+                            <span class="pih-label">loja:</span>
                             <span class="pih-value">
                               <a href="/loja/{{loja_id}}">{{marcaloja}}</a>
                             </span>

@@ -468,13 +468,48 @@ router.post("/depto-foto-upload", uploadMem.single("foto"), async (req, res) => 
     const hash = crypto.randomBytes(8).toString("hex");
     const key = `departamentos/${id}/${Date.now()}_${hash}${safeExt}`;
 
+    // ===== PADRÃO IMAGEM (300x300, fundo branco, padding interno, sem cortar) =====
+      const PAD = 15;                 // <-- troque para 10 se quiser
+      const SIZE = 300;
+      const inner = SIZE - (PAD * 2);
+
+      // define formato final baseado no arquivo enviado (mantém múltiplo)
+      const extToFormat = (safeExt || ".jpg").replace(".", ""); // jpg | jpeg | png | webp
+      const format = (extToFormat === "jpg") ? "jpeg" : extToFormat;
+
+      // buffer final (já com “contain + padding” e canvas branco 300x300)
+      const bufferFinal = await sharp(req.file.buffer)
+        .rotate() // corrige orientação (celular)
+        .resize(inner, inner, {
+          fit: "contain", // nunca corta
+          background: { r: 255, g: 255, b: 255, alpha: 1 }
+        })
+        .extend({
+          top: PAD, bottom: PAD, left: PAD, right: PAD,
+          background: { r: 255, g: 255, b: 255, alpha: 1 }
+        })
+        .toFormat(format, format === "jpeg" ? { quality: 90 } : undefined)
+        .toBuffer();
+
+      // ContentType correto (mantém múltiplo)
+      const contentTypeMap = {
+        jpeg: "image/jpeg",
+        jpg: "image/jpeg",
+        png: "image/png",
+        webp: "image/webp",
+      };
+      const contentTypeFinal = contentTypeMap[format] || (req.file.mimetype || "image/jpeg");
+
+
     // upload
     await s3.send(new PutObjectCommand({
       Bucket: process.env.BUCKET_NAME,      // <- igual seu arquivo todo
       Key: key,
-      Body: req.file.buffer,               // <- agora existe (memoryStorage)
+      //Body: req.file.buffer,               // <- agora existe (memoryStorage);
+       Body: bufferFinal,            // <-- aqui (antes era req.file.buffer)
       ACL: "public-read",
-      ContentType: req.file.mimetype || "image/jpeg",
+      //ContentType: req.file.mimetype || "image/jpeg",
+      ContentType: contentTypeFinal // <-- aqui
     }));
 
     // URL pública

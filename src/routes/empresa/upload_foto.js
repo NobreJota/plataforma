@@ -7,6 +7,8 @@ const path = require("path");
 const crypto = require("crypto");
 
 const multer = require("multer");
+const { gerarThumb300Ajustada } =require("../../utils/thumb");
+
 const { Types } = require('mongoose');
 
 
@@ -25,6 +27,7 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
   filename: (req, file, cb) => cb(null, Date.now() + "_" + file.originalname)
 });
+
 const upload = multer({ storage });
 const uploadMem = multer({ storage: multer.memoryStorage() });
 
@@ -587,56 +590,116 @@ router.post("/home-layout/slot/foto", async (req, res) => {
 
 // upload da foto do slot (PC -> Spaces -> grava URL no Mongo)
 // router.post("/home-layout/slot/uXpload", uploadMem.single("foto"), async (req, res) =>
-router.post("/home-layout/slot/upload", upload.single("foto"), async (req, res) => {
+// router.post("/home-layout/slot/upload", uploadMem.single("foto"), async (req, res) => {
+//   console.log('');
+//   console.log('[ 533 ]=>  routes/empresa/upload_foto.js/=> home-layout/slot/upload');
+//   console.log('-------------------------------------------------------------------------');
+//   console.log('',req.body);
+//   console.log('-------------------------------------------------------------------------');
+//   console.log('-------------------------------------------------------------------------');
+//   console.log("FILE:", req.file ? { fieldname: req.file.fieldname, originalname: req.file.originalname, mimetype: req.file.mimetype, size: req.file.size } : null);
+//    try {
+//         //const { slotId } = req.body;
+//         //if (!slotId) return res.status(400).json({ ok: false, error: "slotId" });
+//         //if (!req.file) return res.status(400).json({ ok: false, error: "foto" });
+//         const { slotKey } = req.body;             // "hero|1"
+//         if (!slotKey) return res.status(400).json({ ok:false, error:"slotKey" });
+//         if (!req.file) return res.status(400).json({ ok:false, error:"foto" });
+
+//         const [tipo, ordemStr] = String(slotKey).split("|");
+//         const ordem = Number(ordemStr);
+//         if (!tipo || !ordem) return res.status(400).json({ ok:false, error:"slotKey_invalida" });
+//         //////////////////////////////////////////////////////////////////////////
+//         const ext = (path.extname(req.file.originalname || "") || ".jpg").toLowerCase();
+//         const safeExt = [".jpg", ".jpeg", ".png", ".webp"].includes(ext) ? ext : ".jpg";
+
+//         const hash = crypto.randomBytes(8).toString("hex");
+//         //const key = `home-layout/${slotId}/${Date.now()}_${hash}${safeExt}`;
+//         const key = `home-layout/${tipo}/${ordem}/${Date.now()}_${hash}${safeExt}`;
+
+//         await s3.send(new PutObjectCommand({
+//           Bucket: process.env.BUCKET_NAME, // você já usa esse
+//           Key: key,
+//           Body: req.file.buffer,           // ⚠️ isso exige memoryStorage; abaixo tem a correção
+//           ACL: "public-read",
+//           ContentType: req.file.mimetype || "image/jpeg",
+//         }));
+
+//         const urlPublica = `https://${process.env.BUCKET_NAME}.nyc3.digitaloceanspaces.com/${key}`;
+
+//        // await HomeLayout.updateOne(
+//        //   { nome: "default", "slots._id": slotId },
+//        //  / { $set: { "slots.$.imagemUrl": urlPublica } }
+//        // );
+//        await HomeLayout.updateOne(
+//             { nome: "default", "slots.tipo": tipo, "slots.ordem": ordem },
+//             { $set: { "slots.$.imgUrl": urlPublica } }
+//         );
+//         return res.json({ ok: true, url: urlPublica });
+//   } catch (err) {
+//         console.error("[POST /home-layout/slot/upload]", err);
+//         return res.status(500).json({ ok: false });
+//   }
+// });
+
+router.post("/home-layout/slot/upload", uploadMem.single("foto"), async (req, res) => {
   console.log('');
   console.log('[ 533 ]=>  routes/empresa/upload_foto.js/=> home-layout/slot/upload');
   console.log('-------------------------------------------------------------------------');
-  console.log('',req.body);
+  console.log('', req.body);
   console.log('-------------------------------------------------------------------------');
   console.log('-------------------------------------------------------------------------');
-  console.log("FILE:", req.file ? { fieldname: req.file.fieldname, originalname: req.file.originalname, mimetype: req.file.mimetype, size: req.file.size } : null);
-   try {
-        //const { slotId } = req.body;
-        //if (!slotId) return res.status(400).json({ ok: false, error: "slotId" });
-        //if (!req.file) return res.status(400).json({ ok: false, error: "foto" });
-        const { slotKey } = req.body;             // "hero|1"
-        if (!slotKey) return res.status(400).json({ ok:false, error:"slotKey" });
-        if (!req.file) return res.status(400).json({ ok:false, error:"foto" });
+  console.log(
+    "FILE:",
+    req.file
+      ? {
+          fieldname: req.file.fieldname,
+          originalname: req.file.originalname,
+          mimetype: req.file.mimetype,
+          size: req.file.size,
+        }
+      : null
+  );
 
-        const [tipo, ordemStr] = String(slotKey).split("|");
-        const ordem = Number(ordemStr);
-        if (!tipo || !ordem) return res.status(400).json({ ok:false, error:"slotKey_invalida" });
-        //////////////////////////////////////////////////////////////////////////
-        const ext = (path.extname(req.file.originalname || "") || ".jpg").toLowerCase();
-        const safeExt = [".jpg", ".jpeg", ".png", ".webp"].includes(ext) ? ext : ".jpg";
+  try {
+    const { slotKey } = req.body; // "hero|1"
+    if (!slotKey) return res.status(400).json({ ok: false, error: "slotKey" });
+    if (!req.file) return res.status(400).json({ ok: false, error: "foto" });
 
-        const hash = crypto.randomBytes(8).toString("hex");
-        const key = `home-layout/${slotId}/${Date.now()}_${hash}${safeExt}`;
+    const [tipo, ordemStr] = String(slotKey).split("|");
+    const ordem = Number(ordemStr);
+    if (!tipo || !ordem) return res.status(400).json({ ok: false, error: "slotKey_invalida" });
 
-        await s3.send(new PutObjectCommand({
-          Bucket: process.env.BUCKET_NAME, // você já usa esse
-          Key: key,
-          Body: req.file.buffer,           // ⚠️ isso exige memoryStorage; abaixo tem a correção
-          ACL: "public-read",
-          ContentType: req.file.mimetype || "image/jpeg",
-        }));
+    const ext = (path.extname(req.file.originalname || "") || ".jpg").toLowerCase();
+    const safeExt = [".jpg", ".jpeg", ".png", ".webp"].includes(ext) ? ext : ".jpg";
 
-        const urlPublica = `https://${process.env.BUCKET_NAME}.nyc3.digitaloceanspaces.com/${key}`;
+    const hash = crypto.randomBytes(8).toString("hex");
+    const key = `home-layout/${tipo}/${ordem}/${Date.now()}_${hash}${safeExt}`;
 
-       // await HomeLayout.updateOne(
-       //   { nome: "default", "slots._id": slotId },
-       //  / { $set: { "slots.$.imagemUrl": urlPublica } }
-       // );
-       await HomeLayout.updateOne(
-            { nome: "default", "slots.tipo": tipo, "slots.ordem": ordem },
-            { $set: { "slots.$.imgUrl": urlPublica } }
-        );
-        return res.json({ ok: true, url: urlPublica });
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Key: key,
+        Body: req.file.buffer, // ✅ certo com uploadMem (memoryStorage)
+        ACL: "public-read",
+        ContentType: req.file.mimetype || "image/jpeg",
+      })
+    );
+
+    const urlPublica = `https://${process.env.BUCKET_NAME}.nyc3.digitaloceanspaces.com/${key}`;
+
+    await HomeLayout.updateOne(
+      { nome: "default", "slots.tipo": tipo, "slots.ordem": ordem },
+      { $set: { "slots.$.imgUrl": urlPublica } }
+    );
+
+    return res.json({ ok: true, url: urlPublica });
   } catch (err) {
-        console.error("[POST /home-layout/slot/upload]", err);
-        return res.status(500).json({ ok: false });
+    console.error("[POST /home-layout/slot/upload]", err);
+    return res.status(500).json({ ok: false });
   }
 });
+
 
 router.post("/ping", (req, res) => {
   console.log("PING body =>", req.body);

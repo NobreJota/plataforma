@@ -1899,6 +1899,31 @@ home-side-card::after{
           const selCid  = document.getElementById('selectCidade');
           const selBai  = document.getElementById('selectBairro');
       
+          let lastValue = input.value.trim();
+
+         input.addEventListener("input", () => {
+            const val = input.value.trim();
+
+            if (val !== lastValue) {
+              lastValue = val;
+
+              if (hiddenId) hiddenId.value = ""; // limpa idProd selecionado
+
+              // 🔥 ESSENCIAL: se ficou menor que 3, libera nova busca futura
+              if (val.length < 3) {
+                lastQuery = ""; // <-- aqui está a sua correção
+
+                // se tinha fetch em andamento, aborta
+                if (abortCtrl) {
+                  abortCtrl.abort();
+                  abortCtrl = null;
+                }
+
+                hideLista();
+                return;
+              }
+            }
+          });
 
           if (!input || !lista || !form) return;
 

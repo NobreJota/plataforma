@@ -205,9 +205,13 @@
     }
 
     #sugestoesLista .sug-item{
-      padding:8px 10px; cursor:pointer; color:#900; /* seu vermelho */
-      border-top:1px solid #eee;
-      background:#fff;
+       display: grid;
+       grid-template-columns: 22px 1fr;  /* ícone | conteúdo */
+       grid-template-rows: auto auto;    /* linha 1 e linha 2 */
+       column-gap: 10px;
+       row-gap: 2px;
+       align-items: center;
+       padding: 10px 14px;
     }
 
     #sugestoesLista .sug-item:hover,
@@ -768,7 +772,7 @@
   margin-left: auto !important;
   font-size: 12px !important;
   font-weight: 600 !important;
-  color: #666 !important;
+  /*color: #666 !important;*/
   white-space: nowrap !important;
 }
 
@@ -1307,6 +1311,161 @@ home-side-card::after{
   align-items: center;
   justify-content: center;
   border-radius: 12px;
+}
+
+#sugestoesLista .sug-item{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+}
+
+#sugestoesLista .sug-prod{
+  flex: 1;
+  font-weight: 600;
+}
+
+#sugestoesLista .sug-right{
+  display: flex;
+  flex-direction: column;   /* <-- 2 linhas */
+  align-items: flex-end;    /* encosta à direita */
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+#sugestoesLista .sug-loja{
+  font-size: 12px;
+  font-weight: 600;
+  opacity: .9;
+}
+
+#sugestoesLista .sug-loc{
+  font-size: 12px;
+  opacity: .75;
+}
+
+</style>
+<style>
+  #sugestoesLista .sug-ico{
+  grid-row: 1 / span 2;
+  grid-column: 1;
+}
+
+/* linha 1: produto */
+#sugestoesLista .sug-prod{
+  grid-column: 2;
+  grid-row: 1;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* bloco da direita vira linha 2 */
+#sugestoesLista .sug-right{
+  grid-column: 2;
+  grid-row: 2;
+  display: block;        /* garante 1 linha */
+  text-align: left;      /* esquerda */
+  font-size: 12px;
+  opacity: .75;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ESCONDE o lojista (fica só cidade/bairro) */
+#sugestoesLista .sug-right .js-sug-loja{
+  /*display: none !important;*/
+}
+
+/* garante que qualquer span dentro de sug-right fique inline */
+#sugestoesLista .sug-right span{
+  display: inline !important;
+}
+
+/* ===== SUGESTÕES: produto em cima / cidade-bairro embaixo ===== */
+
+#sugestoesLista .sug-item{
+  display: grid !important;
+  grid-template-columns: 22px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  row-gap: 2px;
+  align-items: center;
+  padding: 10px 14px;
+}
+
+/* ícone atravessa as 2 linhas */
+#sugestoesLista .sug-ico{
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+/* linha 1 = produto */
+#sugestoesLista .sug-prod{
+  grid-column: 2;
+  grid-row: 1;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* linha 2 = o bloco da direita */
+#sugestoesLista .sug-right{
+  grid-column: 2;
+  grid-row: 2;
+  display: block;
+  font-size: 12px;
+  opacity: .8;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ESCONDE SÓ A PRIMEIRA (LOJA) e deixa a SEGUNDA (cidade-bairro) */
+#sugestoesLista .sug-right .js-sug-loja:first-child{
+  /*display: none !important;*/
+}
+
+#sugestoesLista .sug-item{
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  row-gap: 2px;
+  padding: 10px 14px;
+  align-items: center;
+}
+
+#sugestoesLista .sug-ico{
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+#sugestoesLista .sug-prod{
+  grid-column: 2;
+  grid-row: 1;
+  font-weight: 700;
+}
+
+#sugestoesLista .sug-right{
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;   /* loja em cima, cidade embaixo */
+  gap: 2px;
+  line-height: 1.1;
+}
+
+#sugestoesLista .sug-loja{
+  font-size: 12px;
+  font-weight: 600;
+  opacity: .9;
+}
+
+#sugestoesLista .sug-loc{
+  font-size: 12px;
+  opacity: .75;
 }
 
 </style>
@@ -1936,202 +2095,126 @@ home-side-card::after{
           }
 
           async function buscarSugestoes(q){
-        if (abortCtrl) abortCtrl.abort();
-        abortCtrl = new AbortController();
+                 console.log('busca produto ', q)
+                if (abortCtrl) abortCtrl.abort();
+                abortCtrl = new AbortController();
 
-        const cidade = selCid?.value || '';
-        const bairro = selBai?.value || '';
+                const cidade = selCid?.value || '';
+                const bairro = selBai?.value || '';
 
-        const url = `/buscar-sugestoes?q=${encodeURIComponent(q)}`
-                  + `&cidade=${encodeURIComponent(cidade)}`
-                  + `&bairro=${encodeURIComponent(bairro)}`;
+                const url = `/buscar-sugestoes?q=${encodeURIComponent(q)}`
+                          + `&cidade=${encodeURIComponent(cidade)}`
+                          + `&bairro=${encodeURIComponent(bairro)}`;
 
-        const resp = await fetch(url, {
-          signal: abortCtrl.signal,
-          cache: 'no-store',
-          headers: { 'Accept': 'application/json' }
-        });
+                const resp = await fetch(url, {
+                  signal: abortCtrl.signal,
+                  cache: 'no-store',
+                  headers: { 'Accept': 'application/json' }
+                });
 
-        if (!resp.ok) return [];
-        const data = await resp.json();
+                if (!resp.ok) return [];
+                const data = await resp.json();
 
-        if (Array.isArray(data)) return data;
-        if (Array.isArray(data.itens)) return data.itens;
-        if (Array.isArray(data.items)) return data.items;
-        return [];
-      }
+                if (Array.isArray(data)) return data;
+                if (Array.isArray(data.itens)) return data.itens;
+                if (Array.isArray(data.items)) return data.items;
+                return [];
+          }
+
+
+           function escHtml(str = "") {
+            return String(str)
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+          }
+          function escAttr(str = "") { return escHtml(str); }
+
+          function renderSugestoes(sugestoes = []) {
+            if (!Array.isArray(sugestoes) || sugestoes.length === 0) {
+              hideLista();
+              return;
+            }
+
+            lista.innerHTML = sugestoes.map(item => {
+              const texto  = item.texto || item.descricao || item.nome || "";
+              const loja   = item.loja || "";
+              const cidade = item.cidade || "";
+              const bairro = item.bairro || "";
+              const right1  = loja;
+              const right2 = [cidade, bairro].filter(Boolean).join(" - ");
+              console.log('line [ 1989 ] ',cidade)
+
+              const prodId = item.idProd || item._id || "";
+              const lojaId = item.lojaId || item.lojaid || "";
+              //<span class="sug-ico">🔍</span>
+              return `
+                <div class="sug-item"
+                  data-texto="${escAttr(texto)}"
+                  data.prod.id="${escAttr(prodId)}"
+                  data-loja-id="${escAttr(lojaId)}"
+                  data-loja-nome="${escAttr(loja)}"
+                  data-cidade="${escAttr(cidade)}"
+                  data-bairro="${escAttr(bairro)}"
+                >
+                  
+                  <span class="sug-prod js-sug-prod">${escHtml(texto)}</span>
+                  <span class="sug-right">
+                     ${right1 ? `<span class="sug-loja js-sug-loja" >${escHtml(right1)}</span>` : ""}
+                     ${right2 ? `<span class="sug-loja js-sug-loc" >${escHtml(right2)}</span>` : ""}
+                  </span>   
+                </div>
+              `;
+            }).join("");
+
+            lista.style.display = "block";
+          }
+
 
           // ===== input: digitação =====
           on(input, 'input', async e => {
                 const q = (e.target.value || '').trim();
 
                 if (q.length < 3) {
+                  lastQuery = ''; 
                   hideLista();
                   if (hiddenId) hiddenId.value = '';   // limpa id se o usuário apagar
                   return;
                 }
 
-                if (q === lastQuery) return;
-                lastQuery = q;
+               if (q === lastQuery) return;
 
                 try{
                   const sugestoes = await buscarSugestoes(q);
+                  lastQuery = q;
+
                   if (!sugestoes.length){
                     hideLista();
                     if (hiddenId) hiddenId.value = '';
                     return;
                   }
-                  console.log(' [ line 1141 => sugestoes]',sugestoes)
-                  lista.innerHTML = sugestoes.map(item => {
-                    const texto = item.texto || item.descricao || item.nome || '';
-                    return `<div class="sug-item">${texto}</div>`;
-                  }).join('');
+                  console.log(' [ line 1141 => sugestoes]',sugestoes);
 
-                  lista.style.display = 'block';
-
-                  console.log('PASSO 1 OK -> itens:', lista.querySelectorAll('.sug-item').length);
+                   renderSugestoes(sugestoes)
                   //___________________________________________________________________________
-                  //lista.innerHTML = sugestoes.map(item => {
-                  ///      const texto  = item.texto  || item.descricao || item.nome || '';
-                  //      const loja   = item.loja   || '';
-                  //      const cidade = item.cidade || '';
-                  //      const bairro = item.bairro || '';
-                  //      const right  = [loja, cidade,bairro].filter(Boolean).join(' - ');
-
-                  //      return `
-                  //        <div class="sug-item"
-                  //            data-texto="${att(texto)}"
-                  //            data-prod-id="${att(item.idProd || '')}" 
-                  //            data-loja-id="${att(item.lojaId || '')}"
-                  //            data-loja-nome="${att(loja)}"
-                  //            data-cidade="${att(cidade)}"
-                  //            data-bairro="${att(bairro)}"
-                  //            >
-                  //            <span class="sug-ico">🔍</span>
-                  //            <span class="sug-prod js-sug-prod">${esc(texto)}</span>
-                  //            ${right
-                  //              ? `<span class="sug-loja js-sug-loja">${esc(right)}</span>`
-                  //              : ''
-                  ///            }
-                  //        </div>
-                  //      `;
-                  //     
-                  //}).join('');
-                  //__________________________________________________________________________
-                  //lista.style.display = 'block';
-                  // ======= UTILITÁRIOS (ESCAPE) =======
-                  function escHtml(str = "") {
-                    return String(str)
-                      .replace(/&/g, "&amp;")
-                      .replace(/</g, "&lt;")
-                      .replace(/>/g, "&gt;")
-                      .replace(/"/g, "&quot;")
-                      .replace(/'/g, "&#039;");
-                  }
-
-                  function escAttr(str = "") {
-                    // mesmo escape, mas mantido como função separada por clareza
-                    return escHtml(str);
-                  }
-
-                  // ======= RENDERIZA SUGESTÕES =======
-                  function renderSugestoes(listaEl, sugestoes = []) {
-                    if (!listaEl) return;
-
-                    if (!Array.isArray(sugestoes) || sugestoes.length === 0) {
-                      listaEl.innerHTML = "";
-                      listaEl.style.display = "none";
-                      return;
+                  
+                    }catch(err){
+                      console.error('autocomplete erro', err);
+                      hideLista();
+                      if (hiddenId) hiddenId.value = '';
                     }
-
-                    listaEl.innerHTML = sugestoes
-                      .map((item) => {
-                        const texto = item?.texto || item?.descricao || item?.nome || "";
-                        const loja = item?.loja || "";
-                        const cidade = item?.cidade || "";
-                        const bairro = item?.bairro || "";
-
-                        const right = [loja, cidade, bairro].filter(Boolean).join(" - ");
-
-                        const prodId = item?.idProd || item?._id || "";
-                        const lojaId = item?.lojaId || "";
-
-                        return `
-                          <div class="sug-item"
-                            data-texto="${escAttr(texto)}"
-                            data-prod-id="${escAttr(prodId)}"
-                            data-loja-id="${escAttr(lojaId)}"
-                            data-loja-nome="${escAttr(loja)}"
-                            data-cidade="${escAttr(cidade)}"
-                            data-bairro="${escAttr(bairro)}"
-                          >
-                            <span class="sug-ico">🔍</span>
-                            <span class="sug-prod js-sug-prod">${escHtml(texto)}</span>
-                            ${
-                              right
-                                ? `<span class="sug-loja js-sug-loja">${escHtml(right)}</span>`
-                                : ""
-                            }
-                          </div>
-                        `;
-                      })
-                      .join("");
-
-                    listaEl.style.display = "block";
-                  }
-
-            // ======= EXEMPLO DE USO (onde você recebe "sugestoes") =======
-            // renderSugestoes(lista, sugestoes);
-
-
-            // ======= CLIQUE NAS SUGESTÕES (opcional, mas geralmente necessário) =======
-            // Ajuste os IDs se os seus forem diferentes.
-            function bindSugestoesClick({
-              listaEl,
-              inputBuscaEl,
-              inputIdProdutoEl,
-              selectCidadeEl,
-              selectBairroEl
-            }) {
-              if (!listaEl) return;
-
-              listaEl.addEventListener("click", (e) => {
-                const itemEl = e.target.closest(".sug-item");
-                if (!itemEl) return;
-
-                const texto = itemEl.dataset.texto || "";
-                const prodId = itemEl.dataset.prodId || "";
-                const cidade = itemEl.dataset.cidade || "";
-                const bairro = itemEl.dataset.bairro || "";
-
-                if (inputBuscaEl) inputBuscaEl.value = texto;
-                if (inputIdProdutoEl) inputIdProdutoEl.value = prodId;
-
-                // Se você usa selects de cidade/bairro, tenta setar
-                if (selectCidadeEl && cidade) selectCidadeEl.value = cidade;
-                if (selectBairroEl && bairro) selectBairroEl.value = bairro;
-
-                // some lista
-                listaEl.style.display = "none";
               });
-            }
-
-                  lista.style.display = sugestoes.length ? 'block' : 'none';
-                }catch(err){
-                  console.error('autocomplete erro', err);
-                  hideLista();
-                  if (hiddenId) hiddenId.value = '';
-                }
-          });
 
     // ===== clique na sugestão =====
     on(lista, 'click', ev => {
-          console.log(' clicou na lista')
+          console.log('clicou na lista')
           const item = ev.target.closest('.sug-item');
           if (!item) return;
 
           const clicouProd = ev.target.closest('.js-sug-prod');
-          const clicouLoja = ev.target.closest('.js-sug-loja');
+          const clicouLoja = ev.target.closest('.js-sug-loc');
           console.log('230',clicouLoja)
           const texto    = item.dataset.texto || '';
           const cidade   = item.dataset.cidade || '';

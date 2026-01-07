@@ -2153,7 +2153,7 @@ home-side-card::after{
               return `
                 <div class="sug-item"
                   data-texto="${escAttr(texto)}"
-                  data.prod.id="${escAttr(prodId)}"
+                  data-prod-Id="${escAttr(prodId)}"
                   data-loja-id="${escAttr(lojaId)}"
                   data-loja-nome="${escAttr(loja)}"
                   data-cidade="${escAttr(cidade)}"
@@ -2214,8 +2214,10 @@ home-side-card::after{
           if (!item) return;
 
           const clicouProd = ev.target.closest('.js-sug-prod');
-          const clicouLoja = ev.target.closest('.js-sug-loc');
-          console.log('230',clicouLoja)
+          console.log('2217',clicouProd)
+          const clicouLoja = ev.target.closest('.js-sug-loja');
+          console.log('2218',clicouLoja);
+
           const texto    = item.dataset.texto || '';
           const cidade   = item.dataset.cidade || '';
           const bairro   = item.dataset.bairro || '';
@@ -2240,7 +2242,7 @@ home-side-card::after{
 
           // 2) CLICOU NA SEGUNDA COLUNA (LOJA) -> rota /buscar-xpor-loja
           if (clicouLoja) {
-            console.log('clicou no Produto!')
+            console.log('clicou na loja!')
             const url = `/buscar-por-loja` +
               `?IdProd=${encodeURIComponent(prodId)}` +
               `&lojaId=${encodeURIComponent(lojaId)}` +
@@ -2256,10 +2258,10 @@ home-side-card::after{
     });
 
           // clique fora: esconde a lista
-          on(document, 'click', ev => {
+    on(document, 'click', ev => {
             if (ev.target === input || lista.contains(ev.target)) return;
             hideLista();
-          });
+    });
 })();
   ///////////////////////////////////////////////////////////////////////
 

@@ -41,9 +41,9 @@ const LojistaSchema = new Schema({
   cidade: { type: String },
   bairro: { type: String },
   estado: { type: String },
-  urllogolista: { type: String },
-  urllogomarca: { type: String },
-  urltitulopage: { type: String },
+  corHeader: { type: String },
+  logoUrl: { type: String, default: "" },
+  tituloPage: { type: String },
   departamentos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'departamentos' }],
   fornecedores: [
     {

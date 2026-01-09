@@ -31,8 +31,6 @@
 </style>
 <style>
     /* ÁREA PRINCIPAL */
-  
-
     .page-shell{
       background: #a2a1a1;
       border-left: 2px solid #9a9797;
@@ -45,7 +43,7 @@
       min-width: 0;        /* ESSENCIAL: permite o conteúdo encolher sem quebrar */
     }
 
-     .cards-row{
+    .cards-row{
         display: grid !important;
         grid-template-columns: repeat(4, minmax(220px, 1fr));
         gap: 16px;
@@ -513,8 +511,9 @@
 
 
   @media (max-width: 520px){
-    .cards-row{ grid-template-columns: 1fr; }
-  }
+  .cards-row{ grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+
 
   @media (max-width: 360px){
     .page-wrapper .cards-row{
@@ -814,49 +813,1210 @@
 }
 
 </style>
+<style>
+  /* ===== HEADER AJUSTADA ===== */
+/* ===== HEADER 2 LINHAS (3 colunas) ===== */
+.hdr{
+  width: 100%;
+  padding: 10px 14px;
+  box-sizing: border-box;
+}
+
+/* cada linha tem 3 divisões */
+.hdr-row{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* 3 colunas: esquerda fixa, meio flexível, direita flexível (vazio) */
+.hdr-col.left, .hdr-col.right { width: 120px; flex: 0 0 120px; }
+.hdr-col.mid{ flex: 1 1 auto; min-width:0; display:flex; justify-content:center; }
+
+
+/* LINHA 1 */
+.hdr-row1{ margin-bottom: 10px; }
+
+.hdr-logo{
+  width: 64px;
+  height: 44px;
+  object-fit: contain;
+  display: block;
+}
+
+/* título */
+.hdr-title{
+  color: #fff;
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hdr-title{
+  text-align: center;
+  width: 100%;
+}
+
+/* LINHA 2 */
+.hdr-row2{}
+
+/* hamburger */
+.hdr-burger{
+  width: 48px;
+  height: 42px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,.16);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+}
+.hdr-burger:hover{ background: rgba(255,255,255,.24); }
+
+/* busca grande */
+.hdr-searchWrap{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border-radius: 5px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.18);
+}
+
+.hdr-searchIcon{ opacity: .75; font-size: 18px; }
+
+.hdr-search{
+  width: 100%;
+  border: 0;
+  outline: none;
+  font-size: 16px;
+  background: transparent;
+}
+
+/* sugestões */
+.hdr-sugestoes{
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 22px rgba(0,0,0,.18);
+  overflow: hidden;
+  z-index: 2000;
+  display: none;
+}
+.hdr-sugestoes.show{ display:block; }
+
+/* responsivo: no mobile, tira o “vazio” da direita */
+@media (max-width: 768px){
+  .hdr-col.right{ display:none; }
+  .hdr-col.left{ width: 60px; flex: 0 0 60px; }
+  .hdr-title{ font-size: 22px; }
+}
+
+.hdr-searchWrap{
+  max-width: 900px;     /* ajuste se quiser maior/menor */
+  margin: 0 auto;       /* centraliza */
+}
+
+.hdr{
+  padding: 6px 14px;    /* era 10px 14px */
+}
+
+.hdr-row1{
+  margin-bottom: 6px;   /* era 10px */
+}
+
+.hdr-searchWrap{
+  padding: 8px 10px;    /* era 10px 12px */
+}
+/*////////////////////////////////////////////////////////////////////////////////////*/
+/* ===== Header v2 (pxh-*) SEM CONFLITO ===== */
+.pxh{
+  background: var(--pxh-bg, #0069a8);
+  width: 100%;
+  padding: 10px 14px;
+  box-sizing: border-box;
+}
+
+/* container */
+.pxh__wrap{
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* 2 linhas */
+.pxh__row{
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) 1fr; /* left | center | right (vazio proporcional) */
+  align-items: center;
+  column-gap: 14px;
+}
+
+.pxh__row--top{ margin-bottom: 8px; }
+
+/* colunas */
+.pxh__left{ display:flex; align-items:center; justify-content:flex-start; }
+.pxh__center{ min-width:0; }
+.pxh__right{}
+
+/* logo */
+.pxh__logo{
+  width: 68px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
+}
+
+/* título CENTRAL DE VERDADE */
+.pxh__title{
+  color: #fff;
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 1.1;
+  text-align: center;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  padding: 2px 8px;
+}
+
+/* burger */
+.pxh__burger{
+  width: 46px;
+  height: 38px;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255,255,255,.16);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+}
+.pxh__burger:hover{ background: rgba(255,255,255,.24); }
+
+/* busca (BAIXA e bonita) */
+.pxh__search{
+  position: relative;
+  width: 100%;
+  max-width: 880px;        /* controla largura bonita */
+  margin: 0 auto;          /* CENTRALIZA a busca */
+  background: #fff;
+  border-radius: 12px;
+  padding: 6px 10px;       /* <<< AQUI diminui altura real */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 18px rgba(0,0,0,.18);
+}
+
+/* ícone não aumenta altura */
+.pxh__icon{
+  font-size: 18px;
+  line-height: 1;
+  opacity: .75;
+}
+
+/* input BAIXO (sem altura “fantasma”) */
+.pxh__input{
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+
+  height: 28px;            /* <<< TRAVA altura */
+  line-height: 28px;       /* <<< TRAVA altura */
+  padding: 0;              /* <<< remove padding herdado */
+  margin: 0;               /* <<< remove margin herdado */
+  font-size: 16px;
+}
+
+/* sugestões */
+.pxh__sug{
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0,0,0,.2);
+  overflow: hidden;
+  z-index: 2500;
+  display: none;
+}
+.pxh__sug.show{ display:block; }
+
+/* MOBILE */
+@media (max-width: 768px){
+  .pxh{ padding: 10px 12px; }
+  .pxh__row{
+    grid-template-columns: 64px minmax(0,1fr);
+  }
+  .pxh__right{ display:none; }
+  .pxh__title{ font-size: 22px; text-align:left; }
+  .pxh__search{ max-width: 100%; }
+}
+
+.hdr-col.mid{
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  justify-content: center;   /* centraliza a busca */
+}
+
+/* aumenta a largura da busca */
+.hdr-searchWrap{
+  width: min(980px, 100%);   /* <-- AQUI aumenta (troque 980 se quiser) */
+  margin: 0 auto;
+}
+
+.hdr-searchWrap{              /* a “caixa vermelha” */
+  padding: 4px 10px;          /* diminui altura do container */
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hdr-search{                  /* o input */
+  height: 26px;               /* <<< trava altura */
+  line-height: 26px;          /* <<< trava */
+  padding: 0 !important;      /* <<< mata padding herdado */
+  margin: 0 !important;
+  border: 0;
+  outline: none;
+  font-size: 16px;
+  background: transparent;
+}
+
+.hdr-searchIcon{              /* o ícone */
+  line-height: 1;             /* <<< impede “empurrar” altura */
+}
+
+#headerLojaExclusiva input{
+  height: 26px !important;
+  line-height: 26px !important;
+  padding: 0 !important;
+}
+
+
+
+
+
+
+.produtos-grid{
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+/* MOBILE: força 2 colunas */
+@media (max-width: 576px){
+  .produtos-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+
+.produtos-grid .card img,
+.produtos-grid .produto-img{
+  width: 100%;
+  height: 190px;      /* aumenta */
+  object-fit: contain;
+}
+@media (max-width: 576px){
+  .produtos-grid .card img,
+  .produtos-grid .produto-img{
+    height: 160px;
+  }
+}
+
+/* desktop: menu lateral normal */
+.menu-lateral{
+  display: block;
+}
+
+/* mobile: vira drawer */
+@media (max-width: 992px){
+  .menu-lateral{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 82%;
+    max-width: 320px;
+    height: 100vh;
+    background: #fff;
+    z-index: 3000;
+    transform: translateX(-105%);
+    transition: transform .2s ease;
+    box-shadow: 10px 0 24px rgba(0,0,0,.25);
+    overflow: auto;
+    padding: 12px;
+  }
+  .menu-lateral.show{
+    transform: translateX(0);
+  }
+
+  .menu-backdrop{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    z-index: 2990;
+    display: none;
+  }
+
+  
+}
+
+@media (max-width: 992px){
+  .menu-lateral{
+    transform: translateX(-105%);
+  }
+}
+
+/*@media (max-width: 992px){
+  #menuXDepartamentos{
+    transform: translateX(-105%) !important;
+    position: fixed !important;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 3000;
+  }
+
+  
+}*/
+
+.menu-drawer-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding: 10px 6px;
+  border-bottom: 1px solid rgba(0,0,0,.12);
+  margin-bottom: 10px;
+}
+
+.menu-drawer-title{
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1.1;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: #03ae4e;
+}
+
+.btn-fechar-menu{
+  border: 0;
+  background: transparent;
+  font-size: 20px;
+  line-height: 1;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+/* DESKTOP: não existe drawer/backdrop */
+@media (min-width: 992px){
+  /*.deptXos-backdrop,*/
+ /* .deptosX-drawer{
+    display: none !important;
+  }*/
+  body.menu-open{
+    overflow: auto !important;
+  }
+}
+/* ===== HEADER fica sempre acima ===== */
+#headerLojaExclusiva, .hdr{
+  position: sticky;
+  top: 0;
+  z-index: 1060; /* acima do drawer/backdrop */
+}
+
+/* altura do header (ajuste se precisar) */
+:root{
+  --hdr-h: 104px;     /* <<< ajuste fino (ex: 96px / 110px) */
+  --drawer-w: 280px;  /* <<< largura do menu (menor pra caber + colunas) */
+}
+
+
+
+
+
+
+
+
+
+
+/* ===== GRID de produtos igual HOME: auto-colunas por tamanho ===== */
+.produtos-grid{
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  align-items: stretch;
+}
+
+/* telas maiores: mais colunas possíveis */
+@media (min-width: 1200px){
+  .produtos-grid{ grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+}
+@media (min-width: 1600px){
+  .produtos-grid{ grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+}
+
+/* ===== Imagem “mais destacada” no card ===== */
+.produtos-grid .card .img-wrap,
+.produtos-grid .card .produto-img-wrap{
+  height: 240px;              /* destaque */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.produtos-grid .card img{
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* container principal (menu + produtos) */
+.page-wrapper{
+  display: grid;
+  grid-template-columns: 240px 1fr; /* menu mais estreito = ganha coluna */
+  gap: 16px;
+  align-items: start;
+}
+
+/* menu lateral mais enxuto */
+/*#menuXDepartamentos{
+  width: 240px;
+}*/
+
+/* área dos produtos não pode ter width travando */
+.produtos-area{
+  min-width: 0;
+}
+
+/* imagem do card (mais destaque) */
+.produto-img{
+  height: 190px;
+  object-fit: contain;
+  display: block;
+}
+
+/* mobile: menu vira drawer (não ocupa coluna) */
+@media (max-width: 991px){
+  .page-wrapper{
+    grid-template-columns: 1fr;
+  }
+
+  /*#menuXDepartamentos{
+    width: auto;
+  }*/
+
+  .produto-img{
+    height: 170px;
+  }
+}
+
+/* grid do miolo: menu + produtos */
+.page-wrapper{
+  display: grid;
+  grid-template-columns: 240px 1fr; /* diminui menu pra caber mais coluna */
+  gap: 16px;
+  align-items: start;
+}
+
+/* garante que o conteúdo de produtos não "trava" e não esmaga colunas */
+.produtos-area{
+  min-width: 0;
+}
+
+/* menu lateral mais estreito (desktop) */
+/*#menuXDepartamentos{
+  width: 240px;
+}*/
+
+/* mobile/tablet: menu não ocupa coluna (vira drawer) */
+@media (max-width: 991px){
+  .page-wrapper{
+    grid-template-columns: 1fr;
+  }
+
+  /*#menuXDepartamentos{
+    width: auto;
+  }*/
+}
+
+.produto-img{
+  height: 190px;
+  object-fit: contain;
+  display: block;
+}
+
+</style>
+<style>
+  /* ------------- MENOS MARGEM NAS BORDAS (se tiver container com padding) ------------- */
+.page-shell,
+.container-fluid.page-shell{
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+/* ------------- MENU MAIS ESTREITO NO DESKTOP ------------- */
+@media (min-width: 992px){
+  /* largura fixa do menu (ajuste aqui) */
+  
+  /*#menuXDepartamentos.menu-lateral{
+    flex: 0 0 260px !important;
+    max-width: 260px !important;
+    width: 260px !important;
+  }*/
+
+  /* main ocupa o resto */
+  main.page-main{
+    flex: 1 1 auto !important;
+    max-width: calc(100% - 260px) !important;
+  }
+}
+
+/* opcional: menu com menos “respiro” interno */
+
+/*#menuXDepartamentos .card{
+  margin-bottom: 10px;
+}*/
+
+/* ------------- GRID AUTOMÁTICO PARA OS CARDS ------------- */
+#cardsRow.cards-row{
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px;
+  margin: 0 !important; /* mata margem negativa do .row */
+}
+
+/* mata o comportamento de colunas do Bootstrap dentro do grid */
+#cardsRow.cards-row > [class*="col-"]{
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  flex: none !important;
+}
+
+.container-fluid,
+.page-shell {
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+
+@media (min-width: 992px){
+  
+ /* #menuXDepartamentos.menu-lateral{
+    width: 240px !important;
+    max-width: 240px !important;
+    flex: 0 0 240px !important;
+  }*/
+
+  main.page-main{
+    max-width: calc(100% - 240px) !important;
+  }
+}
+
+#cardsRow.cards-row{
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.card-product{
+  border-radius: 10px;
+}
+
+.card-product .card-body{
+  padding: 10px 12px;
+}
+
+/* BODY vermelho (só pra ficar claro) */
+body{
+  background: #9b9999; /* ou o vermelho que você está usando */
+}
+
+/* PAGE-SHELL (verde) centralizado dentro do vermelho */
+.container-fluid.page-shell{
+  background: #0aa84f;          /* seu verde */
+  width: min(1400px, 96vw);     /* limita e deixa responsivo */
+  margin-left: auto !important;
+  margin-right: auto !important;
+
+  /* opcional: manter padding interno “normal” */
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+.container-fluid.page-shell{
+  width: min(1600px, 92vw);
+  margin: 16px auto !important;  /* centraliza e dá respiro em cima/baixo */
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+.container-fluid.page-shell{
+  background: #0aa84f;
+  width: 100%;                 /* NÃO encolhe por padrão */
+  max-width: 1800px;           /* grande o suficiente p/ 5+ colunas */
+  margin: 16px auto !important;/* centralizado */
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+/* só em telas menores eu deixo "respirar" (para aparecer o vermelho) */
+@media (max-width: 992px){
+  .container-fluid.page-shell{
+    width: 96vw;               /* aqui pode encolher */
+    max-width: none;
+  }
+}
+
+@media (min-width: 1400px){
+  #cardsRow.cards-row{
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 576px){
+  #cardsRow.cards-row{
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* ===== DESKTOP (normal, menu como coluna) ===== */
+@media (min-width: 992px){
+  
+ /* #menuXDepartamentos{
+    position: static !important;
+    transform: none !important;
+    height: auto !important;
+    width: auto !important;
+    max-width: none !important;
+  }*/
+
+  #menuOverlay{ display:none !important; }
+}
+
+/* ===== MOBILE (menu vira drawer e não ocupa espaço na página) ===== */
+@media (max-width: 991.98px){
+  /* o menu sai do fluxo (não “duplica”) */
+  /*#menuXDepartamentos{
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    height: 100vh !important;
+    width: min(88vw, 340px) !important;
+    max-width: 340px !important;
+    z-index: 1050 !important;
+    background: #fff !important;
+    transform: translateX(-105%) !important;
+    transition: transform .22s ease !important;
+  }*/
+
+  
+
+  /* overlay */
+  #menuOverlay{
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0,0,0,.35) !important;
+    z-index: 1040 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity .2s ease !important;
+    display: block !important;
+  }
+  
+  
+
+  /* main vira 100% (o menu não empurra nada) */
+  main.page-main{
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 991.98px){
+
+  /*#menuXDepartamentos{ transform: translateX(-105%); }
+  body.menu-open #menuXDepartamentos{ transform: translateX(0); }*/
+
+  #menuBackdrop{ opacity:0; pointer-events:none; }
+  body.menu-open #menuBackdrop{ opacity:1; pointer-events:auto; }
+}
+
+/* Header do drawer: título à esquerda e X pequeno à direita */
+.menu-drawer-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 10px 12px;
+}
+
+.menu-drawer-title{
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+
+/* overlay/backdrop */
+#menuBackdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+  z-index: 1040;
+}
+
+body.menu-open #menuBackdrop{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu-drawer-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+}
+
+.menu-drawer-title{
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-fechar-menu{
+  width: auto !important;
+  padding: 4px 8px !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  border: 0 !important;
+  background: transparent !important;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+/* o drawer precisa estar acima do backdrop */
+/*#menuXDepartamentos{
+  position: fixed;
+  z-index: 1050 !important;
+}*/
+
+/* backdrop abaixo do drawer */
+#menuBackdrop{
+  z-index: 1040 !important;
+}
+
+/* header e botão X acima de tudo dentro do drawer */
+.menu-drawer-head{
+  position: sticky;   /* pode ser sticky ou relative */
+  top: 0;
+  z-index: 1060;
+  background: #fff;
+}
+
+/* garante clique */
+/*#btnFecharMenu{
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1061;
+  padding: 4px 8px !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  border: 0 !important;
+  background: transparent !important;
+}*/
+
+#menuBackdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+  z-index: 1040;
+}
+body.menu-open #menuBackdrop{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (max-width: 991.98px){
+  /*#menuXDepartamentos{
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    width: min(88vw, 340px);
+    background:#fff;
+    z-index: 1050;
+    transform: translateX(-105%);
+    transition: transform .22s ease;
+    overflow-y: auto;
+  }*/
+
+  /*body.menu-open #menuXDepartamentos{
+    transform: translateX(0);
+  }*/
+}
+
+.menu-drawer-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+}
+.menu-drawer-title{
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#btnFecharMenu{
+  width:auto;
+  padding:4px 8px;
+  font-size:18px;
+  line-height:1;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+}
+
+</style>
+<style>
+  /* ======================= FIX FINAL: MENU DRAWER + BACKDROP ======================= */
+
+/* DESKTOP: #menu_Departamentos volta ao normal (nada de fixed/transform) */
+@media (min-width: 992px){
+  #menuDepartamentos{
+    position: static !important;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+    height: auto !important;
+    width: auto !important;
+    max-width: none !important;
+    z-index: auto !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+  #menuBackdrop{
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  body.menu-open{ overflow: auto !important; }
+}
+
+/* BACKDROP (sempre existe, mas só aparece quando menu-open) */
+#menuBackdrop{
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(0,0,0,.35) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity .2s ease !important;
+  z-index: 1040 !important;
+  display: block !important;
+}
+body.menu-open #menuBackdrop{
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* MOBILE: #menuDepartamentos vira drawer */
+@media (max-width: 991.98px){
+  #menuDepartamentos{
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: min(88vw, 340px) !important;
+    max-width: 340px !important;
+    background: #fff !important;
+
+    z-index: 1050 !important;
+    transform: translateX(-105%) !important;
+    transition: transform .22s ease !important;
+
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    box-shadow: 8px 0 22px rgba(0,0,0,.25) !important;
+  }
+
+  body.menu-open #menuDepartamentos{
+    transform: translateX(0) !important;
+  }
+
+  body.menu-open{ overflow: hidden !important; }
+}
+
+/* X menor e não “come” título */
+.menu-drawer-title{ min-width: 0 !important; }
+#btnFecharMenu{
+  width: auto !important;
+  padding: 4px 8px !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  border: 0 !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  flex: 0 0 auto !important;
+}
+
+/* ================= GRID DOS CARDS (ÚNICO) ================= */
+#cardsRow{
+  display: grid !important;
+  gap: 16px;
+  margin: 0 !important;      /* mata margem negativa de row */
+  padding: 0 !important;
+}
+
+/* Desktop grande: 5 colunas */
+@media (min-width: 1400px){
+  #cardsRow{ grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+}
+
+/* Desktop normal */
+@media (min-width: 992px) and (max-width: 1399.98px){
+  #cardsRow{ grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+}
+
+/* Tablet */
+@media (min-width: 576px) and (max-width: 991.98px){
+  #cardsRow{ grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+}
+
+/* Mobile: 2 colunas SEMPRE */
+@media (max-width: 575.98px){
+  #cardsRow{ grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px; }
+}
+
+/* o wrapper do item não pode ter “col-” */
+#cardsRow .card-item{
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* ===== DESKTOP: menu e main lado a lado (NUNCA empurra pra baixo) ===== */
+@media (min-width: 992px){
+  /* o .row do bootstrap não pode quebrar linha por causa de width fixo */
+  .page-shell > .row{
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+  }
+
+  /* menu volta ao normal (NADA de fixed/transform no desktop) */
+  #menuDepartamentos{
+    position: static !important;
+    transform: none !important;
+    height: auto !important;
+
+    /* largura controlada (não estoura 100%) */
+    flex: 0 0 300px !important;
+    max-width: 300px !important;
+    width: 300px !important;
+  }
+
+  /* main ocupa o resto */
+  main.page-main{
+    flex: 1 1 auto !important;
+    max-width: none !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  /* backdrop nunca aparece no desktop */
+  #menuBackdrop{ display:none !important; }
+  body.menu-open{ overflow:auto !important; }
+}
+
+/* ===== MOBILE: drawer de verdade ===== */
+@media (max-width: 991.98px){
+  #menuDepartamentos{
+    position: fixed !important;
+    top: 0; left: 0;
+    height: 100vh !important;
+    width: min(88vw, 340px) !important;
+    max-width: 340px !important;
+    background:#fff !important;
+    z-index: 1050 !important;
+
+    transform: translateX(-105%) !important;
+    transition: transform .22s ease !important;
+    overflow-y: auto !important;
+  }
+
+  body.menu-open #menuDepartamentos{
+    transform: translateX(0) !important;
+  }
+
+  #menuBackdrop{
+    display:block !important;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  body.menu-open #menuBackdrop{
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* ===== FIX: drawer do menu acima do header ===== */
+
+/* o header pode ficar sticky, mas abaixo do drawer */
+#headerLojaExclusiva{
+  position: sticky;
+  top: 0;
+  z-index: 1500 !important;
+}
+
+/* o menu (drawer) tem que ficar ACIMA do header quando aberto */
+#menuDepartamentos{
+  position: fixed !important;     /* no mobile ele é drawer */
+  z-index: 2000 !important;
+}
+
+/* o backdrop abaixo do menu, mas acima do resto */
+#menuBackdrop{
+  z-index: 1990 !important;
+}
+
+/* garante que o “cabeçalho” do drawer (título + X) esteja clicável */
+#menuDepartamentos .menu-drawer-head{
+  position: sticky;
+  top: 0;
+  z-index: 500 !important;
+  background: #fff;
+}
+
+</style>
+<style>
+  /* ===== DESKTOP: menu é coluna normal ===== */
+@media (min-width: 992px){
+  #menuDepartamentos{
+    position: static !important;
+    transform: none !important;
+    width: auto !important;
+    height: auto !important;
+    z-index: auto !important;
+  }
+
+  #menuBackdrop{
+    display: none !important;
+  }
+}
+
+#headerLojaExclusiva{
+  position: sticky;
+  top: 0;
+  z-index: 1500;
+}
+
+#headerLojaExclusiva{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+#menuDepartamentos .menu-drawer-title{
+  position: relative;
+  z-index: 1;
+}
+
+#menuDepartamentos{
+  position: relative;
+  z-index: 10;
+}
+
+</style>
 </head>
 <body>
 
-  {{!-- ===================== HEADER 100% ===================== --}}
-  <div class="container-fluid my-0" style="background:#0069a8;">
-        <div id="headerLojaExclusiva">
-            {{!-- Bem vindo à loja : --}}
-            <a href="/loja/{{produto.loja_id}}">{{produto.marcaloja}}</a>
-        </div>
-        {{!-- BUSCA DENTRO DA LOJA --}}
-        <div class="container my-1">
-            <div class="top-bar-loja" style="background:transparent;">
-                  <button type="button" id="btnMenuMobile" class="btn-menu-mobile" aria-label="Abrir menu">
-                    ☰
-                  </button>
-                  <div class="search-loja-wrapper">
-                      {{!-- <span class="search-loja-label">
-                      Buscar produtos nesta loja
-                      </span> --}}
+  <header id="headerLojaExclusiva" class="hdr"
+  style="background: {{#if lojista.corHeader}}{{lojista.corHeader}}{{else}}#0069a8{{/if}};">
 
-                      <div class="search-loja-inner">
-                          <span class="search-loja-icon">🔍</span>
+  <!-- LINHA 1: Logo + Título + Vazio -->
+  <div class="hdr-row hdr-row1" style="">
+      <div class="hdr-col left" style="">
+        {{#if lojista.logoUrl}}
+          <img src="{{lojista.logoUrl}}" class="hdr-logo" alt="Logo">
+        {{/if}}
+      </div>
 
-                          <input type="text"
-                                  id="buscaLoja"
-                                  class="search-loja-input"
-                                  placeholder="O que você procura?"
-                                  autocomplete="off">
-                      </div>
-                      <div id="buscaLojaSugestoes" class="busca-sugestoes"></div>
-                  </div>
-            </div>
+      <div class="hdr-col mid">
+        <div class="hdr-title" style="">
+          {{#if lojista.tituloPage}}
+            {{lojista.tituloPage}}
+          {{else}}
+            {{produto.marcaloja}}
+          {{/if}}
         </div>
+      </div>
+
+      <div class="hdr-col right" style=""><!-- vazio proporcional --></div>
   </div>
-  
-  {{!-- ===================== CONTAINER PRINCIPAL ===================== --}}
-  <div class="container-fluid my-3 page-shell" style="background: #ffffff;border-left: 2px #9a9797 solid;">
-     <div class="page-inner page-wrapper" style="background:#fff;">
+
+  <!-- LINHA 2: Hamburger + Busca + Vazio -->
+  <div class="hdr-row hdr-row2">
+    <div class="hdr-col left">
+      <button type="button" id="btnMenuMobile" class="hdr-burger" aria-label="Abrir menu">☰</button>
+    </div>
+
+    <div class="hdr-col mid">
+      <div class="hdr-searchWrap">
+        <span class="hdr-searchIcon">🔎</span>
+        <input type="text" id="buscaLoja" class="hdr-search"
+               placeholder="O que você procura?" autocomplete="off">
+        <div id="buscaLojaSugestoes" class="hdr-sugestoes"></div>
+      </div>
+    </div>
+
+    <div class="hdr-col right" style=""><!-- vazio proporcional --></div>
+  </div>
+
+</header>
+{{!-- ===================== CONTAINER PRINCIPAL ===================== --}}
+<div class="container-fluid my-3 page-shell" style="background: #0a0909;border-left: 2px #9a9797 solid;">
+     <div class="row g-2 gx-lg-2 align-items-start" style="background:#ffffff;padding:6px;">
       {{!-- ===================== MENU LATERAL (1 COLUNA) ===================== --}}
       {{!-- <div id="menuOverlay" class="menu-overlay"></div> --}}
-      <aside class="mb-3" id="menuLateral">
-          <button type="button" id="btnFecharMenu" class="btn-fechar-menu" aria-label="Fechar menu">✕</button>
+      <aside id="menuDepartamentos" class="col-12 col-lg-3 menu-lateral" >
+            <div class="menu-drawer-head">
+              <div class="menu-drawer-title">
+                {{#if lojista.tituloPage}}{{lojista.tituloPage}}{{else}}{{produto.marcaloja}}{{/if}}
+              </div>
 
+              <button type="button" id="btnFecharMenu" class="btn-fechar-menu" aria-label="Fechar menu">✕</button>
+            </div>
             {{!-- DEPARTAMENTOS --}}
             <div class="card mb-3">
                 <div class="card-header py-2">
@@ -904,17 +2064,17 @@
             </div>
             {{/if}}
       </aside>
-
       {{!-- ===================== CARDS (4 COLUNAS) ===================== --}}
-      <main >
-        <div class="row cards-row" id="cardsRow">
+      <main  class="col-12 col-lg-9 page-main">
+        <div class="cards-row" id="cardsRow">
+          {{!-- <div class="produtos-grid" id="cardRow"> --}}
           {{#if produtosLoja.length}}
             {{#each produtosLoja}}
-              <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-3">
+              <div class="card-item">
                 <article class="card h-100 card-product" style="background:#ffffff;">
                     {{!-- /produto/{{this._id}} --}}
                   <a href="" class="d-block">
-                    <img class="w-100 p-2"
+                    <img class="w-100 p-2 produto-img"
                          src="{{this.pageurls.[0]}}"
                          alt="{{this.descricao}}"
                          loading="lazy">
@@ -1149,10 +2309,10 @@
 (function(){
   const btnOpen  = document.getElementById('btnMenuMobile');
   const btnClose = document.getElementById('btnFecharMenu');
-  const backdrop = document.getElementById('menuBackdrop');
-  const aside    = document.querySelector('.page-wrapper aside');
+  const backdrop = document.getElementById('menuBackdrop'); // opcional
+  const aside    = document.getElementById('menuDepartamentos');
 
-  if(!btnOpen || !btnClose || !backdrop || !aside) return;
+  if(!btnOpen || !btnClose || !aside) return;
 
   function abrir(){
     document.body.classList.add('menu-open');
@@ -1163,14 +2323,12 @@
 
   btnOpen.addEventListener('click', abrir);
   btnClose.addEventListener('click', fechar);
-  backdrop.addEventListener('click', fechar);
+  if(backdrop) backdrop.addEventListener('click', fechar);
 
-  // ESC fecha
   document.addEventListener('keydown', (e)=>{
     if(e.key === 'Escape') fechar();
   });
 
-  // Clicar em item do menu fecha (mobile)
   aside.addEventListener('click', (e)=>{
     const a = e.target.closest('a');
     if(a && window.matchMedia('(max-width: 991px)').matches){
@@ -1178,12 +2336,28 @@
     }
   });
 
-  // se aumentar a tela, garante fechado
   window.addEventListener('resize', ()=>{
     if(window.innerWidth >= 992) fechar();
   });
 })();
-</script>
 
+
+</script>
+<script>
+const sug = document.getElementById("buscaLojaSugestoes");
+sug.classList.toggle("show", sug.innerHTML.trim().length > 0);
+</script>
+<script>
+
+</script>
+<script>
+/////////////////////////////////////////////////////////
+</script>
+<script>
+
+
+
+
+</script>
 </body>
 </html>

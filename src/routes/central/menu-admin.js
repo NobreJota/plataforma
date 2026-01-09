@@ -56,7 +56,7 @@ router.post('/login',async(req,res)=>{
                                             console.log('-----------------------------');
                                             console.log(' vai carregar pages/central/centralMenu.handlebars');
                                             console.log('-----------------------------');
-                                            return res.render('pages/central/centralmenu.handlebars', {
+                                            return res.render('pages/central/centralMenu.handlebars', {
                                                    layout: 'central/admin.handlebars',
                                                    usuarioNome: user.nome
                                             });

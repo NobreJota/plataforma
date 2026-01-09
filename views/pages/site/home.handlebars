@@ -1776,6 +1776,26 @@ home-side-card::after{
 
 .card:hover { background: #c21212; color:#fff; }
 
+/* TESTE 1: garantir que o botão recebe o mouse */
+.card-product .btn,
+.card-product a.btn{
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* TESTE 2: se tiver alguma camada em cima, ela para de roubar o hover */
+.card-product .ratio,
+.card-product .ratio *{
+  pointer-events: none;
+}
+
+/* hover VISÍVEL (pra não ter dúvida) */
+.card-product .btn:hover,
+.card-product a.btn:hover{
+  filter: brightness(.85) !important;
+  transform: translateY(-1px) !important;
+}
+
 </style>
 </head>
 <body>

@@ -222,7 +222,7 @@
                                   <th class="click-hide" data-column="7">Email</th>
                                   <th class="click-hide" data-column="8">Cep</th>
                                   <th class="click-hide" data-column="9">Logradouro</th>
-                                  {{!-- <th>Numero</th> --}}
+                                  <th class="click-hide" data-column="9">Numero</th>
                                   <th class="click-hide" data-column="10">Complemento</th>
                                   <th class="click-hide" data-column="11">Cidade</th>
                                   <th class="click-hide" data-column="12">Bairro</th>
@@ -247,7 +247,7 @@
                                   <td class="ajusteRow" contenteditable="true" data-field="email">{{this.email}}</td>
                                   <td class="ajusteRow" contenteditable="true" data-field="cep">{{this.cep}}</td>
                                   <td class="ajusteRow" >{{this.logradouro}}</td>
-                                  {{!-- <td class="ajusteRow">{{this.numero}}</td> --}}
+                                  <td class="ajusteRow">{{this.numero}}</td>
                                   <td class="ajusteRow" >{{this.complemento}}</td>
                                   <td class="ajusteRow">{{this.cidade}}</td>
                                   <td class="ajusteRow">{{this.bairro}}</td>
@@ -263,9 +263,13 @@
                                     <button id="show-all" class="save-line btn btn-sm btn-secondary flex-fill text-center" style="min-width: 80px;margin-left: 3px;background-color: #bb048e;border: 2px white solid;">
                                       <a href="" class="btn btn-sm flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: #bb048e;">All</a>
                                     </button>
-                                    <button data-id="{{this._id}}" href="" class="btn btn-sm flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: coral;">
-                                      <a class="btn btn-sm flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: coral;">Editar</a>
-                                                
+                                    <button data-id="{{this._id}}"  class="btn btn-sm flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: coral;">
+                                      {{!-- <a class="btn btn-sm flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: coral;">Editar</a> --}}
+                                      <a href="/lojista/editar/{{this._id}}"
+                                          class="btn btn-sm flex-fill text-center"
+                                          style="min-width:80px;margin-left:3px;border:2px white solid;background-color:coral;">
+                                          Editar
+                                        </a>
                                     </button>
                                     
                                     <button data-id="{{this._id}}"  class="btn btn-sm btn-warning flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: #bb0404;">

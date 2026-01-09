@@ -5,6 +5,27 @@ const Segmentos = require("../../models/departamento");
 const Lojista = require('../../models/lojista');
 const produtoController = require('../../controllers/produtoController');
 const Departamento = require('../../models/departamento');
+//////////////////////////////////////////////////////
+const path = require("path");
+const crypto = require("crypto");        // ✅ Node crypto (randomBytes)
+const bcrypt = require("bcryptjs");      // ✅ bcryptjs (genSalt/hash)
+
+const multer = require("multer");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+
+// mesmo padrão do seu upload_foto.js
+const uploadMem = multer({ storage: multer.memoryStorage() });
+
+const s3 = new S3Client({
+  region: "us-east-1",
+  endpoint: "https://nyc3.digitaloceanspaces.com",
+  forcePathStyle: false,
+  credentials: {
+    accessKeyId: process.env.SPACES_KEY,
+    secretAccessKey: process.env.SPACES_SECRET,
+  },
+});
+//////////////////////////////////////////////////////
 
 //Pega os dados dos lojista para colocar na tabela Lista
 router.get('/lojista', async (req, res) => {
@@ -154,11 +175,6 @@ router.post('/salvar', async (req, res) => {
   }
 });
 
-// router.get("/departamento-selecao", (req, res) => {
-//    console.log(' [ 15600 ]')
-//    res.render("pages/central/departamento-selecao",{ layout: "central/admin"}); // caminho completo até o handlebars);});
-// });
-
 router.get("/cadastro-cooperado", (req, res) => {
   console.log(5050)
   return res.render("pages/central/cadastro-cooperado.handlebars",{
@@ -211,7 +227,6 @@ router.post("/gravar", async (req, res) => {
     res.status(500).send("Erro ao salvar lojista.");
   }
 });
-
 
 // PERTENCE A CADASTRO DE LOJISTA
 router.get("/selectlista-depto", async (req, res) => {
@@ -330,6 +345,124 @@ router.get('/consulta-cnpj/:cnpj', async (req, res) => {
 
 // routes
 router.delete('/produto-delete/:id', produtoController.softDelete);
+
+// GET - abrir tela de edição
+router.get("/editar/:id", async (req, res) => {
+
+  console.log('BRAVO!')
+  try {
+    const lojista = await Lojista.findById(req.params.id)
+      .populate("departamentos", "nome") // se o schema de departamento tiver "nome"
+      .lean();
+
+    if (!lojista) return res.status(404).send("Lojista não encontrado.");
+
+    res.render("pages/central/editando-lojista", {layout:false, lojista });
+  } catch (err) {
+    console.error("GET /lojistas/editar/:id", err);
+    res.status(500).send("Erro ao abrir edição do lojista.");
+  }
+});
+
+router.post("/editar/:id", uploadMem.single("logoFile"), async (req, res) => {
+  console.log("[POST /lojista/editar/:id] params:", req.params);
+
+  try {
+    const { id } = req.params;
+
+    // defesa: se BUCKET_NAME não existir, já acusa com clareza
+    if (!process.env.BUCKET_NAME) {
+      console.error("ENV BUCKET_NAME está vazio/undefined. Verifique seu .env e dotenv.");
+      return res.status(500).send("Configuração do Space inválida (BUCKET_NAME).");
+    }
+
+    // ===== whitelist (mantive seu padrão) =====
+    const update = {
+      razao: req.body.razao,
+      assinante: req.body.assinante,
+      situacao: req.body.situacao,
+      template: req.body.template,
+      atividade: req.body.atividade,
+      nomeresponsavel: req.body.nomeresponsavel,
+      cpfresponsavel: req.body.cpfresponsavel,
+      cnpj: req.body.cnpj,
+      inscricao: req.body.inscricao,
+      site: req.body.site,
+      marca: req.body.marca,
+      celular: req.body.celular,
+      telefone: req.body.telefone,
+      email: req.body.email,
+
+      cep: req.body.cep,
+      logradouro: req.body.logradouro,
+      numero: req.body.numero,
+      complemento: req.body.complemento,
+      cidade: req.body.cidade,
+      bairro: req.body.bairro,
+      estado: req.body.estado,
+
+      corHeader: req.body.corHeader,
+      tituloPage: req.body.tituloPage,
+
+      // mantém a logo antiga se não vier nova
+      logoUrl: req.body.logoUrl || "",
+
+      ativo: req.body.ativo,
+    };
+
+    // ===== senha opcional (igual seu padrão) =====
+    console.log('');
+    console.log('____________________________________________');
+    console.log("[bcrypt check]", {
+      hasGenSalt: typeof bcrypt.genSalt,
+      hasHash: typeof bcrypt.hash
+    });
+    console.log('');
+    if (req.body.senha && String(req.body.senha).trim() !== "") {
+      const salt = await bcrypt.genSalt(10);
+      update.senha = await bcrypt.hash(String(req.body.senha), salt);
+    }
+
+    // ===== se veio arquivo, sobe no Space e grava logoUrl =====
+    if (req.file && req.file.buffer) {
+      if (!req.file.mimetype || !req.file.mimetype.startsWith("image/")) {
+        return res.status(400).send("Arquivo inválido. Envie uma imagem.");
+      }
+
+      const ext = (path.extname(req.file.originalname || "") || ".jpg").toLowerCase();
+      const safeExt = [".jpg", ".jpeg", ".png", ".webp"].includes(ext) ? ext : ".jpg";
+
+      // const hash = bcrypt.randomBytes(8).toString("hex");
+      const hash = crypto.randomBytes(8).toString("hex");
+      const key = `lojistas/${id}/logo/${Date.now()}_${hash}${safeExt}`;
+
+      await s3.send(
+        new PutObjectCommand({
+          Bucket: process.env.BUCKET_NAME,
+          Key: key,
+          Body: req.file.buffer,
+          ACL: "public-read",
+          ContentType: req.file.mimetype || "image/jpeg",
+        })
+      );
+
+      const urlPublica = `https://${process.env.BUCKET_NAME}.nyc3.digitaloceanspaces.com/${key}`;
+      console.log('') ;
+      console.log('',urlPublica) ;
+      console.log('') ;
+      update.logoUrl = urlPublica;
+    }
+
+    await Lojista.findByIdAndUpdate(id, update, { runValidators: true });
+
+    return res.redirect("/lojista/lista");
+  } catch (err) {
+    console.error("POST /lojista/editar/:id", err);
+    return res.status(500).send("Erro ao salvar lojista.");
+  }
+});
+
+
 
 
 

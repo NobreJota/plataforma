@@ -12,6 +12,7 @@ const ArquivoDoc=require('../../models/arquivoDoc');
 const Parceiro = require('../../models/parceiro');
 const HomeLayout = require('../../models/home_layout'); 
 
+
 // <<< função de normalizar descrição (igual ao schema)
 function normDesc(s = '') {
   return String(s || '')
@@ -812,9 +813,22 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
     // ===================================================
     const { departamentosMenu, setoresMenu, secoesMenu } =
       await montarMenus(baseFilter, depSelecionado, setorSelecionado);
+    // ===== busca do lojista para pegar corHeader / logoUrl / tituloPage =====
+let lojista = null;
+
+// o seu produto tem isso: produto.loja_id (pelo print da header antiga)
+if (produto && produto.loja_id) {
+  lojista = await Lojista.findById(produto.loja_id).lean();
+}
+
+// fallback: se por algum motivo não achou
+if (!lojista) {
+  lojista = { corHeader: "#0069a8", logoUrl: "", tituloPage: "" };
+}
 
     res.render('pages/site/home-page-exclusiva', {
       layout: false, // ou seu layout padrão
+      lojista,
       produto,
       produtosLoja,
       departamentosMenu,

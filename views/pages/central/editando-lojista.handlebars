@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>{{ 'Sua revista eletrônica' }}</title>
+          <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous"
+        />
+        <!-- Font Awesome (opcional; pode ficar antes ou depois do Bootstrap) -->
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          referrerpolicy="no-referrer"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Seu CSS por último para sobrescrever o Bootstrap -->
+        <link rel="stylesheet" href="/css/home.css">
+        {{!-- <link rel="stylesheet" href="/public/css/home-layout.css"> --}}
+  <style>
+.mainBody{
+     background: #fff;color:blueviolet;
+}
+
+.form-control{
+    background: #fff;
+    color:blue
+}
+  </style>      
+</head>
+<body>
+<div id="main" class="mainBody">
+<div class="container mt-3">
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h4 class="m-0">Editar Lojista</h4>
+    <a href="/lojista/lojista" class="btn btn-outline-secondary btn-sm">Voltar</a>
+  </div>
+
+  <form id="formEditLojista" action="/lojista/editar/{{lojista._id}}" method="POST" enctype="multipart/form-data" autocomplete="off">
+
+    <!-- NOVOS CAMPOS (Página Exclusiva) -->
+    <div class="card mb-3">
+      <div class="card-header"><strong>Página Exclusiva</strong></div>
+      <div class="card-body">
+
+       <div class="row g-2">
+    <div class="col-md-6">
+      <label class="form-label">Título da Page</label>
+      <input class="form-control" id="tituloPage" name="tituloPage" value="{{lojista.tituloPage}}">
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Cor do Header</label>
+      <div class="d-flex gap-2 align-items-center">
+        <input class="form-control form-control-color"
+               type="color"
+               id="corHeaderPicker"
+               value="{{#if lojista.corHeader}}{{lojista.corHeader}}{{else}}#0d6efd{{/if}}">
+        <input class="form-control"
+               type="text"
+               id="corHeaderText"
+               name="corHeader"
+               value="{{lojista.corHeader}}"
+               placeholder="#0d6efd">
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label">Logo (arquivo)</label>
+      <input class="form-control" type="file" id="logoFile" name="logoFile" accept="image/*">
+      <input type="hidden" name="logoUrl" value="{{lojista.logoUrl}}">
+    </div>
+  </div>
+
+        {{#if lojista.logoUrl}}
+          <div class="mt-3">
+            <div class="small text-muted mb-1">Prévia:</div>
+            <img src="{{lojista.logoUrl}}" alt="Logo" style="max-height:70px;max-width:240px;object-fit:contain;">
+          </div>
+        {{/if}}
+
+      </div>
+    </div>
+
+    <!-- DADOS PRINCIPAIS -->
+    <div class="card mb-3">
+      <div class="card-header"><strong>Dados principais</strong></div>
+      <div class="card-body">
+
+        <div class="row g-2">
+          <div class="col-md-6">
+            <label class="form-label">Razão</label>
+            <input class="form-control" name="razao" value="{{lojista.razao}}">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Marca</label>
+            <input class="form-control" name="marca" value="{{lojista.marca}}">
+          </div>
+        </div>
+
+        <div class="row g-2 mt-1">
+          <div class="col-md-3">
+            <label class="form-label">Assinante</label>
+            <input class="form-control" name="assinante" value="{{lojista.assinante}}">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Situação</label>
+            <input class="form-control" name="situacao" value="{{lojista.situacao}}">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Template</label>
+            <input class="form-control" name="template" value="{{lojista.template}}">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Atividade</label>
+            <input class="form-control" name="atividade" value="{{lojista.atividade}}">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RESPONSÁVEL + DOCS -->
+    <div class="card mb-3">
+      <div class="card-header"><strong>Responsável e documentos</strong></div>
+      <div class="card-body">
+
+        <div class="row g-2">
+          <div class="col-md-5">
+            <label class="form-label">Nome responsável</label>
+            <input class="form-control" name="nomeresponsavel" value="{{lojista.nomeresponsavel}}">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">CPF responsável</label>
+            <input class="form-control" name="cpfresponsavel" value="{{lojista.cpfresponsavel}}">
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">CNPJ</label>
+            <input class="form-control" name="cnpj" value="{{lojista.cnpj}}">
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">Inscrição</label>
+            <input class="form-control" name="inscricao" value="{{lojista.inscricao}}">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CONTATOS / ACESSO -->
+    <div class="card mb-3">
+      <div class="card-header"><strong>Contato e acesso</strong></div>
+      <div class="card-body">
+
+        <div class="row g-2">
+          <div class="col-md-4">
+            <label class="form-label">Email</label>
+            <input class="form-control" name="email" value="{{lojista.email}}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Telefone</label>
+            <input class="form-control" name="telefone" value="{{lojista.telefone}}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Celular</label>
+            <input class="form-control" name="celular" value="{{lojista.celular}}">
+          </div>
+        </div>
+
+        <div class="row g-2 mt-1">
+          <div class="col-md-8">
+            <label class="form-label">Site</label>
+            <input class="form-control" name="site" value="{{lojista.site}}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Ativo</label>
+            <input class="form-control" name="ativo" value="{{lojista.ativo}}" placeholder="S / N">
+          </div>
+        </div>
+
+        <div class="row g-2 mt-2">
+          <div class="col-md-6">
+            <label class="form-label">Nova senha (opcional)</label>
+            <input class="form-control" name="senha" type="password" placeholder="Deixe em branco para não alterar">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ENDEREÇO -->
+    <div class="card mb-3">
+      <div class="card-header"><strong>Endereço</strong></div>
+      <div class="card-body">
+
+        <div class="row g-2">
+          <div class="col-md-3">
+            <label class="form-label">CEP</label>
+            <input class="form-control" name="cep" value="{{lojista.cep}}">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Logradouro</label>
+            <input class="form-control" name="logradouro" value="{{lojista.logradouro}}">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Número</label>
+            <input class="form-control" name="numero" value="{{lojista.numero}}">
+          </div>
+        </div>
+
+        <div class="row g-2 mt-1">
+          <div class="col-md-4">
+            <label class="form-label">Complemento</label>
+            <input class="form-control" name="complemento" value="{{lojista.complemento}}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Cidade</label>
+            <input class="form-control" name="cidade" value="{{lojista.cidade}}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Bairro</label>
+            <input class="form-control" name="bairro" value="{{lojista.bairro}}">
+          </div>
+        </div>
+
+        <div class="row g-2 mt-1">
+          <div class="col-md-3">
+            <label class="form-label">Estado</label>
+            <input class="form-control" name="estado" value="{{lojista.estado}}">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DEPARTAMENTOS / FORNECEDORES (visualização) -->
+    <div class="card mb-3">
+      <div class="card-header"><strong>Departamentos e Fornecedores</strong></div>
+      <div class="card-body">
+
+        <div class="mb-2">
+          <div class="small text-muted">Departamentos vinculados:</div>
+          {{#if lojista.departamentos.length}}
+            <div class="d-flex flex-wrap gap-2 mt-1">
+              {{#each lojista.departamentos}}
+                <span class="badge bg-secondary">{{this.nome}}</span>
+              {{/each}}
+            </div>
+          {{else}}
+            <div class="text-muted">Nenhum.</div>
+          {{/if}}
+        </div>
+
+        <hr>
+
+        <div>
+          <div class="small text-muted">Fornecedores vinculados:</div>
+          {{#if lojista.fornecedores.length}}
+            <ul class="mb-0">
+              {{#each lojista.fornecedores}}
+                <li>{{this.fornecName}} <span class="text-muted">({{this.fornecId}})</span></li>
+              {{/each}}
+            </ul>
+          {{else}}
+            <div class="text-muted">Nenhum.</div>
+          {{/if}}
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AÇÕES -->
+    <div class="d-flex gap-2 mb-5">
+      <button class="btn btn-primary" type="submit">Salvar alterações</button>
+      <a class="btn btn-outline-secondary" href="/lojista/lista">Cancelar</a>
+    </div>
+
+  </form>
+</div>
+
+
+</div>
+<script>
+  const form   = document.getElementById("formEditLojista");
+  const titulo = document.getElementById("tituloPage");
+  const picker = document.getElementById("corHeaderPicker");
+  const text   = document.getElementById("corHeaderText");
+  const file   = document.getElementById("logoFile");
+
+  // 1) NUNCA submeter com Enter em inputs
+  form?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && e.target.tagName === "INPUT" && e.target.type !== "submit") {
+      e.preventDefault();
+    }
+  });
+
+  // 2) ENTER no título -> abrir paleta de cores
+  titulo?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (picker) {
+        picker.focus();
+        picker.click(); // abre paleta
+      }
+    }
+  });
+
+  // 3) sincroniza picker <-> texto
+  if (picker && text) {
+    if (!text.value) text.value = picker.value;
+
+    picker.addEventListener("input", () => {
+      text.value = picker.value;
+    });
+
+    text.addEventListener("input", () => {
+      const v = (text.value || "").trim();
+      if (/^#[0-9A-Fa-f]{6}$/.test(v)) picker.value = v;
+    });
+  }
+
+  // 4) Após selecionar a cor -> abrir seletor do arquivo (logo)
+  // OBS: em alguns browsers isso é permitido; em outros pode exigir clique do usuário.
+  picker?.addEventListener("change", () => {
+    if (file) {
+      setTimeout(() => file.click(), 150);
+    }
+  });
+</script>
+
+</body>
+</html>

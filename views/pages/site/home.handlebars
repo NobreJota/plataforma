@@ -1869,9 +1869,53 @@ home-side-card::after{
 }
 
 /*//////////////////////////////////////////////////////////*/
+
+
+
+
+/*/////////////////////////////////////////////////////////////*/
+/* âncora do badge */
+#buscaWrapper{ position: relative; }
+
+/* “Buscando em…” flutua, não empurra nada */
+.search-context{
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,.92);
+  padding: 2px 10px;
+  border-radius: 0px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0b6fa4;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 5;
+  box-shadow: 0 2px 8px rgba(0,0,0,.10);
+}
+
+/* mobile: não centraliza (pra não “bater” com logo/menu) e corta com ellipsis */
+@media (max-width: 576px){
+  .search-context{
+    top: -10px;
+    left: 8px;
+    transform: none;
+    font-size: 11px;
+    max-width: calc(100% - 16px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+
+header.topbar{
+   border-bottom: 1px solid rgba(255,255,255,.18);
+}
+
 </style>
 </head>
-<body data-auth="{{#if usuario}}1{{else}}0{{/if}}">
+<body data-auth="{{#if usuario}}1{{else}}0{{/if}}" data-searchctx="{{segmentoAtual}}">
 <header class="topbar" style="padding: 6px;">
     <div class="topbar-row container-wide" >
         <!-- LOGO -->
@@ -1879,28 +1923,24 @@ home-side-card::after{
           <span style="">Rota</span><span class="brand-accent">es</span><span class="brand-accent" style="font-size: xx-small;">.com.br</span>
         </a>
         {{!-- <!-- BUSCA + FILTROS --> /buxscar --}}
-        <form class="search-form" action="" method="get" autocomplete="off" style="background: #fff;">
-                <div class="position-relative top-search-wrap" id="buscaWrapper" style="background: #fff;">
-                  <input
-                    class="form-control top-search-input"
-                    name="q"
-                    id="inputBusca"
-                    placeholder="O que você procura?"
-                    autocomplete="off"
-                    style="background: #ffffff;"
-                  >
-                  <div id="loginNudge" class="login-nudge" hidden>
-                      <span class="login-nudge-text">
-                        Entre para ter histórico e buscas mais precisas
-                      </span>
+        <form class="search-form" action="" method="get" autocomplete="off" style="padding: 3px;">
+            <div class="position-relative top-search-wrap" id="buscaWrapper" style="background: #fff;">
+                      <input
+                        class="form-control top-search-input"
+                        name="q"
+                        id="inputBusca"
+                        placeholder="O que você procura?"
+                        autocomplete="off"
+                        style="background: #ffffff;"
+                      >
+                      <!-- ✅ AGORA NÃO QUEBRA LINHA -->
+                      <div id="searchContext" class="search-context" style="">
+                        Buscando em: <span id="searchContextValue">Compras Online</span>
+                      </div>
 
-                      {{!-- <a href="/login" class="login-nudge-btn">Entrar</a> --}}
-                      <a href="/login" class="login-nudge-btn" onclick="event.stopPropagation()">Entrar</a>
-
-                      <button type="button" class="login-nudge-close" aria-label="Fechar">X</button>
-                  </div>
-                  <input type="hidden" name="idProd" id="inputIdProduto">
-                  <div id="sugestoesLista" class="top-search-list"></div>
+                      <div id="loginNudge" class="login-nudge" hidden>...</div>
+                      <input type="hidden" name="idProd" id="inputIdProduto">
+                      <div id="sugestoesLista" class="top-search-list"></div>
               </div>
               <select id="selectCidade" class="form-select" name="municipio">
                 <option value="" {{#unless cidadeSelecionada}}selected{{/unless}}>Município</option>
@@ -2790,6 +2830,40 @@ window.addEventListener('load', ajustarSugestoesMobile);
     markClosedToday();
   });
 
+})();
+</script>
+<script>
+(function(){
+  const out = document.getElementById('searchContextValue');
+  if (!out) return;
+
+  const url = new URL(window.location.href);
+
+  // ✅ regra: se tiver dep no query -> usa nome do departamento no menu
+  const depId = url.searchParams.get('dep');
+
+  let label = 'Compras Online';
+
+  if (depId){
+    // tenta achar o link do menu que tenha esse depId
+    const a = document.querySelector(`[href*="dep=${CSS.escape(depId)}"]`);
+    const nome = a?.textContent?.trim();
+    if (nome) label = nome;
+  }
+
+  out.textContent = label;
+})();
+</script>
+<script>
+(function(){
+  const el = document.getElementById('searchContext');
+  if (!el) return;
+
+  const raw = (document.body.dataset.searchctx || '').trim();
+  const ctx = raw || 'Compras Online';
+
+  el.textContent = `Buscando em: ${ctx}`;
+  el.hidden = false;
 })();
 </script>
 

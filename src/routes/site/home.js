@@ -180,8 +180,8 @@ router.get('/', async (req, res) => {
           
           // 2️⃣ define departamento alvo
           const segmentoIn = (req.query.segmento || '').trim();
-          const isFirstLoad = !segmentoIn;
-          const alvoNome = segmentoIn || 'Construção Civil';
+          //const isFirstLoad = !segmentoIn;
+          const alvoNome = segmentoIn || 'Compras Online';
 
           // 2.1) HOME LAYOUT (hero / destaques / lateral) — NÃO altera seu fluxo
       const layoutHome = await HomeLayout.findOne({ nome: 'default' }).lean();
@@ -216,15 +216,15 @@ router.get('/', async (req, res) => {
           console.log('______________________________________________________________');
           if (!depAlvo?._id) {
             return res.render('pages/site/home.handlebars', {
-              layout:false,
-              departamentosAtivos: deps,
-              segmentoAtual: 'Departamento não encontrado',
-              atividades: [],
+              layout: false,
+              departamentos: deps,
+              segmentoAtual: 'Compras Online',
               homeHero,
               homeDestaques,
               homeLateral,
             });
           }
+
 
           if (depAlvo.ativado !== 1) return res.redirect('/');
     
@@ -256,7 +256,7 @@ router.get('/', async (req, res) => {
             return res.render('pages/site/home.handlebars', {
             layout: 'site/home.handlebars',      // ajuste se seu layout for outro
             departamentos: deps,     // p/ botões
-            segmentoAtual: depAlvo?.nomeDepartamento || 'E-commerce',
+            segmentoAtual: depAlvo?.nomeDepartamento || 'Compras Online',
 //            atividades,
             homeHero,
             homeDestaques,

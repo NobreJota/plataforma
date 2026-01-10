@@ -1772,7 +1772,6 @@ home-side-card::after{
 }
 /*///////////////////////////////////////////////////////////*/
 /* ===== Login Nudge (baixo impacto, mobile-first) ===== */
-
 #buscaWrapper {
   position: relative; /* ancora o aviso */
 }
@@ -1800,7 +1799,7 @@ home-side-card::after{
   flex: 1;
   font-size: 12px;
   line-height: 1.2;
-  color: #222;
+  color: #de2020;
 }
 
 .login-nudge-btn {
@@ -1820,6 +1819,7 @@ home-side-card::after{
   font-size: 14px;
   cursor: pointer;
   opacity: .7;
+  color: #ff0000;
 }
 .login-nudge-close:hover {
   opacity: 1;
@@ -1849,7 +1849,7 @@ home-side-card::after{
   flex: 1;
   font-size: 14px;
   line-height: 1.2;
-  color: #333;
+  color: #e90707;
 }
 
 #loginNudge .login-nudge-btn{
@@ -1894,7 +1894,9 @@ home-side-card::after{
                         Entre para ter histórico e buscas mais precisas
                       </span>
 
-                      <a href="/login" class="login-nudge-btn">Entrar</a>
+                      {{!-- <a href="/login" class="login-nudge-btn">Entrar</a> --}}
+                      <a href="/login" class="login-nudge-btn" onclick="event.stopPropagation()">Entrar</a>
+
                       <button type="button" class="login-nudge-close" aria-label="Fechar">X</button>
                   </div>
                   <input type="hidden" name="idProd" id="inputIdProduto">
@@ -2452,30 +2454,6 @@ home-side-card::after{
       
           let lastValue = input.value.trim();
 
-         //input.addEventListener("input", () => {
-         //   const val = input.value.trim();
-
-         //   if (val !== lastValue) {
-         //     lastValue = val;
-
-         //     if (hiddenId) hiddenId.value = ""; // limpa idProd selecionado
-
-              // 🔥 ESSENCIAL: se ficou menor que 3, libera nova busca futura
-         //     if (val.length < 3) {
-         //       lastQuery = ""; // <-- aqui está a sua correção
-
-                // se tinha fetch em andamento, aborta
-         //       if (abortCtrl) {
-         //         abortCtrl.abort();
-         //         abortCtrl = null;
-         //       }
-
-         //       hideLista();
-         //       return;
-         //     }
-         //   }
-          //});
-
           if (!input || !lista || !form) return;
 
           let lastQuery = '';
@@ -2732,104 +2710,10 @@ window.addEventListener('load', ajustarSugestoesMobile);
 </script>
 
 <script>
-  (function(){
-        const input = document.getElementById('inputBusca');
-        const nudge = document.getElementById('loginNudge');
-        if (!input || !nudge) return;
 
-        const closeBtn = nudge.querySelector('.login-nudge-close');
-
-        // ajuste aqui se sua variável de login tiver outro nome
-        const isLogged =
-          document.body.dataset.auth === '1';
-
-        const STORAGE_KEY = 'login_nudge_seen';
-
-        function alreadySeenToday(){
-          const v = localStorage.getItem(STORAGE_KEY);
-          const today = new Date().toDateString();
-          return v === today;
-        }
-
-        function markSeen(){
-          localStorage.setItem(STORAGE_KEY, new Date().toDateString());
-        }
-
-        function show(){
-          if (isLogged || alreadySeenToday()) return;
-          nudge.hidden = false;
-          markSeen();
-        }
-
-        function hide(){
-          nudge.hidden = true;
-        }
-
-        closeBtn.addEventListener('click', hide);
-
-        input.addEventListener('input', () => {
-          const q = input.value.trim();
-
-          if (q.length === 1) {
-            show();
-          }
-
-          if (q.length === 0) {
-            hide();
-          }
-
-          if (q.length > 1) {
-            setTimeout(hide, 1500);
-          }
-        });
-
-        document.addEventListener('click', (e) => {
-          if (!nudge.contains(e.target) && e.target !== input) {
-            hide();
-          }
-        });
-})();
 </script>
 <script>
-(function(){
-  const input = document.getElementById('inputBusca');
-  const nudge = document.getElementById('loginNudge');
-  if (!input || !nudge) return;
 
-  const closeBtn = nudge.querySelector('.login-nudge-close');
-
-  // ajuste se sua variável de auth for outra
-  const isLogged = document.body.dataset.auth === '1';
-
-  function show(){
-    if (isLogged) return;
-    nudge.hidden = false;
-  }
-
-  function hide(){
-    nudge.hidden = true;
-  }
-
-  closeBtn.addEventListener('click', hide);
-
-  input.addEventListener('input', () => {
-    const q = input.value.trim();
-
-    // aparece quando começa (1ª letra)
-    if (q.length === 1) show();
-
-    // some quando apaga tudo
-    if (q.length === 0) hide();
-
-    // se continuar digitando, pode sumir depois de um tempinho (opcional)
-    if (q.length > 1) setTimeout(hide, 1200);
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!nudge.contains(e.target) && e.target !== input) hide();
-  });
-
-})();
 </script>
 <script>
 (function(){
@@ -2857,39 +2741,56 @@ window.addEventListener('load', ajustarSugestoesMobile);
 })();
 </script>
 <script>
-  (function () {
+(function(){
   const input = document.getElementById("inputBusca");
   const nudge = document.getElementById("loginNudge");
-  const closeBtn = document.querySelector("#loginNudge .login-nudge-close");
+  const closeBtn = nudge?.querySelector(".login-nudge-close");
 
   if (!input || !nudge) return;
 
-  // se estiver logado, não mostra (você já colocou data-auth no body)
+  // se estiver logado, nunca mostra
   const isAuth = document.body.dataset.auth === "1";
   if (isAuth) return;
 
-  let shown = false;
+  const STORAGE_KEY = "loginNudgeClosedAt";
 
-  function showNudge() {
-    if (shown) return;
+  function todayKey(){
+    return new Date().toISOString().slice(0,10); // yyyy-mm-dd
+  }
+
+  function wasClosedToday(){
+    return localStorage.getItem(STORAGE_KEY) === todayKey();
+  }
+
+  function markClosedToday(){
+    localStorage.setItem(STORAGE_KEY, todayKey());
+  }
+
+  function showNudge(){
+    if (wasClosedToday()) return;
     nudge.hidden = false;
-    shown = true;
+  }
+
+  function hideNudge(){
+    nudge.hidden = true;
   }
 
   // MOSTRA quando digitar a primeira letra
   input.addEventListener("input", () => {
-    if (input.value.trim().length >= 1) showNudge();
+    const q = input.value.trim();
+    if (q.length >= 1) showNudge();
+    if (q.length === 0) hideNudge();
   });
 
-  // FECHA só no X
-  if (closeBtn) {
-    closeBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      nudge.hidden = true;
-    });
-  }
+  // FECHA só no X (e grava decisão do usuário)
+  closeBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    hideNudge();
+    markClosedToday();
+  });
 
-  // IMPORTANTE: não colocar mouseleave/blur/click fora
 })();
-
 </script>
+
+

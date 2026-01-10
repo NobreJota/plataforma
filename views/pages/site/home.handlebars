@@ -26,7 +26,7 @@
   /* ====== topo ====== */
     .topbar{
       position: sticky; top:0; z-index:1000;
-      background:#080808; color:#fff;
+      background:#0d6efd; color:#fff;
       box-shadow:0 2px 10px rgba(0,0,0,.15);
       font-size:clamp(14px,1.3vw,16px);
       margin-bottom: 4px; 
@@ -46,13 +46,13 @@
       margin: auto;
       padding-left: clamp(16px, 3vw, 36px);
       padding-right: clamp(16px, 3vw, 36px);
-      background: rgb(17, 17, 16);
+      background: #0d6efd;
       }
 
     /* logo */
     .brand{
       display:inline-flex; align-items:baseline; font-weight:800;
-      font-size:clamp(18px,2vw,24px); color:#2a82e6; text-decoration:none;
+      font-size:clamp(18px,2vw,24px); color:#ffffff; text-decoration:none;
     }
 
     .brand-accent{ color: #ff4dc4; }           /* cor do "es" */
@@ -961,7 +961,6 @@ home-side-card::after{
   padding: 10px;
 }
 
-
 .home-side-h{ font-weight: 900; font-size: 13px; }
 .home-side-p{ font-size: 12px; opacity: .85; margin-top: 2px; }
 .home-side-body{ pointer-events:none; }
@@ -1315,6 +1314,10 @@ home-side-card::after{
   align-items: center;
   justify-content: center;
   border-radius: 12px;
+}
+
+.btn-color{
+  background: #fffff;
 }
 
 #sugestoesLista .sug-item{
@@ -1914,14 +1917,14 @@ home-side-card::after{
         <!-- AÇÕES (MENU SANDUÍCHE) -->
           <nav class="actions">
             <button
-              class="btn btn-dark top-hamburger"
+              class="btn top-hamburger btn-color"
               type="button"
               data-bs-toggle="offcanvas"
               data-bs-target="#topMenu"
               aria-controls="topMenu"
               aria-label="Abrir menu"
             >
-              <i class="fa-solid fa-bars"></i>
+              <i class="fa-solid fa-bars" style="color:white"></i>
             </button>
           </nav>
 

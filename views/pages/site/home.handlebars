@@ -1768,9 +1768,107 @@ home-side-card::after{
   word-break: break-word;
 }
 /*///////////////////////////////////////////////////////////*/
+/* ===== Login Nudge (baixo impacto, mobile-first) ===== */
+
+#buscaWrapper {
+  position: relative; /* ancora o aviso */
+}
+
+.login-nudge {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 10px;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.18);
+
+  z-index: 2100;
+}
+
+.login-nudge-text {
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.2;
+  color: #222;
+}
+
+.login-nudge-btn {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #0b6fa4;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.login-nudge-close {
+  background: transparent;
+  border: 0;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: .7;
+}
+.login-nudge-close:hover {
+  opacity: 1;
+}
+/*//////////////////////////////////////////////////////*/
+/* o wrapper do input já é position-relative no seu HTML */
+#buscaWrapper { position: relative; }
+
+/* nudge */
+#loginNudge.login-nudge{
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.18);
+}
+
+/* evita “encolher” o texto e mantém alinhado */
+#loginNudge .login-nudge-text{
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #333;
+}
+
+#loginNudge .login-nudge-btn{
+  white-space: nowrap;
+  padding: 6px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+#loginNudge .login-nudge-close{
+  background: transparent;
+  border: 0;
+  font-size: 18px;
+  line-height: 1;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+/*//////////////////////////////////////////////////////////*/
 </style>
 </head>
-<body>
+<body data-auth="{{#if usuario}}1{{else}}0{{/if}}">
 <header class="topbar" style="padding: 6px;">
     <div class="topbar-row container-wide" >
         <!-- LOGO -->
@@ -1788,6 +1886,16 @@ home-side-card::after{
                     autocomplete="off"
                     style="background: #ffffff;"
                   >
+                <div id="loginNudge" class="login-nudge" hidden>
+  <span class="login-nudge-text">
+    Entre para ter histórico e buscas mais precisas
+  </span>
+
+  <a href="/login" class="login-nudge-btn">Entrar</a>
+  <button type="button" class="login-nudge-close" aria-label="Fechar">X</button>
+</div>
+
+
                   <input type="hidden" name="idProduto" id="inputIdProduto">
                   <div id="sugestoesLista" class="top-search-list"></div>
               </div>
@@ -2630,5 +2738,168 @@ document.querySelectorAll('.home-hero-slide img').forEach(img=>{
 
 window.addEventListener('resize', ajustarSugestoesMobile);
 window.addEventListener('load', ajustarSugestoesMobile);
+
+</script>
+
+<script>
+  (function(){
+        const input = document.getElementById('inputBusca');
+        const nudge = document.getElementById('loginNudge');
+        if (!input || !nudge) return;
+
+        const closeBtn = nudge.querySelector('.login-nudge-close');
+
+        // ajuste aqui se sua variável de login tiver outro nome
+        const isLogged =
+          document.body.dataset.auth === '1';
+
+        const STORAGE_KEY = 'login_nudge_seen';
+
+        function alreadySeenToday(){
+          const v = localStorage.getItem(STORAGE_KEY);
+          const today = new Date().toDateString();
+          return v === today;
+        }
+
+        function markSeen(){
+          localStorage.setItem(STORAGE_KEY, new Date().toDateString());
+        }
+
+        function show(){
+          if (isLogged || alreadySeenToday()) return;
+          nudge.hidden = false;
+          markSeen();
+        }
+
+        function hide(){
+          nudge.hidden = true;
+        }
+
+        closeBtn.addEventListener('click', hide);
+
+        input.addEventListener('input', () => {
+          const q = input.value.trim();
+
+          if (q.length === 1) {
+            show();
+          }
+
+          if (q.length === 0) {
+            hide();
+          }
+
+          if (q.length > 1) {
+            setTimeout(hide, 1500);
+          }
+        });
+
+        document.addEventListener('click', (e) => {
+          if (!nudge.contains(e.target) && e.target !== input) {
+            hide();
+          }
+        });
+})();
+</script>
+<script>
+(function(){
+  const input = document.getElementById('inputBusca');
+  const nudge = document.getElementById('loginNudge');
+  if (!input || !nudge) return;
+
+  const closeBtn = nudge.querySelector('.login-nudge-close');
+
+  // ajuste se sua variável de auth for outra
+  const isLogged = document.body.dataset.auth === '1';
+
+  function show(){
+    if (isLogged) return;
+    nudge.hidden = false;
+  }
+
+  function hide(){
+    nudge.hidden = true;
+  }
+
+  closeBtn.addEventListener('click', hide);
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+
+    // aparece quando começa (1ª letra)
+    if (q.length === 1) show();
+
+    // some quando apaga tudo
+    if (q.length === 0) hide();
+
+    // se continuar digitando, pode sumir depois de um tempinho (opcional)
+    if (q.length > 1) setTimeout(hide, 1200);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!nudge.contains(e.target) && e.target !== input) hide();
+  });
+
+})();
+</script>
+<script>
+(function(){
+  // remove q/idProduto da URL sem refresh
+  const url = new URL(window.location.href);
+  const hadQ = url.searchParams.has('q');
+  const hadId = url.searchParams.has('idProduto');
+
+  if (hadQ || hadId) {
+    url.searchParams.delete('q');
+    url.searchParams.delete('idProduto');
+    window.history.replaceState({}, '', url.pathname + (url.search ? url.search : '') + url.hash);
+  }
+})();
+</script>
+<script>
+(function(){
+  const input = document.getElementById('inputBusca');
+  const hiddenId = document.getElementById('inputIdProduto');
+
+  window.addEventListener('pageshow', function(){
+    if (input) input.value = '';
+    if (hiddenId) hiddenId.value = '';
+  });
+})();
+</script>
+<script>
+  (function () {
+  const input = document.getElementById("inputBusca");
+  const nudge = document.getElementById("loginNudge");
+  const closeBtn = document.querySelector("#loginNudge .login-nudge-close");
+
+  if (!input || !nudge) return;
+
+  // se estiver logado, não mostra (você já colocou data-auth no body)
+  const isAuth = document.body.dataset.auth === "1";
+  if (isAuth) return;
+
+  let shown = false;
+
+  function showNudge() {
+    if (shown) return;
+    nudge.hidden = false;
+    shown = true;
+  }
+
+  // MOSTRA quando digitar a primeira letra
+  input.addEventListener("input", () => {
+    if (input.value.trim().length >= 1) showNudge();
+  });
+
+  // FECHA só no X
+  if (closeBtn) {
+    closeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      nudge.hidden = true;
+    });
+  }
+
+  // IMPORTANTE: não colocar mouseleave/blur/click fora
+})();
 
 </script>

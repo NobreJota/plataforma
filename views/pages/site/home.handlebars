@@ -1473,63 +1473,7 @@ home-side-card::after{
 }
 
 </style>
-{{!-- <style>
-  /* ===== GRID PRODUTOS: 2 colunas no mobile, cresce automático ===== */
 
-#produtos{
-  display: grid !important;
-  gap: 14px;
-  align-items: stretch;
-
-  /* Base (desktop/tablet): cria o máximo de colunas que couber */
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-}
-
-/* Mobile: força 2 colunas */
-@media (max-width: 575.98px){
-  #produtos{
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 10px;
-  }
-}
-
-/* ===== IMAGEM DO PRODUTO: padrão visual, sem distorcer ===== */
-
-/* ajuste este seletor para o seu card real */
-#produtos .card img,
-#produtos .produto-card img,
-#produtos .produto-img{
-  width: 100%;
-  height: 160px;           /* altura padrão desktop */
-  object-fit: cover;     /* não corta, não distorce */
-  display: block;
-  padding: 10px;           /* “respiro” dentro do card */
-}
-
-/* Mobile: um pouco menor pra caber 2 colunas bonito */
-@media (max-width: 575.98px){
-  #produtos .card img,
-  #produtos .produto-card img,
-  #produtos .produto-img{
-    height: 120px;
-    padding: 8px;
-  }
-}
-
-.home-wrap{
-  padding-left: 18px;
-  padding-right: 18px;
-}
-
-@media (max-width: 575.98px){
-  .home-wrap{
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-}
-
-
-</style> --}}
 <style>
   /* ===== IMAGEM PRODUTO: tamanho consistente ===== */
 
@@ -1795,7 +1739,35 @@ home-side-card::after{
   filter: brightness(.85) !important;
   transform: translateY(-1px) !important;
 }
+/*/////////////////////// 10/01/2026 ////////////////////////////////////////*/
+/* ===== Departamentos (GRID) ===== */
+.setor-img{
+  height: 160px;                 /* ajuste fino (140~200) */
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;                 /* respiro para a imagem */
+  overflow: hidden;              /* evita vazar */
+}
 
+/* Mostra a imagem inteira */
+.setor-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;           /* ✅ NÃO CORTA */
+  display: block;
+}
+
+/* garante que o título não “some” */
+.setor-txt{
+  padding: 10px 12px 12px;
+  line-height: 1.15;
+  font-weight: 700;
+  white-space: normal;
+  word-break: break-word;
+}
+/*///////////////////////////////////////////////////////////*/
 </style>
 </head>
 <body>

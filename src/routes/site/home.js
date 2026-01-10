@@ -166,16 +166,17 @@ router.get('/', async (req, res) => {
      try {
           // 1️⃣ todos os departamentos ativados → botões do topo
           const deps = await Departamento
-            .find({ }, 'nomeDepartamento ativado imagemUrl')
+            .find({ ativado: 1 }, 'nomeDepartamento ativado imagemUrl')
             .sort({ nomeDepartamento: 1 })
             .lean();
 
+          console.log(' [ 173 Deps +> ',deps)  
           const departamentosView = deps.map(d => ({
             nome: d.nomeDepartamento,
             ativado: d.ativado === 1,
             href: d.ativado === 1 ? `/?segmento=${encodeURIComponent(d.nomeDepartamento)}` : null
           }));  
-          console.log('',departamentosView);  
+          console.log(' [ 178 ] ',departamentosView);  
           
           // 2️⃣ define departamento alvo
           const segmentoIn = (req.query.segmento || '').trim();
@@ -210,8 +211,9 @@ router.get('/', async (req, res) => {
           const depAlvo = await Departamento.findOne({
             nomeDepartamento: { $regex: new RegExp(`^${alvoNome}$`, 'i') }
           }, '_id nomeDepartamento ativado ').lean();
-
-          
+          console.log('');
+          console.log('deps',deps); 
+          console.log('______________________________________________________________');
           if (!depAlvo?._id) {
             return res.render('pages/site/home.handlebars', {
               layout:false,
@@ -1209,8 +1211,6 @@ router.get('/catalogo-teste', (req, res) => {
   res.render('pages/site/catalogo', { layout: false });
 });
 
-
-
 router.get("/home-layout", async (req, res) => {
   try {
     const doc = await HomeLayout.findOne({ nome: "default" }).lean();
@@ -1226,53 +1226,3 @@ router.get("/home-layout", async (req, res) => {
 
 module.exports = router;
 
-// router.get('/buscar-relacionados', async (req, res) => {
-//   try {
-//     const { idProd = '', lojaId = '' } = req.query;
-
-//     if (!idProd) {
-//       return res.redirect('/');
-//     }
-
-//     // produto base
-//     const base = await Ddocumento.findById(idProd).lean();
-//     if (!base) {
-//       return res.redirect('/');
-//     }
-
-//     const filtro = {
-//       ativo: true,
-//       qte: { $gt: 0 },
-//       pageurls: { $exists: true, $not: { $size: 0 } },
-//       descricao: base.descricao,        // mesma descrição base
-//       idSecao: base.idSecao || null     // mesma seção, se existir
-//     };
-
-//     if (lojaId) filtro.loja_id = lojaId;
-
-//     const produtos = await Ddocumento.find(filtro)
-//       .populate('fornecedor', 'razao')
-//       .lean();
-
-//     const departamentosAtivos = await Departamento
-//       .find({ ativado: true })
-//       .sort({ ordem: 1 })
-//       .lean();
-
-//     res.render('pages/site/home', {
-//       layout: 'site/home',
-//       q: '',
-//       cidades: ['Vitória','Vila Velha','Guarapari','Cariacica','Serra'],
-//       cidadeSelecionada: '',
-//       bairros: [],
-//       bairroSelecionado: '',
-//       produtos,
-//       departamentosAtivos,
-//       segmentoAtual: ''
-//     });
-
-//   } catch (e) {
-//     console.error('ERRO /buscar-relacionados', e);
-//     res.redirect('/');
-//   }
-// });

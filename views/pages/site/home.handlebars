@@ -1886,17 +1886,15 @@ home-side-card::after{
                     autocomplete="off"
                     style="background: #ffffff;"
                   >
-                <div id="loginNudge" class="login-nudge" hidden>
-  <span class="login-nudge-text">
-    Entre para ter histórico e buscas mais precisas
-  </span>
+                  <div id="loginNudge" class="login-nudge" hidden>
+                      <span class="login-nudge-text">
+                        Entre para ter histórico e buscas mais precisas
+                      </span>
 
-  <a href="/login" class="login-nudge-btn">Entrar</a>
-  <button type="button" class="login-nudge-close" aria-label="Fechar">X</button>
-</div>
-
-
-                  <input type="hidden" name="idProduto" id="inputIdProduto">
+                      <a href="/login" class="login-nudge-btn">Entrar</a>
+                      <button type="button" class="login-nudge-close" aria-label="Fechar">X</button>
+                  </div>
+                  <input type="hidden" name="idProd" id="inputIdProduto">
                   <div id="sugestoesLista" class="top-search-list"></div>
               </div>
               <select id="selectCidade" class="form-select" name="municipio">
@@ -1905,8 +1903,7 @@ home-side-card::after{
                   <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
                 {{/each}}
               </select>
-
-              <select id="selectBairro" class="form-select" name="loja">
+              <select id="selectBairro" class="form-select" name="bairro">
                 <option value="" {{#unless bairroSelecionado}}selected{{/unless}}>Bairros</option>
                 {{#each bairros}}
                   <option value="{{this}}" {{#if (eq ../bairroSelecionado this)}}selected{{/if}}>{{this}}</option>
@@ -2105,7 +2102,7 @@ home-side-card::after{
                           <div class="mt-1">
                             <a class="btn btn-sm btn-outline-primary"
                               href="/home-detalhe/{{_id}}">
-                              Detalhes / Conversar
+                              Detalhes
                             </a>
 
                             <a class="btn btn-sm btn-outline-secondary"
@@ -2410,7 +2407,7 @@ home-side-card::after{
                     <div class="mt-1" style="height:4vh;background:#fff;padding-top:0px">
                       <a class="btn btn-sm btn-outline-primary"
                         href="/home-detalhe/${p._id}">
-                        Detalhes / Conversar
+                        Detalhes 
                       </a>
 
                       <a class="btn btn-sm btn-outline-secondary" 
@@ -2452,29 +2449,29 @@ home-side-card::after{
       
           let lastValue = input.value.trim();
 
-         input.addEventListener("input", () => {
-            const val = input.value.trim();
+         //input.addEventListener("input", () => {
+         //   const val = input.value.trim();
 
-            if (val !== lastValue) {
-              lastValue = val;
+         //   if (val !== lastValue) {
+         //     lastValue = val;
 
-              if (hiddenId) hiddenId.value = ""; // limpa idProd selecionado
+         //     if (hiddenId) hiddenId.value = ""; // limpa idProd selecionado
 
               // 🔥 ESSENCIAL: se ficou menor que 3, libera nova busca futura
-              if (val.length < 3) {
-                lastQuery = ""; // <-- aqui está a sua correção
+         //     if (val.length < 3) {
+         //       lastQuery = ""; // <-- aqui está a sua correção
 
                 // se tinha fetch em andamento, aborta
-                if (abortCtrl) {
-                  abortCtrl.abort();
-                  abortCtrl = null;
-                }
+         //       if (abortCtrl) {
+         //         abortCtrl.abort();
+         //         abortCtrl = null;
+         //       }
 
-                hideLista();
-                return;
-              }
-            }
-          });
+         //       hideLista();
+         //       return;
+         //     }
+         //   }
+          //});
 
           if (!input || !lista || !form) return;
 
@@ -2567,6 +2564,7 @@ home-side-card::after{
 
           // ===== input: digitação =====
           on(input, 'input', async e => {
+                if (hiddenId) hiddenId.value = '';
                 const q = (e.target.value || '').trim();
 
                 if (q.length < 3) {
@@ -2600,53 +2598,42 @@ home-side-card::after{
               });
 
     // ===== clique na sugestão =====
+  
     on(lista, 'click', ev => {
-          console.log('clicou na lista')
-          const item = ev.target.closest('.sug-item');
-          if (!item) return;
+      const item = ev.target.closest('.sug-item');
+      if (!item) return;
 
-          const clicouProd = ev.target.closest('.js-sug-prod');
-          console.log('2217',clicouProd)
-          const clicouLoja = ev.target.closest('.js-sug-loja');
-          console.log('2218',clicouLoja);
+      const clicouProd = ev.target.closest('.js-sug-prod');
+      const clicouLoja = ev.target.closest('.js-sug-loja');
+      const clicouLoc  = ev.target.closest('.js-sug-loc');
 
-          const texto    = item.dataset.texto || '';
-          const cidade   = item.dataset.cidade || '';
-          const bairro   = item.dataset.bairro || '';
-          const lojaId   = item.dataset.lojaId || '';
-          const lojaNome = item.dataset.lojaNome || '';
-          const prodId    = item.dataset.prodId  || ''; 
+      const texto  = item.dataset.texto || '';
+      const cidade = item.dataset.cidade || (selCid?.value || '');
+      const bairro = item.dataset.bairro || (selBai?.value || '');
 
-          hideLista();
-          input.value = texto;
+      const prodId = item.dataset.prodId || '';
+      const lojaId = item.dataset.lojaId || '';
 
-          // 1) CLICOU NA PRIMEIRA COLUNA -> rota /buscar-por-texto
-          if (clicouProd) {
+      hideLista();
+      input.value = texto;
 
-            console.log('clicou no Produto!')
-            const url = `/buscar-por-texto` +
-              `?q=${encodeURIComponent(texto)}` +
-              `&municipio=${encodeURIComponent(cidade)}` +
-              `&bairro=${encodeURIComponent(selBai?.value || '')}`;
-            window.location.href = url;
-            return;
-          }
+      // 1) Clicou em "Loja" => busca por loja (use sua rota REAL)
+      if (clicouLoja) {
+        const url = `/buscar` +
+          `?IdProd=${encodeURIComponent(prodId)}` +
+          `&lojaId=${encodeURIComponent(lojaId)}` +
+          `&municipio=${encodeURIComponent(cidade)}` +
+          `&bairro=${encodeURIComponent(bairro)}`;
+        window.location.href = url;
+        return;
+      }
 
-          // 2) CLICOU NA SEGUNDA COLUNA (LOJA) -> rota /buscar-xpor-loja
-          if (clicouLoja) {
-            console.log('clicou na loja!')
-            const url = `/buscar-por-loja` +
-              `?IdProd=${encodeURIComponent(prodId)}` +
-              `&lojaId=${encodeURIComponent(lojaId)}` +
-              `&municipio=${encodeURIComponent(cidade)}` +
-              `&bairro=${encodeURIComponent(selBai?.value || '')}`;
-            window.location.href = url;
-            return;
-          }
-          // fallback: se clicar em algum lugar estranho dentro do item, usa busca normal
-            if (!clicouProd && !clicouLoja) {
-                  // form.submit();
-            }
+      // 2) Qualquer outro clique (produto, localização, vazio) => busca por texto
+      const url = `/buscar-por-texto` +
+        `?q=${encodeURIComponent(texto)}` +
+        `&municipio=${encodeURIComponent(cidade)}` +
+        `&bairro=${encodeURIComponent(bairro)}`;
+      window.location.href = url;
     });
 
           // clique fora: esconde a lista

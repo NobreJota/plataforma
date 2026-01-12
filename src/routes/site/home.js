@@ -170,13 +170,15 @@ router.get('/', async (req, res) => {
             .sort({ nomeDepartamento: 1 })
             .lean();
 
-          console.log(' [ 173 Deps +> ',deps)  
+          
           const departamentosView = deps.map(d => ({
-            nome: d.nomeDepartamento,
-            ativado: d.ativado === 1,
-            href: d.ativado === 1 ? `/?segmento=${encodeURIComponent(d.nomeDepartamento)}` : null
-          }));  
-          console.log(' [ 178 ] ',departamentosView);  
+            nomeDepartamento: d.nomeDepartamento,
+            imagemUrl: d.imagemUrl || '/img/placeholder.png',
+            ativado: d.ativado === 1 || d.ativado === true,
+            url: `/?segmento=${encodeURIComponent(d.nomeDepartamento)}`
+          }));
+          console.log('');
+          console.log('_________________________________________________');  
           
           // 2️⃣ define departamento alvo
           const segmentoIn = (req.query.segmento || '').trim();
@@ -184,23 +186,23 @@ router.get('/', async (req, res) => {
           const alvoNome = segmentoIn || 'Compras Online';
 
           // 2.1) HOME LAYOUT (hero / destaques / lateral) — NÃO altera seu fluxo
-      const layoutHome = await HomeLayout.findOne({ nome: 'default' }).lean();
+          const layoutHome = await HomeLayout.findOne({ nome: 'default' }).lean();
 
-      const agora = new Date();
-      const slots = layoutHome?.slots || [];
+          const agora = new Date();
+          const slots = layoutHome?.slots || [];
 
-      // filtro por ativo + janela de data + (opcional) segmento
-      const slotsAtivos = slots.filter(s => {
-        if (!s?.ativo) return false;
-        if (s.startAt && agora < new Date(s.startAt)) return false;
-        if (s.endAt && agora > new Date(s.endAt)) return false;
+          // filtro por ativo + janela de data + (opcional) segmento
+          const slotsAtivos = slots.filter(s => {
+            if (!s?.ativo) return false;
+            if (s.startAt && agora < new Date(s.startAt)) return false;
+            if (s.endAt && agora > new Date(s.endAt)) return false;
 
-        // se o slot tiver segmento preenchido, só aparece quando segmentoIn bater
-        if (s.segmento && s.segmento.trim() && s.segmento.trim().toLowerCase() !== (segmentoIn || '').trim().toLowerCase()) {
-          return false;
-        }
+            // se o slot tiver segmento preenchido, só aparece quando segmentoIn bater
+            if (s.segmento && s.segmento.trim() && s.segmento.trim().toLowerCase() !== (segmentoIn || '').trim().toLowerCase()) {
+              return false;
+            }
 
-        return true;
+            return true;
       });
 
       const homeHero      = slotsAtivos.filter(s => s.tipo === 'hero').sort((a,b)=> (a.ordem||0)-(b.ordem||0));
@@ -211,14 +213,16 @@ router.get('/', async (req, res) => {
           const depAlvo = await Departamento.findOne({
             nomeDepartamento: { $regex: new RegExp(`^${alvoNome}$`, 'i') }
           }, '_id nomeDepartamento ativado ').lean();
+          //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
           console.log('');
-          console.log('deps',deps); 
+          console.log('B1000',departamentosView[3]); 
           console.log('______________________________________________________________');
+          // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
           if (!depAlvo?._id) {
             return res.render('pages/site/home.handlebars', {
-              layout: false,
-              departamentos: deps,
-              segmentoAtual: 'Compras Online',
+              layout:false,
+              departamentos:departamentosView,
+              segmentoAtual: depAlvo?.nomeDepartamento || 'Compras Online',
               homeHero,
               homeDestaques,
               homeLateral,
@@ -255,9 +259,8 @@ router.get('/', async (req, res) => {
           // 5️⃣ renderiza
             return res.render('pages/site/home.handlebars', {
             layout: 'site/home.handlebars',      // ajuste se seu layout for outro
-            departamentos: deps,     // p/ botões
+            departamentos:departamentosView,// p/ botões
             segmentoAtual: depAlvo?.nomeDepartamento || 'Compras Online',
-//            atividades,
             homeHero,
             homeDestaques,
             homeLateral,
@@ -273,78 +276,77 @@ router.get('/', async (req, res) => {
 // CARREGA OS PRODUTOS DA SECAO
 router.get('/produtos', async (req, res) => {
   
-try {
-    const lojistaId = req.query.lojista;   // vem da URL ?lojista=...
-    const page      = Number(req.query.page || 1);
-    const limit     = Number(req.query.limit || 50);
+    try {
+        const lojistaId = req.query.lojista;   // vem da URL ?lojista=...
+        const page      = Number(req.query.page || 1);
+        const limit     = Number(req.query.limit || 50);
 
-    // -------- FILTROS VINDOS DA URL ----------
-    // ?ativo=S (Ativos) | N (Inativos) | T (Todos)
-    // ?fornecedor=ID_DO_FORNECEDOR ou "todos"
-    const filtroAtivo       = req.query.ativo       || 'S';     // default = Ativos
-    const filtroFornecedor  = req.query.fornecedor  || 'todos'; // default = Todos
+        // -------- FILTROS VINDOS DA URL ----------
+        // ?ativo=S (Ativos) | N (Inativos) | T (Todos)
+        // ?fornecedor=ID_DO_FORNECEDOR ou "todos"
+        const filtroAtivo       = req.query.ativo       || 'S';     // default = Ativos
+        const filtroFornecedor  = req.query.fornecedor  || 'todos'; // default = Todos
 
-    if (!lojistaId) {
-      return res.status(400).send('lojista é obrigatório');
-    }
+        if (!lojistaId) {
+          return res.status(400).send('lojista é obrigatório');
+        }
 
-    // ----------- MONTAR FILTRO DO MONGO -------------
-    const filtroMongo = { loja_id: lojistaId };
+        // ----------- MONTAR FILTRO DO MONGO -------------
+        const filtroMongo = { loja_id: lojistaId };
 
-    // Ativo / inativo
-    if (filtroAtivo === 'S') {
-      filtroMongo.ativo = true;
-    } else if (filtroAtivo === 'N') {
-      filtroMongo.ativo = false;
-    }
-    // se for 'T' (todos), não filtra por ativo
+        // Ativo / inativo
+        if (filtroAtivo === 'S') {
+          filtroMongo.ativo = true;
+        } else if (filtroAtivo === 'N') {
+          filtroMongo.ativo = false;
+        }
+        // se for 'T' (todos), não filtra por ativo
 
-    // Fornecedor selecionado
-    if (filtroFornecedor !== 'todos') {
-      filtroMongo.fornecedor = filtroFornecedor;
-    }
+        // Fornecedor selecionado
+        if (filtroFornecedor !== 'todos') {
+          filtroMongo.fornecedor = filtroFornecedor;
+        }
 
-    // --------- PEGAR PRODUTOS PAGINADOS -------------
-    const resultado = await ArquivoDoc.paginate(filtroMongo, {
-      page,
-      limit,
-      sort: { descricao: 1 }  // ou como você já faz aí
-    });
+        // --------- PEGAR PRODUTOS PAGINADOS -------------
+        const resultado = await ArquivoDoc.paginate(filtroMongo, {
+          page,
+          limit,
+          sort: { descricao: 1 }  // ou como você já faz aí
+        });
 
-    const produtos = resultado.docs;
+        const produtos = resultado.docs;
 
-    // --------- LISTA DE FORNECEDORES COM PRODUTOS -------------
-    // Só fornecedores que têm produto desta loja
-    const fornsIds = await ArquivoDoc.distinct('fornecedor', {
-      loja_id: lojistaId
-    });
+        // --------- LISTA DE FORNECEDORES COM PRODUTOS -------------
+        // Só fornecedores que têm produto desta loja
+        const fornsIds = await ArquivoDoc.distinct('fornecedor', {
+          loja_id: lojistaId
+        });
 
-    const fornecedores = await Fornecedor
-      .find({ _id: { $in: fornsIds } })
-      .sort({ fantasia: 1 });   // ou razao/nome, etc.
+        const fornecedores = await Fornecedor
+          .find({ _id: { $in: fornsIds } })
+          .sort({ fantasia: 1 });   // ou razao/nome, etc.
 
-    // --------- RENDERIZAR VIEW -------------
-    res.render('pages/site/home.handlebars', {
-      layout: 'site/home',                 // se você usa ou não layout
-      lojistaId,
-      produtos,
-      fornecedores,
+        // --------- RENDERIZAR VIEW -------------
+        res.render('pages/site/home.handlebars', {
+          layout: 'site/home',                 // se você usa ou não layout
+          lojistaId,
+          produtos,
+          fornecedores,
 
-      // filtros atuais (para marcar selected no HTML)
-      filtroAtivo,
-      filtroFornecedor,
+          // filtros atuais (para marcar selected no HTML)
+          filtroAtivo,
+          filtroFornecedor,
 
-      // paginação
-      page,
-      totalPages: resultado.totalPages,
-      totalDocs: resultado.totalDocs,
-    });
+          // paginação
+          page,
+          totalPages: resultado.totalPages,
+          totalDocs: resultado.totalDocs,
+        });
 
-  } catch (err) {
-    console.error('Erro ao listar produtos:', err);
-    return res.status(500).send('Erro ao listar produtos');
-  }
-
+      } catch (err) {
+        console.error('Erro ao listar produtos:', err);
+        return res.status(500).send('Erro ao listar produtos');
+      }
 });
 
 // BUSCA OS BAIRRO DO LOJISTA

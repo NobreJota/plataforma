@@ -101,7 +101,7 @@
       grid-template-columns: 2.6fr 1fr 1fr; /* BUSCA manda */
       gap: 12px;
       align-items: center;
-      background: #fff;
+      background:transparent;
     }
 
     /* form desce e ocupa 100% */
@@ -1913,6 +1913,102 @@ header.topbar{
    border-bottom: 1px solid rgba(255,255,255,.18);
 }
 
+/* padrão: desktop fica normal */
+.search-area {
+  display: block;
+}
+
+/* mobile: começa escondido */
+@media (max-width: 768px) {
+  .search-area {
+    display: none;
+  }
+  .search-area.is-open {
+    display: block;
+  }
+}
+
+/* botão simples */
+.btn-icon{
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+/* ====== layout do header (desktop e mobile) ====== */
+.topbar .topbar-row{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* logo fixa */
+.topbar .brand{
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* centro ocupa o resto e centraliza a busca */
+#searchArea.search-area{
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+}
+
+/* controla largura da busca no desktop */
+#searchArea .search-form{
+  width: 100%;
+  max-width: 900px;   /* ajuste se quiser */
+}
+
+/* botão lupa: escondido no desktop */
+#btnToggleSearch{
+  flex: 0 0 auto;
+  display: none;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+/* ====== MOBILE ====== */
+@media (max-width: 768px){
+  /* mostra a lupa */
+  #btnToggleSearch{ display: inline-flex; align-items:center; justify-content:center; }
+
+  /* esconde a busca por padrão */
+  #searchArea{ display: none; }
+
+  /* quando abrir, vira dropdown abaixo do header */
+  #searchArea.is-open{
+    display: block;
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: calc(100% + 6px);
+    background: #0d6efd;  /* mesmo azul do header */
+    padding: 8px;
+    z-index: 2000;
+    border-radius: 10px;
+    box-shadow: 0 10px 22px rgba(0,0,0,.25);
+  }
+
+  /* importante: header vira referência pro dropdown */
+  .topbar{ position: relative; }
+
+  /* deixa o form 100% no dropdown */
+  #searchArea.is-open .search-form{
+    max-width: 100%;
+  }
+}
+
 </style>
 </head>
 <body data-auth="{{#if usuario}}1{{else}}0{{/if}}" data-searchctx="{{segmentoAtual}}">
@@ -1923,38 +2019,46 @@ header.topbar{
           <span style="">Rota</span><span class="brand-accent">es</span><span class="brand-accent" style="font-size: xx-small;">.com.br</span>
         </a>
         {{!-- <!-- BUSCA + FILTROS --> /buxscar --}}
-        <form class="search-form" action="" method="get" autocomplete="off" style="padding: 3px;">
-            <div class="position-relative top-search-wrap" id="buscaWrapper" style="background: #fff;">
-                      <input
-                        class="form-control top-search-input"
-                        name="q"
-                        id="inputBusca"
-                        placeholder="O que você procura?"
-                        autocomplete="off"
-                        style="background: #ffffff;"
-                      >
-                      <!-- ✅ AGORA NÃO QUEBRA LINHA -->
-                      <div id="searchContext" class="search-context" style="">
-                        Buscando em: <span id="searchContextValue">Compras Online</span>
-                      </div>
+        <div id="searchArea" class="search-area">
+          
+              <form class="search-form" action="" method="get" autocomplete="off" style="padding: 3px;">
+                  <div class="position-relative top-search-wrap" id="buscaWrapper" style="background:transparent;">
+                            <input
+                              class="form-control top-search-input"
+                              name="q"
+                              id="inputBusca"
+                              placeholder="O que você procura?"
+                              autocomplete="off"
+                              style="background: #ffffff;"
+                            >
+                            <!-- ✅ AGORA NÃO QUEBRA LINHA -->
+                            <div id="searchContext" class="search-context" style="">
+                              Buscando em: <span id="searchContextValue">{{segmentoAtual}}</span>
+                            </div>
 
-                      <div id="loginNudge" class="login-nudge" hidden>...</div>
-                      <input type="hidden" name="idProd" id="inputIdProduto">
-                      <div id="sugestoesLista" class="top-search-list"></div>
-              </div>
-              <select id="selectCidade" class="form-select" name="municipio">
-                <option value="" {{#unless cidadeSelecionada}}selected{{/unless}}>Município</option>
-                {{#each cidades}}
-                  <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
-                {{/each}}
-              </select>
-              <select id="selectBairro" class="form-select" name="bairro">
-                <option value="" {{#unless bairroSelecionado}}selected{{/unless}}>Bairros</option>
-                {{#each bairros}}
-                  <option value="{{this}}" {{#if (eq ../bairroSelecionado this)}}selected{{/if}}>{{this}}</option>
-                {{/each}}
-              </select> 
-        </form>
+                            <div id="loginNudge" class="login-nudge" hidden>...</div>
+                            <input type="hidden" name="idProd" id="inputIdProduto">
+                            <div id="sugestoesLista" class="top-search-list"></div>
+                    </div>
+                    <select id="selectCidade" class="form-select" name="municipio">
+                      <option value="" {{#unless cidadeSelecionada}}selected{{/unless}}>Município</option>
+                      {{#each cidades}}
+                        <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
+                      {{/each}}
+                    </select>
+                    <select id="selectBairro" class="form-select" name="bairro">
+                      <option value="" {{#unless bairroSelecionado}}selected{{/unless}}>Bairros</option>
+                      {{#each bairros}}
+                        <option value="{{this}}" {{#if (eq ../bairroSelecionado this)}}selected{{/if}}>{{this}}</option>
+                      {{/each}}
+                    </select> 
+              </form>
+        </div>    
+         <button type="button" id="btnToggleSearch" class="btn-icon" aria-label="Buscar" aria-expanded="false">      🔍   </button>  
+        {{!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --}}
+        
+        {{!-- </button> --}}
+        {{!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --}}
         <!-- AÇÕES -->
         <!-- AÇÕES (MENU SANDUÍCHE) -->
           <nav class="actions">
@@ -2039,19 +2143,28 @@ header.topbar{
 
 </div>
 <h2 class="sec-title">Departamentos</h2>
-
-<div id="departamentos" class="setores-grid">
+ <div id="departamentos" class="setores-grid">
   {{#each departamentos}}
-    <a class="setor-card" href="{{href}}">
-      <div class="setor-img">
-        <img src="{{imagemUrl}}" alt="{{titulo}}">
+    {{#if ativado}}
+      <a class="setor-card" href="{{url}}">
+        <div class="setor-img">
+          <img src="{{imagemUrl}}" alt="{{nomeDepartamento}}">
+        </div>
+        <div class="setor-txt">{{nomeDepartamento}}</div>
+      </a>
+    {{else}}
+      <div class="setor-card setor-card-disabled" title="Em breve">
+        <div class="setor-img">
+          <img src="{{imagemUrl}}" alt="{{titulo}}">
+        </div>
+        <div class="setor-txt">{{nomeDepartamento}}</div>
       </div>
-      <div class="setor-txt">{{titulo}}</div>
-    </a>
+    {{/if}}
   {{/each}}
 </div>
+
 <div class="dept-list">
-  {{#each departamentosView}}
+  {{#each departamentos}}
     {{#if ativado}}
       <a class="dept-item" href="{{href}}">{{nome}}</a>
     {{else}}
@@ -2060,7 +2173,9 @@ header.topbar{
   {{/each}}
 </div>
 
-<label id="vpLabel" aria-live="polite"></label>
+
+
+{{!-- <label id="vpLabel" aria-live="polite"></label> --}}
 
 {{!-- Só mostra departamentos / setores quando NÃO está em modo busca (sem q) --}}
 {{#unless q}}
@@ -2866,5 +2981,88 @@ window.addEventListener('load', ajustarSugestoesMobile);
   el.hidden = false;
 })();
 </script>
+{{!-- <script>
+  (function () {
+    const btn = document.getElementById('btnToggleSearch');
+    const area = document.getElementById('searchArea');
+    if (!btn || !area) return;
 
+    btn.addEventListener('click', () => {
+      const open = area.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+
+      // opcional: focar o input quando abrir
+      if (open) {
+        const input = area.querySelector('input, select, textarea');
+        if (input) input.focus();
+      }
+    });
+  })();
+</script> --}}
+{{!-- <script>
+  (function () {
+    const btn  = document.getElementById('btnToggleSearch');
+    const area = document.getElementById('searchArea');
+    if (!btn || !area) return;
+
+    function isMobile() {
+      return window.matchMedia('(max-width: 768px)').matches;
+    }
+
+    function closeSearch() {
+      area.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation(); // não deixa o click “subir” e fechar na hora
+      const open = area.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+
+      if (open) {
+        const input = area.querySelector('#inputBusca, input, select, textarea');
+        if (input) input.focus();
+      }
+    });
+
+    // 👉 clique fora fecha
+    document.addEventListener('click', (e) => {
+      if (!isMobile()) return;
+      if (!area.classList.contains('is-open')) return;
+
+      const clicouDentro = area.contains(e.target) || btn.contains(e.target);
+      if (!clicouDentro) closeSearch();
+    });
+
+    // 👉 tecla ESC fecha (desktop/mobile)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+  })();
+</script> --}}
+
+<script>
+  (function(){
+    const btn = document.getElementById('btnToggleSearch');
+    const area = document.getElementById('searchArea');
+    const input = document.getElementById('inputBusca'); // se existir
+
+    if(!btn || !area) return;
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const open = area.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if(open && input) setTimeout(() => input.focus(), 50);
+    });
+
+    // opcional: clicar fora fecha (mobile)
+    document.addEventListener('click', (e) => {
+      if(!area.classList.contains('is-open')) return;
+      if(area.contains(e.target) || btn.contains(e.target)) return;
+      area.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+  })();
+</script>
 

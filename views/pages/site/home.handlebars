@@ -2082,7 +2082,7 @@ header.topbar{
 
   /* LUPA (esquerda) */
   #btnToggleSearch{
-    grid-column: 1;
+    /*grid-column: 1;*/
     justify-self: start;
     margin-left: 6px;   /* <-- puxa mais pra esquerda (ajuste 0~12px) */
   }
@@ -2115,6 +2115,13 @@ header.topbar{
     margin-right: 4px; /* antes 6px */
   }
 }
+@media (max-width: 768px){
+  /* inverter: hambúrguer vai pra esquerda e lupa pra direita */
+  .topbar nav.actions { order: 1; }
+  .topbar .brand      { order: 2; margin: 0 auto; }
+  #btnToggleSearch    { order: 3; margin-left: 0; margin-right: 6px; }
+}
+
 
 </style>
 </head>
@@ -2162,12 +2169,7 @@ header.topbar{
                     </select> 
               </form>
         </div>    
-         
-        {{!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --}}
-        
-        {{!-- </button> --}}
         {{!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --}}
-        <!-- AÇÕES -->
         <!-- AÇÕES (MENU SANDUÍCHE) -->
           <nav class="actions">
             <button
@@ -2181,7 +2183,6 @@ header.topbar{
               <i class="fa-solid fa-bars" style="color:white"></i>
             </button>
           </nav>
-
           <!-- OFFCANVAS MENU -->
           <div class="offcanvas offcanvas-end" tabindex="-1" id="topMenu" aria-labelledby="topMenuLabel">
             <div class="offcanvas-header">

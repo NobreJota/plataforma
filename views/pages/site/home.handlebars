@@ -2010,11 +2010,119 @@ header.topbar{
 }
 
 </style>
+<style>
+  @media (max-width: 768px){
+
+  /* a linha do header precisa ser 1 linha só */
+  .topbar .topbar-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:nowrap;
+  }
+
+  /* logo continua à esquerda */
+  .topbar .brand{
+    flex: 0 0 auto;
+  }
+
+  /* no mobile, a área da busca NÃO pode ocupar espaço na linha */
+  #searchArea{
+    display:none;            /* fechado */
+    flex: 0 0 auto !important;
+  }
+
+  /* lupa aparece */
+  #btnToggleSearch{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    margin-left:auto;        /* empurra pra direita */
+  }
+
+  /* quando abrir: dropdown abaixo do header */
+  #searchArea.is-open{
+    display:block;
+    position:absolute;
+    left:8px;
+    right:8px;
+    top:calc(100% + 6px);
+    background:#0d6efd;
+    padding:10px;
+    z-index:2000;
+    border-radius:10px;
+    box-shadow:0 10px 22px rgba(0,0,0,.25);
+  }
+
+  #searchArea.is-open .search-form{
+    width:100%;
+    max-width:none;
+  }
+}
+
+/*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
+/* Desktop: mostra sempre */
+#searchArea { display: block; }
+
+
+
+@media (max-width: 768px) {
+  #searchArea { display: none !important; }
+  #searchArea.is-open { display: block !important; }
+}
+</style>
+<style>
+  @media (max-width: 768px) {
+  .topbar-row.container-wide{
+    display: grid !important;
+    grid-template-columns: 44px 1fr 44px; /* lupa | logo | hamburguer */
+    align-items: center;
+  }
+
+  /* LUPA (esquerda) */
+  #btnToggleSearch{
+    grid-column: 1;
+    justify-self: start;
+    margin-left: 6px;   /* <-- puxa mais pra esquerda (ajuste 0~12px) */
+  }
+
+  /* LOGO (centro) */
+  .topbar-row .brand{
+    grid-column: 2;
+    justify-self: center;
+    margin: 0 !important;
+  }
+
+  /* HAMBURGUER (direita) — ajuste o seletor se o seu botão for outro */
+  .topbar-row .navbar-toggler,
+  .topbar-row .btn-menu,
+  .topbar-row #btnMenu,
+  .topbar-row [data-bs-toggle="offcanvas"]{
+    grid-column: 3;
+    justify-self: end;
+    margin-right: 6px;
+  }
+}
+@media (max-width: 768px) {
+  #btnToggleSearch {
+    margin-left: 4px; /* antes 6px */
+  }
+
+  .topbar-row .navbar-toggler,
+  .topbar-row #btnMenu,
+  .topbar-row [data-bs-toggle="offcanvas"]{
+    margin-right: 4px; /* antes 6px */
+  }
+}
+
+</style>
 </head>
 <body data-auth="{{#if usuario}}1{{else}}0{{/if}}" data-searchctx="{{segmentoAtual}}">
 <header class="topbar" style="padding: 6px;">
     <div class="topbar-row container-wide" >
         <!-- LOGO -->
+        <button type="button" id="btnToggleSearch" class="btn-icon" aria-label="Buscar" aria-expanded="false">      🔍   </button>  
         <a class="brand" href="/">
           <span style="">Rota</span><span class="brand-accent">es</span><span class="brand-accent" style="font-size: xx-small;">.com.br</span>
         </a>
@@ -2054,7 +2162,7 @@ header.topbar{
                     </select> 
               </form>
         </div>    
-         <button type="button" id="btnToggleSearch" class="btn-icon" aria-label="Buscar" aria-expanded="false">      🔍   </button>  
+         
         {{!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --}}
         
         {{!-- </button> --}}
@@ -2981,88 +3089,28 @@ window.addEventListener('load', ajustarSugestoesMobile);
   el.hidden = false;
 })();
 </script>
-{{!-- <script>
-  (function () {
-    const btn = document.getElementById('btnToggleSearch');
-    const area = document.getElementById('searchArea');
-    if (!btn || !area) return;
-
-    btn.addEventListener('click', () => {
-      const open = area.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-
-      // opcional: focar o input quando abrir
-      if (open) {
-        const input = area.querySelector('input, select, textarea');
-        if (input) input.focus();
-      }
-    });
-  })();
-</script> --}}
-{{!-- <script>
-  (function () {
-    const btn  = document.getElementById('btnToggleSearch');
-    const area = document.getElementById('searchArea');
-    if (!btn || !area) return;
-
-    function isMobile() {
-      return window.matchMedia('(max-width: 768px)').matches;
-    }
-
-    function closeSearch() {
-      area.classList.remove('is-open');
-      btn.setAttribute('aria-expanded', 'false');
-    }
-
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation(); // não deixa o click “subir” e fechar na hora
-      const open = area.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-
-      if (open) {
-        const input = area.querySelector('#inputBusca, input, select, textarea');
-        if (input) input.focus();
-      }
-    });
-
-    // 👉 clique fora fecha
-    document.addEventListener('click', (e) => {
-      if (!isMobile()) return;
-      if (!area.classList.contains('is-open')) return;
-
-      const clicouDentro = area.contains(e.target) || btn.contains(e.target);
-      if (!clicouDentro) closeSearch();
-    });
-
-    // 👉 tecla ESC fecha (desktop/mobile)
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeSearch();
-    });
-  })();
-</script> --}}
-
 <script>
-  (function(){
-    const btn = document.getElementById('btnToggleSearch');
-    const area = document.getElementById('searchArea');
-    const input = document.getElementById('inputBusca'); // se existir
+document.addEventListener('DOMContentLoaded', function () {
+  const btn  = document.getElementById('btnToggleSearch');
+  const area = document.getElementById('searchArea');
+  const input = document.getElementById('inputBusca');
 
-    if(!btn || !area) return;
+  if (!btn || !area) return;
 
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const open = area.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if(open && input) setTimeout(() => input.focus(), 50);
-    });
+  // no mobile: garante fechado ao carregar
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    area.classList.remove('is-open');
+    btn.setAttribute('aria-expanded', 'false');
+  }
 
-    // opcional: clicar fora fecha (mobile)
-    document.addEventListener('click', (e) => {
-      if(!area.classList.contains('is-open')) return;
-      if(area.contains(e.target) || btn.contains(e.target)) return;
-      area.classList.remove('is-open');
-      btn.setAttribute('aria-expanded', 'false');
-    });
-  })();
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
+    const open = area.classList.toggle('is-open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open && input) setTimeout(() => input.focus(), 50);
+  });
+});
 </script>
+
+
 

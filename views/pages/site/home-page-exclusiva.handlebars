@@ -800,6 +800,7 @@
   overflow: hidden;
   transition: transform .12s ease, box-shadow .12s ease;
 }
+
 @media (hover:hover){
   .card-product:hover{
     transform: translateY(-2px);
@@ -2082,56 +2083,47 @@ body.menu-open #menuBackdrop{
 
 /* PREÇO: destaque sem exagero */
 .pih-price{
-  font-size: 1.02rem;
-  font-weight: 600;   /* levemente destacado */
+  font-size: 0.8rem;
+  font-weight: 400;   /* levemente destacado */
   color: #111;
+}
+
+.menu-plataforma{ display:block; padding:10px 8px; }
+.menu-plataforma-logo{ max-width: 190px; height:auto; display:block; }
+
+.menu-home-loja{
+  display:block;
+  margin: 2px 8px;
+  padding: 8px 10px;
+  /*border: 1px solid #d3d1d1;*/
+  border-radius: 8px;
+  text-decoration:none;
+  font-weight:600;
+  width: 90%;
+}
+
+/* logo */
+.brand{
+      display:inline-flex;
+      align-items:baseline;
+      font-weight:800;
+      font-size:clamp(18px,2vw,24px);
+      color:#0d6efd; text-decoration:none;
+}
+
+.brand-accent{ color: #ff4dc4; }           /* cor do "es" */
+
+/* logo fixa */
+.topbar .brand{
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 </style>
 </head>
 <body>
-
   <header id="headerLojaExclusiva" class="hdr"
   style="background: {{#if lojista.corHeader}}{{lojista.corHeader}}{{else}}#0069a8{{/if}};">
-
-  {{!-- <!-- LINHA 1: Logo + Título + Vazio -->
-  <div id="rowLinha1" class="hdr-row hdr-row1" style="">
-      <div class="hdr-col left" style="">
-        {{#if lojista.logoUrl}}
-          <img src="{{lojista.logoUrl}}" class="hdr-logo" alt="Logo">
-        {{/if}}
-      </div>
-
-      <div class="hdr-col mid">
-        <div class="hdr-title" style="">
-          {{#if lojista.tituloPage}}
-            {{lojista.tituloPage}}
-          {{else}}
-            {{produto.marcaloja}}
-          {{/if}}
-        </div>
-      </div>
-
-      <div class="hdr-col right" style=""><!-- vazio proporcional --></div>
-  </div>
-
-  <!-- LINHA 2: Hamburger + Busca + Vazio -->
-  <div id="rowLinha2" class="hdr-row hdr-row2">
-    <div class="hdr-col left">
-      <button type="button" id="btnMenuMobile" class="hdr-burger" aria-label="Abrir menu">☰</button>
-    </div>
-
-    <div class="hdr-col mid">
-      <div class="hdr-searchWrap">
-        <span class="hdr-searchIcon">🔎</span>
-        <input type="text" id="buscaLoja" class="hdr-search"
-               placeholder="O que você procura?" autocomplete="off">
-        <div id="buscaLojaSugestoes" class="hdr-sugestoes"></div>
-      </div>
-    </div>
-
-    <div class="hdr-col right" style=""><!-- vazio proporcional --></div>
-  </div> --}}
                <div id="rowLinha1" class="hdr-row hdr-row1">
                       <div class="hdr-col left">
                           {{#if lojista.logoUrl}}
@@ -2140,7 +2132,7 @@ body.menu-open #menuBackdrop{
                       </div>
 
                       <div class="hdr-col mid">
-                        <div class="hdr-title">Papelaria Soletrar</div>
+                        <div class="hdr-title">{{lojista.marca}}</div>
                       </div>
 
                       <div class="hdr-col right">
@@ -2149,7 +2141,6 @@ body.menu-open #menuBackdrop{
                </div>
                 <div id="rowLinha2" class="hdr-row hdr-row2">
                     <div class="hdr-col left"></div>
-
                     <div class="hdr-col mid">
                       {{!-- <div class="hdr-searchWrap"></div> --}}
                        <div class="hdr-searchWrap">
@@ -2169,113 +2160,114 @@ body.menu-open #menuBackdrop{
      <div class="row g-2 gx-lg-2 align-items-start" style="background:#ffffff;padding:6px;">
       {{!-- ===================== MENU LATERAL (1 COLUNA) ===================== --}}
       <aside id="menuLateral" class="col-12 col-lg-3 menu-lateral" >
-            <div class="menu-drawer-head">
-              <div class="menu-drawer-title">
-                {{#if lojista.tituloPage}}{{lojista.tituloPage}}{{else}}{{produto.marcaloja}}{{/if}}
+              <div class="menu-drawer-head">
+                <div class="menu-drawer-title">
+                  {{#if lojista.tituloPage}}{{lojista.tituloPage}}{{else}}{{produto.marcaloja}}{{/if}}
+                </div>
+                <button type="button" id="btnFecharMenu" class="btn-fechar-menu" aria-label="Fechar menu">✕</button>
               </div>
+              {{!-- 1) LOGO DA PLATAFORMA (vai para HOME principal) --}}
+              <div class="card mb-3">
+                  <a class="menu-home-loja brand" href="/">
+                      <span style="">Rota</span><span class="brand-accent">es</span><span class="brand-accent" style="font-size: xx-small;">.com.br</span>
+                  </a>
+              </div>
+              <div class="card mb-3">
+                  {{!-- 2) HOME da página exclusiva --}}
+                  <a href="/home-page-exclusiva/{{lojista._id}}" class="menu-home-loja">
+                    Home
+                  </a>
+              </div>
+              {{!-- SETORES: se a loja tiver mais de um setor, vira COMBO --}}
+              {{#if setoresMenu.length}}
+                <div class="card mb-3">
+                  <div class="card-header py-2"><strong>Setores</strong></div>
 
-              <button type="button" id="btnFecharMenu" class="btn-fechar-menu" aria-label="Fechar menu">✕</button>
-            </div>
-            {{!-- DEPARTAMENTOS --}}
-            <div class="card mb-3">
-                <div class="card-header py-2">
-                    <strong>Outros departamentos</strong>
-                </div>
-                <div class="list-group list-group-flush">
-                    {{#each departamentosMenu}}
-                    <a href="?dep={{this._id}}"
-                        class="list-group-item list-group-item-action">
-                        {{this.nome}}
-                    </a>
-                    {{/each}}
-                </div>
-            </div>
-            {{!-- SETORES (aparecem só após escolher DEP) --}}
-            {{#if setoresMenu.length}}
-            <div class="card mb-3">
-                <div class="card-header py-2">
-                <strong>Setores</strong>
-                </div>
-                <div class="list-group list-group-flush">
-                {{#each setoresMenu}}
-                    <a href="?dep={{../depSelecionado}}&setor={{this._id}}"
-                    class="list-group-item list-group-item-action">
-                    {{this.nome}}
-                    </a>
-                {{/each}}
-                </div>
-            </div>
-            {{/if}}
-            {{!-- SEÇÕES (aparecem só após escolher SETOR) --}}
-            {{#if secoesMenu.length}}
-            <div class="card mb-3">
-                <div class="card-header py-2">
-                <strong>Seções</strong>
-                </div>
-                <div class="list-group list-group-flush">
-                {{#each secoesMenu}}
-                    <a href="?dep={{../depSelecionado}}&setor={{../setorSelecionado}}&secao={{this._id}}"
-                    class="list-group-item list-group-item-action">
-                    {{this.nome}}
-                    </a>
-                {{/each}}
-                </div>
-            </div>
-            {{/if}}
-      </aside>
-      {{!-- ===================== CARDS (5 COLUNAS) ===================== --}}
-      <main id="rowcards" class="col-12 col-lg-9 page-main">
-            <div class="cards-row" id="cardsRow">
-              {{#if produtosLoja.length}}
-                {{#each produtosLoja}}
-                  <div class="card-item">
-                    <article class="card h-100 card-product" style="background:#ffffff;">
-                          <a href="/home-detalhe/{{this._id}}" class="d-block">
-                            <img
-                              class="w-100 p-2 produto-img"
-                              src="{{this.pageurls.[0]}}"
-                              alt="{{this.descricao}}"
-                              loading="lazy"
-                            >
-                          </a>
-                      <div class="card-body" style="background:#ffffff;">
-                          <div class="pih-row">
-                            <span class="pih-title">
-                              {{this.descricao}} {{this.complete}}
-                            </span>
-                          </div>
-                          <div class="pih-meta">
-                                <div class="pih-line">
-                                            <span class="pih-label">código :</span>
-                                            <span class="pih-text">{{this.codigo}}</span>
-                                </div>
-                                <div class="pih-line">
-                                  <span class="pih-label">à vista</span>
-                                  <span class="pih-price">
-                                    {{#if this.precoprazo}}
-                                      R$ {{formatCurrency this.precoprazo}}
-                                    {{else}}
-                                      sob consulta
-                                    {{/if}}
-                                  </span>
-                                </div>
-                                <div class="mt-1">
-                                  <a class="btn btn-sm btn-outline-primary btn-detalhe"
-                                    href="/home-detalhe/{{this._id}}">
-                                    Detalhes / vendedor
-                                  </a>
-                                </div>
-                          </div>
-                      </div>
-                    </article>
+                  {{!-- Se quiser virar select sempre, já deixo pronto --}}
+                  <div class="p-2">
+                    <select id="comboSetor" class="form-select form-select-sm">
+                      <option value="">Selecione</option>
+                      {{#each setoresMenu}}
+                        <option value="{{this._id}}" {{#if (eq this._id ../setorSelecionado)}}selected{{/if}}>
+                          {{this.nome}}
+                        </option>
+                      {{/each}}
+                    </select>
                   </div>
-                {{/each}}
-              {{else}}
-                <div class="col-12">
-                  <p class="text-muted">Nenhum produto encontrado para este filtro.</p>
                 </div>
               {{/if}}
 
+              {{!-- SEÇÕES: clique aqui é que vai disparar a busca --}}
+              {{#if secoesMenu.length}}
+                <div class="card mb-3">
+                  <div class="card-header py-2"><strong>Seções</strong></div>
+
+                  <div class="list-group list-group-flush" id="listaSecoes">
+                    {{#each secoesMenu}}
+                      <a
+                        href="?dep={{../depSelecionado}}&setor={{../setorSelecionado}}&secao={{this._id}}"
+                        class="list-group-item list-group-item-action js-secao"
+                        data-secao-id="{{this._id}}"
+                      >
+                        {{this.nome}}
+                      </a>
+                    {{/each}}
+                  </div>
+                </div>
+              {{/if}}
+        </aside>
+        {{!-- ===================== CARDS (5 COLUNAS) ===================== --}}
+        <main id="rowcards" class="col-12 col-lg-9 page-main">
+              <div class="cards-row" id="cardsRow">
+                {{#if produtosLoja.length}}
+                  {{#each produtosLoja}}
+                    <div class="card-item">
+                      <article class="card h-100 card-product" style="background:#ffffff;">
+                            <a href="/home-detalhe/{{this._id}}" class="d-block">
+                              <img
+                                class="w-100 p-2 produto-img"
+                                src="{{this.pageurls.[0]}}"
+                                alt="{{this.descricao}}"
+                                loading="lazy"
+                              >
+                            </a>
+                        <div class="card-body" style="background:#ffffff;">
+                            <div class="pih-row">
+                              <span class="pih-title">
+                                {{this.descricao}} {{this.complete}}
+                              </span>
+                            </div>
+                            <div class="pih-meta">
+                                  <div class="pih-line">
+                                              <span class="pih-label">código :</span>
+                                              <span class="pih-text">{{this.codigo}}</span>
+                                  </div>
+                                  <div class="pih-line">
+                                    <span class="pih-label">à vista</span>
+                                    <span class="pih-price">
+                                      {{#if this.precoprazo}}
+                                        R$ {{formatCurrency this.precoprazo}}
+                                      {{else}}
+                                        sob consulta
+                                      {{/if}}
+                                    </span>
+                                  </div>
+                                  <div class="mt-1">
+                                    <a class="btn btn-sm btn-outline-primary btn-detalhe"
+                                      href="/home-detalhe/{{this._id}}">
+                                      Detalhes / vendedor
+                                    </a>
+                                  </div>
+                            </div>
+                        </div>
+                      </article>
+                    </div>
+                  {{/each}}
+                {{else}}
+                  <div class="col-12">
+                    <p class="text-muted">Nenhum produto encontrado para este filtro.</p>
+                  </div>
+                {{/if}}
             </div>
       </main>
   </div>
@@ -2485,8 +2477,6 @@ body.menu-open #menuBackdrop{
     if(window.innerWidth >= 992) fechar();
   });
 })();
-
-
 </script>
 <script>
 const sug = document.getElementById("buscaLojaSugestoes");
@@ -2494,21 +2484,167 @@ const sug = document.getElementById("buscaLojaSugestoes");
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('btnMenuMobile');
-  const menu = document.getElementById('menuLateral');
+    const btn = document.getElementById('btnMenuMobile');
+    const menu = document.getElementById('menuLateral');
 
-  if (!btn || !menu) return;
+    if (!btn || !menu) return;
 
-  btn.addEventListener('click', () => {
-    menu.classList.toggle('is-open');
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('is-open');
+    });
+
+    // opcional: fechar ao clicar fora
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.remove('is-open');
+      }
+    });
+});
+</script>
+<script>
+(function(){
+    const combo = document.getElementById('comboSetor');
+    if (!combo) return;
+
+    combo.addEventListener('change', () => {
+      const setorId = combo.value || '';
+
+      const url = new URL(window.location.href);
+      // mantém dep, troca setor, limpa secao (porque mudou o contexto)
+      if (setorId) url.searchParams.set('setor', setorId);
+      else url.searchParams.delete('setor');
+
+      url.searchParams.delete('secao');
+
+      window.location.href = url.toString();
+    });
+})();
+</script>
+{{!-- <script>
+(function(){
+  const url = new URL(window.location.href);
+  const temSecao = !!url.searchParams.get('secao');
+
+  // ajuste esses IDs/classes conforme sua página exclusiva
+  const areaProdutos = document.getElementById('rowcards') || document.getElementById('cardsRow');
+
+  if (!temSecao && areaProdutos) {
+    areaProdutos.style.display = 'none';
+  }
+})();
+</script> --}}
+<script>
+  console.log('[EXCLUSIVA] DOMContentLoaded - page carregando...');
+  window.addEventListener('load', () => {
+    console.log('[EXCLUSIVA] window.load - page carregada (imagens/css ok)');
   });
+</script>
+<script>
+  function watchNode(selector, label){
+    const el = document.querySelector(selector);
+    if (!el) {
+      console.log(`[EXCLUSIVA] não achei ${label} em ${selector}`);
+      return;
+    }
 
-  // opcional: fechar ao clicar fora
-  document.addEventListener('click', (e) => {
-    if (!menu.contains(e.target) && !btn.contains(e.target)) {
-      menu.classList.remove('is-open');
+    console.log(`[EXCLUSIVA] achei ${label} (${selector}). filhos:`, el.children.length);
+
+    const obs = new MutationObserver((mutations) => {
+      console.log(`[EXCLUSIVA] MUTATION em ${label}:`, {
+        children: el.children.length,
+        htmlLen: (el.innerHTML || '').length,
+        when: new Date().toISOString()
+      });
+
+      // mostra quem chamou (stack)
+      console.trace(`[EXCLUSIVA] stack mutation (${label})`);
+    });
+
+    obs.observe(el, { childList: true, subtree: true, characterData: true });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    watchNode('#cardsRow', 'cardsRow');
+    watchNode('#rowcards', 'rowcards');
+  });
+</script>
+<script>
+  (function(){
+    const desc = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+    Object.defineProperty(Element.prototype, 'innerHTML', {
+      set(v){
+        if (typeof v === 'string' && v.length === 0) {
+          console.log('[EXCLUSIVA] innerHTML = "" em:', this);
+          console.trace('[EXCLUSIVA] stack innerHTML empty');
+        }
+        return desc.set.call(this, v);
+      },
+      get(){
+        return desc.get.call(this);
+      }
+    });
+    console.log('[EXCLUSIVA] hook innerHTML ativo');
+  })();
+</script>
+<script>
+  (function () {
+    function watchMutations(selector, label) {
+      const el = document.querySelector(selector);
+      if (!el) return console.warn('[EXCLUSIVA] nao achei', selector);
+
+      console.log(`[EXCLUSIVA] monitorando ${label}`, el);
+
+      const obs = new MutationObserver((mutList) => {
+        let removed = 0;
+        let added = 0;
+
+        for (const m of mutList) {
+          if (m.type === 'childList') {
+            removed += (m.removedNodes ? m.removedNodes.length : 0);
+            added += (m.addedNodes ? m.addedNodes.length : 0);
+          }
+        }
+
+        // Se removeu coisas ou zerou o conteúdo -> TRACE na hora
+        const isEmptyNow = el.children.length === 0 && el.textContent.trim() === '';
+        if (removed > 0 || isEmptyNow) {
+          console.warn(`[EXCLUSIVA] ${label} mudou (added=${added}, removed=${removed}) filhosAgora=${el.children.length}`);
+          console.trace(`[EXCLUSIVA] QUEM MEXEU em ${label}?`);
+        }
+      });
+
+      obs.observe(el, { childList: true, subtree: false });
+      console.log(`[EXCLUSIVA] observer ativo em ${label}. filhos iniciais:`, el.children.length);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('[EXCLUSIVA] DOMContentLoaded - page carregando...');
+      watchMutations('#cardsRow', 'cardsRow');
+      watchMutations('#rowcards', 'rowcards');
+    });
+
+    window.addEventListener('load', () => {
+      console.log('[EXCLUSIVA] window.load - page carregada (imagens/css ok)');
+    });
+  })();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const el = document.querySelector("#rowcards");
+  if (!el) return;
+
+  console.log("[EXCLUSIVA] rowcards initial style =", el.getAttribute("style"));
+
+  const obs = new MutationObserver((muts) => {
+    for (const m of muts) {
+      if (m.type === "attributes" && m.attributeName === "style") {
+        console.warn("[EXCLUSIVA] rowcards style mudou ->", el.getAttribute("style"));
+        console.trace("[EXCLUSIVA] QUEM MUDOU O STYLE DO #rowcards?");
+      }
     }
   });
+
+  obs.observe(el, { attributes: true, attributeFilter: ["style"] });
 });
 </script>
 

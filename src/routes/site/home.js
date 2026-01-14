@@ -161,7 +161,7 @@ const PLACEHOLDER_IMG =
   </svg>`);
   //???????????????????????????????????????????????????????????????????????????????????
 
-// CARREGA A PADE COMPRAS ONLINE COMO PADRÂO /
+// CARREGA A PARTE COMPRAS ONLINE COMO PADRÂO /
 router.get('/', async (req, res) => {
      try {
           // 1️⃣ todos os departamentos ativados → botões do topo
@@ -665,6 +665,10 @@ router.get('/home-detalhe/:id', async (req, res) => {
     const produto = await ArquivoDoc.findById(req.params.id).lean();
     if (!produto) return res.status(404).send('Produto não encontrado');
 
+    console.log('[EXCLUSIVA] produto._id:', produto._id);
+    console.log('[EXCLUSIVA] loja_id:', produto.loja_id);
+    console.log('[EXCLUSIVA] codigo:', produto.codigo);
+    console.log('[EXCLUSIVA] localloja[0]:', JSON.stringify(produto.localloja?.[0], null, 2));
     res.render('pages/site/home-detalhe', {
       layout: false,  // ou seu layout padrão, se estiver usando
       produto,
@@ -726,17 +730,18 @@ router.get('/home-page-exclusiva/busca', async (req, res) => {
 router.get('/home-page-exclusiva/:id', async (req, res) => {
   console.log('');
   console.log('[ 683 ]=> /home-page-exclusiva/:id');
-  console.log('',req.params.id);
-  console.log('');
+  console.log('código do produto selecionado :',req.params.id);
+  console.log('______________________________________________');
  
   try {
     const produto = await ArquivoDoc.findById(req.params.id).lean();
     if (!produto) return res.status(404).send('Produto não encontrado');
 
+    console.log('produtos [ 740 ] :',produto)
     const lojaId           = produto.loja_id;
-    const depSelecionado   = req.query.dep   || null;
-    const setorSelecionado = req.query.setor || null;
-    const secaoSelecionada = req.query.secao || null;
+    let depSelecionado   = req.query.dep   || null;
+    let setorSelecionado = req.query.setor || null;
+    let secaoSelecionada = req.query.secao || null;
 
     // Filtro base: só produtos "válidos" dessa loja
     const baseFilter = {
@@ -755,39 +760,54 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
     // MODO A → Vindo da HOME (sem dep/setor/secao)
     // ===================================================
     if (!usuarioSelecionouAlgo) {
-      // 1) tenta achar produtos com MESMO CÓDIGO na loja
-      const similares = await ArquivoDoc.find({
-        ...baseFilter,
-        codigo: produto.codigo,
-        _id:    { $ne: produto._id }
-      }).lean();
+        // ✅ 0) pega DEP/SETOR do produto clicado (para comboMenu e filtro padrão)
+        const depId   = produto.localloja?.[0]?.departamento || null;
+        const setorId =
+          produto.localloja?.[0]?.setor?.[0]?.idSetor ||
+          produto.localloja?.[0]?.setor?.[0]?._id ||
+          null;
 
-      if (similares.length) {
-        produtosLoja = similares;
-      } else {
-        // 2) se não tiver similares, usa a MESMA SEÇÃO do produto
-        //    (ajuste o caminho conforme seu localloja real)
-        const secaoId =
-          produto.localloja?.[0]?.setor?.[0]?.secao?.[0]?.idSecao ||
-          produto.localloja?.[0]?.setor?.[0]?.secao?.[0];
 
-        if (secaoId) {
+        if (depId)   depSelecionado   = String(depId);
+        if (setorId) setorSelecionado = String(setorId);
+
+        // ✅ 1) MOSTRAR PRODUTOS DA MESMA LOJA + MESMO SETOR (objetivo principal)
+        if (setorId) {
           produtosLoja = await ArquivoDoc.find({
             ...baseFilter,
-            'localloja.setor.secao.idSecao': secaoId,
+            'localloja.setor.idSetor': new mongoose.Types.ObjectId(String(setorId)),
             _id: { $ne: produto._id }
           }).lean();
         }
-      }
 
-      // Se ainda assim não tiver nada, mostra qualquer produto da loja
-      if (!produtosLoja.length) {
-        produtosLoja = await ArquivoDoc.find({
-          ...baseFilter,
-          _id: { $ne: produto._id }
-        }).lean();
-      }
-    }
+        console.log('setorId 783 ',setorId)
+        // ✅ 2) fallback: se por algum motivo não achou pelo setor, tenta mesma SEÇÃO
+        if (!produtosLoja.length) {
+          const secaoId =
+            produto.localloja?.[0]?.setor?.[0]?.secao?.[0]?.idSecao ||
+            produto.localloja?.[0]?.setor?.[0]?.secao?.[0] ||
+            null;
+
+            if (secaoId) {
+              secaoSelecionada = String(secaoId);
+              produtosLoja = await ArquivoDoc.find({
+                ...baseFilter,
+                'localloja.setor.secao.idSecao': new mongoose.Types.ObjectId(String(secaoId)),
+                _id: { $ne: produto._id }
+              }).lean();
+            }
+          }
+
+          console.log('799 ',produtosLoja.length)
+          // ✅ 3) fallback final: qualquer produto da loja
+          if (!produtosLoja.length) {
+            produtosLoja = await ArquivoDoc.find({
+              ...baseFilter,
+              _id: { $ne: produto._id }
+            }).lean();
+          }
+}
+
     // ===================================================
     // MODO B → Usuário clicou em DEP / SETOR / SEÇÃO
     // (tour pela loja – ignora totalmente a seção do produto)
@@ -799,7 +819,7 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
         filtro['localloja.departamento'] =
           new mongoose.Types.ObjectId(depSelecionado);
       }
-
+      
       if (setorSelecionado) {
         filtro['localloja.setor.idSetor'] =
           new mongoose.Types.ObjectId(setorSelecionado);
@@ -812,24 +832,31 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
 
       produtosLoja = await ArquivoDoc.find(filtro).lean();
     }
+
+    
     // ===================================================
     // MENUS (sempre montados)
     // ===================================================
     const { departamentosMenu, setoresMenu, secoesMenu } =
       await montarMenus(baseFilter, depSelecionado, setorSelecionado);
     // ===== busca do lojista para pegar corHeader / logoUrl / tituloPage =====
-let lojista = null;
+    let lojista = null;
 
-// o seu produto tem isso: produto.loja_id (pelo print da header antiga)
-if (produto && produto.loja_id) {
-  lojista = await Lojista.findById(produto.loja_id).lean();
-}
+    // o seu produto tem isso: produto.loja_id (pelo print da header antiga)
+    if (produto && produto.loja_id) {
+      lojista = await Lojista.findById(produto.loja_id).lean();
+    }
 
-// fallback: se por algum motivo não achou
-if (!lojista) {
-  lojista = { corHeader: "#0069a8", logoUrl: "", tituloPage: "" };
-}
+    // fallback: se por algum motivo não achou
+    if (!lojista) {
+      lojista = { corHeader: "#0069a8", logoUrl: "", tituloPage: "" };
+    }
 
+    console.log('');
+    console.log('__________________________________________________________');
+    console.log('');
+    console.log('', produtosLoja.length);
+    console.log('');
     res.render('pages/site/home-page-exclusiva', {
       layout: false, // ou seu layout padrão
       lojista,
@@ -898,7 +925,8 @@ router.get('/buscar-por-texto', async (req, res) => {
             .populate('fornecedor', 'razao')
             .lean();
           console.log('');
-          console.log('', produtos);
+          console.log(' 928 =>', produtos.length);
+          console.log(' 928 =>', produtos);
           console.log('1000 /buscar-por-texto produtos =>', produtos.length);
           console.log('_________________________________________');
           console.log('');
@@ -958,7 +986,8 @@ router.get('/buscar-por-texto', async (req, res) => {
           // =======================================================
           const resultadoFinal = [...produtos, ...relacionados];
           console.log('');
-          console.log('', resultadoFinal)
+          console.log(' resultadoFinal',resultadoFinal.length);
+          console.log(' 989 resultado final ', resultadoFinal)
           console.log(
             `TOTAL enviado para o frontend => ${resultadoFinal.length}`
           );

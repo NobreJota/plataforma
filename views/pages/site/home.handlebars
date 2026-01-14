@@ -2082,7 +2082,7 @@ header.topbar{
 
   /* LUPA (esquerda) */
   #btnToggleSearch{
-    /*grid-column: 1;*/
+    grid-column: 3;
     justify-self: start;
     margin-left: 6px;   /* <-- puxa mais pra esquerda (ajuste 0~12px) */
   }
@@ -2124,12 +2124,39 @@ header.topbar{
 
 
 </style>
+<style>
+.btn-local{
+  border: 0;
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.btn-local:hover{ background: rgba(255,255,255,.28); }
+.btn-local:active{ transform: translateY(1px); }
+
+@media (max-width: 768px){
+  .btn-local{ padding: 8px; font-weight: 700; }
+}
+
+</style>
 </head>
 <body data-auth="{{#if usuario}}1{{else}}0{{/if}}" data-searchctx="{{segmentoAtual}}">
 <header class="topbar" style="padding: 6px;">
     <div class="topbar-row container-wide" >
         <!-- LOGO -->
         <button type="button" id="btnToggleSearch" class="btn-icon" aria-label="Buscar" aria-expanded="false">      🔍   </button>  
+        <button type="button" id="btnLocal" class="btn-local" aria-label="Localização" style="display: none;">
+          📍 <span id="localLabel">Definir local</span>
+        </button>
+
         <a class="brand" href="/">
           <span style="">Rota</span><span class="brand-accent">es</span><span class="brand-accent" style="font-size: xx-small;">.com.br</span>
         </a>
@@ -2155,12 +2182,20 @@ header.topbar{
                             <input type="hidden" name="idProd" id="inputIdProduto">
                             <div id="sugestoesLista" class="top-search-list"></div>
                     </div>
-                    <select id="selectCidade" class="form-select" name="municipio">
-                      <option value="" {{#unless cidadeSelecionada}}selected{{/unless}}>Município</option>
+                
+                   <select id="selectCidade" class="form-select" name="municipio">
+                      <option value="">Município</option>
+
+                      <option value="__ALL__">🌍 Todas as cidades</option>
+
                       {{#each cidades}}
                         <option value="{{this}}" {{#if (eq ../cidadeSelecionada this)}}selected{{/if}}>{{this}}</option>
                       {{/each}}
+
+                      <option value="__CLEAR__">✖ Limpar filtro</option>
                     </select>
+
+
                     <select id="selectBairro" class="form-select" name="bairro">
                       <option value="" {{#unless bairroSelecionado}}selected{{/unless}}>Bairros</option>
                       {{#each bairros}}
@@ -2197,8 +2232,6 @@ header.topbar{
 
     </div>
 </header>
-
-
 <div class="home-wrap" style="background:#fff;">
   <main id="Herodestaque" class="home-main" style="background-color:#fff;">
 
@@ -2281,14 +2314,9 @@ header.topbar{
     {{/if}}
   {{/each}}
 </div>
-
-
-
 {{!-- <label id="vpLabel" aria-live="polite"></label> --}}
-
 {{!-- Só mostra departamentos / setores quando NÃO está em modo busca (sem q) --}}
 {{#unless q}}
-  
  {{!-- <div id="Setores" style="display:block;">
     <section class="home-atividades">
       <div class="container">
@@ -2406,9 +2434,86 @@ header.topbar{
               </div>
             {{/if}}
     </div>
+
+<!-- MODAL: Definir local -->
+<div class="modal fade" id="modalLocal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Definir local</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Município</label>
+          <select id="modalCidade" class="form-select">
+            <option value="">Selecione</option>
+            <!-- vamos preencher copiando as options do #selectCidade -->
+          </select>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">Bairro</label>
+          <select id="modalBairro" class="form-select" disabled>
+            <option value="">Selecione primeiro a cidade</option>
+            <!-- vamos preencher copiando as options do #selectBairro (quando liberar) -->
+          </select>
+        </div>
+
+        <small class="text-muted">
+          Você pode escolher só a cidade por enquanto (o bairro fica opcional).
+        </small>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Agora não</button>
+        <button type="button" id="btnAplicarLocal" class="btn btn-primary" disabled>Aplicar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
 <script id="home-bundle">
+  // ✅ Injeta as cidades no selectCidade na carga da página (1x)
+(function ensureCidadesNoSelect() {
+  const selCidade = document.getElementById('selectCidade');
+  if (!selCidade) return;
+
+  const CIDADES_REGIAO = ['Cariacica','Guarapari','Serra','Vitória','Vila Velha'];
+
+  const values = () => Array.from(selCidade.options).map(o => (o.value || '').trim());
+
+  // garante __ALL__ logo no topo (após placeholder vazio)
+  if (!values().includes('__ALL__')) {
+    const optAll = new Option('🌐 Todas as cidades', '__ALL__');
+    const idx = (selCidade.options[0] && selCidade.options[0].value === '') ? 1 : 0;
+    selCidade.add(optAll, idx);
+  }
+
+  // garante __CLEAR__ no final
+  let clearOpt = selCidade.querySelector('option[value="__CLEAR__"]');
+  if (!clearOpt) {
+    clearOpt = new Option('✖ Limpar filtro', '__CLEAR__');
+    selCidade.add(clearOpt);
+  }
+
+  // insere cidades ANTES do __CLEAR__
+  CIDADES_REGIAO.forEach(cidade => {
+    if (values().includes(cidade)) return;
+    const opt = new Option(cidade, cidade);
+    selCidade.add(opt, clearOpt); // antes do limpar
+  });
+
+  // força o __CLEAR__ ser o último (caso alguém tenha mexido)
+  selCidade.removeChild(clearOpt);
+  selCidade.add(clearOpt);
+
+  console.log('[ensureCidadesNoSelect] options:', values());
+})();
+
 (() => {
   // ===== Helpers =====
   const $  = (s, r=document) => r.querySelector(s);
@@ -2421,15 +2526,62 @@ header.topbar{
 
   // ===== carregarBairros (global) =====
   async function carregarBairros(cidade, bairroSel='') {
-    const selBairro = document.getElementById('selectBairro');
-    if (!selBairro) return;
-    if (!cidade){
-      selBairro.innerHTML = '<option value="">Bairros</option>';
-      selBairro.disabled = false;
-      return;
-    }
-    selBairro.disabled = true;
-    selBairro.innerHTML = '<option value="">Carregando...</option>';
+        const selBairro = document.getElementById('selectBairro');
+        const selCidade = document.getElementById('selectCidade');
+
+        if (!selBairro) return;
+        // 🔥 GARANTE que as cidades reais existam como <option>
+        const CIDADES_REGIAO = ['Vitória','Vila Velha','Serra','Cariacica','Guarapari'];
+
+        const valuesExistentes = Array.from(selCidade.options).map(o => o.value);
+
+        CIDADES_REGIAO.forEach(cidade => {
+          if (!valuesExistentes.includes(cidade)) {
+            // insere ANTES do "__CLEAR__" se existir
+            const clearOpt = selCidade.querySelector('option[value="__CLEAR__"]');
+            const opt = new Option(cidade, cidade);
+            if (clearOpt) {
+              selCidade.insertBefore(opt, clearOpt);
+            } else {
+              selCidade.add(opt);
+            }
+          }
+        });
+
+        console.log('[initCidadeBairro] cidades injetadas:', 
+          Array.from(selCidade.options).map(o => o.value)
+        );
+
+
+        // ✅ limpar filtro
+        if (cidade === '__CLEAR__') {
+          if (selCidade) selCidade.value = '';
+          selBairro.innerHTML = '<option value="">Bairros</option>';
+          selBairro.disabled = false;
+          return;
+        }
+
+        // ✅ todas as cidades -> bairro não faz sentido
+        if (cidade === '__ALL__') {
+          selBairro.innerHTML = '<option value="">Bairros (todas as cidades)</option>';
+          selBairro.disabled = true;
+          return;
+        }
+
+        if (!cidade) {
+          selBairro.innerHTML = '<option value="">Bairros</option>';
+          selBairro.disabled = false;
+          return;
+        }
+
+        //if (!selBairro) return;
+        //if (!cidade){
+        //  selBairro.innerHTML = '<option value="">Bairros</option>';
+        //  selBairro.disabled = false;
+        //  return;
+        //}
+        //selBairro.disabled = true;
+        //selBairro.innerHTML = '<option value="">Carregando...</option>';
     try{
       const r = await fetch(`/bairros?cidade=${encodeURIComponent(cidade)}`, { cache:'no-store' });
       const data = await r.json();
@@ -2733,8 +2885,17 @@ header.topbar{
                 if (abortCtrl) abortCtrl.abort();
                 abortCtrl = new AbortController();
 
-                const cidade = selCid?.value || '';
-                const bairro = selBai?.value || '';
+                //const cidade = selCid?.value || '';
+                //const bairro = selBai?.value || '';
+                const cidade = (selCid?.value === '__ALL__') ? '' : (selCid?.value || '');
+                const bairro = (selCid?.value === '__ALL__') ? '' : (selBai?.value || '');
+
+
+                //if (!document.getElementById('selectCidade')?.value) return;
+                const vCid = document.getElementById('selectCidade')?.value || '';
+                if (!vCid) return; // ainda exige escolha
+                // ✅ se for __ALL__, deixa passar também
+
 
                 const url = `/buscar-sugestoes?q=${encodeURIComponent(q)}`
                           + `&cidade=${encodeURIComponent(cidade)}`
@@ -2967,17 +3128,8 @@ document.querySelectorAll('.home-hero-slide img').forEach(img=>{
     sug.style.width = '';
   }
 }
-
 window.addEventListener('resize', ajustarSugestoesMobile);
 window.addEventListener('load', ajustarSugestoesMobile);
-
-</script>
-
-<script>
-
-</script>
-<script>
-
 </script>
 <script>
 (function(){
@@ -3114,4 +3266,209 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
+<script>
+(function () {
+  const inputBusca   = document.getElementById('inputBusca');
+  const selectCidade = document.getElementById('selectCidade'); // seu select real do header/form
+  const selectBairro = document.getElementById('selectBairro'); // seu select real do header/form
+
+  // modal
+  const modalEl = document.getElementById('modalLocal');
+  if (!inputBusca || !selectCidade || !modalEl || !window.bootstrap) return;
+
+  const modal = new bootstrap.Modal(modalEl, { backdrop: 'static' });
+
+  const modalCidade = document.getElementById('modalCidade');
+  const modalBairro = document.getElementById('modalBairro');
+  const btnAplicar  = document.getElementById('btnAplicarLocal');
+
+  let modalJaMostrou = false; // evita abrir toda hora enquanto digita
+
+  function temCidadeSelecionada() {
+    return !!(selectCidade.value && selectCidade.value.trim());
+  }
+
+  //function copiarOptions(orig, dest, keepFirst=true) {
+  //  const opts = Array.from(orig.options).map(o => ({ value: o.value, text: o.text }));
+  //  dest.innerHTML = '';
+  //  if (keepFirst) dest.appendChild(new Option('Selecione', ''));
+  //  opts.forEach(o => {
+  //    if (!o.value) return;
+  //    dest.appendChild(new Option(o.text, o.value));
+  //  });
+  //}
+
+  function copiarOptions(orig, dest) {
+      console.log('[copiarOptions] orig id=', orig?.id, 'len=', orig?.options?.length);
+      dest.innerHTML = '';
+
+      // mantém "Selecione" primeiro
+      dest.appendChild(new Option('Selecione', ''));
+      dest.appendChild(new Option('🌐 Todas as cidades', '__ALL__'));
+      // copia as opções do header exatamente na ordem,
+      // mas ignorando o placeholder vazio (Município)
+     // Array.from(orig.options).forEach(o => {
+     //       const v = (o.value || '').trim();
+     //       const t = (o.text  || '').trim();
+     //       if (!v) return; // ignora "Município"
+
+     //       dest.appendChild(new Option(t, v));
+    //      });
+    //  }
+
+    Array.from(orig.options).forEach(o => {
+        const v = (o.value || '').trim();
+        const t = (o.text  || '').trim();
+
+        // ignora placeholder e ignora as opções especiais se existirem no header
+        if (!v) return;
+        if (v === '__ALL__' || v === '__CLEAR__') return;
+
+        dest.appendChild(new Option(t, v));
+      });
+
+      // 3) “linha” separadora (opcional, só visual)
+      const sep = new Option('──────────────', '');
+      sep.disabled = true;
+      dest.appendChild(sep);
+
+      // 4) CLEAR por último
+      dest.appendChild(new Option('✖ Limpar filtro', '__CLEAR__'));
+
+      console.log('[copiarOptions] dest len=', dest.options.length);
+
+  }
+    //  function abrirModalLocal() {
+        // copia as options atuais do header pro modal
+    //    copiarOptions(selectCidade, modalCidade, true);
+
+        // bairro: começa bloqueado
+    //    modalBairro.innerHTML = '<option value="">Selecione primeiro a cidade</option>';
+    //    modalBairro.disabled = true;
+
+    //    btnAplicar.disabled = true;
+
+    //    modal.show();
+    //    setTimeout(() => modalCidade.focus(), 150);
+    //  }
+    function abrirModalLocal() {
+        console.log('[abrirModalLocal] abriu. selectCidade len=', selectCidade?.options?.length);
+
+        copiarOptions(selectCidade, modalCidade);
+
+        console.log('[abrirModalLocal] modalCidade len=', modalCidade?.options?.length);
+
+        modalBairro.innerHTML = '<option value="">Selecione primeiro a cidade</option>';
+        modalBairro.disabled = true;
+
+        btnAplicar.disabled = true;
+
+        modal.show();
+        setTimeout(() => modalCidade.focus(), 150);
+      }
+
+
+      // Abre modal ao digitar 2+ chars e sem cidade
+      inputBusca.addEventListener('input', () => {
+        const q = (inputBusca.value || '').trim();
+
+        if (q.length < 2) {
+          modalJaMostrou = false; // reseta se apagou
+          return;
+        }
+
+        if (!temCidadeSelecionada() && !modalJaMostrou) {
+          modalJaMostrou = true;
+          abrirModalLocal();
+        }
+      });
+
+      // Quando escolhe cidade no modal
+      modalCidade.addEventListener('change', () => {
+        const cidade = modalCidade.value;
+
+        // ✅ permite aplicar "Todas" ou "Limpar" sem depender de bairro
+        if (cidade === '__ALL__' || cidade === '__CLEAR__') {
+          modalBairro.innerHTML = '<option value="">Bairro (não se aplica)</option>';
+          modalBairro.disabled = true;
+          btnAplicar.disabled = false;
+          return;
+        }
+
+        if (!cidade) {
+          modalBairro.innerHTML = '<option value="">Selecione primeiro a cidade</option>';
+          modalBairro.disabled = true;
+          btnAplicar.disabled = true;
+          return;
+        }
+
+        // Copia bairros do header (se você já preenche ele por cidade via backend, isso já vem certo)
+        // Se você preenche bairros via JS/fetch, me diga que eu adapto aqui.
+        copiarOptions(selectBairro, modalBairro, true);
+        modalBairro.disabled = false;
+
+        // Pode aplicar só com cidade (bairro opcional)
+        btnAplicar.disabled = false;
+      });
+
+  // Aplicar local (reflete no header)
+  btnAplicar.addEventListener('click', () => {
+    const cidade = modalCidade.value || '';
+    const bairro = modalBairro && !modalBairro.disabled ? (modalBairro.value || '') : '';
+
+    // seta no header (se existir)
+    selectCidade.value = cidade;
+    if (selectBairro) selectBairro.value = bairro;
+
+    // opcional: persistir
+    //localStorage.setItem('cidadeSelecionada', cidade);
+    //localStorage.setItem('bairroSelecionado', bairro);
+    localStorage.setItem('rotaes:cidade', cidade);
+    localStorage.setItem('rotaes:bairro', bairro);
+
+
+    modal.hide();
+
+    // volta pro input e segue o baile
+    setTimeout(() => inputBusca.focus(), 100);
+  });
+
+  // opcional: ao carregar, restaurar
+  const c = localStorage.getItem('cidadeSelecionada');
+  const b = localStorage.getItem('bairroSelecionado');
+  if (c && selectCidade) selectCidade.value = c;
+  if (b && selectBairro) selectBairro.value = b;
+})();
+</script>
+
+<script>
+  (function () {
+  const cidadeSel = document.getElementById('selectCidade');
+  const bairroSel = document.getElementById('selectBairro');
+  if (!cidadeSel || !bairroSel) return;
+
+  cidadeSel.addEventListener('change', () => {
+    const v = cidadeSel.value;
+
+    if (v === '__CLEAR__') {
+      cidadeSel.value = '';
+      bairroSel.value = '';
+      // se você desabilita bairro quando não tem cidade:
+      // bairroSel.disabled = true;
+      return;
+    }
+
+    if (v === '__ALL__') {
+      // “todas as cidades” => bairro não faz sentido
+      bairroSel.value = '';
+      // bairroSel.disabled = true; // opcional
+      return;
+    }
+
+    // cidade normal => bairro pode ser usado
+    // bairroSel.disabled = false; // opcional
+  });
+})();
+
+</script>
 

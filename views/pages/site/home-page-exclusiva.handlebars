@@ -101,6 +101,7 @@
       gap: 2px;
       margin-bottom: 0.1rem;
     }
+
     .pih-label {
       color: #777;
       font-weight: 500;
@@ -112,7 +113,7 @@
 
     .pih-row .pih-label + .pih-label{
        font-size: 1.1rem;   /* antes estava 1.4rem */
-       font-weight: 600;
+       font-weight: 450;
        color: #444;
     }
 
@@ -126,11 +127,12 @@
         margin-top: 0.25rem;
     }
 
+    /*resultado da busca*/
     .card-title,
     .pih-value{
-      color: #222;
-      font-weight: 600;
-      /*font-size: 1.05rem;*/
+      color: #bd1c1c;
+      font-weight: 450;
+      font-size: 0.8rem;
     }
 
     .card-product{
@@ -638,14 +640,14 @@
    
      /* só a descrição (título do card) */
  .card-product .pih-titulo .pih-value{
-   font-weight: 700;
+   font-weight: 500;
    color: #111;
    line-height: 1.25;
  }
 
  /* valores do bloco (código e preço) ficam normais */
  .card-product .produto-info-home .pih-value{
-   font-weight: 600;
+   font-weight: 450;
    color: #222;
  }
 
@@ -659,23 +661,23 @@
     }
 
    .card-product .pih-titulo .pih-value{
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: calc(1.25em * 2);
-}
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: calc(1.25em * 2);
+    }
 
 
     /* Valores (código e preço) */
     .card-product .produto-info-home .pih-row .pih-value{
       color: #222;
-      font-weight: 600;
+      font-weight: 450;
     }
 
     /* Dá um destaque no preço SEM aumentar o card */
     .card-product .produto-info-home .pih-row:nth-child(2) .pih-value{
-      font-weight: 800;
+      font-weight: 500;
       color: #0b0b0b;
     }
 
@@ -715,7 +717,7 @@
   /* (A) Descrição do produto (topo do card) */
 .card-product .card-body > .pih-row:first-child .pih-value{
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 500;
   color:#222;
 
   display: -webkit-box;
@@ -730,11 +732,9 @@
 /* (B) Valores (código e preço) dentro do bloco de info */
 .card-product .produto-info-home .pih-value{
   font-size: 1.05rem;
-  font-weight: 700;
-  color:#111;
+  font-weight: 500;
+  color:#eb0505;
 }
-
-
 
 /* 🟢 (BASE) melhora leitura em tudo */
 .card-product .card-body{
@@ -776,7 +776,7 @@
 
 /* valor do preço destacado (2ª linha do bloco info) */
 .card-product .produto-info-home .pih-row:nth-child(2) .pih-value{
-  font-weight: 800;
+  font-weight: 500;
 }
 
 /* garante que o bloco de info “cola” no fundo e o botão fica alinhado */
@@ -889,6 +889,7 @@
   color: #fff;
   font-size: 22px;
   cursor: pointer;
+  background:#0d6efd;
 }
 .hdr-burger:hover{ background: rgba(255,255,255,.24); }
 
@@ -1122,11 +1123,6 @@
   padding: 0 !important;
 }
 
-
-
-
-
-
 .produtos-grid{
   display: grid;
   gap: 14px;
@@ -1261,15 +1257,6 @@
   --hdr-h: 104px;     /* <<< ajuste fino (ex: 96px / 110px) */
   --drawer-w: 280px;  /* <<< largura do menu (menor pra caber + colunas) */
 }
-
-
-
-
-
-
-
-
-
 
 /* ===== GRID de produtos igual HOME: auto-colunas por tamanho ===== */
 .produtos-grid{
@@ -1974,14 +1961,51 @@ body.menu-open #menuBackdrop{
 }
 
 </style>
+<style>
+  /* mais espaço da logo em relação à esquerda */
+#headerLojaExclusiva .hdr-col.left {
+  padding-left: 18px;   /* ajuste: 12/16/18/24 conforme quiser */
+}
+
+/* se preferir direto na imagem, pode ser assim também (use um ou outro) */
+/*
+#headerLojaExclusiva .hdr-logo{
+  margin-left: 18px;
+}
+*/
+
+/* botão no canto direito da linha 1 */
+#headerLojaExclusiva .hdr-row1 .hdr-col.right{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 14px;  /* respiro da direita */
+}
+
+#headerLojaExclusiva .hdr-row{
+  display:flex;
+  align-items:center;
+}
+
+#headerLojaExclusiva .hdr-col.left,
+#headerLojaExclusiva .hdr-col.right{
+  width: 64px;          /* mesma largura nos lados */
+  flex: 0 0 64px;
+}
+
+#headerLojaExclusiva .hdr-col.mid{
+  flex: 1;
+  text-align: center;
+}
+</style>
 </head>
 <body>
 
   <header id="headerLojaExclusiva" class="hdr"
   style="background: {{#if lojista.corHeader}}{{lojista.corHeader}}{{else}}#0069a8{{/if}};">
 
-  <!-- LINHA 1: Logo + Título + Vazio -->
-  <div class="hdr-row hdr-row1" style="">
+  {{!-- <!-- LINHA 1: Logo + Título + Vazio -->
+  <div id="rowLinha1" class="hdr-row hdr-row1" style="">
       <div class="hdr-col left" style="">
         {{#if lojista.logoUrl}}
           <img src="{{lojista.logoUrl}}" class="hdr-logo" alt="Logo">
@@ -2002,7 +2026,7 @@ body.menu-open #menuBackdrop{
   </div>
 
   <!-- LINHA 2: Hamburger + Busca + Vazio -->
-  <div class="hdr-row hdr-row2">
+  <div id="rowLinha2" class="hdr-row hdr-row2">
     <div class="hdr-col left">
       <button type="button" id="btnMenuMobile" class="hdr-burger" aria-label="Abrir menu">☰</button>
     </div>
@@ -2017,14 +2041,43 @@ body.menu-open #menuBackdrop{
     </div>
 
     <div class="hdr-col right" style=""><!-- vazio proporcional --></div>
-  </div>
+  </div> --}}
+               <div id="rowLinha1" class="hdr-row hdr-row1">
+                      <div class="hdr-col left">
+                          {{#if lojista.logoUrl}}
+                            <img src="{{lojista.logoUrl}}" class="hdr-logo" alt="Logo">
+                          {{/if}}
+                      </div>
+
+                      <div class="hdr-col mid">
+                        <div class="hdr-title">Papelaria Soletrar</div>
+                      </div>
+
+                      <div class="hdr-col right">
+                        <button type="button" id="btnMenuMobile" class="hdr-burger" aria-label="Abrir menu">≡</button>
+                      </div>
+               </div>
+                <div id="rowLinha2" class="hdr-row hdr-row2">
+                    <div class="hdr-col left"></div>
+
+                    <div class="hdr-col mid">
+                      {{!-- <div class="hdr-searchWrap"></div> --}}
+                       <div class="hdr-searchWrap">
+        <span class="hdr-searchIcon">🔎</span>
+        <input type="text" id="buscaLoja" class="hdr-search"
+               placeholder="O que você procura?" autocomplete="off">
+        <div id="buscaLojaSugestoes" class="hdr-sugestoes"></div>
+      </div>
+                    </div>
+
+                    <div class="hdr-col right"></div>
+                </div>
 
 </header>
 {{!-- ===================== CONTAINER PRINCIPAL ===================== --}}
 <div class="container-fluid my-3 page-shell" style="border-left: 2px #9a9797 solid;">
      <div class="row g-2 gx-lg-2 align-items-start" style="background:#ffffff;padding:6px;">
       {{!-- ===================== MENU LATERAL (1 COLUNA) ===================== --}}
-      {{!-- <div id="menuOverlay" class="menu-overlay"></div> --}}
       <aside id="menuDepartamentos" class="col-12 col-lg-3 menu-lateral" >
             <div class="menu-drawer-head">
               <div class="menu-drawer-title">
@@ -2081,7 +2134,7 @@ body.menu-open #menuBackdrop{
             {{/if}}
       </aside>
       {{!-- ===================== CARDS (4 COLUNAS) ===================== --}}
-      <main  class="col-12 col-lg-9 page-main">
+      <main id="rowcards" class="col-12 col-lg-9 page-main">
         <div class="cards-row" id="cardsRow">
           {{!-- <div class="produtos-grid" id="cardRow"> --}}
           {{#if produtosLoja.length}}
@@ -2106,7 +2159,7 @@ body.menu-open #menuBackdrop{
 
                     <div class="produto-info-home">
                       <div class="pih-row">
-                        <span class="pih-label">código</span>
+                        <span class="pih-label">código??</span>
                         <span class="pih-value">{{this.codigo}}</span>
                       </div>
 
@@ -2149,6 +2202,7 @@ body.menu-open #menuBackdrop{
   </div>
   <div id="menuBackdrop" class="menu-backdrop" aria-hidden="true"></div>
 <script>
+/*  VAI BUSCAR OS PRODUTOS DA LISTA DE SUGESTÃO*/
 (function () {
   const lojaId   = '{{produto.loja_id}}';
   const input    = document.getElementById('buscaLoja');
@@ -2215,14 +2269,11 @@ body.menu-open #menuBackdrop{
                   </div>
 
                   <div class="pih-row">
-                    <span class="pih-label">desc.</span>
+                    <span class="pih-label">descrição</span>
                     <span class="pih-value">
                       ${p.descricao || ''} ${p.complete || ''}
                     </span>
                   </div>
-
-                 
-
                   <div class="mt-1">
                     <a class="btn btn-sm btn-outline-primary btn-detalhe"
                        href="/home-detalhe/${p._id}">
@@ -2319,8 +2370,7 @@ body.menu-open #menuBackdrop{
   });
 })();
 </script>
-
-
+{{!-- /* ABRIR E FECHAR MENU HAMBURGER*/ --}}
 <script>
 (function(){
   const btnOpen  = document.getElementById('btnMenuMobile');
@@ -2361,19 +2411,7 @@ body.menu-open #menuBackdrop{
 </script>
 <script>
 const sug = document.getElementById("buscaLojaSugestoes");
-sug.classList.toggle("show", sug.innerHTML.trim().length > 0);
-</script>
-<script>
-
-</script>
-<script>
-/////////////////////////////////////////////////////////
-</script>
-<script>
-
-
-
-
+   sug.classList.toggle("show", sug.innerHTML.trim().length > 0);
 </script>
 </body>
 </html>

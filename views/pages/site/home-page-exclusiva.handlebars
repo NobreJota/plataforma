@@ -1716,7 +1716,7 @@ body.menu-open #menuBackdrop{
 
 /* DESKTOP: #menu_Departamentos volta ao normal (nada de fixed/transform) */
 @media (min-width: 992px){
-  #menuDepartamentos{
+  #menuLateral{
     position: static !important;
     transform: none !important;
     top: auto !important;
@@ -1754,9 +1754,9 @@ body.menu-open #menuBackdrop{
   pointer-events: auto !important;
 }
 
-/* MOBILE: #menuDepartamentos vira drawer */
+/* MOBILE: #menuLateral vira drawer */
 @media (max-width: 991.98px){
-  #menuDepartamentos{
+  #menuLateral{
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
@@ -1774,7 +1774,7 @@ body.menu-open #menuBackdrop{
     box-shadow: 8px 0 22px rgba(0,0,0,.25) !important;
   }
 
-  body.menu-open #menuDepartamentos{
+  body.menu-open #menuLateral{
     transform: translateX(0) !important;
   }
 
@@ -1837,7 +1837,7 @@ body.menu-open #menuBackdrop{
   }
 
   /* menu volta ao normal (NADA de fixed/transform no desktop) */
-  #menuDepartamentos{
+  #menuLateral{
     position: static !important;
     transform: none !important;
     height: auto !important;
@@ -1863,7 +1863,7 @@ body.menu-open #menuBackdrop{
 
 /* ===== MOBILE: drawer de verdade ===== */
 @media (max-width: 991.98px){
-  #menuDepartamentos{
+  #menuLateral{
     position: fixed !important;
     top: 0; left: 0;
     height: 100vh !important;
@@ -1877,7 +1877,7 @@ body.menu-open #menuBackdrop{
     overflow-y: auto !important;
   }
 
-  body.menu-open #menuDepartamentos{
+  body.menu-open #menuLateral{
     transform: translateX(0) !important;
   }
 
@@ -1903,7 +1903,7 @@ body.menu-open #menuBackdrop{
 }
 
 /* o menu (drawer) tem que ficar ACIMA do header quando aberto */
-#menuDepartamentos{
+#menuLateral{
   position: fixed !important;     /* no mobile ele é drawer */
   z-index: 2000 !important;
 }
@@ -1914,7 +1914,7 @@ body.menu-open #menuBackdrop{
 }
 
 /* garante que o “cabeçalho” do drawer (título + X) esteja clicável */
-#menuDepartamentos .menu-drawer-head{
+#menuLateral .menu-drawer-head{
   position: sticky;
   top: 0;
   z-index: 500 !important;
@@ -1925,7 +1925,7 @@ body.menu-open #menuBackdrop{
 <style>
   /* ===== DESKTOP: menu é coluna normal ===== */
 @media (min-width: 992px){
-  #menuDepartamentos{
+  #menuLateral{
     position: static !important;
     transform: none !important;
     width: auto !important;
@@ -1950,12 +1950,12 @@ body.menu-open #menuBackdrop{
   z-index: 1000;
 }
 
-#menuDepartamentos .menu-drawer-title{
+#menuLateral .menu-drawer-title{
   position: relative;
   z-index: 1;
 }
 
-#menuDepartamentos{
+#menuLateral{
   position: relative;
   z-index: 10;
 }
@@ -1997,6 +1997,96 @@ body.menu-open #menuBackdrop{
   flex: 1;
   text-align: center;
 }
+</style>
+<style>
+  /* menu começa escondido */
+.menu-lateral {
+  display: none;
+}
+
+/* quando ativo */
+.menu-lateral.is-open {
+  display: block;
+}
+
+/* versão overlay (recomendado) */
+@media (min-width: 768px) {
+  .menu-lateral.is-open {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background: #fff;
+    z-index: 1200;
+    box-shadow: 2px 0 12px rgba(0,0,0,.2);
+  }
+}
+/*/////////////////////////////////////////////////*/
+.cards-row{
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, 1fr); /* mobile */
+}
+
+@media (min-width: 768px){
+  .cards-row{ grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 992px){
+  .cards-row{ grid-template-columns: repeat(4, 1fr); } /* desktop */
+}
+
+@media (min-width: 1400px){
+  .cards-row{ grid-template-columns: repeat(5, 1fr); } /* desktop grande */
+}
+
+/* TÍTULO/DESCRIÇÃO do produto (LOJA EXCLUSIVA) */
+.pih-title{
+    display: block;
+    font-weight: 400;      /* tira o "pesado" */
+    font-size: 0.98rem;    /* menor */
+    line-height: 1.2;
+    color: #111;
+    margin: 0 0 6px 0;
+
+    /* evita card estourar */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;      /* 2 linhas no máximo */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* bloco de código/preço */
+.pih-meta{ margin-top: 2px; }
+
+.pih-line{
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  line-height: 1.25;
+  margin-top: 2px;
+}
+
+.pih-label{
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 400;   /* sem bold */
+}
+
+.pih-text{
+  font-size: 0.9rem;
+  color: #111;
+  font-weight: 400;   /* sem bold */
+}
+
+/* PREÇO: destaque sem exagero */
+.pih-price{
+  font-size: 1.02rem;
+  font-weight: 600;   /* levemente destacado */
+  color: #111;
+}
+
 </style>
 </head>
 <body>
@@ -2063,11 +2153,11 @@ body.menu-open #menuBackdrop{
                     <div class="hdr-col mid">
                       {{!-- <div class="hdr-searchWrap"></div> --}}
                        <div class="hdr-searchWrap">
-        <span class="hdr-searchIcon">🔎</span>
-        <input type="text" id="buscaLoja" class="hdr-search"
-               placeholder="O que você procura?" autocomplete="off">
-        <div id="buscaLojaSugestoes" class="hdr-sugestoes"></div>
-      </div>
+                          <span class="hdr-searchIcon">🔎</span>
+                          <input type="text" id="buscaLoja" class="hdr-search"
+                                placeholder="O que você procura?" autocomplete="off">
+                          <div id="buscaLojaSugestoes" class="hdr-sugestoes"></div>
+                      </div>
                     </div>
 
                     <div class="hdr-col right"></div>
@@ -2078,7 +2168,7 @@ body.menu-open #menuBackdrop{
 <div class="container-fluid my-3 page-shell" style="border-left: 2px #9a9797 solid;">
      <div class="row g-2 gx-lg-2 align-items-start" style="background:#ffffff;padding:6px;">
       {{!-- ===================== MENU LATERAL (1 COLUNA) ===================== --}}
-      <aside id="menuDepartamentos" class="col-12 col-lg-3 menu-lateral" >
+      <aside id="menuLateral" class="col-12 col-lg-3 menu-lateral" >
             <div class="menu-drawer-head">
               <div class="menu-drawer-title">
                 {{#if lojista.tituloPage}}{{lojista.tituloPage}}{{else}}{{produto.marcaloja}}{{/if}}
@@ -2133,72 +2223,61 @@ body.menu-open #menuBackdrop{
             </div>
             {{/if}}
       </aside>
-      {{!-- ===================== CARDS (4 COLUNAS) ===================== --}}
+      {{!-- ===================== CARDS (5 COLUNAS) ===================== --}}
       <main id="rowcards" class="col-12 col-lg-9 page-main">
-        <div class="cards-row" id="cardsRow">
-          {{!-- <div class="produtos-grid" id="cardRow"> --}}
-          {{#if produtosLoja.length}}
-            {{#each produtosLoja}}
-              <div class="card-item">
-                <article class="card h-100 card-product" style="background:#ffffff;">
-                    {{!-- /produto/{{this._id}} --}}
-                  <a href="" class="d-block">
-                    <img class="w-100 p-2 produto-img"
-                         src="{{this.pageurls.[0]}}"
-                         alt="{{this.descricao}}"
-                         loading="lazy">
-                  </a>
-
-                  <div class="card-body" style="background:#ffffff;">
-                      <div class="pih-row">
-                        <div class="pih-row pih-titulo"></div>
-                        <span class="pih-value">
-                          {{this.descricao}} {{this.complete}}
-                        </span>
+            <div class="cards-row" id="cardsRow">
+              {{#if produtosLoja.length}}
+                {{#each produtosLoja}}
+                  <div class="card-item">
+                    <article class="card h-100 card-product" style="background:#ffffff;">
+                          <a href="/home-detalhe/{{this._id}}" class="d-block">
+                            <img
+                              class="w-100 p-2 produto-img"
+                              src="{{this.pageurls.[0]}}"
+                              alt="{{this.descricao}}"
+                              loading="lazy"
+                            >
+                          </a>
+                      <div class="card-body" style="background:#ffffff;">
+                          <div class="pih-row">
+                            <span class="pih-title">
+                              {{this.descricao}} {{this.complete}}
+                            </span>
+                          </div>
+                          <div class="pih-meta">
+                                <div class="pih-line">
+                                            <span class="pih-label">código :</span>
+                                            <span class="pih-text">{{this.codigo}}</span>
+                                </div>
+                                <div class="pih-line">
+                                  <span class="pih-label">à vista</span>
+                                  <span class="pih-price">
+                                    {{#if this.precoprazo}}
+                                      R$ {{formatCurrency this.precoprazo}}
+                                    {{else}}
+                                      sob consulta
+                                    {{/if}}
+                                  </span>
+                                </div>
+                                <div class="mt-1">
+                                  <a class="btn btn-sm btn-outline-primary btn-detalhe"
+                                    href="/home-detalhe/{{this._id}}">
+                                    Detalhes / vendedor
+                                  </a>
+                                </div>
+                          </div>
                       </div>
-
-                    <div class="produto-info-home">
-                      <div class="pih-row">
-                        <span class="pih-label">código??</span>
-                        <span class="pih-value">{{this.codigo}}</span>
-                      </div>
-
-                      <div class="pih-row">
-                        <span class="pih-label">à vista</span>
-                        <span class="pih-value">
-                          {{#if this.precoprazo}}
-                            R$ {{formatCurrency this.precoprazo}}
-                          {{else}}
-                            sob consulta
-                          {{/if}}
-                        </span>
-                      </div>
-                      <div class="pih-row" style="margin-top: 10px;margin-bottom: -5px;background: #fff;">
-                        <span class="pih-label"></span>
-                        <span class="pih-value">
-                          {{!-- <a href="/loja/{{this.loja_id}}">{{this.marcaloja}}</a> --}}
-                        </span>
-                      </div>
-
-                      <div class="mt-1">
-                        <a class="btn btn-sm btn-outline-primary btn-detalhe"
-                           href="/home-detalhe/{{this._id}}">
-                          Detalhes / vendedor
-                        </a>
-                      </div>
-                    </div>
+                    </article>
                   </div>
-                </article>
-              </div>
-            {{/each}}
-          {{else}}
-            <div class="col-12">
-              <p class="text-muted">Nenhum produto encontrado para este filtro.</p>
+                {{/each}}
+              {{else}}
+                <div class="col-12">
+                  <p class="text-muted">Nenhum produto encontrado para este filtro.</p>
+                </div>
+              {{/if}}
+
             </div>
-          {{/if}}
-        </div>
       </main>
-    {{!-- </div> --}}
   </div>
   <div id="menuBackdrop" class="menu-backdrop" aria-hidden="true"></div>
 <script>
@@ -2376,7 +2455,7 @@ body.menu-open #menuBackdrop{
   const btnOpen  = document.getElementById('btnMenuMobile');
   const btnClose = document.getElementById('btnFecharMenu');
   const backdrop = document.getElementById('menuBackdrop'); // opcional
-  const aside    = document.getElementById('menuDepartamentos');
+  const aside    = document.getElementById('menuLateral');
 
   if(!btnOpen || !btnClose || !aside) return;
 
@@ -2413,5 +2492,25 @@ body.menu-open #menuBackdrop{
 const sug = document.getElementById("buscaLojaSugestoes");
    sug.classList.toggle("show", sug.innerHTML.trim().length > 0);
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('btnMenuMobile');
+  const menu = document.getElementById('menuLateral');
+
+  if (!btn || !menu) return;
+
+  btn.addEventListener('click', () => {
+    menu.classList.toggle('is-open');
+  });
+
+  // opcional: fechar ao clicar fora
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+      menu.classList.remove('is-open');
+    }
+  });
+});
+</script>
+
 </body>
 </html>

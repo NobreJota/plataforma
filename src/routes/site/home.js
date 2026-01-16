@@ -11,6 +11,19 @@ const DeptoSecao = require('../../models/deptosecao');
 const ArquivoDoc=require('../../models/arquivoDoc');
 const Parceiro = require('../../models/parceiro');
 const HomeLayout = require('../../models/home_layout'); 
+const ListaPedido = require("../../models/lista-pedido"); // seu model
+
+// ✅ adapte conforme seu login
+// Se você usa req.user, ok. Se usa req.session.usuario, troque aqui.
+function getUsuarioId(req) {
+  return req.user?._id || req.session?.usuario?._id || null;
+}
+
+async function getOrCreateLista(usuarioId) {
+  let lista = await ListaPedido.findOne({ usuario: usuarioId });
+  if (!lista) lista = await ListaPedido.create({ usuario: usuarioId, itens: [] });
+  return lista;
+}
 
 
 // <<< função de normalizar descrição (igual ao schema)
@@ -1316,7 +1329,12 @@ router.get('/home-detalhe/:id', async (req, res) => {
 
     // link de volta para a página exclusiva (não volta pra home geral)
     const voltarUrl = `/home-page-exclusiva/${produto._id}?dep=${encodeURIComponent(dep)}&setor=${encodeURIComponent(setor)}&secao=${encodeURIComponent(secao)}`;
-
+    console.log('');
+    console.log('______________________________________________');
+    console.log("ID recebido:", req.params.id);
+    console.log("Produto encontrado:", produto?._id, produto?.descricao, produto?.codigo);
+    console.log("produto.loja_id:", produto?.loja_id);
+    console.log('______________________________________________');
     res.render('pages/site/home-detalhe', {
       layout: false,
       produto,
@@ -1334,5 +1352,108 @@ router.get('/home-detalhe/:id', async (req, res) => {
   }
 });
 
+router.get("/pedido", async (req, res) => {
+  try {
+    const usuarioId = getUsuarioId(req);
+    if (!usuarioId) return res.status(401).json({ ok: false, msg: "Não logado" });
+
+    const lista = await getOrCreateLista(usuarioId);
+
+    // total só dos ativos
+    const total = (lista.itens || [])
+      .filter(it => it.ativo !== false)
+      .reduce((acc, it) => acc + Number(it.preco || 0), 0);
+
+    res.json({ ok: true, itens: lista.itens || [], total });
+  } catch (e) {
+    console.error("GET /api/pedido", e);
+    res.status(500).json({ ok: false, msg: "Erro ao carregar pedido" });
+  }
+});
+
+router.post("/pedido/add", async (req, res) => {
+  try {
+    const usuarioId = getUsuarioId(req);
+    if (!usuarioId) return res.status(401).json({ ok: false, msg: "Não logado" });
+
+    const { produtoId } = req.body;
+    if (!produtoId || !mongoose.Types.ObjectId.isValid(produtoId)) {
+      return res.status(400).json({ ok: false, msg: "produtoId inválido" });
+    }
+
+    const produto = await ArquivoDoc.findById(produtoId).lean();
+    if (!produto) return res.status(404).json({ ok: false, msg: "Produto não encontrado" });
+
+    if (!produto.loja_id) {
+      return res.status(400).json({ ok: false, msg: "Produto sem loja_id" });
+    }
+
+    const lista = await getOrCreateLista(usuarioId);
+
+    // evita duplicar por produto
+    const idx = (lista.itens || []).findIndex(it => String(it.produto) === String(produto._id));
+
+    if (idx >= 0) {
+      // se já tem, reativa e atualiza preço/código (você decide se soma qtd futuramente)
+      lista.itens[idx].ativo = true;
+      lista.itens[idx].preco = Number(produto.preco || 0);
+      lista.itens[idx].codigo = produto.codigo || lista.itens[idx].codigo;
+    } else {
+      lista.itens.push({
+        produto: produto._id,
+        loja: produto.loja_id,
+        codigo: produto.codigo || "",
+        preco: Number(produto.preco || 0),
+        ativo: true,
+      });
+    }
+
+    await lista.save();
+
+    res.json({ ok: true });
+  } catch (e) {
+    console.error("POST /api/pedido/add", e);
+    res.status(500).json({ ok: false, msg: "Erro ao adicionar item" });
+  }
+});
+
+router.patch("/pedido/item/:produtoId/toggle", async (req, res) => {
+  try {
+    const usuarioId = getUsuarioId(req);
+    if (!usuarioId) return res.status(401).json({ ok: false, msg: "Não logado" });
+
+    const { produtoId } = req.params;
+
+    const lista = await getOrCreateLista(usuarioId);
+    const it = (lista.itens || []).find(x => String(x.produto) === String(produtoId));
+    if (!it) return res.status(404).json({ ok: false, msg: "Item não encontrado" });
+
+    it.ativo = !it.ativo;
+    await lista.save();
+
+    res.json({ ok: true, ativo: it.ativo });
+  } catch (e) {
+    console.error("PATCH /api/pedido/toggle", e);
+    res.status(500).json({ ok: false, msg: "Erro ao alternar item" });
+  }
+});
+
+router.delete("/pedido/item/:produtoId", async (req, res) => {
+  try {
+    const usuarioId = getUsuarioId(req);
+    if (!usuarioId) return res.status(401).json({ ok: false, msg: "Não logado" });
+
+    const { produtoId } = req.params;
+
+    const lista = await getOrCreateLista(usuarioId);
+    lista.itens = (lista.itens || []).filter(it => String(it.produto) !== String(produtoId));
+    await lista.save();
+
+    res.json({ ok: true });
+  } catch (e) {
+    console.error("DELETE /api/pedido/item", e);
+    res.status(500).json({ ok: false, msg: "Erro ao remover item" });
+  }
+});
 module.exports = router;
 

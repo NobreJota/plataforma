@@ -2,15 +2,16 @@
 <html lang="pt-br">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1, viewport-fit=cover" />
   <title>{{produto.descricao}}</title>
 
-  {{!-- se você já usa --}}
-  {{!-- <link rel="stylesheet" href="/css/site.css">  --}}
-  {{!-- vamos criar abaixo --}}
-  {{!-- <link rel="stylesheet" href="/css/home-detalhe.css">  --}}
+  {{!-- <link rel="stylesheet" href="/css/home-detalhe.css"> --}}
   <style>
-    .detalhe-wrap{
+    /* public/css/home-detalhe.css */
+
+body { margin: 0; background: #fff; color:#111; font-family: Georgia, "Times New Roman", Times, serif; }
+
+.detalhe-wrap{
   max-width: 1200px;
   margin: 20px auto;
   padding: 10px 18px;
@@ -31,18 +32,66 @@
   align-items: start;
 }
 
+/* coluna fotos */
+.detalhe-fotos{
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.thumbs-col{
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.thumb-slot{
+  position: relative;
+  width: 66px;
+  height: 66px;
+  border: 2px solid #7d0000;
+  background: #fff;
+  padding: 0;
+  cursor: pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.thumb-slot.active{
+  outline: 3px solid #ff7a00;
+  outline-offset: 2px;
+}
+
+.thumb-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display:none;
+}
+
+.thumb-empty{
+  font-size: 14px;
+  color:#6a0000;
+}
+
 .detalhe-foto{
-  border: 3px solid #ff7a00; /* só pra ficar como seu print */
+  border: 3px solid #ff7a00;
   padding: 10px;
   min-height: 520px;
   background: #fff;
+  position: relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .detalhe-foto img{
   width: 100%;
   height: 100%;
   object-fit: contain;
-  display:block;
+  display:none;
 }
 
 .detalhe-foto-placeholder{
@@ -54,47 +103,148 @@
   font-size: 18px;
 }
 
+.btn-add-lista{
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  width: 360px;
+  max-width: calc(100% - 20px);
+  height: 54px;
+  background: #7d0011;
+  color:#fff;
+  border: 0;
+  font-weight: 800;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.btn-add-lista:hover{ filter: brightness(0.95); }
+
+/* coluna info */
 .detalhe-titulo{
-  font-size: 34px;
+  font-size: 44px;
   margin: 0 0 14px;
   font-weight: 800;
-  color: #111;
+  color: #fff;
 }
 
 .detalhe-linha{
-  font-size: 18px;
-  margin: 10px 0;
-  color:#111;
+  font-size: 20px;
+  margin: 12px 0;
+  color:#fff;
 }
 
 .detalhe-sub{
-  color:#444;
+  color:#fff;
   margin-top: 6px;
+  font-size: 18px;
 }
 
-.detalhe-preco{
-  font-weight: 700;
-}
+.detalhe-preco{ font-weight: 800; }
 
 .detalhe-sep{
   border: none;
   border-top: 1px solid #ddd;
-  margin: 18px 0;
+  margin: 22px 0;
 }
 
 .detalhe-subtitulo{
-  font-size: 22px;
-  margin: 0 0 8px;
-  font-weight: 800;
+  font-size: 26px;
+  margin: 0 0 10px;
+  font-weight: 500;
+  color: #fff;
 }
 
 .detalhe-texto{
   margin: 0;
-  font-size: 16px;
-  color:#333;
+  font-size: 18px;
+  color:#fff;
 }
 
-/* Whats flutuante */
+/* contato */
+.contato-box{
+  border-top: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 14px 0;
+}
+
+.contato-linha{ margin: 8px 0; font-size: 18px; color:#fff; }
+
+.btn-contato{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #25d366;
+  color:#fff;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+/* pedido */
+.pedido-wrap{
+  margin-top: 22px;
+}
+
+.pedido-title{
+  font-size: 26px;
+  color: #fff;
+  margin: 10px 0;
+}
+
+.pedido-table{
+  border: 2px solid #fff;
+  background:#0b2b69;
+}
+
+.pedido-head, .pedido-row{
+  display: grid;
+  grid-template-columns: 80px 1fr 120px 120px 120px 110px;
+}
+
+.pedido-head{
+  color: #ff7a00;
+  font-size: 22px;
+  padding: 10px;
+  border-bottom: 2px solid #ff7a00;
+}
+
+.pedido-head > div{ border-right: 1px solid #ff7a00; padding-right: 10px; }
+.pedido-head > div:last-child{ border-right: 0; }
+
+.pedido-body{ padding: 0 10px 10px; }
+
+.pedido-row{
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  align-items: center;
+  font-size: 18px;
+}
+
+.pedido-row:last-child{ border-bottom: 0; }
+
+.pedido-foot{
+  display:flex;
+  justify-content:center;
+  gap: 12px;
+  padding: 10px;
+  border-top: 2px solid #ff7a00;
+  font-size: 22px;
+}
+
+.pedido-total-label{ color:#222; }
+.pedido-total-val{ font-weight: 900; }
+
+/* checkbox grande */
+.chk-off{
+  width: 22px;
+  height: 22px;
+}
+
+/* whats flutuante */
 .whats-float{
   position: fixed;
   right: 28px;
@@ -113,133 +263,778 @@
 }
 .whats-float:hover{ filter: brightness(0.95); }
 
+/* responsivo básico */
+@media (max-width: 980px){
+  .detalhe-grid{ grid-template-columns: 1fr; }
+  .detalhe-fotos{ grid-template-columns: 70px 1fr; }
+  .detalhe-titulo{ font-size: 34px; }
+}
+/*///////////////////////////////////////////////////////////*/
+/* ======= AJUSTE DE ESCALA / MENOS EXAGERADO ======= */
+
+.detalhe-grid{ grid-template-columns: 440px 1fr; gap: 28px; }
+
+.detalhe-fotos{ grid-template-columns: 62px 1fr; gap: 12px; }
+
+.thumb-slot{ width: 58px; height: 58px; border-width: 1px; }
+.thumb-empty{ font-size: 12px; }
+
+.detalhe-foto{
+  border-width: 2px;
+  min-height: 440px;
+}
+.detalhe-foto-placeholder{ height: 400px; font-size: 16px; }
+
+.btn-add-lista{
+  height: 46px;
+  width: 320px;
+  font-size: 16px;
+}
+
+.detalhe-titulo{ font-size: 36px; }
+.detalhe-linha{ font-size: 18px; margin: 10px 0; }
+.detalhe-sub{ font-size: 16px; }
+
+.detalhe-subtitulo{ font-size: 22px; }
+.detalhe-texto{ font-size: 16px; }
+
+/* Pedido mais compacto */
+.pedido-title{ font-size: 22px; }
+.pedido-head{ font-size: 18px; }
+.pedido-row{ font-size: 16px; }
+.pedido-foot{ font-size: 18px; }
+
+/* Whats flutuante menor */
+.whats-float{
+  width: 78px;
+  height: 78px;
+  right: 18px;
+  bottom: 18px;
+  font-size: 14px;
+}
+
+
+/* Whats inline com ícone + número */
+.btn-whatsapp{
+  display:inline-flex;
+  align-items:center;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #25d366;
+  color:#fff;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.btn-whatsapp .wa-ico{
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.18);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.btn-whatsapp .wa-txt{
+  display:flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.btn-whatsapp small{ font-weight: 700; opacity: .95; }
+
+/* ====== COMPACTAR MAIS (override final) ====== */
+
+.detalhe-wrap{
+  max-width: 1080px;
+  margin: 10px auto;
+  padding: 8px 12px;
+}
+
+.detalhe-voltar{
+  font-size: 16px;
+  margin: 4px 0 10px;
+}
+
+/* bloco de cima menor */
+.detalhe-grid{
+  grid-template-columns: 400px 1fr;
+  gap: 18px;
+}
+
+/* thumbs menores */
+.detalhe-fotos{
+  grid-template-columns: 54px 1fr;
+  gap: 10px;
+}
+.thumb-slot{
+  width: 50px;
+  height: 50px;
+  border-width: 1px;
+}
+.thumb-empty{ font-size: 11px; }
+
+/* imagem principal menor */
+.detalhe-foto{
+  min-height: 360px;
+  padding: 8px;
+  border-width: 2px;
+}
+.detalhe-foto-placeholder{
+  height: 320px;
+  font-size: 14px;
+}
+
+/* botão ADD menor */
+.btn-add-lista{
+  height: 40px;
+  width: 280px;
+  font-size: 14px;
+  bottom: 10px;
+}
+
+/* textos menores */
+.detalhe-titulo{ font-size: 30px; margin-bottom: 10px; }
+.detalhe-linha{ font-size: 16px; margin: 8px 0; }
+.detalhe-sub{ font-size: 14px; }
+.detalhe-subtitulo{ font-size: 18px; margin-bottom: 8px; }
+.detalhe-texto{ font-size: 14px; }
+
+.detalhe-sep{ margin: 14px 0; }
+
+  </style>
+  <style>
+    /* ====== TABELA PEDIDO MAIS PRA CIMA ====== */
+
+.pedido-wrap{
+  margin-top: 8px;     /* antes estava grande */
+  padding-top: 0;
+}
+
+.pedido-title{
+  margin: 6px 0 6px;
+  font-size: 20px;
+}
+
+/* reduz a altura da tabela */
+.pedido-head{
+  font-size: 16px;
+  padding: 8px;
+}
+.pedido-row{
+  font-size: 14px;
+  padding: 6px 0;
+}
+.pedido-foot{
+  font-size: 16px;
+  padding: 8px;
+}
+
+/* ====== TRAVAR ALTURA DOS SLOTS À IMAGEM ====== */
+
+/* container da coluna de fotos */
+.detalhe-fotos{
+  align-items: stretch;
+}
+
+/* coluna dos slots */
+.thumbs-col{
+  max-height: 360px;          /* mesma lógica da imagem */
+  overflow: hidden;           /* não deixa passar */
+  gap: 6px;                   /* diminui espaço entre slots */
+}
+
+/* cada slot menor */
+.thumb-slot{
+  height: 44px;
+  width: 44px;
+  margin: 0;
+  padding: 0;
+}
+
+/* texto menor */
+.thumb-empty{
+  font-size: 10px;
+  line-height: 1;
+}
+
+/* imagem principal define o “limite” */
+.detalhe-foto{
+  min-height: 360px;
+  max-height: 360px;
+}
+
+/* ====== TABLE PEDIDO SEMÂNTICA ====== */
+
+.pedido-table{
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #fff;
+  background: #0b2b69;
+}
+
+.pedido-table th,
+.pedido-table td{
+  border-bottom: 1px solid #fff;
+  padding: 8px 10px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.pedido-table thead th{
+  color: #fff;
+  font-weight: 700;
+  border-bottom: 2px solid #fff;
+}
+
+.pedido-table tfoot td{
+  border-top: 2px solid #fff;
+  font-weight: 700;
+}
+
+.pedido-msg{
+  text-align: center;
+  padding: 14px;
+  font-size: 14px;
+}
+
+.pedido-total-label{
+  text-align: right;
+}
+
+.pedido-total-val{
+  font-weight: 800;
+}
+
   </style>
 </head>
 
 <body>
 
-  <div class="detalhe-wrap">
+  <div class="detalhe-wrap" style="background: #0b2b69;color;#fff;">
 
-    <a class="detalhe-voltar" href="{{voltarUrl}}">« Voltar para Home</a>
+    <a class="detalhe-voltar" href="/" aria-label="Voltar para Home">« Voltar para Home</a>
 
     <div class="detalhe-grid">
 
-      {{!-- FOTO --}}
-      <div class="detalhe-foto">
-        {{#if produto.pageurls.[0]}}
-          <img src="{{produto.pageurls.[0]}}" alt="{{produto.descricao}}" />
-        {{else}}
-          <div class="detalhe-foto-placeholder">FOTO DO PRODUTO</div>
-        {{/if}}
-      </div>
+      {{!-- ========================= COLUNA FOTO (slots + foto grande) ========================= --}}
+      <section class="detalhe-fotos" aria-label="Fotos do produto">
 
-      {{!-- INFO --}}
-      <div class="detalhe-info">
+        <div class="thumbs-col" id="thumbsCol">
+          {{!-- 7 slots fixos --}}
+          {{!-- slot 1 --}}
+          <button class="thumb-slot" type="button" data-idx="0" aria-label="Foto 1">
+            <img class="thumb-img" alt="Foto 1">
+            <span class="thumb-empty">slots 01</span>
+          </button>
 
-        <h1 class="detalhe-titulo">{{produto.descricao}} {{produto.complete}}</h1>
+          <button class="thumb-slot" type="button" data-idx="1" aria-label="Foto 2">
+            <img class="thumb-img" alt="Foto 2">
+            <span class="thumb-empty">slots 02</span>
+          </button>
 
-        <div class="detalhe-linha"><strong>Código:</strong> {{produto.codigo}}</div>
+          <button class="thumb-slot" type="button" data-idx="2" aria-label="Foto 3">
+            <img class="thumb-img" alt="Foto 3">
+            <span class="thumb-empty">slots 03</span>
+          </button>
+
+          <button class="thumb-slot" type="button" data-idx="3" aria-label="Foto 4">
+            <img class="thumb-img" alt="Foto 4">
+            <span class="thumb-empty">slots 04</span>
+          </button>
+
+          <button class="thumb-slot" type="button" data-idx="4" aria-label="Foto 5">
+            <img class="thumb-img" alt="Foto 5">
+            <span class="thumb-empty">slots 05</span>
+          </button>
+
+          <button class="thumb-slot" type="button" data-idx="5" aria-label="Foto 6">
+            <img class="thumb-img" alt="Foto 6">
+            <span class="thumb-empty">slots 06</span>
+          </button>
+
+          <button class="thumb-slot" type="button" data-idx="6" aria-label="Foto 7">
+            <img class="thumb-img" alt="Foto 7">
+            <span class="thumb-empty">slots 07</span>
+          </button>
+        </div>
+
+        <div class="detalhe-foto" id="fotoBox">
+          <img id="imgPrincipal" alt="{{produto.descricao}}">
+          <div id="fotoPlaceholder" class="detalhe-foto-placeholder">SEM IMAGEM</div>
+
+         <button id="btnAddLista" class="btn-add-lista" type="button" data-produto-id="{{produto._id}}">
+  ADD lista
+</button>
+
+        </div>
+
+      </section>
+
+      {{!-- ========================= COLUNA INFO ========================= --}}
+      <section class="detalhe-info" aria-label="Informações do produto">
+
+        <h1 class="detalhe-titulo">{{produto.descricao}}</h1>
+
+        <div class="detalhe-linha"><b>Código:</b> {{produto.codigo}}</div>
 
         <div class="detalhe-linha">
-          <strong>Preço à vista:</strong>
-          <span class="detalhe-preco" data-preco="{{produto.precoprazo}}">R$ --</span>
+          <b>Preço à vista:</b>
+          <span class="detalhe-preco">
+            {{#if produto.preco}}{{moeda produto.preco}}{{else}}Consultar{{/if}}
+          </span>
         </div>
 
         <div class="detalhe-linha">
-          <strong>Loja:</strong>
-          <span class="detalhe-loja">{{produto.marcaloja}}</span>
+          <b>Loja:</b> {{#if lojista.nomeFantasia}}{{lojista.nomeFantasia}}{{else}}{{produto.marcaloja}}{{/if}}
         </div>
 
-        <div class="detalhe-linha detalhe-sub">
-          {{produto.cidade}} - {{produto.bairro}}
+        <div class="detalhe-sub">
+          {{#if lojista.municipio}}{{lojista.municipio}}{{/if}}
+          {{#if lojista.bairro}} - {{lojista.bairro}}{{/if}}
         </div>
 
-        <hr class="detalhe-sep" />
+        <hr class="detalhe-sep">
 
-        <h2 class="detalhe-subtitulo">Conversar com vendedor</h2>
+        
+        <h3 class="detalhe-subtitulo">Conversar com vendedor</h3>
+
+        <div class="contato-box">
+          <div class="contato-linha">Colocar aqui os canais de contato da loja.</div>
+
+          {{#if lojista.whatsapp}}
+            <a class="btn-whatsapp" id="btnWhatsInline" href="#" data-whatsapp="{{lojista.whatsapp}}">
+              <span class="wa-ico" aria-hidden="true">
+                <!-- ícone Whats (SVG) sem depender de FontAwesome -->
+                <svg viewBox="0 0 32 32" width="18" height="18">
+                  <path fill="currentColor" d="M19.11 17.53c-.27-.14-1.61-.79-1.86-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.14-1.14-.42-2.17-1.34-.8-.71-1.34-1.59-1.5-1.86-.16-.27-.02-.42.12-.55.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.48-.84-2.02-.22-.53-.44-.46-.61-.47h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27 0 1.34.97 2.64 1.11 2.82.14.18 1.91 2.91 4.63 4.08.65.28 1.15.45 1.54.58.65.21 1.24.18 1.71.11.52-.08 1.61-.66 1.84-1.29.23-.64.23-1.18.16-1.29-.07-.11-.25-.18-.52-.32z"/>
+                  <path fill="currentColor" d="M16.02 3C9.4 3 4.02 8.38 4.02 15c0 2.11.55 4.16 1.6 5.97L4 29l8.25-1.56c1.76.96 3.74 1.47 5.77 1.47 6.62 0 12-5.38 12-12s-5.38-12-12-12zm0 22.03c-1.86 0-3.65-.5-5.18-1.44l-.37-.22-4.9.93.94-4.77-.24-.39A9 9 0 1 1 25.02 15a9.01 9.01 0 0 1-9 9.03z"/>
+                </svg>
+              </span>
+
+              <span class="wa-txt">
+                <b>WhatsApp</b>
+                <small id="waNumeroInline"></small>
+              </span>
+            </a>
+          {{/if}}
+
+          {{#if lojista.telefone}}
+            <div class="contato-linha"><b>Telefone:</b> {{lojista.telefone}}</div>
+          {{/if}}
+        </div>
+
+
+        <hr class="detalhe-sep">
+
+        <h3 class="detalhe-subtitulo">Especificações do produto</h3>
         <p class="detalhe-texto">
-          Colocar aqui os canais de contato da loja.
+          {{#if produto.especificacoes}}{{produto.especificacoes}}{{else}}(Área para texto de especificações técnicas.){{/if}}
         </p>
-        {{!-- Exemplo: botão WhatsApp --}}
-<a class="btn btn-success"
-   target="_blank"
-   href="https://wa.me/55{{onlyDigits lojista.celular}}?text={{encodeURIComponent mensagemWhatsapp}}">
-  WhatsApp
-</a>
 
-        <hr class="detalhe-sep" />
+        <hr class="detalhe-sep">
 
-        <h2 class="detalhe-subtitulo">Especificações do produto</h2>
+        <h3 class="detalhe-subtitulo">Histórico / informações adicionais</h3>
         <p class="detalhe-texto">
-          (Área para texto de especificações técnicas.)
+          {{#if produto.historico}}{{produto.historico}}{{else}}(Área para históricos diversos, comentários, observações...){{/if}}
         </p>
 
-        <hr class="detalhe-sep" />
+      </section>
 
-        <h2 class="detalhe-subtitulo">Histórico / informações adicionais</h2>
-        <p class="detalhe-texto">
-          (Área para históricos diversos, comentários, observações...)
-        </p>
-
-      </div>
     </div>
+
+    {{!-- ========================= TABELA PEDIDO ========================= --}}
+    <section class="pedido-wrap" aria-label="Pedido">
+  <div class="pedido-title">Pedido:</div>
+
+  <table class="pedido-table">
+    <thead>
+      <tr>
+        <th>Cod</th>
+        <th>produto</th>
+        <th>loja</th>
+        <th>preço</th>
+        <th>total</th>
+        <th>desativar</th>
+      </tr>
+    </thead>
+
+    <tbody id="pedidoRows">
+      <tr>
+        <td colspan="6" class="pedido-msg">
+          Faça login para usar o Pedido.
+        </td>
+      </tr>
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <td colspan="4"></td>
+        <td class="pedido-total-label">total do pedido r$</td>
+        <td class="pedido-total-val" id="pedidoTotal">0,00</td>
+      </tr>
+    </tfoot>
+  </table>
+</section>
+
   </div>
 
   {{!-- BOTÃO WHATSAPP flutuante --}}
-  {{!-- Ajuste o campo abaixo para o seu schema (ex: lojista.whatsapp / lojista.telefone / lojista.contato.whatsapp) --}}
-  <a id="btnWhats"
-     class="whats-float"
-     href="#"
-     aria-label="Falar no WhatsApp">
-     WhatsApp
-  </a>
+  <a id="btnWhatsFloat" class="whats-float" href="#" aria-label="Falar no WhatsApp">WhatsApp</a>
 
-  <script>
-    // ========= 1) FORMATA PREÇO (aceita 4190 ou 41.90) =========
-    (function(){
-      const el = document.querySelector('[data-preco]');
-      if(!el) return;
+  {{!-- DATA p/ JS (sem inventar dependência) --}}
+<script>
+  // public/js/home-detalhe.js
+(function(){
+  "use strict";
 
-      let v = el.getAttribute('data-preco') || '';
-      // normaliza: "4190" -> 41.90  |  "41.90" -> 41.90
-      let num = Number(String(v).replace(',', '.'));
-      if (!isFinite(num)) num = 0;
+  const P = window.__PRODUTO__ || {};
+  const imgs = Array.isArray(P.imagens) ? P.imagens.slice(0, 7) : [];
 
-      // regra: se veio inteiro grande (ex: 4190) assumimos centavos
-      if (num >= 1000 && Number.isInteger(num)) num = num / 100;
+  const imgPrincipal = document.getElementById("imgPrincipal");
+  const placeholder = document.getElementById("fotoPlaceholder");
+  const thumbs = Array.from(document.querySelectorAll(".thumb-slot"));
 
-      el.textContent = 'R$ ' + num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    })();
+  function setPrincipal(url){
+    if(!url){
+      imgPrincipal.style.display = "none";
+      placeholder.style.display = "flex";
+      return;
+    }
+    imgPrincipal.src = url;
+    imgPrincipal.style.display = "block";
+    placeholder.style.display = "none";
+  }
 
-    // ========= 2) WHATSAPP =========
-    (function(){
-      const btn = document.getElementById('btnWhats');
-      if(!btn) return;
+  function setThumb(slot, url){
+    const img = slot.querySelector(".thumb-img");
+    const empty = slot.querySelector(".thumb-empty");
+    if(url){
+      img.src = url;
+      img.style.display = "block";
+      empty.style.display = "none";
+    } else {
+      img.removeAttribute("src");
+      img.style.display = "none";
+      empty.style.display = "block";
+    }
+  }
 
-      // >>> coloque aqui o campo real do seu lojista
-      const raw =
-        '{{lojista.whatsapp}}' ||
-        '{{lojista.telefone}}' ||
-        '';
+  function setActive(idx){
+    thumbs.forEach(b => b.classList.remove("active"));
+    const btn = thumbs[idx];
+    if(btn) btn.classList.add("active");
+  }
 
-      const phone = String(raw || '').replace(/\D/g,''); // só dígitos
+  // pinta thumbs
+  thumbs.forEach((btn, idx) => {
+    setThumb(btn, imgs[idx]);
+    btn.addEventListener("click", () => {
+      setPrincipal(imgs[idx]);
+      setActive(idx);
+    });
+  });
 
-      // mensagem padrão
-      const msg = encodeURIComponent(
-        `Olá! Tenho interesse no produto: {{produto.descricao}} (código {{produto.codigo}}).`
-      );
+  // principal inicial
+  setPrincipal(imgs[0] || "");
+  setActive(0);
 
-      if(phone.length < 10){
-        // sem whats cadastrado: esconde botão (ou mantenha e abra modal)
-        btn.style.display = 'none';
+  // WhatsApp (inline e flutuante)
+  function onlyDigits(v){ return String(v || "").replace(/\D/g, ""); }
+  function waUrl(phone, msg){
+    const d = onlyDigits(phone);
+    if(d.length < 10) return "";
+    return `https://wa.me/55${d}?text=${encodeURIComponent(msg || "")}`;
+  }
+
+  const msgPadrao = `Olá! Tenho interesse no produto: ${P.descricao || ""} (código ${P.codigo || ""}).`;
+  const urlWhats = waUrl(P.whatsapp, msgPadrao);
+
+  const btnFloat = document.getElementById("btnWhatsFloat");
+  if(btnFloat){
+    if(urlWhats){
+      btnFloat.href = urlWhats;
+      btnFloat.target = "_blank";
+      btnFloat.rel = "noopener";
+    } else {
+      btnFloat.style.display = "none";
+    }
+  }
+
+  const btnInline = document.getElementById("btnWhatsInline");
+  if(btnInline){
+    if(urlWhats){
+      btnInline.href = urlWhats;
+      btnInline.target = "_blank";
+      btnInline.rel = "noopener";
+    } else {
+      btnInline.style.display = "none";
+    }
+  }
+
+  // ==================== LISTA DO USUARIO (localStorage por enquanto) ====================
+  // (Você pediu: "Criar MODEL lista de produtos x usuário logado" — isso é o próximo passo no backend.
+  // Aqui eu deixei FUNCIONANDO já no front pra testar a UX.)
+  const STORAGE_KEY = "raq_lista_pedido_v1";
+
+  function readList(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+    catch { return []; }
+  }
+  function writeList(list){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  function moeda(n){
+    const num = Number(n || 0);
+    return num.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function calcTotalItem(item){
+    const p = Number(item.preco || 0);
+    return p;
+  }
+
+  function renderPedido(){
+    const rows = document.getElementById("pedidoRows");
+    const totalEl = document.getElementById("pedidoTotal");
+    if(!rows || !totalEl) return;
+
+    const list = readList();
+    rows.innerHTML = "";
+
+    let total = 0;
+
+    list.forEach((it, i) => {
+      const t = calcTotalItem(it);
+      total += t;
+
+      const div = document.createElement("div");
+      div.className = "pedido-row";
+      div.innerHTML = `
+        <div>${it.codigo || ""}</div>
+        <div>${it.descricao || ""}</div>
+        <div>${it.loja || ""}</div>
+        <div>R$ ${moeda(it.preco)}</div>
+        <div>R$ ${moeda(t)}</div>
+        <div><input class="chk-off" type="checkbox" data-i="${i}"></div>
+      `;
+      rows.appendChild(div);
+    });
+
+    totalEl.textContent = moeda(total);
+
+    // desativar (remove)
+    rows.querySelectorAll('input[type="checkbox"][data-i]').forEach(chk => {
+      chk.addEventListener("change", () => {
+        const idx = Number(chk.getAttribute("data-i"));
+        const list2 = readList();
+        list2.splice(idx, 1);
+        writeList(list2);
+        renderPedido();
+      });
+    });
+  }
+
+  // ADD lista
+  const btnAdd = document.getElementById("btnAddLista");
+  if(btnAdd){
+    btnAdd.addEventListener("click", () => {
+      const list = readList();
+
+      // evita duplicar por id/codigo
+      const key = P.id || P.codigo;
+      const exists = list.some(x => (x.id || x.codigo) === key);
+      if(!exists){
+        list.push({
+          id: P.id,
+          codigo: P.codigo,
+          descricao: P.descricao,
+          preco: Number(P.preco || 0),
+          loja: P.loja
+        });
+        writeList(list);
+      }
+      renderPedido();
+    });
+  }
+
+  // inicializa tabela
+  renderPedido();
+
+})();
+
+
+  </script>
+<script>
+  
+function onlyDigits(v){ return String(v || "").replace(/\D/g, ""); }
+
+function formatBRPhone(digits){
+  const d = onlyDigits(digits);
+  // 11 dígitos: (xx) xxxxx-xxxx | 10 dígitos: (xx) xxxx-xxxx
+  if(d.length === 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+  if(d.length === 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
+  return d;
+}
+
+function waUrl(phoneRaw, msg){
+  const d = onlyDigits(phoneRaw);
+  if(d.length < 10) return "";
+
+  // se já vier com 55 na frente (ex: 55 + DDD + número), não duplica
+  const phone = d.startsWith("55") ? d : ("55" + d);
+  return `https://wa.me/${phone}?text=${encodeURIComponent(msg || "")}`;
+}
+
+const msgPadrao = `Olá! Tenho interesse no produto: ${P.descricao || ""} (código ${P.codigo || ""}).`;
+const urlWhats = waUrl(P.whatsapp, msgPadrao);
+
+// escreve número no botão inline
+const numInline = document.getElementById("waNumeroInline");
+if(numInline && P.whatsapp){
+  numInline.textContent = formatBRPhone(P.whatsapp);
+}
+
+// botão flutuante
+const btnFloat = document.getElementById("btnWhatsFloat");
+if(btnFloat){
+  if(urlWhats){
+    btnFloat.href = urlWhats;
+    btnFloat.target = "_blank";
+    btnFloat.rel = "noopener";
+    btnFloat.innerHTML = `
+      <span style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <span style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.18);">
+          <svg viewBox="0 0 32 32" width="18" height="18" style="color:#fff">
+            <path fill="currentColor" d="M19.11 17.53c-.27-.14-1.61-.79-1.86-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.14-1.14-.42-2.17-1.34-.8-.71-1.34-1.59-1.5-1.86-.16-.27-.02-.42.12-.55.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.48-.84-2.02-.22-.53-.44-.46-.61-.47h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27 0 1.34.97 2.64 1.11 2.82.14.18 1.91 2.91 4.63 4.08.65.28 1.15.45 1.54.58.65.21 1.24.18 1.71.11.52-.08 1.61-.66 1.84-1.29.23-.64.23-1.18.16-1.29-.07-.11-.25-.18-.52-.32z"/>
+            <path fill="currentColor" d="M16.02 3C9.4 3 4.02 8.38 4.02 15c0 2.11.55 4.16 1.6 5.97L4 29l8.25-1.56c1.76.96 3.74 1.47 5.77 1.47 6.62 0 12-5.38 12-12s-5.38-12-12-12zm0 22.03c-1.86 0-3.65-.5-5.18-1.44l-.37-.22-4.9.93.94-4.77-.24-.39A9 9 0 1 1 25.02 15a9.01 9.01 0 0 1-9 9.03z"/>
+          </svg>
+        </span>
+        <span>Whats</span>
+      </span>
+    `;
+  } else {
+    btnFloat.style.display = "none";
+  }
+}
+
+// botão inline
+const btnInline = document.getElementById("btnWhatsInline");
+if(btnInline){
+  if(urlWhats){
+    btnInline.href = urlWhats;
+    btnInline.target = "_blank";
+    btnInline.rel = "noopener";
+  } else {
+    btnInline.style.display = "none";
+  }
+}
+</script>
+<script>
+  (function () {
+  "use strict";
+
+  const btnAdd = document.getElementById("btnAddLista");
+  const pedidoRows = document.getElementById("pedidoRows");
+  const pedidoTotal = document.getElementById("pedidoTotal");
+
+  function moeda(n) {
+    const num = Number(n || 0);
+    return num.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  async function api(url, opts = {}) {
+    const res = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+      ...opts,
+    });
+
+    const data = await res.json().catch(() => ({}));
+
+    if (res.status === 401) throw new Error("NAO_LOGADO");
+    if (!res.ok || data.ok === false) throw new Error(data.msg || "Erro na API");
+
+    return data;
+  }
+
+  function render(itens, total) {
+    if (!pedidoRows) return;
+
+    pedidoRows.innerHTML = "";
+
+    itens.forEach((it) => {
+      const row = document.createElement("tr");
+row.innerHTML = `
+  <td>${it.codigo || ""}</td>
+  <td>${it.descricao || ""}</td>
+  <td>${it.lojaNome || ""}</td>
+  <td>R$ ${moeda(it.preco)}</td>
+  <td>R$ ${moeda(it.preco)}</td>
+  <td>
+    <input type="checkbox" ${it.ativo ? "checked" : ""} data-toggle="${it.produto}">
+  </td>
+`;
+pedidoRows.appendChild(row);
+
+    });
+
+    if (pedidoTotal) pedidoTotal.textContent = moeda(total || 0);
+
+    // toggle ativo
+    pedidoRows.querySelectorAll("[data-toggle]").forEach((chk) => {
+      chk.addEventListener("change", async () => {
+        const produtoId = chk.getAttribute("data-toggle");
+        await api(`/pedido/item/${produtoId}/toggle`, { method: "PATCH" });
+        await carregarPedido();
+      });
+    });
+
+    // remover
+    pedidoRows.querySelectorAll("[data-del]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const produtoId = btn.getAttribute("data-del");
+        await api(`/pedido/item/${produtoId}`, { method: "DELETE" });
+        await carregarPedido();
+      });
+    });
+  }
+
+  async function carregarPedido() {
+    try {
+      const data = await api("/pedido");
+      // ⚠️ Sua lista só tem codigo/preco/ativo + refs.
+      // Se quiser mostrar descrição/lojaNome, a gente faz populate no backend.
+      render(data.itens || [], data.total || 0);
+    } catch (e) {
+      if (e.message === "NAO_LOGADO") {
+        if (pedidoRows) pedidoRows.innerHTML = `<div style="padding:10px;color:#fff;">Faça login para usar o Pedido.</div>`;
+        if (pedidoTotal) pedidoTotal.textContent = "0,00";
+        if (btnAdd) btnAdd.disabled = true;
         return;
       }
+      console.error(e);
+    }
+  }
 
-      btn.href = `https://wa.me/55${phone}?text=${msg}`;
-      btn.target = '_blank';
-      btn.rel = 'noopener';
-    })();
-  </script>
+  if (btnAdd) {
+    btnAdd.addEventListener("click", async () => {
+      const produtoId = btnAdd.getAttribute("data-produto-id");
+      try {
+        await api("/pedido/add", { method: "POST", body: JSON.stringify({ produtoId }) });
+        await carregarPedido();
+      } catch (e) {
+        if (e.message === "NAO_LOGADO") return alert("Faça login para adicionar no pedido.");
+        alert("Erro ao adicionar no pedido.");
+      }
+    });
+  }
 
+  carregarPedido();
+})();
+
+</script>
 </body>
 </html>

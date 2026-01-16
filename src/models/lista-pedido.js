@@ -1,3 +1,7 @@
+// models/ImportModelo.js
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
 const ListaPedidoSchema = new mongoose.Schema({
   usuario: {
     type: mongoose.Schema.Types.ObjectId,
@@ -23,3 +27,4 @@ const ListaPedidoSchema = new mongoose.Schema({
 
   criadoEm: { type: Date, default: Date.now }
 });
+module.exports = mongoose.model('lista_pedido', ListaPedidoSchema);

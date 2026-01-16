@@ -508,6 +508,100 @@ body { margin: 0; background: #fff; color:#111; font-family: Georgia, "Times New
   font-weight: 800;
 }
 
+@media (max-width: 576px){
+  .detalhe-grid{ grid-template-columns: 1fr; }
+  .detalhe-fotos{ grid-template-columns: 52px 1fr; }
+  .detalhe-foto{ max-height: 320px; min-height: 320px; }
+  .thumbs-col{ max-height: 320px; }
+  
+}
+/* ===================== RESPONSIVO MOBILE (até 576px) ===================== */
+@media (max-width: 576px){
+
+  /* página */
+  .detalhe-wrap{
+    max-width: 100%;
+    margin: 0;
+    padding: 8px 8px 18px;
+  }
+
+  /* grade vira 1 coluna */
+  .detalhe-grid{
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* bloco fotos (thumbs + imagem) */
+  .detalhe-fotos{
+    display: grid;
+    grid-template-columns: 56px 1fr !important;
+    gap: 10px !important;
+    align-items: stretch;
+  }
+
+  /* coluna de thumbs: travada e compacta */
+  .thumbs-col{
+    max-height: 320px !important;
+    overflow: hidden;           /* não passa da caixa */
+    display: flex;
+    flex-direction: column;
+    gap: 6px !important;
+  }
+
+  .thumb-slot{
+    width: 52px !important;
+    height: 52px !important;
+    border-width: 1px !important;
+    padding: 0 !important;
+  }
+
+  /* imagem principal: altura fixa no mobile */
+  .detalhe-foto{
+    min-height: 320px !important;
+    max-height: 320px !important;
+    padding: 8px !important;
+  }
+  .detalhe-foto-placeholder{
+    height: 300px !important;
+    font-size: 14px !important;
+  }
+
+  /* botão add: largura total do bloco de imagem */
+  .btn-add-lista{
+    position: static !important;   /* para de ficar "flutuando" */
+    width: 100% !important;
+    height: 42px !important;
+    margin-top: 10px;
+    font-size: 14px !important;
+  }
+
+  /* textos mais compactos */
+  .detalhe-titulo{ font-size: 24px !important; margin: 8px 0 8px; }
+  .detalhe-linha{ font-size: 14px !important; margin: 6px 0; }
+  .detalhe-subtitulo{ font-size: 16px !important; margin: 10px 0 6px; }
+  .detalhe-texto{ font-size: 14px !important; }
+
+  /* TABELA pedido: não quebrar no mobile */
+  .pedido-wrap{
+    margin-top: 10px !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pedido-table{
+    min-width: 700px;            /* força scroll horizontal */
+  }
+
+  /* Whats flutuante menor */
+  .whats-float{
+    width: 64px !important;
+    height: 64px !important;
+    right: 14px !important;
+    bottom: 14px !important;
+    font-size: 12px !important;
+  }
+}
+
+
   </style>
 </head>
 

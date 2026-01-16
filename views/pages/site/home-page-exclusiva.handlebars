@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{{!-- Página exclusiva do lojista  --}}
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
@@ -1751,7 +1752,7 @@ body.menu-open #menuBackdrop{
   display: block !important;
 }
 body.menu-open #menuBackdrop{
-  opacity: 1 !important;
+  /*opacity: 1 !important;*/
   pointer-events: auto !important;
 }
 
@@ -1884,7 +1885,7 @@ body.menu-open #menuBackdrop{
 
   #menuBackdrop{
     display:block !important;
-    opacity: 0;
+   /* opacity: 0;*/
     pointer-events: none;
   }
 
@@ -2120,6 +2121,82 @@ body.menu-open #menuBackdrop{
 }
 
 </style>
+<style>
+  /* ===========================
+   HOME-EXCLUSIVA: trava título e alinha botão
+   =========================== */
+
+/* garante “coluna” e botão sempre no fundo */
+.card-product,
+.card-product .card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-product .card-body {
+  height: 100%;
+}
+
+/* TÍTULO do produto (2 linhas, não empurra o botão) */
+.pih-title {
+  /* escolha quantas linhas quer (2 ou 3) */
+  --lines: 2;
+  --lh: 1.15em;
+
+  line-height: var(--lh);
+  min-height: calc(var(--lines) * var(--lh)); /* trava altura */
+  max-height: calc(var(--lines) * var(--lh));
+  overflow: hidden;
+
+  display: -webkit-box;
+  -webkit-line-clamp: var(--lines);
+  -webkit-box-orient: vertical;
+
+  /* melhora quebra de palavras */
+  word-break: break-word;
+}
+
+/* Se você usa h6.card-title também em algum lugar, trava igualmente */
+.card-product .card-title {
+  --lines: 2;
+  --lh: 1.15em;
+
+  line-height: var(--lh);
+  min-height: calc(var(--lines) * var(--lh));
+  max-height: calc(var(--lines) * var(--lh));
+  overflow: hidden;
+
+  display: -webkit-box;
+  -webkit-line-clamp: var(--lines);
+  -webkit-box-orient: vertical;
+}
+
+/* empurra área do botão para o rodapé do card */
+.card-product .mt-1,
+.card-product .acoes,
+.card-product .btn-detalhe,
+.card-product .btn-vendedor {
+  margin-top: auto; /* o segredo: cola no fundo */
+}
+
+/* (opcional) deixa o botão com altura fixa e não “dançar” */
+.card-product .btn {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 992px) {
+  .pih-title,
+  .card-product .card-title { --lines: 3; }
+}
+@media (max-width: 991px) {
+  .pih-title,
+  .card-product .card-title { --lines: 2; }
+}
+
+</style>
 </head>
 <body>
   <header id="headerLojaExclusiva" class="hdr"
@@ -2231,6 +2308,7 @@ body.menu-open #menuBackdrop{
                                 loading="lazy"
                               >
                             </a>
+                            
                         <div class="card-body" style="background:#ffffff;">
                             <div class="pih-row">
                               <span class="pih-title">
@@ -2308,10 +2386,12 @@ body.menu-open #menuBackdrop{
 
       const html = itens.map(p => {
         const img = (p.pageurls && p.pageurls[0]) ? p.pageurls[0] : placeholderImg;
-        const preco = p.precoprazo
-          ? 'R$ ' + Number(p.precoprazo).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
-          : '0,00';
-
+        //const preco = p.precoprazo
+        //  ? 'R$ ' + Number(p.precoprazo).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+        //  : '0,00';
+        const preco = Number.isFinite(Number(p.precoprazo))
+        ? (Number(p.precoprazo) / 100).toLocaleString('pt-BR', { style:'currency', currency:'BRL' })
+         : 'sob consulta';
         return `
           <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
             <article class="card h-100 card-product">
@@ -2520,7 +2600,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 })();
 </script>
-{{!-- <script>
+<script>
 (function(){
   const url = new URL(window.location.href);
   const temSecao = !!url.searchParams.get('secao');
@@ -2528,11 +2608,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // ajuste esses IDs/classes conforme sua página exclusiva
   const areaProdutos = document.getElementById('rowcards') || document.getElementById('cardsRow');
 
-  if (!temSecao && areaProdutos) {
-    areaProdutos.style.display = 'none';
-  }
+  //if (!temSecao && areaProdutos) {
+  //  areaProdutos.style.display = 'none';
+  //}
 })();
-</script> --}}
+</script>
 <script>
   console.log('[EXCLUSIVA] DOMContentLoaded - page carregando...');
   window.addEventListener('load', () => {

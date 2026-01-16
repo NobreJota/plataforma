@@ -1,65 +1,245 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8">
-  <title>Detalhes do produto</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{produto.descricao}}</title>
+
+  {{!-- se você já usa --}}
+  {{!-- <link rel="stylesheet" href="/css/site.css">  --}}
+  {{!-- vamos criar abaixo --}}
+  {{!-- <link rel="stylesheet" href="/css/home-detalhe.css">  --}}
+  <style>
+    .detalhe-wrap{
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 10px 18px;
+}
+
+.detalhe-voltar{
+  display:inline-block;
+  margin: 8px 0 18px;
+  text-decoration: none;
+  color: #1a73e8;
+  font-size: 18px;
+}
+
+.detalhe-grid{
+  display: grid;
+  grid-template-columns: 520px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.detalhe-foto{
+  border: 3px solid #ff7a00; /* só pra ficar como seu print */
+  padding: 10px;
+  min-height: 520px;
+  background: #fff;
+}
+
+.detalhe-foto img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display:block;
+}
+
+.detalhe-foto-placeholder{
+  height: 480px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#b30000;
+  font-size: 18px;
+}
+
+.detalhe-titulo{
+  font-size: 34px;
+  margin: 0 0 14px;
+  font-weight: 800;
+  color: #111;
+}
+
+.detalhe-linha{
+  font-size: 18px;
+  margin: 10px 0;
+  color:#111;
+}
+
+.detalhe-sub{
+  color:#444;
+  margin-top: 6px;
+}
+
+.detalhe-preco{
+  font-weight: 700;
+}
+
+.detalhe-sep{
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 18px 0;
+}
+
+.detalhe-subtitulo{
+  font-size: 22px;
+  margin: 0 0 8px;
+  font-weight: 800;
+}
+
+.detalhe-texto{
+  margin: 0;
+  font-size: 16px;
+  color:#333;
+}
+
+/* Whats flutuante */
+.whats-float{
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  width: 110px;
+  height: 110px;
+  border-radius: 999px;
+  background: #25d366;
+  color: #fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 12px 28px rgba(0,0,0,.22);
+}
+.whats-float:hover{ filter: brightness(0.95); }
+
+  </style>
 </head>
+
 <body>
 
-<div class="container my-4">
-  <a href="/" class="btn btn-link">&laquo; Voltar para Home</a>
+  <div class="detalhe-wrap">
 
-  <div class="row mt-3">
-    <div class="col-md-5">
-      {{!-- FOTO PRINCIPAL (ajuste o campo da imagem que você já usa) --}}
-      <img src="{{produto.imagemUrl}}" class="img-fluid" alt="{{produto.descricao}}">
-    </div>
+    <a class="detalhe-voltar" href="{{voltarUrl}}">« Voltar para Home</a>
 
-    <div class="col-md-7">
-      <h3>{{produto.descricao}} {{produto.complete}}</h3>
+    <div class="detalhe-grid">
 
-      <p><strong>Código:</strong> {{produto.codigo}}</p>
-
-      <p>
-        <strong>Preço à vista:</strong>
-        {{#if produto.precovista}}
-          R$ {{formatCurrency produto.precovista}}
+      {{!-- FOTO --}}
+      <div class="detalhe-foto">
+        {{#if produto.pageurls.[0]}}
+          <img src="{{produto.pageurls.[0]}}" alt="{{produto.descricao}}" />
         {{else}}
-          sob consulta
+          <div class="detalhe-foto-placeholder">FOTO DO PRODUTO</div>
         {{/if}}
-      </p>
+      </div>
 
-      <p>
-        <strong>Loja:</strong>
-        <a href="/loja/{{produto.loja_id}}">
-          {{produto.marcaloja}}
-        </a>
-        <br>
-        <small>{{produto.cidade}} - {{produto.bairro}}</small>
-      </p>
+      {{!-- INFO --}}
+      <div class="detalhe-info">
 
-      <hr>
+        <h1 class="detalhe-titulo">{{produto.descricao}} {{produto.complete}}</h1>
 
-      <h5>Conversar com vendedor</h5>
-      {{!-- aqui depois você coloca WhatsApp, formulário, etc. --}}
-      <p>Colocar aqui os canais de contato da loja.</p>
+        <div class="detalhe-linha"><strong>Código:</strong> {{produto.codigo}}</div>
 
-      <hr>
+        <div class="detalhe-linha">
+          <strong>Preço à vista:</strong>
+          <span class="detalhe-preco" data-preco="{{produto.precoprazo}}">R$ --</span>
+        </div>
 
-      <h5>Especificações do produto</h5>
-      <p>
-        {{!-- campo futuro: produto.especificacoes, ficha técnica etc. --}}
-        (Área para texto de especificações técnicas.)
-      </p>
+        <div class="detalhe-linha">
+          <strong>Loja:</strong>
+          <span class="detalhe-loja">{{produto.marcaloja}}</span>
+        </div>
+
+        <div class="detalhe-linha detalhe-sub">
+          {{produto.cidade}} - {{produto.bairro}}
+        </div>
+
+        <hr class="detalhe-sep" />
+
+        <h2 class="detalhe-subtitulo">Conversar com vendedor</h2>
+        <p class="detalhe-texto">
+          Colocar aqui os canais de contato da loja.
+        </p>
+        {{!-- Exemplo: botão WhatsApp --}}
+<a class="btn btn-success"
+   target="_blank"
+   href="https://wa.me/55{{onlyDigits lojista.celular}}?text={{encodeURIComponent mensagemWhatsapp}}">
+  WhatsApp
+</a>
+
+        <hr class="detalhe-sep" />
+
+        <h2 class="detalhe-subtitulo">Especificações do produto</h2>
+        <p class="detalhe-texto">
+          (Área para texto de especificações técnicas.)
+        </p>
+
+        <hr class="detalhe-sep" />
+
+        <h2 class="detalhe-subtitulo">Histórico / informações adicionais</h2>
+        <p class="detalhe-texto">
+          (Área para históricos diversos, comentários, observações...)
+        </p>
+
+      </div>
     </div>
   </div>
 
-  <div class="mt-4">
-    <h5>Histórico / informações adicionais</h5>
-    <p>(Área para históricos diversos, comentários, observações...)</p>
-  </div>
-</div>
+  {{!-- BOTÃO WHATSAPP flutuante --}}
+  {{!-- Ajuste o campo abaixo para o seu schema (ex: lojista.whatsapp / lojista.telefone / lojista.contato.whatsapp) --}}
+  <a id="btnWhats"
+     class="whats-float"
+     href="#"
+     aria-label="Falar no WhatsApp">
+     WhatsApp
+  </a>
+
+  <script>
+    // ========= 1) FORMATA PREÇO (aceita 4190 ou 41.90) =========
+    (function(){
+      const el = document.querySelector('[data-preco]');
+      if(!el) return;
+
+      let v = el.getAttribute('data-preco') || '';
+      // normaliza: "4190" -> 41.90  |  "41.90" -> 41.90
+      let num = Number(String(v).replace(',', '.'));
+      if (!isFinite(num)) num = 0;
+
+      // regra: se veio inteiro grande (ex: 4190) assumimos centavos
+      if (num >= 1000 && Number.isInteger(num)) num = num / 100;
+
+      el.textContent = 'R$ ' + num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    })();
+
+    // ========= 2) WHATSAPP =========
+    (function(){
+      const btn = document.getElementById('btnWhats');
+      if(!btn) return;
+
+      // >>> coloque aqui o campo real do seu lojista
+      const raw =
+        '{{lojista.whatsapp}}' ||
+        '{{lojista.telefone}}' ||
+        '';
+
+      const phone = String(raw || '').replace(/\D/g,''); // só dígitos
+
+      // mensagem padrão
+      const msg = encodeURIComponent(
+        `Olá! Tenho interesse no produto: {{produto.descricao}} (código {{produto.codigo}}).`
+      );
+
+      if(phone.length < 10){
+        // sem whats cadastrado: esconde botão (ou mantenha e abra modal)
+        btn.style.display = 'none';
+        return;
+      }
+
+      btn.href = `https://wa.me/55${phone}?text=${msg}`;
+      btn.target = '_blank';
+      btn.rel = 'noopener';
+    })();
+  </script>
 
 </body>
 </html>

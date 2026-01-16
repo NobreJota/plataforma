@@ -35,7 +35,7 @@
       html, body{
         height: 100%;
         overflow: hidden;           /* <- trava scroll da página */
-        background: #111;           /* opcional: cor de fundo padrão */
+        background: #d60f0f;           /* opcional: cor de fundo padrão */
       }
 
       /* empurra a página para baixo da barra fixa */
@@ -327,10 +327,6 @@
 .lbl-img   { background:#fff1b3; color:#8a5a00; border:1px solid #ffd24d; } /* amarelo */
 
 
-
- 
-
-
 .faixa-topo {
     display: flex;
     flex-direction: row;
@@ -392,7 +388,7 @@
 #menulista {
        width: 13vw;
        height: 96vh;
-       background-color:transparent;
+       background-color:red;
        margin-top: 2px;
        transition: margin-left 0.4s ease;
        margin-left: -10vw; /* Escondido inicialmente */
@@ -1617,5 +1613,43 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = url.toString();
   }
 });
+</script>
+<script>
+(function () {
+  function killOverlays() {
+    // 1) Backdrops do Bootstrap (modal/offcanvas)
+    document.querySelectorAll('.modal-backdrop, .offcanvas-backdrop').forEach(el => el.remove());
+
+    // 2) Classes do body que mantêm a tela travada
+    document.body.classList.remove('modal-open', 'offcanvas-backdrop', 'menu-open');
+
+    // 3) Overlays comuns do seu projeto (ajuste IDs se existirem)
+    ['menuOverlay', 'menuBackdrop', 'loadingOverlay', 'overlay', 'backdrop'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = 'none';
+        el.style.pointerEvents = 'none';
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', killOverlays);
+  window.addEventListener('pageshow', killOverlays); // quando volta do cache do navegador
+})();
+
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a');
+  if (!a) return;
+
+  // fecha qualquer modal/offcanvas aberto antes de trocar de página
+  document.querySelectorAll('.offcanvas.show, .modal.show').forEach(el => {
+    el.classList.remove('show');
+    el.style.display = 'none';
+  });
+
+  document.querySelectorAll('.modal-backdrop, .offcanvas-backdrop').forEach(el => el.remove());
+  document.body.classList.remove('modal-open');
+});
+
 </script>
 

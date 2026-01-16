@@ -737,7 +737,9 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
     const produto = await ArquivoDoc.findById(req.params.id).lean();
     if (!produto) return res.status(404).send('Produto não encontrado');
 
-    console.log('produtos [ 740 ] :',produto)
+    console.log('produtos [ 740 ] :',produto);
+   // console.log(produto.localloja.setor.idSetor)
+
     const lojaId           = produto.loja_id;
     let depSelecionado   = req.query.dep   || null;
     let setorSelecionado = req.query.setor || null;
@@ -783,19 +785,37 @@ router.get('/home-page-exclusiva/:id', async (req, res) => {
         console.log('setorId 783 ',setorId)
         // ✅ 2) fallback: se por algum motivo não achou pelo setor, tenta mesma SEÇÃO
         if (!produtosLoja.length) {
-          const secaoId =
-            produto.localloja?.[0]?.setor?.[0]?.secao?.[0]?.idSecao ||
-            produto.localloja?.[0]?.setor?.[0]?.secao?.[0] ||
-            null;
+          // const secaoId =
+          //   produto.localloja?.[0]?.setor?.[0]?.secao?.[0]?.idSecao ||
+          //   produto.localloja?.[0]?.setor?.[0]?.secao?.[0] ||
+          //   null;
 
-            if (secaoId) {
-              secaoSelecionada = String(secaoId);
-              produtosLoja = await ArquivoDoc.find({
-                ...baseFilter,
-                'localloja.setor.secao.idSecao': new mongoose.Types.ObjectId(String(secaoId)),
-                _id: { $ne: produto._id }
-              }).lean();
-            }
+          //   if (secaoId) {
+          //     secaoSelecionada = String(secaoId);
+          //     produtosLoja = await ArquivoDoc.find({
+          //       ...baseFilter,
+          //       'localloja.setor.secao.idSecao': new mongoose.Types.ObjectId(String(secaoId)),
+          //       _id: { $ne: produto._id }
+          //     }).lean();
+          //   }
+           // 2) se não tiver similares, usa o MESMO SETOR do produto (REGRA DA EXCLUSIVA)
+             const setorId =
+               produto.localloja?.[0]?.setor?.[0]?.idSetor ||
+               produto.localloja?.[0]?.setor?.[0]; // (fallback se você salva só o id)
+            
+             if (setorId) {
+               // marca setor/dep atuais para montar combo/menu corretamente
+               setorSelecionado = String(setorId);
+               depSelecionado   = depSelecionado || String(produto.localloja?.[0]?.departamento || '');
+               secaoSelecionada = null; // vem por setor, não por secao
+            
+               produtosLoja = await ArquivoDoc.find({
+                 ...baseFilter,
+                 'localloja.setor.idSetor': setorId,
+                 _id: { $ne: produto._id }
+               }).lean();
+             }
+
           }
 
           console.log('799 ',produtosLoja.length)
@@ -919,14 +939,14 @@ router.get('/buscar-por-texto', async (req, res) => {
             }
           }
 
-          console.log('[ line 831 ] FILTRO /buscar-por-texto =>', filtro);
+          console.log('[ line 922 ] FILTRO /buscar-por-texto =>', filtro);
 
           const produtos = await Ddocumento.find(filtro)
             .populate('fornecedor', 'razao')
             .lean();
           console.log('');
           console.log(' 928 =>', produtos.length);
-          console.log(' 928 =>', produtos);
+          //console.log(' 928 =>', produtos);
           console.log('1000 /buscar-por-texto produtos =>', produtos.length);
           console.log('_________________________________________');
           console.log('');
@@ -935,7 +955,7 @@ router.get('/buscar-por-texto', async (req, res) => {
 
           if (produtos.length > 0) {
               const p = produtos[0];
-              console.log('produtos :',produtos)   
+              console.log('produtos[ 938 ] :',produtos.length)   
               try {
                 const loc = p.localloja?.[0];
                 const setor = loc?.setor?.[0];
@@ -962,7 +982,7 @@ router.get('/buscar-por-texto', async (req, res) => {
             : [];
 
           let relacionados = [];
-
+          const idsJaVieram = produtos.map(p => p._id); 
           if (secaoIds.length > 0) {
             relacionados = await Ddocumento.find({
               ativo: true,
@@ -973,7 +993,7 @@ router.get('/buscar-por-texto', async (req, res) => {
               'localloja.setor.secao.idSecao': { $in: secaoIds },
 
               // evita incluir novamente o produto principal
-              _id: { $ne: produtos[0]._id }
+              _id: { $nin: produtos[0]._id }
             })
               .limit(40)
               .lean();
@@ -987,10 +1007,21 @@ router.get('/buscar-por-texto', async (req, res) => {
           const resultadoFinal = [...produtos, ...relacionados];
           console.log('');
           console.log(' resultadoFinal',resultadoFinal.length);
-          console.log(' 989 resultado final ', resultadoFinal)
+          console.log(' 990 resultado final ', resultadoFinal)
           console.log(
             `TOTAL enviado para o frontend => ${resultadoFinal.length}`
           );
+
+          console.log(' 995 ',resultadoFinal.length)
+          const uniq = [];
+          const seen = new Set();
+
+          for (const p of resultadoFinal) {
+            const id = String(p._id);
+            if (seen.has(id)) continue;
+            seen.add(id);
+            uniq.push(p);
+          }
 
           res.render('pages/site/home', {
             layout: 'site/home',
@@ -999,7 +1030,7 @@ router.get('/buscar-por-texto', async (req, res) => {
             cidadeSelecionada: municipio,
             bairros: bairrosDaCidade,
             bairroSelecionado: bairro,
-            produtos: resultadoFinal,
+            produtos: uniq,
             departamentosAtivos,
             segmentoAtual: ''
           });
@@ -1252,6 +1283,54 @@ router.get("/home-layout", async (req, res) => {
   } catch (err) {
     console.error("[GET /admin/home-layout]", err);
     return res.status(500).send("Erro ao carregar admin da HOME");
+  }
+});
+
+
+router.get('/home-detalhe/:id', async (req, res) => {
+  try {
+    const produto = await ArquivoDoc.findById(req.params.id).lean();
+    // let lojista = await Lojista.findById(produto.loja_id).lean();
+    
+    if (!produto) return res.status(404).send('Produto não encontrado');
+
+  
+
+    // pega lojista da loja do produto
+    let lojista = null;
+    if (produto.loja_id) {
+      lojista = await Lojista.findById(produto.loja_id).lean();
+    }
+    if (!lojista) lojista = { corHeader: "#0069a8", logoUrl: "", tituloPage: "" };
+
+      const whatsappNumber = String(lojista?.celular || '').replace(/\D/g, '');
+      const mensagemWhatsapp =
+        `Olá! Tenho interesse no produto: ${produto.descricao || ''} (código ${produto.codigo || ''}).`;
+
+     const whatsappLink =
+     `https://wa.me/55${whatsappNumber}?text=${encodeURIComponent(mensagemWhatsapp)}`;
+    // mantém contexto (pra “Voltar para Home” voltar pra EXCLUSIVA com filtros)
+    const dep  = req.query.dep || '';
+    const setor = req.query.setor || '';
+    const secao = req.query.secao || '';
+
+    // link de volta para a página exclusiva (não volta pra home geral)
+    const voltarUrl = `/home-page-exclusiva/${produto._id}?dep=${encodeURIComponent(dep)}&setor=${encodeURIComponent(setor)}&secao=${encodeURIComponent(secao)}`;
+
+    res.render('pages/site/home-detalhe', {
+      layout: false,
+      produto,
+      lojista,
+      voltarUrl,
+      depSelecionado: dep || null,
+      setorSelecionado: setor || null,
+      secaoSelecionada: secao || null,
+      mensagemWhatsapp,
+      whatsappLink
+    });
+  } catch (err) {
+    console.error('ERRO /home-detalhe:', err);
+    res.status(500).send('Erro ao abrir detalhes');
   }
 });
 

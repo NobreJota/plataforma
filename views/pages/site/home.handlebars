@@ -1,4 +1,5 @@
 <!doctype html>
+{{!-- Home do site --}}
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
@@ -2344,7 +2345,7 @@ header.topbar{
 
 {{!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: --}}
     <div id="produtos"
-        class="container my-4" style="background-color:#fbfafa;{{#if produtos.length}}display:block;{{else}}display:none;{{/if}}">
+        class="container my-4" style="background-color:#ec0a0a;{{#if produtos.length}}display:block;{{else}}display:none;{{/if}}">
             {{#if banner}}
               ...
             {{/if}}
@@ -2380,8 +2381,8 @@ header.topbar{
                           <div class="pih-row">
                             <span class="pih-label">à vista</span>
                             <span class="pih-value">
-                              {{#if precovista}}
-                                R$ {{formatCurrency precovista}}
+                              {{#if precoprazo}}
+                                R$ {{formatCurrency precoprazo}}
                               {{else}}
                                 sob consulta
                               {{/if}}
@@ -2773,9 +2774,9 @@ header.topbar{
           const img        = pickImage(p);
           //const precoVista = p.precovista ? brl(p.precovista) : '';
           const raw =
-              p.precovista && typeof p.precovista === 'object' && '$numberDecimal' in p.precovista
-                ? p.precovista.$numberDecimal
-                : p.precovista;
+              p.precoprazo && typeof p.precoprazo === 'object' && '$numberDecimal' in p.precoprazo
+                ? p.precoprazo.$numberDecimal
+                : p.precoprazo;
 
          let precoVista = '';
 
@@ -2787,13 +2788,13 @@ header.topbar{
                 // (assumindo que esse campo SEMPRE está em centavos)
                 num = num / 100;
 
-                precoVista = num.toLocaleString('pt-BR', {
+                precoPrazo = num.toLocaleString('pt-BR', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2
                 });
               }
           }
-
+          console.log('[ 2796 ]',precoPrazo)
           const href       = p.href || `/produto/${p._id}`;
 
           return `
@@ -2822,7 +2823,7 @@ header.topbar{
                     <div class="pih-row">
                       <span class="pih-label">À vista :</span>
                       <span class="pih-value">
-                        ${precoVista || 'sob consulta'}
+                        ${precoPrazo || 'sob consulta'}
                       </span>
                     </div>
                     <div class="mt-1" style="height:4vh;background:#fff;padding-top:0px">
@@ -3224,7 +3225,7 @@ window.addEventListener('load', ajustarSugestoesMobile);
     // tenta achar o link do menu que tenha esse depId
     const a = document.querySelector(`[href*="dep=${CSS.escape(depId)}"]`);
     const nome = a?.textContent?.trim();
-    if (nome) label = nome;
+    //if (nome) label = nome;
   }
 
   out.textContent = label;

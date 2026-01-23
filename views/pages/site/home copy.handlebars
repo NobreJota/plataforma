@@ -3370,47 +3370,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
       // Abre modal ao digitar 2+ chars e sem cidade
-     // inputBusca.addEventListener('input', () => {
-     //   const q = (inputBusca.value || '').trim();
+      inputBusca.addEventListener('input', () => {
+        const q = (inputBusca.value || '').trim();
 
-    //    if (q.length < 2) {
-    //      modalJaMostrou = false; // reseta se apagou
-    //      return;
-    //    }
-
-    //    if (!temCidadeSelecionada() && !modalJaMostrou) {
-    //      modalJaMostrou = true;
-    //      abrirModalLocal();
-    //    }
-    //  });
-
-       // ====== ABRIR MODAL NO FOCO (sem loop) ======NOO))))))))))))))))))))VOOOOOOOOOOOOOO
-      let ignoreNextFocus = false;
-
-      // abre modal ao focar (se não tem cidade)
-      function checarEabrirModalNoFoco() {
-        if (ignoreNextFocus) {
-          ignoreNextFocus = false;
+        if (q.length < 2) {
+          modalJaMostrou = false; // reseta se apagou
           return;
         }
 
-        if (!temCidadeSelecionada()) {
-          // evita reabrir repetidamente enquanto o modal está aberto
-          if (!modalJaMostrou) {
-            modalJaMostrou = true;
-            abrirModalLocal();
-          }
+        if (!temCidadeSelecionada() && !modalJaMostrou) {
+          modalJaMostrou = true;
+          abrirModalLocal();
         }
-      }
-
-      inputBusca.addEventListener('focus', checarEabrirModalNoFoco);
-      inputBusca.addEventListener('click', checarEabrirModalNoFoco);
-
-      // quando o modal fecha, libera pra poder abrir de novo futuramente (se ainda estiver sem cidade)
-      modalEl.addEventListener('hidden.bs.modal', () => {
-        modalJaMostrou = false;
       });
-      //////////////////////////////////////////////////////////////////////////// NOVO
 
       // Quando escolhe cidade no modal
       modalCidade.addEventListener('change', () => {
@@ -3452,30 +3424,21 @@ document.addEventListener('DOMContentLoaded', function () {
     // opcional: persistir
     //localStorage.setItem('cidadeSelecionada', cidade);
     //localStorage.setItem('bairroSelecionado', bairro);
-   // localStorage.setItem('rotaes:cidade', cidade);
-    //localStorage.setItem('rotaes:bairro', bairro);
+    localStorage.setItem('rotaes:cidade', cidade);
+    localStorage.setItem('rotaes:bairro', bairro);
 
 
     modal.hide();
 
     // volta pro input e segue o baile
-    //setTimeout(() => inputBusca.focus(), 100);
-    // volta pro input e segue o baile (sem reabrir o modal)
-    ignoreNextFocus = true;
-    setTimeout(() => inputBusca.focus(), 50);
+    setTimeout(() => inputBusca.focus(), 100);
   });
 
   // opcional: ao carregar, restaurar
-  //const c = localStorage.getItem('cidadeSelecionada');
-  //const b = localStorage.getItem('bairroSelecionado');
-  //if (c && selectCidade) selectCidade.value = c;
-  //if (b && selectBairro) selectBairro.value = b;
-  // opcional: ao carregar, restaurar
-    const c = localStorage.getItem('rotaes:cidade');
-    const b = localStorage.getItem('rotaes:bairro');
-    if (c && selectCidade) selectCidade.value = c;
-    if (b && selectBairro) selectBairro.value = b;
-
+  const c = localStorage.getItem('cidadeSelecionada');
+  const b = localStorage.getItem('bairroSelecionado');
+  if (c && selectCidade) selectCidade.value = c;
+  if (b && selectBairro) selectBairro.value = b;
 })();
 </script>
 
@@ -3510,47 +3473,3 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </script>
 
-<script>
-  (function () {
-  // ajuste os IDs conforme seus botões/elementos reais
-  const btnAbrir  = document.getElementById('btnAbrirMenu') || document.getElementById('btnMenu');
-  const btnFechar = document.getElementById('btnFecharMenu');
-  const menuEl    = document.getElementById('menuDepartamentos') || document.getElementById('menuLateral');
-
-  function abrir() {
-    document.body.classList.add('menu-open');
-  }
-
-  function fechar() {
-    document.body.classList.remove('menu-open');
-  }
-
-  if (btnAbrir)  btnAbrir.addEventListener('click', abrir);
-  if (btnFechar) btnFechar.addEventListener('click', fechar);
-
-  // se clicar fora/overlay e você fecha o menu, já remove também:
-  const overlay = document.getElementById('menuOverlay');
-  if (overlay) overlay.addEventListener('click', fechar);
-
-  // fallback: se o menu some por qualquer motivo, remove a classe
-  if (menuEl) {
-    const obs = new MutationObserver(() => {
-      const aberto =
-        menuEl.classList.contains('open') ||
-        menuEl.classList.contains('show') ||
-        menuEl.style.transform === 'translateX(0px)' ||
-        menuEl.getAttribute('aria-hidden') === 'false';
-      if (!aberto) fechar();
-    });
-    obs.observe(menuEl, { attributes: true, attributeFilter: ['class', 'style', 'aria-hidden'] });
-  }
-
-  function fechar() {
-  document.body.classList.remove('menu-open');
-  const inputBusca = document.getElementById('inputBusca');
-  if (inputBusca) setTimeout(() => inputBusca.focus(), 50);
-}
-
-})();
-
-</script>

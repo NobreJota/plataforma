@@ -175,7 +175,7 @@ const PLACEHOLDER_IMG =
   //???????????????????????????????????????????????????????????????????????????????????
 
 // CARREGA A PARTE COMPRAS ONLINE COMO PADRÂO /
-router.get('/test', async (req, res) => {
+router.get('/', async (req, res) => {
      try {
           // 1️⃣ todos os departamentos ativados → botões do topo
           const deps = await Departamento
@@ -183,13 +183,32 @@ router.get('/test', async (req, res) => {
             .sort({ nomeDepartamento: 1 })
             .lean();
 
-          
-          const departamentosView = deps.map(d => ({
-            nomeDepartamento: d.nomeDepartamento,
-            imagemUrl: d.imagemUrl || '/img/placeholder.png',
-            ativado: d.ativado === 1 || d.ativado === true,
-            url: `/?segmento=${encodeURIComponent(d.nomeDepartamento)}`
-          }));
+          const rotaEspecial = {
+              "Serviços": "/home-servico",
+              "Turismo": "/home-turismo",
+            };
+
+           const departamentosView = deps.map(d => {
+              const nome = (d.nomeDepartamento || "").trim();
+
+              return {
+                nomeDepartamento: nome,
+                imagemUrl: d.imagemUrl || "/img/placeholder.png",
+                ativado: d.ativado === 1 || d.ativado === true,
+
+                // ✅ se for "Serviços" ou "Turismo" vai para rota própria
+                // ✅ senão mantém seu comportamento atual
+                url: rotaEspecial[nome] || `/?segmento=${encodeURIComponent(nome)}`
+              };
+            });
+
+
+          // const departamentosView = deps.map(d => ({
+          //   nomeDepartamento: d.nomeDepartamento,
+          //   imagemUrl: d.imagemUrl || '/img/placeholder.png',
+          //   ativado: d.ativado === 1 || d.ativado === true,
+          //   url: `/?segmento=${encodeURIComponent(d.nomeDepartamento)}`
+          // }));
           console.log('');
           console.log('_________________________________________________');  
           
@@ -241,7 +260,6 @@ router.get('/test', async (req, res) => {
               homeLateral,
             });
           }
-
 
           if (depAlvo.ativado !== 1) return res.redirect('/');
     
@@ -1322,7 +1340,6 @@ router.get("/home-layout", async (req, res) => {
   }
 });
 
-
 router.get('/home-detalhe/:id', async (req, res) => {
   console.log('');
   console.log('[ 1328 ] ',req.params.id);
@@ -1339,40 +1356,22 @@ router.get('/home-detalhe/:id', async (req, res) => {
       }
       if (!lojista) lojista = { corHeader: "#0069a8", logoUrl: "", tituloPage: "" };
 
-      // const whatsappNumber = String(lojista?.celular || '').replace(/\D/g, '');
-
-      // const mensagemWhatsapp =
-      //   `Olá! Tenho interesse no produto: ${produto?.descricao || ''} (código ${produto?.codigo || ''}).`;
-
-      // const whatsappLink =
-      //   whatsappNumber
-      //     ? `https://wa.me/55${whatsappNumber}?text=${encodeURIComponent(mensagemWhatsapp)}`
-      //     : '';
-
+     
       const whatsappNumber = String(lojista?.celular || '').replace(/\D/g, '');
 
-//      const fotoUrl = Array.isArray(produto.pageurls) && produto.pageurls[0] ? produto.pageurls[0] : "";
 
-// const msg =
-//   `Olá! Tenho interesse no produto: ${produto.descricao || ""} (código ${produto.codigo || ""}).` +
-//   (fotoUrl ? `\n\nFoto: ${fotoUrl}` : "");
+      const fotoUrl = Array.isArray(produto.pageurls) && produto.pageurls.length
+        ? produto.pageurls[0]
+        : "";
 
-// const whatsappLink = whatsappNumber
-//   ? `https://api.whatsapp.com/send?phone=55${whatsappNumber}&text=${encodeURIComponent(msg)}`
-//   : "";
+      const mensagemWhatsapp =
+        `Olá! Tenho interesse no produto: ${produto?.descricao || ""} (código ${produto?.codigo || ""}).` +
+        (fotoUrl ? `\n\nFoto: ${fotoUrl}` : "");
 
-const fotoUrl = Array.isArray(produto.pageurls) && produto.pageurls.length
-  ? produto.pageurls[0]
-  : "";
-
-const mensagemWhatsapp =
-  `Olá! Tenho interesse no produto: ${produto?.descricao || ""} (código ${produto?.codigo || ""}).` +
-  (fotoUrl ? `\n\nFoto: ${fotoUrl}` : "");
-
-const whatsappLink =
-  whatsappNumber
-    ? `https://api.whatsapp.com/send/?phone=55${whatsappNumber}&text=${encodeURIComponent(mensagemWhatsapp)}`
-    : "#";
+      const whatsappLink =
+        whatsappNumber
+          ? `https://api.whatsapp.com/send/?phone=55${whatsappNumber}&text=${encodeURIComponent(mensagemWhatsapp)}`
+          : "#";
 
 
       console.log(' 3000',produto.pageurls)
@@ -1540,6 +1539,34 @@ router.get("/pagina-exclusiva/:slug", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Erro ao abrir página exclusiva");
+  }
+});
+
+// SERVIÇO
+router.get("/home-servico", async (req, res) => {
+  try {
+      // se você já carrega dados na home (departamentos, cidades, etc),
+      // copie o mesmo "bloco de dados" aqui (o mínimo).
+      return res.render("pages/site/home-servico.handlebars", {
+      layout:false,
+      titulo: "Serviços",
+    });
+  } catch (e) {
+      console.error("[GET /home-servico] ERRO:", e);
+      return res.status(500).send("Erro ao abrir Serviços: " + (e?.message || e));
+  }
+});
+
+// TURISMO
+router.get("/home-turismo", async (req, res) => {
+  try {
+      return res.render("pages/site/home-turismo.handlebars", {
+      layout:false,
+      titulo: "Turismo",
+    });
+  } catch (e) {
+     console.error("[GET /home-turismo] ERRO:", e);
+     return res.status(500).send("Erro ao abrir turismo: " + (e?.message || e));
   }
 });
 

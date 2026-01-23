@@ -79,6 +79,7 @@ app.engine('handlebars', engine({
           inc: (v) => parseInt(v, 10) + 1,
           dec: (v) => Math.max(parseInt(v, 10) - 1, 1),
           onlyDigits: (s) => String(s ?? '').replace(/\D+/g, ''),
+          concat: (...args) => args.slice(0, -1).join(""),
           // ✅ ESTES DOIS PRECISAM FICAR DENTRO DE "helpers"
           encodeURIComponent: (s) => encodeURIComponent(String(s ?? '')),
           includes: (arr, val) =>

@@ -35,7 +35,7 @@
       html, body{
         height: 100%;
         overflow: hidden;           /* <- trava scroll da página */
-        background: #d60f0f;           /* opcional: cor de fundo padrão */
+        background: #ffffff;           /* opcional: cor de fundo padrão */
       }
 
       /* empurra a página para baixo da barra fixa */
@@ -61,9 +61,10 @@
       .topbar{
           position: fixed; inset: 0 0 auto 0;
           z-index: var(--z-top);
-          background: #0b2a3f; color:#fff;
+          background: #0b2a3f;
+          color:#fff;
           box-shadow: 0 2px 10px rgba(0,0,0,.2);
-          background-color: red;
+          background-color:#fff;
       }
 
       .topbar .brand{ font-weight: 800; color:#fff; text-decoration:none; }
@@ -260,6 +261,18 @@
           background-color: #fff;
         }
 
+     /*    #menuLateral {
+      width: auto;
+      height: 94vh;
+      position: absolute;
+      top: 3.8vh;
+      left: 0;
+      display: flex;
+      flex-direction: row;
+      z-index: 1000;
+      background-color: #fff;
+    }*/
+
         #H2menuLateral {
           writing-mode: vertical-rl; /* vertical (de baixo para cima) */
           transform: rotate(180deg); /* inverte para cima para baixo */
@@ -271,15 +284,36 @@
           margin-left: .4vw;
         }
 
+    /*    #H2menuLateral {
+      writing-mode: vertical-rl; /* vertical (de baixo para cima) */
+     /* transform: rotate(180deg); /* inverte para cima para baixo */
+     /* font-size: 1vw;
+      color: #13e236;
+      margin: 0;
+      text-align: center;
+      font-weight: 100;
+      margin-left: .4vw;
+    }*/
+
         #faixaVertical {
           width: 2vw;
-          height: 96vh;
+          height: 98vh;
           background-color: #295ee4;
           z-index: 800;
           display: flex;
           flex-direction: column;
           justify-content: space-around;
         }
+
+    /*    #faixaXVertical {
+      width: 2vw;
+      height: 96vh;
+      background-color: #295ee4;
+      z-index: 800;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }*/
 
     #menulista {
           width: 13vw;
@@ -352,38 +386,11 @@
   gap: 38px;                             /* espaço entre colunas um pouco menor */
 }
 
-#menuLateral {
-      width: auto;
-      height: 94vh;
-      position: absolute;
-      top: 3.8vh;
-      left: 0;
-      display: flex;
-      flex-direction: row;
-      z-index: 1000;
-      background-color: #fff;
-    }
 
-    #H2menuLateral {
-      writing-mode: vertical-rl; /* vertical (de baixo para cima) */
-      transform: rotate(180deg); /* inverte para cima para baixo */
-      font-size: 1vw;
-      color: #13e236;
-      margin: 0;
-      text-align: center;
-      font-weight: 100;
-      margin-left: .4vw;
-    }
 
-    #faixaVertical {
-      width: 2vw;
-      height: 96vh;
-      background-color: #295ee4;
-      z-index: 800;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-    }
+    
+
+    
 
 #menulista {
        width: 13vw;
@@ -415,7 +422,7 @@
     #main {
         width: 100vw;
         height: 100vh; /* altura para visualização completa */
-        background-color: #5e5c5c; /* apenas para visualização */
+        background-color: #12d412; /* apenas para visualização */
         position: relative; /* necessário para iniciar o contexto de empilhamento */
         z-index: 1; /* camada inferior */
     }
@@ -549,8 +556,6 @@
       overflow: hidden;
     }
 
-    
-
     .table-scroll {
       flex: 1;               /* ocupa todo espaço disponível */
       overflow-y: auto;      /* SCROLL AQUI */
@@ -562,6 +567,7 @@
       position: sticky;
       top: 0;
       z-index: 10;
+      background: yellow;
     }
 </style>
 <style>
@@ -579,8 +585,8 @@
 </style>
  </head>
 {{!-- ///////////////////////////////////////////////////////////////////////////// --}}
-<header id="id-header" class="topbar">
-      <div class="container-fluid py-2" style="background: #b87004;">
+<header id="id-header" class="topbar" style="">
+      <div class="container-fluid py-2" style="background: #b87004;width: 98%;margin-left: 2vw;">
           <div class="d-flex align-items-center justify-content-between">
             <a href="/" class="brand">
               Loja : <span class="accent">{{lojista.marca}}</span>
@@ -588,7 +594,7 @@
           </div>
       </div>
       {{!-- /////////////////////////////////////////////////////////////////////////// --}}
-      <section class="painel-lista" style="background-color: #0833a2;">
+      <section class="painel-lista" style="background-color: #a29f08;width: 98%;margin-left: 2vw;padding-left: 1vw;">
             <div class="container-fluid py-2">
                   <div class="toolbar">
                       <!-- Ativos -->
@@ -798,7 +804,7 @@
           </div>
           <div style="height: 25vh;"></div>
         </div>
-        <div id="faixaVertical" style="width: 2vw; height: 96vh; background-color:#0b56e1; display: flex; flex-direction: column; justify-content: space-around; z-index: 800;margin-top:-0.5vh;">
+        <div id="faixaVertical" style="width: 2vw; height: 100vh; background-color:#240be1; display: flex; flex-direction: column; justify-content: space-around; z-index: 800;margin-top: -3vh;">
           <h2 id="H2menuLateral" style="font-size: 1vw; text-align: end; color: #fff;">Menu lateral</h2>
         </div>
 </div>
@@ -1219,6 +1225,7 @@ function clearSlot(i){
 {{!-- <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> --}}
 {{!-- MOSTRANDO E ESCONDENDO MENU LATERAL --}}
 <script>
+  console.log('100')
       const faixa = document.getElementById("faixaVertical");
       const menulista = document.getElementById("menulista");
 
@@ -1238,6 +1245,7 @@ function clearSlot(i){
 </script>
 {{!-- PEGA ID LOJISTA PARA LINK FORNEC CADASTRO --}}
 <script>
+  console.log('1241')
   function pegaIdlojista(){
     //console.log(' [ 377 pegaIdlojista]')
     let n=document.getElementById("IddoLojista");
@@ -1254,6 +1262,7 @@ function clearSlot(i){
 </script>
 {{!-- ORDENAÇÃO DE COLUNS --}}
 <script>
+  
 let direcaoOrdenacao = [];
 
 function ordenarTabela(colunaIndex) {

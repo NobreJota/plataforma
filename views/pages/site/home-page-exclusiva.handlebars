@@ -2727,6 +2727,21 @@ document.addEventListener("DOMContentLoaded", () => {
   obs.observe(el, { attributes: true, attributeFilter: ["style"] });
 });
 </script>
+<script>
+  document.addEventListener("click", async (e) => {
+  const card = e.target.closest(".card-prod");
+  if (!card) return;
 
+  e.preventDefault();
+  const id = card.dataset.id;
+
+  const r = await fetch(`/home-detalhe/${id}?partial=1`);
+  const html = await r.text();
+
+  document.querySelector("#modalBody").innerHTML = html;
+  document.querySelector("#modalProduto").classList.add("open");
+});
+
+</script>
 </body>
 </html>

@@ -52,7 +52,8 @@ const LojistaSchema = new Schema({
     }
   ],
   ativo: { type: String },
-}, { timestamps: true });
+  slug: { type: String, trim: true, index: true },
+  }, { timestamps: true });
 
 LojistaSchema.plugin(mongoosePaginate);
 

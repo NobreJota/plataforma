@@ -99,11 +99,7 @@ const ArquivoDocSchema = new Schema({
   taxa: {type: mongoose.Types.Decimal128 ,default: 0},
   cfop_ecf: {type: String,default: ''},// “CFOP ECF” (nome interno sem espaço)
   cfop_nfe: {type: String,default: ''},
-
-
-  
-
-}, { timestamps: true });
+  }, { timestamps: true });
 
 
 // <<< NOVO: sempre que salvar UM documento, preenche descricaoNorm

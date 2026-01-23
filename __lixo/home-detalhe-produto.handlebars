@@ -130,7 +130,7 @@ body { margin: 0; background: #ebeaea; color:#111; font-family: Georgia, "Times 
 }
 
 .detalhe-linha{
-  font-size: larger;
+  font-size: 20px;
   margin: 12px 0;
   color:#222;
 }
@@ -964,21 +964,13 @@ body { margin: 0; background: #ebeaea; color:#111; font-family: Georgia, "Times 
 .topbar-inner{
   max-width: 1180px;
   margin: 0 auto;
-  height: 48px;
+  height: 48px;                 /* <<< fino como concorrente */
   padding: 0 14px;
-  display: grid;
-  grid-template-columns: auto 1fr auto; /* esquerda | centro | direita */
+  display: flex;
   align-items: center;
+  justify-content: start;
   gap: 12px;
 }
-
-.topbar-center{
-  text-align: center;
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: .5px;
-}
-
 
 .topbar-back{
   color: #fff;
@@ -1039,29 +1031,26 @@ body{ margin:0; }
 </head>
 
 <body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="topbar-back" href="{{voltarUrl}}">
+      ← Voltar
+    </a>
+
+    <div class="topbar-right">
+      {{#if usuarioLogado}}
+        <span class="topbar-user">Olá, {{usuarioLogado.nome}}</span>
+      {{else}}
+        <a class="topbar-login" href="/login">Fazer login</a>
+      {{/if}}
+    </div>
+  </div>
+</div>
 
 
+  <div class="detalhe-wrap" style="background: #063fa0;color:#111;">
 
-  <div class="detalhe-wrap" style="background: #ffffff;color:#111;">
-     <div class="topbar" style="">
-            <div class="topbar-inner">
-          <a class="topbar-back" id="btnVoltar" href="#">← Voltar</a>
-
-          <div class="topbar-center" style="display: flex;flex-direction: column;justify-items: auto;">
-            <b style="margin-bottom: 2px;">LOJA : {{#if lojista.nomeFantasia}}{{lojista.nomeFantasia}}{{else}}{{produto.marcaloja}}{{/if}}</b>
-            <b style="font-size: smaller;">{{lojista.logradouro}} : {{lojista.complemento}} - {{lojista.bairro}}</b>
-          </div>
-
-          <div class="topbar-right">
-            {{#if usuarioLogado}}
-              <span class="topbar-user">Olá, {{usuarioLogado.nome}}</span>
-            {{else}}
-              <a class="topbar-login" href="/login">Fazer login</a>
-            {{/if}}
-          </div>
-        </div>
-     </div>
-    
+    {{!-- <a class="detalhe-voltar" href="/" aria-label="Voltar para Home">« Voltar para Home</a> --}}
 
     <div class="detalhe-grid" style="padding-left: 6px;padding-top: 10px;padding-bottom: 2px;">
       {{!-- ========================= COLUNA FOTO (slots + foto grande) ========================= --}}
@@ -1104,13 +1093,8 @@ body{ margin:0; }
                   <span class="thumb-empty">slots 07</span>
                 </button>
             </div>
-            <div class="detalhe-foto" id="fotoBox" style="padding: 5px;padding-bottom: 1px;border: 1px solid #808080;">
-                   <img
-                        id="imgPrincipal"
-                        src="{{produto.pageurls.[0]}}"
-                        alt="{{produto.descricao}}"
-                        style="display:block; width:100%; height:100%; object-fit:contain;"
-                      >
+            <div class="detalhe-foto" id="fotoBox" style="padding: 5px;padding-bottom: 1px;">
+                  <img id="imgPrincipal" ...>
                   <div id="fotoPlaceholder" class="detalhe-foto-placeholder">SEM IMAGEM</div>
 
                   <button id="btnAddLista" class="btn-add-lista" type="button">
@@ -1121,8 +1105,8 @@ body{ margin:0; }
       {{!-- ========================= COLUNA INFO ========================= --}}
       <section class="detalhe-info" aria-label="Informações do produto">
 
-        <h1 class="detalhe-titulo" style="">Descrição : {{produto.descricao}}</h1>
-        <h1 class="detalhe-titulo" style="">Complemento : {{produto.complete}}</h1>
+        <h1 class="detalhe-titulo">{{produto.descricao}}</h1>
+
         <div class="detalhe-linha"><b>Código:</b> {{produto.codigo}}</div>
 
         <div class="detalhe-linha">
@@ -1157,7 +1141,7 @@ body{ margin:0; }
       {{!-- <div style="width: 5vw;height: 5vh;background: palevioletred;float:right ;"> --}}
        <a id="btnWhatsFloat"
               class="whats-float"
-              href="{{{whatsappLink}}}"
+              href="{{whatsappLink}}"
               target="_blank"
               rel="noopener"
               aria-label="Falar no WhatsApp" >
@@ -1197,6 +1181,8 @@ body{ margin:0; }
               </tfoot>
             </table>
           </section>
+{{!-- BOTÃO WHATSAPP flutuante --}}
+  {{!-- <a id="btnWhatsFloat" class="whats-float" href="#" aria-label="Falar no WhatsApp">WhatsApp</a> --}}
   </div>
 
   
@@ -1205,87 +1191,10 @@ body{ margin:0; }
 
 <script>
   window.__PRODUTO__ = {{{json produto}}};
-  window.__WHATSAPP_LINK__ = {{{json whatsappLink}}};
-  
-</script>
-
-<script>
-  window.__LOGADO__ = {{#if usuarioLogado}}true{{else}}false{{/if}};
+  window.__WHATSAPP_LINK__ = "{{whatsappLink}}";
 </script>
 
 <script src="/js/home-detalhe.js"></script>
-<script>
- document.getElementById('btnVoltar').addEventListener('click', function(e){
-    e.preventDefault();
-    if (window.history.length > 1) window.history.back();
-    else window.location.href = '/'; // fallback
-  });
-</script>
-<script>
-(function () {
-  const produto = window.__PRODUTO__ || {};
-  console.log(' ', produto)
-  const urls = Array.isArray(produto.pageurls) ? produto.pageurls : [];
-   console.log( ' 1228 ', urls)
-  const slots = Array.from(document.querySelectorAll('.thumb-slot'));
-  const imgPrincipal = document.getElementById('imgPrincipal');
-  const placeholder = document.getElementById('fotoPlaceholder');
-
-  function setPrincipal(url) {
-    if (!imgPrincipal || !placeholder) return;
-
-    if (url) {
-      imgPrincipal.src = url;
-      imgPrincipal.style.display = 'block';
-      placeholder.style.display = 'none';
-    } else {
-      imgPrincipal.removeAttribute('src');
-      imgPrincipal.style.display = 'none';
-      placeholder.style.display = 'flex';
-    }
-  }
-
-  // Preenche slots e registra clique
-  slots.forEach((btn, i) => {
-    const url = urls[i] || '';
-    const img = btn.querySelector('.thumb-img');
-    const empty = btn.querySelector('.thumb-empty');
-
-    // limpa estado
-    btn.classList.remove('active');
-    btn.dataset.url = url;
-
-    if (url) {
-      if (img) {
-        img.src = url;
-        img.style.display = 'block';
-      }
-      if (empty) empty.style.display = 'none';
-    } else {
-      if (img) {
-        img.removeAttribute('src');
-        img.style.display = 'none';
-      }
-      if (empty) empty.style.display = 'inline';
-    }
-
-    btn.addEventListener('click', () => {
-      // ativa visual
-      slots.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      setPrincipal(btn.dataset.url || '');
-    });
-  });
-
-  // Inicial: primeira imagem, senão placeholder
-  const firstUrl = urls.find(Boolean) || '';
-  if (firstUrl) {
-    const firstIndex = urls.findIndex(u => !!u);
-    if (slots[firstIndex]) slots[firstIndex].classList.add('active');
-  }
-  setPrincipal(firstUrl);
-})();
-</script>
+  
 </body>
 </html>

@@ -175,7 +175,7 @@ const PLACEHOLDER_IMG =
   //???????????????????????????????????????????????????????????????????????????????????
 
 // CARREGA A PARTE COMPRAS ONLINE COMO PADRÂO /
-router.get('/', async (req, res) => {
+router.get('/test', async (req, res) => {
      try {
           // 1️⃣ todos os departamentos ativados → botões do topo
           const deps = await Departamento
@@ -672,20 +672,43 @@ router.get('/sejacooperado',async (req,res)=>{
   res.render("pages/site/seja-cooperado", { layout:false});
 });
 
-router.get('/home-detalhe/:id', async (req, res) => {
-  
+router.get('/home-mortodetalhe/:id', async (req, res) => {
   try {
     const produto = await ArquivoDoc.findById(req.params.id).lean();
     if (!produto) return res.status(404).send('Produto não encontrado');
 
+    // ⚠️ Ajuste o nome do Model conforme o seu projeto: Lojista / LojistaDoc / etc
+    let slugLoja = "";
+    if (produto.loja_id) {
+      const lojista = await Lojista.findById(produto.loja_id).select("slug").lean();
+      slugLoja = lojista?.slug || "";
+    }
+
+    console.log('__________________________________');
+    console.log('',produto._id);
+    console.log('__________________________________');
+    const voltarUrl = slugLoja
+      ? `/pagina-exclusiva/${slugLoja}?p=${produto._id}`
+      : `/?p=${produto._id}`;
+    //const voltarUrl = slugLoja ? `/pagina-exclusiva/${slugLoja}` : "/";
+
+    console.log(' [ 689 ]');
+    console.log(' slug', slugLoja);
+    console.log(' [ 691 ]');
+    //const voltarUrl = slugLoja ? `/pagina-exclusiva/${slugLoja}` : "/";
+    console.log(voltarUrl)
     console.log('[EXCLUSIVA] produto._id:', produto._id);
     console.log('[EXCLUSIVA] loja_id:', produto.loja_id);
     console.log('[EXCLUSIVA] codigo:', produto.codigo);
     console.log('[EXCLUSIVA] localloja[0]:', JSON.stringify(produto.localloja?.[0], null, 2));
+
     res.render('pages/site/home-detalhe', {
-      layout: false,  // ou seu layout padrão, se estiver usando
+      layout: false,
       produto,
+      voltarUrl,
+      usuarioLogado: req.user || null
     });
+
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao abrir detalhes do produto');
@@ -1301,54 +1324,72 @@ router.get("/home-layout", async (req, res) => {
 
 
 router.get('/home-detalhe/:id', async (req, res) => {
+  console.log('');
+  console.log('[ 1328 ] ',req.params.id);
+  console.log('');
   try {
-    const produto = await ArquivoDoc.findById(req.params.id).lean();
-    // let lojista = await Lojista.findById(produto.loja_id).lean();
-    
-    if (!produto) return res.status(404).send('Produto não encontrado');
+      const produto = await ArquivoDoc.findById(req.params.id).lean();
+      // let lojista = await Lojista.findById(produto.loja_id).lean();
+      if (!produto) return res.status(404).send('Produto não encontrado');
 
-  
+      // pega lojista da loja do produto
+      let lojista = null;
+      if (produto.loja_id) {
+        lojista = await Lojista.findById(produto.loja_id).lean();
+      }
+      if (!lojista) lojista = { corHeader: "#0069a8", logoUrl: "", tituloPage: "" };
 
-    // pega lojista da loja do produto
-    let lojista = null;
-    if (produto.loja_id) {
-      lojista = await Lojista.findById(produto.loja_id).lean();
-    }
-    if (!lojista) lojista = { corHeader: "#0069a8", logoUrl: "", tituloPage: "" };
+      // const whatsappNumber = String(lojista?.celular || '').replace(/\D/g, '');
+
+      // const mensagemWhatsapp =
+      //   `Olá! Tenho interesse no produto: ${produto?.descricao || ''} (código ${produto?.codigo || ''}).`;
+
+      // const whatsappLink =
+      //   whatsappNumber
+      //     ? `https://wa.me/55${whatsappNumber}?text=${encodeURIComponent(mensagemWhatsapp)}`
+      //     : '';
 
       const whatsappNumber = String(lojista?.celular || '').replace(/\D/g, '');
-      const mensagemWhatsapp =
-        `Olá! Tenho interesse no produto: ${produto.descricao || ''} (código ${produto.codigo || ''}).`;
 
-     const whatsappLink =
-     `https://wa.me/55${whatsappNumber}?text=${encodeURIComponent(mensagemWhatsapp)}`;
-    // mantém contexto (pra “Voltar para Home” voltar pra EXCLUSIVA com filtros)
-    const dep  = req.query.dep || '';
-    const setor = req.query.setor || '';
-    const secao = req.query.secao || '';
+//      const fotoUrl = Array.isArray(produto.pageurls) && produto.pageurls[0] ? produto.pageurls[0] : "";
 
-    // link de volta para a página exclusiva (não volta pra home geral)
-    const voltarUrl = `/home-page-exclusiva/${produto._id}?dep=${encodeURIComponent(dep)}&setor=${encodeURIComponent(setor)}&secao=${encodeURIComponent(secao)}`;
-    console.log('');
-    console.log('______________________________________________');
-    console.log("ID recebido:", req.params.id);
-    console.log("Produto encontrado:", produto?._id, produto?.descricao, produto?.codigo);
-    console.log("produto.loja_id:", produto?.loja_id);
-    console.log('______________________________________________');
-    res.render('pages/site/home-detalhe', {
-      layout: false,
-      produto,
-      lojista,
-      voltarUrl,
-      depSelecionado: dep || null,
-      setorSelecionado: setor || null,
-      secaoSelecionada: secao || null,
-      mensagemWhatsapp,
-      whatsappLink
-    });
+// const msg =
+//   `Olá! Tenho interesse no produto: ${produto.descricao || ""} (código ${produto.codigo || ""}).` +
+//   (fotoUrl ? `\n\nFoto: ${fotoUrl}` : "");
+
+// const whatsappLink = whatsappNumber
+//   ? `https://api.whatsapp.com/send?phone=55${whatsappNumber}&text=${encodeURIComponent(msg)}`
+//   : "";
+
+const fotoUrl = Array.isArray(produto.pageurls) && produto.pageurls.length
+  ? produto.pageurls[0]
+  : "";
+
+const mensagemWhatsapp =
+  `Olá! Tenho interesse no produto: ${produto?.descricao || ""} (código ${produto?.codigo || ""}).` +
+  (fotoUrl ? `\n\nFoto: ${fotoUrl}` : "");
+
+const whatsappLink =
+  whatsappNumber
+    ? `https://api.whatsapp.com/send/?phone=55${whatsappNumber}&text=${encodeURIComponent(mensagemWhatsapp)}`
+    : "#";
+
+
+      console.log(' 3000',produto.pageurls)
+
+      console.log('______________________________________________');
+      console.log('whatsapplink', whatsappLink)
+      console.log('______________________________________________');
+      res.render('pages/site/home-detalhe', {
+        layout: false,
+        produto,
+        lojista,
+        whatsappLink,
+        usuarioLogado: req.user || null
+      });
   } catch (err) {
-    console.error('ERRO /home-detalhe:', err);
-    res.status(500).send('Erro ao abrir detalhes');
+      console.error('ERRO /home-detalhe:', err);
+      res.status(500).send('Erro ao abrir detalhes');
   }
 });
 
@@ -1455,5 +1496,53 @@ router.delete("/pedido/item/:produtoId", async (req, res) => {
     res.status(500).json({ ok: false, msg: "Erro ao remover item" });
   }
 });
+
+router.get("/pagina-exclusiva/:slug", async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const { p } = req.query; // id do produto em destaque
+
+    const lojista = await Lojista.findOne({ slug }).lean();
+    if (!lojista) return res.status(404).send("404 - Página não encontrada");
+
+    let filtro = { loja_id: lojista._id };
+
+    let produtoDestaque = null;
+    let secaoId = null;
+
+    if (p) {
+      produtoDestaque = await ArquivoDoc.findById(p).lean();
+
+      // garante que o destaque é dessa loja
+      if (produtoDestaque && String(produtoDestaque.loja_id) === String(lojista._id)) {
+        // pega a seção do produto (ajuste se seu caminho mudar)
+        secaoId = produtoDestaque?.localloja?.[0]?.secao?.[0]?.idSecao;
+
+        if (secaoId) {
+          filtro["localloja.secao.idSecao"] = secaoId;
+        }
+      }
+    }
+
+    const produtos = await ArquivoDoc.find(filtro)
+      .sort({ pageposicao: 1, descricao: 1 })
+      .lean();
+    console.log(' produto :')
+    return res.render("pages/site/home-page-exclusiva", {
+      layout:false,
+      lojista,
+      produtos,
+      produtoDestaqueId: produtoDestaque?._id ? String(produtoDestaque._id) : null,
+      secaoId: secaoId ? String(secaoId) : null,
+      usuarioLogado: req.user || null
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erro ao abrir página exclusiva");
+  }
+});
+
+
 module.exports = router;
 

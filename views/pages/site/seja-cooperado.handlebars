@@ -4,137 +4,576 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Seja um cooperado</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --brand:#066bdf;
+      --brand-dark:#054fb0;
+      --bg:#f4f7ff;
+    }
+    body{ background: var(--bg); }
+    .page-shell{ min-height: 100vh; }
+    .top-hero{
+      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+      color:#fff;
+      border-bottom-left-radius: 22px;
+      border-bottom-right-radius: 22px;
+    }
+    .top-hero h1{ font-weight: 700; letter-spacing:.2px; }
+    .top-hero p{ opacity:.92; }
+
+    .card-soft{
+      border: 0;
+      box-shadow: 0 12px 30px rgba(2, 22, 64, .10);
+      border-radius: 18px;
+    }
+    .section-title{
+      font-weight: 700;
+      color:#0f1f3a;
+      margin: 0;
+    }
+    .hint{
+      color:#54657f;
+      font-size: .92rem;
+    }
+    .form-control, .form-select{
+      border-radius: 12px;
+      padding: .65rem .75rem;
+    }
+    .form-control:focus, .form-select:focus{
+      box-shadow: 0 0 0 .20rem rgba(6,107,223,.15);
+      border-color: rgba(6,107,223,.35);
+    }
+
+    .badge-rule{
+      background: rgba(6,107,223,.10);
+      color: #0b2a62;
+      border: 1px solid rgba(6,107,223,.18);
+      border-radius: 999px;
+      padding: .35rem .60rem;
+      font-weight: 600;
+      font-size: .82rem;
+    }
+
+    .rules li{ margin-bottom: .35rem; }
+    .rules li:last-child{ margin-bottom: 0; }
+
+    .depto-box{
+      background: #0b2a62;
+      border-radius: 14px;
+      padding: 12px;
+      color:#fff;
+    }
+    #listaDepartamentosSelecionados{
+      margin: 0;
+      padding-left: 1rem;
+    }
+    #listaDepartamentosSelecionados li{
+      padding: 2px 0;
+      font-size: .95rem;
+    }
+
+    .btn-primary{
+      background: var(--brand);
+      border-color: var(--brand);
+      border-radius: 12px;
+      padding: .70rem 1rem;
+      font-weight: 700;
+    }
+    .btn-primary:hover{
+      background: var(--brand-dark);
+      border-color: var(--brand-dark);
+    }
+    .btn-outline-secondary{
+      border-radius: 12px;
+      padding: .70rem 1rem;
+      font-weight: 700;
+    }
+
+    .small-note{
+      font-size: .85rem;
+      color:#5a6a82;
+    }
+
+    /* Mobile: dá respiro e evita "apertado" */
+    @media (max-width: 576px){
+      .top-hero{ border-radius: 0 0 18px 18px; }
+    }
+
+  </style>
+  <style>
+  /* foco */
+  .is-focus  { background: #fff3cd !important; color:#000 !important; }
+  /* preenchido (apertou Enter) */
+  .is-filled { background: #dc3545 !important; color:#fff !important; }
+  /* erro (Enter em vazio) */
+  .is-error  { outline: 2px solid #c1121f !important; }
+</style>
+
 </head>
+
 <body>
-<div style="background-color: #066bdf;width: 98vw;height: 98vh;margin: auto;padding: 25px;">
-  <div style="background-color: #fff;width: 80vw;height: 25vh;margin: auto;padding: 20px;display: flex;flex-direction: column;justify-items: auto;">
-    <label style="font-size: 1.2rem;color:red">LEIA COM ATENÇÃO !</label>
-    <hr>
-    <label style="font-size: 0.9rem;color: black;">- Só poderá ser cadastrado empresas da grande Vitória. [ Cariacica, Guarapari, Serra, Vitória, Vila Velha ].</label>
-    <label style="font-size: 0.9rem;color: black;">- As empresas terão que estar legalizads no fisco FEDERAL,ESTADUAL OU MUNICIPAL.</label>
-    <label style="font-size: 0.9rem;color: black;">- As empresa não poderão ter incentivo fiscal do governo.</label>
-    <label style="font-size: 0.9rem;color: black;">- As empresa não poderão ter sua matriz fora do ESTADO.</label>
-    <label style="font-size: 0.9rem;color: black;">- No caso de franquias de fora do ESTADO será analisada se pode ou não participar.</label>
-  </div>
-  <div style="background-color:cadetblue ;width: 80vw;height: 50vh;margin: auto;overflow-y: auto;margin-top:0vh">
-  <div id="cadastroLojistaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#bbbcbb80; justify-content:center; align-items:center;padding: 5px;">
-        <div style="background:#fff; width:50%; height:92vh;margin: auto;padding:10px; border-radius:10px; box-shadow:0 5px 10px #00000080;overflow-x: scroll;overflow-y: auto;">
-            <h4 style="font-weight: 200;color: #141414;">Cadastro de Lojista</h4>
-            <div id="divForm" style="background-color:transparent;height:90vh ;">
-                <form id="cadastroLojistaForm" class="gravaSubmit" method="POST" action="/lojista/gravar">
-                        <input type="hidden" id="editId" name="_id">
-                        <div class="row">
-                            <label>CNPJ:</label>
-                            <input type="text" id="inputCNPJ" name="inputCNPJ" class="form-control" style="background-color: #0d0d0d;color:yellow">
-                        </div>
-                        <div class="row">
-                            <label>Razao:</label>
-                            <input type="text" id="inputrazao" name="inputrazao" class="form-control">
-                        </div>
-                        <div class="row mt-2">
-                            <label>Responsável:</label>
-                            <input type="text" id="responsavel" name="responsavel" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>CPF:</label>
-                            <input type="text" id="cpf" name="cpf" class="form-control">
-                        </div>
-                        {{!-- <div class="row">
-                            <label>Inscrição:</label>
-                            <input type="text" id="inscricao" name="inscricao" class="form-control">
-                        </div> --}}
-                      <div class="row row-dupla-top">
-                            <div class="campo">
-                              <label for="inscricao">Inscrição Estadual</label>
-                              <input type="text" id="inscricao" name="inscricao" class="form-control" placeholder="">
-                            </div>
-
-                            <div class="campo">
-                              <label for="inscricao_municipal">Inscrição Municipal</label>
-                              <input type="text" id="inscricao_municipal" name="inscricao_municipal" class="form-control" placeholder="">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <label>Site:</label>
-                            <input type="text" id="site" name="site" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>Marca:</label>
-                            <input type="text" id="marca" name="marca" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>Celular:</label>
-                            <input type="text" id="celular" name="celular" class="form-control letra">
-                        </div>
-                        <div class="row">
-                            <label>Fone:</label>
-                            <input type="text" id="fone" name="fone" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>Email:</label>
-                            <input type="email" id="email" name="email" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>Senha:</label>
-                            <input type="password" id="senha" name="senha" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>Cep:</label>
-                            <input type="text" id="cep" name="cep" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>Logradouro:</label>
-                            <input type="text" id="logradouro" name="logradouro" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>Número:</label>
-                            <input type="text" id="numero" name="numero" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>Complemento:</label>
-                            <input type="text" id="complemento" name="complemento" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>Bairro:</label>
-                            <input type="text" id="bairro" name="bairro" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>Cidade:</label>
-                            <input type="text" id="cidade" name="cidade" class="form-control">
-                        </div>
-                        <div class="row">
-                            <label>Estado:</label>
-                            <input type="text" id="estado" name="estado" class="form-control" >
-                        </div>
-                        {{!-- ///////////////////////////////////////////////////////////////////////// --}}
-                        <!-- Lista dos departamentos selecionados (pode ser antes visualmente) -->
-                        <div class="row">
-                            <label>Departamentos selecionados:</label>
-                              <ul id="listaDepartamentosSelecionados" style="padding-left: 1rem;background-color: blueviolet;color:#ffffff;text-align: right;"></ul>
-                            </div>
-
-                            <div class="row">
-                            <label>Escolher departamento ?????? :</label>
-                            <div class="grupo-depto" style="display: flex; gap: 10px; align-items: center;">
-                                <select id="selectDepartamento" class="form-control select-departamento" style="width: 20vw;">
-                                <option value="">Selecione um departamento</option>
-                                </select>
-                            </div>
-                            </div>
-                        {{!-- ///////////////////////////////////////////////////////////////////////// --}}
-                        <div class="row" style="height: 4vh;background-color:#0d0d0d ;margin-bottom: .5vh;margin-top: 4vh;">
-                      
-                        </div>
-                        <div class="row" style="display:flex;flex-direction: row;justify-content:space-around;background-color: transparent;">
-                            <button type="button" class="btn btn-secondary" style="width: 30%;" onclick="closeCadastroModal()">Cancelar</button>
-                            <button type="submit" class="btn btn-primary" style="width: 30%;">Salvar</button>
-                        </div>
-                </form>
-            </div>
+  <div class="page-shell">
+    <!-- HERO / TOPO -->
+    <div class="top-hero py-4">
+      <div class="container">
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+          <div>
+            <h1 class="h3 mb-1">Seja um cooperado</h1>
+            <p class="mb-0">Preencha seus dados para análise e cadastro do lojista.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <span class="badge-rule">Grande Vitória</span>
+            <span class="badge-rule">Análise de elegibilidade</span>
+          </div>
         </div>
-</div>
+      </div>
+    </div>
+
+    <div class="container my-4">
+      <div class="row g-4">
+        <!-- REGRAS -->
+        <div class="col-12 col-lg-4">
+          <div class="card card-soft">
+            <div class="card-body">
+              <div class="d-flex align-items-start gap-3">
+                <div class="flex-shrink-0">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center"
+                       style="width:44px;height:44px;background:rgba(220,53,69,.12);color:#dc3545;font-weight:800;">
+                    !
+                  </div>
+                </div>
+                <div>
+                  <h2 class="h6 section-title mb-1" style="color:#b00020;">Leia com atenção</h2>
+                  <div class="hint">Regras para participação como cooperado.</div>
+                </div>
+              </div>
+
+              <hr class="my-3">
+
+              <ul class="rules small mb-0">
+                <li>Só poderá ser cadastrado empresas da Grande Vitória: <strong>Cariacica, Guarapari, Serra, Vitória e Vila Velha</strong>.</li>
+                <li>As empresas precisam estar <strong>legalizadas</strong> no fisco <strong>Federal, Estadual ou Municipal</strong>.</li>
+                <li>A empresa <strong>não pode</strong> ter incentivo fiscal do governo.</li>
+                <li>A empresa <strong>não pode</strong> ter matriz fora do Estado.</li>
+                <li>No caso de franquias de fora do Estado, será analisado se pode ou não participar.</li>
+              </ul>
+
+              <hr class="my-3">
+
+              <div class="small-note">
+                Ao enviar, seus dados serão avaliados. Se aprovado, entraremos em contato.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORMULÁRIO -->
+        <div class="col-12 col-lg-8">
+          <div class="card card-soft">
+            <div class="card-body">
+              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <h2 class="h5 section-title mb-0">Cadastro de Lojista</h2>
+                <div class="hint">Campos com atenção: CNPJ, e-mail e telefone.</div>
+              </div>
+
+              <hr class="my-3">
+
+              <!-- FORM (mantive seu id/action) -->
+              <form id="cadastroLojistaForm" class="gravaSubmit" method="POST" action="/lojista/gravar-cooperado">
+                <input type="hidden" id="editId" name="_id">
+
+                <!-- DADOS PRINCIPAIS -->
+                <div class="row g-3">
+                  <div class="col-12 col-md-4">
+                    <label class="form-label">CNPJ</label>
+                    <input type="text" id="inputCNPJ" name="inputCNPJ" class="form-control"
+                           style="background:#0d0d0d;color:yellow" placeholder="00.000.000/0000-00">
+                  </div>
+
+                  <div class="col-12 col-md-8">
+                    <label class="form-label">Razão Social</label>
+                    <input type="text" id="inputrazao" name="inputrazao" class="form-control" placeholder="Sua empresa LTDA">
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Responsável</label>
+                    <input type="text" id="responsavel" name="responsavel" class="form-control" placeholder="Nome do responsável">
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">CPF</label>
+                    <input type="text" id="cpf" name="cpf" class="form-control" placeholder="000.000.000-00">
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Inscrição Estadual</label>
+                    <input type="text" id="inscricao" name="inscricao" class="form-control">
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Inscrição Municipal</label>
+                    <input type="text" id="inscricao_municipal" name="inscricao_municipal" class="form-control">
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Site</label>
+                    <input type="text" id="site" name="site" class="form-control" placeholder="https://...">
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Marca</label>
+                    <input type="text" id="marca" name="marca" class="form-control" placeholder="Nome fantasia / marca">
+                  </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- CONTATO -->
+                <h3 class="h6 section-title mb-2">Contato</h3>
+                <div class="row g-3">
+                  <div class="col-12 col-md-4">
+                    <label class="form-label">Celular</label>
+                    <input type="text" id="celular" name="celular" class="form-control letra" placeholder="(27) 9xxxx-xxxx">
+                  </div>
+
+                  <div class="col-12 col-md-4">
+                    <label class="form-label">Telefone</label>
+                    <input type="text" id="fone" name="fone" class="form-control" placeholder="(27) xxxx-xxxx">
+                  </div>
+
+                  <div class="col-12 col-md-4">
+                    <label class="form-label">E-mail</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="contato@empresa.com">
+                  </div>
+
+                  <div class="col-12 col-md-4">
+                    <label class="form-label">Senha</label>
+                    <input type="password" id="senha" name="senha" class="form-control" placeholder="Crie uma senha">
+                  </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- ENDEREÇO -->
+                <h3 class="h6 section-title mb-2">Endereço</h3>
+                <div class="row g-3">
+                  <div class="col-12 col-md-3">
+                    <label class="form-label">CEP</label>
+                    <input type="text" id="cep" name="cep" class="form-control" placeholder="00000-000">
+                  </div>
+
+                  <div class="col-12 col-md-7">
+                    <label class="form-label">Logradouro</label>
+                    <input type="text" id="logradouro" name="logradouro" class="form-control">
+                  </div>
+
+                  <div class="col-12 col-md-2">
+                    <label class="form-label">Número</label>
+                    <input type="text" id="numero" name="numero" class="form-control">
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Complemento</label>
+                    <input type="text" id="complemento" name="complemento" class="form-control">
+                  </div>
+
+                  <div class="col-12 col-md-6">
+                    <label class="form-label">Bairro</label>
+                    <input type="text" id="bairro" name="bairro" class="form-control">
+                  </div>
+
+                  <div class="col-12 col-md-8">
+                    <label class="form-label">Cidade</label>
+                    <input type="text" id="cidade" name="cidade" class="form-control">
+                  </div>
+
+                  <div class="col-12 col-md-4">
+                    <label class="form-label">Estado</label>
+                    <input type="text" id="estado" name="estado" class="form-control">
+                  </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- DEPARTAMENTOS -->
+                <h3 class="h6 section-title mb-2">Departamentos</h3>
+
+                <div class="depto-box mb-3">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <div class="fw-bold">Selecionados</div>
+                    <div class="small" style="opacity:.85;">(os que você já escolheu)</div>
+                  </div>
+                  <div class="mt-2">
+                    <ul id="listaDepartamentosSelecionados"></ul>
+                  </div>
+                </div>
+
+                <div class="row g-3 align-items-end">
+                  <div class="col-12 col-md-8">
+                    <label class="form-label">Escolher departamento</label>
+                    <select id="selectDepartamento" class="form-select select-departamento">
+                      <option value="">Selecione um departamento</option>
+                    </select>
+                    <div class="hint mt-1">Você pode escolher mais de um (sem repetir).</div>
+                  </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- AÇÕES -->
+                <div class="d-flex flex-column flex-sm-row gap-2 justify-content-end">
+                  <button type="button" class="btn btn-outline-secondary" onclick="closeCadastroModal()">Cancelar</button>
+                  <button type="submit" class="btn btn-primary">Salvar cadastro</button>
+                </div>
+                <input type="hidden" name="situacao" value="sob análise">
+              </form>
+            </div>
+          </div>
+
+          <div class="text-center small-note mt-3">
+            Ao clicar em “Salvar cadastro”, você confirma que leu e aceita as regras.
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+
+  <!-- bootstrap js opcional (só se você for usar componentes JS) -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
+  <script>
+(function () {
+  // ====== CONFIG ======
+  const $ = (sel) => document.querySelector(sel);
+
+  // seus inputs (mantive os mesmos nomes/ids que você usa)
+  const inputCNPJ  = $("#inputCNPJ");
+  const inputRazao = $("#inputrazao");
+  const inputResp  = $("#responsavel");
+  const inputCPF   = $("#cpf");
+  const inputMarca = $("#marca");
+  const inputFone  = $("#fone");
+  const inputCel   = $("#celular");
+  const inputEmail = $("#email");
+
+  const inputCep   = $("#cep");
+  const inputLogr  = $("#logradouro");
+  const inputNum   = $("#numero");
+  const inputBairro= $("#bairro");
+  const inputCidade= $("#cidade");
+  const inputUF    = $("#estado");
+
+  // opcional: onde mostrar status (se não existir, ele cria)
+  let statusEl = $("#cnpjStatus");
+  if (!statusEl && inputCNPJ) {
+    statusEl = document.createElement("div");
+    statusEl.id = "cnpjStatus";
+    statusEl.style.marginTop = "6px";
+    statusEl.style.fontSize = "13px";
+    inputCNPJ.insertAdjacentElement("afterend", statusEl);
+  }
+
+  if (!inputCNPJ) return;
+
+  // ====== HELPERS ======
+  function onlyDigits(v) {
+    return String(v || "").replace(/\D/g, "");
+  }
+
+  function setStatus(msg, type) {
+    if (!statusEl) return;
+    statusEl.textContent = msg || "";
+    statusEl.style.color = (type === "err") ? "#c1121f" : (type === "ok") ? "#0a7a2f" : "#555";
+  }
+
+  function fill(el, val) {
+    if (!el) return;
+    const v = (val == null) ? "" : String(val);
+    el.value = v;
+  }
+
+  // se você já tem toTitleCaseSmart global, usa; senão, passa direto
+  function smartTitle(s) {
+    try {
+      if (typeof window.toTitleCaseSmart === "function") return window.toTitleCaseSmart(s);
+    } catch {}
+    return s || "";
+  }
+
+  async function fetchJSON(url) {
+    const res = await fetch(url, { headers: { "Accept": "application/json" } });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msg = data?.message || data?.msg || ("HTTP " + res.status);
+      throw new Error(msg);
+    }
+    return data;
+  }
+
+  // ====== CORE ======
+  async function buscarCNPJ() {
+    const cnpj = onlyDigits(inputCNPJ.value);
+
+    if (cnpj.length !== 14) {
+      setStatus("CNPJ inválido (precisa ter 14 dígitos).", "err");
+      return;
+    }
+
+    setStatus("Buscando dados do CNPJ...", "info");
+
+    try {
+      console.log(' 427')  
+      const data = await fetchJSON(`/lojista/consulta-cnpj/${cnpj}`);
+
+      // seu backend às vezes usa {status:"ERROR"} — respeita isso
+      if (data?.status === "ERROR") {
+        setStatus(data?.message || "Não foi possível consultar o CNPJ.", "err");
+        return;
+      }
+
+       console.log('data :',data); 
+      // ====== MAPEAMENTO (ajuste fino se seu payload variar) ======
+      const razao = data?.nome || data?.razao || "";
+      const fantasia = data?.fantasia || data?.marca || "";
+      const email = data?.email || "";
+      const telefone = data?.telefone || "";
+      const celular = data?.celular || "";
+
+      // responsável (QSA)
+      const resp = data?.qsa?.[0]?.nome?.trim?.() || "";
+      const cpf  = data?.cpf || "";
+
+      // endereço
+      const cep  = data?.cep || "";
+      const logr = data?.logradouro || "";
+      const num  = data?.numero || "";
+      const bairro = data?.bairro || "";
+      const cidade = data?.municipio || data?.cidade || "";
+      const uf     = data?.uf || data?.estado || "";
+
+      // ====== PREENCHE ======
+      fill(inputRazao, smartTitle(razao));
+      fill(inputMarca, smartTitle(fantasia));
+      fill(inputResp, smartTitle(resp));
+      fill(inputCPF, cpf);
+
+      fill(inputEmail, email);
+      fill(inputFone, telefone);
+      fill(inputCel, celular);
+
+      fill(inputCep, cep);
+      fill(inputLogr, smartTitle(logr));
+      fill(inputNum, num);
+      fill(inputBairro, smartTitle(bairro));
+      fill(inputCidade, smartTitle(cidade));
+      fill(inputUF, uf);
+
+      setStatus("Dados carregados com sucesso.", "ok");
+      // depois de preencher tudo com sucesso:
+      if (typeof window.__focusAfterCnpj === "function") window.__focusAfterCnpj();
+
+
+      // opcional: joga foco no próximo campo útil
+      if (inputRazao && !inputRazao.value) inputRazao.focus();
+      else if (inputResp) inputResp.focus();
+
+    } catch (err) {
+      console.error("consulta-cnpj:", err);
+      setStatus("Falha ao consultar CNPJ. Verifique conexão/rota/API.", "err");
+    }
+  }
+
+  // ====== EVENTOS ======
+  inputCNPJ.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      buscarCNPJ();
+    }
+  });
+
+  // opcional: se sair do campo e tiver 14 dígitos, busca também
+  inputCNPJ.addEventListener("blur", () => {
+    const cnpj = onlyDigits(inputCNPJ.value);
+    if (cnpj.length === 14) buscarCNPJ();
+  });
+
+})();
+</script>
+<script>
+(function(){
+  const form = document.getElementById("cadastroLojistaForm");
+  if (!form) return;
+
+  // pega campos navegáveis (ignora hidden/disabled)
+  const fields = Array.from(form.querySelectorAll(
+    "input:not([type='hidden']):not([disabled]), select:not([disabled]), textarea:not([disabled])"
+  )).filter(el => el.offsetParent !== null); // só visíveis
+
+  function clearMarks(el){
+    el.classList.remove("is-focus","is-filled","is-error");
+  }
+  function markFocus(el){
+    clearMarks(el);
+    el.classList.add("is-focus");
+  }
+  function markFilled(el){
+    clearMarks(el);
+    el.classList.add("is-filled");
+  }
+  function markError(el){
+    el.classList.add("is-error");
+  }
+  function nextField(curr){
+    const idx = fields.indexOf(curr);
+    return idx >= 0 ? fields[idx+1] : null;
+  }
+
+  // ao focar: amarelo
+  fields.forEach(el => {
+    el.addEventListener("focus", () => markFocus(el));
+    el.addEventListener("blur", () => {
+      // ao sair, se já tem valor e não está marcado, deixa neutro (ou opcionalmente filled)
+      if (String(el.value || "").trim() !== "" && !el.classList.contains("is-filled")) {
+        // não força vermelho aqui pra não brigar com suas rotinas
+        el.classList.remove("is-focus","is-error");
+      } else {
+        el.classList.remove("is-focus","is-error");
+      }
+    });
+
+    el.addEventListener("keydown", (e) => {
+  if (e.key !== "Enter") return;
+  e.preventDefault();
+
+  const val = String(el.value || "").trim();
+  if (!val) {
+    markError(el);
+    el.focus();
+    return;
+  }
+
+  markFilled(el);
+
+  const nx = nextField(el);
+  if (nx) {
+    nx.focus();
+    markFocus(nx);
+  }
+});
+
+
+  // deixa disponível globalmente para o JS do CNPJ chamar
+  window.__focusAfterCnpj = function(){
+    const alvo = document.getElementById("inputrazao");
+    if (alvo) {
+      alvo.focus();
+      markFocus(alvo);
+    }
+  };
+})();
+</script>
 
 </body>
+</html>

@@ -334,8 +334,6 @@
 })();
 </script>
 
-</body>
- </html>
 <!-- HTML: Campos para selecionar departamentos e exibir os escolhidos em <ul> -->
 <script>
 const inputs = document.querySelectorAll("#cadastroLojistaForm input");
@@ -431,39 +429,6 @@ const inputs = document.querySelectorAll("#cadastroLojistaForm input");
         form.submit();
     });
 </script>
-
-<script>
-//  document.addEventListener("DOMContentLoaded", function () {
-//    document.querySelectorAll(".row input").forEach((input) => {
-//      input.addEventListener("keydown", function (e) {
-//        if (e.key === "Enter") {
-//          e.preventDefault();
-
-//          if (e.target.value.trim() === "") {
-//            e.target.style.border = "2px solid red"; // Opcional: destacar vazio
-//            return; // Não continua para o próximo input
-//          } else {
-//            e.target.style.border = ""; // Remove o destaque se estava
-//          }
-
-//          const allInputs = Array.from(document.querySelectorAll(".row input"));
-//          const currentIndex = allInputs.indexOf(e.target);
-//          const currentRow = allInputs[currentIndex];
-
-//          currentRow.style.backgroundColor = "red";
-//          currentRow.style.color = "#fff";
-//
-//          const nextInput = allInputs[currentIndex + 1];
-//          if (nextInput) {
-//            nextInput.style.backgroundColor = "yellow";
-//            nextInput.focus();
-//          }
-//        }
-//      });
-//    });
-//  });
-</script>
-
 {{!-- BUSCA CEP API:VIACEP --}}
 <script>
     async function buscarEnderecoPorCep(cep) {
@@ -878,3 +843,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
  
+</body>
+ </html>

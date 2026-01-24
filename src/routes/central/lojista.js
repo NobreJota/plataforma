@@ -185,7 +185,7 @@ router.get("/cadastro-cooperado", (req, res) => {
 // grava lojista/cooperados
 router.post("/gravar", async (req, res) => {
   console.log('');
-  console.log('[ 172 ]');
+  console.log('[ 188 ]');
   console.log(' Vem : views/pages/central/cadastro-cooperados.handlebars');
   console.log(' router:/routes/central/lojista.js/gravar');
   console.log(' => :');
@@ -462,6 +462,52 @@ router.post("/editar/:id", uploadMem.single("logoFile"), async (req, res) => {
   }
 });
 
+router.post('/gravar-cooperado', async (req, res) => {
+  console.log('');
+  console.log('[ 467 ]');
+  console.log(' Vem : views/pages/sitel/seja-cooperados.handlebars');
+  console.log(' router:/routes/central/lojista.js/gravar');
+  console.log(' => :');
+  console.log('',req.body)
+  console.log('---------------------------------------------------');
+  try {
+      const novoLojista = new Lojista({
+          razao: req.body.inputrazao,
+          assinante: "padrao",
+          situacao: (req.body.situacao && String(req.body.situacao).trim())
+              ? String(req.body.situacao).trim()
+              : "ativo",
+          template: "base",
+          atividade: "não informada",
+          nomeresponsavel: req.body.responsavel,
+          cpfresponsavel: req.body.cpf,
+          cnpj: req.body.inputCNPJ,
+          inscricao: req.body.inscricao,
+          site: req.body.site,
+          marca: req.body.marca,
+          celular: req.body.celular,
+          telefone: req.body.fone,
+          email: req.body.email,
+          senha: req.body.senha,
+          cep: req.body.cep,
+          logradouro: req.body.logradouro,
+          complemento: req.body.complemento,
+          bairro: req.body.bairro,
+          cidade: req.body.cidade,
+          estado: req.body.estado,
+          departamentos:req.body.departamentos_ids,
+    });
+        // Defaults temporários (pode ajustar conforme seu fluxo depois) 
+        await novoLojista.save();
+        console.log('');
+        console.log('[ 503 ] novoLojista.save');
+        console.log('');
+        res.redirect("/lojista/lojista"); // ajuste para onde redirecionar após salvar
+  } catch (err) {
+    console.error("❌ Erro ao salvar lojista:", err);
+    res.status(500).send("Erro ao salvar lojista.");
+  }
+});
 
 
 

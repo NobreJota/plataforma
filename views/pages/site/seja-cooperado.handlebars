@@ -50,6 +50,7 @@
     .badge-rule{
       background: rgba(6,107,223,.10);
       color: #0b2a62;
+      color:#fff;
       border: 1px solid rgba(6,107,223,.18);
       border-radius: 999px;
       padding: .35rem .60rem;
@@ -107,9 +108,30 @@
   /* foco */
   .is-focus  { background: #fff3cd !important; color:#000 !important; }
   /* preenchido (apertou Enter) */
-  .is-filled { background: #dc3545 !important; color:#fff !important; }
+  .is-filled { background: #dca735 !important; color:#fff !important; }
   /* erro (Enter em vazio) */
   .is-error  { outline: 2px solid #c1121f !important; }
+
+  /* mensagem embaixo do campo */
+.field-error{
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #b00020;
+  background: #ffe9ee;
+  border: 1px solid #ff9fb0;
+  border-left: 6px solid #b00020;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+/* input em erro */
+.is-error{
+  border: 2px solid #b00020 !important;
+  background: #fff5f7 !important;
+  color: #111 !important;
+}
+
 </style>
 
 </head>
@@ -501,79 +523,190 @@
 
 })();
 </script>
+
 <script>
-(function(){
+(function () {
   const form = document.getElementById("cadastroLojistaForm");
   if (!form) return;
 
-  // pega campos navegáveis (ignora hidden/disabled)
-  const fields = Array.from(form.querySelectorAll(
+  // Campos focáveis
+  const focusables = Array.from(form.querySelectorAll(
     "input:not([type='hidden']):not([disabled]), select:not([disabled]), textarea:not([disabled])"
-  )).filter(el => el.offsetParent !== null); // só visíveis
+  ));
 
-  function clearMarks(el){
+  // Utilitários (mantém sua base)
+  function resetClasses(el){
     el.classList.remove("is-focus","is-filled","is-error");
+    // zera inline legado (CNPJ/CEP)
+    el.style.backgroundColor = "";
+    el.style.color = "";
+    el.style.caretColor = "";
+    el.style.border = "";
   }
   function markFocus(el){
-    clearMarks(el);
+    resetClasses(el);
     el.classList.add("is-focus");
   }
   function markFilled(el){
-    clearMarks(el);
+    resetClasses(el);
     el.classList.add("is-filled");
   }
   function markError(el){
+    resetClasses(el);
     el.classList.add("is-error");
   }
-  function nextField(curr){
-    const idx = fields.indexOf(curr);
-    return idx >= 0 ? fields[idx+1] : null;
+  function nextOf(el){
+    const i = focusables.indexOf(el);
+    return i >= 0 ? focusables[i+1] : null;
   }
 
-  // ao focar: amarelo
-  fields.forEach(el => {
-    el.addEventListener("focus", () => markFocus(el));
+  // ✅ NOVO: cria/atualiza mensagem abaixo do campo
+  function showFieldError(el, msg){
+    if (!el) return;
+
+    // reaproveita se já existir logo abaixo
+    let box = el.nextElementSibling;
+    if (!box || !box.classList.contains("field-error")) {
+      box = document.createElement("div");
+      box.className = "field-error";
+      el.insertAdjacentElement("afterend", box);
+    }
+    box.textContent = msg;
+  }
+
+  // ✅ NOVO: remove mensagem abaixo do campo
+  function clearFieldError(el){
+    if (!el) return;
+    const box = el.nextElementSibling;
+    if (box && box.classList.contains("field-error")) box.remove();
+  }
+
+  // pega um "nome bonitinho" do campo
+  function getLabelText(el){
+    if (!el) return "este campo";
+    const id = el.id;
+    if (id) {
+      const lb = document.querySelector(`label[for="${id}"]`);
+      if (lb && lb.textContent) return lb.textContent.trim().replace(/:$/, "");
+    }
+    return (el.getAttribute("aria-label") || el.placeholder || el.name || el.id || "este campo")
+      .toString()
+      .trim()
+      .replace(/:$/, "");
+  }
+
+  // Eventos por campo
+  focusables.forEach((el) => {
+
+    el.addEventListener("focus", () => {
+      markFocus(el);
+    });
+
     el.addEventListener("blur", () => {
-      // ao sair, se já tem valor e não está marcado, deixa neutro (ou opcionalmente filled)
-      if (String(el.value || "").trim() !== "" && !el.classList.contains("is-filled")) {
-        // não força vermelho aqui pra não brigar com suas rotinas
-        el.classList.remove("is-focus","is-error");
+      const val = String(el.value || "").trim();
+      if (val !== "") {
+        clearFieldError(el);
+        markFilled(el);
       } else {
-        el.classList.remove("is-focus","is-error");
+        clearFieldError(el);
+        resetClasses(el);
       }
     });
 
+    // ✅ NOVO: ao digitar, se ficar preenchido, some o erro
+    el.addEventListener("input", () => {
+      if (String(el.value || "").trim() !== "") {
+        clearFieldError(el);
+        el.classList.remove("is-error");
+      }
+    });
+
+    // Enter dentro do campo
     el.addEventListener("keydown", (e) => {
-  if (e.key !== "Enter") return;
-  e.preventDefault();
+      if (e.key !== "Enter") return;
+      e.preventDefault(); // não deixa submeter o form
 
-  const val = String(el.value || "").trim();
-  if (!val) {
-    markError(el);
-    el.focus();
-    return;
-  }
+      const val = String(el.value || "").trim();
+      if (!val) {
+        const nomeCampo = getLabelText(el);
+        markError(el);
+        showFieldError(el, `⚠️ Preencha o campo: ${nomeCampo}`);
+        el.focus();
+        return;
+      }
 
-  markFilled(el);
+      clearFieldError(el);
+      markFilled(el);
 
-  const nx = nextField(el);
-  if (nx) {
-    nx.focus();
-    markFocus(nx);
+      const nx = nextOf(el);
+      if (nx) {
+        nx.focus();
+        markFocus(nx);
+      }
+    });
+  });
+
+})();
+
+
+// Variável que armazena todos os departamentos
+let listaDepartamentos = [];
+
+let jaCarregouDepartamentos = false;
+document.getElementById("inputrazao").addEventListener("focus", async () => {
+  if (jaCarregouDepartamentos) return;
+
+  try {
+    const res = await fetch("/lojista/selectlistaDepto"); // ✅ rota
+    listaDepartamentos = await res.json();
+    preencherSelect();
+    jaCarregouDepartamentos = true;
+  } catch (err) {
+    console.error("Erro ao carregar departamentos:", err);
   }
 });
 
+function preencherSelect() {
+  const select = document.getElementById("selectDepartamento");              // ✅ ID certo
+  const ul = document.getElementById("listaDepartamentosSelecionados");      // ✅ ID certo
+  if (!select || !ul) return;
 
-  // deixa disponível globalmente para o JS do CNPJ chamar
-  window.__focusAfterCnpj = function(){
-    const alvo = document.getElementById("inputrazao");
-    if (alvo) {
-      alvo.focus();
-      markFocus(alvo);
-    }
-  };
-})();
+  const selecionados = Array.from(ul.querySelectorAll("li")).map(li => li.dataset.id);
+
+  select.innerHTML = '<option value="">Selecione um departamento</option>';
+
+  listaDepartamentos.forEach(dep => {
+    if (!dep?._id) return;
+    if (selecionados.includes(dep._id)) return;
+
+    const opt = document.createElement("option");
+    opt.value = dep._id;
+    opt.textContent = dep.nomeDepartamento;
+    select.appendChild(opt);
+  });
+}
+
+document.getElementById("selectDepartamento").addEventListener("change", function () {
+  const selectedId = this.value;
+  if (!selectedId) return;
+
+  const dep = listaDepartamentos.find(d => d._id === selectedId);
+  if (!dep) return;
+
+  const ul = document.getElementById("listaDepartamentosSelecionados");
+  if (!ul) return;
+
+  const li = document.createElement("li");
+  li.textContent = dep.nomeDepartamento;
+  li.dataset.id = dep._id;
+  ul.appendChild(li);
+
+  this.value = "";
+  preencherSelect();
+});
+
 </script>
+
 
 </body>
 </html>

@@ -241,7 +241,9 @@ router.get("/selectlista-depto", async (req, res) => {
   console.log(' destino :mesmo');
   console.log('______________________________________');
   try {
-    const departamentos = await Departamento.find().lean();
+    const departamentos = Departamento.find({ ativado: 1 }, '_id nomeDepartamento')   // ✅ só ativos
+      .sort({ nomeDepartamento: 1 })
+      .lean();
     //console.log('258 lista de departamentos :');
     console.log(departamentos);
     res.json(departamentos); // retorna [{ _id, titulo }]
@@ -471,6 +473,25 @@ router.post('/gravar-cooperado', async (req, res) => {
   console.log('',req.body)
   console.log('---------------------------------------------------');
   try {
+      // ✅ normaliza CNPJ (somente números)
+      const cnpjRaw = (req.body.inputCNPJ || '').toString();
+      const cnpj = cnpjRaw.replace(/\D/g, '');
+
+      // valida tamanho
+      if (cnpj.length !== 14) {
+        return res.status(400).send("CNPJ inválido.");
+      }
+
+      // ✅ verifica se já existe
+      const jaExiste = await Lojista.findOne({ cnpj }).select("_id cnpj razao situacao").lean();
+
+      if (jaExiste) {
+        // (pode trocar a mensagem pelo seu texto final)
+        return res
+          .status(409)
+          .send(`CNPJ já cadastrado. Situação: ${jaExiste.situacao || 'não informada'}.`);
+      }
+
       const novoLojista = new Lojista({
           razao: req.body.inputrazao,
           assinante: "padrao",
@@ -509,6 +530,21 @@ router.post('/gravar-cooperado', async (req, res) => {
   }
 });
 
+// ✅ /src/routes/central/lojista.js (ou onde está sua rota lojista)
+router.get('/selectlistaDepto', async (req, res) => {
+  console.log( ' 514 ');
+  try {
+    const deps = await Departamento
+      .find({ ativado: 1 }, '_id nomeDepartamento')   // ✅ só ativos
+      .sort({ nomeDepartamento: 1 })
+      .lean();
+
+    return res.json(deps);
+  } catch (e) {
+    console.error('❌ /selectlista-depto', e);
+    return res.status(500).json([]);
+  }
+});
 
 
 

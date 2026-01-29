@@ -362,167 +362,43 @@
       </div>
     </div>
   </div>
+<div class="modal fade" id="modalCnpjJaCadastrado" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">CNPJ já cadastrado</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="alert alert-warning mb-3">
+          Já existe um lojista registrado com este CNPJ. Confira abaixo:
+        </div>
+
+        <div class="row g-2">
+          <div class="col-12"><strong>Razão:</strong> <span id="mRazao">-</span></div>
+          <div class="col-12"><strong>Marca:</strong> <span id="mMarca">-</span></div>
+          <div class="col-12"><strong>Situação:</strong> <span id="mSituacao">-</span></div>
+          <div class="col-12"><strong>Cidade/UF:</strong> <span id="mCidade">-</span></div>
+          <div class="col-12"><strong>E-mail:</strong> <span id="mEmail">-</span></div>
+          <div class="col-6"><strong>Telefone:</strong> <span id="mTel">-</span></div>
+          <div class="col-6"><strong>Celular:</strong> <span id="mCel">-</span></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <a id="btnAbrirCadastroExistente" class="btn btn-outline-primary" href="#" target="_blank" rel="noopener">
+          Abrir cadastro
+        </a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   <!-- bootstrap js opcional (só se você for usar componentes JS) -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> -->
-  <script>
-(function () {
-  // ====== CONFIG ======
-  const $ = (sel) => document.querySelector(sel);
 
-  // seus inputs (mantive os mesmos nomes/ids que você usa)
-  const inputCNPJ  = $("#inputCNPJ");
-  const inputRazao = $("#inputrazao");
-  const inputResp  = $("#responsavel");
-  const inputCPF   = $("#cpf");
-  const inputMarca = $("#marca");
-  const inputFone  = $("#fone");
-  const inputCel   = $("#celular");
-  const inputEmail = $("#email");
-
-  const inputCep   = $("#cep");
-  const inputLogr  = $("#logradouro");
-  const inputNum   = $("#numero");
-  const inputBairro= $("#bairro");
-  const inputCidade= $("#cidade");
-  const inputUF    = $("#estado");
-
-  // opcional: onde mostrar status (se não existir, ele cria)
-  let statusEl = $("#cnpjStatus");
-  if (!statusEl && inputCNPJ) {
-    statusEl = document.createElement("div");
-    statusEl.id = "cnpjStatus";
-    statusEl.style.marginTop = "6px";
-    statusEl.style.fontSize = "13px";
-    inputCNPJ.insertAdjacentElement("afterend", statusEl);
-  }
-
-  if (!inputCNPJ) return;
-
-  // ====== HELPERS ======
-  function onlyDigits(v) {
-    return String(v || "").replace(/\D/g, "");
-  }
-
-  function setStatus(msg, type) {
-    if (!statusEl) return;
-    statusEl.textContent = msg || "";
-    statusEl.style.color = (type === "err") ? "#c1121f" : (type === "ok") ? "#0a7a2f" : "#555";
-  }
-
-  function fill(el, val) {
-    if (!el) return;
-    const v = (val == null) ? "" : String(val);
-    el.value = v;
-  }
-
-  // se você já tem toTitleCaseSmart global, usa; senão, passa direto
-  function smartTitle(s) {
-    try {
-      if (typeof window.toTitleCaseSmart === "function") return window.toTitleCaseSmart(s);
-    } catch {}
-    return s || "";
-  }
-
-  async function fetchJSON(url) {
-    const res = await fetch(url, { headers: { "Accept": "application/json" } });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      const msg = data?.message || data?.msg || ("HTTP " + res.status);
-      throw new Error(msg);
-    }
-    return data;
-  }
-
-  // ====== CORE ======
-  async function buscarCNPJ() {
-    const cnpj = onlyDigits(inputCNPJ.value);
-
-    if (cnpj.length !== 14) {
-      setStatus("CNPJ inválido (precisa ter 14 dígitos).", "err");
-      return;
-    }
-
-    setStatus("Buscando dados do CNPJ...", "info");
-
-    try {
-      console.log(' 427')  
-      const data = await fetchJSON(`/lojista/consulta-cnpj/${cnpj}`);
-
-      // seu backend às vezes usa {status:"ERROR"} — respeita isso
-      if (data?.status === "ERROR") {
-        setStatus(data?.message || "Não foi possível consultar o CNPJ.", "err");
-        return;
-      }
-
-       console.log('data :',data); 
-      // ====== MAPEAMENTO (ajuste fino se seu payload variar) ======
-      const razao = data?.nome || data?.razao || "";
-      const fantasia = data?.fantasia || data?.marca || "";
-      const email = data?.email || "";
-      const telefone = data?.telefone || "";
-      const celular = data?.celular || "";
-
-      // responsável (QSA)
-      const resp = data?.qsa?.[0]?.nome?.trim?.() || "";
-      const cpf  = data?.cpf || "";
-
-      // endereço
-      const cep  = data?.cep || "";
-      const logr = data?.logradouro || "";
-      const num  = data?.numero || "";
-      const bairro = data?.bairro || "";
-      const cidade = data?.municipio || data?.cidade || "";
-      const uf     = data?.uf || data?.estado || "";
-
-      // ====== PREENCHE ======
-      fill(inputRazao, smartTitle(razao));
-      fill(inputMarca, smartTitle(fantasia));
-      fill(inputResp, smartTitle(resp));
-      fill(inputCPF, cpf);
-
-      fill(inputEmail, email);
-      fill(inputFone, telefone);
-      fill(inputCel, celular);
-
-      fill(inputCep, cep);
-      fill(inputLogr, smartTitle(logr));
-      fill(inputNum, num);
-      fill(inputBairro, smartTitle(bairro));
-      fill(inputCidade, smartTitle(cidade));
-      fill(inputUF, uf);
-
-      setStatus("Dados carregados com sucesso.", "ok");
-      // depois de preencher tudo com sucesso:
-      if (typeof window.__focusAfterCnpj === "function") window.__focusAfterCnpj();
-
-
-      // opcional: joga foco no próximo campo útil
-      if (inputRazao && !inputRazao.value) inputRazao.focus();
-      else if (inputResp) inputResp.focus();
-
-    } catch (err) {
-      console.error("consulta-cnpj:", err);
-      setStatus("Falha ao consultar CNPJ. Verifique conexão/rota/API.", "err");
-    }
-  }
-
-  // ====== EVENTOS ======
-  inputCNPJ.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      buscarCNPJ();
-    }
-  });
-
-  // opcional: se sair do campo e tiver 14 dígitos, busca também
-  inputCNPJ.addEventListener("blur", () => {
-    const cnpj = onlyDigits(inputCNPJ.value);
-    if (cnpj.length === 14) buscarCNPJ();
-  });
-
-})();
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 (function () {
@@ -707,6 +583,148 @@ document.getElementById("selectDepartamento").addEventListener("change", functio
 
 </script>
 
+<script>
+(function(){
+  const inputCNPJ  = document.getElementById("inputCNPJ");
+  const inputRazao = document.getElementById("inputrazao");
+  if (!inputCNPJ) return;
 
+  // status (se existir)
+  const statusEl = document.getElementById("cnpjStatus");
+  function setStatus(msg, type){
+    if (!statusEl) return;
+    statusEl.textContent = msg || "";
+    statusEl.style.color = (type==="err") ? "#c1121f" : (type==="ok") ? "#0a7a2f" : "#555";
+  }
+
+  function onlyDigits(v){ return String(v||"").replace(/\D/g,""); }
+
+  // usa seu TitleCase se existir
+  function smartTitle(s){
+    try { if (typeof window.toTitleCaseSmart === "function") return window.toTitleCaseSmart(s); } catch {}
+    return s || "";
+  }
+
+  function fill(idOrEl, val){
+    const el = (typeof idOrEl === "string") ? document.getElementById(idOrEl) : idOrEl;
+    if (!el) return;
+    el.value = (val == null) ? "" : String(val);
+  }
+
+  async function checarCnpjNoBanco(cnpj14){
+    const res = await fetch(`/lojista/cnpj-existe/${cnpj14}`);
+    const data = await res.json().catch(()=>({ok:false}));
+    if (!data.ok) throw new Error(data.msg || "Falha ao checar CNPJ");
+    return data; // {existe, lojista}
+  }
+
+  async function consultarReceita(cnpj14){
+    const res = await fetch(`/lojista/consulta-cnpj/${cnpj14}`, { headers:{ "Accept":"application/json" }});
+    const data = await res.json().catch(()=>({}));
+    if (!res.ok) throw new Error(data?.message || data?.msg || ("HTTP " + res.status));
+    if (data?.status === "ERROR") throw new Error(data?.message || "Erro na consulta do CNPJ");
+    return data;
+  }
+
+  // Modal (se você já colocou)
+  const modalEl = document.getElementById("modalCnpjJaCadastrado");
+  const modal = (modalEl && window.bootstrap) ? new bootstrap.Modal(modalEl) : null;
+
+  function preencherModal(loj){
+    console.log(' preenche MODAL');
+    console.log('modalEl:', document.getElementById('modalCnpjJaCadastrado'));
+    console.log('window.bootstrap:', window.bootstrap);
+    bloquearFormulario();
+    const byId = (id) => document.getElementById(id);
+    if (!loj) return;
+    if (byId("mRazao"))    byId("mRazao").textContent    = loj.razao || "-";
+    if (byId("mMarca"))    byId("mMarca").textContent    = loj.marca || "-";
+    if (byId("mSituacao")) byId("mSituacao").textContent = loj.situacao || "-";
+    if (byId("mCidade"))   byId("mCidade").textContent   = [loj.cidade, loj.estado].filter(Boolean).join(" / ") || "-";
+    if (byId("mEmail"))    byId("mEmail").textContent    = loj.email || "-";
+    if (byId("mTel"))      byId("mTel").textContent      = loj.telefone || "-";
+    if (byId("mCel"))     byId("mCel").textContent =(loj.celular && loj.celular !== "não informado") ? loj.celular : "—";
+    const btnAbrir = byId("btnAbrirCadastroExistente");
+    if (btnAbrir && loj._id) btnAbrir.href = `/lojista/editar/${loj._id}`;
+  }
+
+  // ✅ ÚNICO fluxo (Enter/blur)
+  let emAndamento = false;
+
+  async function fluxoCnpj(){
+    if (emAndamento) return;
+    const cnpj = onlyDigits(inputCNPJ.value);
+    if (cnpj.length !== 14) { setStatus("CNPJ inválido (14 dígitos).", "err"); return; }
+
+    emAndamento = true;
+    try {
+      setStatus("Verificando CNPJ no banco...", "info");
+
+      const chk = await checarCnpjNoBanco(cnpj);
+      console.log( ' cnpj existe : ',chk)
+
+      if (chk.existe) {
+        console.log(' chk.existe OK')
+        setStatus("CNPJ já cadastrado.", "err");
+        preencherModal(chk.lojista);
+        if (modal) modal.show();
+        return; // ❌ para aqui
+      }
+
+      setStatus("Consultando Receita Federal...", "info");
+      const data = await consultarReceita(cnpj);
+
+      // mapeamento (igual seu padrão)
+      fill("inputrazao", smartTitle(data?.nome || ""));
+      fill("marca",      smartTitle(data?.fantasia || ""));
+      fill("responsavel",smartTitle(data?.qsa?.[0]?.nome?.trim?.() || ""));
+      fill("cpf",        data?.cpf || "");
+
+      fill("email",      data?.email || "");
+      fill("fone",       data?.telefone || "");
+      fill("celular",    data?.celular || "");
+
+      fill("cep",        data?.cep || "");
+      fill("logradouro", smartTitle(data?.logradouro || ""));
+      fill("numero",     data?.numero || "");
+      fill("bairro",     smartTitle(data?.bairro || ""));
+      fill("cidade",     smartTitle(data?.municipio || data?.cidade || ""));
+      fill("estado",     (data?.uf || data?.estado || ""));
+
+      setStatus("Dados carregados com sucesso.", "ok");
+
+      // foco final
+      if (inputRazao) setTimeout(() => inputRazao.focus(), 60);
+
+    } catch (err) {
+      console.error(err);
+      setStatus(err.message || "Falha ao consultar CNPJ.", "err");
+    } finally {
+      emAndamento = false;
+    }
+  }
+
+  inputCNPJ.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    fluxoCnpj();
+  });
+
+  inputCNPJ.addEventListener("blur", () => {
+    const cnpj = onlyDigits(inputCNPJ.value);
+    if (cnpj.length === 14) fluxoCnpj();
+  });
+
+})();
+</script>
+
+<script>
+  function bloquearFormulario() {
+  document
+    .querySelectorAll("#cadastroLojistaForm input, #cadastroLojistaForm select")
+    .forEach(el => el.disabled = true);
+}
+
+</script>
 </body>
 </html>

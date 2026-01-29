@@ -464,6 +464,104 @@ router.post("/editar/:id", uploadMem.single("logoFile"), async (req, res) => {
   }
 });
 
+router.post("/editarcadLojista/:id", async (req, res) => {
+  console.log("[POST /lojista/editarcadLojista/:id] params:", req.params);
+
+  try {
+    const { id } = req.params;
+
+    // defesa: se BUCKET_NAME não existir, já acusa com clareza
+    // if (!process.env.BUCKET_NAME) {
+    //   console.error("ENV BUCKET_NAME está vazio/undefined. Verifique seu .env e dotenv.");
+    //   return res.status(500).send("Configuração do Space inválida (BUCKET_NAME).");
+    // }
+
+    // ===== whitelist (mantive seu padrão) =====
+    const update = {
+      razao: req.body.razao,
+      assinante: req.body.assinante,
+      situacao: req.body.situacao,
+      template: req.body.template,
+      atividade: req.body.atividade,
+      nomeresponsavel: req.body.nomeresponsavel,
+      cpfresponsavel: req.body.cpfresponsavel,
+      cnpj: req.body.cnpj,
+      inscricao: req.body.inscricao,
+      site: req.body.site,
+      marca: req.body.marca,
+      celular: req.body.celular,
+      telefone: req.body.telefone,
+      email: req.body.email,
+
+      cep: req.body.cep,
+      logradouro: req.body.logradouro,
+      numero: req.body.numero,
+      complemento: req.body.complemento,
+      cidade: req.body.cidade,
+      bairro: req.body.bairro,
+      estado: req.body.estado,
+
+      corHeader: req.body.corHeader,
+      tituloPage: req.body.tituloPage,
+
+      // mantém a logo antiga se não vier nova
+      logoUrl: req.body.logoUrl || "",
+
+      ativo: req.body.ativo,
+    };
+
+    // ===== senha opcional (igual seu padrão) =====
+    console.log('');
+    console.log('____________________________________________');
+    // console.log("[bcrypt check]", {
+    //   hasGenSalt: typeof bcrypt.genSalt,
+    //   hasHash: typeof bcrypt.hash
+    // });
+    console.log('');
+    // if (req.body.senha && String(req.body.senha).trim() !== "") {
+    //   const salt = await bcrypt.genSalt(10);
+    //   update.senha = await bcrypt.hash(String(req.body.senha), salt);
+    // }
+
+    // ===== se veio arquivo, sobe no Space e grava logoUrl =====
+    // if (req.file && req.file.buffer) {
+    //   if (!req.file.mimetype || !req.file.mimetype.startsWith("image/")) {
+    //     return res.status(400).send("Arquivo inválido. Envie uma imagem.");
+    //   }
+
+    //   const ext = (path.extname(req.file.originalname || "") || ".jpg").toLowerCase();
+    //   const safeExt = [".jpg", ".jpeg", ".png", ".webp"].includes(ext) ? ext : ".jpg";
+
+    //   // const hash = bcrypt.randomBytes(8).toString("hex");
+    //   const hash = crypto.randomBytes(8).toString("hex");
+    //   const key = `lojistas/${id}/logo/${Date.now()}_${hash}${safeExt}`;
+
+    //   await s3.send(
+    //     new PutObjectCommand({
+    //       Bucket: process.env.BUCKET_NAME,
+    //       Key: key,
+    //       Body: req.file.buffer,
+    //       ACL: "public-read",
+    //       ContentType: req.file.mimetype || "image/jpeg",
+    //     })
+    //   );
+
+    //   const urlPublica = `https://${process.env.BUCKET_NAME}.nyc3.digitaloceanspaces.com/${key}`;
+    //   console.log('') ;
+    //   console.log('',urlPublica) ;
+    //   console.log('') ;
+    //   update.logoUrl = urlPublica;
+    // }
+
+    await Lojista.findByIdAndUpdate(id, update);
+
+    return res.redirect("/lojista/listaLojista");
+  } catch (err) {
+    console.error("POST /lojista/editar/:id", err);
+    return res.status(500).send("Erro ao salvar lojista.");
+  }
+});
+
 router.post('/gravar-cooperado', async (req, res) => {
   console.log('');
   console.log('[ 467 ]');
@@ -543,6 +641,27 @@ router.get('/selectlistaDepto', async (req, res) => {
   } catch (e) {
     console.error('❌ /selectlista-depto', e);
     return res.status(500).json([]);
+  }
+});
+
+
+// ✅ Checa se CNPJ já existe (retorna dados resumidos do lojista)
+router.get("/cnpj-existe/:cnpj", async (req, res) => {
+  console.log(' 5000')
+  try {
+    const cnpj = String(req.params.cnpj || "").replace(/\D/g, "");
+    if (cnpj.length !== 14) return res.json({ ok: true, existe: false });
+    console.log('cnpj : ',cnpj) 
+    const loj = await Lojista.findOne({ cnpj })
+      .select("_id razao marca email telefone celular cidade estado situacao assinante createdAt cnpj")
+      .lean();
+    console.log('loj ',loj)
+    if (!loj) return res.json({ ok: true, existe: false });
+
+    return res.json({ ok: true, existe: true, lojista: loj });
+  } catch (e) {
+    console.error("cnpj-existe:", e);
+    return res.status(500).json({ ok: false, msg: "Erro ao verificar CNPJ" });
   }
 });
 

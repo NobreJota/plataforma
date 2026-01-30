@@ -2158,13 +2158,12 @@ header.topbar{
           📍 <span id="localLabel">Definir local</span>
         </button>
 
-        <a class="brand" href="/test">
+        <a class="brand" href="/">
           <span style="">Rota</span><span class="brand-accent">es</span><span class="brand-accent" style="font-size: xx-small;">.com.br</span>
         </a>
         {{!-- <!-- BUSCA + FILTROS --> /buxscar --}}
         <div id="searchArea" class="search-area">
-          
-              <form class="search-form" action="" method="get" autocomplete="off" style="padding: 3px;">
+             <form class="search-form" action="" method="get" autocomplete="off" style="padding: 3px;">
                   <div class="position-relative top-search-wrap" id="buscaWrapper" style="background:transparent;">
                             <input
                               class="form-control top-search-input"
@@ -2441,7 +2440,7 @@ header.topbar{
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Definir local</h5>
+        <h5 class="modal-title" style="color: red;">Selecione a cidade que você quer pesquisar ? </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
 
@@ -2462,8 +2461,8 @@ header.topbar{
           </select>
         </div>
 
-        <small class="text-muted">
-          Você pode escolher só a cidade por enquanto (o bairro fica opcional).
+        <small class="text-muted" >
+          <p style="color: red;">Você pode escolher só a cidade por enquanto (o bairro fica opcional).</p>
         </small>
       </div>
 

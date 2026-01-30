@@ -1547,7 +1547,7 @@ router.get("/home-servico", async (req, res) => {
   try {
       // se você já carrega dados na home (departamentos, cidades, etc),
       // copie o mesmo "bloco de dados" aqui (o mínimo).
-      return res.render("pages/site/home-servico.handlebars", {
+      return res.render("pages/site/servico/home-servico.handlebars", {
       layout:false,
       titulo: "Serviços",
     });
@@ -1560,7 +1560,7 @@ router.get("/home-servico", async (req, res) => {
 // TURISMO
 router.get("/home-turismo", async (req, res) => {
   try {
-      return res.render("pages/site/home-turismo.handlebars", {
+      return res.render("pages/site/turismo/turismo-home.handlebars", {
       layout:false,
       titulo: "Turismo",
     });

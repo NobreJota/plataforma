@@ -356,6 +356,7 @@ app.use((req, res, next) => {
 // Rotas
 // -------------------------------------------------------------------
 const admin       = require('./src/routes/central/usuario');
+// admin/login entra -> 1111@gmail.com
 const homeadmin   = require('./src/routes/central/home_layout_admin');
 const central     = require('./src/routes/central/menu-admin');
 const atividades  = require('./src/routes/central/atividades'); // controla as foto dos departamentos e dos setores 
@@ -368,6 +369,8 @@ const paineisSecoes = require('./src/routes/central/paineis-secoes');
 
 const home        = require('./src/routes/site/home');
 const usuarioloja = require('./src/routes/empresa/usuario');
+// usuarioloja/login entra na loja do cooperado emaildo cliente com senha do próprio 1212@gmail.com
+const contab    = require('.src/routes/contabil/contab');
 const loja        = require('./src/routes/empresa/rotina');
 const produto     = require('./src/routes/empresa/produtos');
 const cadproduto  = require("./src/routes/empresa/produto_cadastro");
@@ -393,6 +396,7 @@ app.use('/paineisecoes', paineisSecoes);
 
 app.use('/', home);
 app.use('/usuarioloja', usuarioloja);
+app.use('/contab', contab);
 app.use('/loja', loja);
 app.use('/produto', produto);
 app.use('/cadproduto',cadproduto);

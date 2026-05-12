@@ -1,0 +1,439 @@
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<div class="pc-page">
+
+  {{!-- Cabeçalho --}}
+  <div class="pc-header">
+    <div class="pc-header-left">
+      <i class="ti ti-hierarchy-2" aria-hidden="true"></i>
+      <div>
+        <h1>Plano de Contas</h1>
+        <span class="pc-subtitle">Contabilidade</span>
+      </div>
+    </div>
+    <div class="pc-tipo-tabs">
+      <button class="pc-tipo active" data-tipo="ativo">Ativo</button>
+      <button class="pc-tipo" data-tipo="passivo">Passivo</button>
+      <button class="pc-tipo" data-tipo="despesas">Despesas</button>
+      <button class="pc-tipo" data-tipo="receitas">Receitas</button>
+    </div>
+  </div>
+
+  {{!-- Grade de três colunas --}}
+  <div class="pc-grid">
+
+    {{!-- Coluna 1: Grupo --}}
+    <div class="pc-col">
+      <div class="pc-col-header">
+        <i class="ti ti-folder" aria-hidden="true"></i>
+        <span>Grupo</span>
+        <button class="pc-add-btn" title="Novo grupo"><i class="ti ti-plus"></i></button>
+      </div>
+      <div class="pc-search">
+        <i class="ti ti-search" aria-hidden="true"></i>
+        <input type="text" placeholder="Buscar grupo..." id="search-grupo">
+      </div>
+      <ul class="pc-list" id="list-grupo">
+        <li class="pc-item active" data-id="1">
+          <span class="pc-code">1</span>
+          <span class="pc-name">Ativo Circulante</span>
+        </li>
+        <li class="pc-item" data-id="2">
+          <span class="pc-code">2</span>
+          <span class="pc-name">Ativo Não Circulante</span>
+        </li>
+        <li class="pc-item" data-id="3">
+          <span class="pc-code">3</span>
+          <span class="pc-name">Realizável a Longo Prazo</span>
+        </li>
+        <li class="pc-item" data-id="4">
+          <span class="pc-code">4</span>
+          <span class="pc-name">Investimentos</span>
+        </li>
+        <li class="pc-item" data-id="5">
+          <span class="pc-code">5</span>
+          <span class="pc-name">Imobilizado</span>
+        </li>
+        <li class="pc-item" data-id="6">
+          <span class="pc-code">6</span>
+          <span class="pc-name">Intangível</span>
+        </li>
+      </ul>
+    </div>
+
+    {{!-- Coluna 2: Conta Título --}}
+    <div class="pc-col">
+      <div class="pc-col-header">
+        <i class="ti ti-file-description" aria-hidden="true"></i>
+        <span>Conta Título</span>
+        <button class="pc-add-btn" title="Nova conta título"><i class="ti ti-plus"></i></button>
+      </div>
+      <div class="pc-search">
+        <i class="ti ti-search" aria-hidden="true"></i>
+        <input type="text" placeholder="Buscar conta..." id="search-titulo">
+      </div>
+      <ul class="pc-list" id="list-titulo">
+        <li class="pc-item active" data-id="1.01">
+          <span class="pc-code">1.01</span>
+          <span class="pc-name">Caixa e Equivalentes</span>
+        </li>
+        <li class="pc-item" data-id="1.02">
+          <span class="pc-code">1.02</span>
+          <span class="pc-name">Contas a Receber</span>
+        </li>
+        <li class="pc-item" data-id="1.03">
+          <span class="pc-code">1.03</span>
+          <span class="pc-name">Estoques</span>
+        </li>
+        <li class="pc-item" data-id="1.04">
+          <span class="pc-code">1.04</span>
+          <span class="pc-name">Despesas Antecipadas</span>
+        </li>
+        <li class="pc-item" data-id="1.05">
+          <span class="pc-code">1.05</span>
+          <span class="pc-name">Outros Ativos Circulantes</span>
+        </li>
+      </ul>
+    </div>
+
+    {{!-- Coluna 3: Conta Sub Título --}}
+    <div class="pc-col">
+      <div class="pc-col-header">
+        <i class="ti ti-file-invoice" aria-hidden="true"></i>
+        <span>Conta Sub Título</span>
+        <button class="pc-add-btn" title="Nova sub conta"><i class="ti ti-plus"></i></button>
+      </div>
+      <div class="pc-search">
+        <i class="ti ti-search" aria-hidden="true"></i>
+        <input type="text" placeholder="Buscar sub conta..." id="search-sub">
+      </div>
+      <ul class="pc-list" id="list-sub">
+        <li class="pc-item active" data-id="1.01.001">
+          <span class="pc-code">1.01.001</span>
+          <span class="pc-name">Caixa Geral</span>
+          <span class="pc-badge ativo">Ativo</span>
+        </li>
+        <li class="pc-item" data-id="1.01.002">
+          <span class="pc-code">1.01.002</span>
+          <span class="pc-name">Banco do Brasil</span>
+          <span class="pc-badge ativo">Ativo</span>
+        </li>
+        <li class="pc-item" data-id="1.01.003">
+          <span class="pc-code">1.01.003</span>
+          <span class="pc-name">Caixa Econômica Federal</span>
+          <span class="pc-badge ativo">Ativo</span>
+        </li>
+        <li class="pc-item" data-id="1.01.004">
+          <span class="pc-code">1.01.004</span>
+          <span class="pc-name">Itaú Conta Corrente</span>
+          <span class="pc-badge ativo">Ativo</span>
+        </li>
+        <li class="pc-item" data-id="1.01.005">
+          <span class="pc-code">1.01.005</span>
+          <span class="pc-name">Aplicação CDB</span>
+          <span class="pc-badge ativo">Ativo</span>
+        </li>
+        <li class="pc-item" data-id="1.01.006">
+          <span class="pc-code">1.01.006</span>
+          <span class="pc-name">Fundo de Reserva</span>
+          <span class="pc-badge inativo">Inativo</span>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  {{!-- Painel de detalhes do item selecionado --}}
+  <div class="pc-detail-bar">
+    <div class="pc-detail-info">
+      <span class="pc-detail-code" id="detail-code">1.01.001</span>
+      <span class="pc-detail-name" id="detail-name">Caixa Geral</span>
+      <span class="pc-badge ativo" id="detail-badge">Ativo</span>
+    </div>
+    <div class="pc-actions">
+      <button class="pc-btn secondary" onclick="acaoBotao('anterior')">
+        <i class="ti ti-chevron-left"></i> Anterior
+      </button>
+      <button class="pc-btn secondary" onclick="acaoBotao('proximo')">
+        Próximo <i class="ti ti-chevron-right"></i>
+      </button>
+      <button class="pc-btn secondary" onclick="acaoBotao('lancamentos')">
+        <i class="ti ti-list"></i> Lançamentos
+      </button>
+      <button class="pc-btn secondary" onclick="acaoBotao('bancos')">
+        <i class="ti ti-building-bank"></i> Bancos
+      </button>
+      <button class="pc-btn secondary" onclick="acaoBotao('outros')">
+        <i class="ti ti-dots"></i> Outros
+      </button>
+      <button class="pc-btn primary" onclick="acaoBotao('inserir')">
+        <i class="ti ti-plus"></i> Inserir
+      </button>
+      <button class="pc-btn danger" onclick="acaoBotao('deletar')">
+        <i class="ti ti-trash"></i> Deletar
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<style>
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css');
+
+.pc-page {
+  font-family: 'DM Sans', sans-serif;
+  background: #f4f6f9;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  gap: 1rem;
+  box-sizing: border-box;
+}
+
+.pc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  border: 1px solid #e8ecf0;
+}
+.pc-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #185FA5;
+}
+.pc-header-left i { font-size: 28px; }
+.pc-header-left h1 { font-size: 18px; font-weight: 600; color: #1a2332; margin: 0; }
+.pc-subtitle { font-size: 12px; color: #7a8a9a; display: block; }
+
+.pc-tipo-tabs {
+  display: flex;
+  gap: 6px;
+  background: #f0f3f7;
+  padding: 4px;
+  border-radius: 10px;
+}
+.pc-tipo {
+  padding: 6px 18px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7a8d;
+  cursor: pointer;
+  transition: all .15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.pc-tipo:hover { background: #fff; color: #1a2332; }
+.pc-tipo.active { background: #fff; color: #185FA5; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+
+.pc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  flex: 1;
+}
+
+.pc-col {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e8ecf0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pc-col-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e8ecf0;
+  background: #fafbfc;
+}
+.pc-col-header i { font-size: 17px; color: #185FA5; }
+.pc-col-header span { font-size: 13px; font-weight: 600; color: #1a2332; flex: 1; }
+.pc-add-btn {
+  border: 1px solid #d0d7e0;
+  background: #fff;
+  border-radius: 6px;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #185FA5; font-size: 14px;
+  transition: all .12s;
+}
+.pc-add-btn:hover { background: #e7f1fb; border-color: #185FA5; }
+
+.pc-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #f0f3f7;
+}
+.pc-search i { font-size: 15px; color: #9aa5b4; }
+.pc-search input {
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: #1a2332;
+  background: transparent;
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+}
+.pc-search input::placeholder { color: #b0bac5; }
+
+.pc-list {
+  list-style: none;
+  margin: 0; padding: 6px 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.pc-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all .12s;
+}
+.pc-item:hover { background: #f4f7fb; }
+.pc-item.active { background: #eaf2fb; border-left-color: #185FA5; }
+
+.pc-code {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: #7a8a9a;
+  min-width: 60px;
+  flex-shrink: 0;
+}
+.pc-name {
+  font-size: 13px;
+  color: #1a2332;
+  flex: 1;
+}
+.pc-item.active .pc-name { color: #185FA5; font-weight: 500; }
+
+.pc-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.pc-badge.ativo { background: #e6f4ea; color: #2d7a3a; }
+.pc-badge.inativo { background: #fde8e8; color: #a33030; }
+
+.pc-detail-bar {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e8ecf0;
+  padding: 12px 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.pc-detail-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pc-detail-code {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: #7a8a9a;
+  background: #f0f3f7;
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+.pc-detail-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a2332;
+}
+
+.pc-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.pc-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all .12s;
+  font-family: 'DM Sans', sans-serif;
+}
+.pc-btn i { font-size: 15px; }
+.pc-btn.secondary {
+  background: #fff;
+  border-color: #d0d7e0;
+  color: #3a4a5c;
+}
+.pc-btn.secondary:hover { background: #f4f7fb; border-color: #185FA5; color: #185FA5; }
+.pc-btn.primary {
+  background: #185FA5;
+  border-color: #185FA5;
+  color: #fff;
+}
+.pc-btn.primary:hover { background: #1250880; }
+.pc-btn.danger {
+  background: #fff;
+  border-color: #e0d0d0;
+  color: #a33030;
+}
+.pc-btn.danger:hover { background: #fde8e8; border-color: #a33030; }
+</style>
+
+<script>
+(function(){
+  document.querySelectorAll('.pc-tipo').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.pc-tipo').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.pc-list').forEach(function(list){
+    list.querySelectorAll('.pc-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        list.querySelectorAll('.pc-item').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+        const code = this.querySelector('.pc-code');
+        const name = this.querySelector('.pc-name');
+        if(code) document.getElementById('detail-code').textContent = code.textContent;
+        if(name) document.getElementById('detail-name').textContent = name.textContent;
+      });
+    });
+  });
+
+  ['grupo','titulo','sub'].forEach(function(col){
+    document.getElementById('search-'+col).addEventListener('input', function(){
+      const q = this.value.toLowerCase();
+      document.getElementById('list-'+col).querySelectorAll('.pc-item').forEach(function(item){
+        const txt = item.textContent.toLowerCase();
+        item.style.display = txt.includes(q) ? '' : 'none';
+      });
+    });
+  });
+})();
+
+function acaoBotao(acao){
+  console.log('Ação:', acao);
+}
+</script>

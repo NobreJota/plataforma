@@ -1,0 +1,350 @@
+<div class="coop-menu-wrap">
+
+  {{!-- Sidebar principal --}}
+  <nav class="coop-sidebar">
+    <div class="coop-sidebar-header">
+      <i class="ti ti-building-store" aria-hidden="true"></i>
+      <span>Cooperado</span>
+    </div>
+
+    <ul class="coop-nav">
+      <li class="coop-nav-item {{#if (eq activeMenu 'fluxo')}}active{{/if}}"
+          data-menu="fluxo">
+        <i class="ti ti-cash" aria-hidden="true"></i>
+        <span>Fluxo de Caixa</span>
+        <i class="ti ti-chevron-right coop-arrow" aria-hidden="true"></i>
+      </li>
+      <li class="coop-nav-item {{#if (eq activeMenu 'contabil')}}active{{/if}}"
+          data-menu="contabil">
+        <i class="ti ti-calculator" aria-hidden="true"></i>
+        <span>Contabilidade</span>
+        <i class="ti ti-chevron-right coop-arrow" aria-hidden="true"></i>
+      </li>
+      <li class="coop-nav-item {{#if (eq activeMenu 'compra')}}active{{/if}}"
+          data-menu="compra">
+        <i class="ti ti-shopping-cart" aria-hidden="true"></i>
+        <span>Compra</span>
+        <i class="ti ti-chevron-right coop-arrow" aria-hidden="true"></i>
+      </li>
+      <li class="coop-nav-item {{#if (eq activeMenu 'venda')}}active{{/if}}"
+          data-menu="venda">
+        <i class="ti ti-tag" aria-hidden="true"></i>
+        <span>Venda</span>
+        <i class="ti ti-chevron-right coop-arrow" aria-hidden="true"></i>
+      </li>
+      <li class="coop-nav-item {{#if (eq activeMenu 'site')}}active{{/if}}"
+          data-menu="site">
+        <i class="ti ti-world" aria-hidden="true"></i>
+        <span>Site</span>
+      </li>
+    </ul>
+  </nav>
+
+  {{!-- Coluna de submenus (nível 2) --}}
+  <div class="coop-sub-col" id="coop-sub-panel">
+
+    {{!-- Fluxo de Caixa --}}
+    <ul class="coop-sub-list" data-sub="fluxo">
+      <li class="coop-sub-title">Fluxo de Caixa</li>
+      <li class="coop-sub-item" data-leaf="lancamentos" data-url="/contabil/fluxo/lancamentos">
+        <span>Lançamentos</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      </li>
+      <li class="coop-sub-item" data-url="/contabil/fluxo/grid">
+        <span>Grid mês a mês</span>
+      </li>
+      <li class="coop-sub-item" data-leaf="recebendo" data-url="/contabil/fluxo/recebendo">
+        <span>Recebendo títulos</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      </li>
+      <li class="coop-sub-item" data-leaf="pagando" data-url="/contabil/fluxo/pagando">
+        <span>Pagando títulos</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      </li>
+      <li class="coop-sub-item" data-leaf="pesquisa" data-url="/contabil/fluxo/pesquisa">
+        <span>Pesquisa de contas</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      </li>
+      <li class="coop-sub-item" data-url="/contabil/fluxo/outros">
+        <span>Outros</span>
+      </li>
+    </ul>
+
+    {{!-- Contabilidade --}}
+    <ul class="coop-sub-list" data-sub="contabil">
+      <li class="coop-sub-title">Contabilidade</li>
+      <li class="coop-sub-item" data-leaf="plano" data-url="/contabil/plano">
+        <span>Plano de contas</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      </li>
+      <li class="coop-sub-item" data-url="/contab/razao">
+        <span>Razão</span>
+      </li>
+      <li class="coop-sub-item" data-leaf="pessoal" data-url="/contabil/pessoal">
+        <span>Pessoal</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      </li>
+      <li class="coop-sub-item" data-url="/contabil/relatorios">
+        <span>Relatórios</span>
+      </li>
+    </ul>
+
+    {{!-- Compra --}}
+    <ul class="coop-sub-list" data-sub="compra">
+      <li class="coop-sub-title">Compra</li>
+      <li class="coop-sub-item" data-leaf="fornecedores" data-url="/compra/fornecedores">
+        <span>Fornecedores</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      </li>
+      <li class="coop-sub-item" data-url="/compra/pedidos">
+        <span>Pedidos</span>
+      </li>
+      <li class="coop-sub-item" data-url="/compra/entrada">
+        <span>Entrada de mercadoria</span>
+      </li>
+      <li class="coop-sub-item" data-url="/compra/relatorios">
+        <span>Relatórios</span>
+      </li>
+    </ul>
+
+    {{!-- Venda --}}
+    <ul class="coop-sub-list" data-sub="venda">
+      <li class="coop-sub-title">Venda</li>
+      <li class="coop-sub-item" data-leaf="clientes" data-url="/venda/clientes">
+        <span>Clientes</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      </li>
+      <li class="coop-sub-item" data-url="/venda/notas-fiscais">
+        <span>Notas fiscais</span>
+      </li>
+      <li class="coop-sub-item" data-url="/venda/relatorios">
+        <span>Relatórios</span>
+      </li>
+    </ul>
+
+    {{!-- Site --}}
+    <ul class="coop-sub-list" data-sub="site">
+      <li class="coop-sub-title">Site</li>
+      <li class="coop-sub-item" data-url="/site/configuracoes">
+        <span>Configurações</span>
+      </li>
+    </ul>
+
+  </div>
+
+  {{!-- Coluna de folhas (nível 3) --}}
+  <div class="coop-leaf-col" id="coop-leaf-panel">
+    <ul class="coop-leaf-list" data-leaf="lancamentos">
+      <li class="coop-sub-title">Lançamentos</li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=5">5 — A receber</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=2">2 — A pagar</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=8">8 — Orçamento</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=0">0 — Avulso</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=1">1 — Cartão de crédito</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=3">3 — Compras realizadas</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=7">7 — Previsão de compras</a></li>
+    </ul>
+
+    <ul class="coop-leaf-list" data-leaf="recebendo">
+      <li class="coop-sub-title">Recebendo títulos</li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/recebendo/listar">Listar títulos a receber</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/recebendo/baixa">Baixa de recebimento</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/recebendo/relatorio">Relatório de recebidos</a></li>
+    </ul>
+
+    <ul class="coop-leaf-list" data-leaf="pagando">
+      <li class="coop-sub-title">Pagando títulos</li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/pagando/listar">Listar títulos a pagar</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/pagando/baixa">Baixa de pagamento</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/pagando/relatorio">Relatório de pagos</a></li>
+    </ul>
+
+    <ul class="coop-leaf-list" data-leaf="pesquisa">
+      <li class="coop-sub-title">Pesquisa de contas</li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/pesquisa/conta">Por conta</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/pesquisa/periodo">Por período</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/fluxo/pesquisa/historico">Por histórico</a></li>
+    </ul>
+
+    <ul class="coop-leaf-list" data-leaf="plano">
+      <li class="coop-sub-title">Plano de contas</li>
+      <li class="coop-leaf-item"><a href="/contabil/plano/grupo-sub">Grupo sub</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/plano/contas-titulos">Contas títulos</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/plano/contas-sub-titulos">Contas sub títulos</a></li>
+    </ul>
+
+
+    <ul class="coop-leaf-list" data-leaf="pessoal">
+      <li class="coop-sub-title">Pessoal</li>
+      <li class="coop-leaf-item"><a href="/contabil/pessoal/cadastro">Cadastro</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/pessoal/alterar">Alterar</a></li>
+      <li class="coop-leaf-item"><a href="/contabil/pessoal/deletar">Deletar</a></li>
+    </ul>
+
+    <ul class="coop-leaf-list" data-leaf="fornecedores">
+      <li class="coop-sub-title">Fornecedores</li>
+      <li class="coop-leaf-item"><a href="/compra/fornecedores/cadastro">Cadastro</a></li>
+      <li class="coop-leaf-item"><a href="/compra/fornecedores/alterar">Alterar</a></li>
+      <li class="coop-leaf-item"><a href="/compra/fornecedores/deletar">Deletar</a></li>
+    </ul>
+
+    <ul class="coop-leaf-list" data-leaf="clientes">
+      <li class="coop-sub-title">Clientes</li>
+      <li class="coop-leaf-item"><a href="/venda/clientes/cadastro">Cadastro</a></li>
+      <li class="coop-leaf-item"><a href="/venda/clientes/alterar">Alterar</a></li>
+      <li class="coop-leaf-item"><a href="/venda/clientes/deletar">Deletar</a></li>
+    </ul>
+
+  </div>
+
+</div>
+
+<style>
+  @import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css');
+
+  .coop-menu-wrap {
+    display: flex;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
+  }
+
+  /* Sidebar principal */
+  .coop-sidebar {
+    width: 210px;
+    background: #1e2a3a;
+    color: #c8d6e5;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .coop-sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1.25rem 1rem;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .coop-sidebar-header i { font-size: 20px; color: #4dabf7; }
+  .coop-nav { list-style: none; padding: 0.5rem 0; margin: 0; }
+  .coop-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 1rem;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    color: #a8bdd0;
+  }
+  .coop-nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+  .coop-nav-item.active { background: rgba(77,171,247,0.15); color: #4dabf7; border-left-color: #4dabf7; }
+  .coop-nav-item > i:first-child { font-size: 18px; }
+  .coop-nav-item > span { flex: 1; }
+  .coop-arrow { font-size: 13px; opacity: 0.5; }
+
+  /* Coluna submenu nível 2 */
+  .coop-sub-col {
+    width: 210px;
+    background: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+    flex-shrink: 0;
+    display: none;
+  }
+  .coop-sub-col.visible { display: block; }
+  .coop-sub-list { list-style: none; padding: 0.75rem 0; margin: 0; display: none; }
+  .coop-sub-list.visible { display: block; }
+  .coop-sub-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #868e96;
+    padding: 0 1rem 0.5rem;
+  }
+  .coop-sub-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 1rem;
+    cursor: pointer;
+    color: #495057;
+    border-left: 3px solid transparent;
+    transition: all 0.12s;
+  }
+  .coop-sub-item:hover { background: #e9ecef; color: #212529; }
+  .coop-sub-item.active { background: #e7f5ff; color: #1971c2; border-left-color: #1971c2; font-weight: 500; }
+  .coop-sub-item i { font-size: 13px; opacity: 0.4; }
+
+  /* Coluna folha nível 3 */
+  .coop-leaf-col {
+    width: 210px;
+    background: #fff;
+    border-right: 1px solid #dee2e6;
+    flex-shrink: 0;
+    display: none;
+  }
+  .coop-leaf-col.visible { display: block; }
+  .coop-leaf-list { list-style: none; padding: 0.75rem 0; margin: 0; display: none; }
+  .coop-leaf-list.visible { display: block; }
+  .coop-leaf-item { padding: 0; }
+  .coop-leaf-item a {
+    display: block;
+    padding: 8px 1rem;
+    color: #495057;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.12s;
+    border-left: 3px solid transparent;
+  }
+  .coop-leaf-item a:hover { background: #f1f3f5; color: #1971c2; border-left-color: #1971c2; }
+</style>
+
+<script>
+(function () {
+  const navItems   = document.querySelectorAll('.coop-nav-item');
+  const subPanel   = document.getElementById('coop-sub-panel');
+  const leafPanel  = document.getElementById('coop-leaf-panel');
+  const subLists   = document.querySelectorAll('.coop-sub-list');
+  const leafLists  = document.querySelectorAll('.coop-leaf-list');
+  const subItems   = document.querySelectorAll('.coop-sub-item');
+
+  function hideLeaf() {
+    leafPanel.classList.remove('visible');
+    leafLists.forEach(l => l.classList.remove('visible'));
+    subItems.forEach(i => i.classList.remove('active'));
+  }
+
+  navItems.forEach(function (item) {
+    item.addEventListener('click', function () {
+      const key = this.dataset.menu;
+      navItems.forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+      subLists.forEach(l => l.classList.remove('visible'));
+      hideLeaf();
+      const target = document.querySelector('.coop-sub-list[data-sub="' + key + '"]');
+      if (target) {
+        subPanel.classList.add('visible');
+        target.classList.add('visible');
+      } else {
+        subPanel.classList.remove('visible');
+      }
+    });
+  });
+
+  subItems.forEach(function (item) {
+    item.addEventListener('click', function () {
+      const leafKey = this.dataset.leaf;
+      const url     = this.dataset.url;
+      subItems.forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+      leafLists.forEach(l => l.classList.remove('visible'));
+      if (leafKey) {
+        const target = document.querySelector('.coop-leaf-list[data-leaf="' + leafKey + '"]');
+        if (target) {
+          leafPanel.classList.add('visible');
+          target.classList.add('visible');
+          return;
+        }
+      }
+      leafPanel.classList.remove('visible');
+      if (url) window.location.href = url;
+    });
+  });
+})();
+</script>

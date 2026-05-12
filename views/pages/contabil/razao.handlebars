@@ -1,0 +1,315 @@
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<div class="rz-page">
+
+  {{!-- Cabeçalho --}}
+  <div class="rz-header">
+    <div class="rz-header-left">
+      <i class="ti ti-book-2" aria-hidden="true"></i>
+      <div>
+        <h1>Razão</h1>
+        <span class="rz-subtitle">Contabilidade</span>
+      </div>
+    </div>
+    <div class="rz-header-right">
+      <div class="rz-tipo-tabs">
+        <button class="rz-tipo active" data-tipo="ativo">Ativo</button>
+        <button class="rz-tipo" data-tipo="passivo">Passivo</button>
+        <button class="rz-tipo" data-tipo="despesas">Despesas</button>
+        <button class="rz-tipo" data-tipo="receitas">Receitas</button>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Filtros --}}
+  <div class="rz-filters">
+    <div class="rz-filter-group">
+      <label>Conta</label>
+      <input type="text" id="filtro-conta" placeholder="Ex: 1.01.001">
+    </div>
+    <div class="rz-filter-group">
+      <label>Período de</label>
+      <input type="date" id="filtro-de" value="2026-01-01">
+    </div>
+    <div class="rz-filter-group">
+      <label>até</label>
+      <input type="date" id="filtro-ate" value="2026-05-31">
+    </div>
+    <div class="rz-filter-group">
+      <label>Histórico</label>
+      <input type="text" id="filtro-hist" placeholder="Buscar histórico...">
+    </div>
+    <button class="rz-btn primary" onclick="filtrar()">
+      <i class="ti ti-search"></i> Pesquisar
+    </button>
+  </div>
+
+  {{!-- Resumo --}}
+  <div class="rz-resumo">
+    <div class="rz-card-resumo">
+      <span class="rz-resumo-label">Conta selecionada</span>
+      <span class="rz-resumo-val" id="res-conta">1.01.001 — Caixa Geral</span>
+    </div>
+    <div class="rz-card-resumo">
+      <span class="rz-resumo-label">Total débitos</span>
+      <span class="rz-resumo-val debito" id="res-debito">R$ 45.200,00</span>
+    </div>
+    <div class="rz-card-resumo">
+      <span class="rz-resumo-label">Total créditos</span>
+      <span class="rz-resumo-val credito" id="res-credito">R$ 38.750,00</span>
+    </div>
+    <div class="rz-card-resumo">
+      <span class="rz-resumo-label">Saldo</span>
+      <span class="rz-resumo-val saldo" id="res-saldo">R$ 6.450,00</span>
+    </div>
+  </div>
+
+  {{!-- Grid de lançamentos --}}
+  <div class="rz-table-wrap">
+    <table class="rz-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Histórico</th>
+          <th>Documento</th>
+          <th class="right">Débito</th>
+          <th class="right">Crédito</th>
+          <th class="right">Saldo</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="rz-tbody">
+        <tr>
+          <td><span class="rz-date">01/01/2026</span></td>
+          <td>Saldo inicial</td>
+          <td><span class="rz-doc">000</span></td>
+          <td class="right debito">—</td>
+          <td class="right credito">—</td>
+          <td class="right saldo">R$ 0,00</td>
+          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
+        </tr>
+        <tr>
+          <td><span class="rz-date">03/01/2026</span></td>
+          <td>Recebimento NF 1234 — Cliente ABC</td>
+          <td><span class="rz-doc">NF1234</span></td>
+          <td class="right debito">R$ 12.500,00</td>
+          <td class="right credito">—</td>
+          <td class="right saldo">R$ 12.500,00</td>
+          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
+        </tr>
+        <tr>
+          <td><span class="rz-date">05/01/2026</span></td>
+          <td>Pagamento fornecedor Komlog</td>
+          <td><span class="rz-doc">PAG001</span></td>
+          <td class="right debito">—</td>
+          <td class="right credito">R$ 3.200,00</td>
+          <td class="right saldo">R$ 9.300,00</td>
+          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
+        </tr>
+        <tr>
+          <td><span class="rz-date">10/01/2026</span></td>
+          <td>Recebimento duplicata 248/1</td>
+          <td><span class="rz-doc">DUP248</span></td>
+          <td class="right debito">R$ 8.750,00</td>
+          <td class="right credito">—</td>
+          <td class="right saldo">R$ 18.050,00</td>
+          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
+        </tr>
+        <tr>
+          <td><span class="rz-date">14/01/2026</span></td>
+          <td>Pagamento salários — Janeiro</td>
+          <td><span class="rz-doc">SAL001</span></td>
+          <td class="right debito">—</td>
+          <td class="right credito">R$ 15.400,00</td>
+          <td class="right saldo">R$ 2.650,00</td>
+          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
+        </tr>
+        <tr>
+          <td><span class="rz-date">20/01/2026</span></td>
+          <td>Recebimento Rinnai NF 599492</td>
+          <td><span class="rz-doc">NF599</span></td>
+          <td class="right debito">R$ 23.950,00</td>
+          <td class="right credito">—</td>
+          <td class="right saldo">R$ 26.600,00</td>
+          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
+        </tr>
+        <tr>
+          <td><span class="rz-date">25/01/2026</span></td>
+          <td>Pagamento IPTU — Imóvel 03/10</td>
+          <td><span class="rz-doc">IPTU03</span></td>
+          <td class="right debito">—</td>
+          <td class="right credito">R$ 20.150,00</td>
+          <td class="right saldo">R$ 6.450,00</td>
+          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  {{!-- Barra de ações --}}
+  <div class="rz-action-bar">
+    <div class="rz-nav-btns">
+      <button class="rz-btn secondary"><i class="ti ti-chevron-left"></i> Anterior</button>
+      <button class="rz-btn secondary">Próximo <i class="ti ti-chevron-right"></i></button>
+    </div>
+    <div class="rz-action-btns">
+      <button class="rz-btn secondary"><i class="ti ti-file-invoice"></i> Boleta</button>
+      <button class="rz-btn secondary"><i class="ti ti-building-bank"></i> Bancos</button>
+      <button class="rz-btn secondary"><i class="ti ti-printer"></i> Imprimir</button>
+      <button class="rz-btn primary" onclick="novoLancamento()">
+        <i class="ti ti-plus"></i> Novo lançamento
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<style>
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css');
+
+.rz-page {
+  font-family: 'DM Sans', sans-serif;
+  background: #f4f6f9;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  gap: 1rem;
+  box-sizing: border-box;
+}
+
+.rz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  border: 1px solid #e8ecf0;
+}
+.rz-header-left { display: flex; align-items: center; gap: 12px; color: #185FA5; }
+.rz-header-left i { font-size: 28px; }
+.rz-header-left h1 { font-size: 18px; font-weight: 600; color: #1a2332; margin: 0; }
+.rz-subtitle { font-size: 12px; color: #7a8a9a; display: block; }
+
+.rz-tipo-tabs { display: flex; gap: 6px; background: #f0f3f7; padding: 4px; border-radius: 10px; }
+.rz-tipo { padding: 6px 16px; border: none; background: transparent; border-radius: 8px; font-size: 13px; font-weight: 500; color: #6b7a8d; cursor: pointer; transition: all .15s; font-family: 'DM Sans', sans-serif; }
+.rz-tipo:hover { background: #fff; color: #1a2332; }
+.rz-tipo.active { background: #fff; color: #185FA5; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+
+.rz-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  border: 1px solid #e8ecf0;
+  flex-wrap: wrap;
+}
+.rz-filter-group { display: flex; flex-direction: column; gap: 4px; }
+.rz-filter-group label { font-size: 11px; font-weight: 600; color: #7a8a9a; text-transform: uppercase; letter-spacing: .05em; }
+.rz-filter-group input { border: 1px solid #d0d7e0; border-radius: 8px; padding: 7px 12px; font-size: 13px; color: #1a2332; font-family: 'DM Sans', sans-serif; outline: none; transition: border .12s; }
+.rz-filter-group input:focus { border-color: #185FA5; }
+
+.rz-resumo {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.rz-card-resumo {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e8ecf0;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.rz-resumo-label { font-size: 11px; font-weight: 600; color: #7a8a9a; text-transform: uppercase; letter-spacing: .05em; }
+.rz-resumo-val { font-size: 16px; font-weight: 600; color: #1a2332; font-family: 'DM Mono', monospace; }
+.rz-resumo-val.debito { color: #185FA5; }
+.rz-resumo-val.credito { color: #a33030; }
+.rz-resumo-val.saldo { color: #2d7a3a; }
+
+.rz-table-wrap {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e8ecf0;
+  overflow: auto;
+  flex: 1;
+}
+.rz-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.rz-table thead tr { background: #fafbfc; border-bottom: 1px solid #e8ecf0; }
+.rz-table th { padding: 10px 14px; font-size: 11px; font-weight: 600; color: #7a8a9a; text-transform: uppercase; letter-spacing: .05em; text-align: left; white-space: nowrap; }
+.rz-table th.right { text-align: right; }
+.rz-table td { padding: 10px 14px; border-bottom: 1px solid #f0f3f7; color: #1a2332; vertical-align: middle; }
+.rz-table tr:last-child td { border-bottom: none; }
+.rz-table tr:hover td { background: #f8fafc; }
+.rz-table td.right { text-align: right; font-family: 'DM Mono', monospace; }
+.rz-table td.debito { color: #185FA5; font-weight: 500; }
+.rz-table td.credito { color: #a33030; font-weight: 500; }
+.rz-table td.saldo { color: #2d7a3a; font-weight: 600; }
+
+.rz-date { font-family: 'DM Mono', monospace; font-size: 12px; color: #5a6a7a; }
+.rz-doc { font-family: 'DM Mono', monospace; font-size: 11px; background: #f0f3f7; padding: 2px 8px; border-radius: 5px; color: #5a6a7a; }
+
+.rz-row-actions { display: flex; gap: 4px; }
+.rz-icon-btn { border: 1px solid #e0e6ed; background: #fff; border-radius: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; transition: all .12s; }
+.rz-icon-btn.edit { color: #185FA5; }
+.rz-icon-btn.edit:hover { background: #eaf2fb; border-color: #185FA5; }
+.rz-icon-btn.del { color: #a33030; }
+.rz-icon-btn.del:hover { background: #fde8e8; border-color: #a33030; }
+
+.rz-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 1.5rem;
+  border: 1px solid #e8ecf0;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.rz-nav-btns, .rz-action-btns { display: flex; gap: 6px; }
+
+.rz-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 8px;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border: 1px solid; transition: all .12s;
+  font-family: 'DM Sans', sans-serif;
+}
+.rz-btn i { font-size: 15px; }
+.rz-btn.secondary { background: #fff; border-color: #d0d7e0; color: #3a4a5c; }
+.rz-btn.secondary:hover { background: #f4f7fb; border-color: #185FA5; color: #185FA5; }
+.rz-btn.primary { background: #185FA5; border-color: #185FA5; color: #fff; }
+.rz-btn.primary:hover { background: #124f8a; }
+</style>
+
+<script>
+(function(){
+  document.querySelectorAll('.rz-tipo').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.rz-tipo').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+})();
+
+function filtrar(){
+  const conta = document.getElementById('filtro-conta').value;
+  const hist  = document.getElementById('filtro-hist').value.toLowerCase();
+  document.querySelectorAll('#rz-tbody tr').forEach(function(tr){
+    const txt = tr.textContent.toLowerCase();
+    const match = (!conta || txt.includes(conta.toLowerCase())) &&
+                  (!hist  || txt.includes(hist));
+    tr.style.display = match ? '' : 'none';
+  });
+}
+
+function novoLancamento(){
+  console.log('Abrir modal/página de novo lançamento');
+}
+</script>

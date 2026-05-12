@@ -24,7 +24,7 @@ function ensureLojista(req, res, next) {
 
 //CONFERE SE O USUARIO É VERDADEIRO
 router.post('/cooperados',async(req,res)=>{
-    console.log('');
+    console.log('ZERADO');
     console.log('');
     ////////////////////////////////////////////////////////////////////////
     // Confere o login do cooperado
@@ -49,6 +49,7 @@ router.post('/cooperados',async(req,res)=>{
         console.log('os erros',errors)
         res.render("usuario/loginloja",{ layout:'admin.handlebars',errors:errors})
     }else{
+       console.log('===>',req.body.email)
        try{
             /////////////////////////////////////////////////////
             // Se não tiver error então segue em frente
@@ -83,6 +84,7 @@ router.post('/cooperados',async(req,res)=>{
        }
          }
 });
+
 
 // GET /loja/cooperados — lista paginada com filtros
 router.get('/cooperados', ensureLojista, async (req, res) => {
@@ -206,23 +208,27 @@ router.get('/cooperados', ensureLojista, async (req, res) => {
           //////////////////////////////////////////////////////////////////////////
           // render
           console.log(' ',produtos.length)
-          // 'empresa/empresa-produto.handlebars'
-          res.render('pages/empresa/cooperado-admin.handlebars', {
+          res.render('pages/contabil/cooperado_menu.handlebars', {
             layout:false ,
-            basePath: '/loja/cooperados',      // <- use isso nos links
-            produtos,
-            fornecedores,
-            lojista,
-            total, page, pages, limit,
-            pageNumbers, qsNoPage,
-            filtroAtivo: statusAtivo,
-            //statusSelecionado: status,
-            fornecedorSelecionado: fornId,
-             modoSelecionado: modo,
-             departamentos,
-             setoresPorDepto: SETORES_POR_DEPTO,
-             secoesPorSetor:  SECOES_POR_SETOR,
-          });
+          }
+          // 'empresa/empresa-produto.handlebars'
+          // res.render('pages/empresa/cooperado-admin.handlebars', {
+          //   layout:false ,
+          //   basePath: '/loja/cooperados',      // <- use isso nos links
+          //   produtos,
+          //   fornecedores,
+          //   lojista,
+          //   total, page, pages, limit,
+          //   pageNumbers, qsNoPage,
+          //   filtroAtivo: statusAtivo,
+          //   //statusSelecionado: status,
+          //   fornecedorSelecionado: fornId,
+          //    modoSelecionado: modo,
+          //    departamentos,
+          //    setoresPorDepto: SETORES_POR_DEPTO,
+          //    secoesPorSetor:  SECOES_POR_SETOR,
+          // }
+          );
     } catch (err) {
           console.error(err);
             res.status(500).send('Erro ao carregar a lista.');
@@ -334,6 +340,9 @@ router.post('/usuarioloja/login', async (req, res) => {
 
     // ✅ vai para a LISTA (GET)
     return res.redirect('/loja/cooperados');
+    //  res.render('pages/contabil/cooperado_menu.handlebars', {
+    //        layout:false ,
+    //      });
   } catch (e) {
     console.error(e);
     req.flash('error_msg', 'Erro ao autenticar.');
@@ -341,5 +350,55 @@ router.post('/usuarioloja/login', async (req, res) => {
   }
 });
 
+'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+
+router.get('/assistente-lojista', async (req, res) => {
+  try {
+    res.render('pages/empresa/assistente_lojista', {
+      layout: '',
+      produto: {
+        nome: '',
+        codigo: '',
+        marca: '',
+        categoria: '',
+        preco: '',
+        descricao: ''
+      }
+    });
+  } catch (erro) {
+    console.error('Erro ao abrir assistente do lojista:', erro);
+    res.status(500).send('Erro ao abrir a página do assistente.');
+  }
+});
+
+router.post('/assistente-lojista/gerar', async (req, res) => {
+  try {
+    const { prompt, produto } = req.body;
+
+    if (!prompt) {
+      return res.status(400).json({ erro: 'Prompt não enviado.' });
+    }
+
+    const respostaFake = `
+Sugestão gerada para o produto "${produto?.nome || 'Sem nome'}":
+
+${prompt}
+
+Texto sugerido:
+Este produto se destaca pela sua qualidade, praticidade e excelente custo-benefício. Ideal para clientes que procuram eficiência, durabilidade e um ótimo resultado no uso diário.
+    `.trim();
+
+    return res.json({
+      ok: true,
+      resposta: respostaFake
+    });
+
+  } catch (erro) {
+    console.error('Erro ao gerar resposta do assistente:', erro);
+    return res.status(500).json({
+      erro: 'Erro interno ao gerar resposta.'
+    });
+  }
+});
 module.exports = router;
 

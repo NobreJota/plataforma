@@ -8,7 +8,7 @@ const ContaTituloSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "SubGrupo",
       required: true,
-      index: true,
+    //  index: true,
     },
     codigoSubGrupo:   { type: String, required: true, trim: true }, // "1.01"
     codigo:           { type: String, required: true, trim: true, unique: true }, // "1.01.002"

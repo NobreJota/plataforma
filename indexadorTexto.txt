@@ -7,3 +7,4 @@ Enumerar a lista de títulos png
 
 transforma para png => txt
 Get-ChildItem *.png | Select-Object -ExpandProperty Name > lista-imagens.txt
+https://claude.ai/chat/fe7cd474-c037-4b04-af85-2e53190a619b

@@ -1,0 +1,153 @@
+<div class="banco-page">
+  <header class="banco-header">
+    <h1>🏛️ Bancos</h1>
+    <p class="banco-subtitle">Cadastro de instituições financeiras</p>
+    <button class="banco-btn-novo" id="btn-novo">+ Novo banco</button>
+  </header>
+
+  <div class="banco-toolbar">
+    <label class="banco-checkbox">
+      <input type="checkbox" id="incluir-inativos"> Incluir inativos
+    </label>
+    <span id="contador" class="banco-contador">0 bancos</span>
+  </div>
+
+  <table class="banco-table">
+    <thead>
+      <tr>
+        <th>CÓDIGO</th>
+        <th>NOME</th>
+        <th>NOME CURTO</th>
+        <th>STATUS</th>
+        <th>AÇÕES</th>
+      </tr>
+    </thead>
+    <tbody id="lista-bancos">
+      <tr><td colspan="5" class="banco-empty">Carregando...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div id="modal-banco" class="banco-modal" hidden>
+  <div class="banco-modal-content">
+    <div class="banco-modal-header">
+      <h2 id="modal-titulo">Novo banco</h2>
+      <button class="banco-close" id="btn-fechar">×</button>
+    </div>
+
+    <form id="form-banco" class="banco-form">
+      <div class="banco-row">
+        <label class="flex-fix" style="min-width:120px">
+          <span>Código FEBRABAN <em>*</em></span>
+          <input type="text" id="f-codigo" tabindex="1" required maxlength="3" placeholder="001" autocomplete="off">
+        </label>
+        <label class="flex-grow">
+          <span>Nome completo <em>*</em></span>
+          <input type="text" id="f-nome" tabindex="2" required placeholder="Banco do Brasil S.A." autocomplete="off">
+        </label>
+        <label class="flex-fix" style="min-width:140px">
+          <span>Nome curto</span>
+          <input type="text" id="f-nomeCurto" tabindex="3" placeholder="BB" autocomplete="off">
+        </label>
+      </div>
+
+      <div class="banco-modal-footer">
+        <button type="button" id="btn-cancelar" class="banco-btn-cancel">Cancelar</button>
+        <button type="submit" class="banco-btn-salvar" id="btn-salvar">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .banco-page { padding: 24px; max-width: 1200px; margin: 0 auto; }
+  .banco-header { display:flex; align-items:center; gap:16px; margin-bottom:8px; }
+  .banco-header h1 { margin:0; font-size:1.6rem; }
+  .banco-subtitle { color:#6b7280; font-size:.95rem; margin:0; flex:1; }
+  .banco-btn-novo {
+    background:#1d4ed8; color:#fff; border:none; border-radius:8px;
+    padding:10px 18px; font-weight:600; cursor:pointer; font-size:.95rem;
+  }
+  .banco-btn-novo:hover { background:#1e40af; }
+
+  .banco-toolbar {
+    display:flex; align-items:center; gap:16px; margin:16px 0;
+    padding:12px; background:#f9fafb; border-radius:8px;
+  }
+  .banco-checkbox { display:flex; align-items:center; gap:8px; cursor:pointer; }
+  .banco-contador { margin-left:auto; color:#6b7280; font-size:.9rem; }
+
+  .banco-table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; }
+  .banco-table th {
+    background:#1d4ed8; color:#fff; padding:12px; text-align:left;
+    font-size:.8rem; letter-spacing:.5px;
+  }
+  .banco-table td { padding:12px; border-bottom:1px solid #e5e7eb; }
+  .banco-table tr:hover { background:#f9fafb; }
+  .banco-empty { text-align:center; padding:32px; color:#9ca3af; }
+
+  .banco-codigo {
+    font-family:monospace; font-weight:600; background:#eff6ff;
+    color:#1e40af; padding:4px 10px; border-radius:6px; display:inline-block;
+  }
+  .banco-tag-ativo {
+    background:#d1fae5; color:#065f46; padding:3px 10px;
+    border-radius:12px; font-size:.75rem; font-weight:600;
+  }
+  .banco-tag-inativo {
+    background:#fee2e2; color:#991b1b; padding:3px 10px;
+    border-radius:12px; font-size:.75rem; font-weight:600;
+  }
+  .banco-btn-acao {
+    background:none; border:none; cursor:pointer; font-size:1.1rem;
+    padding:4px 8px; border-radius:4px;
+  }
+  .banco-btn-acao:hover { background:#e5e7eb; }
+
+  /* Modal */
+  .banco-modal {
+    position:fixed; inset:0; background:rgba(0,0,0,.5);
+    display:flex; align-items:center; justify-content:center; z-index:1000;
+  }
+  .banco-modal-content {
+    background:#fff; border-radius:12px; width:90%; max-width:680px;
+    max-height:90vh; overflow-y:auto;
+  }
+  .banco-modal-header {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px; background:#1d4ed8; color:#fff; border-radius:12px 12px 0 0;
+  }
+  .banco-modal-header h2 { margin:0; font-size:1.2rem; }
+  .banco-close { background:none; border:none; color:#fff; font-size:1.8rem; cursor:pointer; }
+
+  .banco-form { padding:24px; }
+  .banco-row { display:flex; gap:12px; margin-bottom:16px; }
+  .flex-fix { flex:0 0 auto; }
+  .flex-grow { flex:1; }
+  .banco-form label { display:flex; flex-direction:column; gap:6px; }
+  .banco-form label span { font-size:.85rem; color:#374151; font-weight:500; }
+  .banco-form label em { color:#dc2626; font-style:normal; }
+  .banco-form input {
+    padding:10px 12px; border:1px solid #d1d5db; border-radius:7px;
+    font-size:.95rem; transition:border-color .15s;
+  }
+  .banco-form input:focus { outline:none; border-color:#1d4ed8; box-shadow:0 0 0 3px rgba(29,78,216,.1); }
+
+  .banco-modal-footer {
+    display:flex; justify-content:flex-end; gap:12px;
+    padding-top:16px; border-top:1px solid #e5e7eb; margin-top:16px;
+  }
+  .banco-btn-cancel {
+    background:#f3f4f6; border:1px solid #d1d5db;
+    border-radius:7px; padding:10px 18px; cursor:pointer; font-weight:500;
+  }
+  .banco-btn-cancel:hover { background:#e5e7eb; }
+  .banco-btn-salvar {
+    background:#1d4ed8; color:#fff; border:none; border-radius:7px;
+    padding:10px 24px; font-weight:600; cursor:pointer;
+  }
+  .banco-btn-salvar:hover { background:#1e40af; }
+</style>
+
+<script src="/js/auxiliares/bancos.js"></script>

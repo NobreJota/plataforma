@@ -179,3 +179,4 @@ Ajustar essas rotas/layout pro mesmo padrão de código que você já está usan
 
 Montar o Mongoose Parceiro já com um scriptzinho pra você cadastrar um parceiro direto no Node (sem painel ainda).
 
+https://claude.ai/chat/fe7cd474-c037-4b04-af85-2e53190a619b

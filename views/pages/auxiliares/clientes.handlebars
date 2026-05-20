@@ -1,0 +1,442 @@
+{{!-- views/pages/auxiliares/clientes.handlebars --}}
+
+<div class="cli-wrapper">
+
+  <div class="cli-header">
+    <div>
+      <h2>👥 Clientes</h2>
+      <p class="cli-subtitle">Cadastro auxiliar de clientes</p>
+    </div>
+    <button id="btn-novo-cliente" class="btn-primary">➕ Novo cliente</button>
+  </div>
+
+  <div class="cli-toolbar">
+    <input type="search" id="busca" class="cli-input"
+           placeholder="🔍 Buscar por nome, CPF ou CNPJ...">
+    <label class="cli-check">
+      <input type="checkbox" id="incluir-inativos">
+      <span>Incluir inativos</span>
+    </label>
+    <span id="contador" class="cli-contador">0 clientes</span>
+  </div>
+
+  <div class="cli-table-wrapper">
+    <table class="cli-table">
+      <thead>
+        <tr>
+          <th style="width:90px">Código</th>
+          <th style="width:60px">Tipo</th>
+          <th>Nome / Razão Social</th>
+          <th style="width:160px">CPF / CNPJ</th>
+          <th style="width:180px">Cidade / UF</th>
+          <th style="width:130px">Telefone</th>
+          <th style="width:80px">Status</th>
+          <th style="width:140px;text-align:right">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="lista-clientes">
+        <tr><td colspan="8" class="cli-empty">Carregando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  {{!-- ============ MODAL ============ --}}
+  <div id="modal-cliente" class="cli-modal" hidden>
+    <div class="cli-modal-card">
+      <header>
+        <h3 id="modal-titulo">Novo cliente</h3>
+        <button class="cli-close" data-close>×</button>
+      </header>
+
+      <form id="form-cliente" class="cli-form" autocomplete="off">
+        <div class="codigo-preview" id="codigo-preview">
+          Código: <strong id="codigo-valor">(será gerado automaticamente)</strong>
+        </div>
+
+        <fieldset class="cli-fieldset">
+          <legend>📋 Identificação</legend>
+
+          <div class="cli-row">
+            <label class="flex-fix">
+              <span>Tipo <em>*</em></span>
+              <select id="f-tipo" tabindex="1" required>
+                <option value="PF">Pessoa Física</option>
+                <option value="PJ">Pessoa Jurídica</option>
+              </select>
+            </label>
+            <label class="flex-grow">
+              <span id="lbl-cpfCnpj">CPF <em>*</em></span>
+              <div class="input-wrap">
+                <input type="text" id="f-cpfCnpj" tabindex="2" required
+                       placeholder="000.000.000-00" maxlength="18" autocomplete="off" autocorrect="off" spellcheck="false">
+                <span class="status-busca" id="status-cnpj"></span>
+              </div>
+            </label>
+          </div>
+
+          <label>
+            <span id="lbl-nome">Nome completo <em>*</em></span>
+            <input type="text" id="f-nome" tabindex="3" required placeholder="ex: João da Silva" autocomplete="off" autocorrect="off" spellcheck="false">
+          </label>
+
+          <div class="cli-row">
+            <label class="flex-grow">
+              <span>E-mail</span>
+              <input type="email" id="f-email" tabindex="4" placeholder="exemplo@email.com" autocomplete="off">
+            </label>
+            <label class="flex-fix" style="min-width:170px">
+              <span>Telefone</span>
+              <input type="text" id="f-telefone" tabindex="5" placeholder="(00) 00000-0000" maxlength="15" autocomplete="off">
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="cli-fieldset" id="bloco-inscricoes" hidden>
+          <legend>🏢 Inscrições (PJ)</legend>
+          <div class="bloco-inscricoes">
+            <label class="flex-grow">
+              <span>Inscrição Estadual</span>
+              <div class="campo-isento-wrap">
+                <input type="text" id="f-inscricaoEstadual" placeholder="Apenas números" autocomplete="off">
+                <button type="button" class="btn-isento" data-target="f-inscricaoEstadual">ISENTO</button>
+              </div>
+            </label>
+            <label class="flex-grow">
+              <span>Inscrição Municipal</span>
+              <div class="campo-isento-wrap">
+                <input type="text" id="f-inscricaoMunicipal" placeholder="Apenas números" autocomplete="off">
+                <button type="button" class="btn-isento" data-target="f-inscricaoMunicipal">ISENTO</button>
+              </div>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="cli-fieldset">
+          <legend>📍 Endereço de cobrança <em>*</em></legend>
+
+          <div class="cli-row">
+            <label class="flex-fix" style="min-width:200px">
+              <span>CEP <em>*</em></span>
+              <div class="input-wrap">
+                <input type="tel" id="cob-cep" tabindex="6" required
+                       placeholder="00000-000" maxlength="9" inputmode="numeric" autocomplete="off" autocorrect="off" spellcheck="false">
+                <span class="status-busca" id="status-cep-cob"></span>
+              </div>
+            </label>
+            <label class="flex-grow">
+              <span>Logradouro <em>*</em></span>
+              <input type="text" id="cob-logradouro" tabindex="7" required placeholder="Rua, Avenida..." autocomplete="off">
+            </label>
+            <label class="flex-fix" style="min-width:100px">
+              <span>Número</span>
+              <input type="text" id="cob-numero" tabindex="8" placeholder="100" autocomplete="off">
+            </label>
+          </div>
+
+          <div class="cli-row">
+            <label class="flex-grow">
+              <span>Complemento</span>
+              <input type="text" id="cob-complemento" tabindex="9" placeholder="Sala, Apto..." autocomplete="off">
+            </label>
+            <label class="flex-grow">
+              <span>Bairro</span>
+              <input type="text" id="cob-bairro" tabindex="10" autocomplete="off">
+            </label>
+          </div>
+
+          <div class="cli-row">
+            <label class="flex-grow">
+              <span>Cidade <em>*</em></span>
+              <input type="text" id="cob-cidade" tabindex="11" required autocomplete="off">
+            </label>
+            <label class="flex-fix" style="min-width:90px">
+              <span>UF <em>*</em></span>
+              <input type="text" id="cob-uf" tabindex="12" required maxlength="2" style="text-transform:uppercase" autocomplete="off">
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="cli-fieldset">
+          <legend>🚚 Endereço de entrega</legend>
+
+          <label class="cli-check-inline">
+            <input type="checkbox" id="entrega-igual" tabindex="13" checked>
+            <span>Mesmo endereço da cobrança</span>
+          </label>
+
+          <div id="bloco-entrega" hidden>
+            <div class="cli-row">
+              <label class="flex-fix" style="min-width:200px">
+                <span>CEP <em>*</em></span>
+                <div class="input-wrap">
+                  <input type="tel" id="ent-cep" tabindex="14"
+                         placeholder="00000-000" maxlength="9" inputmode="numeric" autocomplete="off" autocorrect="off" spellcheck="false">
+                  <span class="status-busca" id="status-cep-ent"></span>
+                </div>
+              </label>
+              <label class="flex-grow">
+                <span>Logradouro <em>*</em></span>
+                <input type="text" id="ent-logradouro" tabindex="15" placeholder="Rua, Avenida..." autocomplete="off">
+              </label>
+              <label class="flex-fix" style="min-width:100px">
+                <span>Número</span>
+                <input type="text" id="ent-numero" tabindex="16" autocomplete="off">
+              </label>
+            </div>
+
+            <div class="cli-row">
+              <label class="flex-grow">
+                <span>Complemento</span>
+                <input type="text" id="ent-complemento" tabindex="17" autocomplete="off">
+              </label>
+              <label class="flex-grow">
+                <span>Bairro</span>
+                <input type="text" id="ent-bairro" tabindex="18" autocomplete="off">
+              </label>
+            </div>
+
+            <div class="cli-row">
+              <label class="flex-grow">
+                <span>Cidade <em>*</em></span>
+                <input type="text" id="ent-cidade" tabindex="19" autocomplete="off">
+              </label>
+              <label class="flex-fix" style="min-width:90px">
+                <span>UF <em>*</em></span>
+                <input type="text" id="ent-uf" tabindex="20" maxlength="2" style="text-transform:uppercase" autocomplete="off">
+              </label>
+            </div>
+          </div>
+        </fieldset>
+
+        <label>
+          <span>Observações</span>
+          <textarea id="f-observacoes" tabindex="21" rows="2" placeholder="Anotações internas..."></textarea>
+        </label>
+
+        <div class="cli-form-actions">
+          <button type="button" class="btn-secondary" data-close>Cancelar</button>
+          <button type="submit" class="btn-primary" id="btn-salvar" tabindex="22">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+
+<style>
+  .cli-wrapper { padding: 24px; max-width: 1280px; margin: 0 auto; }
+
+  .cli-header {
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom: 18px;
+  }
+  .cli-header h2 { margin:0; font-size:1.4rem; }
+  .cli-subtitle { color:#6b7280; margin:4px 0 0; font-size:.9rem; }
+
+  .btn-primary {
+    background:#1d4ed8; color:#fff; border:0; padding:10px 18px;
+    border-radius:8px; cursor:pointer; font-weight:600;
+  }
+  .btn-primary:hover { background:#1e40af; }
+  .btn-secondary {
+    background:#e5e7eb; color:#111; border:0; padding:10px 18px;
+    border-radius:8px; cursor:pointer; font-weight:600;
+  }
+  .btn-secondary:hover { background:#d1d5db; }
+
+  .cli-toolbar {
+    display:flex; gap:12px; align-items:center; margin-bottom:14px; flex-wrap:wrap;
+  }
+  .cli-input {
+    flex:1; min-width:260px; padding:10px 14px;
+    border:1px solid #d1d5db; border-radius:8px; font-size:.95rem;
+  }
+  .cli-input:focus { outline:2px solid #1d4ed8; border-color:#1d4ed8; }
+
+  .cli-check { display:flex; gap:6px; align-items:center; font-size:.9rem; color:#374151; }
+  .cli-contador { color:#6b7280; font-size:.85rem; margin-left:auto; }
+
+  .cli-table-wrapper {
+    background:#fff; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden;
+  }
+  .cli-table { width:100%; border-collapse:collapse; font-size:.92rem; }
+  .cli-table th, .cli-table td {
+    padding:10px 14px; text-align:left; border-bottom:1px solid #f3f4f6;
+  }
+  .cli-table th {
+    background:#f9fafb; color:#374151; font-weight:600;
+    font-size:.82rem; text-transform:uppercase; letter-spacing:.03em;
+  }
+  .cli-table tbody tr:hover { background:#f9fafb; }
+  .cli-table tbody tr.inativo { opacity:.55; }
+
+  .cli-empty { text-align:center; padding:32px !important; color:#6b7280; }
+  .codigo-cell { font-family: ui-monospace, monospace; font-weight:600; }
+
+  .tipo-badge {
+    display:inline-block; padding:2px 8px; border-radius:10px;
+    font-size:.72rem; font-weight:700; letter-spacing:.04em;
+  }
+  .tipo-badge.PF { background:#dbeafe; color:#1e40af; }
+  .tipo-badge.PJ { background:#dcfce7; color:#166534; }
+
+  .status-badge {
+    display:inline-block; padding:2px 8px; border-radius:10px;
+    font-size:.72rem; font-weight:600;
+  }
+  .status-badge.ativo   { background:#dcfce7; color:#166534; }
+  .status-badge.inativo { background:#fee2e2; color:#991b1b; }
+
+  .acoes-cell { text-align:right; white-space:nowrap; }
+  .btn-icon {
+    background:transparent; border:0; cursor:pointer; padding:6px 8px;
+    border-radius:6px; font-size:1rem; margin-left:4px;
+  }
+  .btn-icon:hover { background:#e5e7eb; }
+  .btn-icon.danger:hover { background:#fee2e2; }
+
+  /* Modal */
+  .cli-modal {
+    position:fixed; inset:0; background:rgba(0,0,0,.45);
+    display:flex; align-items:center; justify-content:center; z-index:1000;
+  }
+  .cli-modal[hidden] { display:none; }
+
+  .cli-modal-card {
+    background:#fff; border-radius:12px; width:760px; max-width:94vw;
+    max-height:92vh; overflow-y:auto;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+    animation: pop .18s ease-out;
+  }
+  @keyframes pop { from{transform:scale(.95);opacity:0;} to{transform:scale(1);opacity:1;} }
+
+  .cli-modal-card header {
+    background:#1d4ed8; color:#fff; padding:14px 18px;
+    display:flex; justify-content:space-between; align-items:center;
+    position: sticky; top: 0; z-index: 2;
+  }
+  .cli-modal-card header h3 { margin:0; font-size:1.05rem; }
+  .cli-close {
+    background:transparent; color:#fff; border:0; font-size:1.5rem;
+    cursor:pointer; line-height:1;
+  }
+
+  .cli-form { padding:16px 18px; display:flex; flex-direction:column; gap:14px; }
+
+  .cli-fieldset {
+    border:1px solid #e5e7eb; border-radius:8px; padding:12px 14px 14px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .cli-fieldset legend {
+    padding:0 6px; font-size:.85rem; color:#374151; font-weight:600;
+  }
+  .cli-fieldset legend em { color:#dc2626; font-style:normal; }
+
+  .cli-form label { display:flex; flex-direction:column; gap:4px; font-size:.82rem; color:#374151; }
+  .cli-form label em { color:#dc2626; font-style:normal; }
+  .cli-form input, .cli-form select, .cli-form textarea {
+    padding:9px 11px; border:1px solid #d1d5db; border-radius:7px;
+    font-size:.92rem; font-family: inherit;
+    transition: background .25s ease, border-color .15s ease;
+  }
+  .cli-form input:focus, .cli-form select:focus, .cli-form textarea:focus {
+    outline:2px solid #1d4ed8; border-color:#1d4ed8;
+  }
+
+  /* ⭐ Campo PREENCHIDO (amarelo claro) */
+  .cli-form input.preenchido,
+  .cli-form select.preenchido,
+  .cli-form textarea.preenchido {
+    background: #fef9c3;
+    border-color: #facc15;
+  }
+  .cli-form input.preenchido:focus,
+  .cli-form select.preenchido:focus { background: #fffbe6; }
+
+  /* ⚠ Campo OBRIGATÓRIO PENDENTE (borda laranja sutil) */
+  .cli-form input.pendente,
+  .cli-form select.pendente {
+    border-color: #fb923c;
+    background: #fff7ed;
+    box-shadow: 0 0 0 1px #fb923c33 inset;
+  }
+  .cli-form input.pendente:focus,
+  .cli-form select.pendente:focus {
+    background: #fff;
+    outline-color: #fb923c;
+  }
+
+  /* ❌ Flash de erro ao tentar salvar com pendência */
+  .cli-form input.cli-erro-flash,
+  .cli-form select.cli-erro-flash {
+    background: #fee2e2 !important;
+    border-color: #dc2626 !important;
+    animation: shake .3s ease;
+  }
+  @keyframes shake {
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-4px);}
+    75%{transform:translateX(4px);}
+  }
+
+  .cli-row { display:flex; gap:10px; }
+  .cli-row .flex-grow { flex:1; }
+  .cli-row .flex-fix  { flex:0 0 160px; }
+
+  .cli-check-inline {
+    flex-direction:row !important; align-items:center; gap:8px !important;
+    font-size:.88rem; color:#1e40af; cursor:pointer;
+  }
+  .cli-check-inline input { width:auto; }
+
+  /* ⭐ Wrap do input com badge ao lado (não em cima!) */
+  .input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .input-wrap input {
+    flex: 1 1 110px;      /* mínimo 110px para CEP caber inteiro */
+    min-width: 110px;
+  }
+  .status-busca {
+    font-size: .72rem;
+    color: #6b7280;
+    white-space: nowrap;
+    text-align: left;
+  }
+  .status-busca.ok   { color:#166534; font-weight:600; }
+  .status-busca.erro { color:#b91c1c; font-weight:600; }
+
+  .cli-form-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:4px; align-items:center; }
+  .pendencias-info {
+    margin-right:auto; font-size:.82rem; color:#9a3412;
+    background:#fff7ed; padding:6px 12px; border-radius:6px;
+    border:1px solid #fed7aa;
+  }
+  .pendencias-info[hidden] { display:none; }
+
+  .codigo-preview {
+    background:#eff6ff; border:1px solid #93c5fd; border-radius:8px;
+    padding:10px 12px; font-size:.9rem; color:#1e40af;
+  }
+
+  /* Bloco IE/IM */
+  .bloco-inscricoes { display:flex; gap:10px; }
+  .campo-isento-wrap { display:flex; gap:6px; align-items:stretch; }
+  .campo-isento-wrap input { flex:1; min-width:0; }
+  .btn-isento {
+    background:#f3f4f6; border:1px solid #d1d5db; border-radius:7px;
+    padding:0 12px; font-size:.75rem; font-weight:600; color:#4b5563;
+    cursor:pointer; white-space:nowrap; transition:all .15s;
+  }
+  .btn-isento:hover { background:#e5e7eb; }
+  .btn-isento.ativo {
+    background:#ecfccb; border-color:#84cc16; color:#4d7c0f;
+  }
+</style>
+
+<script src="/js/auxiliares/clientes.js"></script>

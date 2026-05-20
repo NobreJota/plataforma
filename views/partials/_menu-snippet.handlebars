@@ -1,0 +1,79 @@
+<!-- ============================================================
+     SNIPPET DE NAVEGAÇÃO — Adicionar ao seu layout principal
+     (views/layouts/main.handlebars OU views/partials/menu.handlebars)
+     ============================================================
+     Onde tiver os links "Plano de Contas" e "Razão", adiciona o
+     bloco abaixo. Você ajusta o estilo conforme seu CSS atual. -->
+
+<nav class="menu-principal">
+  <a href="/contab/plano">📋 Plano de Contas</a>
+  <a href="/contab/razao">📖 Razão</a>
+
+  <!-- Submenu Cadastros Auxiliares -->
+  <div class="menu-item-dropdown">
+    <button class="menu-dropdown-trigger">
+      📂 Cadastros Aux. ▼
+    </button>
+    <div class="menu-dropdown-content">
+      <a href="/aux/clientes">👥 Clientes</a>
+      <a href="/aux/fornecedores">🏭 Fornecedores</a>
+      <a href="/aux/bancos">🏛️ Bancos</a>
+      <a href="/aux/contas-bancarias">💳 Contas Bancárias</a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .menu-principal {
+    display: flex;
+    gap: 20px;
+    padding: 12px 24px;
+    background: #1d4ed8;
+    color: #fff;
+  }
+  .menu-principal a {
+    color: #fff;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: .95rem;
+  }
+  .menu-principal a:hover { background: rgba(255,255,255,.15); }
+
+  /* Dropdown */
+  .menu-item-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  .menu-dropdown-trigger {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: .95rem;
+    border-radius: 6px;
+  }
+  .menu-dropdown-trigger:hover { background: rgba(255,255,255,.15); }
+  .menu-dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    color: #1f2937;
+    min-width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    z-index: 100;
+    overflow: hidden;
+  }
+  .menu-dropdown-content a {
+    color: #1f2937;
+    display: block;
+    padding: 10px 16px;
+    font-size: .9rem;
+  }
+  .menu-dropdown-content a:hover { background: #f3f4f6; color: #1d4ed8; }
+  .menu-item-dropdown:hover .menu-dropdown-content { display: block; }
+</style>

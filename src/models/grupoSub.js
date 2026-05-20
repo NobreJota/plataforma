@@ -8,7 +8,7 @@ const SubGrupoSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Grupo",
       required: true,
-      index: true,
+     // index: true,
     },
     // Mantido em texto para facilitar queries sem populate
     codigoGrupo: { type: String, required: true, trim: true }, // "1"

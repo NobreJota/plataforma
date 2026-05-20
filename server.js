@@ -370,7 +370,8 @@ const paineisSecoes = require('./src/routes/central/paineis-secoes');
 const home        = require('./src/routes/site/home');
 const usuarioloja = require('./src/routes/empresa/usuario');
 // usuarioloja/login entra na loja do cooperado emaildo cliente com senha do próprio 1212@gmail.com
-const contab    = require('.src/routes/contabil/contab');
+const contabil    =require('./src/routes/contabil/pages');
+const auxiliares = require('./src/routes/auxiliares/pages');
 const loja        = require('./src/routes/empresa/rotina');
 const produto     = require('./src/routes/empresa/produtos');
 const cadproduto  = require("./src/routes/empresa/produto_cadastro");
@@ -396,7 +397,8 @@ app.use('/paineisecoes', paineisSecoes);
 
 app.use('/', home);
 app.use('/usuarioloja', usuarioloja);
-app.use('/contab', contab);
+app.use('/contab', contabil);
+app.use('/aux', auxiliares);
 app.use('/loja', loja);
 app.use('/produto', produto);
 app.use('/cadproduto',cadproduto);

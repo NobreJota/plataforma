@@ -1,0 +1,261 @@
+<div class="cb-page">
+  <header class="cb-header">
+    <h1>💳 Contas Bancárias</h1>
+    <p class="cb-subtitle">Contas correntes, poupança e aplicações</p>
+    <button class="cb-btn-novo" id="btn-novo">+ Nova conta</button>
+  </header>
+
+  <div class="cb-toolbar">
+    <input type="search" id="busca" class="cb-input" placeholder="🔍 Buscar por código, apelido, agência ou número...">
+    <label class="cb-checkbox">
+      <input type="checkbox" id="incluir-inativos"> Incluir inativas
+    </label>
+    <span id="contador" class="cb-contador">0 contas</span>
+  </div>
+
+  <table class="cb-table">
+    <thead>
+      <tr>
+        <th>CÓDIGO</th>
+        <th>BANCO</th>
+        <th>AGÊNCIA</th>
+        <th>CONTA</th>
+        <th>TIPO</th>
+        <th>APELIDO</th>
+        <th>CONTA CONTÁBIL</th>
+        <th>STATUS</th>
+        <th>AÇÕES</th>
+      </tr>
+    </thead>
+    <tbody id="lista-contas">
+      <tr><td colspan="9" class="cb-empty">Carregando...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div id="modal-conta" class="cb-modal" hidden>
+  <div class="cb-modal-content">
+    <div class="cb-modal-header">
+      <h2 id="modal-titulo">Nova conta bancária</h2>
+      <button class="cb-close" id="btn-fechar">×</button>
+    </div>
+
+    <div class="codigo-preview" id="codigo-preview">
+      Código: <strong>(será gerado automaticamente)</strong>
+    </div>
+
+    <form id="form-conta" class="cb-form" autocomplete="off">
+
+      <fieldset class="cb-fieldset">
+        <legend>🏛️ Dados bancários</legend>
+        <div class="cb-row">
+          <label class="flex-grow">
+            <span>Banco <em>*</em></span>
+            <select id="f-banco" tabindex="1" required autocomplete="off">
+              <option value="">Selecione...</option>
+            </select>
+          </label>
+          <label class="flex-fix" style="min-width:150px">
+            <span>Tipo <em>*</em></span>
+            <select id="f-tipo" tabindex="2" required autocomplete="off">
+              <option value="CORRENTE">Conta Corrente</option>
+              <option value="POUPANCA">Poupança</option>
+              <option value="APLICACAO">Aplicação</option>
+              <option value="PAGAMENTO">Conta Pagamento</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="cb-row">
+          <label class="flex-fix" style="min-width:120px">
+            <span>Agência <em>*</em></span>
+            <input type="text" id="f-agencia" tabindex="3" required placeholder="1234" autocomplete="off">
+          </label>
+          <label class="flex-fix" style="min-width:80px">
+            <span>DV</span>
+            <input type="text" id="f-agenciaDv" tabindex="4" maxlength="2" placeholder="5" autocomplete="off">
+          </label>
+          <label class="flex-fix" style="min-width:160px">
+            <span>Número da conta <em>*</em></span>
+            <input type="text" id="f-numero" tabindex="5" required placeholder="67890" autocomplete="off">
+          </label>
+          <label class="flex-fix" style="min-width:80px">
+            <span>DV</span>
+            <input type="text" id="f-numeroDv" tabindex="6" maxlength="2" placeholder="1" autocomplete="off">
+          </label>
+        </div>
+
+        <div class="cb-row">
+          <label class="flex-grow">
+            <span>Apelido</span>
+            <input type="text" id="f-apelido" tabindex="7" placeholder="Ex: BB Operacional, CEF Folha..." autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="cb-fieldset">
+        <legend>👤 Titular</legend>
+        <div class="cb-row">
+          <label class="flex-grow">
+            <span>Nome do titular</span>
+            <input type="text" id="f-titular" tabindex="8" placeholder="Cooperativa Rota" autocomplete="off">
+          </label>
+          <label class="flex-fix" style="min-width:200px">
+            <span>CPF/CNPJ do titular</span>
+            <input type="text" id="f-cpfCnpjTitular" tabindex="9" placeholder="00.000.000/0000-00" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="cb-fieldset">
+        <legend>📊 Vínculo contábil</legend>
+        <div class="cb-row">
+          <label class="flex-grow">
+            <span>Conta SubTítulo do Plano de Contas</span>
+            <select id="f-contaSubTitulo" tabindex="10" autocomplete="off">
+              <option value="">— Vincular depois —</option>
+            </select>
+            <small class="cb-hint">A movimentação dessa conta bancária será refletida no SubTítulo selecionado.</small>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="cb-fieldset">
+        <legend>💰 Saldo inicial</legend>
+        <div class="cb-row">
+          <label class="flex-fix" style="min-width:180px">
+            <span>Saldo inicial (R$)</span>
+            <input type="number" step="0.01" id="f-saldoInicial" tabindex="11" placeholder="0,00" autocomplete="off">
+          </label>
+          <label class="flex-fix" style="min-width:180px">
+            <span>Data do saldo inicial</span>
+            <input type="date" id="f-dataSaldoInicial" tabindex="12" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="cb-fieldset">
+        <legend>📝 Observações</legend>
+        <textarea id="f-observacoes" tabindex="13" rows="2" placeholder="Anotações livres..." autocomplete="off"></textarea>
+      </fieldset>
+
+      <div class="cb-modal-footer">
+        <button type="button" id="btn-cancelar" class="cb-btn-cancel">Cancelar</button>
+        <button type="submit" class="cb-btn-salvar" id="btn-salvar">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .cb-page { padding: 24px; max-width: 1300px; margin: 0 auto; }
+  .cb-header { display:flex; align-items:center; gap:16px; margin-bottom:8px; }
+  .cb-header h1 { margin:0; font-size:1.6rem; }
+  .cb-subtitle { color:#6b7280; font-size:.95rem; margin:0; flex:1; }
+  .cb-btn-novo {
+    background:#1d4ed8; color:#fff; border:none; border-radius:8px;
+    padding:10px 18px; font-weight:600; cursor:pointer;
+  }
+  .cb-btn-novo:hover { background:#1e40af; }
+
+  .cb-toolbar {
+    display:flex; align-items:center; gap:16px; margin:16px 0;
+    padding:12px; background:#f9fafb; border-radius:8px;
+  }
+  .cb-input {
+    flex:1; padding:8px 12px; border:1px solid #d1d5db;
+    border-radius:7px; font-size:.95rem;
+  }
+  .cb-checkbox { display:flex; align-items:center; gap:8px; cursor:pointer; white-space:nowrap; }
+  .cb-contador { color:#6b7280; font-size:.9rem; white-space:nowrap; }
+
+  .cb-table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; font-size:.9rem; }
+  .cb-table th {
+    background:#1d4ed8; color:#fff; padding:10px; text-align:left;
+    font-size:.75rem; letter-spacing:.5px;
+  }
+  .cb-table td { padding:10px; border-bottom:1px solid #e5e7eb; }
+  .cb-table tr:hover { background:#f9fafb; }
+  .cb-empty { text-align:center; padding:32px; color:#9ca3af; }
+
+  .cb-codigo {
+    font-family:monospace; font-weight:600; background:#eff6ff;
+    color:#1e40af; padding:3px 8px; border-radius:6px; display:inline-block; font-size:.85rem;
+  }
+  .cb-tag-tipo {
+    background:#e0e7ff; color:#3730a3; padding:2px 8px;
+    border-radius:10px; font-size:.7rem; font-weight:600;
+  }
+  .cb-tag-ativo {
+    background:#d1fae5; color:#065f46; padding:3px 10px;
+    border-radius:12px; font-size:.75rem; font-weight:600;
+  }
+  .cb-tag-inativo {
+    background:#fee2e2; color:#991b1b; padding:3px 10px;
+    border-radius:12px; font-size:.75rem; font-weight:600;
+  }
+  .cb-btn-acao {
+    background:none; border:none; cursor:pointer; font-size:1.1rem;
+    padding:4px 8px; border-radius:4px;
+  }
+  .cb-btn-acao:hover { background:#e5e7eb; }
+
+  /* Modal */
+  .cb-modal {
+    position:fixed; inset:0; background:rgba(0,0,0,.5);
+    display:flex; align-items:center; justify-content:center; z-index:1000;
+  }
+  .cb-modal-content {
+    background:#fff; border-radius:12px; width:90%; max-width:760px;
+    max-height:90vh; overflow-y:auto;
+  }
+  .cb-modal-header {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px; background:#1d4ed8; color:#fff; border-radius:12px 12px 0 0;
+  }
+  .cb-modal-header h2 { margin:0; font-size:1.2rem; }
+  .cb-close { background:none; border:none; color:#fff; font-size:1.8rem; cursor:pointer; }
+
+  .codigo-preview {
+    background:#eff6ff; border:1px solid #93c5fd; border-radius:8px;
+    padding:10px 16px; margin:16px 24px 0; font-size:.9rem; color:#1e40af;
+  }
+
+  .cb-form { padding:16px 24px 24px; }
+  .cb-fieldset {
+    border:1px solid #e5e7eb; border-radius:8px; padding:12px 16px;
+    margin-bottom:14px;
+  }
+  .cb-fieldset legend { padding:0 8px; font-weight:600; color:#374151; font-size:.9rem; }
+  .cb-row { display:flex; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+  .flex-fix { flex:0 0 auto; }
+  .flex-grow { flex:1; min-width:200px; }
+  .cb-form label { display:flex; flex-direction:column; gap:6px; }
+  .cb-form label span { font-size:.85rem; color:#374151; font-weight:500; }
+  .cb-form label em { color:#dc2626; font-style:normal; }
+  .cb-form input, .cb-form select, .cb-form textarea {
+    padding:9px 12px; border:1px solid #d1d5db; border-radius:7px;
+    font-size:.92rem; transition:border-color .15s;
+  }
+  .cb-form input:focus, .cb-form select:focus, .cb-form textarea:focus {
+    outline:none; border-color:#1d4ed8; box-shadow:0 0 0 3px rgba(29,78,216,.1);
+  }
+  .cb-hint { font-size:.75rem; color:#6b7280; margin-top:2px; }
+
+  .cb-modal-footer {
+    display:flex; justify-content:flex-end; gap:12px;
+    padding-top:14px; border-top:1px solid #e5e7eb;
+  }
+  .cb-btn-cancel {
+    background:#f3f4f6; border:1px solid #d1d5db;
+    border-radius:7px; padding:9px 18px; cursor:pointer; font-weight:500;
+  }
+  .cb-btn-salvar {
+    background:#1d4ed8; color:#fff; border:none; border-radius:7px;
+    padding:9px 24px; font-weight:600; cursor:pointer;
+  }
+  .cb-btn-salvar:hover { background:#1e40af; }
+</style>
+
+<script src="/js/auxiliares/contas-bancarias.js"></script>

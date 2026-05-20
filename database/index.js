@@ -14,8 +14,9 @@ async function connectToDatabase() {
   }
   await mongoose.connect(MONGO_URI, opts);
   const c = mongoose.connection;
-  console.log(`✅ MongoDB conecXtado: ${c.host}${c.port ? ':'+c.port : ''} | DB: ${c.name}`);
+  console.log(`✅ MongoDB conectado=1000: ${c.host}${c.port ? ':'+c.port : ''} | DB: ${c.name}`);
   return mongoose;
+  
 }
 
 module.exports = { mongoose, connectToDatabase };

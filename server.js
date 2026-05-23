@@ -372,6 +372,7 @@ const usuarioloja = require('./src/routes/empresa/usuario');
 // usuarioloja/login entra na loja do cooperado emaildo cliente com senha do próprio 1212@gmail.com
 const contabil    =require('./src/routes/contabil/pages');
 const auxiliares = require('./src/routes/auxiliares/pages');
+const financeiro = require('./src/routes/financeiro/pages');
 const loja        = require('./src/routes/empresa/rotina');
 const produto     = require('./src/routes/empresa/produtos');
 const cadproduto  = require("./src/routes/empresa/produto_cadastro");
@@ -399,6 +400,7 @@ app.use('/', home);
 app.use('/usuarioloja', usuarioloja);
 app.use('/contab', contabil);
 app.use('/aux', auxiliares);
+app.use('/financeiro',financeiro);
 app.use('/loja', loja);
 app.use('/produto', produto);
 app.use('/cadproduto',cadproduto);

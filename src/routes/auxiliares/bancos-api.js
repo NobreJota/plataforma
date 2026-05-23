@@ -4,9 +4,50 @@ const Banco = require('../../models/auxiliares/banco');
 
 const router = express.Router();
 
+/* ===== Seed automático dos 10 bancos principais ===== */
+const BANCOS_PADRAO = [
+  { codigo: '001', nome: 'Banco do Brasil S.A.',   nomeCurto: 'BB' },
+  { codigo: '104', nome: 'Caixa Econômica Federal', nomeCurto: 'CEF' },
+  { codigo: '237', nome: 'Banco Bradesco S.A.',     nomeCurto: 'Bradesco' },
+  { codigo: '341', nome: 'Banco Itaú Unibanco S.A.', nomeCurto: 'Itaú' },
+  { codigo: '033', nome: 'Banco Santander Brasil S.A.', nomeCurto: 'Santander' },
+  { codigo: '260', nome: 'Nu Pagamentos S.A.',      nomeCurto: 'Nubank' },
+  { codigo: '077', nome: 'Banco Inter S.A.',        nomeCurto: 'Inter' },
+  { codigo: '756', nome: 'Banco Cooperativo do Brasil S.A. – Bancoob', nomeCurto: 'Sicoob' },
+  { codigo: '021', nome: 'Banestes S.A. Banco do Estado do Espírito Santo', nomeCurto: 'Banestes' },
+  { codigo: '336', nome: 'Banco C6 S.A.',           nomeCurto: 'C6' }
+];
+
+let seedExecutado = false;
+async function garantirSeed() {
+  if (seedExecutado) return;
+  seedExecutado = true;
+  try {
+    try {
+      await Banco.collection.createIndex({ codigo: 1 }, { unique: true, name: 'codigo_unique' });
+    } catch (_) { /* já existe */ }
+
+    let inseridos = 0;
+    for (const b of BANCOS_PADRAO) {
+      const existe = await Banco.findOne({ codigo: b.codigo });
+      if (!existe) {
+        await Banco.create(b);
+        inseridos++;
+      }
+    }
+    if (inseridos > 0) {
+      console.log(`🌱 Seed de bancos: ${inseridos} banco(s) cadastrado(s) automaticamente.`);
+    }
+  } catch (err) {
+    console.error('⚠ Erro no seed de bancos:', err.message);
+    seedExecutado = false; // permite tentar de novo na próxima
+  }
+}
+
 /* LISTAR */
 router.get('/', async (req, res) => {
   try {
+    await garantirSeed();  // 🌱 garante os 10 bancos antes de listar
     const incluirInativos = req.query.incluirInativos === 'true';
     const filter = incluirInativos ? {} : { ativo: true };
     const bancos = await Banco.find(filter).sort({ nome: 1 });
@@ -39,7 +80,6 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ erro: 'Código FEBRABAN deve ter 3 dígitos.' });
     }
 
-    // Verifica duplicidade
     const existe = await Banco.findOne({ codigo: codigoLimpo });
     if (existe) {
       return res.status(409).json({
@@ -81,12 +121,10 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-/* INATIVAR (soft delete) */
+/* INATIVAR */
 router.delete('/:id', async (req, res) => {
   try {
-    const b = await Banco.findByIdAndUpdate(
-      req.params.id, { ativo: false }, { new: true }
-    );
+    const b = await Banco.findByIdAndUpdate(req.params.id, { ativo: false }, { new: true });
     if (!b) return res.status(404).json({ erro: 'Banco não encontrado.' });
     res.json({ ok: true });
   } catch (err) {
@@ -97,9 +135,7 @@ router.delete('/:id', async (req, res) => {
 /* REATIVAR */
 router.post('/:id/reativar', async (req, res) => {
   try {
-    const b = await Banco.findByIdAndUpdate(
-      req.params.id, { ativo: true }, { new: true }
-    );
+    const b = await Banco.findByIdAndUpdate(req.params.id, { ativo: true }, { new: true });
     if (!b) return res.status(404).json({ erro: 'Banco não encontrado.' });
     res.json(b);
   } catch (err) {

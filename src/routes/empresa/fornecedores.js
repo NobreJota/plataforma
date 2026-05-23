@@ -6,7 +6,7 @@ require("../../../database/index"); // ajuste para seu caminho
 
 
 const Departamento =require("../../models/departamento");
-const Fornecedor =require('../../models/fornecedor');
+const Fornecedor =require('../../models/fornec');
 const Lojista = require("../../models/lojista"); // <-- se ainda não tem
 
 

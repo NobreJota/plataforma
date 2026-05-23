@@ -38,17 +38,19 @@
 
     <form id="form-banco" class="banco-form">
       <div class="banco-row">
-        <label class="flex-fix" style="min-width:120px">
+        <label class="flex-fix" style="min-width:110px; max-width:130px">
           <span>Código FEBRABAN <em>*</em></span>
           <input type="text" id="f-codigo" tabindex="1" required maxlength="3" placeholder="001" autocomplete="off">
         </label>
+        <label class="flex-fix" style="min-width:130px">
+          <span>Nome curto</span>
+          <input type="text" id="f-nomeCurto" tabindex="3" placeholder="BB" autocomplete="off">
+        </label>
+      </div>
+      <div class="banco-row">
         <label class="flex-grow">
           <span>Nome completo <em>*</em></span>
           <input type="text" id="f-nome" tabindex="2" required placeholder="Banco do Brasil S.A." autocomplete="off">
-        </label>
-        <label class="flex-fix" style="min-width:140px">
-          <span>Nome curto</span>
-          <input type="text" id="f-nomeCurto" tabindex="3" placeholder="BB" autocomplete="off">
         </label>
       </div>
 
@@ -110,6 +112,7 @@
     position:fixed; inset:0; background:rgba(0,0,0,.5);
     display:flex; align-items:center; justify-content:center; z-index:1000;
   }
+  .banco-modal[hidden] { display:none; }
   .banco-modal-content {
     background:#fff; border-radius:12px; width:90%; max-width:680px;
     max-height:90vh; overflow-y:auto;
@@ -122,10 +125,12 @@
   .banco-close { background:none; border:none; color:#fff; font-size:1.8rem; cursor:pointer; }
 
   .banco-form { padding:24px; }
-  .banco-row { display:flex; gap:12px; margin-bottom:16px; }
+  .banco-form * { box-sizing: border-box; }
+  .banco-row { display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
   .flex-fix { flex:0 0 auto; }
-  .flex-grow { flex:1; }
+  .flex-grow { flex:1; min-width:200px; }
   .banco-form label { display:flex; flex-direction:column; gap:6px; }
+  .banco-form input { width:100%; }
   .banco-form label span { font-size:.85rem; color:#374151; font-weight:500; }
   .banco-form label em { color:#dc2626; font-style:normal; }
   .banco-form input {

@@ -15,7 +15,7 @@ const DeptoSecoes=require('../../models/deptosecao');
 
 //require('../../models/ddocumento');
 const Ddocumento=mongoose.model('arquivo_doc');
-const fornec=require('../../models/fornecedor');
+const fornec=require('../../models/fornec');
 
 function ensureLojista(req, res, next) {
   if (req.session && req.session.lojistaId) return next();

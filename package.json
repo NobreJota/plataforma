@@ -43,5 +43,9 @@
   },
   "engines": {
     "node": "20.x"
+  },
+  "nodemonConfig": {                  
+    "ignore": ["lixo/*", "**/*_.js"]
   }
+  
 }

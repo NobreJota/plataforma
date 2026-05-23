@@ -6,7 +6,7 @@ const Departamento = require("../../models/departamento");
 const DeptoSetor = require("../../models/deptosetores");
 const DeptoSecoes = require("../../models/deptosecao");
 //const Ddocumento = mongoose.model("d_documento");
-const Fornec = require("../../models/fornecedor");
+const Fornec = require("../../models/fornec");
 
 router.get("/lista", async (req, res) => {
   const depto = await Departamento

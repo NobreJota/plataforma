@@ -1,507 +1,291 @@
-{{!-- views/pages/auxiliares/fornecedores.handlebars --}}
-
-<div class="for-wrapper">
-
-  <div class="for-header">
-    <div>
-      <h2>🏭 Fornecedores</h2>
-      <p class="for-subtitle">Cadastro auxiliar de fornecedores</p>
-    </div>
-    <button id="btn-novo-fornecedor" class="btn-primary">➕ Novo fornecedor</button>
-  </div>
+<div class="for-page">
+  <header class="for-header">
+    <h1>🏭 Fornecedores</h1>
+    <p class="for-subtitle">Cadastro unificado (compartilhado com o site)</p>
+    <button class="for-btn-novo" id="btn-novo">+ Novo fornecedor</button>
+  </header>
 
   <div class="for-toolbar">
-    <input type="search" id="busca" class="for-input"
-           placeholder="🔍 Buscar por nome, CPF ou CNPJ...">
-    <label class="for-check">
-      <input type="checkbox" id="incluir-inativos">
-      <span>Incluir inativos</span>
+    <input type="search" id="busca" class="for-input" placeholder="🔍 Buscar por razão, CNPJ ou marca...">
+    <label class="for-checkbox">
+      <input type="checkbox" id="incluir-inativos"> Incluir inativos
     </label>
     <span id="contador" class="for-contador">0 fornecedores</span>
   </div>
 
-  <div class="for-table-wrapper">
-    <table class="for-table">
-      <thead>
-        <tr>
-          <th style="width:90px">Código</th>
-          <th style="width:60px">Tipo</th>
-          <th>Nome / Razão Social</th>
-          <th style="width:160px">CPF / CNPJ</th>
-          <th style="width:180px">Cidade / UF</th>
-          <th style="width:130px">Telefone</th>
-          <th style="width:80px">Status</th>
-          <th style="width:140px;text-align:right">Ações</th>
-        </tr>
-      </thead>
-      <tbody id="lista-fornecedores">
-        <tr><td colspan="8" class="for-empty">Carregando...</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-
-  <div id="modal-fornecedor" class="for-modal" hidden>
-    <div class="for-modal-card">
-      <header>
-        <h3 id="modal-titulo">Novo fornecedor</h3>
-        <button class="for-close" data-close>×</button>
-      </header>
-
-      <form id="form-fornecedor" class="for-form" autocomplete="off">
-        <div class="codigo-preview" id="codigo-preview">
-          Código: <strong id="codigo-valor">(será gerado automaticamente)</strong>
-        </div>
-
-        {{!-- Aviso enquanto CNPJ não foi consultado --}}
-        <div class="aviso-cnpj" id="aviso-cnpj">
-          ℹ️ Digite o CNPJ para preencher automaticamente os dados pela Receita Federal
-        </div>
-
-        <fieldset class="for-fieldset">
-          <legend>📋 Identificação</legend>
-
-          <div class="for-row">
-            <label class="flex-fix">
-              <span>Tipo <em>*</em></span>
-              <select id="f-tipo" tabindex="1" required>
-                <option value="PJ">Pessoa Jurídica</option>
-                <option value="PF">Pessoa Física</option>
-              </select>
-            </label>
-            <label class="flex-grow">
-              <span id="lbl-cpfCnpj">CNPJ <em>*</em></span>
-              <div class="input-wrap">
-                <input type="text" id="f-cpfCnpj" tabindex="2" required
-                       placeholder="00.000.000/0000-00" maxlength="18" autocomplete="off">
-                <span class="status-busca" id="status-cnpj"></span>
-              </div>
-            </label>
-          </div>
-
-          <label>
-            <span id="lbl-nome">Razão social <em>*</em></span>
-            <div class="campo-com-selo">
-              <input type="text" id="f-nome" tabindex="3" required
-                     placeholder="Aguardando CNPJ..." disabled autocomplete="off">
-              <span class="selo-rf" data-campo="f-nome" hidden>⚠ Receita Federal</span>
-            </div>
-          </label>
-
-          <div class="for-row">
-            <label class="flex-grow">
-              <span>E-mail</span>
-              <div class="campo-com-selo">
-                <input type="email" id="f-email" tabindex="4"
-                       placeholder="Aguardando CNPJ..." disabled autocomplete="off">
-                <span class="selo-rf" data-campo="f-email" hidden>⚠ Receita Federal</span>
-              </div>
-            </label>
-            <label class="flex-fix" style="min-width:170px">
-              <span>Telefone</span>
-              <div class="campo-com-selo">
-                <input type="text" id="f-telefone" tabindex="5"
-                       placeholder="Aguardando CNPJ..." maxlength="15" disabled autocomplete="off">
-                <span class="selo-rf" data-campo="f-telefone" hidden>⚠ Receita Federal</span>
-              </div>
-            </label>
-          </div>
-        </fieldset>
-
-        <fieldset class="for-fieldset" id="bloco-inscricoes" hidden>
-          <legend>🏢 Inscrições (PJ)</legend>
-          <div class="bloco-inscricoes">
-            <label class="flex-grow">
-              <span>Inscrição Estadual</span>
-              <div class="campo-isento-wrap">
-                <input type="text" id="f-inscricaoEstadual" placeholder="Apenas números" disabled autocomplete="off">
-                <button type="button" class="btn-isento" data-target="f-inscricaoEstadual">ISENTO</button>
-              </div>
-            </label>
-            <label class="flex-grow">
-              <span>Inscrição Municipal</span>
-              <div class="campo-isento-wrap">
-                <input type="text" id="f-inscricaoMunicipal" placeholder="Apenas números" disabled autocomplete="off">
-                <button type="button" class="btn-isento" data-target="f-inscricaoMunicipal">ISENTO</button>
-              </div>
-            </label>
-          </div>
-        </fieldset>
-
-        <fieldset class="for-fieldset">
-          <legend>📍 Endereço de cobrança <em>*</em></legend>
-
-          <div class="for-row">
-            <label class="flex-fix" style="min-width:200px">
-              <span>CEP <em>*</em></span>
-              <div class="input-wrap">
-                <input type="tel" id="cob-cep" tabindex="6" required
-                       placeholder="00000-000" maxlength="9" inputmode="numeric" disabled autocomplete="off">
-                <span class="status-busca" id="status-cep-cob"></span>
-              </div>
-            </label>
-            <label class="flex-grow">
-              <span>Logradouro <em>*</em></span>
-              <div class="campo-com-selo">
-                <input type="text" id="cob-logradouro" tabindex="7" required
-                       placeholder="Rua, Avenida..." disabled autocomplete="off">
-                <span class="selo-rf" data-campo="cob-logradouro" hidden>⚠ Receita Federal</span>
-              </div>
-            </label>
-            <label class="flex-fix" style="min-width:100px">
-              <span>Número</span>
-              <input type="text" id="cob-numero" tabindex="8" placeholder="100" disabled autocomplete="off">
-            </label>
-          </div>
-
-          <div class="for-row">
-            <label class="flex-grow">
-              <span>Complemento</span>
-              <input type="text" id="cob-complemento" tabindex="9" placeholder="Sala, Apto..." disabled autocomplete="off">
-            </label>
-            <label class="flex-grow">
-              <span>Bairro</span>
-              <div class="campo-com-selo">
-                <input type="text" id="cob-bairro" tabindex="10" disabled autocomplete="off">
-                <span class="selo-rf" data-campo="cob-bairro" hidden>⚠ Receita Federal</span>
-              </div>
-            </label>
-          </div>
-
-          <div class="for-row">
-            <label class="flex-grow">
-              <span>Cidade <em>*</em></span>
-              <div class="campo-com-selo">
-                <input type="text" id="cob-cidade" tabindex="11" required disabled autocomplete="off">
-                <span class="selo-rf" data-campo="cob-cidade" hidden>⚠ Receita Federal</span>
-              </div>
-            </label>
-            <label class="flex-fix" style="min-width:90px">
-              <span>UF <em>*</em></span>
-              <div class="campo-com-selo">
-                <input type="text" id="cob-uf" tabindex="12" required maxlength="2"
-                       style="text-transform:uppercase" disabled autocomplete="off">
-                <span class="selo-rf" data-campo="cob-uf" hidden>⚠ RF</span>
-              </div>
-            </label>
-          </div>
-        </fieldset>
-
-        <fieldset class="for-fieldset">
-          <legend>🚚 Endereço de entrega</legend>
-
-          <label class="for-check-inline">
-            <input type="checkbox" id="entrega-igual" tabindex="13" checked disabled>
-            <span>Mesmo endereço da cobrança</span>
-          </label>
-
-          <div id="bloco-entrega" hidden>
-            <div class="for-row">
-              <label class="flex-fix" style="min-width:200px">
-                <span>CEP <em>*</em></span>
-                <div class="input-wrap">
-                  <input type="tel" id="ent-cep" tabindex="14"
-                         placeholder="00000-000" maxlength="9" inputmode="numeric" autocomplete="off">
-                  <span class="status-busca" id="status-cep-ent"></span>
-                </div>
-              </label>
-              <label class="flex-grow">
-                <span>Logradouro <em>*</em></span>
-                <input type="text" id="ent-logradouro" tabindex="15" placeholder="Rua, Avenida..." autocomplete="off">
-              </label>
-              <label class="flex-fix" style="min-width:100px">
-                <span>Número</span>
-                <input type="text" id="ent-numero" tabindex="16" autocomplete="off">
-              </label>
-            </div>
-
-            <div class="for-row">
-              <label class="flex-grow">
-                <span>Complemento</span>
-                <input type="text" id="ent-complemento" tabindex="17" autocomplete="off">
-              </label>
-              <label class="flex-grow">
-                <span>Bairro</span>
-                <input type="text" id="ent-bairro" tabindex="18" autocomplete="off">
-              </label>
-            </div>
-
-            <div class="for-row">
-              <label class="flex-grow">
-                <span>Cidade <em>*</em></span>
-                <input type="text" id="ent-cidade" tabindex="19" autocomplete="off">
-              </label>
-              <label class="flex-fix" style="min-width:90px">
-                <span>UF <em>*</em></span>
-                <input type="text" id="ent-uf" tabindex="20" maxlength="2" style="text-transform:uppercase" autocomplete="off">
-              </label>
-            </div>
-          </div>
-        </fieldset>
-
-        <label>
-          <span>Observações</span>
-          <textarea id="f-observacoes" tabindex="21" rows="2" placeholder="Anotações internas..." disabled></textarea>
-        </label>
-
-        <div class="for-form-actions">
-          <button type="button" class="btn-secondary" data-close>Cancelar</button>
-          <button type="submit" class="btn-primary" id="btn-salvar" tabindex="22">Salvar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
+  <table class="for-table">
+    <thead>
+      <tr>
+        <th>RAZÃO SOCIAL</th>
+        <th>CNPJ / CPF</th>
+        <th>MARCA</th>
+        <th>CIDADE</th>
+        <th>STATUS</th>
+        <th>AÇÕES</th>
+      </tr>
+    </thead>
+    <tbody id="lista-fornecedores">
+      <tr><td colspan="6" class="for-empty">Carregando...</td></tr>
+    </tbody>
+  </table>
 </div>
 
+<!-- Modal -->
+<div id="modal-fornecedor" class="for-modal" hidden>
+  <div class="for-modal-content">
+    <div class="for-modal-header">
+      <h2 id="modal-titulo">Novo fornecedor</h2>
+      <button class="for-close" id="btn-fechar">×</button>
+    </div>
+
+    <form id="form-fornecedor" class="for-form" autocomplete="off">
+
+      <!-- Identificação -->
+      <fieldset class="for-fieldset">
+        <legend>📋 Identificação</legend>
+        <div class="for-row">
+          <label class="flex-fix" style="min-width:160px">
+            <span>Tipo <em>*</em></span>
+            <select id="f-tipo" tabindex="1" autocomplete="off">
+              <option value="PJ">Pessoa Jurídica</option>
+              <option value="PF">Pessoa Física</option>
+            </select>
+          </label>
+          <label class="flex-fix" style="min-width:220px">
+            <span id="label-doc">CNPJ <em>*</em></span>
+            <div class="input-wrap">
+              <input type="text" id="f-cpfCnpj" tabindex="2" required placeholder="00.000.000/0000-00"
+                     autocomplete="off" autocorrect="off" spellcheck="false">
+              <span class="status-busca" id="status-cnpj"></span>
+            </div>
+          </label>
+        </div>
+        <div class="for-row">
+          <label class="flex-grow">
+            <span>Razão social / Nome <em>*</em></span>
+            <input type="text" id="f-nome" tabindex="3" required placeholder="Nome do fornecedor"
+                   autocomplete="off" autocorrect="off" spellcheck="false">
+          </label>
+        </div>
+        <div class="for-row">
+          <label class="flex-fix" style="min-width:240px">
+            <span>Marca</span>
+            <input type="text" id="f-marca" tabindex="4" placeholder="Marca / fantasia" autocomplete="off">
+          </label>
+          <label class="flex-fix" style="min-width:200px">
+            <span>Nº Contábil</span>
+            <input type="text" id="f-ncontabil" tabindex="5" placeholder="Vínculo contábil" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Inscrições (só PJ) -->
+      <fieldset class="for-fieldset" id="bloco-inscricoes">
+        <legend>🏢 Inscrições (PJ)</legend>
+        <div class="bloco-inscricoes">
+          <label class="flex-grow">
+            <span>Inscrição Estadual</span>
+            <div class="campo-isento-wrap">
+              <input type="text" id="f-inscricaoEstadual" placeholder="Apenas números" autocomplete="off">
+              <button type="button" class="btn-isento" data-target="f-inscricaoEstadual">ISENTO</button>
+            </div>
+          </label>
+          <label class="flex-grow">
+            <span>Inscrição Municipal</span>
+            <div class="campo-isento-wrap">
+              <input type="text" id="f-inscricaoMunicipal" placeholder="Apenas números" autocomplete="off">
+              <button type="button" class="btn-isento" data-target="f-inscricaoMunicipal">ISENTO</button>
+            </div>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Contato principal -->
+      <fieldset class="for-fieldset">
+        <legend>📞 Contato principal</legend>
+        <div class="for-row">
+          <label class="flex-grow">
+            <span>E-mail</span>
+            <input type="email" id="f-email" tabindex="6" placeholder="exemplo@email.com" autocomplete="off">
+          </label>
+          <label class="flex-fix" style="min-width:200px">
+            <span>Telefone</span>
+            <input type="tel" id="f-telefone" tabindex="7" placeholder="(00) 00000-0000" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Endereço -->
+      <fieldset class="for-fieldset">
+        <legend>📍 Endereço</legend>
+        <div class="for-row">
+          <label class="flex-fix" style="min-width:200px">
+            <span>CEP</span>
+            <div class="input-wrap">
+              <input type="tel" id="cob-cep" tabindex="8" placeholder="00000-000" maxlength="9"
+                     inputmode="numeric" autocomplete="off" autocorrect="off" spellcheck="false">
+              <span class="status-busca" id="status-cep-cob"></span>
+            </div>
+          </label>
+          <label class="flex-grow">
+            <span>Logradouro</span>
+            <input type="text" id="cob-logradouro" tabindex="9" placeholder="Rua, Avenida..." autocomplete="off">
+          </label>
+          <label class="flex-fix" style="min-width:100px">
+            <span>Número</span>
+            <input type="text" id="cob-numero" tabindex="10" placeholder="100" autocomplete="off">
+          </label>
+        </div>
+        <div class="for-row">
+          <label class="flex-fix" style="min-width:200px">
+            <span>Complemento</span>
+            <input type="text" id="cob-complemento" tabindex="11" placeholder="Sala, Apto..." autocomplete="off">
+          </label>
+          <label class="flex-grow">
+            <span>Bairro</span>
+            <input type="text" id="cob-bairro" tabindex="12" placeholder="Bairro" autocomplete="off">
+          </label>
+        </div>
+        <div class="for-row">
+          <label class="flex-grow">
+            <span>Cidade</span>
+            <input type="text" id="cob-cidade" tabindex="13" placeholder="Cidade" autocomplete="off">
+          </label>
+          <label class="flex-fix" style="min-width:90px">
+            <span>UF</span>
+            <input type="text" id="cob-uf" tabindex="14" maxlength="2" placeholder="ES" autocomplete="off">
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Contatos especializados (colapsável) -->
+      <fieldset class="for-fieldset">
+        <legend>
+          <button type="button" class="toggle-contatos" id="toggle-contatos">
+            👥 Contatos especializados <span id="seta-contatos">▼</span>
+          </button>
+        </legend>
+        <div id="bloco-contatos" hidden>
+          <div class="contato-grupo">
+            <h4>Representante</h4>
+            <div class="for-row">
+              <label class="flex-grow"><span>Nome</span>
+                <input type="text" id="rep-nome" autocomplete="off"></label>
+              <label class="flex-grow"><span>E-mail</span>
+                <input type="email" id="rep-email" autocomplete="off"></label>
+              <label class="flex-fix" style="min-width:170px"><span>Celular</span>
+                <input type="tel" id="rep-celular" autocomplete="off"></label>
+            </div>
+          </div>
+          <div class="contato-grupo">
+            <h4>Comercial</h4>
+            <div class="for-row">
+              <label class="flex-grow"><span>Nome</span>
+                <input type="text" id="com-nome" autocomplete="off"></label>
+              <label class="flex-grow"><span>E-mail</span>
+                <input type="email" id="com-email" autocomplete="off"></label>
+              <label class="flex-fix" style="min-width:170px"><span>Celular</span>
+                <input type="tel" id="com-celular" autocomplete="off"></label>
+            </div>
+          </div>
+          <div class="contato-grupo">
+            <h4>Técnica</h4>
+            <div class="for-row">
+              <label class="flex-grow"><span>Nome</span>
+                <input type="text" id="tec-nome" autocomplete="off"></label>
+              <label class="flex-grow"><span>E-mail</span>
+                <input type="email" id="tec-email" autocomplete="off"></label>
+              <label class="flex-fix" style="min-width:170px"><span>Celular</span>
+                <input type="tel" id="tec-celular" autocomplete="off"></label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="for-modal-footer">
+        <button type="button" id="btn-cancelar" class="for-btn-cancel">Cancelar</button>
+        <button type="submit" class="for-btn-salvar" id="btn-salvar">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <style>
-  .for-wrapper { padding: 24px; max-width: 1280px; margin: 0 auto; }
+  .for-page { padding:24px; max-width:1200px; margin:0 auto; }
+  .for-header { display:flex; align-items:center; gap:16px; margin-bottom:8px; }
+  .for-header h1 { margin:0; font-size:1.6rem; }
+  .for-subtitle { color:#6b7280; font-size:.95rem; margin:0; flex:1; }
+  .for-btn-novo { background:#7c3aed; color:#fff; border:none; border-radius:8px; padding:10px 18px; font-weight:600; cursor:pointer; }
+  .for-btn-novo:hover { background:#6d28d9; }
 
-  .for-header {
-    display:flex; justify-content:space-between; align-items:flex-start;
-    margin-bottom: 18px;
-  }
-  .for-header h2 { margin:0; font-size:1.4rem; }
-  .for-subtitle { color:#6b7280; margin:4px 0 0; font-size:.9rem; }
+  .for-toolbar { display:flex; align-items:center; gap:16px; margin:16px 0; padding:12px; background:#f9fafb; border-radius:8px; }
+  .for-input { flex:1; padding:8px 12px; border:1px solid #d1d5db; border-radius:7px; font-size:.95rem; }
+  .for-checkbox { display:flex; align-items:center; gap:8px; cursor:pointer; white-space:nowrap; }
+  .for-contador { color:#6b7280; font-size:.9rem; white-space:nowrap; }
 
-  .btn-primary {
-    background:#7c3aed; color:#fff; border:0; padding:10px 18px;
-    border-radius:8px; cursor:pointer; font-weight:600;
-  }
-  .btn-primary:hover { background:#6d28d9; }
-  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
-  .btn-secondary {
-    background:#e5e7eb; color:#111; border:0; padding:10px 18px;
-    border-radius:8px; cursor:pointer; font-weight:600;
-  }
-  .btn-secondary:hover { background:#d1d5db; }
+  .for-table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; font-size:.9rem; }
+  .for-table th { background:#7c3aed; color:#fff; padding:11px; text-align:left; font-size:.78rem; letter-spacing:.5px; }
+  .for-table td { padding:11px; border-bottom:1px solid #e5e7eb; vertical-align:middle; }
+  .for-table tr:hover { background:#faf5ff; }
+  .for-empty { text-align:center; padding:32px; color:#9ca3af; }
 
-  .for-toolbar {
-    display:flex; gap:12px; align-items:center; margin-bottom:14px; flex-wrap:wrap;
-  }
-  .for-input {
-    flex:1; min-width:260px; padding:10px 14px;
-    border:1px solid #d1d5db; border-radius:8px; font-size:.95rem;
-  }
-  .for-input:focus { outline:2px solid #7c3aed; border-color:#7c3aed; }
+  .for-doc { font-family:monospace; font-size:.85rem; white-space:nowrap; }
+  .for-col-acoes { white-space:nowrap; text-align:right; width:1%; }
+  .for-tag-ativo { background:#d1fae5; color:#065f46; padding:3px 10px; border-radius:12px; font-size:.75rem; font-weight:600; }
+  .for-tag-inativo { background:#fee2e2; color:#991b1b; padding:3px 10px; border-radius:12px; font-size:.75rem; font-weight:600; }
+  .for-btn-acao { background:none; border:none; cursor:pointer; font-size:1.1rem; padding:4px 8px; border-radius:4px; display:inline-block; }
+  .for-btn-acao:hover { background:#e5e7eb; }
 
-  .for-check { display:flex; gap:6px; align-items:center; font-size:.9rem; color:#374151; }
-  .for-contador { color:#6b7280; font-size:.85rem; margin-left:auto; }
-
-  .for-table-wrapper {
-    background:#fff; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden;
-  }
-  .for-table { width:100%; border-collapse:collapse; font-size:.92rem; }
-  .for-table th, .for-table td {
-    padding:10px 14px; text-align:left; border-bottom:1px solid #f3f4f6;
-  }
-  .for-table th {
-    background:#f9fafb; color:#374151; font-weight:600;
-    font-size:.82rem; text-transform:uppercase; letter-spacing:.03em;
-  }
-  .for-table tbody tr:hover { background:#faf5ff; }
-  .for-table tbody tr.inativo { opacity:.55; }
-
-  .for-empty { text-align:center; padding:32px !important; color:#6b7280; }
-  .codigo-cell { font-family: ui-monospace, monospace; font-weight:600; }
-
-  .tipo-badge {
-    display:inline-block; padding:2px 8px; border-radius:10px;
-    font-size:.72rem; font-weight:700; letter-spacing:.04em;
-  }
-  .tipo-badge.PF { background:#fef3c7; color:#92400e; }
-  .tipo-badge.PJ { background:#ede9fe; color:#5b21b6; }
-
-  .status-badge {
-    display:inline-block; padding:2px 8px; border-radius:10px;
-    font-size:.72rem; font-weight:600;
-  }
-  .status-badge.ativo   { background:#dcfce7; color:#166534; }
-  .status-badge.inativo { background:#fee2e2; color:#991b1b; }
-
-  .acoes-cell { text-align:right; white-space:nowrap; }
-  .btn-icon {
-    background:transparent; border:0; cursor:pointer; padding:6px 8px;
-    border-radius:6px; font-size:1rem; margin-left:4px;
-  }
-  .btn-icon:hover { background:#e5e7eb; }
-  .btn-icon.danger:hover { background:#fee2e2; }
-
-  .for-modal {
-    position:fixed; inset:0; background:rgba(0,0,0,.45);
-    display:flex; align-items:center; justify-content:center; z-index:1000;
-  }
+  /* Modal */
+  .for-modal { position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; z-index:1000; }
   .for-modal[hidden] { display:none; }
+  .for-modal-content { background:#fff; border-radius:12px; width:90%; max-width:780px; max-height:90vh; overflow-y:auto; }
+  .for-modal-header { display:flex; justify-content:space-between; align-items:center; padding:20px; background:#7c3aed; color:#fff; border-radius:12px 12px 0 0; }
+  .for-modal-header h2 { margin:0; font-size:1.2rem; }
+  .for-close { background:none; border:none; color:#fff; font-size:1.8rem; cursor:pointer; }
 
-  .for-modal-card {
-    background:#fff; border-radius:12px; width:760px; max-width:94vw;
-    max-height:92vh; overflow-y:auto;
-    box-shadow:0 20px 60px rgba(0,0,0,.25);
-    animation: pop .18s ease-out;
-  }
-  @keyframes pop { from{transform:scale(.95);opacity:0;} to{transform:scale(1);opacity:1;} }
-
-  .for-modal-card header {
-    background:#7c3aed; color:#fff; padding:14px 18px;
-    display:flex; justify-content:space-between; align-items:center;
-    position: sticky; top: 0; z-index: 2;
-  }
-  .for-modal-card header h3 { margin:0; font-size:1.05rem; }
-  .for-close {
-    background:transparent; color:#fff; border:0; font-size:1.5rem;
-    cursor:pointer; line-height:1;
-  }
-
-  .for-form { padding:16px 18px; display:flex; flex-direction:column; gap:14px; }
-
-  /* Aviso "Digite o CNPJ primeiro" */
-  .aviso-cnpj {
-    background: #fef3c7;
-    border: 1px solid #fcd34d;
-    color: #92400e;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: .88rem;
-    transition: opacity .3s;
-  }
-  .aviso-cnpj[hidden] { display:none; }
-
-  .for-fieldset {
-    border:1px solid #e5e7eb; border-radius:8px; padding:12px 14px 14px;
-    display:flex; flex-direction:column; gap:10px;
-  }
-  .for-fieldset legend {
-    padding:0 6px; font-size:.85rem; color:#374151; font-weight:600;
-  }
-  .for-fieldset legend em { color:#dc2626; font-style:normal; }
-
-  .for-form label { display:flex; flex-direction:column; gap:4px; font-size:.82rem; color:#374151; }
+  .for-form { padding:16px 24px 24px; }
+  .for-form * { box-sizing:border-box; }
+  .for-fieldset { border:1px solid #e5e7eb; border-radius:8px; padding:12px 16px; margin-bottom:14px; }
+  .for-fieldset legend { padding:0 8px; font-weight:600; color:#374151; font-size:.9rem; }
+  .for-fieldset[hidden] { display:none; }
+  .for-row { display:flex; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+  .flex-fix { flex:0 0 auto; }
+  .flex-grow { flex:1; min-width:180px; }
+  .for-form label { display:flex; flex-direction:column; gap:6px; }
+  .for-form label span { font-size:.85rem; color:#374151; font-weight:500; }
   .for-form label em { color:#dc2626; font-style:normal; }
-  .for-form input, .for-form select, .for-form textarea {
-    padding:9px 11px; border:1px solid #d1d5db; border-radius:7px;
-    font-size:.92rem; font-family: inherit;
-    transition: background .25s ease, border-color .15s ease;
-  }
-  .for-form input:focus, .for-form select:focus, .for-form textarea:focus {
-    outline:2px solid #7c3aed; border-color:#7c3aed;
-  }
+  .for-form input, .for-form select { width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:7px; font-size:.92rem; transition:border-color .15s; }
+  .for-form input:focus, .for-form select:focus { outline:none; border-color:#7c3aed; box-shadow:0 0 0 3px rgba(124,58,237,.1); }
 
-  /* Campo BLOQUEADO (aguardando CNPJ) */
-  .for-form input:disabled,
-  .for-form select:disabled,
-  .for-form textarea:disabled {
-    background: #f3f4f6;
-    color: #9ca3af;
-    cursor: not-allowed;
-    border-color: #e5e7eb;
-  }
+  .input-wrap { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .input-wrap input { flex:1 1 130px; min-width:130px; }
+  .status-busca { font-size:.72rem; color:#6b7280; white-space:nowrap; }
+  .status-busca.ok { color:#059669; }
+  .status-busca.erro { color:#dc2626; }
 
-  /* Campo PREENCHIDO (amarelo claro) */
-  .for-form input.preenchido,
-  .for-form select.preenchido,
-  .for-form textarea.preenchido {
-    background: #fef9c3;
-    border-color: #facc15;
-  }
-  .for-form input.preenchido:focus,
-  .for-form select.preenchido:focus { background: #fffbe6; }
+  .preenchido { background:#fef9c3 !important; border-color:#facc15 !important; }
+  .pendente { border-color:#fb923c !important; background:#fff7ed !important; }
+  .for-erro-flash { animation:forShake .4s; border-color:#dc2626 !important; }
+  @keyframes forShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
 
-  /* Campo PENDENTE (laranja) */
-  .for-form input.pendente,
-  .for-form select.pendente {
-    border-color: #fb923c;
-    background: #fff7ed;
-    box-shadow: 0 0 0 1px #fb923c33 inset;
-  }
-  .for-form input.pendente:focus,
-  .for-form select.pendente:focus {
-    background: #fff;
-    outline-color: #fb923c;
-  }
-
-  /* Erro flash */
-  .for-form input.for-erro-flash,
-  .for-form select.for-erro-flash {
-    background: #fee2e2 !important;
-    border-color: #dc2626 !important;
-    animation: shake .3s ease;
-  }
-  @keyframes shake {
-    0%,100%{transform:translateX(0);}
-    25%{transform:translateX(-4px);}
-    75%{transform:translateX(4px);}
-  }
-
-  .for-row { display:flex; gap:10px; }
-  .for-row .flex-grow { flex:1; }
-  .for-row .flex-fix  { flex:0 0 160px; }
-
-  .for-check-inline {
-    flex-direction:row !important; align-items:center; gap:8px !important;
-    font-size:.88rem; color:#5b21b6; cursor:pointer;
-  }
-  .for-check-inline input { width:auto; }
-
-  .input-wrap {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .input-wrap input {
-    flex: 1 1 110px;
-    min-width: 110px;
-  }
-  .status-busca {
-    font-size: .72rem;
-    color: #6b7280;
-    white-space: nowrap;
-    min-width: 60px;
-    text-align: left;
-  }
-  .status-busca.ok   { color:#166534; font-weight:600; }
-  .status-busca.erro { color:#b91c1c; font-weight:600; }
-
-  /* Campo + selo Receita Federal */
-  .campo-com-selo { position: relative; }
-  .campo-com-selo input { width: 100%; box-sizing: border-box; }
-  .selo-rf {
-    position: absolute;
-    top: -8px;
-    right: 6px;
-    background: #fef3c7;
-    color: #92400e;
-    font-size: .65rem;
-    font-weight: 600;
-    padding: 1px 6px;
-    border-radius: 8px;
-    border: 1px solid #fcd34d;
-    pointer-events: none;
-    line-height: 1.3;
-  }
-  .selo-rf[hidden] { display: none; }
-
-  .for-form-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:4px; align-items:center; }
-
-  .codigo-preview {
-    background:#faf5ff; border:1px solid #c4b5fd; border-radius:8px;
-    padding:10px 12px; font-size:.9rem; color:#5b21b6;
-  }
-
-  /* Bloco IE/IM */
+  /* IE/IM */
   .bloco-inscricoes { display:flex; gap:10px; }
   .campo-isento-wrap { display:flex; gap:6px; align-items:stretch; }
   .campo-isento-wrap input { flex:1; min-width:0; }
-  .btn-isento {
-    background:#f3f4f6; border:1px solid #d1d5db; border-radius:7px;
-    padding:0 12px; font-size:.75rem; font-weight:600; color:#4b5563;
-    cursor:pointer; white-space:nowrap; transition:all .15s;
-  }
+  .btn-isento { background:#f3f4f6; border:1px solid #d1d5db; border-radius:7px; padding:0 12px; font-size:.75rem; font-weight:600; color:#4b5563; cursor:pointer; white-space:nowrap; }
   .btn-isento:hover { background:#e5e7eb; }
-  .btn-isento.ativo {
-    background:#ecfccb; border-color:#84cc16; color:#4d7c0f;
-  }
+  .btn-isento.ativo { background:#ecfccb; border-color:#84cc16; color:#4d7c0f; }
+
+  /* Contatos especializados */
+  .toggle-contatos { background:none; border:none; cursor:pointer; font-weight:600; color:#374151; font-size:.9rem; padding:0; }
+  .contato-grupo { margin-bottom:12px; padding:10px; background:#faf5ff; border-radius:8px; }
+  .contato-grupo h4 { margin:0 0 8px; font-size:.85rem; color:#6d28d9; }
+
+  .for-modal-footer { display:flex; justify-content:flex-end; gap:12px; padding-top:14px; border-top:1px solid #e5e7eb; }
+  .for-btn-cancel { background:#f3f4f6; border:1px solid #d1d5db; border-radius:7px; padding:9px 18px; cursor:pointer; font-weight:500; }
+  .for-btn-salvar { background:#7c3aed; color:#fff; border:none; border-radius:7px; padding:9px 24px; font-weight:600; cursor:pointer; }
+  .for-btn-salvar:hover { background:#6d28d9; }
 </style>
 
 <script src="/js/auxiliares/fornecedores.js"></script>

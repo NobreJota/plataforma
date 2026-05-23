@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require("mongoose");
 const Lojista = require("../../models/lojista");
-const Fornecedor = require("../../models/fornecedor");
+const Fornecedor = require("../../models/fornec");
 const ArquivoDoc = require('../../models/arquivoDoc');
 
 const ImportModelo = require('../../models/ImportModelo');

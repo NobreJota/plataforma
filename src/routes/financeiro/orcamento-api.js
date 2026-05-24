@@ -15,7 +15,7 @@ const router = express.Router();
 
 /* GET /financeiro/api/orcamento/disponiveis
    Lista subtítulos de DESPESA (código 3.x) que ainda PODEM ser vinculados,
-   marcando quais já estão vinculados. */
+   marcando quais já estão vinculados. Inclui o nome do ContaTítulo pai. */
 router.get('/disponiveis', async (req, res) => {
   try {
     // Subtítulos de despesa (código começa com "3.") e ativos
@@ -28,11 +28,17 @@ router.get('/disponiveis', async (req, res) => {
     const vinculadas = await OrcamentoConta.find({}).lean();
     const setVinc = new Set(vinculadas.map(v => String(v.contaSubTitulo)));
 
+    // Mapa de nomes dos ContaTítulo de despesa (código → nome)
+    const titulos = await ContaTitulo.find({ codigo: /^3\./ }, 'codigo nome').lean();
+    const nomeTitulo = {};
+    titulos.forEach(t => { nomeTitulo[t.codigo] = t.nome; });
+
     const lista = subtitulos.map(s => ({
       _id: s._id,
       codigo: s.codigo,
       nome: s.nome,
       codigoContaTitulo: s.codigoContaTitulo,
+      nomeContaTitulo: nomeTitulo[s.codigoContaTitulo] || s.codigoContaTitulo,
       vinculada: setVinc.has(String(s._id)),
       ativa: setVinc.has(String(s._id))
         ? (vinculadas.find(v => String(v.contaSubTitulo) === String(s._id))?.ativo ?? true)

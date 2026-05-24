@@ -39,6 +39,9 @@
         A vinculação vale para todos os anos. Desmarcar uma conta a desativa
         (ex: financiamento que acabou) sem apagar o histórico.</p>
       <input type="search" id="busca-contas" class="orc-busca" placeholder="🔍 Buscar conta...">
+      <select id="filtro-titulo" class="orc-filtro-titulo">
+        <option value="">Todos os títulos</option>
+      </select>
       <div class="orc-lista-vincular" id="lista-vincular">
         <p class="orc-empty">Carregando contas...</p>
       </div>
@@ -95,7 +98,8 @@
   .orc-close { background:none; border:none; color:#fff; font-size:1.6rem; cursor:pointer; }
   .orc-modal-body { padding:18px 20px; overflow-y:auto; flex:1; }
   .orc-hint { font-size:.82rem; color:#6b7280; margin:0 0 12px; line-height:1.4; }
-  .orc-busca { width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:7px; margin-bottom:12px; box-sizing:border-box; }
+  .orc-busca { width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:7px; margin-bottom:8px; box-sizing:border-box; }
+  .orc-filtro-titulo { width:100%; padding:9px 12px; border:1px solid #d1d5db; border-radius:7px; margin-bottom:12px; box-sizing:border-box; font-size:.9rem; background:#f9fafb; }
 
   .orc-lista-vincular { display:flex; flex-direction:column; gap:2px; }
   .orc-grupo-vinc { font-weight:700; color:#0e7490; font-size:.8rem; margin:10px 0 4px; padding-bottom:3px; border-bottom:1px solid #e5e7eb; }

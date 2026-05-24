@@ -3,14 +3,14 @@
  */
 (() => {
   'use strict';
-  console.log('%c📊 orcamento.js v1', 'background:#0891b2;color:white;padding:5px 11px;border-radius:4px;font-weight:bold;');
+  console.log('%c📊 orcamento.js v3 - fix marcacao persistente', 'background:#0891b2;color:white;padding:5px 11px;border-radius:4px;font-weight:bold;');
 
   const API = '/financeiro/api/orcamento';
   const $  = (s) => document.querySelector(s);
   const $$ = (s) => Array.from(document.querySelectorAll(s));
 
   const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  const state = { ano: new Date().getFullYear(), disponiveis: [], debounce: null };
+  const state = { ano: new Date().getFullYear(), disponiveis: [], marcadas: new Set(), debounce: null };
 
   async function api(method, path = '', body) {
     const opts = { method, headers: { 'Content-Type': 'application/json' } };
@@ -96,6 +96,11 @@
     $('#lista-vincular').innerHTML = '<p class="orc-empty">Carregando contas...</p>';
     try {
       state.disponiveis = await api('GET', '/disponiveis');
+      // Inicializa o Set de marcadas com as que já estão vinculadas e ativas
+      state.marcadas = new Set(
+        state.disponiveis.filter(c => c.vinculada && c.ativa).map(c => String(c._id))
+      );
+      popularFiltroTitulo();
       renderVincular(state.disponiveis);
     } catch (err) {
       $('#lista-vincular').innerHTML = `<p class="orc-empty">Erro: ${err.message}</p>`;
@@ -104,23 +109,25 @@
 
   function renderVincular(lista) {
     if (lista.length === 0) {
-      $('#lista-vincular').innerHTML = '<p class="orc-empty">Nenhuma conta de despesa (3.x) encontrada no plano.</p>';
+      $('#lista-vincular').innerHTML = '<p class="orc-empty">Nenhuma conta encontrada com esse filtro.</p>';
       return;
     }
     // Agrupa por codigoContaTitulo
     const grupos = {};
     lista.forEach(c => {
       const k = c.codigoContaTitulo || '—';
-      if (!grupos[k]) grupos[k] = [];
-      grupos[k].push(c);
+      if (!grupos[k]) grupos[k] = { nome: c.nomeContaTitulo || k, itens: [] };
+      grupos[k].itens.push(c);
     });
 
     let html = '';
     Object.keys(grupos).sort().forEach(k => {
-      html += `<div class="orc-grupo-vinc">${k}</div>`;
-      grupos[k].forEach(c => {
+      const g = grupos[k];
+      html += `<div class="orc-grupo-vinc">${k} - ${g.nome}</div>`;
+      g.itens.forEach(c => {
+        const checked = state.marcadas.has(String(c._id)) ? 'checked' : '';
         html += `<label class="orc-item-vinc">
-          <input type="checkbox" value="${c._id}" ${c.vinculada ? 'checked' : ''}>
+          <input type="checkbox" value="${c._id}" ${checked}>
           <span class="cod">${c.codigo}</span>
           <span class="nm">${c.nome}</span>
         </label>`;
@@ -129,28 +136,47 @@
     $('#lista-vincular').innerHTML = html;
     atualizarContador();
 
+    // Ao marcar/desmarcar, atualiza o Set (persiste entre filtros)
     $$('#lista-vincular input[type=checkbox]').forEach(cb => {
-      cb.addEventListener('change', atualizarContador);
+      cb.addEventListener('change', () => {
+        if (cb.checked) state.marcadas.add(cb.value);
+        else state.marcadas.delete(cb.value);
+        atualizarContador();
+      });
     });
   }
 
+  // Popula o dropdown de títulos a partir dos disponíveis
+  function popularFiltroTitulo() {
+    const titulos = {};
+    state.disponiveis.forEach(c => {
+      const k = c.codigoContaTitulo || '—';
+      if (!titulos[k]) titulos[k] = c.nomeContaTitulo || k;
+    });
+    const sel = $('#filtro-titulo');
+    sel.innerHTML = '<option value="">Todos os títulos</option>' +
+      Object.keys(titulos).sort().map(k =>
+        `<option value="${k}">${k} - ${titulos[k]}</option>`
+      ).join('');
+  }
+
   function atualizarContador() {
-    const marcadas = $$('#lista-vincular input:checked').length;
-    $('#contador-vinc').textContent = `${marcadas} conta(s) selecionada(s)`;
+    $('#contador-vinc').textContent = `${state.marcadas.size} conta(s) selecionada(s)`;
   }
 
   async function salvarVincular() {
-    const ids = $$('#lista-vincular input:checked').map(cb => cb.value);
+    // Usa o Set completo (persiste entre filtros) — não só os visíveis
+    const ids = Array.from(state.marcadas);
     const btn = $('#btn-salvar-vincular');
     btn.disabled = true; btn.textContent = 'Salvando...';
     try {
+      // Vincula/reativa as marcadas
       await api('POST', '/vincular', { subtituloIds: ids });
-      // Desvincular: contas que estavam vinculadas e foram desmarcadas → toggle off
+
+      // Desvincular: as que ESTAVAM vinculadas+ativas e agora NÃO estão marcadas
       const desmarcadas = state.disponiveis.filter(c =>
-        c.vinculada && !ids.includes(String(c._id))
+        c.vinculada && c.ativa && !state.marcadas.has(String(c._id))
       );
-      // (Entrega 1: só ativa novas. Desativar via grid futuramente, ou aqui:)
-      // Para simplificar, recarrega vinculadas e desativa as removidas
       if (desmarcadas.length > 0) {
         const vinc = await api('GET', '/vinculadas?incluirInativas=true');
         for (const d of desmarcadas) {
@@ -167,11 +193,13 @@
     }
   }
 
-  /* ===== Busca no modal ===== */
+  /* ===== Busca + filtro no modal ===== */
   function filtrarVincular() {
     const termo = $('#busca-contas').value.trim().toLowerCase();
-    if (!termo) { renderVincular(state.disponiveis); return; }
-    const filtrada = state.disponiveis.filter(c =>
+    const titulo = $('#filtro-titulo').value;
+    let filtrada = state.disponiveis;
+    if (titulo) filtrada = filtrada.filter(c => c.codigoContaTitulo === titulo);
+    if (termo) filtrada = filtrada.filter(c =>
       c.nome.toLowerCase().includes(termo) || c.codigo.includes(termo)
     );
     renderVincular(filtrada);
@@ -184,6 +212,7 @@
   $('#btn-cancelar-vincular').addEventListener('click', () => $('#modal-vincular').hidden = true);
   $('#btn-salvar-vincular').addEventListener('click', salvarVincular);
   $('#busca-contas').addEventListener('input', () => { clearTimeout(state.debounce); state.debounce = setTimeout(filtrarVincular, 200); });
+  $('#filtro-titulo').addEventListener('change', filtrarVincular);
 
   /* ===== Init ===== */
   (async function init() {

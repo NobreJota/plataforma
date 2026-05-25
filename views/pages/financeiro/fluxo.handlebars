@@ -1,0 +1,91 @@
+<div class="flx-page">
+  <header class="flx-header">
+    <h1>🌊 Fluxo de Caixa</h1>
+    <div class="flx-controls">
+      <div class="flx-meses" id="flx-meses"></div>
+      <label class="flx-ano-label">Ano:
+        <select id="flx-ano" class="flx-ano-select"></select>
+      </label>
+    </div>
+  </header>
+
+  <div class="flx-legenda">
+    <span class="flx-leg verde">● Orçamento (proj.)</span>
+    <span class="flx-leg vermelho">● A receber</span>
+    <span class="flx-leg preto">● A pagar</span>
+  </div>
+
+  <div class="flx-grid-wrap">
+    <table class="flx-grid">
+      <thead>
+        <tr>
+          <th class="c-item">#</th>
+          <th class="c-chave">Parc.</th>
+          <th class="c-hist">Histórico</th>
+          <th class="c-conta">Conta</th>
+          <th class="c-pos">T</th>
+          <th class="c-vect">Vencto</th>
+          <th class="c-receber">A receber</th>
+          <th class="c-pagar">A pagar</th>
+          <th class="c-saldo">Saldo</th>
+        </tr>
+      </thead>
+      <tbody id="flx-body">
+        <tr><td colspan="9" class="flx-empty">Carregando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flx-resumo" id="flx-resumo"></div>
+</div>
+
+<style>
+  .flx-page { padding:16px 20px; max-width:1400px; margin:0 auto; }
+  .flx-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:10px; }
+  .flx-header h1 { margin:0; font-size:1.5rem; }
+  .flx-controls { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .flx-meses { display:flex; gap:2px; flex-wrap:wrap; }
+  .flx-mes-btn { padding:5px 9px; border:1px solid #d1d5db; background:#fff; border-radius:6px; cursor:pointer; font-size:.78rem; }
+  .flx-mes-btn:hover { background:#f0f9ff; }
+  .flx-mes-btn.ativo { background:#0891b2; color:#fff; border-color:#0891b2; font-weight:600; }
+  .flx-ano-label { display:flex; align-items:center; gap:6px; font-weight:600; color:#374151; }
+  .flx-ano-select { padding:6px 10px; border:1px solid #d1d5db; border-radius:7px; font-weight:600; }
+
+  .flx-legenda { display:flex; gap:16px; margin-bottom:10px; font-size:.8rem; }
+  .flx-leg.verde    { color:#059669; }
+  .flx-leg.vermelho { color:#dc2626; }
+  .flx-leg.preto    { color:#374151; }
+
+  .flx-grid-wrap { overflow-x:auto; border:1px solid #d1d5db; border-radius:8px; background:#fff; }
+  .flx-grid { width:100%; border-collapse:collapse; font-size:.82rem; }
+  .flx-grid th { background:#6d28d9; color:#fff; padding:8px 10px; text-align:right; font-size:.72rem; letter-spacing:.4px; white-space:nowrap; position:sticky; top:0; }
+  .flx-grid th.c-item, .flx-grid th.c-chave, .flx-grid th.c-pos { text-align:center; }
+  .flx-grid th.c-hist, .flx-grid th.c-conta { text-align:left; }
+  .flx-grid td { padding:6px 10px; border-bottom:1px solid #f0f0f0; text-align:right; white-space:nowrap; }
+  .flx-grid td.c-item, .flx-grid td.c-chave, .flx-grid td.c-pos { text-align:center; color:#6b7280; font-size:.76rem; }
+  .flx-grid td.c-hist, .flx-grid td.c-conta { text-align:left; }
+  .flx-grid tr:hover td { background:#faf5ff; }
+
+  /* Cores por pos */
+  .flx-grid tr.cor-verde td.c-hist,
+  .flx-grid tr.cor-verde td.c-conta { color:#059669; }
+  .flx-grid tr.cor-vermelho td.c-hist,
+  .flx-grid tr.cor-vermelho td.c-conta { color:#dc2626; }
+  .flx-grid tr.cor-preto td.c-hist,
+  .flx-grid tr.cor-preto td.c-conta { color:#1f2937; }
+
+  .val-receber { color:#059669; font-weight:600; }
+  .val-pagar { color:#dc2626; font-weight:600; }
+  .val-saldo-pos { color:#059669; }
+  .val-saldo-neg { color:#dc2626; font-weight:600; }
+  .c-pos-badge { display:inline-block; min-width:20px; padding:1px 5px; border-radius:4px; background:#ede9fe; color:#6d28d9; font-weight:600; font-size:.72rem; }
+
+  .flx-empty { text-align:center; padding:32px; color:#9ca3af; }
+
+  .flx-resumo { display:flex; gap:24px; justify-content:flex-end; padding:12px 16px; margin-top:10px; background:#f9fafb; border-radius:8px; font-size:.9rem; flex-wrap:wrap; }
+  .flx-resumo-item { display:flex; flex-direction:column; align-items:flex-end; }
+  .flx-resumo-item .lbl { font-size:.72rem; color:#6b7280; text-transform:uppercase; letter-spacing:.5px; }
+  .flx-resumo-item .val { font-weight:700; font-size:1.05rem; }
+</style>
+
+<script src="/js/financeiro/fluxo.js"></script>

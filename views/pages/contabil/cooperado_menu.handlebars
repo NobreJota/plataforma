@@ -46,23 +46,11 @@
     {{!-- Fluxo de Caixa --}}
     <ul class="coop-sub-list" data-sub="fluxo">
       <li class="coop-sub-title">Fluxo de Caixa</li>
-      <li class="coop-sub-item" data-leaf="lancamentos" data-url="/contabil/fluxo/lancamentos">
-        <span>Lançamentos</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
-      </li>
-      <li class="coop-sub-item" data-url="/contabil/fluxo/grid">
+      <li class="coop-sub-item" data-url="/financeiro/fluxo">
         <span>Grid mês a mês</span>
       </li>
-      <li class="coop-sub-item" data-leaf="recebendo" data-url="/contabil/fluxo/recebendo">
-        <span>Recebendo títulos</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
-      </li>
-      <li class="coop-sub-item" data-leaf="pagando" data-url="/contabil/fluxo/pagando">
-        <span>Pagando títulos</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
-      </li>
-      <li class="coop-sub-item" data-leaf="pesquisa" data-url="/contabil/fluxo/pesquisa">
-        <span>Pesquisa de contas</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
-      </li>
-      <li class="coop-sub-item" data-url="/contabil/fluxo/outros">
-        <span>Outros</span>
+      <li class="coop-sub-item" data-url="/financeiro/orcamento">
+        <span>Orçamento Anual</span>
       </li>
     </ul>
 
@@ -86,8 +74,8 @@
     {{!-- Compra --}}
     <ul class="coop-sub-list" data-sub="compra">
       <li class="coop-sub-title">Compra</li>
-      <li class="coop-sub-item" data-leaf="fornecedores" data-url="/compra/fornecedores">
-        <span>Fornecedores</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      <li class="coop-sub-item" data-url="/aux/fornecedores">
+        <span>Fornecedores</span>
       </li>
       <li class="coop-sub-item" data-url="/compra/pedidos">
         <span>Pedidos</span>
@@ -103,8 +91,8 @@
     {{!-- Venda --}}
     <ul class="coop-sub-list" data-sub="venda">
       <li class="coop-sub-title">Venda</li>
-      <li class="coop-sub-item" data-leaf="clientes" data-url="/venda/clientes">
-        <span>Clientes</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      <li class="coop-sub-item" data-url="/aux/clientes">
+        <span>Clientes</span>
       </li>
       <li class="coop-sub-item" data-url="/venda/notas-fiscais">
         <span>Notas fiscais</span>
@@ -126,65 +114,16 @@
 
   {{!-- Coluna de folhas (nível 3) --}}
   <div class="coop-leaf-col" id="coop-leaf-panel">
-    <ul class="coop-leaf-list" data-leaf="lancamentos">
-      <li class="coop-sub-title">Lançamentos</li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=5">5 — A receber</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=2">2 — A pagar</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=8">8 — Orçamento</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=0">0 — Avulso</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=1">1 — Cartão de crédito</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=3">3 — Compras realizadas</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/lancamentos?tipo=7">7 — Previsão de compras</a></li>
-    </ul>
 
-    <ul class="coop-leaf-list" data-leaf="recebendo">
-      <li class="coop-sub-title">Recebendo títulos</li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/recebendo/listar">Listar títulos a receber</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/recebendo/baixa">Baixa de recebimento</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/recebendo/relatorio">Relatório de recebidos</a></li>
-    </ul>
-
-    <ul class="coop-leaf-list" data-leaf="pagando">
-      <li class="coop-sub-title">Pagando títulos</li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/pagando/listar">Listar títulos a pagar</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/pagando/baixa">Baixa de pagamento</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/pagando/relatorio">Relatório de pagos</a></li>
-    </ul>
-
-    <ul class="coop-leaf-list" data-leaf="pesquisa">
-      <li class="coop-sub-title">Pesquisa de contas</li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/pesquisa/conta">Por conta</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/pesquisa/periodo">Por período</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/fluxo/pesquisa/historico">Por histórico</a></li>
-    </ul>
-
-    {{!-- <ul class="coop-leaf-list" data-leaf="plano">
-      <li class="coop-sub-title">Plano de contas</li>
-      <li class="coop-leaf-item"><a href="/contabil/plano/grupo-sub">Grupo sub</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/plano/contas-titulos">Contas títulos</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/plano/contas-sub-titulos">Contas sub títulos</a></li>
-    </ul> --}}
-
+    {{!-- Folhas de recebendo/pagando/lancamentos/pesquisa REMOVIDAS:
+         agora o recebimento/pagamento é feito clicando na linha do
+         Grid do Fluxo de Caixa (modal), não por menu. --}}
 
     <ul class="coop-leaf-list" data-leaf="pessoal">
       <li class="coop-sub-title">Pessoal</li>
       <li class="coop-leaf-item"><a href="/contabil/pessoal/cadastro">Cadastro</a></li>
       <li class="coop-leaf-item"><a href="/contabil/pessoal/alterar">Alterar</a></li>
       <li class="coop-leaf-item"><a href="/contabil/pessoal/deletar">Deletar</a></li>
-    </ul>
-
-    <ul class="coop-leaf-list" data-leaf="fornecedores">
-      <li class="coop-sub-title">Fornecedores</li>
-      <li class="coop-leaf-item"><a href="/compra/fornecedores/cadastro">Cadastro</a></li>
-      <li class="coop-leaf-item"><a href="/compra/fornecedores/alterar">Alterar</a></li>
-      <li class="coop-leaf-item"><a href="/compra/fornecedores/deletar">Deletar</a></li>
-    </ul>
-
-    <ul class="coop-leaf-list" data-leaf="clientes">
-      <li class="coop-sub-title">Clientes</li>
-      <li class="coop-leaf-item"><a href="/venda/clientes/cadastro">Cadastro</a></li>
-      <li class="coop-leaf-item"><a href="/venda/clientes/alterar">Alterar</a></li>
-      <li class="coop-leaf-item"><a href="/venda/clientes/deletar">Deletar</a></li>
     </ul>
 
   </div>

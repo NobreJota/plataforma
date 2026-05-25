@@ -3,7 +3,7 @@
  */
 (() => {
   'use strict';
-  console.log('%c📊 orcamento.js v3 - fix marcacao persistente', 'background:#0891b2;color:white;padding:5px 11px;border-radius:4px;font-weight:bold;');
+  console.log('%c📊 orcamento.js v5 - editar lancamento', 'background:#0891b2;color:white;padding:5px 11px;border-radius:4px;font-weight:bold;');
 
   const API = '/financeiro/api/orcamento';
   const $  = (s) => document.querySelector(s);
@@ -61,28 +61,28 @@
           let celulas = '';
           for (let m = 0; m < 12; m++) {
             const v = conta.meses[m] || 0;
-            if (v > 0) {
-              celulas += `<td class="cel-valor tem-valor" data-conta="${conta.orcamentoContaId}" data-mes="${m}">${fmt(v)}</td>`;
-            } else {
-              celulas += `<td class="cel-valor vazio" data-conta="${conta.orcamentoContaId}" data-mes="${m}">,00</td>`;
-            }
+            const cls = v > 0 ? 'tem-valor' : 'vazio';
+            const txt = v > 0 ? fmt(v) : ',00';
+            celulas += `<td class="cel-valor ${cls}" data-conta="${conta.orcamentoContaId}" data-mes="${m}" data-nome="${conta.nome}" data-codigo="${conta.codigo}">${txt}</td>`;
           }
           html += `<tr class="orc-conta-row">
             <td class="cel-item">${item}</td>
-            <td class="cel-conta">${conta.nome}</td>
+            <td class="cel-conta cel-abre-lanc" data-conta="${conta.orcamentoContaId}" data-nome="${conta.nome}" data-codigo="${conta.codigo}">${conta.nome}</td>
             ${celulas}
           </tr>`;
         }
       }
       tbody.innerHTML = html;
 
-      // Clique nas células (Entrega 2 fará o modal; por ora só avisa)
-      $$('.cel-valor').forEach(cel => {
-        cel.addEventListener('click', () => {
-          const contaId = cel.dataset.conta;
-          const mes = MESES[cel.dataset.mes];
-          console.log(`Clicou: conta ${contaId}, mês ${mes}`);
-          // Entrega 2: abrir modal de lançamento aqui
+      // Clique na célula ou no nome da conta → abre modal de lançamento
+      $$('.cel-valor, .cel-abre-lanc').forEach(el => {
+        el.addEventListener('click', () => {
+          abrirLancamento({
+            contaId: el.dataset.conta,
+            nome: el.dataset.nome,
+            codigo: el.dataset.codigo,
+            mesInicial: el.dataset.mes !== undefined ? parseInt(el.dataset.mes, 10) + 1 : 1
+          });
         });
       });
     } catch (err) {
@@ -204,6 +204,192 @@
     );
     renderVincular(filtrada);
   }
+
+  /* ============================================================
+     MODAL DE LANÇAMENTO (Entrega 2)
+     ============================================================ */
+  const lanc = { contaId: null, nome: '', codigo: '', editandoId: null };
+
+  // Parse de valor BR "1.465,00" → 1465.00
+  function parseValor(s) {
+    if (!s) return 0;
+    return Number(String(s).replace(/\./g, '').replace(',', '.')) || 0;
+  }
+
+  function calcularParcelasPreview(valor, numParcelas, modo) {
+    numParcelas = Math.max(1, parseInt(numParcelas, 10) || 1);
+    const out = [];
+    if (modo === 'total') {
+      const base = Math.floor((valor / numParcelas) * 100) / 100;
+      let acc = 0;
+      for (let i = 0; i < numParcelas; i++) {
+        let v = base;
+        if (i === numParcelas - 1) v = Math.round((valor - acc) * 100) / 100;
+        acc += base;
+        out.push(v);
+      }
+    } else {
+      for (let i = 0; i < numParcelas; i++) out.push(valor);
+    }
+    return out;
+  }
+
+  async function abrirLancamento({ contaId, nome, codigo, mesInicial }) {
+    lanc.contaId = contaId; lanc.nome = nome; lanc.codigo = codigo;
+    lanc.editandoId = null;
+    $('#lanc-titulo').textContent = 'Lançamento';
+    $('#lanc-codigo').textContent = codigo || '';
+    $('#lanc-nome').textContent = nome || '';
+    $('#lanc-ano').textContent = 'Ano ' + state.ano;
+
+    // Reset form
+    $('#lanc-historico').value = nome || '';
+    $('#lanc-valor').value = '';
+    $('#lanc-modo').value = 'parcela';
+    $('#lanc-parcelas').value = '12';
+    $('#lanc-mes-inicial').value = mesInicial || 1;
+    $('#lanc-dia').value = '10';
+    $('#lanc-preview').hidden = true;
+    $('#btn-add-lancamento').textContent = '+ Adicionar';
+
+    $('#modal-lancamento').hidden = false;
+    await carregarLancamentosSalvos();
+    setTimeout(() => $('#lanc-valor').focus(), 50);
+  }
+
+  // Preenche o formulário para editar um lançamento existente
+  function editarLancamento(l) {
+    lanc.editandoId = l._id;
+    $('#lanc-historico').value = l.historico || '';
+    $('#lanc-valor').value = fmt(l.valor);
+    $('#lanc-modo').value = 'parcela';  // valor salvo é por parcela
+    $('#lanc-parcelas').value = l.numParcelas || 1;
+    $('#lanc-mes-inicial').value = l.mesInicial || 1;
+    $('#lanc-dia').value = l.diaVencimento || 10;
+    $('#btn-add-lancamento').textContent = '✓ Salvar alteração';
+    atualizarPreview();
+    $('#lanc-valor').focus();
+    // rola para o topo do form
+    $('#lanc-valor').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function atualizarPreview() {
+    const valor = parseValor($('#lanc-valor').value);
+    const nParc = parseInt($('#lanc-parcelas').value, 10) || 1;
+    const modo = $('#lanc-modo').value;
+    const mesIni = parseInt($('#lanc-mes-inicial').value, 10) || 1;
+    const dia = parseInt($('#lanc-dia').value, 10) || 10;
+
+    if (valor <= 0) { $('#lanc-preview').hidden = true; return; }
+
+    const parcelas = calcularParcelasPreview(valor, nParc, modo);
+    let html = '';
+    let total = 0;
+    for (let i = 0; i < parcelas.length; i++) {
+      const mesIndex = (mesIni - 1 + i) % 12;
+      const anoP = state.ano + Math.floor((mesIni - 1 + i) / 12);
+      total += parcelas[i];
+      html += `<div class="lanc-preview-item">
+        <span>${String(dia).padStart(2,'0')}/${String(mesIndex+1).padStart(2,'0')}/${anoP}</span>
+        <span>${fmt(parcelas[i])}</span>
+      </div>`;
+    }
+    $('#lanc-preview-lista').innerHTML = html;
+    $('#lanc-preview-total').textContent = `Total: ${fmt(total)} em ${nParc}x`;
+    $('#lanc-preview').hidden = false;
+  }
+
+  async function carregarLancamentosSalvos() {
+    const cont = $('#lanc-salvos-lista');
+    cont.innerHTML = '<p class="orc-empty">Carregando...</p>';
+    try {
+      const data = await api('GET', `/lancamentos/${state.ano}/${lanc.contaId}`);
+      const lancs = data.lancamentos || [];
+      if (lancs.length === 0) {
+        cont.innerHTML = '<p class="orc-empty">Nenhum lançamento ainda.</p>';
+        return;
+      }
+      const nomeMes = (m) => MESES[m-1];
+      cont.innerHTML = lancs.map(l => `
+        <div class="lanc-salvo-item">
+          <span class="lanc-salvo-desc">${l.historico} · ${l.numParcelas}x · a partir de ${nomeMes(l.mesInicial)}</span>
+          <span class="lanc-salvo-valor">${fmt(l.valor)}</span>
+          <button class="lanc-btn-edit" data-id="${l._id}" title="Alterar">✏️</button>
+          <button class="lanc-btn-del" data-id="${l._id}" title="Excluir">🗑️</button>
+        </div>
+      `).join('');
+      // Guarda os lançamentos para edição
+      lanc._cache = lancs;
+      $$('#lanc-salvos-lista .lanc-btn-edit').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const l = (lanc._cache || []).find(x => String(x._id) === String(btn.dataset.id));
+          if (l) editarLancamento(l);
+        });
+      });
+      $$('#lanc-salvos-lista .lanc-btn-del').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (!confirm('Excluir este lançamento? As parcelas projetadas serão removidas.')) return;
+          try {
+            await api('DELETE', `/lancamento/${state.ano}/${lanc.contaId}/${btn.dataset.id}`);
+            if (lanc.editandoId === btn.dataset.id) { lanc.editandoId = null; $('#btn-add-lancamento').textContent = '+ Adicionar'; }
+            await carregarLancamentosSalvos();
+            carregarGrid();
+          } catch (err) { alert('Erro: ' + err.message); }
+        });
+      });
+    } catch (err) {
+      cont.innerHTML = `<p class="orc-empty">Erro: ${err.message}</p>`;
+    }
+  }
+
+  async function adicionarLancamento() {
+    const valor = parseValor($('#lanc-valor').value);
+    if (valor <= 0) { alert('Informe um valor válido.'); $('#lanc-valor').focus(); return; }
+    const payload = {
+      ano: state.ano,
+      orcamentoContaId: lanc.contaId,
+      historico: $('#lanc-historico').value.trim() || lanc.nome,
+      valor,
+      numParcelas: parseInt($('#lanc-parcelas').value, 10) || 1,
+      modo: $('#lanc-modo').value,
+      mesInicial: parseInt($('#lanc-mes-inicial').value, 10) || 1,
+      diaVencimento: parseInt($('#lanc-dia').value, 10) || 10
+    };
+    const btn = $('#btn-add-lancamento');
+    btn.disabled = true; btn.textContent = 'Salvando...';
+    try {
+      if (lanc.editandoId) {
+        // EDITAR: PUT (remove parcelas antigas, gera novas — sem lixo)
+        await api('PUT', `/lancamento/${state.ano}/${lanc.contaId}/${lanc.editandoId}`, payload);
+        lanc.editandoId = null;
+      } else {
+        // NOVO: POST
+        await api('POST', '/lancamento', payload);
+      }
+      // Reset campos de valor, mantém histórico
+      $('#lanc-valor').value = '';
+      $('#lanc-preview').hidden = true;
+      $('#btn-add-lancamento').textContent = '+ Adicionar';
+      await carregarLancamentosSalvos();
+      carregarGrid();  // atualiza o grid de fundo
+    } catch (err) {
+      alert('Erro: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      if (!lanc.editandoId) btn.textContent = '+ Adicionar';
+    }
+  }
+
+  function fecharLancamento() { $('#modal-lancamento').hidden = true; }
+
+  // Listeners do modal de lançamento
+  ['#lanc-valor', '#lanc-parcelas', '#lanc-modo', '#lanc-mes-inicial', '#lanc-dia'].forEach(sel => {
+    $(sel).addEventListener('input', atualizarPreview);
+    $(sel).addEventListener('change', atualizarPreview);
+  });
+  $('#btn-add-lancamento').addEventListener('click', adicionarLancamento);
+  $('#btn-fechar-lanc').addEventListener('click', fecharLancamento);
+  $('#btn-fechar-lanc-rodape').addEventListener('click', fecharLancamento);
 
   /* ===== Listeners ===== */
   $('#combo-ano').addEventListener('change', (e) => { state.ano = parseInt(e.target.value, 10); carregarGrid(); });

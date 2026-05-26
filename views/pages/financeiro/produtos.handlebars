@@ -1,0 +1,197 @@
+<div class="prd-page">
+  <header class="prd-header">
+    <h1>📦 Produtos</h1>
+    <div class="prd-resumo" id="prd-resumo"></div>
+  </header>
+
+  <div class="prd-filtros">
+    <label class="prd-filtro">
+      <span>Buscar</span>
+      <input type="search" id="f-busca" placeholder="🔍 Descrição, código ou referência...">
+    </label>
+    <label class="prd-filtro">
+      <span>Fornecedor</span>
+      <select id="f-fornecedor"><option value="todos">Todos</option></select>
+    </label>
+    <label class="prd-filtro prd-filtro-sm">
+      <span>Situação</span>
+      <select id="f-ativo">
+        <option value="todos">Todos</option>
+        <option value="true">Ativos</option>
+        <option value="false">Inativos</option>
+      </select>
+    </label>
+    <label class="prd-filtro prd-filtro-sm">
+      <span>Imagens</span>
+      <select id="f-imagem">
+        <option value="todos">Todas</option>
+        <option value="com">Com imagem</option>
+        <option value="sem">Sem imagem</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="prd-barra-topo" id="prd-barra-topo"></div>
+
+  <div class="prd-grid-wrap">
+    <table class="prd-grid">
+      <thead>
+        <tr>
+          <th class="c-img">Img</th>
+          <th class="c-cod">Código</th>
+          <th class="c-desc">Descrição</th>
+          <th class="c-ref">Referência</th>
+          <th class="c-forn">Fornecedor</th>
+          <th class="c-num">Estoque</th>
+          <th class="c-num">Custo</th>
+          <th class="c-num">À vista</th>
+          <th class="c-num">A prazo</th>
+          <th class="c-status">Status</th>
+        </tr>
+      </thead>
+      <tbody id="prd-body">
+        <tr><td colspan="10" class="prd-empty">Carregando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="prd-paginacao" id="prd-paginacao"></div>
+</div>
+
+<!-- Modal de edição (gestão) -->
+<div id="prd-modal" class="prd-modal" hidden>
+  <div class="prd-modal-content">
+    <div class="prd-modal-header">
+      <h2>Editar produto</h2>
+      <button class="prd-close" id="prd-modal-close">×</button>
+    </div>
+    <div class="prd-modal-body">
+      <div class="prd-modal-info">
+        <img id="m-thumb" class="prd-modal-thumb" src="" alt="" hidden>
+        <div class="prd-modal-meta">
+          <div class="m-desc" id="m-desc"></div>
+          <div class="m-sub"><span id="m-cod"></span> · <span id="m-forn"></span></div>
+        </div>
+      </div>
+
+      <div class="prd-modal-aviso">
+        ✏️ Edição de <b>gestão</b>: preços e estoque. Descrição, imagens e dados
+        fiscais permanecem inalterados (editados no cadastro do site).
+      </div>
+
+      <fieldset class="prd-fieldset">
+        <legend>💰 Preços</legend>
+        <div class="prd-form-row">
+          <label><span>Custo (R$)</span><input type="text" id="m-custo" inputmode="decimal" placeholder="0,00"></label>
+          <label><span>À vista (R$)</span><input type="text" id="m-vista" inputmode="decimal" placeholder="0,00"></label>
+          <label><span>A prazo (R$)</span><input type="text" id="m-prazo" inputmode="decimal" placeholder="0,00"></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="prd-fieldset">
+        <legend>📦 Estoque</legend>
+        <div class="prd-form-row">
+          <label><span>Quantidade</span><input type="number" id="m-qte" min="0"></label>
+          <label><span>Estoque mín.</span><input type="number" id="m-emin" min="0"></label>
+          <label><span>Estoque máx.</span><input type="number" id="m-emax" min="0"></label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="prd-modal-footer">
+      <span id="m-status" class="prd-modal-status"></span>
+      <button type="button" id="prd-modal-cancel" class="prd-btn-cancel">Cancelar</button>
+      <button type="button" id="prd-modal-salvar" class="prd-btn-salvar">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .prd-page { padding:18px 20px; max-width:1500px; margin:0 auto; }
+  .prd-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:14px; }
+  .prd-header h1 { margin:0; font-size:1.5rem; }
+  .prd-resumo { display:flex; gap:16px; font-size:.82rem; color:#6b7280; }
+  .prd-resumo b { color:#1f2937; }
+
+  .prd-filtros { display:flex; gap:12px; margin-bottom:14px; flex-wrap:wrap; align-items:flex-end; background:#f9fafb; padding:14px; border-radius:8px; }
+  .prd-filtro { display:flex; flex-direction:column; gap:5px; flex:1; min-width:160px; }
+  .prd-filtro-sm { flex:0 0 auto; min-width:130px; }
+  .prd-filtro span { font-size:.78rem; color:#374151; font-weight:600; }
+  .prd-filtro input, .prd-filtro select { padding:8px 11px; border:1px solid #d1d5db; border-radius:7px; font-size:.9rem; }
+  .prd-filtro input:focus, .prd-filtro select:focus { outline:none; border-color:#0d9488; box-shadow:0 0 0 3px rgba(13,148,136,.1); }
+
+  .prd-barra-topo { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; padding:8px 14px; background:#f0fdfa; border:1px solid #99f6e4; border-radius:7px; font-size:.85rem; flex-wrap:wrap; min-height:20px; }
+  .prd-barra-topo .conta-filtro { color:#0f766e; font-weight:600; }
+  .prd-barra-topo .nav-mini { display:flex; align-items:center; gap:8px; }
+  .prd-barra-topo .nav-mini button { padding:5px 12px; border:1px solid #5eead4; background:#fff; border-radius:6px; cursor:pointer; font-size:.8rem; color:#0f766e; }
+  .prd-barra-topo .nav-mini button:hover:not(:disabled) { background:#ccfbf1; }
+  .prd-barra-topo .nav-mini button:disabled { opacity:.4; cursor:default; }
+  .prd-barra-topo .nav-mini .info { color:#6b7280; font-size:.8rem; }
+
+  .prd-grid-wrap { overflow-x:auto; border:1px solid #d1d5db; border-radius:8px; background:#fff; }
+  .prd-grid { width:100%; border-collapse:collapse; font-size:.84rem; }
+  .prd-grid th { background:#0d9488; color:#fff; padding:9px 10px; text-align:left; font-size:.74rem; letter-spacing:.4px; white-space:nowrap; position:sticky; top:0; }
+  .prd-grid th.c-num { text-align:right; }
+  .prd-grid th.c-img, .prd-grid th.c-status { text-align:center; }
+  .prd-grid td { padding:7px 10px; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
+  .prd-grid td.c-num { text-align:right; font-variant-numeric:tabular-nums; }
+  .prd-grid td.c-img, .prd-grid td.c-status { text-align:center; }
+  .prd-grid tr:hover { background:#f0fdfa; }
+
+  .prd-thumb { width:38px; height:38px; object-fit:cover; border-radius:5px; border:1px solid #e5e7eb; cursor:pointer; transition:transform .12s; }
+  .prd-thumb:hover { transform:scale(1.15); border-color:#0d9488; }
+
+  /* Lightbox */
+  #prd-lightbox { display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center; }
+  #prd-lightbox .lb-overlay { position:absolute; inset:0; background:rgba(0,0,0,.8); }
+  #prd-lightbox .lb-content { position:relative; z-index:1; display:flex; align-items:center; gap:14px; max-width:90vw; max-height:90vh; }
+  #prd-lightbox .lb-img { max-width:75vw; max-height:80vh; object-fit:contain; border-radius:8px; background:#fff; box-shadow:0 8px 40px rgba(0,0,0,.5); }
+  #prd-lightbox .lb-close { position:absolute; top:-40px; right:0; background:none; border:none; color:#fff; font-size:2.2rem; cursor:pointer; line-height:1; }
+  #prd-lightbox .lb-nav { background:rgba(255,255,255,.9); border:none; width:46px; height:46px; border-radius:50%; font-size:1.8rem; cursor:pointer; color:#0d9488; flex-shrink:0; }
+  #prd-lightbox .lb-nav:hover { background:#fff; }
+  #prd-lightbox .lb-caption { position:absolute; bottom:-36px; left:0; right:0; text-align:center; color:#fff; font-size:.95rem; }
+
+  /* Modal de edição */
+  .prd-modal { position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; z-index:1500; }
+  .prd-modal[hidden] { display:none; }
+  .prd-modal-content { background:#fff; border-radius:12px; width:90%; max-width:520px; max-height:88vh; display:flex; flex-direction:column; overflow:hidden; }
+  .prd-modal-header { display:flex; justify-content:space-between; align-items:center; padding:16px 20px; background:#0d9488; color:#fff; border-radius:12px 12px 0 0; }
+  .prd-modal-header h2 { margin:0; font-size:1.15rem; }
+  .prd-close { background:none; border:none; color:#fff; font-size:1.6rem; cursor:pointer; }
+  .prd-modal-body { padding:18px 20px; overflow-y:auto; overflow-x:hidden; }
+  .prd-modal-info { display:flex; gap:14px; align-items:center; margin-bottom:14px; }
+  .prd-modal-thumb { width:60px; height:60px; object-fit:cover; border-radius:8px; border:1px solid #e5e7eb; flex-shrink:0; }
+  .prd-modal-meta { min-width:0; }
+  .prd-modal-meta .m-desc { font-weight:700; font-size:1.05rem; color:#1f2937; }
+  .prd-modal-meta .m-sub { font-size:.82rem; color:#6b7280; margin-top:3px; }
+  .prd-modal-aviso { background:#f0fdfa; border:1px solid #99f6e4; border-radius:7px; padding:9px 12px; font-size:.8rem; color:#0f766e; margin-bottom:16px; line-height:1.4; }
+  .prd-fieldset { border:1px solid #e5e7eb; border-radius:8px; padding:12px 14px; margin-bottom:14px; }
+  .prd-fieldset legend { padding:0 8px; font-weight:600; color:#374151; font-size:.88rem; }
+  .prd-form-row { display:flex; gap:10px; width:100%; box-sizing:border-box; }
+  .prd-form-row label { display:flex; flex-direction:column; gap:5px; flex:1 1 0; min-width:0; }
+  .prd-form-row label span { font-size:.78rem; color:#374151; font-weight:500; }
+  .prd-form-row input { width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:7px; font-size:.9rem; box-sizing:border-box; text-align:right; }
+  .prd-form-row input:focus { outline:none; border-color:#0d9488; box-shadow:0 0 0 3px rgba(13,148,136,.1); }
+  .prd-modal-footer { display:flex; align-items:center; gap:12px; padding:14px 20px; border-top:1px solid #e5e7eb; }
+  .prd-modal-status { flex:1; font-size:.82rem; }
+  .prd-modal-status.ok { color:#059669; }
+  .prd-modal-status.erro { color:#dc2626; }
+  .prd-btn-cancel { background:#f3f4f6; border:1px solid #d1d5db; border-radius:7px; padding:9px 18px; cursor:pointer; font-weight:500; }
+  .prd-btn-salvar { background:#0d9488; color:#fff; border:none; border-radius:7px; padding:9px 22px; font-weight:600; cursor:pointer; }
+  .prd-btn-salvar:hover { background:#0f766e; }
+  .prd-noimg { display:inline-block; width:38px; height:38px; border-radius:5px; background:#f3f4f6; color:#9ca3af; line-height:38px; font-size:1rem; }
+  .prd-cod { font-family:monospace; font-size:.8rem; color:#6b7280; white-space:nowrap; }
+  .prd-desc { color:#1f2937; }
+  .prd-estoque-baixo { color:#dc2626; font-weight:600; }
+  .prd-tag-ativo { background:#d1fae5; color:#065f46; padding:2px 9px; border-radius:11px; font-size:.72rem; font-weight:600; }
+  .prd-tag-inativo { background:#fee2e2; color:#991b1b; padding:2px 9px; border-radius:11px; font-size:.72rem; font-weight:600; }
+
+  .prd-empty { text-align:center; padding:32px; color:#9ca3af; }
+
+  .prd-paginacao { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:14px; }
+  .prd-pag-btn { padding:7px 14px; border:1px solid #d1d5db; background:#fff; border-radius:7px; cursor:pointer; font-size:.85rem; }
+  .prd-pag-btn:hover:not(:disabled) { background:#f0fdfa; border-color:#0d9488; }
+  .prd-pag-btn:disabled { opacity:.4; cursor:default; }
+  .prd-pag-info { font-size:.85rem; color:#6b7280; }
+</style>
+
+<script src="/js/financeiro/produtos.js"></script>

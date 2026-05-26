@@ -208,7 +208,8 @@ router.get('/cooperados', ensureLojista, async (req, res) => {
           //////////////////////////////////////////////////////////////////////////
           // render
           console.log(' ',produtos.length)
-          res.render('pages/contabil/cooperado_menu.handlebars', {
+          res.render('pages/empresa/cooperado-admin.handlebars', {
+          //res.render('pages/contabil/cooperado_menu.handlebars', {
             layout:false ,
           }
           // 'empresa/empresa-produto.handlebars'

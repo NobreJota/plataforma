@@ -34,7 +34,16 @@ const FluxoProjetadoSchema = new mongoose.Schema({
   orcamentoAno:       { type: Number, default: null },
   lancamentoId:       { type: mongoose.Schema.Types.ObjectId, default: null },
 
-  status: { type: String, enum: ['ATIVO', 'CANCELADO'], default: 'ATIVO' }
+  // Quitação (quando pago/recebido via boleta)
+  boletaId:  { type: mongoose.Schema.Types.ObjectId, ref: 'Boleta', default: null },
+  quitadoEm: { type: Date, default: null },
+
+  // Realização (quando projeção pos 8 vira despesa real pos 2)
+  documento:        { type: String, default: '' },      // nº NF/documento da despesa real
+  projecaoOrigemId: { type: mongoose.Schema.Types.ObjectId, default: null },
+  realizadaEm:      { type: Date, default: null },
+
+  status: { type: String, enum: ['ATIVO', 'CANCELADO', 'QUITADO', 'REALIZADA'], default: 'ATIVO' }
 }, {
   collection: '_fluxo_projetado',
   timestamps: { createdAt: 'criadoEm', updatedAt: 'atualizadoEm' },

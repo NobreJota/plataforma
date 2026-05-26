@@ -39,6 +39,65 @@
   <div class="flx-resumo" id="flx-resumo"></div>
 </div>
 
+<!-- Modal de pagamento/recebimento em lote -->
+<div id="pag-modal" class="pag-modal" hidden>
+  <div class="pag-modal-content">
+    <div class="pag-modal-header" id="pag-header">
+      <h2 id="pag-titulo">💰 Pagamento em lote</h2>
+      <button class="pag-close" id="pag-close">×</button>
+    </div>
+    <div class="pag-modal-body">
+      <div class="pag-controles">
+        <label class="pag-campo">
+          <span>Banco</span>
+          <select id="pag-banco"><option value="">Selecione...</option></select>
+        </label>
+        <label class="pag-campo">
+          <span>Data do movimento</span>
+          <input type="date" id="pag-data">
+        </label>
+      </div>
+
+      <div class="pag-lista-wrap">
+        <table class="pag-lista">
+          <thead>
+            <tr>
+              <th class="pl-check"><input type="checkbox" id="pag-todos" title="Marcar todos"></th>
+              <th class="pl-data">Vencto</th>
+              <th class="pl-hist">Histórico</th>
+              <th class="pl-conta">Conta</th>
+              <th class="pl-valor">Valor</th>
+            </tr>
+          </thead>
+          <tbody id="pag-tbody">
+            <tr><td colspan="5" class="pag-empty">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="pag-modal-footer">
+      <span class="pag-resumo" id="pag-resumo">0 marcados</span>
+      <button type="button" id="pag-cancelar" class="pag-btn-cancel">Cancelar</button>
+      <button type="button" id="pag-confirmar" class="pag-btn-ok">💰 Pagar selecionados</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal da Boleta -->
+<div id="bol-modal" class="pag-modal" hidden>
+  <div class="bol-content">
+    <div class="bol-header">
+      <span id="bol-titulo">Boleta</span>
+      <button class="pag-close" id="bol-close">×</button>
+    </div>
+    <div class="bol-body" id="bol-body"></div>
+    <div class="bol-footer">
+      <button type="button" id="bol-estornar" class="bol-btn-estornar">↩ Estornar</button>
+      <button type="button" id="bol-fechar" class="pag-btn-cancel">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <style>
   .flx-page { padding:16px 20px; max-width:1400px; margin:0 auto; }
   .flx-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:10px; }
@@ -86,6 +145,66 @@
   .flx-resumo-item { display:flex; flex-direction:column; align-items:flex-end; }
   .flx-resumo-item .lbl { font-size:.72rem; color:#6b7280; text-transform:uppercase; letter-spacing:.5px; }
   .flx-resumo-item .val { font-weight:700; font-size:1.05rem; }
+
+  /* Linha clicável no fluxo */
+  .flx-grid tr.flx-pagavel { cursor:pointer; }
+  .flx-grid tr.flx-pagavel:hover td { background:#f5f3ff; }
+
+  /* Modais */
+  .pag-modal { position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; z-index:1500; }
+  .pag-modal[hidden] { display:none; }
+  .pag-modal-content { background:#fff; border-radius:12px; width:92%; max-width:680px; max-height:88vh; display:flex; flex-direction:column; overflow:hidden; }
+  .pag-modal-header { display:flex; justify-content:space-between; align-items:center; padding:16px 20px; background:#6d28d9; color:#fff; }
+  .pag-modal-header.receber { background:#059669; }
+  .pag-modal-header h2 { margin:0; font-size:1.15rem; }
+  .pag-close { background:none; border:none; color:#fff; font-size:1.6rem; cursor:pointer; line-height:1; }
+  .pag-modal-body { padding:18px 20px; overflow-y:auto; }
+  .pag-controles { display:flex; gap:14px; margin-bottom:14px; }
+  .pag-campo { display:flex; flex-direction:column; gap:5px; flex:1; }
+  .pag-campo span { font-size:.78rem; color:#374151; font-weight:600; }
+  .pag-campo select, .pag-campo input { padding:8px 11px; border:1px solid #d1d5db; border-radius:7px; font-size:.9rem; }
+
+  .pag-lista-wrap { border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; }
+  .pag-lista { width:100%; border-collapse:collapse; font-size:.85rem; }
+  .pag-lista th { background:#f3f4f6; padding:8px 10px; text-align:left; font-size:.74rem; color:#374151; }
+  .pag-lista th.pl-valor { text-align:right; }
+  .pag-lista th.pl-check { text-align:center; width:36px; }
+  .pag-lista td { padding:7px 10px; border-top:1px solid #f0f0f0; }
+  .pag-lista td.pl-valor { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; }
+  .pag-lista td.pl-check { text-align:center; }
+  .pag-lista tr.marcado td { background:#fef9c3; }   /* AMARELO na seleção */
+  .pag-lista tr.fora-do-dia td.pl-data { color:#d97706; font-weight:600; }
+  .pag-lista input[type=checkbox] { width:17px; height:17px; cursor:pointer; }
+  .pag-lista .pl-hist-input { width:100%; padding:4px 7px; border:1px solid #e5e7eb; border-radius:5px; font-size:.82rem; box-sizing:border-box; }
+  .pag-lista .pl-hist-input:focus { outline:none; border-color:#6d28d9; }
+  .pag-lista th.pl-hist, .pag-lista td.pl-hist { min-width:220px; }
+
+  .pag-modal-footer { display:flex; align-items:center; gap:12px; padding:14px 20px; border-top:1px solid #e5e7eb; }
+  .pag-resumo { flex:1; font-size:.88rem; color:#374151; font-weight:600; }
+  .pag-btn-cancel { background:#f3f4f6; border:1px solid #d1d5db; border-radius:7px; padding:9px 18px; cursor:pointer; }
+  .pag-btn-ok { background:#6d28d9; color:#fff; border:none; border-radius:7px; padding:9px 22px; font-weight:600; cursor:pointer; }
+  .pag-btn-ok:hover { background:#5b21b6; }
+  .pag-btn-ok:disabled { opacity:.4; cursor:default; }
+  .pag-empty { text-align:center; padding:24px; color:#9ca3af; }
+
+  /* Boleta */
+  .bol-content { background:#fff; border-radius:10px; width:92%; max-width:660px; max-height:88vh; display:flex; flex-direction:column; overflow:hidden; }
+  .bol-header { display:flex; justify-content:space-between; align-items:center; padding:14px 18px; background:#1d4ed8; color:#fff; font-weight:700; }
+  .bol-body { padding:18px; overflow-y:auto; }
+  .bol-secao { margin-bottom:16px; }
+  .bol-secao h3 { margin:0 0 8px; font-size:1rem; }
+  .bol-secao.credito h3 { color:#1d4ed8; }
+  .bol-secao.debito h3 { color:#1d4ed8; }
+  .bol-tabela { width:100%; border-collapse:collapse; font-size:.84rem; }
+  .bol-tabela th { text-align:left; font-size:.72rem; color:#6b7280; padding:4px 8px; border-bottom:1px solid #e5e7eb; }
+  .bol-tabela th.v { text-align:right; }
+  .bol-tabela td { padding:6px 8px; border-bottom:1px solid #f3f4f6; }
+  .bol-tabela td.v { text-align:right; font-variant-numeric:tabular-nums; }
+  .bol-cod { font-family:monospace; font-size:.78rem; color:#6b7280; }
+  .bol-total { text-align:right; font-weight:700; padding:8px; color:#1d4ed8; }
+  .bol-footer { display:flex; gap:12px; justify-content:flex-end; padding:14px 18px; border-top:1px solid #e5e7eb; }
+  .bol-btn-estornar { background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; border-radius:7px; padding:9px 18px; cursor:pointer; font-weight:600; margin-right:auto; }
+  .bol-btn-estornar:hover { background:#fee2e2; }
 </style>
 
 <script src="/js/financeiro/fluxo.js"></script>

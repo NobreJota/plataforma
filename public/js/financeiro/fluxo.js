@@ -3,7 +3,7 @@
  */
 (() => {
   'use strict';
-  console.log('%c🌊 fluxo.js v4.1 - diagnostico clique', 'background:#6d28d9;color:white;padding:5px 11px;border-radius:4px;font-weight:bold;');
+  console.log('%c🌊 fluxo.js v4.2 - dropdown banco código + nome', 'background:#6d28d9;color:white;padding:5px 11px;border-radius:4px;font-weight:bold;');
 
   const API = '/financeiro/api/fluxo';
   const $  = (s) => document.querySelector(s);
@@ -136,8 +136,22 @@
   async function carregarBancos() {
     try {
       const bancos = await pagApi('GET', '/bancos');
+      // Ordena pelo código contábil do subtítulo (1.01.002.001, 002, 003...).
+      // Contas sem vínculo (subCodigo vazio) vão pro fim, claramente sinalizadas.
+      bancos.sort((a, b) => {
+        const ca = a.subCodigo || 'zzz';
+        const cb = b.subCodigo || 'zzz';
+        return ca.localeCompare(cb);
+      });
+      // Formato: "1.01.002.001 - Banestes/Armação"  (código primeiro, alinha em coluna)
+      // Sem vínculo: "(sem vínculo) Apelido"
       $('#pag-banco').innerHTML = '<option value="">Selecione...</option>' +
-        bancos.map(b => `<option value="${b._id}">${b.apelido}${b.subCodigo ? ' ('+b.subCodigo+')' : ''}</option>`).join('');
+        bancos.map(b => {
+          const label = b.subCodigo
+            ? `${b.subCodigo} - ${b.subNome || b.apelido}`
+            : `(sem vínculo) ${b.apelido}`;
+          return `<option value="${b._id}">${label}</option>`;
+        }).join('');
     } catch (err) { console.warn('bancos:', err.message); }
   }
 

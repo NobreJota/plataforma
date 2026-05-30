@@ -120,6 +120,22 @@
 
         {{!-- Campos só de ContaSubTitulo --}}
         <div id="f-subtitulo-extras" hidden>
+
+          {{!-- ====== STEPPER DE CÓDIGO (setinhas que pulam ocupados) ====== --}}
+          <div id="stepper-codigo" class="stp-wrap" hidden>
+            <label class="stp-label">Código do subtítulo</label>
+            <div class="stp-row">
+              <span class="stp-base" id="stp-base">1.01.002.</span>
+              <span class="stp-seq" id="stp-seq">004</span>
+              <div class="stp-arrows">
+                <button type="button" class="stp-arrow" id="stp-up" title="Próximo disponível">▲</button>
+                <button type="button" class="stp-arrow" id="stp-down" title="Anterior disponível">▼</button>
+              </div>
+              <span class="stp-status" id="stp-status">✅ disponível</span>
+            </div>
+            <small class="stp-hint" id="stp-hint">As setinhas pulam os números já usados.</small>
+          </div>
+
           <label>
             <span>Natureza <em>*</em></span>
             <select id="f-natureza" required>
@@ -133,22 +149,6 @@
             <span>Saldo inicial</span>
             <input type="number" id="f-saldo" step="0.01" value="0">
           </label>
-
-          <fieldset class="contab-fieldset">
-            <legend>Dados bancários (opcional)</legend>
-            <label>
-              <span>Banco</span>
-              <input type="text" id="f-banco" placeholder="ex: Banestes">
-            </label>
-            <label>
-              <span>Agência</span>
-              <input type="text" id="f-agencia" placeholder="ex: 0042">
-            </label>
-            <label>
-              <span>Conta</span>
-              <input type="text" id="f-conta" placeholder="ex: 123456-7">
-            </label>
-          </fieldset>
         </div>
 
         <div class="contab-form-actions">
@@ -184,8 +184,9 @@
   }
   .contab-modal[hidden] { display:none; }
 
+  /* Modal padrão (form): mais largo para aproveitar espaço lateral */
   .contab-modal-card {
-    background:#fff; border-radius:12px; width:420px; max-width:92vw;
+    background:#fff; border-radius:12px; width:540px; max-width:92vw;
     max-height: 90vh; overflow-y: auto;
     box-shadow:0 20px 60px rgba(0,0,0,.25);
     animation: pop .18s ease-out;
@@ -247,33 +248,129 @@
   .btn-action.primary       { background:#dbeafe; color:#1e40af; border-color:#93c5fd; }
   .btn-action.primary:hover { background:#bfdbfe; }
 
-  /* Form (Modal 5) */
-  .contab-form { padding:18px; display:flex; flex-direction:column; gap:12px; }
-  .contab-form label { display:flex; flex-direction:column; gap:4px; font-size:.85rem; color:#374151; }
+  /* Form (Modal 5) — campos mais compactos em altura */
+  .contab-form { padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .contab-form label { display:flex; flex-direction:column; gap:3px; font-size:.85rem; color:#374151; }
   .contab-form label em { color:#dc2626; font-style:normal; }
   .contab-form input, .contab-form select {
-    padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; font-size:.95rem;
-    background:#fff;
+    padding:6px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:.92rem;
+    background:#fff; height:32px;
   }
   .contab-form input:focus, .contab-form select:focus {
     outline:2px solid #1d4ed8; border-color:#1d4ed8;
   }
-  .contab-form-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:6px; }
+  .contab-form-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:8px; }
 
   .contab-check { flex-direction:row !important; align-items:center; gap:8px !important; }
-  .contab-check input { width:auto; }
-
-  .contab-fieldset {
-    border:1px solid #e5e7eb; border-radius:8px; padding:12px;
-    display:flex; flex-direction:column; gap:10px;
-  }
-  .contab-fieldset legend { padding:0 6px; font-size:.8rem; color:#6b7280; }
+  .contab-check input { width:auto; height:auto; }
 
   .codigo-preview {
     background:#f0fdf4; border:1px solid #86efac; border-radius:8px;
-    padding:10px 12px; font-size:.9rem; color:#166534;
+    padding:8px 12px; font-size:.88rem; color:#166534;
   }
   .codigo-preview small { color:#16a34a; margin-left:6px; }
+
+  /* ====== STEPPER DE CÓDIGO ====== */
+  .stp-wrap {
+    background:#eff6ff; border:1px solid #bfdbfe; border-radius:7px;
+    padding:8px 10px; margin-bottom:4px; display:flex; flex-direction:column; gap:3px;
+  }
+  .stp-label { font-size:.72rem; font-weight:600; color:#1e40af; }
+  .stp-row { display:flex; align-items:center; gap:6px; }
+  .stp-base { font-family:ui-monospace, monospace; font-size:.95rem; color:#374151; }
+  .stp-seq {
+    font-family:ui-monospace, monospace; font-size:1.05rem; font-weight:700;
+    color:#1d4ed8; background:#fff; border:1px solid #93c5fd; border-radius:5px;
+    padding:1px 9px; min-width:44px; text-align:center;
+  }
+  .stp-arrows { display:flex; flex-direction:column; gap:2px; }
+  .stp-arrow {
+    background:#1d4ed8; color:#fff; border:0; border-radius:4px;
+    width:26px; height:16px; cursor:pointer; font-size:.6rem; line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .stp-arrow:hover { background:#1e40af; }
+  .stp-arrow:disabled { opacity:.4; cursor:default; }
+  .stp-status { font-size:.76rem; font-weight:600; color:#16a34a; margin-left:4px; }
+  .stp-status.bloqueado { color:#b45309; }
+  .stp-hint { font-size:.68rem; color:#6b7280; }
 </style>
+
+<script>
+/* ====================================================================
+   StepperCodigo — controla o seletor de código do subtítulo.
+   É chamado pelo contabil-plano.js (abrirInsercao / abrirEdicao / seq).
+   ==================================================================== */
+window.StepperCodigo = (function () {
+  'use strict';
+  const API = '/contab/api';
+  const $ = (s) => document.querySelector(s);
+  const st = { tituloId: null, seq: null, bloqueado: false };
+
+  async function get(url) {
+    const r = await fetch(url);
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.erro || 'Erro');
+    return d;
+  }
+  function mostrarSeq(seq) { st.seq = seq; const e=$('#stp-seq'); if(e) e.textContent = String(seq).padStart(3,'0'); }
+  function setBase(base)   { const e=$('#stp-base'); if(e) e.textContent = base + '.'; }
+  function statusLivre() {
+    const e=$('#stp-status'); if(!e) return;
+    e.textContent='✅ disponível'; e.className='stp-status';
+    $('#stp-hint').textContent='As setinhas pulam os números já usados.';
+    $('#stp-up').disabled=false; $('#stp-down').disabled=false; st.bloqueado=false;
+  }
+  function statusBloqueado(motivo) {
+    const e=$('#stp-status'); if(!e) return;
+    e.textContent='🔒 conta com movimento — número travado'; e.className='stp-status bloqueado';
+    $('#stp-hint').textContent = motivo ? ('Motivo: '+motivo+'.') : '';
+    $('#stp-up').disabled=true; $('#stp-down').disabled=true; st.bloqueado=true;
+  }
+
+  async function abrirInsercao(tituloId, codigoBase) {
+    st.tituloId = tituloId; st.bloqueado=false;
+    $('#stepper-codigo').hidden = false;
+    setBase(codigoBase);
+    try {
+      const d = await get(`${API}/subtitulos-codigos/${tituloId}`);
+      setBase(d.codigoBase); mostrarSeq(d.sugestao); statusLivre();
+    } catch(e){ console.warn('stepper:', e.message); }
+  }
+
+  async function abrirEdicao(subId, tituloId, codigoBase, seqAtual) {
+    st.tituloId = tituloId; st.bloqueado=false;
+    $('#stepper-codigo').hidden = false;
+    setBase(codigoBase); mostrarSeq(seqAtual); statusLivre();
+    try {
+      const mov = await get(`${API}/subtitulo/${subId}/movimento`);
+      if (mov.temMovimento) statusBloqueado(mov.motivo);
+    } catch(e){ /* deixa editável */ }
+  }
+
+  async function navegar(dir) {
+    if (st.bloqueado || !st.tituloId) return;
+    try {
+      const d = await get(`${API}/subtitulos-codigos/${st.tituloId}/navegar?atual=${st.seq}&dir=${dir}`);
+      mostrarSeq(d.seq); statusLivre();
+    } catch(e){ console.warn('stepper navegar:', e.message); }
+  }
+
+  function esconder(){ const w=$('#stepper-codigo'); if(w) w.hidden = true; }
+  function seq(){ return st.seq; }
+  function estaBloqueado(){ return st.bloqueado; }
+
+  // clique nas setinhas (closest pega botão ou texto interno)
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest && e.target.closest('#stp-up, #stp-down');
+    if (!btn) return;
+    e.preventDefault();
+    navegar(btn.id === 'stp-up' ? 'up' : 'down');
+  });
+
+  console.log('%c🔢 StepperCodigo pronto', 'background:#1d4ed8;color:#fff;padding:3px 8px;border-radius:4px');
+  return { abrirInsercao, abrirEdicao, navegar, esconder, seq, estaBloqueado };
+})();
+</script>
 
 <script src="/js/contabil/contabil-plano.js"></script>

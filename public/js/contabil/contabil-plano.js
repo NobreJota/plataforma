@@ -257,9 +257,6 @@
     $('#f-aceita').checked  = !!registro?.aceitaLancamento;
     $('#f-natureza').value  = registro?.natureza || '';
     $('#f-saldo').value     = registro?.saldoInicial ?? 0;
-    $('#f-banco').value     = registro?.banco || '';
-    $('#f-agencia').value   = registro?.agencia || '';
-    $('#f-conta').value     = registro?.conta || '';
 
     $('#codigo-preview').hidden = false;
     $('#codigo-valor').textContent =
@@ -268,6 +265,20 @@
     $('#f-aceita-wrapper').hidden    = (nivel !== 'titulo');
     $('#f-subtitulo-extras').hidden  = (nivel !== 'subtitulo');
     $('#f-natureza').required        = (nivel === 'subtitulo');
+
+    // ===== STEPPER de código (só para subtítulo) =====
+    if (nivel === 'subtitulo' && window.StepperCodigo) {
+      if (modo === 'inserir') {
+        window.StepperCodigo.abrirInsercao(state.tituloAtual._id, state.tituloAtual.codigo);
+      } else {
+        const seqAtual = parseInt((registro.codigo || '').split('.')[3], 10);
+        window.StepperCodigo.abrirEdicao(
+          registro._id, state.tituloAtual._id, state.tituloAtual.codigo, seqAtual
+        );
+      }
+    } else if (window.StepperCodigo) {
+      window.StepperCodigo.esconder();
+    }
 
     abrir('modal-form');
   }
@@ -309,11 +320,13 @@
         const payload = {
           nome, descricao,
           natureza:     $('#f-natureza').value,
-          saldoInicial: parseFloat($('#f-saldo').value || 0),
-          banco:        $('#f-banco').value.trim(),
-          agencia:      $('#f-agencia').value.trim(),
-          conta:        $('#f-conta').value.trim()
+          saldoInicial: parseFloat($('#f-saldo').value || 0)
         };
+        // código escolhido no stepper (setinhas)
+        if (window.StepperCodigo) {
+          const seq = window.StepperCodigo.seq();
+          if (seq != null && !window.StepperCodigo.estaBloqueado()) payload.seqEscolhida = seq;
+        }
         if (state.modo === 'inserir') {
           payload.contaTituloId = state.tituloAtual._id;
           await api('POST', '/subtitulos', payload);

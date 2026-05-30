@@ -79,69 +79,7 @@
         </tr>
       </thead>
       <tbody id="rz-tbody">
-        <tr>
-          <td><span class="rz-date">01/01/2026</span></td>
-          <td>Saldo inicial</td>
-          <td><span class="rz-doc">000</span></td>
-          <td class="right debito">—</td>
-          <td class="right credito">—</td>
-          <td class="right saldo">R$ 0,00</td>
-          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
-        </tr>
-        <tr>
-          <td><span class="rz-date">03/01/2026</span></td>
-          <td>Recebimento NF 1234 — Cliente ABC</td>
-          <td><span class="rz-doc">NF1234</span></td>
-          <td class="right debito">R$ 12.500,00</td>
-          <td class="right credito">—</td>
-          <td class="right saldo">R$ 12.500,00</td>
-          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
-        </tr>
-        <tr>
-          <td><span class="rz-date">05/01/2026</span></td>
-          <td>Pagamento fornecedor Komlog</td>
-          <td><span class="rz-doc">PAG001</span></td>
-          <td class="right debito">—</td>
-          <td class="right credito">R$ 3.200,00</td>
-          <td class="right saldo">R$ 9.300,00</td>
-          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
-        </tr>
-        <tr>
-          <td><span class="rz-date">10/01/2026</span></td>
-          <td>Recebimento duplicata 248/1</td>
-          <td><span class="rz-doc">DUP248</span></td>
-          <td class="right debito">R$ 8.750,00</td>
-          <td class="right credito">—</td>
-          <td class="right saldo">R$ 18.050,00</td>
-          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
-        </tr>
-        <tr>
-          <td><span class="rz-date">14/01/2026</span></td>
-          <td>Pagamento salários — Janeiro</td>
-          <td><span class="rz-doc">SAL001</span></td>
-          <td class="right debito">—</td>
-          <td class="right credito">R$ 15.400,00</td>
-          <td class="right saldo">R$ 2.650,00</td>
-          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
-        </tr>
-        <tr>
-          <td><span class="rz-date">20/01/2026</span></td>
-          <td>Recebimento Rinnai NF 599492</td>
-          <td><span class="rz-doc">NF599</span></td>
-          <td class="right debito">R$ 23.950,00</td>
-          <td class="right credito">—</td>
-          <td class="right saldo">R$ 26.600,00</td>
-          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
-        </tr>
-        <tr>
-          <td><span class="rz-date">25/01/2026</span></td>
-          <td>Pagamento IPTU — Imóvel 03/10</td>
-          <td><span class="rz-doc">IPTU03</span></td>
-          <td class="right debito">—</td>
-          <td class="right credito">R$ 20.150,00</td>
-          <td class="right saldo">R$ 6.450,00</td>
-          <td><div class="rz-row-actions"><button class="rz-icon-btn edit" title="Alterar"><i class="ti ti-edit"></i></button><button class="rz-icon-btn del" title="Deletar"><i class="ti ti-trash"></i></button></div></td>
-        </tr>
+        <tr><td colspan="7" style="text-align:center;padding:24px;color:#7a8a9a">Informe uma conta (ex: 1.01.002.014) e clique em Pesquisar.</td></tr>
       </tbody>
     </table>
   </div>
@@ -288,28 +226,4 @@
 .rz-btn.primary:hover { background: #124f8a; }
 </style>
 
-<script>
-(function(){
-  document.querySelectorAll('.rz-tipo').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      document.querySelectorAll('.rz-tipo').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-    });
-  });
-})();
-
-function filtrar(){
-  const conta = document.getElementById('filtro-conta').value;
-  const hist  = document.getElementById('filtro-hist').value.toLowerCase();
-  document.querySelectorAll('#rz-tbody tr').forEach(function(tr){
-    const txt = tr.textContent.toLowerCase();
-    const match = (!conta || txt.includes(conta.toLowerCase())) &&
-                  (!hist  || txt.includes(hist));
-    tr.style.display = match ? '' : 'none';
-  });
-}
-
-function novoLancamento(){
-  console.log('Abrir modal/página de novo lançamento');
-}
-</script>
+<script src="/js/financeiro/razao.js"></script>

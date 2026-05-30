@@ -10,6 +10,7 @@ const comprasApi   = require('./compras-api');
 const produtosApi  = require('./produtos-api');
 const pagamentoApi = require('./pagamento-api');
 const realizacaoApi = require('./realizacao-api');
+const razaoApi = require('./razao-api');
 
 /* ===== Telas ===== */
 router.get('/orcamento', (req, res) => {
@@ -35,5 +36,6 @@ router.use('/api/compras', comprasApi);
 router.use('/api/produtos', produtosApi);
 router.use('/api/pagamento', pagamentoApi);
 router.use('/api/realizacao', realizacaoApi);
+router.use('/api/razao', razaoApi);
 
 module.exports = router;

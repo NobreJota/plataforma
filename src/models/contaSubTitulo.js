@@ -12,10 +12,6 @@ const ContaSubTituloSchema = new Schema(  {
     codigo:            { type: String, required: true, trim: true, unique: true }, // "1.01.002.001"
     nome:              { type: String, required: true, trim: true }, // "Banestes/Armação"
     descricao:         { type: String, default: "" },
-    // Campos bancários (opcionais — preencher quando for conta bancária)
-    banco:   { type: String, default: "" }, // "Banestes"
-    agencia: { type: String, default: "" }, // "0042"
-    conta:   { type: String, default: "" }, // "123456-7"
 
     saldoInicial: { type: Number, default: 0 },
     // natureza contábil: devedora (ativo/despesa) | credora (passivo/receita)
@@ -29,13 +25,9 @@ const ContaSubTituloSchema = new Schema(  {
   },
   {
     timestamps: { createdAt: "criadoEm", updatedAt: "atualizadoEm" },
-    autoIndex: false,
   }
 );
 
-ContaSubTituloSchema.index({ codigo: 1 }, { unique: true });
-ContaSubTituloSchema.index({ contaTituloId: 1 });
-ContaSubTituloSchema.index({ codigoContaTitulo: 1 });
-ContaSubTituloSchema.index({ natureza: 1 });
-
-module.exports = mongoose.model("ContaSubTitulo", ContaSubTituloSchema);
+module.exports =
+  mongoose.models.ContaSubTitulo ||
+  mongoose.model("ContaSubTitulo", ContaSubTituloSchema, "contasubtitulos");

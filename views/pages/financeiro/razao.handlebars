@@ -1,0 +1,267 @@
+{{!-- views/pages/contabil/razao.handlebars --}}
+
+<div class="rz-page">
+
+  {{!-- ====== BARRA: GRUPOS (Ativo/Passivo/Despesas/Receitas) ====== --}}
+  <div class="rz-grupos">
+    <button class="rz-tab active" data-grupo="1">Ativo</button>
+    <button class="rz-tab" data-grupo="2">Passivo</button>
+    <button class="rz-tab" data-grupo="3">Despesas</button>
+    <button class="rz-tab" data-grupo="4">Receitas</button>
+  </div>
+
+  {{!-- ====== BARRA: COMBOS (Conta-título + Subtítulo + Busca) ====== --}}
+  <div class="rz-combos">
+    <div class="rz-col-left">
+      {{!-- combo Conta-título --}}
+      <div class="rz-combo" id="rz-combo-titulo" tabindex="0">
+        <span class="rz-combo-label">CONTA-TÍTULO</span>
+        <span class="rz-combo-value" id="rz-titulo-value">Selecione...</span>
+        <i class="rz-chev">▾</i>
+        <div class="rz-dropdown" id="rz-titulo-list" hidden></div>
+      </div>
+      {{!-- busca rápida --}}
+      <div class="rz-search">
+        <span class="rz-search-icon">🔍</span>
+        <input type="text" id="rz-busca" placeholder="busca rápida por nome" autocomplete="off">
+        <div class="rz-dropdown" id="rz-busca-list" hidden></div>
+      </div>
+    </div>
+
+    {{!-- combo Subtítulo --}}
+    <div class="rz-combo" id="rz-combo-subtitulo" tabindex="0">
+      <span class="rz-combo-label">SUBTÍTULO</span>
+      <span class="rz-combo-value" id="rz-sub-value">Selecione um título...</span>
+      <i class="rz-chev">▾</i>
+      <div class="rz-dropdown" id="rz-sub-list" hidden></div>
+    </div>
+  </div>
+
+  {{!-- ====== BARRA: PERÍODO + TOTAIS ====== --}}
+  <div class="rz-totais">
+    <span class="rz-periodo" id="rz-periodo" title="Clique para alterar">
+      📅 Período: <b id="rz-periodo-label">—</b>
+    </span>
+    <div class="rz-periodo-pop" id="rz-periodo-pop" hidden>
+      <label>De <input type="date" id="rz-de"></label>
+      <label>Até <input type="date" id="rz-ate"></label>
+      <button class="rz-btn" id="rz-periodo-aplicar">Aplicar</button>
+    </div>
+    <span class="rz-resumo">Débito: <b class="rz-debito" id="rz-tot-deb">0,00</b></span>
+    <span class="rz-resumo">Crédito: <b class="rz-credito" id="rz-tot-cre">0,00</b></span>
+    <span class="rz-resumo">Saldo: <b id="rz-tot-saldo">0,00</b></span>
+  </div>
+
+  {{!-- ====== GRADE DE LANÇAMENTOS ====== --}}
+  <div class="rz-grade">
+    <div class="rz-grade-head">
+      <div>CHAVE</div>
+      <div>DATA</div>
+      <div>C/PART.</div>
+      <div>HISTÓRICO</div>
+      <div class="rz-right">DÉBITO</div>
+      <div class="rz-right">CRÉDITO</div>
+      <div class="rz-right">SALDO</div>
+    </div>
+    <div id="rz-grade-body">
+      <div class="rz-empty">Selecione uma conta para ver os lançamentos.</div>
+    </div>
+  </div>
+
+</div>
+
+
+{{!-- ====== MODAL DA BOLETA (reaproveita o do fluxo) ====== --}}
+<div id="bol-modal" class="rz-modal" hidden>
+  <div class="rz-modal-card">
+    <header>
+      <h3 id="bol-titulo">Boleta</h3>
+      <button class="rz-modal-close" id="bol-close">×</button>
+    </header>
+    <div class="rz-modal-body" id="bol-body"></div>
+    <footer>
+      <button class="rz-btn" id="bol-fechar">Fechar</button>
+    </footer>
+  </div>
+</div>
+
+
+<style>
+  /* ====== ESTILO ====== */
+  .rz-page { font-family: system-ui, -apple-system, sans-serif; background: #fff; }
+
+  /* GRUPOS */
+  .rz-grupos {
+    display: flex; gap: 6px; padding: 10px 16px;
+    border-bottom: 1px solid #e5e7eb; background: #fff;
+  }
+  .rz-tab {
+    padding: 5px 14px; font-size: 12px; font-weight: 500;
+    border: 1px solid #d1d5db; border-radius: 6px; background: #fff;
+    color: #6b7280; cursor: pointer;
+  }
+  .rz-tab:hover { background: #f3f4f6; }
+  .rz-tab.active { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+
+  /* COMBOS */
+  .rz-combos {
+    display: flex; gap: 12px; padding: 10px 16px; align-items: flex-start;
+    background: #fafafa; border-bottom: 1px solid #e5e7eb;
+  }
+  .rz-col-left { display: flex; flex-direction: column; gap: 5px; }
+
+  .rz-combo {
+    position: relative; display: flex; align-items: center; gap: 8px;
+    border: 1px solid #d1d5db; border-radius: 6px; padding: 5px 10px;
+    background: #fff; font-size: 11px; cursor: pointer; min-width: 240px;
+    user-select: none; height: 28px;
+  }
+  .rz-combo:hover { border-color: #9ca3af; }
+  .rz-combo-label { color: #9ca3af; font-size: 9px; letter-spacing: 0.5px; }
+  .rz-combo-value { color: #111; font-weight: 500; font-family: ui-monospace, monospace; flex: 1; }
+  .rz-chev { margin-left: 4px; color: #6b7280; font-style: normal; }
+
+  .rz-search {
+    position: relative; display: flex; align-items: center; gap: 5px;
+    border: 1px solid #d1d5db; border-radius: 6px; padding: 3px 8px;
+    background: #fff; min-width: 240px; height: 22px;
+  }
+  .rz-search-icon { font-size: 11px; opacity: .5; }
+  .rz-search input {
+    border: 0; outline: 0; flex: 1; background: transparent;
+    font-size: 10px; padding: 0; height: 16px;
+  }
+
+  /* DROPDOWN (lista de opções) */
+  .rz-dropdown {
+    position: absolute; top: calc(100% + 2px); left: 0; right: 0; z-index: 50;
+    background: #fff; border: 1px solid #d1d5db; border-radius: 6px;
+    max-height: 320px; overflow-y: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    min-width: 280px;
+  }
+  .rz-dropdown .rz-opt {
+    padding: 6px 10px; font-size: 11px; font-family: ui-monospace, monospace;
+    cursor: pointer; border-bottom: 1px solid #f3f4f6;
+  }
+  .rz-dropdown .rz-opt:hover { background: #eff6ff; }
+  .rz-dropdown .rz-opt.selected { background: #1d4ed8; color: #fff; }
+  .rz-dropdown .rz-empty-opt { padding: 12px; text-align: center; color: #9ca3af; font-size: 11px; }
+
+  /* TOTAIS */
+  .rz-totais {
+    position: relative; display: flex; gap: 18px; align-items: center;
+    padding: 8px 16px; font-size: 11px; background: #fff;
+    border-bottom: 1px solid #e5e7eb; flex-wrap: wrap;
+  }
+  .rz-periodo {
+    display: inline-flex; align-items: center; gap: 4px; color: #6b7280;
+    cursor: pointer; border: 1px dashed #d1d5db; padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .rz-periodo:hover { background: #f9fafb; }
+  .rz-periodo b { color: #111; }
+  .rz-periodo-pop {
+    position: absolute; top: 36px; left: 16px; z-index: 60;
+    background: #fff; border: 1px solid #d1d5db; border-radius: 8px;
+    padding: 12px; display: flex; gap: 10px; align-items: flex-end;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  }
+  .rz-periodo-pop label {
+    display: flex; flex-direction: column; gap: 3px;
+    font-size: 10px; color: #6b7280;
+  }
+  .rz-periodo-pop input[type=date] {
+    padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 11px;
+  }
+  .rz-resumo { color: #6b7280; }
+  .rz-resumo b { color: #111; }
+  .rz-debito { color: #15803d !important; }
+  .rz-credito { color: #b91c1c !important; }
+
+  /* GRADE */
+  .rz-grade { background: #fff; }
+  .rz-grade-head {
+    display: grid; grid-template-columns: 70px 80px 100px 1fr 100px 100px 100px;
+    background: #1d4ed8; color: #fff; font-size: 10px;
+    padding: 7px 16px; gap: 8px; font-weight: 500;
+  }
+  .rz-row {
+    display: grid; grid-template-columns: 70px 80px 100px 1fr 100px 100px 100px;
+    padding: 7px 16px; gap: 8px; font-size: 11px;
+    font-family: ui-monospace, monospace; border-bottom: 1px solid #f3f4f6;
+  }
+  .rz-row:hover { background: #fafafa; }
+  .rz-row .rz-chave-link,
+  .rz-row .rz-cpart-link {
+    color: #1d4ed8; text-decoration: underline; cursor: pointer;
+  }
+  .rz-row .rz-hist { font-family: system-ui, sans-serif; }
+  .rz-right { text-align: right; }
+  .rz-row .rz-deb { color: #15803d; }
+  .rz-row .rz-cre { color: #b91c1c; }
+  .rz-row .rz-saldo-neg { color: #b91c1c; }
+  .rz-row .rz-saldo-pos { color: #15803d; }
+  .rz-row .rz-dash { color: #d1d5db; text-align: right; }
+
+  .rz-empty {
+    padding: 60px 16px; text-align: center; color: #9ca3af; font-size: 12px;
+  }
+
+  /* BUSCA */
+  .rz-busca-grupo {
+    padding: 4px 10px; font-size: 9px; color: #6b7280; font-weight: 600;
+    background: #f3f4f6; letter-spacing: 0.5px;
+  }
+
+  /* BOTÃO */
+  .rz-btn {
+    padding: 5px 14px; background: #1d4ed8; color: #fff;
+    border: 0; border-radius: 6px; cursor: pointer; font-size: 11px;
+  }
+  .rz-btn:hover { background: #1e40af; }
+
+  /* MODAL */
+  .rz-modal {
+    position: fixed; inset: 0; background: rgba(0,0,0,.45);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+  }
+  .rz-modal[hidden] { display: none; }
+  .rz-modal-card {
+    background: #fff; border-radius: 12px; width: 720px; max-width: 92vw;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  }
+  .rz-modal-card header {
+    background: #1d4ed8; color: #fff; padding: 12px 18px;
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0;
+  }
+  .rz-modal-card header h3 { margin: 0; font-size: 1.05rem; }
+  .rz-modal-close {
+    background: transparent; color: #fff; border: 0; font-size: 1.4rem;
+    cursor: pointer; line-height: 1;
+  }
+  .rz-modal-body { padding: 16px; }
+  .rz-modal-card footer {
+    padding: 10px 16px; display: flex; justify-content: flex-end;
+    border-top: 1px solid #eee;
+  }
+
+  /* Boleta */
+  .bol-secao { margin-bottom: 16px; }
+  .bol-secao h3 { font-size: 13px; margin: 0 0 6px; color: #1d4ed8; }
+  .bol-tabela { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .bol-tabela th, .bol-tabela td {
+    padding: 6px 8px; border-bottom: 1px solid #e5e7eb; text-align: left;
+  }
+  .bol-tabela th { background: #f3f4f6; font-size: 10px; color: #6b7280; }
+  .bol-tabela .v { text-align: right; font-family: ui-monospace, monospace; }
+  .bol-cod { font-family: ui-monospace, monospace; color: #1d4ed8; }
+  .bol-total {
+    text-align: right; font-weight: 600; color: #1d4ed8;
+    margin-top: 8px; font-family: ui-monospace, monospace;
+  }
+</style>
+
+<script src="/js/contabil/razao.js"></script>

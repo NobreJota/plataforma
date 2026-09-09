@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Loja Online</title>
+  <style>
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    /* Estilos do header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background-color: #333;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    /* Logo */
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    /* Links do menu (login, carrinho) */
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .menu a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    .menu a:hover {
+      text-decoration: underline;
+      color: #FFD700;
+    }
+
+    /* Ícones */
+    .menu .icon {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .menu .icon img {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        height: auto;
+        padding: 10px 20px;
+      }
+      .menu {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header>
+    <!-- Logomarca -->
+    <a href="#" class="logo">Minha Loja</a>
+
+    <!-- Itens do menu -->
+    <nav class="menu">
+      <!-- Login -->
+      <a href="#login">
+        <div class="icon">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/user.png" alt="Ícone de Login">
+          <span>Login</span>
+        </div>
+      </a>
+
+      <!-- Carrinho -->
+      <a href="#carrinho">
+        <div class="icon">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/shopping-cart.png" alt="Ícone de Carrinho">
+          <span>Carrinho</span>
+        </div>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Conteúdo da página -->
+  <main style="margin-top: 70px; padding: 20px;">
+    <h1>Bem-vindo à Minha Loja Online!</h1>
+    <p>Explore nossos produtos incríveis e aproveite nossas ofertas.</p>
+  </main>
+</body>
+</html>

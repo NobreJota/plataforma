@@ -1,0 +1,160 @@
+<div class="container-fluid pagina-assistente-lojista py-4">
+
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+      <h2 class="titulo-pagina mb-1">Assistente Inteligente do Lojista</h2>
+      <p class="subtitulo-pagina mb-0">
+        Gere textos, melhore descrições, crie títulos e receba ajuda para seus anúncios.
+      </p>
+    </div>
+
+    <div>
+      <a href="/empresa/produto_import_itens" class="btn btn-outline-secondary">
+        Voltar
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- COLUNA ESQUERDA -->
+    <div class="col-12 col-lg-4">
+
+      <div class="card card-assistente shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Ações rápidas</h5>
+
+          <div class="d-grid gap-2">
+            <button class="btn btn-assistente-acao" data-acao="descricao">
+              Gerar descrição do produto
+            </button>
+
+            <button class="btn btn-assistente-acao" data-acao="titulo">
+              Melhorar título
+            </button>
+
+            <button class="btn btn-assistente-acao" data-acao="anuncio">
+              Criar texto de anúncio
+            </button>
+
+            <button class="btn btn-assistente-acao" data-acao="beneficios">
+              Destacar benefícios
+            </button>
+
+            <button class="btn btn-assistente-acao" data-acao="palavras">
+              Sugerir palavras-chave
+            </button>
+
+            <button class="btn btn-assistente-acao" data-acao="correcao">
+              Corrigir ortografia
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-assistente shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Dados do produto</h5>
+
+          <div class="mb-3">
+            <label class="form-label">Nome do produto</label>
+            <input type="text" class="form-control" id="aiNomeProduto" value="{{produto.nome}}">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Código</label>
+            <input type="text" class="form-control" id="aiCodigoProduto" value="{{produto.codigo}}">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Marca</label>
+            <input type="text" class="form-control" id="aiMarcaProduto" value="{{produto.marca}}">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Categoria</label>
+            <input type="text" class="form-control" id="aiCategoriaProduto" value="{{produto.categoria}}">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Preço</label>
+            <input type="text" class="form-control" id="aiPrecoProduto" value="{{produto.preco}}">
+          </div>
+
+          <div class="mb-0">
+            <label class="form-label">Descrição atual</label>
+            <textarea class="form-control" id="aiDescricaoAtual" rows="6">{{produto.descricao}}</textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLUNA DIREITA -->
+    <div class="col-12 col-lg-8">
+
+      <div class="card card-assistente shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Pergunte à IA</h5>
+
+          <div class="mb-3">
+            <label class="form-label">O que você deseja gerar?</label>
+            <textarea
+              class="form-control"
+              id="promptAssistente"
+              rows="5"
+              placeholder="Ex.: Crie uma descrição atrativa para este produto destacando qualidade, durabilidade e custo-benefício."
+            ></textarea>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-primary" id="btnGerarResposta">
+              Gerar resposta
+            </button>
+
+            <button class="btn btn-outline-secondary" id="btnLimparPrompt">
+              Limpar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-assistente shadow-sm mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <h5 class="card-title mb-0">Resposta da IA</h5>
+
+            <div class="d-flex flex-wrap gap-2">
+              <button class="btn btn-outline-success btn-sm" id="btnCopiarResposta">
+                Copiar
+              </button>
+              <button class="btn btn-outline-primary btn-sm" id="btnUsarNaDescricao">
+                Usar na descrição
+              </button>
+              <button class="btn btn-outline-dark btn-sm" id="btnUsarNoTitulo">
+                Usar no título
+              </button>
+            </div>
+          </div>
+
+          <div id="boxRespostaIA" class="box-resposta-ia">
+            Sua resposta aparecerá aqui...
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-assistente shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Histórico rápido</h5>
+          <div id="historicoAssistente" class="historico-assistente">
+            <div class="historico-vazio">Nenhuma solicitação feita ainda.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="/css/empresa/assistente-lojista.css">
+<script src="/js/empresa/assistente-lojista.js"></script>

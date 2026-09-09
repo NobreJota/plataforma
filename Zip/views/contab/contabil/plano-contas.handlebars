@@ -1,0 +1,376 @@
+{{!-- views/pages/contabil/plano-contas.handlebars --}}
+
+<div class="contab-wrapper">
+
+  <div class="razao-header">
+    <h2>📘 Razão · Contabilidade</h2>
+    <button id="btn-abrir-grupos" class="btn-primary">⚙ Plano de Contas</button>
+  </div>
+
+
+  {{!-- ============ MODAL 1: Grupos (somente leitura) ============ --}}
+  <div id="modal-grupos" class="contab-modal" hidden>
+    <div class="contab-modal-card">
+      <header>
+        <h3>Grupos</h3>
+        <button class="contab-close" data-close="modal-grupos">×</button>
+      </header>
+      <div class="contab-grupos-list" id="lista-grupos"></div>
+    </div>
+  </div>
+
+
+  {{!-- ============ MODAL 2: SubGrupos ============ --}}
+  <div id="modal-subgrupos" class="contab-modal" hidden>
+    <div class="contab-modal-card large">
+      <header>
+        <h3 id="titulo-modal-subgrupos">SubGrupos</h3>
+        <button class="contab-close" data-close="modal-subgrupos">×</button>
+      </header>
+      <div class="contab-content">
+        <div class="contab-listbox" id="lista-subgrupos"></div>
+        <div class="contab-actions">
+          <button class="btn-action" data-acao="inserir-subgrupo">➕ Inserir</button>
+          <button class="btn-action" data-acao="alterar-subgrupo">✏ Alterar</button>
+          <button class="btn-action danger" data-acao="deletar-subgrupo">🗑 Deletar</button>
+          <button class="btn-action primary" data-acao="abrir-titulos">📂 Contas-título</button>
+        </div>
+      </div>
+      <footer>
+        <button class="btn-secondary" data-close="modal-subgrupos">Voltar</button>
+      </footer>
+    </div>
+  </div>
+
+
+  {{!-- ============ MODAL 3: Contas-título ============ --}}
+  <div id="modal-titulos" class="contab-modal" hidden>
+    <div class="contab-modal-card large">
+      <header>
+        <h3 id="titulo-modal-titulos">Contas-título</h3>
+        <button class="contab-close" data-close="modal-titulos">×</button>
+      </header>
+      <div class="contab-content">
+        <div class="contab-listbox" id="lista-titulos"></div>
+        <div class="contab-actions">
+          <button class="btn-action" data-acao="inserir-titulo">➕ Inserir</button>
+          <button class="btn-action" data-acao="alterar-titulo">✏ Alterar</button>
+          <button class="btn-action danger" data-acao="deletar-titulo">🗑 Deletar</button>
+          <button class="btn-action primary" data-acao="abrir-subtitulos">📂 Sub-títulos</button>
+        </div>
+      </div>
+      <footer>
+        <button class="btn-secondary" data-close="modal-titulos">Voltar</button>
+      </footer>
+    </div>
+  </div>
+
+
+  {{!-- ============ MODAL 4: Sub-títulos ============ --}}
+  <div id="modal-subtitulos" class="contab-modal" hidden>
+    <div class="contab-modal-card large">
+      <header>
+        <h3 id="titulo-modal-subtitulos">Sub-títulos</h3>
+        <button class="contab-close" data-close="modal-subtitulos">×</button>
+      </header>
+      <div class="contab-content">
+        <div class="contab-listbox" id="lista-subtitulos"></div>
+        <div class="contab-actions">
+          <button class="btn-action" data-acao="inserir-subtitulo">➕ Inserir</button>
+          <button class="btn-action" data-acao="alterar-subtitulo">✏ Alterar</button>
+          <button class="btn-action danger" data-acao="deletar-subtitulo">🗑 Deletar</button>
+        </div>
+      </div>
+      <footer>
+        <button class="btn-secondary" data-close="modal-subtitulos">Voltar</button>
+      </footer>
+    </div>
+  </div>
+
+
+  {{!-- ============ MODAL 5: Form de cadastro/edição (dinâmico) ============ --}}
+  <div id="modal-form" class="contab-modal" hidden>
+    <div class="contab-modal-card">
+      <header>
+        <h3 id="form-titulo">Cadastro</h3>
+        <button class="contab-close" data-close="modal-form">×</button>
+      </header>
+
+      <form id="form-conta" class="contab-form">
+        <div class="codigo-preview" id="codigo-preview" hidden>
+          Código: <strong id="codigo-valor">—</strong>
+          <small>(gerado automaticamente)</small>
+        </div>
+
+        <label>
+          <span>Nome <em>*</em></span>
+          <input type="text" id="f-nome" required placeholder="ex: Disponível">
+        </label>
+
+        <label>
+          <span>Descrição</span>
+          <input type="text" id="f-descricao" placeholder="opcional">
+        </label>
+
+        {{!-- Campos só de ContaTitulo --}}
+        <label id="f-aceita-wrapper" hidden class="contab-check">
+          <input type="checkbox" id="f-aceita">
+          <span>Aceita lançamento direto (conta analítica)</span>
+        </label>
+
+        {{!-- Campos só de ContaSubTitulo --}}
+        <div id="f-subtitulo-extras" hidden>
+
+          {{!-- ====== STEPPER DE CÓDIGO (setinhas que pulam ocupados) ====== --}}
+          <div id="stepper-codigo" class="stp-wrap" hidden>
+            <label class="stp-label">Código do subtítulo</label>
+            <div class="stp-row">
+              <span class="stp-base" id="stp-base">1.01.002.</span>
+              <span class="stp-seq" id="stp-seq">004</span>
+              <div class="stp-arrows">
+                <button type="button" class="stp-arrow" id="stp-up" title="Próximo disponível">▲</button>
+                <button type="button" class="stp-arrow" id="stp-down" title="Anterior disponível">▼</button>
+              </div>
+              <span class="stp-status" id="stp-status">✅ disponível</span>
+            </div>
+            <small class="stp-hint" id="stp-hint">As setinhas pulam os números já usados.</small>
+          </div>
+
+          <label>
+            <span>Natureza <em>*</em></span>
+            <select id="f-natureza" required>
+              <option value="">Selecione...</option>
+              <option value="devedora">Devedora (Ativo/Despesa)</option>
+              <option value="credora">Credora (Passivo/Receita)</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Saldo inicial</span>
+            <input type="number" id="f-saldo" step="0.01" value="0">
+          </label>
+        </div>
+
+        <div class="contab-form-actions">
+          <button type="button" class="btn-secondary" data-close="modal-form">Cancelar</button>
+          <button type="submit" class="btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+
+<style>
+  /* ========= ESTILO ========= */
+  .contab-wrapper { padding: 24px; }
+  .razao-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+
+  .btn-primary {
+    background:#1d4ed8; color:#fff; border:0; padding:10px 18px;
+    border-radius:8px; cursor:pointer; font-weight:600;
+  }
+  .btn-primary:hover { background:#1e40af; }
+  .btn-secondary {
+    background:#e5e7eb; color:#111; border:0; padding:10px 18px;
+    border-radius:8px; cursor:pointer; font-weight:600;
+  }
+  .btn-secondary:hover { background:#d1d5db; }
+
+  .contab-modal {
+    position:fixed; inset:0; background:rgba(0,0,0,.45);
+    display:flex; align-items:center; justify-content:center; z-index:1000;
+  }
+  .contab-modal[hidden] { display:none; }
+
+  /* Modal padrão (form): mais largo para aproveitar espaço lateral */
+  .contab-modal-card {
+    background:#fff; border-radius:12px; width:540px; max-width:92vw;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+    animation: pop .18s ease-out;
+  }
+  .contab-modal-card.large { width:680px; }
+  @keyframes pop { from{ transform:scale(.95); opacity:0;} to{transform:scale(1); opacity:1;} }
+
+  .contab-modal-card header {
+    background:#1d4ed8; color:#fff; padding:14px 18px;
+    display:flex; justify-content:space-between; align-items:center;
+    position: sticky; top: 0; z-index: 2;
+  }
+  .contab-modal-card header h3 { margin:0; font-size:1.05rem; }
+  .contab-close {
+    background:transparent; color:#fff; border:0; font-size:1.5rem;
+    cursor:pointer; line-height:1;
+  }
+  .contab-modal-card footer {
+    padding:12px 18px; display:flex; justify-content:flex-end; gap:8px;
+    border-top:1px solid #eee;
+  }
+
+  /* Lista de grupos (Modal 1) */
+  .contab-grupos-list { padding:18px; display:flex; flex-direction:column; gap:10px; }
+  .contab-grupos-list button {
+    background:#a855f7; color:#fff; border:0; padding:14px;
+    font-weight:700; font-size:1rem; border-radius:8px; cursor:pointer;
+    transition: background .15s;
+  }
+  .contab-grupos-list button:hover { background:#9333ea; }
+
+  /* Listbox + actions */
+  .contab-content { display:flex; gap:14px; padding:18px; }
+  .contab-listbox {
+    flex:1; min-height:280px; max-height:340px; overflow-y:auto;
+    border:1px solid #d1d5db; border-radius:8px; padding:6px; background:#f9fafb;
+  }
+  .contab-listbox .item {
+    padding:8px 10px; cursor:pointer; border-radius:6px;
+    font-family: ui-monospace, monospace; font-size:.92rem;
+  }
+  .contab-listbox .item:hover  { background:#e0e7ff; }
+  .contab-listbox .item.active { background:#1d4ed8; color:#fff; }
+  .contab-listbox .item .badge {
+    font-size:.7rem; padding:1px 6px; border-radius:10px; margin-left:6px;
+    background:#ddd; color:#333; font-family: system-ui;
+  }
+  .contab-listbox .item.active .badge { background:rgba(255,255,255,.25); color:#fff; }
+  .contab-listbox .empty { padding:20px; text-align:center; color:#6b7280; font-size:.9rem; }
+
+  .contab-actions { display:flex; flex-direction:column; gap:8px; min-width:170px; }
+  .btn-action {
+    background:#fff; border:1px solid #d1d5db; padding:10px 14px;
+    border-radius:8px; cursor:pointer; text-align:left; font-weight:500;
+  }
+  .btn-action:hover         { background:#f3f4f6; }
+  .btn-action.danger        { color:#b91c1c; }
+  .btn-action.danger:hover  { background:#fee2e2; }
+  .btn-action.primary       { background:#dbeafe; color:#1e40af; border-color:#93c5fd; }
+  .btn-action.primary:hover { background:#bfdbfe; }
+
+  /* Form (Modal 5) — campos mais compactos em altura */
+  .contab-form { padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .contab-form label { display:flex; flex-direction:column; gap:3px; font-size:.85rem; color:#374151; }
+  .contab-form label em { color:#dc2626; font-style:normal; }
+  .contab-form input, .contab-form select {
+    padding:6px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:.92rem;
+    background:#fff; height:32px;
+  }
+  .contab-form input:focus, .contab-form select:focus {
+    outline:2px solid #1d4ed8; border-color:#1d4ed8;
+  }
+  .contab-form-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:8px; }
+
+  .contab-check { flex-direction:row !important; align-items:center; gap:8px !important; }
+  .contab-check input { width:auto; height:auto; }
+
+  .codigo-preview {
+    background:#f0fdf4; border:1px solid #86efac; border-radius:8px;
+    padding:8px 12px; font-size:.88rem; color:#166534;
+  }
+  .codigo-preview small { color:#16a34a; margin-left:6px; }
+
+  /* ====== STEPPER DE CÓDIGO ====== */
+  .stp-wrap {
+    background:#eff6ff; border:1px solid #bfdbfe; border-radius:7px;
+    padding:8px 10px; margin-bottom:4px; display:flex; flex-direction:column; gap:3px;
+  }
+  .stp-label { font-size:.72rem; font-weight:600; color:#1e40af; }
+  .stp-row { display:flex; align-items:center; gap:6px; }
+  .stp-base { font-family:ui-monospace, monospace; font-size:.95rem; color:#374151; }
+  .stp-seq {
+    font-family:ui-monospace, monospace; font-size:1.05rem; font-weight:700;
+    color:#1d4ed8; background:#fff; border:1px solid #93c5fd; border-radius:5px;
+    padding:1px 9px; min-width:44px; text-align:center;
+  }
+  .stp-arrows { display:flex; flex-direction:column; gap:2px; }
+  .stp-arrow {
+    background:#1d4ed8; color:#fff; border:0; border-radius:4px;
+    width:26px; height:16px; cursor:pointer; font-size:.6rem; line-height:1;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .stp-arrow:hover { background:#1e40af; }
+  .stp-arrow:disabled { opacity:.4; cursor:default; }
+  .stp-status { font-size:.76rem; font-weight:600; color:#16a34a; margin-left:4px; }
+  .stp-status.bloqueado { color:#b45309; }
+  .stp-hint { font-size:.68rem; color:#6b7280; }
+</style>
+
+<script>
+/* ====================================================================
+   StepperCodigo — controla o seletor de código do subtítulo.
+   É chamado pelo contabil-plano.js (abrirInsercao / abrirEdicao / seq).
+   ==================================================================== */
+window.StepperCodigo = (function () {
+  'use strict';
+  const API = '/contab/api';
+  const $ = (s) => document.querySelector(s);
+  const st = { tituloId: null, seq: null, bloqueado: false };
+
+  async function get(url) {
+    const r = await fetch(url);
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.erro || 'Erro');
+    return d;
+  }
+  function mostrarSeq(seq) { st.seq = seq; const e=$('#stp-seq'); if(e) e.textContent = String(seq).padStart(3,'0'); }
+  function setBase(base)   { const e=$('#stp-base'); if(e) e.textContent = base + '.'; }
+  function statusLivre() {
+    const e=$('#stp-status'); if(!e) return;
+    e.textContent='✅ disponível'; e.className='stp-status';
+    $('#stp-hint').textContent='As setinhas pulam os números já usados.';
+    $('#stp-up').disabled=false; $('#stp-down').disabled=false; st.bloqueado=false;
+  }
+  function statusBloqueado(motivo) {
+    const e=$('#stp-status'); if(!e) return;
+    e.textContent='🔒 conta com movimento — número travado'; e.className='stp-status bloqueado';
+    $('#stp-hint').textContent = motivo ? ('Motivo: '+motivo+'.') : '';
+    $('#stp-up').disabled=true; $('#stp-down').disabled=true; st.bloqueado=true;
+  }
+
+  async function abrirInsercao(tituloId, codigoBase) {
+    st.tituloId = tituloId; st.bloqueado=false;
+    $('#stepper-codigo').hidden = false;
+    setBase(codigoBase);
+    try {
+      const d = await get(`${API}/subtitulos-codigos/${tituloId}`);
+      setBase(d.codigoBase); mostrarSeq(d.sugestao); statusLivre();
+    } catch(e){ console.warn('stepper:', e.message); }
+  }
+
+  async function abrirEdicao(subId, tituloId, codigoBase, seqAtual) {
+    st.tituloId = tituloId; st.bloqueado=false;
+    $('#stepper-codigo').hidden = false;
+    setBase(codigoBase); mostrarSeq(seqAtual); statusLivre();
+    try {
+      const mov = await get(`${API}/subtitulo/${subId}/movimento`);
+      if (mov.temMovimento) statusBloqueado(mov.motivo);
+    } catch(e){ /* deixa editável */ }
+  }
+
+  async function navegar(dir) {
+    if (st.bloqueado || !st.tituloId) return;
+    try {
+      const d = await get(`${API}/subtitulos-codigos/${st.tituloId}/navegar?atual=${st.seq}&dir=${dir}`);
+      mostrarSeq(d.seq); statusLivre();
+    } catch(e){ console.warn('stepper navegar:', e.message); }
+  }
+
+  function esconder(){ const w=$('#stepper-codigo'); if(w) w.hidden = true; }
+  function seq(){ return st.seq; }
+  function estaBloqueado(){ return st.bloqueado; }
+
+  // clique nas setinhas (closest pega botão ou texto interno)
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest && e.target.closest('#stp-up, #stp-down');
+    if (!btn) return;
+    e.preventDefault();
+    navegar(btn.id === 'stp-up' ? 'up' : 'down');
+  });
+
+  console.log('%c🔢 StepperCodigo pronto', 'background:#1d4ed8;color:#fff;padding:3px 8px;border-radius:4px');
+  return { abrirInsercao, abrirEdicao, navegar, esconder, seq, estaBloqueado };
+})();
+</script>
+
+<script src="/js/contabil/contabil-plano.js"></script>

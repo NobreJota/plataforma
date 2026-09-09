@@ -1,0 +1,74 @@
+Isso acontece porque você “monkey-patchou” o console.log (sua função mirrorConsole) e passou a chamar o orig.apply(console, a). Para o DevTools, o callsite agora é a linha onde o wrapper está definido (872), então todas as mensagens ficam com a mesma origem. Isso é esperado em qualquer override do console.
+
+Você tem três jeitos simples de resolver (ou contornar) isso:
+
+1) Pare de sobrescrever o console.log (recomendado)
+
+Se a ideia é só “espelhar” o que foi logado para um painel/textarea, não substitua o método original. Em vez disso, crie um logger separado:
+
+// NÃO mexa no console nativo.
+window.log = (...args) => {
+  console.log(...args);   // mantém o callsite correto
+  addLog(...args);        // sua função que grava no painel
+};
+
+// use window.log(...) quando quiser “espelhar”
+
+
+Assim, console.log continua apontando para a linha real.
+(Quando não for viável trocar todos os console.log(...) do código, veja as opções 2/3.)
+
+2) Continue sobrescrevendo, mas anexe a origem real ao final
+
+Se você precisa manter o patch, capture o stack e aponte o callsite original na mesma linha do log:
+
+(function mirrorConsole(){
+  const origLog   = console.log;
+  const origInfo  = console.info;
+  const origWarn  = console.warn;
+  const origError = console.error;
+
+  function withCaller(orig){
+    return function(...args){
+      // primeira linha é "Error", segunda é o wrapper, a terceira é o chamador real
+      const stack = (new Error()).stack?.split('\n')[2]?.trim() || '';
+      // adiciona a origem ao final do log
+      orig.apply(console, [...args, '\n%c↳ ' + stack, 'color:#999']);
+      // seu espelho
+      try { addLog(...args); } catch {}
+    };
+  }
+
+  console.log  = withCaller(origLog);
+  console.info = withCaller(origInfo);
+  console.warn = withCaller(origWarn);
+  console.error= withCaller(origError);
+})();
+
+
+O DevTools ainda mostrará “linha 872” como callsite primário (porque o wrapper foi chamado), mas você verá ao lado a seta ↳ com arquivo:linha:coluna do ponto real que logou. Na prática, isso resolve a dificuldade de encontrar a linha.
+
+3) Use Blackbox no DevTools para o arquivo do wrapper
+
+No Chrome DevTools:
+
+Settings → Ignore List (ou “Blackbox scripts”)
+
+Adicione o arquivo/trecho onde está a mirrorConsole (ex: **/mirror-console.js)
+
+Marque “Hide ignore-listed frames”.
+
+Para muitos casos, o DevTools passa a pular o frame do wrapper e mostrar o callsite do chamador. (Funciona melhor para stacks de erro; para logs simples, a opção 2 ainda é mais previsível.)
+
+Dicas finais
+
+Ative o patch apenas em dev:
+
+if (window.__DEV__) mirrorConsole();
+
+
+Se usar bundler, coloque a mirrorConsole em um arquivo próprio; isso ajuda a ignorá-lo no DevTools (blackbox) e deixa claro onde está o patch.
+
+Evite sobrescrever console.* em produção.
+
+Com qualquer uma das soluções acima você volta a enxergar a origem real dos logs sem ficar “preso” na linha 872.

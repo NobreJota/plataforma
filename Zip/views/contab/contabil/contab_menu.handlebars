@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contab · Menu</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f7fafc;
+      min-height: 100vh;
+    }
+    .header {
+      background: #1e3a5f; color: #fff;
+      padding: 14px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    }
+    .header .titulo {
+      font-size: 1.15rem; font-weight: 600;
+    }
+    .header .usuario {
+      font-size: 0.85rem; display: flex; align-items: center; gap: 14px;
+    }
+    .header .usuario a {
+      color: #cbd5e0; text-decoration: none; font-size: 0.8rem;
+      padding: 4px 10px; border: 1px solid #4a5568; border-radius: 4px;
+    }
+    .header .usuario a:hover { background: #2c5282; color: #fff; }
+
+    .container {
+      max-width: 720px;
+      margin: 60px auto;
+      padding: 0 24px;
+    }
+    .grid {
+      display: flex; flex-direction: column;
+      gap: 20px;
+    }
+    .btn-menu {
+      background: #718096; color: #fff;
+      border: 0; border-radius: 8px;
+      padding: 32px; font-size: 1.15rem; font-weight: 500;
+      cursor: pointer; text-align: center;
+      font-family: inherit;
+      text-decoration: none;
+      display: block;
+      transition: background 0.15s, transform 0.1s;
+      box-shadow: 0 2px 6px rgba(0,0,0,.08);
+    }
+    .btn-menu:hover {
+      background: #2c5282;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="titulo">📊 Área Contábil</div>
+    <div class="usuario">
+      <span>{{usuario.nome}}</span>
+      <a href="/usuariocontab/logout">Sair</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="grid">
+      <a href="/contab/fluxo"     class="btn-menu">fluxo de caixa</a>
+      <a href="/contab/orcamento" class="btn-menu">orçamento</a>
+      <a href="/contab/compras"   class="btn-menu">compras</a>
+      <a href="/contab/vendas"    class="btn-menu">vendas</a>
+    </div>
+  </div>
+</body>
+</html>

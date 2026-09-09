@@ -1,0 +1,55 @@
+{
+	"folders": [
+		{
+			"path": "../Modelos_page"
+		},
+		{
+			"path": "../Mongo_table"
+		},
+		{
+			"path": "../_modelochagpt"
+		},
+		{
+			"path": "../arquitetura"
+		},
+		{
+			"path": "../config"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../empresa"
+		},
+		{
+			"path": "../estruturas"
+		},
+		{
+			"path": "../helpers"
+		},
+		{
+			"path": "../img"
+		},
+		{
+			"path": "../node_modules"
+		},
+		{
+			"path": "../public"
+		},
+		{
+			"path": "../scripts"
+		},
+		{
+			"path": "../src"
+		},
+		{
+			"path": "../textos"
+		},
+		{
+			"path": "../uploads"
+		},
+		{
+			"path": "../views"
+		}
+	]
+}

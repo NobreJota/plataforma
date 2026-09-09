@@ -1,0 +1,50 @@
+<div class="container" style="max-width:420px;margin:40px auto;">
+  {{#if success_msg}}
+    <div class="alert alert-success">{{success_msg}}</div>
+  {{/if}}
+  {{#if error_msg}}
+    <div class="alert alert-danger">{{error_msg}}</div>
+  {{/if}}
+
+  <div class="card" style="padding:24px;">
+    <h2 class="mb-3">Cadastrar Administrador</h2>
+
+    <form action="/admin/register" method="POST" autocomplete="off">
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome</label>
+        <input id="nome" name="nome" type="text" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">E-mail</label>
+        <input id="email" name="email" type="email" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="senha" class="form-label">Senha</label>
+        <input id="senha" name="senha" type="password" class="form-control" minlength="6" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="senha2" class="form-label">Confirmar senha</label>
+        <input id="senha2" name="senha2" type="password" class="form-control" minlength="6" required />
+      </div>
+
+      <!-- Deixe este hidden para criar ADMIN direto -->
+      {{!-- <input type="hidden" name="admin" value="S" /> --}}
+
+      {{!-- Se preferir opcional, use: --}}
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="ehAdmin" name="admin" value="S" checked>
+        <label class="form-check-label" for="ehAdmin">Conceder permissão de administrador</label>
+      </div>
+      {{!-- --> --}}
+
+      <button type="submit" class="btn btn-primary w-100">Criar administrador</button>
+    </form>
+
+    <div class="text-center mt-3">
+      <a href="/usuarioloja/login">Voltar ao login</a>
+    </div>
+  </div>
+</div>

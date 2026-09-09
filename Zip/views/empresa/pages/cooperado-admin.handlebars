@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+{{!-- ESSE FORM É A ADMINISTRAÇÂO CENTRAL DOS PRODUTOS --}}
+{{!-- AQUI nós listamos os produtos,selecionamos fornecedores,editamos imagens,e importamos produtos --}}
+<html lang="pt-br">
+ <head>
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {{!-- cooperado-admin.handlebars --}}
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">       
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    {{!-- <link rel="stylesheet" href="httpsX://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> --}}
+    {{!-- <link rel="stylesheet" href="httpsX://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> --}}
+
+    {{!-- <link rel="stylesheet" href="/css/fontawesome.min.css"> --}}
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/js/empresa/produtoedit-imagem.js">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+    {{!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> --}}
+    {{!-- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> --}}
+    {{!-- <script src=""></script> --}}
+  <script defer>
+      window.colacerto = function () { }
+  </script>
+    <title>Rotaes  : Admin : lojista</title>
+  <style>
+      html, body{
+        height: 100%;
+        overflow: hidden;           /* <- trava scroll da página */
+        background: #ffffff;           /* opcional: cor de fundo padrão */
+      }
+
+      /* empurra a página para baixo da barra fixa */
+      body{ padding-top: var(--h-top); background:#111; }
+
+      /* ===== layout da faixa ===== */
+      :root{
+        /* será atualizado via JS para bater com a altura real do header */
+        --h-top: 56px;        /* altura do header fixo */
+        --gap: 12px;          /* respiro entre faixas */
+        --z-top: 1030;        /* acima do conteúdo */
+        --z-toolbar: 1020;    /* abaixo do header, acima do conteúdo */
+      }
+
+      /* ===== layout da faixa ===== */
+      :root{
+        --toolbar-pad-y: 2px;
+        --toolbar-pad-x: 16px;
+        --toolbar-gap:  8px;
+      }
+
+      /* ===== Header fixo ===== */
+      .topbar{
+          position: fixed; inset: 0 0 auto 0;
+          z-index: var(--z-top);
+          background: #0b2a3f;
+          color:#fff;
+          box-shadow: 0 2px 10px rgba(0,0,0,.2);
+          background-color:#fff;
+      }
+
+      .topbar .brand{ font-weight: 800; color:#fff; text-decoration:none; }
+      .topbar .brand .accent{ color:#47d1ff;margin-left: 12px; }
+
+      .painel-lista {
+         height: 100%;
+         display: flex;
+         flex-direction: column;
+      }  
+
+      /* ===== Faixa de filtros (painelLista) ===== */
+      .painel-lista{
+        position: sticky; top: var(--h-top); z-index: var(--z-toolbar);
+      }
+
+      .painel-lista .container-fluid{ padding-left: 0; padding-right: 16px; }
+
+      .painel-lista .pager-inline{
+        display:flex; justify-content:center; align-items:center;
+        padding: 6px 0; margin: 0;
+      }
+
+      .painel-lista .toolbar{
+        display: grid; gap: 10px; align-items: center;
+        grid-template-columns: 1fr 1fr;        /* mobile */
+      }
+
+      .pager-inline{
+          flex: 1 1 100%;
+          display:flex;
+          justify-content:center;          /* centraliza */
+          align-items:center;
+          gap: 8px;
+      }
+
+      
+      .label-pill{
+        font-weight:700; color:#b70000; margin-right:6px;
+      }
+      .toolbar .form-select{ min-height: 36px; }
+
+      /* ===== Conteúdo ===== */
+      .content-wrap{
+        height: calc(100vh - var(--h-top));
+        padding: 0;                 /* sem respiro que criava o “vão” */
+        background: transparent;    /* tira o fundo pink */
+      }
+
+      /* Cabeçalho da tabela grudado no topo do contêiner com scroll */
+      #divTable{ 
+        position: relative;
+        height: 100%;               /* ocupa toda a .content-wrap */
+        width: 98%;
+        margin: auto;
+        overflow-y: scroll;         /* <- barra SEMPRE visível */
+        overflow-x: auto;           /* horizontal quando necessário */
+        scrollbar-gutter: stable both-edges;  /* evita “pulo” de layout */
+        background-color: #100e0e;  /* seu fundo */
+        
+        };  
+      #divTable table{ border-collapse: separate; } /* evita glitches no sticky */
+
+      #divTable thead thead{ 
+        position: sticky;
+        top: 0;
+        z-index: 5;
+      }
+
+      #divTable thead th{
+        position: sticky;     /* alguns navegadores exigem no th também */
+        top: 0;
+        z-index: 6;
+        background: #dfb706;  /* mesma cor do cabeçalho da sua tabela */
+        /* opcional: separador visual quando rolar */
+        box-shadow: 0 2px 0 rgba(0,0,0,.06);
+      }
+
+      /* opcional: uma “sombrinha” para separar visualmente quando rolar */
+      #divTable thead {
+        box-shadow: 0 2px 0 rgba(0,0,0,.06);
+      }
+
+      .content-wrap{ padding-top: 0; }
+
+      /* ===== Responsivo ===== */
+      @media (min-width: 992px){
+            .painel-lista .toolbar{
+              grid-template-columns: 280px 1fr 280px;  /* desktop: Ativos | Fornecedores | Imagens */
+              gap: 16px;
+            }
+      }
+
+      /* nova linha da paginação dentro da faixa */
+      .painel-lista .pager{
+        padding-top: 6px; padding-bottom: 6px;
+        display: flex; justify-content: center; align-items: center;
+        background: transparent;    /* mantém amarelo da faixa */
+      }
+
+      /* elimina “vão” entre faixa e tabela */
+      .content-wrap{ padding-top: 8px; }
+      .table-wrap{ margin-top: 0 !important;}           /* se você usa um wrap da tabela */
+      .table{ margin-top: 0; }    
+</style>
+{{!-- ///////////////////////////////////////////////////////////////////////////// --}}
+<style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      position: relative;
+    }
+    
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+</style>
+<style>
+    .fixed-top{
+      background-color:#023c6c ;width: 100%;margin:auto;padding: 6px;height: 3vh;margin-top: .2vh;
+    }
+    
+    /* colunas dos filtros (já tínhamos left/center/right) */
+    .fx-col{ display:flex; align-items:center; gap:10px; }
+    .fx-left, .fx-right{ flex:0 0 280px; min-width:240px; }
+    .fx-center{ flex:1 1 520px; min-width:380px; }
+
+    /* ===== rótulos coloridos (na lateral de cada divisão) ===== */
+    .label-pill{
+      display:inline-block; font-weight:600; font-size:.95rem;
+      padding:2px 8px; border-radius:4px;
+      line-height:1.2; white-space:nowrap;
+    }
+
+    .lbl-ativos{ background:#ffdddd; color:#a30000; border:1px solid #ff6b6b; } /* vermelho claro */
+    .lbl-forn  { background:#dfe9ff; color:#0833a2; border:1px solid #4d74ff; } /* azul */
+    .lbl-img   { background:#fff1b3; color:#8a5a00; border:1px solid #ffd24d; } /* amarelo */
+
+    /*position: sticky;*/
+    .toolbar-sticky{
+      top: 3.5vh;                          /* gruda no topo */
+      z-index: 1020;                   /* acima do cabeçalho da tabela */
+      background: #b05404e6;             /* sua cor de fundo atual */
+      padding: var(--toolbar-pad-y) var(--toolbar-pad-x);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--toolbar-gap);
+      border-bottom: 1px solid rgba(0,0,0,.08);
+    }
+
+    .toolbar-sticky .form-select.form-select-sm{ height: calc(2rem + 2px); }
+
+    
+
+    .faixa-topo {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: #fff;
+        width: 80%;
+        margin: auto;
+      }
+
+      /* ===== opcional: borda laranja da área abaixo ===== */
+    .faixa-topo + .faixa-borda {
+      border:6px solid #ff8a00; border-top-left-radius:8px; border-top-right-radius:8px;
+      border-bottom:none; height:14px; margin:6px 0 12px;
+    }
+
+    .faixa-topo .form-select.form-select-sm{
+      height: calc(2rem + 2px);
+      padding: .25rem .5rem;
+    }
+
+    .faixa-topo{ 
+      padding: 2px 34px;                    /* mais espaço left/right dentro da faixa */
+      gap: 38px;                             /* espaço entre colunas um pouco menor */
+    }
+
+    #menuLateral {
+          width: auto;
+          height: 94vh;
+          position: absolute;
+          top: 3.8vh;
+          left: 0;
+          display: flex;
+          flex-direction: row;
+          z-index: 1000;
+          background-color: #fff;
+        }
+
+     /*    #menuLateral {
+      width: auto;
+      height: 94vh;
+      position: absolute;
+      top: 3.8vh;
+      left: 0;
+      display: flex;
+      flex-direction: row;
+      z-index: 1000;
+      background-color: #fff;
+    }*/
+
+        #H2menuLateral {
+          writing-mode: vertical-rl; /* vertical (de baixo para cima) */
+          transform: rotate(180deg); /* inverte para cima para baixo */
+          font-size: 1vw;
+          color: #13e236;
+          margin: 0;
+          text-align: center;
+          font-weight: 100;
+          margin-left: .4vw;
+        }
+
+    /*    #H2menuLateral {
+      writing-mode: vertical-rl; /* vertical (de baixo para cima) */
+     /* transform: rotate(180deg); /* inverte para cima para baixo */
+     /* font-size: 1vw;
+      color: #13e236;
+      margin: 0;
+      text-align: center;
+      font-weight: 100;
+      margin-left: .4vw;
+    }*/
+
+        #faixaVertical {
+          width: 2vw;
+          height: 98vh;
+          background-color: #295ee4;
+          z-index: 800;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+        }
+
+    /*    #faixaXVertical {
+      width: 2vw;
+      height: 96vh;
+      background-color: #295ee4;
+      z-index: 800;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }*/
+
+    #menulista {
+          width: 13vw;
+          height: 96vh;
+          background-color:transparent;
+          margin-top: 2px;
+          transition: margin-left 0.4s ease;
+          margin-left: -10vw; /* Escondido inicialmente */
+        }
+    
+        @media screen and (max-width: 600px) {
+          .topnav .search-container {
+            float: none;
+          }
+          .topnav a, .topnav input[type=text], .topnav .search-container button {
+            float: none;
+            display: block;
+            text-align: left;
+            width: 100%;
+            margin: 0;
+            padding: 14px;
+          }
+          .topnav input[type=text] {
+            border: 1px solid #ccc;  
+          }
+        }
+</style>
+<style>
+
+
+/* colunas dos filtros (já tínhamos left/center/right) */
+.fx-col{ display:flex; align-items:center; gap:10px; }
+.fx-left, .fx-right{ flex:0 0 280px; min-width:240px; }
+.fx-center{ flex:1 1 520px; min-width:380px; }
+
+/* ===== rótulos coloridos (na lateral de cada divisão) ===== */
+.label-pill{
+  display:inline-block; font-weight:600; font-size:.95rem;
+  padding:2px 8px; border-radius:4px;
+  line-height:1.2; white-space:nowrap;
+}
+
+.lbl-ativos{ background:#ffdddd; color:#a30000; border:1px solid #ff6b6b; } /* vermelho claro */
+.lbl-forn  { background:#dfe9ff; color:#0833a2; border:1px solid #4d74ff; } /* azul */
+.lbl-img   { background:#fff1b3; color:#8a5a00; border:1px solid #ffd24d; } /* amarelo */
+
+
+.faixa-topo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #fff;
+    width: 80%;
+    margin: auto;
+   }
+
+   /* ===== opcional: borda laranja da área abaixo ===== */
+.faixa-topo + .faixa-borda {
+  border:6px solid #ff8a00; border-top-left-radius:8px; border-top-right-radius:8px;
+  border-bottom:none; height:14px; margin:6px 0 12px;
+}
+
+.faixa-topo .form-select.form-select-sm{
+  height: calc(2rem + 2px);
+  padding: .25rem .5rem;
+}
+
+.faixa-topo{ 
+  padding: 2px 34px;                    /* mais espaço left/right dentro da faixa */
+  gap: 38px;                             /* espaço entre colunas um pouco menor */
+}
+
+
+
+    
+
+    
+
+#menulista {
+       width: 13vw;
+       height: 96vh;
+       background-color:red;
+       margin-top: 2px;
+       transition: margin-left 0.4s ease;
+       margin-left: -10vw; /* Escondido inicialmente */
+    }
+    
+@media screen and (max-width: 600px) {
+  .topnav .search-container {
+    float: none;
+  }
+  .topnav a, .topnav input[type=text], .topnav .search-container button {
+    float: none;
+    display: block;
+    text-align: left;
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+  }
+  .topnav input[type=text] {
+    border: 1px solid #ccc;  
+  }
+}
+</style>
+<style>
+    #main {
+        width: 100vw;
+        height: 100vh; /* altura para visualização completa */
+        background-color: #12d412; /* apenas para visualização */
+        position: relative; /* necessário para iniciar o contexto de empilhamento */
+        z-index: 1; /* camada inferior */
+    }
+
+    .grade{
+        width:calc(100vw - 2.5vw);
+        background-color: #ffffff;
+        color:#295ee4;
+        margin-top:0;
+        background: #e90cb9;
+        height: 80vh;
+        width: 99vw;"
+    }
+
+    .edit-row {
+       background-color: #f6990e; /* Amarelo claro */
+    }
+
+    .delete-row {
+       background-color: #c40303; /* Vermelho claro */
+    }
+
+    .btn-warning{
+       background-color: #b87004;
+       color:#fff;
+    }
+
+    .btn-danger{
+       background-color: #f90532;
+       color:#fff;
+    }
+
+    .selected-row {
+       background-color: unset;
+    }
+
+    td.alinhar-center,
+    th.alinhar-center {
+       text-align: center;
+    }
+
+    td.alinhar-direita,
+    th.alinhar-direita {
+       text-align: right !important;   /* força ficar à direita */
+       padding-right: 6px;             /* opcional: um espacinho da borda */
+       font-variant-numeric: tabular-nums; /* opcional: números alinhados bonitos */
+    }
+</style>
+<style>
+   /* ==============================
+   AJUSTES GERAIS DO EDIT MODAL
+   ============================== */
+    #editModal .modal-ajuste-body {
+      font-size: 13px;
+    }
+
+    /* linha com ID e CODIGO lado a lado */
+    #editModal .edit-top-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    #editModal .edit-top-col {
+      flex: 1;
+    }
+
+    /* caixinha do ID (laranja) */
+    #editModal .edit-id-box {
+      background: #c8cd32;
+      color: #fff;
+      border-radius: 4px;
+      padding: 3px 6px;
+      font-size: 12px;
+    }
+
+    /* input do código (amarelo) */
+
+
+    /* labels menores */
+    #editModal label {
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    /* inputs mais baixos e com fonte menor */
+    #editModal input.form-control,
+    #editModal select.form-control {
+      font-size: 13px;
+      padding: 2px 6px;
+      height: 28px;          /* altura menor */
+      line-height: 1.2;
+      background: #c8cd32;
+    }
+
+    /* espaço entre os campos gerados via JS */
+    #editModal .campo-modal {
+      margin-bottom: 6px;
+    }
+
+    #editModal .localizacao-bloco {
+      background: #f8f8ff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    #editModal .localizacao-bloco h6 {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    #editModal .localizacao-bloco label {
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    #editModal .localizacao-bloco select {
+      font-size: 13px;
+      padding: 2px 6px;
+      height: auto;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden; /* evita scroll duplo */
+    }
+
+    .content-wrap {
+      height: calc(100vh - 60px); /* ajuste se tiver header */
+      overflow: hidden;
+    }
+
+    .table-scroll {
+      flex: 1;               /* ocupa todo espaço disponível */
+      overflow-y: auto;      /* SCROLL AQUI */
+      overflow-x: hidden;
+    }
+
+    /* mantém o cabeçalho visível */
+    #tabelaProdutos thead {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: yellow;
+    }
+</style>
+<style>
+  /* ===== layout da faixa ===== */
+    /*:roxot{
+      --toolbar-pad-y: 2px;
+      --toolbar-pad-x: 16px;
+      --toolbar-gap:  8px;
+    }*/
+
+    
+   /* .bck-flex{
+      background-color:#ffffff;height: 100vh;
+    }*/
+</style>
+ </head>
+{{!-- ///////////////////////////////////////////////////////////////////////////// --}}
+<header id="id-header" class="topbar" style="">
+      <div class="container-fluid py-2" style="background: #b87004;width: 98%;margin-left: 2vw;">
+          <div class="d-flex align-items-center justify-content-between">
+            <a href="/" class="brand">
+              Loja : <span class="accent">{{lojista.marca}}</span>
+            </a>
+          </div>
+      </div>
+      {{!-- /////////////////////////////////////////////////////////////////////////// --}}
+      <section class="painel-lista" style="background-color: #a29f08;width: 98%;margin-left: 2vw;padding-left: 1vw;">
+            <div class="container-fluid py-2">
+                  <div class="toolbar">
+                      <!-- Ativos -->
+                      {{!-- d-flex align-items-center --}}
+                      <div class=" form-group mr-3">
+                        <label for="filtroAtivo" style="color:#fff;">Ativos:</label>
+                        <select id="filtroAtivo" class="form-select form-select-sm">
+                          <option value="S" {{#if (eq filtroAtivo "S")}}selected{{/if}}>Ativos</option>
+                          <option value="N" {{#if (eq filtroAtivo "N")}}selected{{/if}}>Inativos</option>
+                          <option value="T" {{#if (eq filtroAtivo "T")}}selected{{/if}}>Todos</option>
+                        </select>
+                      </div>
+                      <!-- Fornecedores -->
+                      <div class="form-group ml-4">
+                            <label for="filtroFornecedor" style="color:#fff;">Fornecedores:</label>
+                            <select id="filtroFornecedor" class="form-control form-control-sm">
+                              <option value="todos">Todos</option>
+                              {{#each fornecedores}}
+                                <option value="{{this._id}}"
+                                  {{#if (eq ../filtroFornecedor this._id)}}selected{{/if}}>
+                                  {{this.fantasia}} {{this.razao}}
+                                </option>
+                              {{/each}}
+                            </select>
+                      </div>
+                      <!-- Imagens -->
+                      <div class="d-flex align-items-center">
+                            <span class="label-pill">Imagens:</span>
+                            <select class="form-select form-select-sm">
+                              <option>Lista</option>
+                              <option>Grid</option>
+                              <option>Sem imagem</option>
+                            </select>
+                      </div>
+                      <!-- Paginação dentro da faixa amarela -->
+                     <nav class="pager-inline" aria-label="Paginação">
+                          <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+                              <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page=1">«</a>
+                            </li>
+                            <li class="page-item {{#if (eq page 1)}}disabled{{/if}}">
+                              <a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{dec page}}">‹</a>
+                            </li>
+
+                            {{#each pageNumbers}}
+                              <li class="page-item {{#if (eq this ../page)}}active{{/if}}">
+                                <a class="page-link" href="{{../basePath}}?{{../qsNoPage}}{{#if ../qsNoPage}}&{{/if}}page={{this}}">{{this}}</a>
+                              </li>
+                            {{/each}}
+
+                            <li class="page-item {{#if (eq page pages)}}disabled{{/if}}"><a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{inc page}}">›</a></li>
+                            <li class="page-item {{#if (eq page pages)}}disabled{{/if}}"><a class="page-link" href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{pages}}">»</a></li>
+                          </ul>
+                          <a class="btn btn-outline-primary btn-sm ms-2"
+                            href="{{basePath}}?{{qsNoPage}}{{#if qsNoPage}}&{{/if}}page={{inc page}}" style="color:#fff">
+                            Próximos 50 »
+                          </a>
+                     </nav>
+                  </div>
+            </div>
+      </section>
+</header>
+<body>
+<main id="id-main" class="content-wrap">
+  <div class="container-fluid" style="">
+    
+    <div id="div_Table" style="margin-bottom: 20px;background-color: #0b56e1;">
+        <div id="painelLista" class="grade" >
+            <input id="IddoLojista" type="text" name="loja_id" value="{{lojista._id}}" style="background-color: #19bc2a;display:none;">
+            <div id="divTable" class="table-scroll" style="width:99%;height:80vh;margin:auto;background-color:#100e0e;margin-bottom: 10px;overflow-y: auto;">
+                  <table id="tabelaProdutos" class="table  table-bordered" style="font-size: small;">
+                    <thead class="fixar-apos-paginacao" style="color: #df061f;width: 100%;font-size:x-small ;font-weight: 400;" >
+                    <tr style="background-color: #dfb706;">
+                      <th style="width: 0.35vw;" onclick="ordenarTabela(0)" style="">Ord</th>
+                      <th style="display: none;" >Id</th>
+                      <th onclick="ordenarTabela(2)" style="width: 1vw;">Código</th>
+                      <th onclick="ordenarTabela(3)" style="width: 13.4vw;">Descrição</th>
+                      <th onclick="ordenarTabela(4)" style="width: 13.8vw;">Complemento</th>
+                      <th onclick="ordenarTabela(5)" style="width: 5.5vw;">Refer</th>
+                      <th onclick="ordenarTabela(6)" style="width: 13vw;">Ativo</th>
+                      <th onclick="ordenarTabela(6)" style="width: 13vw;">Url</th>
+                      <th onclick="ordenarTabela(7)">Segmento</th>
+                      <th onclick="ordenarTabela(8)">Qte</th>
+                      <th onclick="ordenarTabela(9)">Custo</th>
+                      <th onclick="ordenarTabela(10)">Vista</th>
+                      <th onclick="ordenarTabela(11)">Prazo</th>
+                      <th >Ações</th>
+                    </tr>
+                </thead>
+                    <tbody id="produtoTable">
+                      {{#each produtos}}
+                      <tr data-id="{{_id}}"
+                          data-ativo="{{#if this.ativo}}Ativo{{else}}Inativo{{/if}}"
+                          >
+                        <td class="alinhar-center">{{inc @index}}</td>
+                        <td style="display: none">{{_id}}</td>
+                        <td>{{codigo}}</td>
+                        <td>{{descricao}}</td>
+                        <td>{{complete}}</td>
+                        <td>{{referencia}}</td>
+                        <td>{{ativo}}</td>
+                        <td class="alinhar-centro">
+                          {{#if pageurls.length}}
+                            {{!-- <a href="{{pageurls.[0]}}" target="_blank" title="Abrir imagem"> --}}
+                               <a href="{{pageurls.[0]}}" class="js-open-img"
+                              data-img="{{pageurls.[0]}}"
+                              data-title="{{descricao}}">
+                               <img 
+                                src="{{pageurls.[0]}}" 
+                                alt="Imagem do produto"
+                                style="
+                                  width: 48px;
+                                  height: 48px;
+                                  object-fit: contain;
+                                  border: 1px solid #ccc;
+                                  background: #fff;
+                                "
+                              >
+                            </a>
+                            
+                            {{!-- </a> --}}
+                            <span class="badge bg-secondary ms-2" title="Qtd. de imagens">
+                              {{pageurls.length}}
+                            </span>
+                          {{else}}
+                            <span style="color:#c00;font-weight:bold">sem imagem</span>
+                          {{/if}}
+                        </td>
+                        <td>
+                          {{#each localloja}}
+                              {{#each departamento}}
+                                <span class="departamento-click" data-index="{{@../index}}" style="font-weight: bold;color:red;">
+                                  {{nomeDepartamento}}
+                                </span>
+                              {{/each}}
+                            {{/each}}
+                        </td>
+                        <td class="alinhar-center">{{qte}}</td>
+                        <td class="alinhar-direita">{{formatarDecimal_precocusto}}</td>
+                        <td class="alinhar-direita">{{formatarDecimal_precovista}}</td>
+                        <td class="alinhar-direita">{{formatarDecimal_precoprazo}}</td>
+                        <td>
+                          <div style="display: flex;flex-direction: row;justify-content:space-around;gap: 4px; flex-wrap: wrap;background-color:transparent;">
+                            <select 
+                                    class="form-select form-select-sm" 
+                                    onchange="executarAcaoComDataset(this)" 
+                                    data-id="{{_id}}" 
+                                    data-descricao="{{descricao}}" 
+                                    data-fornecedor="{{fornecedor.razao}}"
+                                    data-departamento ="{{localloja.[0].departamento.[0].nomeDepartamento}}">
+                              <option value="" selected disabled>⋮</option>
+                              {{!-- <option value="" selected hidden>⋮</option> --}}
+                              <option value="vincular">🔗 Vincular</option>
+                              <option value="imagens">🖼️ Imagens</option>
+                              <option  value="editar">✏️ Editar</option>
+                              <option  value="deletar">🗑️ Deletar</option>
+                            </select>
+                            {{!-- // data-codigo="{{codigo}}"  --}}
+                          </div>
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+    </div>
+  </div>
+ 
+
+</main>
+<div id="menuLateral" class="" style="z-index: 2000;height: 100vh;background-color:#fff;margin-top:-0.6vh;">
+        <div id="menulista" style="width: 10vw; height: 98vh;display: flex; flex-direction: column; justify-content: space-around; transition: margin-left 0.4s ease;">
+          <!-- Conteúdo do menu -->
+          <div style="height: 15vh;background-color:#fff;">
+              <div id="imgStats" style="margin:10px 0;font-weight:600;">
+                  Total: <span id="stTotal">0</span> |
+                  Com imagem: <span id="stCom">0</span> |
+                  Sem imagem: <span id="stSem">0</span>
+              </div>
+          </div>
+          <div style="display: flex; flex-direction: column; justify-content: space-between;background-color:#fff;text-align: left;margin: auto;height: 30vh;padding-top: 5vh;">
+             <button style="border: block;background-color:#0833a2;color:#fff">
+               <a id="passa-cadastrofornec" href="" style="text-decoration: none;color:#ffffff;">Cadastro fornecedor</a>
+            </button>
+            {{!-- <div style="height: 1vh;"></div> --}}
+            {{!-- <div> --}}
+              <button style="border: block;background-color:#0833a2;width: 100%;">
+                {{!-- <h1 style="font-weight:200;color:#fff;font-size: small;"> --}}
+                <a id="passa-listafornec" href="/fornec/listafornec/:{{this._id}}" style="text-decoration: none;color:#ffffff;">Lista fornecedor</a>
+                {{!-- </h1> --}}
+              </button>
+            {{!-- </div> --}}
+            
+             <button class="btn btn-sm btn-primary"
+                    type="button"
+                    onclick="location.href='/cadproduto/cadastro?lojista={{lojista._id}}'">
+              Cadastro de produtos
+            </button>
+
+             <button class="btn btn-sm btn-primary"
+                    type="button"
+                    onclick="location.href='/importtabela/importacao/import-itens?lojista={{lojista._id}}'">
+              Importa tabela
+            </button>
+            {{!-- onclick="location.href='/importtabela/importacao/import-itens?lojista={{lojista._id}}'" --}}
+          </div>
+          <div style="height: 25vh;"></div>
+        </div>
+        <div id="faixaVertical" style="width: 2vw; height: 100vh; background-color:#240be1; display: flex; flex-direction: column; justify-content: space-around; z-index: 800;margin-top: -3vh;">
+          <h2 id="H2menuLateral" style="font-size: 1vw; text-align: end; color: #fff;">Menu lateral</h2>
+        </div>
+</div>
+<script>
+  //const Handlebars = require('handlebars');
+  // mede a altura real do header e atualiza a variável CSS --h-top
+  (function(){
+    const root = document.documentElement;
+    const header = document.querySelector('.topbar');
+    function setHeaderHeight(){
+      const h = header ? header.offsetHeight : 56;
+      root.style.setProperty('--h-top', h + 'px');
+    }
+    window.addEventListener('load', setHeaderHeight, {once:true});
+    window.addEventListener('resize', setHeaderHeight, {passive:true});
+    // se tiver fontes web que alteram a altura mais tarde:
+    document.fonts && document.fonts.addEventListener('loadingdone', setHeaderHeight);
+  })();
+
+  // de centavos (int) para string "83,43"
+//function formatarReaisDeCentavos(v) {
+//  if (v == null) return "";
+//  const num = Number(v) / 100;
+//  return num.toLocaleString('pt-BR', {
+//    minimumFractionDigits: 2,
+//    maximumFractionDigits: 2
+//  });
+//}
+
+// de string "83,43" para centavos (int)
+function parseReaisParaCentavos(str) {
+  if (!str) return null;
+  // tira pontos de milhar e troca vírgula por ponto
+  const limpo = String(str).replace(/\./g, '').replace(',', '.');
+  const num = Number(limpo);
+  if (Number.isNaN(num)) return null;
+  return Math.round(num * 100);
+}
+
+//Handlebars.registerHelper('formatarDecimal_precocusto', function (valor) {
+//  return formatarDecimalDeCentavos(this.precocusto);
+//});
+
+//Handlebars.registerHelper('formatarDecimal_precovista', function (valor) {
+//  return formatarDecimalDeCentavos(this.precovista);
+//});
+
+//Handlebars.registerHelper('formatarDecimal_precoprazo', function (valor) {
+//  return formatarDecimalDeCentavos(this.precoprazo);
+//});
+</script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+        <script src="/js/dashboard.js"></script>
+        {{!-- <script type="module" src="/js/modal-imagem.js"></script> --}}
+        {{!-- <script defer src="/js/modal-imagem.js"></script> --}}
+        <script src="/js/empresa/bcoimagem.js" defer></script>
+        <script src="/js/empresa/produtoEdit-imagem.js" defer></script>
+        <script src="/js/empresa/editecadastro.js" defer></script>
+        <script src="/js/empresa/similares.js" defer></script>
+        <script src="/js/rotinas/limpaSelect.js"></script>
+        <script src="/js/rotinas/produto-ImageModal.js"></script>
+        <script src="/js/rotinas/produto-VinculoModal.js"></script>
+        <script src="/js/rotinas/produto-editModal.js"></script>
+        <script src="/js/rotinas/produto-DeleteModal.js"></script>
+        <script src="/js/rotinas/AcaoComDataset.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Modal para edição -->
+<div id="editModal"
+  style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:9999;">
+  <div
+    style="background:#fff; width:50%; height:auto; padding:20px; border-radius:10px; box-shadow:0 5px 10px rgba(0,0,0,0.5);">
+    <h4>Editar Produto ??</h4>
+    <form id="editForm">
+      {{!-- <input type="text" id="editId" value=""> --}}
+      <div class="edit-top-row" >
+            <div class="edit-top-col">
+              <label for="editId">Id:</label>
+              <div id="edit-Id" class="edit-id-box"></div>
+            </div>
+
+            <div class="edit-top-col">
+              <label for="editCodigo">Código J:</label>
+              <input type="text" id="editCodigo" name="codigo" class="form-control " >
+            </div>
+      </div>
+      <div class="edit-top-row" >
+          <div class="edit-top-col" style="margin-bottom:10px;" >
+            <label for="editDescricao">Descrição:</label>
+            <input type="text" id="editDescricao" name="descricao" class="form-control">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;" >
+            <label for="editComplemento">Complemento:</label>
+            <input type="text" id="editComplemento" name="complemento" class="form-control">
+          </div>
+      </div>
+      <div class="edit-top-row" >
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Refer:</label>
+            <input type="text" id="editRefer" name="refer" class="form-control">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Quantidade:</label>
+            <input type="number" id="editQte" name="qte" class="form-control">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label for="editAtivo">Ativar:</label>
+            <select id="editAtivo" name="ativo" class="form-control">
+                <option value="ATUAL"></option>   <!-- será preenchido via JS -->
+                <option value="true">Ativar</option>
+                <option value="false">Desativar</option>
+            </select>
+          </div>
+      </div>
+      <div class="edit-top-row" >
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Preço Custo:</label>
+            <input type="text" step="any" id="editPrecoCusto" name="precocusto" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Preço Vista:</label>
+            <input type="textr" step="any" id="editPrecoVista" name="precovista" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Preço Prazo:</label>
+            <input type="text" step="any" id="editPrecoPrazo" name="precoprazo" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
+      </div>
+       <legend style="font-size:small;color:#4d74ff">Localização atual</legend>
+       <hr class="mt-3 mb-2">
+       <div class="edit-top-row" style="margin-top: -5px;background:transparent;height: 7vh;padding-top: 0px;">
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Departamento atual:</label>
+            <input type="text" step="any" id="departamento-atual" name="departamento-atual" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Setores:</label>
+            <input type="textr" step="any" id="setor-atual" name="setor-atual" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
+          <div class="edit-top-col" style="margin-bottom:10px;">
+            <label>Seções:</label>
+            <input type="text" step="any" id="secao-atual" name="secao-atual" class="form-control" style="background: #023c6c;color:#fff;">
+          </div>
+      </div>
+      <hr class="mt-3 mb-2">
+      <div class="localizacao-bloco mt-2 p-2 border rounded bg-light">
+        <h6 class="mb-2" style="font-weight:600;">Localização na loja</h6>
+
+        <div class="form-row">
+          <!-- DEPARTAMENTO -->
+          <div class="form-group col-md-4">
+            <label for="editDepartamento">Departamento</label>
+            <select
+              id="editDepartamento"
+              class="form-control form-control-sm"
+              data-campo="departamento"
+            >
+              <option value="">-- selecione --</option>
+              {{!-- departamentos deve vir do backend --}}
+              {{#each departamentos}}
+                <option value="{{this._id}}">
+                  {{this.nomeDepartamento}}
+                </option>
+              {{/each}}
+            </select>
+          </div>
+
+          <!-- SETOR -->
+          <div class="form-group col-md-4">
+            <label for="editSetor">Setor</label>
+            <select
+              id="editSetor"
+              class="form-control form-control-sm"
+              data-campo="setor"
+              disabled
+            >
+              <option value="">-- selecione --</option>
+            </select>
+          </div>
+
+          <!-- SEÇÃO (1 ou mais) -->
+          <div class="form-group col-md-4">
+            <label for="editSecao">Seção(s)</label>
+            <select
+              id="editSecao"
+              class="form-control form-control-sm"
+              data-campo="secao"
+              multiple
+              size="4"
+              disabled
+            >
+            </select>
+            <small class="form-text text-muted">
+              Use Ctrl (ou Shift) para selecionar mais de uma seção.
+            </small>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-secondary" onclick="closeEditModal(); window.limparMenuAcoes?.();">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Produto -->
+<div id="modalProdutoVinculo" class="modal fade"  tabindex="-1">
+   <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Produto ?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="conteudoModalProduto">
+        <!-- Conteúdo preenchido dinamicamente via JS -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-sm" style="background-color:#02662d;color:#ffffff" onclick="abrirModalBuscaSimilar('{{_id}}')">+ vincular</button>
+      </div>
+    </div>
+  </div>
+</div>
+{{!-- Busca Similares --}}
+<div id="areaBuscaSimilar" style="display:none; padding: 10px;">
+  <h6>Buscar Similar para Vincular</h6>
+  <input type="text" id="buscaSimilarInput1" placeholder="Buscar similar por código ou nome" class="form-control" onkeyup="buscarSimilares(baseId)">
+  <div id="resultadosSimilar1" style="margin-top:10px;"></div>
+</div>
+<!-- SEGUNDO BLOCO -->
+<div id="modalVinculo" class="modal fade"  tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Buscar Similar para Vincular</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input id="buscaSimilarInput2" type="text" class="form-control" style="background-color: #ffffff;color: #100e0e;" placeholder="Buscar similar por código ou nome" oninput="buscarSimilar()">
+        <div id="resultadosSimilar2" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para deletar -->
+<div id="deleteModal"
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,.5); justify-content:center; align-items:center; z-index:9999;">
+  <div style="background:#fff; width:420px; padding:16px; border-radius:10px; box-shadow:0 5px 10px rgba(0,0,0,.3);">
+    <h4>Remover produto</h4>
+    <p>Tem certeza que deseja excluir o produto abaixo?</p>
+
+    <div style="background:#f7f7f7; border:1px solid #eee; padding:8px; border-radius:6px;">
+      <div><strong>ID:</strong> <span id="delId"></span></div>
+      <div><strong>Descrição:</strong> <span id="delDesc"></span></div>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+      <button type="button" class="btn btn-secondary" onclick="closeDeleteModal();">Cancelar</button>
+      <button type="button" class="btn btn-danger" id="btnConfirmDelete">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<input id="miHiddenFile" type="file" accept="image/*" style="display:none" />
+<!-- Modal imagem (Bootstrap 5) -->
+<div class="modal fade" id="modalImg" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+
+      <div class="modal-header py-2">
+        <h6 class="modal-title" id="modalImgTitle">Imagem do produto</h6>
+
+        <!-- X do Bootstrap (perfeito) -->
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+
+        <!-- Se quiser o seu X grandão, use este e remova o btn-close acima:
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal" aria-label="Fechar"
+          style="font-size:22px;line-height:1;padding:2px 10px;border:1px solid #ddd;">&times;</button>
+        -->
+      </div>
+
+      <div class="modal-body text-center">
+        <img id="modalImgEl" src="" alt="Imagem"
+             style="max-width:100%;max-height:75vh;object-fit:contain;">
+        <div class="mt-2">
+          {{!-- <a id="modalImgLink" href="#" target="_blank" rel="noopener">Abrir em nova aba</a> --}}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function atualizarContadorImagens(){
+  const tbody = document.getElementById('produtoTable');
+  if(!tbody) return;
+
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const total = rows.length;
+
+  let com = 0;
+  let sem = 0;
+
+  rows.forEach(tr => {
+    // se tiver miniatura dentro da linha, conta como "com imagem"
+    const temImg = !!tr.querySelector('a.js-open-img[data-img]');
+    if(temImg) com++;
+    else sem++;
+  });
+
+  document.getElementById('stTotal').textContent = total;
+  document.getElementById('stCom').textContent   = com;
+  document.getElementById('stSem').textContent   = sem;
+}
+
+// roda quando carregar
+document.addEventListener('DOMContentLoaded', atualizarContadorImagens);
+
+// se você re-renderiza a tabela via JS, chame atualizarContadorImagens() depois do render
+</script>
+
+<script>
+document.addEventListener('click', function(ev){
+  const a = ev.target.closest('.js-open-img');
+  if(!a) return;
+
+  ev.preventDefault();
+
+  const url = a.dataset.img || '';
+  const titulo = a.dataset.titulo || 'Imagem do produto';
+
+  if(!url) return;
+
+  const imgEl  = document.getElementById('modalImgEl');
+  const linkEl = document.getElementById('modalImgLink');
+  const titleEl= document.getElementById('modalImgTitle');
+
+  imgEl.src = url;
+  //linkEl.href = url;
+  titleEl.textContent = titulo;
+
+  const modal = new bootstrap.Modal(document.getElementById('modalImg'));
+  modal.show();
+});
+</script>
+
+</body>
+</html>   
+<script>
+  window.SETORES_POR_DEPTO = {{{json setoresPorDepto}}};
+  window.SECOES_POR_SETOR  = {{{json secoesPorSetor}}};
+  //console.log(window.SETORES_POR_DEPTO)
+</script>
+<script>
+// === CORE DOS SLOTS (precisa existir ANTES de usar resetSlots) ===
+const MAX_SLOTS = 7;
+const slots         = Array(MAX_SLOTS).fill(null);
+const originalSlots = Array(MAX_SLOTS).fill(null);
+let nextIdx = 0;
+
+function firstEmpty(){ for (let i=0;i<MAX_SLOTS;i++) if (!slots[i]) return i; return -1; }
+function recompute(){ nextIdx = firstEmpty(); }
+
+function addEmptySlot(i){
+  const slot = document.createElement('div');
+  slot.className = 'mi-slot empty';
+  slot.dataset.idx = i;
+  slot.dataset.num = i + 1;
+  slot.addEventListener('click', () => {
+    if (!window.$hiddenFile) return;
+    $hiddenFile.dataset.targetIdx = String(i);
+    $hiddenFile.value = '';
+    $hiddenFile.click();
+  });
+  const btn = document.createElement('button');
+  btn.className = 'mi-remove'; btn.title = 'Remover'; btn.textContent = '×';
+  btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
+  slot.appendChild(btn);
+  if (window.$miSlotGrid) $miSlotGrid.appendChild(slot);
+  slots[i] = null;
+}
+
+function resetSlots(){
+  if (!window.$miSlotGrid) return;
+  $miSlotGrid.innerHTML = '';
+  for (let i = 0; i < MAX_SLOTS; i++) addEmptySlot(i);
+  recompute();
+}
+
+function fillSlot(i, src){
+  const slot = $miSlotGrid?.children?.[i];
+  if (!slot) return;
+  slot.className = 'mi-slot filled';
+  slot.innerHTML = '';
+  const img = document.createElement('img'); img.src = src; slot.appendChild(img);
+  const btn = document.createElement('button');
+  btn.className = 'mi-remove'; btn.title = 'Remover'; btn.textContent = '×';
+  btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
+  slot.appendChild(btn);
+  recompute();
+}
+
+function clearSlot(i){
+  const slot = $miSlotGrid?.children?.[i];
+  if (!slot) return;
+  slot.className = 'mi-slot empty';
+  slot.innerHTML = '';
+  const btn = document.createElement('button');
+  btn.className = 'mi-remove'; btn.title = 'Remover'; btn.textContent = '×';
+  btn.addEventListener('click', ev => { ev.stopPropagation(); clearSlot(i); });
+  slot.appendChild(btn);
+  slots[i] = null;
+  recompute();
+}
+</script>
+{{!-- <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><> --}}
+{{!-- MOSTRANDO E ESCONDENDO MENU LATERAL --}}
+<script>
+  console.log('100')
+      const faixa = document.getElementById("faixaVertical");
+      const menulista = document.getElementById("menulista");
+
+      faixa.addEventListener("click", function () {
+        const currentMargin = parseFloat(window.getComputedStyle(menulista).marginLeft);
+        const vwToPx = vw => (vw * window.innerWidth) / 100;
+
+        const abertoPX = 0;
+        const fechadoPX = -vwToPx(10); // Agora -13vw
+
+        if (Math.abs(currentMargin - fechadoPX) <= 1) {
+          menulista.style.marginLeft = '0vw'; // Abre
+        } else {
+          menulista.style.marginLeft = '-10vw'; // Fecha
+        }
+      });
+</script>
+{{!-- PEGA ID LOJISTA PARA LINK FORNEC CADASTRO --}}
+<script>
+  console.log('1241')
+  function pegaIdlojista(){
+    //console.log(' [ 377 pegaIdlojista]')
+    let n=document.getElementById("IddoLojista");
+    const link = document.getElementById("passa-cadastrofornec");
+    // Atualiza o href corretamente:
+    let lojistaId=n.value;
+    link.href = `/fornec/cadastro/${lojistaId}`;
+     const link1 = document.getElementById("passa-listafornec");
+    // Atualiza o href corretamente:
+    link1.href = `/fornec/listafornec/${lojistaId}`;
+  }
+
+   pegaIdlojista()
+</script>
+{{!-- ORDENAÇÃO DE COLUNS --}}
+<script>
+  
+let direcaoOrdenacao = [];
+
+function ordenarTabela(colunaIndex) {
+  const tabela = document.getElementById("tabelaProdutos");
+  const tbody = tabela.tBodies[0];
+  const linhas = Array.from(tbody.rows);
+
+  // Alternar direção
+  direcaoOrdenacao[colunaIndex] = !direcaoOrdenacao[colunaIndex];
+  const crescente = direcaoOrdenacao[colunaIndex];
+
+  linhas.sort((a, b) => {
+    const valA = a.cells[colunaIndex].innerText.trim();
+    const valB = b.cells[colunaIndex].innerText.trim();
+
+    const numA = parseFloat(valA.replace(",", "."));
+    const numB = parseFloat(valB.replace(",", "."));
+    const ambosNumeros = !isNaN(numA) && !isNaN(numB);
+
+    if (ambosNumeros) {
+      return crescente ? numA - numB : numB - numA;
+    } else {
+      return crescente
+        ? valA.localeCompare(valB)
+        : valB.localeCompare(valA);
+    }
+  });
+
+  linhas.forEach(row => tbody.appendChild(row));
+}
+</script>
+{{!-- buscaSimilarInput2 --}}
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  const inputBuscar = document.getElementById("buscaSimilarInput2");
+
+  if (!inputBuscar) return;
+
+  inputBuscar.addEventListener("input", async (e) => {
+    console.log(' [ 617 produtos .handlebars]')
+    const termo = e.target.value.trim();
+    if (termo.length < 2 || !produtoIdBaseSelecionado) return;
+
+    try {
+      const resposta = await fetch(`/simiproduto/buscar?termo=${encodeURIComponent(termo)}&baseId=${produtoIdBaseSelecionado}`);
+      const similares = await resposta.json();
+
+      const lista = document.getElementById("resultadosSimilar2");
+      lista.innerHTML = "";
+
+      if (!similares.length) {
+        lista.innerHTML = '<div class="text-muted">Nenhum resultado encontrado</div>';
+        return;
+      }
+
+      similares.forEach(sim => {
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+        li.innerHTML = `
+          <div>
+            <strong>${sim.codigo}</strong> - ${sim.descricao} (R$ ${parseFloat(sim.precovista?.$numberDecimal || '0').toFixed(2)})
+          </div>
+          <button class="btn btn-sm btn-success" onclick="vincularSimilar('${produtoIdBaseSelecionado}', '${sim._id}')">Vincular</button>
+        `;
+        lista.appendChild(li);
+      });
+    } catch (err) {
+      console.error("Erro na busca de similares:", err);
+    }
+  });
+});
+</script>
+{{!-- executarAcao(acao, id, codigo, descricao,fornecedor) --}}
+<script>
+  function executarAcao(acao, id, descricao,fornecedor,departamento) {
+        const row = document.querySelector(`[data-id='${id}']`);
+        const tableRows = document.querySelectorAll("tr");
+
+        // limpa os destaques anteriores
+        tableRows.forEach(r => r.classList.remove("edit-row", "delete-row"));
+        console.log('executarAcao');
+        const produtoId=id;
+        const departamentoNome=departamento;
+        switch (acao) {
+          case "vincular":
+            console.log(' [ 1057 ] executarAcao',id)
+            abrirModalVinculoProduto(id);
+            window.abrirModalVinculoProduto = abrirModalVinculoProduto;
+            break;
+          case "imagens":
+             window.location.href = `/editimagem/produto/${produtoId}/editar-imagens`;
+             break;
+          case "editar":
+            row?.classList.add("edit-row");
+            openEditModal(id);
+            window.openEditModal = openEditModal;
+            break;
+          case "deletar":
+             row?.classList.add("delete-row");
+             openDeleteModal(id, descricao);
+             window.openDeleteModal = openDeleteModal;
+             break;
+        }
+  }
+
+  //abrirModalImagens para selecionar a imaagem a ser gravada
+  //function abrirModalImagens(descricao, fornecedor, { produtoId, departamentoNome }) {
+  //      console.log(' [ 981 -abrirModalImagens]')
+  //      window.abrirXModalImagem({
+  //        produtoId,
+  //        descricao,
+  //        fornecedor,
+  //        departamento: departamentoNome
+  //      });
+  //}
+</script>
+{{!-- openCadastroModal --}}
+<script>
+  function openCadastroModal(){
+      document.getElementById("cadastroProdutoModal").style.display="block";
+  }  
+</script>
+{{!-- modalContent-SetorSecao --}}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const spans = document.querySelectorAll(".departamento-click");
+    const modal = document.getElementById("modalInfoSetorSecao");
+    const modalContent = document.getElementById("modalContentSetorSecao");
+
+    spans.forEach(span => {
+      span.addEventListener("click", function (e) {
+        const index = parseInt(this.dataset.index);
+
+        // Obtem dados do JS pré-carregado
+        const dados = window.todosSetoresSecoes?.[index];
+        if (!dados) return;
+
+        let html = "";
+        if (dados.setores?.length) {
+          html += "<strong>Setores:</strong><ul>";
+          dados.setores.forEach(s => html += `<li>${s}</li>`);
+          html += "</ul>";
+        }
+
+        if (dados.secoes?.length) {
+          html += "<strong>Seções:</strong><ul>";
+          dados.secoes.forEach(s => html += `<li>${s}</li>`);
+          html += "</ul>";
+        }
+
+        modalContent.innerHTML = html;
+
+        // Posiciona o modal
+        const rect = this.getBoundingClientRect();
+        modal.style.left = `${rect.left + window.scrollX}px`;
+        modal.style.top = `${rect.top + window.scrollY - modal.offsetHeight - 10}px`;
+        modal.style.display = "block";
+      });
+    });
+
+    // Esconde o modal ao clicar fora
+    //document.addEventListener("click", function (e) {
+    //  if (!e.target.classList.contains("departamento-click") &&
+    //      !modal.contains(e.target)) {
+    ///    modal.style.display = "none";
+    //  }
+    //});
+  });
+</script>
+ {{!-- FECHA CADASTROMODAL --}}
+<script>
+  function closeCadastroModal(){
+     document.getElementById("cadastroProdutoModal").style.display="none"
+  }
+</script>
+{{!-- ??????????????????????????????????????????????????????????????? --}}
+{{!-- /* ==== AÇÕES DO MENU (limpo + com logs) ==== */ --}}
+<script>
+(function(){
+  let __lastSelect = null;
+
+    function resetSelect(sel){
+    try { sel.value = ''; sel.selectedIndex = 0; sel.blur(); } catch(_){}
+  }
+
+      // Função chamada pelo onchange do <select>
+    function abrirModalImagem(produtoId,descricao,fornecedor,departamento){
+      
+        const id   =produtoId;
+        alert("olâ!")
+          // await fetch('/editimagem/buscaproduto/`${id}`')
+        
+    }
+
+    // 2) Demais ações -> delega para sua função antiga (já testada no projeto)
+    ///if (typeof window.executarAcao === 'function'){
+    //  console.log('[AÇÕES] delegando para executarAcao()');
+    //  window.executarAcao(acao, id, desc, forn, dept);
+    //} else {
+    //  consoleX.error('[AÇÕES] executarAcao não encontrado no window');
+   // }
+  //};
+
+  // Fechou modal? garante reset do último select, por via das dúvidas
+  //['modalImagem','modalVinculo','editModal'].forEach(id=>{
+  //  const el = document.getElementById(id);
+  //  if (!el) return;
+  //  el.addEventListener('click', e => { if (e.target === el && __lastSelect) resetSelect(__lastSelect); });
+  //  el.querySelectorAll('.btn-close, #miClose').forEach(b => b.addEventListener('click', ()=>{ if (__lastSelect) resetSelect(__lastSelect); }));
+  //});
+  //window.addEventListener('keydown', e => { if (e.key === 'Escape' && __lastSelect) resetSelect(__lastSelect); });
+})();
+</script>
+
+<script>
+  //window.executarAcaoXComDataset = function(sel){
+  //const acao   = sel.value;
+  //const dados  = {
+  //  id:           sel.dataset.id,
+  //  descricao:    sel.dataset.descricao,
+  //  fornecedor:   sel.dataset.fornecedor,
+  //  departamento: sel.dataset.departamento
+  //};
+
+  // guarda qual foi o último select usado (se algum modal fechar “por fora”)
+  //__lastActionSelect = sel;
+
+  // *** IMPORTANTE: reseta AGORA para permitir escolher a MESMA opção depois ***
+  //__resetActionSelect(sel);
+
+  // fecha qualquer dropdown custom (se você tiver) — inócuo se não existir
+  if (window.acoCloseMenus) window.acoCloseMenus();
+
+  
+  
+
+    // Dispara a ação escolhida (com logs e fallbacks)
+  //console.log('[acao]', acao, dados);
+
+  //if (acao === 'imagens'){
+    //console.log('ação Imagem')
+  //    if (typeof window.abriXrModalImagem === 'function'){
+  //      window.abrirXModalImagem({
+  //        produtoId:    dados.id,
+  //        descricao:    dados.descricao,
+  //        fornecedor:   dados.fornecedor,
+  //        departamento: dados.departamento
+  //        
+  //      })  
+        //return;
+        
+  //    }
+  //}
+  //else if (acao === 'vincular'){
+  //  console.log(' 1331')
+    // nome que você já usava
+  //  if (typeof window.abrirModalVinculoProduto === 'function'){
+  //    window.abrirModalVinculoProduto(dados.id);
+      //return;
+  //  }
+    // fallback para um possível nome alternativo
+  //  if (typeof window.abrirModalVinculo === 'function'){
+  //    window.abrirModalVinculo(dados);
+      //return;
+   // }
+  //}
+  //else if (acao === 'editar'){
+  //  console.log(' dados Id',dados.id)
+  //  if (typeof window.openEditModal === 'function'){
+  //    window.openEditModal(dados.id);
+      //return;
+  //  }
+  //  if (typeof window.abrirModalEditar === 'function'){
+  //    window.abrirModalEditar(dados);
+  //    //return;
+  //  }
+  //}
+  //else if (acao === 'deletar'){
+  //  if (typeof window.deleteProduct === 'function'){
+  //    window.deleteProduct(dados.id);
+      //return;
+  //  }
+  //  if (typeof window.excluirProduto === 'function'){
+   //   window.excluirProduto(dados.id);
+      //return;
+   // }
+  //}
+
+  // Fallback definitivo: usa a função antiga que você já tinha
+//  if (typeof window.executarAcao === 'function'){
+//    console.warn('[fallback executarAcao()]');
+//    window.executarAcao(acao, dados.id, dados.descricao, dados.fornecedor, dados.departamento);
+//  } else {
+//    console.error('Nenhuma função encontrada para a ação:', acao);
+ // }
+
+//};
+</script>
+<script>
+(() => {
+  window.executarAcaoComDataset = function(sel){
+    window.setLastActionSelect?.(sel);
+
+    const acao = (sel.value || '').trim();
+    const id   = sel.dataset.id;
+    const desc = sel.dataset.descricao || '';
+    const forn = sel.dataset.fornecedor || '';
+    const dept = sel.dataset.departamento || '';
+
+    if (acao === 'imagens' && typeof window.abrirModalImagem === 'function') {
+      window.abrirModalImagem({ produtoId: id, descricao: desc, fornecedor: forn, departamento: dept });
+      return;
+    }
+    if (typeof window.executarAcao === 'function') {
+      window.executarAcao(acao, id, desc, forn, dept);
+    }
+  };
+})();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const selAtivo      = document.getElementById('filtroAtivo');
+  const selFornecedor = document.getElementById('filtroFornecedor');
+
+  if (selAtivo) {
+    selAtivo.addEventListener('change', aplicarFiltros);
+  }
+  if (selFornecedor) {
+    selFornecedor.addEventListener('change', aplicarFiltros);
+  }
+
+  function aplicarFiltros() {
+    const ativo       = selAtivo ? selAtivo.value : 'S';
+    const fornecedor  = selFornecedor ? selFornecedor.value : 'todos';
+
+    const url = new URL(window.location.href);
+
+    // lojista já está na URL (não mexe)
+    // Ativo
+    if (ativo && ativo !== 'S') {
+      url.searchParams.set('ativo', ativo);
+    } else {
+      // se for "S", nem precisa mandar (é o default no backend)
+      url.searchParams.delete('ativo');
+    }
+
+    // Fornecedor
+    if (fornecedor && fornecedor !== 'todos') {
+      url.searchParams.set('fornecedor', fornecedor);
+    } else {
+      url.searchParams.delete('fornecedor');
+    }
+
+    // volta pra página 1 sempre que mudar filtro
+    url.searchParams.set('page', 1);
+
+    window.location.href = url.toString();
+  }
+});
+</script>
+<script>
+(function () {
+  function killOverlays() {
+    // 1) Backdrops do Bootstrap (modal/offcanvas)
+    document.querySelectorAll('.modal-backdrop, .offcanvas-backdrop').forEach(el => el.remove());
+
+    // 2) Classes do body que mantêm a tela travada
+    document.body.classList.remove('modal-open', 'offcanvas-backdrop', 'menu-open');
+
+    // 3) Overlays comuns do seu projeto (ajuste IDs se existirem)
+    ['menuOverlay', 'menuBackdrop', 'loadingOverlay', 'overlay', 'backdrop'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = 'none';
+        el.style.pointerEvents = 'none';
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', killOverlays);
+  window.addEventListener('pageshow', killOverlays); // quando volta do cache do navegador
+})();
+
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a');
+  if (!a) return;
+
+  // fecha qualquer modal/offcanvas aberto antes de trocar de página
+  document.querySelectorAll('.offcanvas.show, .modal.show').forEach(el => {
+    el.classList.remove('show');
+    el.style.display = 'none';
+  });
+
+  document.querySelectorAll('.modal-backdrop, .offcanvas-backdrop').forEach(el => el.remove());
+  document.body.classList.remove('modal-open');
+});
+
+</script>
+

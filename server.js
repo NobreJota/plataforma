@@ -368,11 +368,13 @@ const paineis     = require('./src/routes/central/paineis');
 const paineisSecoes = require('./src/routes/central/paineis-secoes');
 
 const home        = require('./src/routes/site/home');
-const usuarioloja = require('./src/routes/empresa/usuario');
 // usuarioloja/login entra na loja do cooperado emaildo cliente com senha do próprio 1212@gmail.com
-const contabil    =require('./src/routes/contabil/pages');
-const auxiliares = require('./src/routes/auxiliares/pages');
-const financeiro = require('./src/routes/financeiro/pages');
+const usuarioloja = require('./src/routes/empresa/usuario');
+const usuariocontab = require('./src/routes/contab/auxiliares/rotina');
+const opencontab = require('./src/routes/contab/auxiliares/rotina')
+const contabil    =require('./src/routes/contab/contabil/pages');
+const auxiliares = require('./src/routes/contab/auxiliares/pages');
+const financeiro = require('./src/routes/contab/financeiro/pages');
 const loja        = require('./src/routes/empresa/rotina');
 const produto     = require('./src/routes/empresa/produtos');
 const cadproduto  = require("./src/routes/empresa/produto_cadastro");
@@ -386,7 +388,7 @@ const auth = require('./src/routes/auth');
 
 
 
-app.use('/admin', admin);
+app.use('/admin-plata_forma', admin);
 app.use('/homeadmin', homeadmin);
 app.use('/central', central);
 app.use('/lojista', lojista);
@@ -398,6 +400,8 @@ app.use('/paineisecoes', paineisSecoes);
 
 app.use('/', home);
 app.use('/usuarioloja', usuarioloja);
+app.use('/usuariocontab', usuariocontab);
+app.use('/opencontab', opencontab);
 app.use('/contab', contabil);
 app.use('/aux', auxiliares);
 app.use('/financeiro',financeiro);

@@ -1,0 +1,14 @@
+<h2>{{produto.nome}}</h2>
+<p>Fornecedor: {{produto.fornecedor.nome}}</p>
+<!-- ... demais detalhes ... -->
+
+{{#if produto.similares.length}}
+  <h3>Produtos semelhantes:</h3>
+  <ul>
+    {{#each produto.similares}}
+      <li>
+        <a href="/produtos/{{this._id}}">{{this.nome}}</a> – {{this.fornecedor.nome}}
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}

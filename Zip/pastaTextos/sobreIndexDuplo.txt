@@ -1,0 +1,79 @@
+Esses avisos do Mongoose significam: o mesmo índice está sendo declarado duas vezes no schema – normalmente porque você:
+
+colocou index: true em um campo e também declarou schema.index({ campo: 1 }), ou
+
+registrou o mesmo model mais de uma vez (hot-reload / require duplicado) e o código que adiciona índices roda de novo.
+
+Os nomes que aparecem no log (loja_id, imagemUrl, codigoId, key, produtoNome, fornecedor, departamento) são exatamente os campos com índice duplicado.
+
+Como resolver
+1) Deixe a definição do índice em um único lugar
+
+No schema, escolha uma forma:
+
+Opção A – no campo
+
+const schema = new Schema({
+  imagemUrl: { type: String, index: true }, // ok
+  // ...
+});
+// NÃO repetir: schema.index({ imagemUrl: 1 });
+
+
+Opção B – no schema.index()
+
+const schema = new Schema({
+  imagemUrl: { type: String },             // sem index aqui
+  // ...
+});
+schema.index({ imagemUrl: 1 });            // ok
+
+
+Faça isso para todos os campos citados no warning.
+
+2) Garanta que o model não é registrado duas vezes
+
+Em ambientes com reload ou quando o arquivo do model pode ser importado mais de uma vez:
+
+module.exports = mongoose.models.Mconstrucao
+  || mongoose.model('Mconstrucao', schema);
+
+
+Repita esse padrão para todos os models.
+
+3) (Opcional) Desative criação automática de índices em produção
+
+Evita custo e ruído em produção:
+
+schema.set('autoIndex', false);
+// ou na conexão
+mongoose.connect(uri, { autoIndex: false });
+
+
+Em dev, deixe autoIndex: true para o Mongoose sincronizar os índices.
+
+4) Se quiser limpar índices no banco
+
+Os avisos são de definição duplicada, não de índice duplicado no MongoDB.
+Mesmo assim, para conferir/limpar:
+
+// listar
+db.suaColecao.getIndexes()
+
+// remover um específico
+db.suaColecao.dropIndex("imagemUrl_1")
+
+// (cautela!) remover todos e recriar ao subir a app
+db.suaColecao.dropIndexes()
+
+Checklist rápido para o seu projeto
+
+ Remover index:true de campos que também têm schema.index() (ou vice-versa) para: loja_id, imagemUrl, codigoId, key, produtoNome, fornecedor, departamento.
+
+ Usar mongoose.models.Nome || mongoose.model(...) em todos os models.
+
+ (Prod) autoIndex: false.
+
+ Se necessário, revisar índices no Mongo com getIndexes() / dropIndex().
+
+Depois dessas alterações e um restart do servidor, os warnings somem. ✅

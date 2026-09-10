@@ -13,11 +13,11 @@ const EnderecoSchema = new mongoose.Schema({
 }, { _id: false });
 
 const ClienteSchema = new mongoose.Schema({
-  codigo: { type: String, required: true, trim: true, unique: true },
+  codigo: { type: String, required: true, trim: true },
   tipo:   { type: String, required: true, enum: ['PF', 'PJ'] },
   nome:   { type: String, required: true, trim: true },
   cpfCnpj: {
-    type: String, required: true, unique: true,
+    type: String, required: true,
     set: v => apenasNumeros(v)
   },
   email:       { type: String, trim: true, default: '', lowercase: true },
@@ -50,5 +50,7 @@ const ClienteSchema = new mongoose.Schema({
 
 ClienteSchema.index({ nome: 1 });
 ClienteSchema.index({ ativo: 1 });
+ClienteSchema.index({ lojistaId: 1, codigo: 1 },  { unique: true });
+ClienteSchema.index({ lojistaId: 1, cpfCnpj: 1 }, { unique: true });
 
 module.exports = mongoose.model('Cliente', ClienteSchema);

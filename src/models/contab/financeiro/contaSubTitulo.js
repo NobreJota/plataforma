@@ -9,7 +9,7 @@ const ContaSubTituloSchema = new Schema(  {
       // index: true,
     },
     codigoContaTitulo: { type: String, required: true, trim: true }, // "1.01.002"
-    codigo:            { type: String, required: true, trim: true, unique: true }, // "1.01.002.001"
+    codigo:            { type: String, required: true, trim: true }, // "1.01.002.001"
     nome:              { type: String, required: true, trim: true }, // "Banestes/Armação"
     descricao:         { type: String, default: "" },
 
@@ -37,6 +37,8 @@ const ContaSubTituloSchema = new Schema(  {
     timestamps: { createdAt: "criadoEm", updatedAt: "atualizadoEm" },
   }
 );
+
+ContaSubTituloSchema.index({ lojistaId: 1, codigo: 1 }, { unique: true });
 
 module.exports =
   mongoose.models.ContaSubTitulo ||

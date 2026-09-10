@@ -371,7 +371,7 @@ const home        = require('./src/routes/site/home');
 // usuarioloja/login entra na loja do cooperado emaildo cliente com senha do próprio 1212@gmail.com
 const usuarioloja = require('./src/routes/empresa/usuario');
 const usuariocontab = require('./src/routes/contab/auxiliares/rotina');
-const opencontab = require('./src/routes/contab/auxiliares/rotina')
+const { ensureContab } = require('./src/routes/contab/auxiliares/rotina');
 const contabil    =require('./src/routes/contab/contabil/pages');
 const auxiliares = require('./src/routes/contab/auxiliares/pages');
 const financeiro = require('./src/routes/contab/financeiro/pages');
@@ -401,10 +401,10 @@ app.use('/paineisecoes', paineisSecoes);
 app.use('/', home);
 app.use('/usuarioloja', usuarioloja);
 app.use('/usuariocontab', usuariocontab);
-app.use('/opencontab', opencontab);
-app.use('/contab', contabil);
-app.use('/aux', auxiliares);
-app.use('/financeiro',financeiro);
+//app.use('/opencontab', opencontab);
+app.use('/contab',ensureContab, contabil);
+app.use('/aux',ensureContab, auxiliares);
+app.use('/financeiro',ensureContab,financeiro);
 app.use('/loja', loja);
 app.use('/produto', produto);
 app.use('/cadproduto',cadproduto);

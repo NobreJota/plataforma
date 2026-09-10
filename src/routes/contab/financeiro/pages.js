@@ -14,19 +14,19 @@ const razaoApi = require('./razao-api');
 
 /* ===== Telas ===== */
 router.get('/orcamento', (req, res) => {
-  res.render('pages/financeiro/orcamento', { layout: false, activeMenu: 'financeiro' });
+  res.render('contab/financeiro/orcamento', { layout: false, activeMenu: 'financeiro' });
 });
 
 router.get('/fluxo', (req, res) => {
-  res.render('pages/financeiro/fluxo', { layout: false, activeMenu: 'financeiro' });
+  res.render('contab/financeiro/fluxo', { layout: false, activeMenu: 'financeiro' });
 });
 
 router.get('/compras', (req, res) => {
-  res.render('pages/financeiro/compras', { layout: false, activeMenu: 'compra' });
+  res.render('contab/financeiro/compras', { layout: false, activeMenu: 'compra' });
 });
 
 router.get('/produtos', (req, res) => {
-  res.render('pages/financeiro/produtos', { layout: false, activeMenu: 'produto' });
+  res.render('contab/financeiro/produtos', { layout: false, activeMenu: 'produto' });
 });
 
 /* ===== APIs ===== */

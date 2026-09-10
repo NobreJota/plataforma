@@ -10,8 +10,7 @@ const OrcamentoContaSchema = new mongoose.Schema({
   contaSubTitulo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ContaSubTitulo',
-    required: true,
-    unique: true   // cada subtítulo só pode ser vinculado uma vez
+    required: true
   },
 
   // Snapshot dos dados (evita lookup constante + histórico)
@@ -42,5 +41,6 @@ const OrcamentoContaSchema = new mongoose.Schema({
 OrcamentoContaSchema.index({ codigo: 1 });
 OrcamentoContaSchema.index({ codigoContaTitulo: 1 });
 OrcamentoContaSchema.index({ ativo: 1 });
+OrcamentoContaSchema.index({ lojistaId: 1, contaSubTitulo: 1 }, { unique: true });
 
 module.exports = mongoose.model('OrcamentoConta', OrcamentoContaSchema);

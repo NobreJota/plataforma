@@ -1,4 +1,4 @@
-/* public/js/contabil/contabil-plano.js
+/* public/js/contab/contabil/contabil-plano.js
  * Plano de Contas - 4 níveis: Grupo → SubGrupo → ContaTitulo → ContaSubTitulo
  * API: /contab/api/...
  */
@@ -18,18 +18,165 @@
     nivel:          null
   };
 
-  const abrir  = (id) => $('#' + id).hidden = false;
-  const fechar = (id) => $('#' + id).hidden = true;
+  const abrir = (id) => $('#' + id).hidden = false;
+
+  // Ao fechar um modal, reabre o de trás em vez de deixar a tela em branco.
+  // Vale tanto para o botão "Voltar" quanto para o X do cabeçalho.
+  const PAI = {
+    'modal-subgrupos': () => abrirGrupos()
+  };
+
+  function fechar(id) {
+    $('#' + id).hidden = true;
+    const voltarPara = PAI[id];
+    if (voltarPara) voltarPara();
+  }
 
   document.addEventListener('click', (e) => {
     const id = e.target.dataset.close;
     if (id) fechar(id);
   });
 
+  /* ============================================================
+     CAIXAS DE DIÁLOGO PRÓPRIAS
+     Substituem confirm() e alert() do navegador. As nativas mostram
+     "localhost:5000 diz" no topo e não aceitam estilo nenhum.
+     Tudo é montado aqui no JS de propósito: assim o handlebars não precisa
+     de marcação nova e estas funções servem em qualquer tela do contab.
+     ============================================================ */
+  (function injetarEstiloDialogo() {
+    if (document.getElementById('cx-estilo')) return;
+    const st = document.createElement('style');
+    st.id = 'cx-estilo';
+    st.textContent = `
+      .cx-fundo { position:fixed; inset:0; background:rgba(15,23,42,.55);
+        display:flex; align-items:center; justify-content:center; z-index:9999; }
+      .cx-caixa { background:#fff; border-radius:8px; width:min(420px,92vw);
+        box-shadow:0 18px 45px rgba(0,0,0,.3); overflow:hidden;
+        font-family:inherit; animation:cx-entra .12s ease-out; }
+      @keyframes cx-entra { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
+      .cx-topo { background:#1d4ed8; color:#fff; padding:12px 18px;
+        font-weight:600; font-size:15px; }
+      .cx-topo.cx-perigo { background:#b91c1c; }
+      .cx-corpo { padding:20px 18px; color:#1e293b; font-size:14px;
+        line-height:1.5; white-space:pre-line; }
+      .cx-pe { padding:12px 18px 16px; display:flex; gap:10px; justify-content:flex-end; }
+      .cx-btn { padding:8px 18px; border-radius:6px; border:1px solid #cbd5e1;
+        background:#fff; cursor:pointer; font-size:14px; font-family:inherit; }
+      .cx-btn:hover { background:#f1f5f9; }
+      .cx-btn-ok { background:#1d4ed8; border-color:#1d4ed8; color:#fff; }
+      .cx-btn-ok:hover { background:#1e40af; }
+      .cx-btn-perigo { background:#b91c1c; border-color:#b91c1c; color:#fff; }
+      .cx-btn-perigo:hover { background:#991b1b; }
+    `;
+    document.head.appendChild(st);
+  })();
+
+  function montarDialogo({ titulo, mensagem, okTexto, cancelar, perigo }) {
+    return new Promise((resolve) => {
+      const fundo = document.createElement('div');
+      fundo.className = 'cx-fundo';
+      fundo.innerHTML = `
+        <div class="cx-caixa" role="dialog" aria-modal="true">
+          <div class="cx-topo ${perigo ? 'cx-perigo' : ''}">${titulo}</div>
+          <div class="cx-corpo"></div>
+          <div class="cx-pe">
+            ${cancelar ? '<button class="cx-btn" data-r="0">Cancelar</button>' : ''}
+            <button class="cx-btn ${perigo ? 'cx-btn-perigo' : 'cx-btn-ok'}" data-r="1">${okTexto}</button>
+          </div>
+        </div>`;
+      // textContent, e não innerHTML: o nome da conta vem do banco e não deve
+      // ser interpretado como HTML.
+      fundo.querySelector('.cx-corpo').textContent = mensagem;
+
+      function encerrar(valor) {
+        document.removeEventListener('keydown', aoTeclar);
+        fundo.remove();
+        resolve(valor);
+      }
+      function aoTeclar(ev) {
+        if (ev.key === 'Escape') encerrar(false);
+        if (ev.key === 'Enter')  encerrar(true);
+      }
+
+      fundo.addEventListener('click', (ev) => {
+        const r = ev.target.dataset.r;
+        if (r !== undefined) encerrar(r === '1');
+        else if (ev.target === fundo && cancelar) encerrar(false);   // clique fora
+      });
+      document.addEventListener('keydown', aoTeclar);
+
+      document.body.appendChild(fundo);
+      fundo.querySelector('.cx-btn[data-r="1"]').focus();
+    });
+  }
+
+  // Aviso simples, no lugar de alert().
+  const avisar = (mensagem, titulo = 'Aviso') =>
+    montarDialogo({ titulo, mensagem, okTexto: 'OK', cancelar: false, perigo: false });
+
+  // Pergunta sim/não, no lugar de confirm(). Devolve true/false.
+  const perguntar = (mensagem, okTexto = 'Confirmar', titulo = 'Confirmação') =>
+    montarDialogo({ titulo, mensagem, okTexto, cancelar: true, perigo: true });
+
+  /* ============================================================
+     CONTAS SUSPENSAS DENTRO DAS LISTAS
+     As listas passaram a trazer também as contas suspensas, em cinza e com
+     etiqueta. Assim a conta é reativada no mesmo lugar onde ela estava, sem
+     precisar procurar em outra tela.
+     ============================================================ */
+  (function injetarEstiloSuspensa() {
+    if (document.getElementById('cx-estilo-susp')) return;
+    const st = document.createElement('style');
+    st.id = 'cx-estilo-susp';
+    st.textContent = `
+      .item.suspensa, #lista-grupos button.suspensa { opacity:.55; }
+      .item.suspensa { font-style:italic; }
+      .badge-susp { display:inline-block; margin-left:8px; padding:1px 7px;
+        border-radius:10px; font-size:11px; font-style:normal;
+        background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; }
+    `;
+    document.head.appendChild(st);
+  })();
+
+  const etiquetaSuspensa = (reg) =>
+    reg.ativo === false ? '<span class="badge-susp">suspensa</span>' : '';
+
+  /* Chamado quando o usuário clica numa linha suspensa. Devolve true se a
+     conta foi reativada, para quem chamou recarregar a lista. */
+  async function tentarReativar(nivel, reg) {
+    const ok = await perguntar(
+      `A conta ${reg.codigo} - ${reg.nome} está suspensa.\n\nReativar?`,
+      'Reativar',
+      'Conta suspensa'
+    );
+    if (!ok) return false;
+    try {
+      await api('POST', `/suspensas/${nivel}/${reg._id}/reativar`);
+      return true;
+    } catch (err) {
+      await avisar(err.message, 'Não foi possível reativar');
+      return false;
+    }
+  }
+
   async function api(method, path, body) {
     const opts = { method, headers: { 'Content-Type': 'application/json' } };
     if (body) opts.body = JSON.stringify(body);
     const res = await fetch(API + path, opts);
+
+    // 401 = sessão do contab expirada. O servidor responde em JSON (e não com
+    // a tela de login) para as chamadas de API, então é aqui que a gente leva
+    // o usuário de volta ao login em vez de mostrar um erro solto na tela.
+    if (res.status === 401) {
+      await avisar('Sua sessão expirou. Faça login novamente.', 'Sessão encerrada');
+      window.location.href = '/usuariocontab/login';
+      // A navegação não é instantânea. Devolvendo uma Promise que nunca resolve,
+      // quem chamou esta função para aqui e não dispara um segundo alerta por
+      // cima do primeiro.
+      return new Promise(() => {});
+    }
+
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.erro || 'Erro na requisição');
     return data;
@@ -44,7 +191,7 @@
   // ============================================================
   // NÍVEL 1: GRUPOS
   // ============================================================
-  $('#btn-abrir-grupos').addEventListener('click', async () => {
+  async function abrirGrupos() {
     const lista = $('#lista-grupos');
     lista.innerHTML = '<div class="empty">Carregando...</div>';
     abrir('modal-grupos');
@@ -64,7 +211,13 @@
     } catch (err) {
       lista.innerHTML = `<div class="empty">Erro: ${err.message}</div>`;
     }
-  });
+  }
+
+  // O botão continua reabrindo o modal se o usuário fechar no X...
+  $('#btn-abrir-grupos').addEventListener('click', abrirGrupos);
+
+  // ...e aqui ele abre sozinho ao carregar a página, para não começar em branco.
+  abrirGrupos();
 
   // ============================================================
   // NÍVEL 2: SUBGRUPOS
@@ -90,9 +243,15 @@
       lista.innerHTML = '';
       subs.forEach(s => {
         const item = document.createElement('div');
-        item.className = 'item';
-        item.textContent = `${s.codigo} - ${s.nome}`;
-        item.onclick = () => selecionarItem('lista-subgrupos', item, s, 'subGrupoAtual');
+        item.className = 'item' + (s.ativo === false ? ' suspensa' : '');
+        item.innerHTML = `${s.codigo} - ${s.nome} ${etiquetaSuspensa(s)}`;
+        item.onclick = async () => {
+          if (s.ativo === false) {
+            if (await tentarReativar('subgrupo', s)) await recarregarSubGrupos();
+            return;   // conta suspensa não pode ser selecionada para trabalhar
+          }
+          selecionarItem('lista-subgrupos', item, s, 'subGrupoAtual');
+        };
         lista.appendChild(item);
       });
     } catch (err) {
@@ -106,20 +265,25 @@
 
     if (acao === 'inserir-subgrupo') abrirForm('subgrupo', 'inserir');
     else if (acao === 'alterar-subgrupo') {
-      if (!state.subGrupoAtual) return alert('Selecione um subgrupo primeiro.');
+      if (!state.subGrupoAtual) return avisar('Selecione um subgrupo primeiro.');
       abrirForm('subgrupo', 'alterar', state.subGrupoAtual);
     }
     else if (acao === 'deletar-subgrupo') {
-      if (!state.subGrupoAtual) return alert('Selecione um subgrupo primeiro.');
-      if (!confirm(`Deletar "${state.subGrupoAtual.codigo} - ${state.subGrupoAtual.nome}"?`)) return;
+      if (!state.subGrupoAtual) return avisar('Selecione um subgrupo primeiro.');
+      const ok = await perguntar(
+        `Suspender o subgrupo ${state.subGrupoAtual.codigo} - ${state.subGrupoAtual.nome}?\n\n` +
+        `A conta sai das listas mas continua guardada, e pode ser reativada depois.`,
+        'Suspender'
+      );
+      if (!ok) return;
       try {
         await api('DELETE', `/subgrupos/${state.subGrupoAtual._id}`);
         state.subGrupoAtual = null;
         await recarregarSubGrupos();
-      } catch (err) { alert(err.message); }
+      } catch (err) { avisar(err.message, 'Não foi possível'); }
     }
     else if (acao === 'abrir-titulos') {
-      if (!state.subGrupoAtual) return alert('Selecione um subgrupo primeiro.');
+      if (!state.subGrupoAtual) return avisar('Selecione um subgrupo primeiro.');
       abrirTitulos();
     }
   });
@@ -147,12 +311,18 @@
       lista.innerHTML = '';
       tits.forEach(t => {
         const item = document.createElement('div');
-        item.className = 'item';
+        item.className = 'item' + (t.ativo === false ? ' suspensa' : '');
         const badge = t.aceitaLancamento
           ? '<span class="badge">analítica</span>'
           : '<span class="badge">sintética</span>';
-        item.innerHTML = `${t.codigo} - ${t.nome} ${badge}`;
-        item.onclick = () => selecionarItem('lista-titulos', item, t, 'tituloAtual');
+        item.innerHTML = `${t.codigo} - ${t.nome} ${badge} ${etiquetaSuspensa(t)}`;
+        item.onclick = async () => {
+          if (t.ativo === false) {
+            if (await tentarReativar('titulo', t)) await recarregarTitulos();
+            return;
+          }
+          selecionarItem('lista-titulos', item, t, 'tituloAtual');
+        };
         lista.appendChild(item);
       });
     } catch (err) {
@@ -166,20 +336,25 @@
 
     if (acao === 'inserir-titulo') abrirForm('titulo', 'inserir');
     else if (acao === 'alterar-titulo') {
-      if (!state.tituloAtual) return alert('Selecione um título primeiro.');
+      if (!state.tituloAtual) return avisar('Selecione um título primeiro.');
       abrirForm('titulo', 'alterar', state.tituloAtual);
     }
     else if (acao === 'deletar-titulo') {
-      if (!state.tituloAtual) return alert('Selecione um título primeiro.');
-      if (!confirm(`Deletar "${state.tituloAtual.codigo} - ${state.tituloAtual.nome}"?`)) return;
+      if (!state.tituloAtual) return avisar('Selecione um título primeiro.');
+      const ok = await perguntar(
+        `Suspender o conta-título ${state.tituloAtual.codigo} - ${state.tituloAtual.nome}?\n\n` +
+        `A conta sai das listas mas continua guardada, e pode ser reativada depois.`,
+        'Suspender'
+      );
+      if (!ok) return;
       try {
         await api('DELETE', `/titulos/${state.tituloAtual._id}`);
         state.tituloAtual = null;
         await recarregarTitulos();
-      } catch (err) { alert(err.message); }
+      } catch (err) { avisar(err.message, 'Não foi possível'); }
     }
     else if (acao === 'abrir-subtitulos') {
-      if (!state.tituloAtual) return alert('Selecione um título primeiro.');
+      if (!state.tituloAtual) return avisar('Selecione um título primeiro.');
       abrirSubtitulos();
     }
   });
@@ -207,9 +382,16 @@
       lista.innerHTML = '';
       subs.forEach(s => {
         const item = document.createElement('div');
-        item.className = 'item';
-        item.innerHTML = `${s.codigo} - ${s.nome} <span class="badge">${s.natureza || '?'}</span>`;
-        item.onclick = () => selecionarItem('lista-subtitulos', item, s, 'subtituloAtual');
+        item.className = 'item' + (s.ativo === false ? ' suspensa' : '');
+        item.innerHTML = `${s.codigo} - ${s.nome} ` +
+                         `<span class="badge">${s.natureza || '?'}</span> ${etiquetaSuspensa(s)}`;
+        item.onclick = async () => {
+          if (s.ativo === false) {
+            if (await tentarReativar('subtitulo', s)) await recarregarSubtitulos();
+            return;
+          }
+          selecionarItem('lista-subtitulos', item, s, 'subtituloAtual');
+        };
         lista.appendChild(item);
       });
     } catch (err) {
@@ -223,17 +405,22 @@
 
     if (acao === 'inserir-subtitulo') abrirForm('subtitulo', 'inserir');
     else if (acao === 'alterar-subtitulo') {
-      if (!state.subtituloAtual) return alert('Selecione um subtítulo primeiro.');
+      if (!state.subtituloAtual) return avisar('Selecione um subtítulo primeiro.');
       abrirForm('subtitulo', 'alterar', state.subtituloAtual);
     }
     else if (acao === 'deletar-subtitulo') {
-      if (!state.subtituloAtual) return alert('Selecione um subtítulo primeiro.');
-      if (!confirm(`Deletar "${state.subtituloAtual.codigo} - ${state.subtituloAtual.nome}"?`)) return;
+      if (!state.subtituloAtual) return avisar('Selecione um subtítulo primeiro.');
+      const ok = await perguntar(
+        `Suspender o subtítulo ${state.subtituloAtual.codigo} - ${state.subtituloAtual.nome}?\n\n` +
+        `A conta sai das listas mas continua guardada, e pode ser reativada depois.`,
+        'Suspender'
+      );
+      if (!ok) return;
       try {
         await api('DELETE', `/subtitulos/${state.subtituloAtual._id}`);
         state.subtituloAtual = null;
         await recarregarSubtitulos();
-      } catch (err) { alert(err.message); }
+      } catch (err) { avisar(err.message, 'Não foi possível'); }
     }
   });
 
@@ -337,7 +524,7 @@
         await recarregarSubtitulos();
       }
     } catch (err) {
-      alert('Erro: ' + err.message);
+      avisar(err.message, 'Não foi possível');
     }
   });
 

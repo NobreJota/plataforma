@@ -29,7 +29,11 @@ const ContrapartidaSchema = new mongoose.Schema({
 const BoletaSchema = new mongoose.Schema({
   codigo: { type: String, required: true, unique: true, trim: true },
 
-  tipo: { type: String, required: true, enum: ['PAGAMENTO', 'RECEBIMENTO'] },
+  // SALDO_TRANSFERIDO: o saldo que a conta traz do exercício anterior quando a
+  // empresa entra na plataforma, ou quando a conta abre no meio do ano.
+  // É uma boleta de perna única: não tem contrapartida, porque não houve troca
+  // com ninguém — o valor simplesmente já estava lá.
+  tipo: { type: String, required: true, enum: ['PAGAMENTO', 'RECEBIMENTO', 'SALDO_TRANSFERIDO'] },
 
   data: { type: Date, required: true },
 
@@ -39,7 +43,12 @@ const BoletaSchema = new mongoose.Schema({
   bancoCodigo: { type: String, default: '' },
   bancoNome:   { type: String, default: '' },
 
+
   // Valor total (= soma das contrapartidas)
+  // Em SALDO_TRANSFERIDO o valor é assinado: + aumenta o saldo da conta,
+  // − diminui. Ativo normalmente entra +, Passivo −, mas há exceções (conta
+  // bancária no cheque especial é Ativo negativo), por isso quem manda é o
+  // sinal digitado e não o grupo.
   valorTotal: { type: Number, required: true, default: 0 },
 
   // Para PAGAMENTO: banco é creditado (sai dinheiro), contrapartidas são débitos

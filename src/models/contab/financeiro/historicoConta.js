@@ -36,7 +36,7 @@ const HistoricoContaSchema = new mongoose.Schema({
 });
 
 // Evita duplicar o mesmo texto na mesma conta
-HistoricoContaSchema.index({ codigoConta: 1, texto: 1 }, { unique: true });
+HistoricoContaSchema.index({ lojistaId: 1, codigoConta: 1, texto: 1 }, { unique: true });
 HistoricoContaSchema.index({ usos: -1 });
 
 module.exports = mongoose.models.HistoricoConta ||

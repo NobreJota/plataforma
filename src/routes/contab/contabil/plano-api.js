@@ -14,11 +14,15 @@ const SubGrupo       = require('../../../models/grupoSub');
 const ContaTitulo    = require('../../../models/contab/financeiro/contaTitulo');
 const ContaSubTitulo = require('../../../models/contab/financeiro/contaSubTitulo');
 
-// Models financeiros (para detectar movimento). Carregados com tolerância
-// (se algum não existir no ambiente, a checagem ignora aquela fonte).
-let Boleta = null, FluxoProjetado = null;
-try { Boleta = require('../../../models/financeiro/boleta'); } catch (_) {}
-try { FluxoProjetado = require('../../../models/financeiro/fluxoProjetado'); } catch (_) {}
+// Models financeiros, usados para detectar movimento na conta.
+// ATENÇÃO: o caminho certo passa por /contab/. Antes estava
+// '../../../models/financeiro/boleta', que não existe — e como o require
+// ficava dentro de um try/catch vazio, falhava calado: Boleta virava null e
+// a checagem de movimento em boletas nunca chegou a acontecer.
+// Agora o require é direto: se o caminho quebrar, o servidor reclama na hora
+// em vez de deixar passar uma conta que tem lançamento.
+const Boleta         = require('../../../models/contab/financeiro/boleta');
+const FluxoProjetado = require('../../../models/contab/financeiro/fluxoProjetado');
 
 /* Detecta se um subtítulo TEM MOVIMENTO de valores.
    Movimento = aparece em boletas (banco/contrapartida) OU no fluxo OU saldo inicial ≠ 0.
@@ -34,23 +38,39 @@ async function temMovimento(subtitulo) {
   }
 
   // Aparece em alguma boleta? (como banco ou contrapartida)
-  if (Boleta) {
-    const naBoleta = await Boleta.countDocuments({
-      $or: [
-        { bancoCodigo: codigo },
-        { 'contrapartidas.codigoConta': codigo }
-      ]
-    });
-    if (naBoleta > 0) return { tem: true, motivo: `${naBoleta} lançamento(s) em boletas` };
-  }
+  const naBoleta = await Boleta.countDocuments({
+    $or: [
+      { bancoCodigo: codigo },
+      { 'contrapartidas.codigoConta': codigo }
+    ]
+  });
+  if (naBoleta > 0) return { tem: true, motivo: `${naBoleta} lançamento(s) em boletas` };
 
-  // Aparece no fluxo projetado? (qualquer status que indique uso real)
-  if (FluxoProjetado) {
-    const noFluxo = await FluxoProjetado.countDocuments({ codigoConta: codigo });
-    if (noFluxo > 0) return { tem: true, motivo: `${noFluxo} lançamento(s) no fluxo` };
-  }
+  // Aparece no fluxo projetado?
+  const noFluxo = await FluxoProjetado.countDocuments({ codigoConta: codigo });
+  if (noFluxo > 0) return { tem: true, motivo: `${noFluxo} lançamento(s) no fluxo` };
 
   return { tem: false };
+}
+
+/* Mesma pergunta, mas para um SubGrupo ou Conta-título: basta que UM dos
+   subtítulos abaixo dele tenha movimento para o pai não poder ser inativado. */
+async function algumFilhoTemMovimento(filtroSubtitulos) {
+  const subs = await ContaSubTitulo.find(filtroSubtitulos).lean();
+  for (const s of subs) {
+    const mov = await temMovimento(s);
+    if (mov.tem) return { tem: true, conta: `${s.codigo} - ${s.nome}`, motivo: mov.motivo };
+  }
+  return { tem: false };
+}
+
+/* As telas do plano agora mostram tambem as contas suspensas, em cor
+   diferente, para o usuario poder reativar no proprio lugar onde a conta
+   estava. Quando ?somenteAtivas=true vier na URL, volta ao comportamento
+   antigo — util para combos de lancamento, onde conta suspensa nao pode
+   aparecer como opcao. */
+function filtroAtivo(req) {
+  return req.query.somenteAtivas === 'true' ? { ativo: true } : {};
 }
 
 /* =========================================================
@@ -130,7 +150,7 @@ router.get('/grupos', async (req, res) => {
 router.get('/subgrupos/:grupoId', async (req, res) => {
   try {
     const subs = await SubGrupo
-      .find({ grupoId: req.params.grupoId, ativo: true })
+      .find({ grupoId: req.params.grupoId, ...filtroAtivo(req) })
       .sort({ codigo: 1 });
     res.json(subs);
   } catch (err) {
@@ -176,17 +196,37 @@ router.put('/subgrupos/:id', async (req, res) => {
   }
 });
 
+/* INATIVAR subgrupo.
+   Não apaga: marca ativo:false. Como todos os GETs deste arquivo já filtram
+   por ativo:true, a conta some das telas mas o registro fica no banco. */
 router.delete('/subgrupos/:id', async (req, res) => {
   try {
-    const filhos = await ContaTitulo.countDocuments({ subGrupoId: req.params.id });
-    if (filhos > 0) {
+    const sg = await SubGrupo.findById(req.params.id);
+    if (!sg) return res.status(404).json({ erro: 'Subgrupo não encontrado.' });
+
+    const titulosAtivos = await ContaTitulo
+      .find({ subGrupoId: sg._id, ativo: true }).select('_id').lean();
+
+    if (titulosAtivos.length > 0) {
+      // Se algum neto tem movimento, a mensagem diz qual conta é — assim o
+      // usuário sabe onde mexer, em vez de só ouvir "não pode".
+      const mov = await algumFilhoTemMovimento({
+        contaTituloId: { $in: titulosAtivos.map(t => t._id) },
+        ativo: true
+      });
+      if (mov.tem) {
+        return res.status(409).json({
+          erro: `Conta ${mov.conta} com movimento. Impossível suspender.`
+        });
+      }
       return res.status(409).json({
-        erro: `Este subgrupo possui ${filhos} título(s). Exclua-os antes.`
+        erro: `Este subgrupo possui ${titulosAtivos.length} título(s) ativo(s). Inative-os antes.`
       });
     }
-    const rem = await SubGrupo.findByIdAndDelete(req.params.id);
-    if (!rem) return res.status(404).json({ erro: 'Subgrupo não encontrado.' });
-    res.json({ ok: true });
+
+    sg.ativo = false;
+    await sg.save();
+    res.json({ ok: true, inativado: true });
   } catch (err) {
     res.status(500).json({ erro: err.message });
   }
@@ -198,7 +238,7 @@ router.delete('/subgrupos/:id', async (req, res) => {
 router.get('/titulos/:subGrupoId', async (req, res) => {
   try {
     const titulos = await ContaTitulo
-      .find({ subGrupoId: req.params.subGrupoId, ativo: true })
+      .find({ subGrupoId: req.params.subGrupoId, ...filtroAtivo(req) })
       .sort({ codigo: 1 });
     res.json(titulos);
   } catch (err) {
@@ -246,17 +286,28 @@ router.put('/titulos/:id', async (req, res) => {
   }
 });
 
+/* INATIVAR conta-título (mesma regra do subgrupo). */
 router.delete('/titulos/:id', async (req, res) => {
   try {
-    const filhos = await ContaSubTitulo.countDocuments({ contaTituloId: req.params.id });
-    if (filhos > 0) {
+    const ct = await ContaTitulo.findById(req.params.id);
+    if (!ct) return res.status(404).json({ erro: 'Título não encontrado.' });
+
+    const filhosAtivos = await ContaSubTitulo.countDocuments({ contaTituloId: ct._id, ativo: true });
+    if (filhosAtivos > 0) {
+      const mov = await algumFilhoTemMovimento({ contaTituloId: ct._id, ativo: true });
+      if (mov.tem) {
+        return res.status(409).json({
+          erro: `Conta ${mov.conta} com movimento. Impossível suspender.`
+        });
+      }
       return res.status(409).json({
-        erro: `Este título possui ${filhos} subtítulo(s). Exclua-os antes.`
+        erro: `Este título possui ${filhosAtivos} subtítulo(s) ativo(s). Inative-os antes.`
       });
     }
-    const rem = await ContaTitulo.findByIdAndDelete(req.params.id);
-    if (!rem) return res.status(404).json({ erro: 'Título não encontrado.' });
-    res.json({ ok: true });
+
+    ct.ativo = false;
+    await ct.save();
+    res.json({ ok: true, inativado: true });
   } catch (err) {
     res.status(500).json({ erro: err.message });
   }
@@ -268,7 +319,7 @@ router.delete('/titulos/:id', async (req, res) => {
 router.get('/subtitulos/:contaTituloId', async (req, res) => {
   try {
     const subs = await ContaSubTitulo
-      .find({ contaTituloId: req.params.contaTituloId, ativo: true })
+      .find({ contaTituloId: req.params.contaTituloId, ...filtroAtivo(req) })
       .sort({ codigo: 1 });
     res.json(subs);
   } catch (err) {
@@ -454,17 +505,128 @@ router.delete('/subtitulos/:id', async (req, res) => {
     const sub = await ContaSubTitulo.findById(req.params.id);
     if (!sub) return res.status(404).json({ erro: 'Subtítulo não encontrado.' });
 
-    // Regra de ouro: conta com movimento não pode ser deletada
+    // Regra de ouro: conta com movimento não pode ser inativada
     const mov = await temMovimento(sub);
     if (mov.tem) {
       return res.status(409).json({
-        erro: `Não é possível deletar: esta conta tem movimento (${mov.motivo}). ` +
-              `Transfira os valores para outra conta antes de excluir.`
+        erro: 'Conta com movimento. Impossível suspender.'
       });
     }
 
-    await ContaSubTitulo.findByIdAndDelete(req.params.id);
-    res.json({ ok: true });
+    sub.ativo = false;
+    await sub.save();
+    res.json({ ok: true, inativado: true });
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* =========================================================
+   CONTAS SUSPENSAS  (listar e reativar)
+
+   Como nada mais é apagado de verdade, precisa existir um caminho de volta
+   pela tela — senão a única saída seria abrir o Compass, o que não serve
+   para o usuário final.
+   ========================================================= */
+
+// O termo digitado vira uma expressão regular. Sem escapar, um ponto (que o
+// usuário digita naturalmente ao buscar "3.01") casaria com qualquer caractere,
+// e um parêntese quebraria a regex e derrubaria a rota com erro 500.
+function regexBusca(termo) {
+  const limpo = String(termo || '').trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(limpo, 'i');
+}
+
+/* GET /contab/api/suspensas?busca=pap
+   Devolve os três níveis do plano numa lista só, já achatada, para a tela
+   não precisar saber de hierarquia. */
+router.get('/suspensas', async (req, res) => {
+  try {
+    const busca = String(req.query.busca || '').trim();
+
+    // Busca vazia devolve tudo; com texto, filtra por código ou nome.
+    // Busca pelo NOME da conta. O código também é aceito porque não atrapalha
+    // e às vezes o usuário lembra dele.
+    const filtro = { ativo: false };
+    if (busca) {
+      const rx = regexBusca(busca);
+      filtro.$or = [{ nome: rx }, { codigo: rx }];
+    }
+
+    const [subgrupos, titulos, subtitulos] = await Promise.all([
+      SubGrupo.find(filtro).sort({ codigo: 1 }).limit(200).lean(),
+      ContaTitulo.find(filtro).sort({ codigo: 1 }).limit(200).lean(),
+      ContaSubTitulo.find(filtro).sort({ codigo: 1 }).limit(200).lean()
+    ]);
+
+    const lista = [
+      ...subgrupos.map(x  => ({ nivel: 'subgrupo',  rotulo: 'SubGrupo',     _id: x._id, codigo: x.codigo, nome: x.nome })),
+      ...titulos.map(x    => ({ nivel: 'titulo',    rotulo: 'Conta-título', _id: x._id, codigo: x.codigo, nome: x.nome })),
+      ...subtitulos.map(x => ({ nivel: 'subtitulo', rotulo: 'Sub-título',   _id: x._id, codigo: x.codigo, nome: x.nome }))
+    ].sort((a, b) => a.codigo.localeCompare(b.codigo));
+
+    res.json(lista);
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* POST /contab/api/suspensas/:nivel/:id/reativar */
+router.post('/suspensas/:nivel/:id/reativar', async (req, res) => {
+  try {
+    const { nivel, id } = req.params;
+
+    if (nivel === 'subgrupo') {
+      const sg = await SubGrupo.findById(id);
+      if (!sg) return res.status(404).json({ erro: 'Subgrupo não encontrado.' });
+      sg.ativo = true;
+      await sg.save();
+      return res.json({ ok: true, conta: `${sg.codigo} - ${sg.nome}` });
+    }
+
+    if (nivel === 'titulo') {
+      const ct = await ContaTitulo.findById(id);
+      if (!ct) return res.status(404).json({ erro: 'Título não encontrado.' });
+
+      // Reativar um filho sem reativar o pai deixaria a conta "viva" mas
+      // invisível: as telas navegam de cima para baixo e nunca chegariam nela.
+      const pai = await SubGrupo.findById(ct.subGrupoId).lean();
+      if (pai && !pai.ativo) {
+        return res.status(409).json({
+          erro: `Reative antes o subgrupo ${pai.codigo} - ${pai.nome}.`
+        });
+      }
+
+      ct.ativo = true;
+      await ct.save();
+      return res.json({ ok: true, conta: `${ct.codigo} - ${ct.nome}` });
+    }
+
+    if (nivel === 'subtitulo') {
+      const st = await ContaSubTitulo.findById(id);
+      if (!st) return res.status(404).json({ erro: 'Subtítulo não encontrado.' });
+
+      const pai = await ContaTitulo.findById(st.contaTituloId).lean();
+      if (pai && !pai.ativo) {
+        return res.status(409).json({
+          erro: `Reative antes a conta-título ${pai.codigo} - ${pai.nome}.`
+        });
+      }
+      if (pai) {
+        const avo = await SubGrupo.findById(pai.subGrupoId).lean();
+        if (avo && !avo.ativo) {
+          return res.status(409).json({
+            erro: `Reative antes o subgrupo ${avo.codigo} - ${avo.nome}.`
+          });
+        }
+      }
+
+      st.ativo = true;
+      await st.save();
+      return res.json({ ok: true, conta: `${st.codigo} - ${st.nome}` });
+    }
+
+    return res.status(400).json({ erro: 'Nível inválido.' });
   } catch (err) {
     res.status(500).json({ erro: err.message });
   }

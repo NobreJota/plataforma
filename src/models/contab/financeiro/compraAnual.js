@@ -26,7 +26,7 @@ const FornecedorValoresSchema = new mongoose.Schema({
 }, { _id: true });
 
 const CompraAnualSchema = new mongoose.Schema({
-  ano: { type: Number, required: true, unique: true, index: true },
+  ano: { type: Number, required: true },
   fornecedores: [FornecedorValoresSchema],
   observacoes: { type: String, default: '' },
   status: { type: String, enum: ['ABERTO', 'FECHADO'], default: 'ABERTO' },
@@ -44,6 +44,6 @@ const CompraAnualSchema = new mongoose.Schema({
   autoIndex: false
 });
 
-CompraAnualSchema.index({ ano: 1 });
+CompraAnualSchema.index({ lojistaId: 1, ano: 1 }, { unique: true });
 
 module.exports = mongoose.model('CompraAnual', CompraAnualSchema);

@@ -6,8 +6,9 @@ const Banco = require('../../../models/contab/auxiliares/banco');
 const router = express.Router();
 
 /* ===== Helpers ===== */
-async function proximoCodigo() {
-  const ultima = await ContaBancaria.findOne()
+// Sequencial por empresa (ver mesma nota em clientes-api.js).
+async function proximoCodigo(lojistaId) {
+  const ultima = await ContaBancaria.findOne({ lojistaId })
     .sort({ codigo: -1 })
     .collation({ locale: 'en_US', numericOrdering: true });
   if (!ultima) return 'CB-0001';
@@ -22,7 +23,7 @@ router.get('/', async (req, res) => {
   try {
     const incluirInativos = req.query.incluirInativos === 'true';
     const busca = (req.query.busca || '').trim();
-    const filter = {};
+    const filter = { lojistaId: req.lojistaId };
     if (!incluirInativos) filter.ativo = true;
     if (busca) {
       filter.$or = [
@@ -45,7 +46,8 @@ router.get('/', async (req, res) => {
 /* OBTER POR ID */
 router.get('/:id', async (req, res) => {
   try {
-    const c = await ContaBancaria.findById(req.params.id)
+    // findOne com lojistaId, e não findById (ver nota em clientes-api.js).
+    const c = await ContaBancaria.findOne({ _id: req.params.id, lojistaId: req.lojistaId })
       .populate('banco', 'codigo nome nomeCurto')
       .populate('contaSubTitulo', 'codigo descricao');
     if (!c) return res.status(404).json({ erro: 'Conta bancária não encontrada.' });
@@ -76,8 +78,9 @@ router.post('/', async (req, res) => {
     const bancoExiste = await Banco.findById(banco);
     if (!bancoExiste) return res.status(400).json({ erro: 'Banco selecionado não existe.' });
 
-    const codigo = await proximoCodigo();
+    const codigo = await proximoCodigo(req.lojistaId);
     const nova = await ContaBancaria.create({
+      lojistaId: req.lojistaId,
       codigo,
       banco,
       agencia:    String(agencia).trim(),
@@ -94,7 +97,7 @@ router.post('/', async (req, res) => {
       observacoes: String(observacoes || '').trim()
     });
 
-    const populada = await ContaBancaria.findById(nova._id)
+    const populada = await ContaBancaria.findById(nova._id)   // recém-criada, já é da empresa
       .populate('banco', 'codigo nome nomeCurto')
       .populate('contaSubTitulo', 'codigo descricao');
     res.status(201).json(populada);
@@ -129,7 +132,8 @@ router.put('/:id', async (req, res) => {
     if (observacoes !== undefined)   patch.observacoes = String(observacoes).trim();
     if (ativo !== undefined)         patch.ativo = !!ativo;
 
-    const c = await ContaBancaria.findByIdAndUpdate(req.params.id, patch, { new: true })
+    const c = await ContaBancaria.findOneAndUpdate(
+      { _id: req.params.id, lojistaId: req.lojistaId }, patch, { new: true })
       .populate('banco', 'codigo nome nomeCurto')
       .populate('contaSubTitulo', 'codigo descricao');
     if (!c) return res.status(404).json({ erro: 'Conta bancária não encontrada.' });
@@ -142,8 +146,8 @@ router.put('/:id', async (req, res) => {
 /* INATIVAR */
 router.delete('/:id', async (req, res) => {
   try {
-    const c = await ContaBancaria.findByIdAndUpdate(
-      req.params.id, { ativo: false }, { new: true }
+    const c = await ContaBancaria.findOneAndUpdate(
+      { _id: req.params.id, lojistaId: req.lojistaId }, { ativo: false }, { new: true }
     );
     if (!c) return res.status(404).json({ erro: 'Conta bancária não encontrada.' });
     res.json({ ok: true });
@@ -155,8 +159,8 @@ router.delete('/:id', async (req, res) => {
 /* REATIVAR */
 router.post('/:id/reativar', async (req, res) => {
   try {
-    const c = await ContaBancaria.findByIdAndUpdate(
-      req.params.id, { ativo: true }, { new: true }
+    const c = await ContaBancaria.findOneAndUpdate(
+      { _id: req.params.id, lojistaId: req.lojistaId }, { ativo: true }, { new: true }
     );
     if (!c) return res.status(404).json({ erro: 'Conta bancária não encontrada.' });
     res.json(c);

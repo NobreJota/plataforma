@@ -14,28 +14,28 @@ const lookupsExtra         = require('./lookups-extra');
 /* ===== Telas ===== */
 
 router.get('/clientes', (req, res) => {
-  res.render('pages/auxiliares/clientes', {
+  res.render('contab/auxiliares/clientes', {
     layout: false,
     activeMenu: 'auxiliares'
   });
 });
 
 router.get('/fornecedores', (req, res) => {
-  res.render('pages/auxiliares/fornecedores', {
+  res.render('contab/auxiliares/fornecedores', {
     layout: false,
     activeMenu: 'auxiliares'
   });
 });
 
 router.get('/bancos', (req, res) => {
-  res.render('pages/auxiliares/bancos', {
+  res.render('contab/auxiliares/bancos', {
     layout: false,
     activeMenu: 'auxiliares'
   });
 });
 
 router.get('/contas-bancarias', (req, res) => {
-  res.render('pages/auxiliares/contas-bancarias', {
+  res.render('contab/auxiliares/contas-bancarias', {
     layout: false,
     activeMenu: 'auxiliares'
   });

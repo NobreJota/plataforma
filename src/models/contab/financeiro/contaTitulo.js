@@ -11,7 +11,7 @@ const ContaTituloSchema = new Schema(
     //  index: true,
     },
     codigoSubGrupo:   { type: String, required: true, trim: true }, // "1.01"
-    codigo:           { type: String, required: true, trim: true, unique: true }, // "1.01.002"
+    codigo:           { type: String, required: true, trim: true }, // "1.01.002"
     nome:             { type: String, required: true, trim: true }, // "Bancos"
     descricao:        { type: String, default: "" },
     // false = conta sintética (agrupa), true = permite lançamento direto
@@ -34,7 +34,7 @@ const ContaTituloSchema = new Schema(
   }
 );
 
-ContaTituloSchema.index({ codigo: 1 }, { unique: true });
+ContaTituloSchema.index({ lojistaId: 1, codigo: 1 }, { unique: true });
 ContaTituloSchema.index({ subGrupoId: 1 });
 ContaTituloSchema.index({ codigoSubGrupo: 1 });
 

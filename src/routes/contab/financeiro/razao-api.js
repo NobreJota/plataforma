@@ -38,6 +38,26 @@ router.get('/lancamentos', async (req, res) => {
       const ehPagamento = b.tipo === 'PAGAMENTO';
       const doc = fmtDoc(b);
 
+      // SALDO TRANSFERIDO: perna única, sem contrapartida. Quem manda é o
+      // sinal do valor: + entra na coluna que aumenta o saldo, − na que
+      // diminui. Sem este ramo a linha cairia no comportamento de recebimento
+      // e todo saldo viraria positivo, invertendo as contas de Passivo.
+      if (b.tipo === 'SALDO_TRANSFERIDO') {
+        if (b.bancoCodigo === conta) {
+          const v = b.valorTotal || 0;
+          lancamentos.push({
+            data: b.data,
+            historico: b.historico || 'SALDO TRANSFERIDO',
+            documento: doc,
+            boletaId: b._id,
+            cPartida: '',                    // não há contrapartida, de propósito
+            debito:  v > 0 ?  v : 0,
+            credito: v < 0 ? -v : 0
+          });
+        }
+        continue;
+      }
+
       // A conta é o BANCO desta boleta?
       if (b.bancoCodigo === conta) {
         // contrapartida(s): a(s) conta(s) das contrapartidas.

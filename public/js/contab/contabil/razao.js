@@ -1,4 +1,4 @@
-/* public/js/contabil/razao.js
+/* public/js/contab/contabil/razao.js
  * Tela do Razão — combos Conta-título + Subtítulo, busca rápida,
  * filtro de período, grade de lançamentos, modal de boleta,
  * navegação por contrapartida (clica no código C/PART → pula pra outra conta).
@@ -29,6 +29,16 @@
   // ============================================================
   async function getJson(url) {
     const r = await fetch(url);
+
+    // Sessão do contab expirada: as rotas de API respondem 401 em JSON. Sem
+    // este ramo o front tentaria ler a tela de login como JSON e mostraria
+    // um erro que não diz nada ao usuário.
+    if (r.status === 401) {
+      alert('Sua sessão expirou. Faça login novamente.');
+      window.location.href = '/usuariocontab/login';
+      return new Promise(() => {});   // trava aqui até a navegação acontecer
+    }
+
     const d = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(d.erro || `Erro ${r.status}`);
     return d;
@@ -59,8 +69,11 @@
     $('#rz-ate').value = st.ate;
     atualizarLabelPeriodo();
   }
+  // O período virou campo fixo na primeira linha, então os próprios inputs já
+  // mostram as datas e não existe mais rótulo separado para atualizar.
   function atualizarLabelPeriodo() {
-    $('#rz-periodo-label').textContent = `${fmtDataBr(st.de)} a ${fmtDataBr(st.ate)}`;
+    const el = $('#rz-periodo-label');
+    if (el) el.textContent = `${fmtDataBr(st.de)} a ${fmtDataBr(st.ate)}`;
   }
 
   // ============================================================
@@ -90,7 +103,11 @@
       return `<div class="${cls}" data-id="${t._id}">${t.codigo} ${t.nome}</div>`;
     }).join('');
     dd.querySelectorAll('.rz-opt').forEach(el => {
-      el.addEventListener('click', () => {
+      el.addEventListener('click', (ev) => {
+        // O dropdown fica DENTRO do .rz-combo. Sem parar aqui, o clique sobe
+        // até o combo, cujo handler alterna aberto/fechado — e reabre a lista
+        // que acabamos de fechar.
+        ev.stopPropagation();
         const t = st.titulos.find(x => x._id === el.dataset.id);
         selecionarTitulo(t);
         fecharDropdowns();
@@ -137,7 +154,8 @@
       return `<div class="${cls}" data-id="${s._id}">${seq} ${s.nome}</div>`;
     }).join('');
     dd.querySelectorAll('.rz-opt').forEach(el => {
-      el.addEventListener('click', () => {
+      el.addEventListener('click', (ev) => {
+        ev.stopPropagation();   // ver nota no dropdown de conta-título
         const s = st.subtitulos.find(x => x._id === el.dataset.id);
         selecionarSubtitulo(s);
         fecharDropdowns();
@@ -208,14 +226,81 @@
     body.querySelectorAll('.rz-chave-link').forEach(el => {
       el.addEventListener('click', () => abrirBoleta(el.dataset.bid));
     });
-    // clique na C/Partida → navega pra outra conta
+    // clique na C/Partida → abre o popup ao lado, sem sair do razão atual
     body.querySelectorAll('.rz-cpart-link').forEach(el => {
-      el.addEventListener('click', () => navegarParaConta(el.dataset.cod));
+      el.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        abrirPopContrapartida(el, el.dataset.cod);
+      });
     });
   }
 
   // ============================================================
-  // NAVEGAR PRA OUTRA CONTA (clique na C/PART)
+  // POPUP DA CONTRAPARTIDA
+  // Antes o clique trocava o razão na hora. Agora mostra de que conta se
+  // trata e só troca se o usuário pedir — quem está conferindo uma conta não
+  // perde o lugar por causa de um clique de curiosidade.
+  // ============================================================
+  let codPopAtual = null;
+
+  function abrirPopContrapartida(elemento, codigo) {
+    if (!codigo) return;
+    const pop = $('#cp-pop');
+    if (!pop) return;
+
+    codPopAtual = codigo;
+    $('#cp-cod').textContent  = codigo;
+    $('#cp-nome').textContent = nomeDaConta(codigo);
+
+    // Precisa ficar visível antes de medir: elemento escondido tem altura zero
+    // e o cálculo de posição sairia errado.
+    pop.hidden = false;
+    const r = elemento.getBoundingClientRect();
+    const alturaPop = pop.offsetHeight;
+
+    // Abre para baixo; se não couber até o fim da janela, abre para cima.
+    const cabeAbaixo = (r.bottom + alturaPop + 8) < window.innerHeight;
+    const topo = cabeAbaixo ? r.bottom + 6 : r.top - alturaPop - 6;
+
+    pop.style.left = (window.scrollX + r.left) + 'px';
+    pop.style.top  = (window.scrollY + topo) + 'px';
+  }
+
+  function fecharPopContrapartida() {
+    const pop = $('#cp-pop');
+    if (pop) pop.hidden = true;
+    codPopAtual = null;
+  }
+
+  /* Procura o nome nos subtítulos já carregados. Se a conta for de outro
+     grupo ela ainda não está em memória, e aí mostramos só o código em vez de
+     buscar no servidor a cada clique. */
+  function nomeDaConta(codigo) {
+    const achado = st.subtitulos.find(s => s.codigo === codigo);
+    return achado ? achado.nome : 'Clique em abrir para ver os lançamentos.';
+  }
+
+  function configurarPopContrapartida() {
+    const btnAbrir  = $('#cp-abrir');
+    const btnFechar = $('#cp-fechar');
+    if (btnAbrir) {
+      btnAbrir.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const cod = codPopAtual;
+        fecharPopContrapartida();
+        if (cod) navegarParaConta(cod);
+      });
+    }
+    if (btnFechar) {
+      btnFechar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        fecharPopContrapartida();
+      });
+    }
+  }
+
+  // ============================================================
+  // NAVEGAR PRA OUTRA CONTA (botão "Abrir esta conta" do popup)
   // ============================================================
   async function navegarParaConta(codigoSubtitulo) {
     if (!codigoSubtitulo) return;
@@ -343,7 +428,14 @@
     $('#rz-titulo-list').hidden = true;
     $('#rz-sub-list').hidden = true;
     $('#rz-busca-list').hidden = true;
-    $('#rz-periodo-pop').hidden = true;
+    fecharMenus();
+    fecharPopContrapartida();
+  }
+
+  function fecharMenus() {
+    const drop = $('#rz-menu-lanc-drop');
+    if (drop) drop.hidden = true;
+    $$('.rz-menu-item').forEach(el => el.classList.remove('aberto'));
   }
 
   function configurarCombos() {
@@ -363,29 +455,60 @@
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.rz-combo') &&
           !e.target.closest('.rz-search') &&
-          !e.target.closest('.rz-periodo') &&
-          !e.target.closest('.rz-periodo-pop')) {
+          !e.target.closest('.rz-periodo-box') &&
+          !e.target.closest('.rz-cp-pop') &&
+          !e.target.closest('.rz-menu')) {
         fecharDropdowns();
       }
     });
   }
 
   // ============================================================
+  // MENU DE AÇÕES (Lançamentos / Transferir saldo / Imprimir)
+  // ============================================================
+  function configurarMenu() {
+    const item = $('#rz-menu-lanc');
+    const drop = $('#rz-menu-lanc-drop');
+    if (!item || !drop) return;
+
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const vaiAbrir = drop.hidden;
+      fecharDropdowns();
+      drop.hidden = !vaiAbrir;
+      item.classList.toggle('aberto', vaiAbrir);
+    });
+
+    drop.addEventListener('click', (e) => {
+      const acao = e.target.dataset.acao;
+      if (!acao) return;
+      e.stopPropagation();
+      fecharMenus();
+
+      // As telas de lançamento ainda não existem. O menu já fica montado para
+      // não precisar mexer no layout quando elas chegarem.
+      if (acao === 'lanc-credito') alert('Tela de lançamento a crédito ainda não disponível.');
+      if (acao === 'lanc-debito')  alert('Tela de lançamento a débito ainda não disponível.');
+    });
+
+    const btnImprimir = $('#rz-menu-imprimir');
+    if (btnImprimir) {
+      btnImprimir.addEventListener('click', (e) => {
+        e.stopPropagation();
+        fecharDropdowns();   // popups abertos sairiam impressos junto
+        window.print();
+      });
+    }
+  }
+
+  // ============================================================
   // PERÍODO
   // ============================================================
   function configurarPeriodo() {
-    $('#rz-periodo').addEventListener('click', (e) => {
-      e.stopPropagation();
-      const pop = $('#rz-periodo-pop');
-      const willOpen = pop.hidden;
-      fecharDropdowns();
-      pop.hidden = !willOpen;
-    });
     $('#rz-periodo-aplicar').addEventListener('click', () => {
       st.de  = $('#rz-de').value;
       st.ate = $('#rz-ate').value;
       atualizarLabelPeriodo();
-      $('#rz-periodo-pop').hidden = true;
       if (st.sub) carregarRazao();
     });
   }
@@ -424,6 +547,8 @@
   (function init() {
     inicializarPeriodo();
     configurarCombos();
+    configurarMenu();
+    configurarPopContrapartida();
     configurarPeriodo();
     configurarGrupos();
     configurarBusca();

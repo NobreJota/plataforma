@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const { apenasNumeros } = require('../../../utils/validadorDocumento');
 
 const ContaBancariaSchema = new mongoose.Schema({
-  codigo: { type: String, required: true, trim: true, unique: true },
+  codigo: { type: String, required: true, trim: true },
 
   // Banco (referência ao cadastro mestre)
   banco: {
@@ -66,5 +66,6 @@ const ContaBancariaSchema = new mongoose.Schema({
 ContaBancariaSchema.index({ banco: 1 });
 ContaBancariaSchema.index({ ativo: 1 });
 ContaBancariaSchema.index({ apelido: 1 });
+ContaBancariaSchema.index({ lojistaId: 1, codigo: 1 }, { unique: true });
 
 module.exports = mongoose.model('ContaBancaria', ContaBancariaSchema);

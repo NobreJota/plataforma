@@ -1,4 +1,4 @@
-{{!-- views/pages/contabil/razao.handlebars --}}
+{{!-- views/contab/contabil/razao.handlebars --}}
 
 <div class="contab-app">
 
@@ -35,26 +35,29 @@
 
     {{!-- ====== BARRA: GRUPOS (Ativo/Passivo/Despesas/Receitas) ====== --}}
     <div class="rz-grupos">
-      <button class="rz-tab active" data-grupo="1">Ativo</button>
-      <button class="rz-tab" data-grupo="2">Passivo</button>
-      <button class="rz-tab" data-grupo="3">Despesas</button>
-      <button class="rz-tab" data-grupo="4">Receitas</button>
+      <div class="rz-tabs">
+        <button class="rz-tab active" data-grupo="1">Ativo</button>
+        <button class="rz-tab" data-grupo="2">Passivo</button>
+        <button class="rz-tab" data-grupo="3">Despesas</button>
+        <button class="rz-tab" data-grupo="4">Receitas</button>
+      </div>
+      {{!-- Quinta parte da linha: o filtro de período, sempre visível.
+            Antes era um popup que abria ao clicar; virou campo fixo porque é
+            usado em toda consulta. --}}
+      <div class="rz-periodo-box">
+        <label>De <input type="date" id="rz-de"></label>
+        <label>Até <input type="date" id="rz-ate"></label>
+        <button class="rz-btn" id="rz-periodo-aplicar">Aplicar</button>
+      </div>
     </div>
 
     {{!-- ====== BARRA: COMBOS (Conta-título + Subtítulo + Busca) ====== --}}
     <div class="rz-combos">
-      <div class="rz-col-left">
-        <div class="rz-combo" id="rz-combo-titulo" tabindex="0">
-          <span class="rz-combo-label">CONTA-TÍTULO</span>
-          <span class="rz-combo-value" id="rz-titulo-value">Selecione...</span>
-          <i class="rz-chev">▾</i>
-          <div class="rz-dropdown" id="rz-titulo-list" hidden></div>
-        </div>
-        <div class="rz-search">
-          <span class="rz-search-icon">🔍</span>
-          <input type="text" id="rz-busca" placeholder="busca rápida por nome" autocomplete="off">
-          <div class="rz-dropdown" id="rz-busca-list" hidden></div>
-        </div>
+      <div class="rz-combo" id="rz-combo-titulo" tabindex="0">
+        <span class="rz-combo-label">CONTA-TÍTULO</span>
+        <span class="rz-combo-value" id="rz-titulo-value">Selecione...</span>
+        <i class="rz-chev">▾</i>
+        <div class="rz-dropdown" id="rz-titulo-list" hidden></div>
       </div>
 
       <div class="rz-combo" id="rz-combo-subtitulo" tabindex="0">
@@ -63,21 +66,36 @@
         <i class="rz-chev">▾</i>
         <div class="rz-dropdown" id="rz-sub-list" hidden></div>
       </div>
+
+      <div class="rz-search">
+        <span class="rz-search-icon">🔍</span>
+        <input type="text" id="rz-busca" placeholder="busca rápida por nome" autocomplete="off">
+        <div class="rz-dropdown" id="rz-busca-list" hidden></div>
+      </div>
     </div>
 
     {{!-- ====== BARRA: PERÍODO + TOTAIS ====== --}}
     <div class="rz-totais">
-      <span class="rz-periodo" id="rz-periodo" title="Clique para alterar">
-        📅 Período: <b id="rz-periodo-label">—</b>
-      </span>
-      <div class="rz-periodo-pop" id="rz-periodo-pop" hidden>
-        <label>De <input type="date" id="rz-de"></label>
-        <label>Até <input type="date" id="rz-ate"></label>
-        <button class="rz-btn" id="rz-periodo-aplicar">Aplicar</button>
+
+      {{!-- Menu de ações, à esquerda --}}
+      <nav class="rz-menu">
+        <div class="rz-menu-item" id="rz-menu-lanc">
+          Lançamentos <i class="rz-chev">▾</i>
+          <div class="rz-menu-drop" id="rz-menu-lanc-drop" hidden>
+            <button class="rz-menu-opt" data-acao="lanc-credito">Crédito</button>
+            <button class="rz-menu-opt" data-acao="lanc-debito">Débito</button>
+          </div>
+        </div>
+        <a class="rz-menu-item" href="/contab/saldo-transferido">Transferir saldo</a>
+        <button class="rz-menu-item" id="rz-menu-imprimir">Imprimir</button>
+      </nav>
+
+      {{!-- Totais, à direita --}}
+      <div class="rz-direita">
+        <span class="rz-resumo">Débito: <b class="rz-debito" id="rz-tot-deb">0,00</b></span>
+        <span class="rz-resumo">Crédito: <b class="rz-credito" id="rz-tot-cre">0,00</b></span>
+        <span class="rz-resumo">Saldo: <b id="rz-tot-saldo">0,00</b></span>
       </div>
-      <span class="rz-resumo">Débito: <b class="rz-debito" id="rz-tot-deb">0,00</b></span>
-      <span class="rz-resumo">Crédito: <b class="rz-credito" id="rz-tot-cre">0,00</b></span>
-      <span class="rz-resumo">Saldo: <b id="rz-tot-saldo">0,00</b></span>
     </div>
 
     {{!-- ====== GRADE DE LANÇAMENTOS ====== --}}
@@ -97,6 +115,19 @@
     </div>
 
   </main>
+</div>
+
+
+{{!-- ====== POPUP DA CONTRAPARTIDA ======
+      Aparece ao lado do código clicado. Mostra de que conta se trata sem
+      trocar o razão que está na tela — a consulta em andamento não se perde. --}}
+<div id="cp-pop" class="rz-cp-pop" hidden>
+  <div class="rz-cp-cod" id="cp-cod"></div>
+  <div class="rz-cp-nome" id="cp-nome">—</div>
+  <div class="rz-cp-acoes">
+    <button class="rz-btn" id="cp-abrir">Abrir esta conta</button>
+    <button class="rz-btn-claro" id="cp-fechar">Fechar</button>
+  </div>
 </div>
 
 
@@ -194,13 +225,17 @@
 
   /* GRUPOS */
   .rz-grupos {
-    display: flex; gap: 6px; padding: 10px 16px;
+    display: flex; gap: 12px; padding: 10px 16px; align-items: center;
     border-bottom: 1px solid #e5e7eb; background: #fff;
   }
+  /* A linha inteira é dividida em 5 partes iguais: as 4 abas e o período.
+     Por isso .rz-tabs vale 4 e .rz-periodo-box vale 1. */
+  .rz-tabs { display: flex; gap: 6px; flex: 4; }
   .rz-tab {
-    padding: 5px 14px; font-size: 12px; font-weight: 500;
+    flex: 1;
+    padding: 7px 14px; font-size: 13px; font-weight: 600;
     border: 1px solid #d1d5db; border-radius: 6px; background: #fff;
-    color: #6b7280; cursor: pointer;
+    color: #374151; cursor: pointer;
     font-family: inherit;
   }
   .rz-tab:hover { background: #f3f4f6; }
@@ -208,33 +243,74 @@
 
   /* COMBOS */
   .rz-combos {
-    display: flex; gap: 12px; padding: 10px 16px; align-items: flex-start;
+    display: flex; gap: 12px; padding: 10px 16px; align-items: center;
     background: #fafafa; border-bottom: 1px solid #e5e7eb;
   }
-  .rz-col-left { display: flex; flex-direction: column; gap: 5px; }
 
   .rz-combo {
     position: relative; display: flex; align-items: center; gap: 8px;
     border: 1px solid #d1d5db; border-radius: 6px; padding: 5px 10px;
-    background: #fff; font-size: 11px; cursor: pointer; min-width: 240px;
-    user-select: none; height: 28px;
+    background: #fff; font-size: 13px; cursor: pointer; min-width: 240px;
+    user-select: none; height: 32px;
   }
   .rz-combo:hover { border-color: #9ca3af; }
-  .rz-combo-label { color: #9ca3af; font-size: 9px; letter-spacing: 0.5px; }
+  .rz-combo-label { color: #6b7280; font-size: 10px; letter-spacing: 0.5px; }
   .rz-combo-value { color: #111; font-weight: 500; font-family: ui-monospace, monospace; flex: 1; }
   .rz-chev { margin-left: 4px; color: #6b7280; font-style: normal; }
 
   .rz-search {
     position: relative; display: flex; align-items: center; gap: 5px;
     border: 1px solid #d1d5db; border-radius: 6px; padding: 3px 8px;
-    background: #fff; min-width: 240px; height: 22px;
+    background: #fff; flex: 1; height: 28px;
+  }
+
+  /* PERÍODO (5ª parte da primeira linha) */
+  .rz-periodo-box {
+    flex: 1; display: flex; align-items: center; gap: 6px;
+    border: 1px solid #d1d5db; border-radius: 6px;
+    padding: 3px 8px; background: #fff; height: 28px;
+  }
+  .rz-periodo-box label {
+    display: flex; align-items: center; gap: 3px;
+    font-size: 12px; color: #374151; white-space: nowrap;
+  }
+  .rz-periodo-box input[type=date] {
+    border: 0; outline: 0; background: transparent;
+    font-size: 12px; font-family: inherit; color: #111;
+    padding: 0; width: 100px;
   }
   .rz-search-icon { font-size: 11px; opacity: .5; }
   .rz-search input {
     border: 0; outline: 0; flex: 1; background: transparent;
-    font-size: 10px; padding: 0; height: 16px;
+    font-size: 12px; padding: 0; height: 18px;
     font-family: inherit;
   }
+
+  /* O atributo hidden vale display:none, mas qualquer regra de classe com
+     display: flex ganha dele por especificidade — e o elemento aparece mesmo
+     "escondido". Estas duas linhas devolvem a palavra final ao hidden. */
+  .rz-menu-drop[hidden],
+  .rz-dropdown[hidden] { display: none !important; }
+
+  /* POPUP DA CONTRAPARTIDA */
+  .rz-cp-pop {
+    position: absolute; z-index: 80; min-width: 250px;
+    background: #fff; border: 1px solid #d1d5db; border-radius: 8px;
+    padding: 12px 14px; box-shadow: 0 10px 30px rgba(0,0,0,.16);
+  }
+  .rz-cp-pop[hidden] { display: none !important; }
+  .rz-cp-cod {
+    font-family: ui-monospace, monospace; font-size: 14px;
+    font-weight: 600; color: #1d4ed8;
+  }
+  .rz-cp-nome { font-size: 13px; color: #111; margin: 3px 0 10px; }
+  .rz-cp-acoes { display: flex; gap: 8px; }
+  .rz-btn-claro {
+    padding: 5px 12px; border: 1px solid #d1d5db; border-radius: 6px;
+    background: #fff; color: #374151; font-size: 12px;
+    font-family: inherit; cursor: pointer;
+  }
+  .rz-btn-claro:hover { background: #f3f4f6; }
 
   /* DROPDOWN */
   .rz-dropdown {
@@ -245,41 +321,47 @@
     min-width: 280px;
   }
   .rz-dropdown .rz-opt {
-    padding: 6px 10px; font-size: 11px; font-family: ui-monospace, monospace;
+    padding: 7px 10px; font-size: 13px; font-family: ui-monospace, monospace;
     cursor: pointer; border-bottom: 1px solid #f3f4f6;
   }
   .rz-dropdown .rz-opt:hover { background: #eff6ff; }
   .rz-dropdown .rz-opt.selected { background: #1d4ed8; color: #fff; }
   .rz-dropdown .rz-empty-opt { padding: 12px; text-align: center; color: #9ca3af; font-size: 11px; }
 
-  /* TOTAIS */
+  /* BARRA DE AÇÕES + TOTAIS */
   .rz-totais {
-    position: relative; display: flex; gap: 18px; align-items: center;
-    padding: 8px 16px; font-size: 11px; background: #fff;
-    border-bottom: 1px solid #e5e7eb; flex-wrap: wrap;
+    position: relative; display: flex; align-items: center;
+    padding: 8px 16px; font-size: 13px; background: #fff;
+    border-bottom: 1px solid #e5e7eb; gap: 18px;
   }
-  .rz-periodo {
-    display: inline-flex; align-items: center; gap: 4px; color: #6b7280;
-    cursor: pointer; border: 1px dashed #d1d5db; padding: 2px 8px;
-    border-radius: 4px;
+  /* Empurra período e totais para a direita, deixando o menu na esquerda. */
+  .rz-direita {
+    margin-left: auto; display: flex; align-items: center; gap: 18px;
   }
-  .rz-periodo:hover { background: #f9fafb; }
-  .rz-periodo b { color: #111; }
-  .rz-periodo-pop {
-    position: absolute; top: 36px; left: 16px; z-index: 60;
-    background: #fff; border: 1px solid #d1d5db; border-radius: 8px;
-    padding: 12px; display: flex; gap: 10px; align-items: flex-end;
-    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+
+  /* MENU DE AÇÕES */
+  .rz-menu { display: flex; align-items: center; gap: 4px; }
+  .rz-menu-item {
+    position: relative; display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 5px; border: 0; background: transparent;
+    font-size: 13px; font-family: inherit; color: #1f2937;
+    cursor: pointer; text-decoration: none; white-space: nowrap;
   }
-  .rz-periodo-pop label {
-    display: flex; flex-direction: column; gap: 3px;
-    font-size: 10px; color: #6b7280;
+  .rz-menu-item:hover { background: #f3f4f6; color: #111; }
+  .rz-menu-item.aberto { background: #eef2ff; color: #1d4ed8; }
+  .rz-menu-drop {
+    position: absolute; top: 100%; left: 0; margin-top: 4px; z-index: 70;
+    background: #fff; border: 1px solid #d1d5db; border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12); min-width: 140px;
+    padding: 4px; display: flex; flex-direction: column;
   }
-  .rz-periodo-pop input[type=date] {
-    padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 11px;
-    font-family: inherit;
+  .rz-menu-opt {
+    text-align: left; padding: 6px 10px; border: 0; border-radius: 4px;
+    background: transparent; font-size: 13px; font-family: inherit;
+    color: #1f2937; cursor: pointer;
   }
-  .rz-resumo { color: #6b7280; }
+  .rz-menu-opt:hover { background: #f3f4f6; }
+  .rz-resumo { color: #374151; }
   .rz-resumo b { color: #111; }
   .rz-debito { color: #15803d !important; }
   .rz-credito { color: #b91c1c !important; }
@@ -288,12 +370,12 @@
   .rz-grade { background: #fff; }
   .rz-grade-head {
     display: grid; grid-template-columns: 70px 80px 110px 1fr 100px 100px 100px;
-    background: #1d4ed8; color: #fff; font-size: 10px;
+    background: #1d4ed8; color: #fff; font-size: 11px;
     padding: 7px 16px; gap: 8px; font-weight: 500;
   }
   .rz-row {
     display: grid; grid-template-columns: 70px 80px 110px 1fr 100px 100px 100px;
-    padding: 7px 16px; gap: 8px; font-size: 11px;
+    padding: 9px 16px; gap: 8px; font-size: 13px; color: #111;
     font-family: ui-monospace, monospace; border-bottom: 1px solid #f3f4f6;
   }
   .rz-row:hover { background: #fafafa; }
@@ -366,4 +448,4 @@
   }
 </style>
 
-<script src="/js/contabil/razao.js"></script>
+<script src="/js/contab/contabil/razao.js"></script>

@@ -34,7 +34,7 @@ const ContaValoresSchema = new mongoose.Schema({
 }, { _id: true });
 
 const OrcamentoAnualSchema = new mongoose.Schema({
-  ano: { type: Number, required: true, unique: true, index: true },
+  ano: { type: Number, required: true },
 
   contas: [ContaValoresSchema],
 
@@ -54,6 +54,6 @@ const OrcamentoAnualSchema = new mongoose.Schema({
   autoIndex: false
 });
 
-OrcamentoAnualSchema.index({ ano: 1 });
+OrcamentoAnualSchema.index({ lojistaId: 1, ano: 1 }, { unique: true });
 
 module.exports = mongoose.model('OrcamentoAnual', OrcamentoAnualSchema);

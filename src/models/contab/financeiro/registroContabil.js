@@ -5,7 +5,7 @@
 const mongoose = require('mongoose');
 
 const RegistroContabilSchema = new mongoose.Schema({
-  codigo: { type: String, required: true, trim: true, unique: true },
+  codigo: { type: String, required: true, trim: true },
 
   tipo: {
     type: String,
@@ -88,6 +88,7 @@ RegistroContabilSchema.index({ tipo: 1 });
 RegistroContabilSchema.index({ contaSubTitulo: 1 });
 RegistroContabilSchema.index({ contaBancaria: 1 });
 RegistroContabilSchema.index({ status: 1 });
+RegistroContabilSchema.index({ lojistaId: 1, codigo: 1 }, { unique: true });
 
 // Preenche mes/ano automaticamente a partir da data
 RegistroContabilSchema.pre('save', function (next) {

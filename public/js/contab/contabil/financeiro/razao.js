@@ -28,12 +28,21 @@
   // ============================================================
   // HELPERS
   // ============================================================
-  async function getJson(url) {
+   async function getJson(url) {
     const r = await fetch(url);
+
+    if (r.status === 401) {
+      alert('Sua sessão expirou. Faça login novamente.');
+      window.location.href = '/usuariocontab/login';
+      return new Promise(() => {});
+    }
+
     const d = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(d.erro || `Erro ${r.status}`);
     return d;
   }
+
+
   function fmt(v) {
     if (v == null || v === 0) return '0,00';
     return Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

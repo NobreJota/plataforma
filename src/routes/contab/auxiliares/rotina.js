@@ -8,26 +8,51 @@
 // A sessão guarda `lojistaId` — chave do sistema multi-empresa. TODAS as
 // queries de contab devem filtrar por esse lojistaId (etapa 2C).
 
-const express = require('express');
-const router  = express.Router();
+const express  = require('express');
+const mongoose = require('mongoose');
+const router   = express.Router();
 
 // Model do Lojista (mora em src/models/empresa/lojista.js)
-// Este arquivo está em src/routes/contab/auxiliares/, então sobe 3 níveis
-// até src/ e desce em models/empresa/lojista
 const Lojista = require('../../../models/empresa/lojista');
 
 /* ---------------------------------------------------------------
    MIDDLEWARE ensureContab
-   Protege rotas internas do contab. Se não estiver logado, manda
-   pro login. Se estiver, expõe `req.lojistaId` pras rotas usarem
-   como filtro (Model.find({ lojistaId: req.lojistaId })).
+   Protege rotas internas do contab. Expõe `req.lojistaId` pras rotas
+   usarem como filtro: Model.find({ lojistaId: req.lojistaId })
+
+   IMPORTANTE — duas respostas diferentes:
+   - Tela (GET /contab/plano)  → redirect pro login
+   - API  (GET /contab/api/..) → 401 JSON
+
+   Sem essa separação, um fetch() com sessão expirada recebe um 302 e
+   depois o HTML da tela de login. O front tenta dar res.json() nisso e
+   estoura "Unexpected token '<'" — erro que parece bug de API mas é
+   sessão vencida.
+
+   req.lojistaId vai como ObjectId, não string. Filtro de igualdade
+   simples funciona com string, mas $in, $match de aggregate e
+   populate/match NÃO fazem o cast — e falham em silêncio, devolvendo
+   lista vazia. Convertendo aqui, no único lugar, o problema não existe.
    --------------------------------------------------------------- */
+function ehRequisicaoApi(req) {
+  return req.originalUrl.includes('/api/')
+      || req.xhr
+      || (req.get('accept') || '').includes('application/json');
+}
+
 function ensureContab(req, res, next) {
-  if (req.session && req.session.usuarioContab && req.session.usuarioContab.lojistaId) {
-    req.lojistaId = req.session.usuarioContab.lojistaId;
-    return next();
+  const id = req.session && req.session.usuarioContab && req.session.usuarioContab.lojistaId;
+
+  if (!id) {
+    if (ehRequisicaoApi(req)) {
+      return res.status(401).json({ erro: 'Sessão expirada. Faça login novamente.' });
+    }
+    return res.redirect('/usuariocontab/login');
   }
-  return res.redirect('/usuariocontab/login');
+
+  req.lojistaId = new mongoose.Types.ObjectId(String(id));
+  res.locals.usuarioContab = req.session.usuarioContab;   // disponível nas views
+  return next();
 }
 
 /* ---------------------------------------------------------------
@@ -84,7 +109,22 @@ router.post('/login', async (req, res) => {
       responsavel: lojista.nomeresponsavel   // "Augusta Cavalieri"
     };
 
-    return res.redirect('/usuariocontab/menu');
+    // Regrava o cookie de sessão com id novo. Sem isso, um id de sessão
+    // capturado antes do login continua válido depois dele (session fixation).
+    return req.session.regenerate((err) => {
+      if (err) {
+        console.error('❌ regenerate sessão contab:', err.message);
+        return res.redirect('/usuariocontab/login?erro=' + encodeURIComponent('Erro interno. Tente novamente.'));
+      }
+      req.session.usuarioContab = {
+        lojistaId:   lojista._id.toString(),
+        razao:       lojista.razao,
+        marca:       lojista.marca,
+        email:       lojista.email,
+        responsavel: lojista.nomeresponsavel
+      };
+      return res.redirect('/usuariocontab/menu');
+    });
   } catch (err) {
     console.error('❌ POST /usuariocontab/login:', err.message);
     return res.redirect('/usuariocontab/login?erro=' + encodeURIComponent('Erro interno. Tente novamente.'));
@@ -93,8 +133,7 @@ router.post('/login', async (req, res) => {
 
 /* ---------------------------------------------------------------
    GET /usuariocontab/menu
-   Menu principal do contab (protegido). Renderiza a view
-   views/contab/contabil/cooperado_menu.handlebars
+   Menu principal do contab (protegido).
    --------------------------------------------------------------- */
 router.get('/menu', ensureContab, (req, res) => {
   res.render('contab/contabil/cooperado_menu', {

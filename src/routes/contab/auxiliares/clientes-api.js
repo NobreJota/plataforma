@@ -12,10 +12,11 @@ const {
 /* =========================================================
    HELPERS
    ========================================================= */
-async function proximoCodigo() {
+// O código sequencial é por empresa: a segunda empresa começa no CLI-0001,
+// e não de onde a primeira parou.
+async function proximoCodigo(lojistaId) {
   const ultimo = await Cliente
-    .findOne({ codigo: /^CLI-/ })
-
+    .findOne({ lojistaId, codigo: /^CLI-/ })
     .sort({ codigo: -1 })
     .lean();
   if (!ultimo) return 'CLI-0001';
@@ -65,7 +66,7 @@ function validarContato(email, telefone) {
 router.get('/', async (req, res) => {
   try {
     const { busca = '', incluirInativos = 'false' } = req.query;
-    const filtro = {};
+    const filtro = { lojistaId: req.lojistaId };
     if (incluirInativos !== 'true') filtro.ativo = true;
 
     if (busca.trim()) {
@@ -84,7 +85,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const c = await Cliente.findById(req.params.id);
+    // findOne com lojistaId, e não findById: com o _id na mão, outra empresa
+    // abriria o cadastro por URL.
+    const c = await Cliente.findOne({ _id: req.params.id, lojistaId: req.lojistaId });
     if (!c) return res.status(404).json({ erro: 'Cliente não encontrado.' });
     res.json(decorar(c));
   } catch (err) {
@@ -96,7 +99,7 @@ router.get('/:id', async (req, res) => {
 router.get('/buscar-cpfcnpj/:doc', async (req, res) => {
   try {
     const doc = apenasNumeros(req.params.doc);
-    const existente = await Cliente.findOne({ cpfCnpj: doc });
+    const existente = await Cliente.findOne({ cpfCnpj: doc, lojistaId: req.lojistaId });
     if (existente) {
       return res.json({
         existe: true,
@@ -134,7 +137,7 @@ router.post('/', async (req, res) => {
 
     // 🔧 Verifica duplicidade ANTES de tentar inserir
     const docLimpo = apenasNumeros(cpfCnpj);
-    const existente = await Cliente.findOne({ cpfCnpj: docLimpo });
+    const existente = await Cliente.findOne({ cpfCnpj: docLimpo, lojistaId: req.lojistaId });
     if (existente) {
       return res.status(409).json({
         erro: `Já existe um cliente com este ${tipo === 'PF' ? 'CPF' : 'CNPJ'} (código ${existente.codigo}: ${existente.nome}).`
@@ -159,8 +162,9 @@ router.post('/', async (req, res) => {
       if (erroEnt) return res.status(400).json({ erro: erroEnt });
     }
 
-    const codigo = await proximoCodigo();
+    const codigo = await proximoCodigo(req.lojistaId);
     const novo = await Cliente.create({
+      lojistaId: req.lojistaId,
       codigo, tipo, nome, cpfCnpj,
       email:       email       || '',
       telefone:    telefone    || '',
@@ -226,9 +230,9 @@ router.put('/:id', async (req, res) => {
       }
     }
 
-    const upd = await Cliente.findByIdAndUpdate(
-      req.params.id, patch,
-      { new: true, runValidators: true, omitUndefined: true }
+    const upd = await Cliente.findOneAndUpdate(
+      { _id: req.params.id, lojistaId: req.lojistaId }, patch,
+      { new: true, runValidators: true }
     );
     if (!upd) return res.status(404).json({ erro: 'Cliente não encontrado.' });
     res.json(decorar(upd));
@@ -242,8 +246,8 @@ router.put('/:id', async (req, res) => {
    ========================================================= */
 router.delete('/:id', async (req, res) => {
   try {
-    const upd = await Cliente.findByIdAndUpdate(
-      req.params.id, { ativo: false }, { new: true }
+    const upd = await Cliente.findOneAndUpdate(
+      { _id: req.params.id, lojistaId: req.lojistaId }, { ativo: false }, { new: true }
     );
     if (!upd) return res.status(404).json({ erro: 'Cliente não encontrado.' });
     res.json({ ok: true });
@@ -252,8 +256,8 @@ router.delete('/:id', async (req, res) => {
 
 router.post('/:id/reativar', async (req, res) => {
   try {
-    const upd = await Cliente.findByIdAndUpdate(
-      req.params.id, { ativo: true }, { new: true }
+    const upd = await Cliente.findOneAndUpdate(
+      { _id: req.params.id, lojistaId: req.lojistaId }, { ativo: true }, { new: true }
     );
     if (!upd) return res.status(404).json({ erro: 'Cliente não encontrado.' });
     res.json(decorar(upd));

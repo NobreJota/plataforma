@@ -10,8 +10,7 @@ const CompraFornecedorSchema = new mongoose.Schema({
   fornecedor: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'fornec',
-    required: true,
-    unique: true   // cada fornecedor vinculado uma vez
+    required: true
   },
 
   // Snapshot (evita lookup + histórico)
@@ -37,5 +36,6 @@ const CompraFornecedorSchema = new mongoose.Schema({
 
 CompraFornecedorSchema.index({ razao: 1 });
 CompraFornecedorSchema.index({ ativo: 1 });
+CompraFornecedorSchema.index({ lojistaId: 1, fornecedor: 1 }, { unique: true });
 
 module.exports = mongoose.model('CompraFornecedor', CompraFornecedorSchema);

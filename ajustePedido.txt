@@ -1,0 +1,85 @@
+[dotenv@17.0.1] injecting env (13) from .env – [tip] encrypt with dotenvx: https://dotenvx.com
+✅ MongoDB conectado=1000: dbaas-db-9498210-a980bbcd.mongo.ondigitalocean.com:27017 | DB: admin
+conectado ao banco
+
+--- simulação (nada é gravado) ---
+
+Pedido no 2  ·  situacao P
+  itens ......... 9
+  total ......... 50.481,97
+  fluxo ativo ... 3 linha(s)
+  notas ligadas . 1  (620819)
+
+  -> situacao vira C, as linhas do fluxo saem, as notas ficam sem pedido
+
+nada foi gravado. Para gravar, repita com --aplicar
+
+conexão fechada.
+[dotenv@17.0.1] injecting env (13) from .env – [tip] encrypt with dotenvx: https://dotenvx.com
+✅ MongoDB conectado=1000: dbaas-db-9498210-a980bbcd.mongo.ondigitalocean.com:27017 | DB: admin
+conectado ao banco
+
+>>> MODO APLICAR <<<
+
+Pedido no 2  ·  situacao P
+  itens ......... 9
+  total ......... 50.481,97
+  fluxo ativo ... 3 linha(s)
+  notas ligadas . 1  (620819)
+
+  -> situacao vira C, as linhas do fluxo saem, as notas ficam sem pedido
+
+[ok] pedido no 2 cancelado.
+
+conexão fechada.
+[dotenv@17.0.1] injecting env (13) from .env – [tip] encrypt with dotenvx: https://dotenvx.com
+✅ MongoDB conectado=1000: dbaas-db-9498210-a980bbcd.mongo.ondigitalocean.com:27017 | DB: admin
+conectado ao banco
+
+--- simulação (nada é gravado) ---
+
+Nota 620819/5  RINNAI BRASIL TEC. DE AQUECIMENTO LTDA
+  8 itens  ·  29.469,99
+
+Estes itens ainda nao tem o nosso codigo:
+
+    REUM200CFHBNE   AQUECEDOR DE AGUA A GAS GN
+
+ERRO: 1 item(ns) sem codigo. Identifique na tela da nota e rode de novo.
+
+conexão fechada.
+[dotenv@17.0.1] injecting env (13) from .env – [tip] encrypt with dotenvx: https://dotenvx.com
+✅ MongoDB conectado=1000: dbaas-db-9498210-a980bbcd.mongo.ondigitalocean.com:27017 | DB: admin
+conectado ao banco
+
+>>> MODO APLICAR <<<
+
+Nota 620819/5  RINNAI BRASIL TEC. DE AQUECIMENTO LTDA
+  8 itens  ·  29.469,99
+
+Estes itens ainda nao tem o nosso codigo:
+
+    REUM200CFHBNE   AQUECEDOR DE AGUA A GAS GN
+
+ERRO: 1 item(ns) sem codigo. Identifique na tela da nota e rode de novo.
+
+conexão fechada.
+[dotenv@17.0.1] injecting env (13) from .env – [tip] encrypt with dotenvx: https://dotenvx.com
+✅ MongoDB conectado=1000: dbaas-db-9498210-a980bbcd.mongo.ondigitalocean.com:27017 | DB: admin
+conectado ao banco
+
+>>> MODO APLICAR <<<
+
+Pedido avulso a criar:  no 3
+  fornecedor ..... RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.
+  entrega ........ 11/10/26
+  total .......... 15.369,30
+
+      4978  aquec.gás  20 l/gn    M 200 (1697)      1 x   1.682,14
+      5353  aquec.gás 42 l/glp   3201 FFA-BE        2 x   3.500,00
+      5386  aquec.gás  15  l/gn    M 150 (3056)     3 x   1.254,64
+      5451  master sistema MEC - MSB-M              4 x     730,81
+
+[ok] pedido avulso no 3 criado.
+
+conexão fechada.

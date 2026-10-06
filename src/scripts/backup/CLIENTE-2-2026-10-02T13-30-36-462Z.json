@@ -1,0 +1,558 @@
+[
+  {
+    "_id": {
+      "$oid": "6a06f20d88094a49310ffbd5"
+    },
+    "codigo": "CLI-0001",
+    "tipo": "PF",
+    "nome": "Jorge Viana Lessa",
+    "cpfCnpj": "37685929791",
+    "email": "jorgelessa@terra.com.br",
+    "telefone": "(27) 99942-6279",
+    "observacoes": "",
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1778840077074"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1778840361714"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a06f2c088094a49310ffbdc"
+    },
+    "codigo": "CLI-0002",
+    "tipo": "PJ",
+    "nome": "Armação Comercial Ltda",
+    "cpfCnpj": "27323484000166",
+    "email": "financeiro.armacao@terra.com.br",
+    "telefone": "(27) 99999-9999",
+    "observacoes": "",
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1778840256788"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1778926527409"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a086f67838996afe030c574"
+    },
+    "codigo": "CLI-0003",
+    "tipo": "PF",
+    "nome": "Augusta Cavalieri",
+    "cpfCnpj": "70337349720",
+    "email": "augusta@gmail.com",
+    "telefone": "(27) 99932-3232",
+    "observacoes": "",
+    "enderecoCobranca": {
+      "cep": "29046010",
+      "logradouro": "Avenida Leitão da Silva",
+      "numero": "905",
+      "complemento": "loja",
+      "bairro": "Gurigica",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "enderecoEntrega": {
+      "cep": "29046010",
+      "logradouro": "Avenida Leitão da Silva",
+      "numero": "905",
+      "complemento": "loja",
+      "bairro": "Gurigica",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "entregaIgualCobranca": true,
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1778937703853"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1778937703853"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0adf0bfa34fe0136f9c051"
+    },
+    "codigo": "CLI-0004",
+    "tipo": "PF",
+    "nome": "Carlos Eduardo",
+    "cpfCnpj": "86265687700",
+    "email": "romano@gmail.com",
+    "telefone": "(27) 99978-6543",
+    "inscricaoEstadual": "",
+    "inscricaoMunicipal": "",
+    "observacoes": "",
+    "enderecoCobranca": {
+      "cep": "29057630",
+      "logradouro": "Rua Desembargador João Manoel de Carvalho",
+      "numero": "100",
+      "complemento": "aptº",
+      "bairro": "Barro Vermelho",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "enderecoEntrega": {
+      "cep": "29057630",
+      "logradouro": "Rua Desembargador João Manoel de Carvalho",
+      "numero": "100",
+      "complemento": "aptº",
+      "bairro": "Barro Vermelho",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "entregaIgualCobranca": true,
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779097355966"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779097355966"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0adfb0fa34fe0136f9c056"
+    },
+    "codigo": "CLI-0005",
+    "tipo": "PJ",
+    "nome": "LOG TERMINAIS E TRANSPORTES LTDA",
+    "cpfCnpj": "31199240000190",
+    "email": "log@gmail.com",
+    "telefone": "(27) 3298-4800",
+    "inscricaoEstadual": "083903640",
+    "inscricaoMunicipal": "ISENTO",
+    "observacoes": "",
+    "enderecoCobranca": {
+      "cep": "29104360",
+      "logradouro": "DARLY SANTOS",
+      "numero": "2487",
+      "complemento": "sede",
+      "bairro": "POLO EMPRESARIAL NOVO MEXICO",
+      "cidade": "VILA VELHA",
+      "uf": "ES"
+    },
+    "enderecoEntrega": {
+      "cep": "29104360",
+      "logradouro": "DARLY SANTOS",
+      "numero": "2487",
+      "complemento": "sede",
+      "bairro": "POLO EMPRESARIAL NOVO MEXICO",
+      "cidade": "VILA VELHA",
+      "uf": "ES"
+    },
+    "entregaIgualCobranca": true,
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779097520842"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779097520842"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0ae0c5fa34fe0136f9c05b"
+    },
+    "codigo": "CLI-0006",
+    "tipo": "PF",
+    "nome": "Janete Gazzani Ferreira",
+    "cpfCnpj": "21402680759",
+    "email": "gazani@gmail.com",
+    "telefone": "(27) 99987-6543",
+    "inscricaoEstadual": "ISENTO",
+    "inscricaoMunicipal": "ISENTO",
+    "observacoes": "",
+    "enderecoCobranca": {
+      "cep": "29050667",
+      "logradouro": "Avenida Marechal Mascarenhas de Moraes",
+      "numero": "654",
+      "complemento": "apto",
+      "bairro": "Bento Ferreira",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "enderecoEntrega": {
+      "cep": "29050667",
+      "logradouro": "Avenida Marechal Mascarenhas de Moraes",
+      "numero": "654",
+      "complemento": "apto",
+      "bairro": "Bento Ferreira",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "entregaIgualCobranca": true,
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779097797710"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779098026868"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0aeae3f9f58c1a4ce73b7e"
+    },
+    "codigo": "CLI-0007",
+    "tipo": "PF",
+    "nome": "Luiz Roberto Faé",
+    "cpfCnpj": "14883598730",
+    "email": "jota@gmail.com",
+    "telefone": "(27) 88987-6543",
+    "inscricaoEstadual": "",
+    "inscricaoMunicipal": "",
+    "observacoes": "",
+    "enderecoCobranca": {
+      "cep": "29102020",
+      "logradouro": "Rodovia do Sol",
+      "numero": "89",
+      "complemento": "casa",
+      "bairro": "Praia de Itaparica",
+      "cidade": "Vila Velha",
+      "uf": "ES"
+    },
+    "enderecoEntrega": {
+      "cep": "29102020",
+      "logradouro": "Rodovia do Sol",
+      "numero": "89",
+      "complemento": "casa",
+      "bairro": "Praia de Itaparica",
+      "cidade": "Vila Velha",
+      "uf": "ES"
+    },
+    "entregaIgualCobranca": true,
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779100387936"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779100387936"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0aedb2db59af20dcfa6ceb"
+    },
+    "codigo": "CLI-0008",
+    "tipo": "PF",
+    "nome": "Marcos Vinicius Gomes",
+    "cpfCnpj": "14883598731",
+    "email": "gomes@gmail.com",
+    "telefone": "(27) 87659-8760",
+    "inscricaoEstadual": "",
+    "inscricaoMunicipal": "",
+    "observacoes": "",
+    "enderecoCobranca": {
+      "cep": "29056253",
+      "logradouro": "Avenida Rio Branco",
+      "numero": "9087",
+      "complemento": "De 437 a 925 - Lado Ímpar",
+      "bairro": "Santa Lúcia",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "enderecoEntrega": {
+      "cep": "29056253",
+      "logradouro": "Avenida Rio Branco",
+      "numero": "9087",
+      "complemento": "De 437 a 925 - Lado Ímpar",
+      "bairro": "Santa Lúcia",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "entregaIgualCobranca": true,
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779101106754"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779101145881"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0aee28db59af20dcfa6cf2"
+    },
+    "codigo": "CLI-0009",
+    "tipo": "PF",
+    "nome": "José Alfredo",
+    "cpfCnpj": "14883598732",
+    "email": "alfredo@gmail.com",
+    "telefone": "(27) 99956-4321",
+    "inscricaoEstadual": "",
+    "inscricaoMunicipal": "",
+    "observacoes": "",
+    "enderecoCobranca": {
+      "cep": "29055655",
+      "logradouro": "Rua Major Clarindo Fundão",
+      "numero": "5678",
+      "complemento": "apto",
+      "bairro": "Praia do Canto",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "enderecoEntrega": {
+      "cep": "29055655",
+      "logradouro": "Rua Major Clarindo Fundão",
+      "numero": "5678",
+      "complemento": "apto",
+      "bairro": "Praia do Canto",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "entregaIgualCobranca": true,
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779101224126"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779101224126"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0c67090c3309ad9534b4db"
+    },
+    "codigo": "CLI-0010",
+    "tipo": "PF",
+    "nome": "Geraldo Antonio da Silva",
+    "cpfCnpj": "67497233734",
+    "email": "gantonio@gmail.com",
+    "telefone": "(27) 99967-5432",
+    "inscricaoEstadual": "",
+    "inscricaoMunicipal": "",
+    "observacoes": "",
+    "enderecoCobranca": {
+      "cep": "29055260",
+      "logradouro": "Rua Aleixo Netto",
+      "numero": "8987",
+      "complemento": "De 420 Ao Fim - Lado Par",
+      "bairro": "Praia do Canto",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "enderecoEntrega": {
+      "cep": "29055260",
+      "logradouro": "Rua Aleixo Netto",
+      "numero": "8987",
+      "complemento": "De 420 Ao Fim - Lado Par",
+      "bairro": "Praia do Canto",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "entregaIgualCobranca": true,
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779197705004"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779197705004"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0cb51034e9f73decb00b84"
+    },
+    "codigo": "CLI-0011",
+    "tipo": "PF",
+    "nome": "Ricardo de Abreu  Judíce",
+    "cpfCnpj": "39476014768",
+    "email": "judice@gmail.com",
+    "telefone": "(27) 9876-8999",
+    "inscricaoEstadual": "",
+    "inscricaoMunicipal": "",
+    "observacoes": "",
+    "enderecoCobranca": {
+      "cep": "29052250",
+      "logradouro": "Beco das Flores",
+      "numero": "8765",
+      "complemento": "sala 901",
+      "bairro": "Praia do Suá",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "enderecoEntrega": {
+      "cep": "29052250",
+      "logradouro": "Beco das Flores",
+      "numero": "8765",
+      "complemento": "sala 901",
+      "bairro": "Praia do Suá",
+      "cidade": "Vitória",
+      "uf": "ES"
+    },
+    "entregaIgualCobranca": true,
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779217680448"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779217680448"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0cb58b34e9f73decb00b8a"
+    },
+    "codigo": "CLI-0012",
+    "tipo": "PJ",
+    "nome": "AC Empreendimentos e Participacoes LTDA",
+    "cpfCnpj": "34149273000114",
+    "email": "acempreendimentos@gmail.com",
+    "telefone": "(27) 9989-6609",
+    "inscricaoEstadual": "0",
+    "inscricaoMunicipal": "0",
+    "observacoes": "",
+    "enderecoCobranca": {
+      "cep": "29132690",
+      "logradouro": "Br 262",
+      "numero": "S/N",
+      "complemento": "Km 13 Galpao02 Sala D",
+      "bairro": "Calabouco, Ribeira",
+      "cidade": "Viana",
+      "uf": "ES"
+    },
+    "enderecoEntrega": {
+      "cep": "29132690",
+      "logradouro": "Br 262",
+      "numero": "S/N",
+      "complemento": "Km 13 Galpao02 Sala D",
+      "bairro": "Calabouco, Ribeira",
+      "cidade": "Viana",
+      "uf": "ES"
+    },
+    "entregaIgualCobranca": true,
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779217803114"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779217803114"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  }
+]

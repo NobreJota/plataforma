@@ -1,0 +1,2024 @@
+[
+  {
+    "_id": {
+      "$oid": "6ab57fb7cb0b09f25414768a"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "numero": {
+      "$numberInt": "1"
+    },
+    "situacao": "C",
+    "fornecedor": {
+      "$oid": "68936e90198046c40856a443"
+    },
+    "nrFornecOrigem": {
+      "$numberInt": "67"
+    },
+    "dataEmissao": {
+      "$date": {
+        "$numberLong": "1790279607022"
+      }
+    },
+    "dataEntregaPrevista": {
+      "$date": {
+        "$numberLong": "1792800000000"
+      }
+    },
+    "condicaoPagamento": {
+      "texto": "84/112 dias",
+      "dias": [
+        {
+          "$numberInt": "84"
+        },
+        {
+          "$numberInt": "112"
+        }
+      ]
+    },
+    "representante": "",
+    "itens": [
+      {
+        "codigoOrigem": {
+          "$numberInt": "5987"
+        },
+        "referencia": "KO 38 D",
+        "descricao": "Aquec. GN      KO 38 D  BR   38 Prime(3590)",
+        "quantidade": {
+          "$numberInt": "4"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "352588"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "4"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab57fb7cb0b09f25414768b"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "5588"
+        },
+        "referencia": "KO 21 Di",
+        "descricao": "Aquec. GN      KO 21 Di  Inox (3556)",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "167359"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "2"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab57fb7cb0b09f25414768c"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "5554"
+        },
+        "referencia": "KO 16 D",
+        "descricao": "Aquec. GN      KO 16 D  BR   16lts(3552)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "141249"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "4"
+          },
+          "estoqueNaData": {
+            "$numberInt": "3"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab57fb7cb0b09f25414768d"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "5552"
+        },
+        "referencia": "KO 21 Di",
+        "descricao": "Aquec. GLP/KO 21 Di  Inox   21 lts(2973)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "186059"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "2"
+          },
+          "estoqueNaData": {
+            "$numberInt": "1"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab57fb7cb0b09f25414768e"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "5144"
+        },
+        "referencia": "TP 80",
+        "descricao": "mini-bomba TP 80  110 V - Bronze (3326)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "61034"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "2"
+          },
+          "estoqueNaData": {
+            "$numberInt": "1"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab57fb7cb0b09f25414768f"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "5115"
+        },
+        "referencia": "21903",
+        "descricao": "placa contr eletr. KO 4000 SE",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "39796"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "2"
+          },
+          "estoqueNaData": {
+            "$numberInt": "1"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab57fb7cb0b09f254147690"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6532"
+        },
+        "referencia": "",
+        "descricao": "Aquec. GN      KO 21 Decor Wb Preto",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "159900"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "1"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab57fb7cb0b09f254147691"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6171"
+        },
+        "referencia": "SP 200",
+        "descricao": "bomba silent press SP 200 bivolt (3273)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "84431"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "1"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab57fb7cb0b09f254147692"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6384"
+        },
+        "referencia": "",
+        "descricao": "bomba smartPress 37  220 V",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "176682"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "1"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab57fb7cb0b09f254147693"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "5954"
+        },
+        "referencia": "22274",
+        "descricao": "fluxostato KO 15-16-20-21D.DI PRIME",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "13698"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "1"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab57fb7cb0b09f254147694"
+        }
+      }
+    ],
+    "valorTotal": {
+      "$numberInt": "2607919"
+    },
+    "lancamentosFluxo": [
+      {
+        "$oid": "6ab57fb7cb0b09f254147698"
+      },
+      {
+        "$oid": "6ab57fb7cb0b09f254147699"
+      }
+    ],
+    "observacao": "Frete CIF",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790279607036"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790632981561"
+      }
+    },
+    "__v": {
+      "$numberInt": "1"
+    },
+    "canceladoEm": {
+      "$date": {
+        "$numberLong": "1790632981557"
+      }
+    },
+    "motivoCancelamento": "Cancelado pelo COMPRA-8 (pedido de teste)"
+  },
+  {
+    "_id": {
+      "$oid": "6ab7cef4b649c5c88513eca5"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "numero": {
+      "$numberInt": "2"
+    },
+    "situacao": "C",
+    "fornecedor": {
+      "$oid": "68e002af6374d722404d456f"
+    },
+    "nrFornecOrigem": {
+      "$numberInt": "82"
+    },
+    "dataEmissao": {
+      "$date": {
+        "$numberLong": "1790430964152"
+      }
+    },
+    "dataEntregaPrevista": {
+      "$date": {
+        "$numberLong": "1792972800000"
+      }
+    },
+    "condicaoPagamento": {
+      "texto": "56/70/84 dias",
+      "dias": [
+        {
+          "$numberInt": "56"
+        },
+        {
+          "$numberInt": "70"
+        },
+        {
+          "$numberInt": "84"
+        }
+      ]
+    },
+    "representante": "",
+    "itens": [
+      {
+        "codigoOrigem": {
+          "$numberInt": "6440"
+        },
+        "referencia": "REU E351",
+        "descricao": "aquec.gás  35 l/GN   E 351  FEA",
+        "quantidade": {
+          "$numberInt": "4"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "415534"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "4"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab7cef4b649c5c88513eca6"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6003"
+        },
+        "referencia": "E 15FEH",
+        "descricao": "aquec.gás  15 l/gn    E 15 (3293)",
+        "quantidade": {
+          "$numberInt": "3"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "144528"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "7"
+          },
+          "estoqueNaData": {
+            "$numberInt": "4"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab7cef4b649c5c88513eca7"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "4858"
+        },
+        "referencia": "200CFHB",
+        "descricao": "aquec.gás  20 l/glp   M 200 (3011)",
+        "quantidade": {
+          "$numberInt": "3"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "170466"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "3"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab7cef4b649c5c88513eca8"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6023"
+        },
+        "referencia": "E271FEH",
+        "descricao": "aquec.gás  27 l/glp  E 271(1832)(1696)",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "292322"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "2"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab7cef4b649c5c88513eca9"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6047"
+        },
+        "referencia": "E331FEH",
+        "descricao": "aquec.gás  33 l/gn   E 331 (2962)",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "371625"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "2"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab7cef4b649c5c88513ecaa"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "5838"
+        },
+        "referencia": "E211FEH",
+        "descricao": "aquec.gás  21 l/gn    E 211 (2584)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "215155"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "2"
+          },
+          "estoqueNaData": {
+            "$numberInt": "1"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab7cef4b649c5c88513ecab"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "5824"
+        },
+        "referencia": "E211FEH",
+        "descricao": "aquec.gás  21 l/glp   E 211 (3094) BR",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "205194"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "1"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab7cef4b649c5c88513ecac"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6533"
+        },
+        "referencia": "Prata",
+        "descricao": "aquec.gás  27 l/glp  E 271 Prata",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "292322"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "1"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab7cef4b649c5c88513ecad"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6418"
+        },
+        "referencia": "REU E 351",
+        "descricao": "aquec.gás  35 l/glp   E 351  FEA",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "400514"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "1"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab7cef4b649c5c88513ecae"
+        }
+      }
+    ],
+    "valorTotal": {
+      "$numberInt": "5048197"
+    },
+    "lancamentosFluxo": [
+      {
+        "$oid": "6ab7cef4b649c5c88513ecb0"
+      },
+      {
+        "$oid": "6ab7cef4b649c5c88513ecb1"
+      },
+      {
+        "$oid": "6ab7cef4b649c5c88513ecb2"
+      }
+    ],
+    "observacao": "Frete CIF",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790430964163"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790461944734"
+      }
+    },
+    "__v": {
+      "$numberInt": "1"
+    },
+    "canceladoEm": {
+      "$date": {
+        "$numberLong": "1790461944724"
+      }
+    },
+    "motivoCancelamento": "Cancelado pelo COMPRA-8 (pedido de teste)"
+  },
+  {
+    "_id": {
+      "$oid": "6ab845e2b8cd6ac916b4a8cc"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "numero": {
+      "$numberInt": "3"
+    },
+    "situacao": "C",
+    "fornecedor": {
+      "$oid": "68e002af6374d722404d456f"
+    },
+    "dataEmissao": {
+      "$date": {
+        "$numberLong": "1790461410939"
+      }
+    },
+    "dataEntregaPrevista": {
+      "$date": {
+        "$numberLong": "1791757410914"
+      }
+    },
+    "condicaoPagamento": {
+      "texto": "30/60 dias",
+      "dias": [
+        {
+          "$numberInt": "30"
+        },
+        {
+          "$numberInt": "60"
+        }
+      ]
+    },
+    "itens": [
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "4978"
+        },
+        "referencia": "200CFHB",
+        "descricao": "aquec.gás  20 l/gn    M 200 (1697)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "168214"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab845e2b8cd6ac916b4a8cd"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "5353"
+        },
+        "referencia": "3202FFA",
+        "descricao": "aquec.gás 42 l/glp   3201 FFA-BE",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "350000"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab845e2b8cd6ac916b4a8ce"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "5386"
+        },
+        "referencia": "150CFHB",
+        "descricao": "aquec.gás  15  l/gn    M 150 (3056)",
+        "quantidade": {
+          "$numberInt": "3"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "125464"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab845e2b8cd6ac916b4a8cf"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "5451"
+        },
+        "referencia": "MSB-M",
+        "descricao": "master sistema MEC - MSB-M",
+        "quantidade": {
+          "$numberInt": "4"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "73081"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab845e2b8cd6ac916b4a8d0"
+        }
+      }
+    ],
+    "valorTotal": {
+      "$numberInt": "1536930"
+    },
+    "lancamentosFluxo": [
+      {
+        "$oid": "6ab845e3b8cd6ac916b4a8d2"
+      },
+      {
+        "$oid": "6ab845e3b8cd6ac916b4a8d3"
+      }
+    ],
+    "observacao": "Pedido avulso de teste",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461410954"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790632987713"
+      }
+    },
+    "__v": {
+      "$numberInt": "1"
+    },
+    "canceladoEm": {
+      "$date": {
+        "$numberLong": "1790632987710"
+      }
+    },
+    "motivoCancelamento": "Cancelado pelo COMPRA-8 (pedido de teste)"
+  },
+  {
+    "_id": {
+      "$oid": "6ab8469ba02df9c8e7cfbb7e"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "numero": {
+      "$numberInt": "4"
+    },
+    "situacao": "C",
+    "fornecedor": {
+      "$oid": "68e002af6374d722404d456f"
+    },
+    "nrFornecOrigem": {
+      "$numberInt": "82"
+    },
+    "dataEmissao": {
+      "$date": {
+        "$numberLong": "1790461595832"
+      }
+    },
+    "dataEntregaPrevista": {
+      "$date": {
+        "$numberLong": "1792972800000"
+      }
+    },
+    "condicaoPagamento": {
+      "texto": "56/70/84 dias",
+      "dias": [
+        {
+          "$numberInt": "56"
+        },
+        {
+          "$numberInt": "70"
+        },
+        {
+          "$numberInt": "84"
+        }
+      ]
+    },
+    "representante": "",
+    "itens": [
+      {
+        "codigoOrigem": {
+          "$numberInt": "6440"
+        },
+        "referencia": "REUE351FEABN3",
+        "descricao": "aquec.gás  35 l/GN   E 351  FEA",
+        "quantidade": {
+          "$numberInt": "4"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "415534"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "4"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab8469ba02df9c8e7cfbb7f"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6003"
+        },
+        "referencia": "E 15FEH",
+        "descricao": "aquec.gás  15 l/gn    E 15 (3293)",
+        "quantidade": {
+          "$numberInt": "3"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "144528"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "7"
+          },
+          "estoqueNaData": {
+            "$numberInt": "4"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab8469ba02df9c8e7cfbb80"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "4858"
+        },
+        "referencia": "REUM200CFHBLE",
+        "descricao": "aquec.gás  20 l/glp   M 200 (3011)",
+        "quantidade": {
+          "$numberInt": "3"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "170466"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "3"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab8469ba02df9c8e7cfbb81"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6023"
+        },
+        "referencia": "REUE271FEHBL3",
+        "descricao": "aquec.gás  27 l/glp  E 271(1832)(1696)",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "292322"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "2"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab8469ba02df9c8e7cfbb82"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6047"
+        },
+        "referencia": "REUE331FEHBN3",
+        "descricao": "aquec.gás  33 l/gn   E 331 (2962)",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "371625"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "2"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab8469ba02df9c8e7cfbb83"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "5838"
+        },
+        "referencia": "E211FEH",
+        "descricao": "aquec.gás  21 l/gn    E 211 (2584)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "215155"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "2"
+          },
+          "estoqueNaData": {
+            "$numberInt": "1"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab8469ba02df9c8e7cfbb84"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "5824"
+        },
+        "referencia": "REUE211FEHBN3",
+        "descricao": "aquec.gás  21 l/glp   E 211 (3094) BR",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "205194"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "1"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab8469ba02df9c8e7cfbb85"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6533"
+        },
+        "referencia": "Prata",
+        "descricao": "aquec.gás  27 l/glp  E 271 Prata",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "292322"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "1"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab8469ba02df9c8e7cfbb86"
+        }
+      },
+      {
+        "codigoOrigem": {
+          "$numberInt": "6418"
+        },
+        "referencia": "REUE351FEABL3",
+        "descricao": "aquec.gás  35 l/glp   E 351  FEA",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "400514"
+        },
+        "baseCalculo": {
+          "janelaDias": {
+            "$numberInt": "30"
+          },
+          "saidaNoPeriodo": {
+            "$numberInt": "1"
+          },
+          "estoqueNaData": {
+            "$numberInt": "0"
+          },
+          "aCaminhoNaData": {
+            "$numberInt": "0"
+          },
+          "ajustadoAMao": false
+        },
+        "_id": {
+          "$oid": "6ab8469ba02df9c8e7cfbb87"
+        }
+      }
+    ],
+    "valorTotal": {
+      "$numberInt": "5048197"
+    },
+    "lancamentosFluxo": [
+      {
+        "$oid": "6ab8469ba02df9c8e7cfbb8b"
+      },
+      {
+        "$oid": "6ab8469ba02df9c8e7cfbb8c"
+      },
+      {
+        "$oid": "6ab8469ba02df9c8e7cfbb8d"
+      }
+    ],
+    "observacao": "Frete CIF",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461595848"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790632993899"
+      }
+    },
+    "__v": {
+      "$numberInt": "1"
+    },
+    "canceladoEm": {
+      "$date": {
+        "$numberLong": "1790632993894"
+      }
+    },
+    "motivoCancelamento": "Cancelado pelo COMPRA-8 (pedido de teste)"
+  },
+  {
+    "_id": {
+      "$oid": "6ab84802ec8585dd5adfe40a"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "numero": {
+      "$numberInt": "5"
+    },
+    "situacao": "C",
+    "fornecedor": {
+      "$oid": "68e002af6374d722404d456f"
+    },
+    "dataEmissao": {
+      "$date": {
+        "$numberLong": "1790461954599"
+      }
+    },
+    "dataEntregaPrevista": {
+      "$date": {
+        "$numberLong": "1790337453154"
+      }
+    },
+    "condicaoPagamento": {
+      "texto": "52/66/80 dias",
+      "dias": [
+        {
+          "$numberInt": "52"
+        },
+        {
+          "$numberInt": "66"
+        },
+        {
+          "$numberInt": "80"
+        }
+      ]
+    },
+    "itens": [
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "5838"
+        },
+        "referencia": "E211FEH",
+        "descricao": "aquec.gás  21 l/gn    E 211 (2584)",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "206892"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84802ec8585dd5adfe40b"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "4858"
+        },
+        "referencia": "REUM200CFHBLE",
+        "descricao": "aquec.gás  20 l/glp   M 200 (3011)",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "168643"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84802ec8585dd5adfe40c"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "6440"
+        },
+        "referencia": "REUE351FEABN3",
+        "descricao": "aquec.gás  35 l/GN   E 351  FEA",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "390173"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84802ec8585dd5adfe40d"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "6047"
+        },
+        "referencia": "REUE331FEHBN3",
+        "descricao": "aquec.gás  33 l/gn   E 331 (2962)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "359246"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84802ec8585dd5adfe40e"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "6023"
+        },
+        "referencia": "REUE271FEHBL3",
+        "descricao": "aquec.gás  27 l/glp  E 271(1832)(1696)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "294051"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84802ec8585dd5adfe40f"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "6418"
+        },
+        "referencia": "REUE351FEABL3",
+        "descricao": "aquec.gás  35 l/glp   E 351  FEA",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "390173"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84802ec8585dd5adfe410"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "4858"
+        },
+        "referencia": "REUM200CFHBLE",
+        "descricao": "aquec.gás  20 l/glp   M 200 (3011)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "168643"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84802ec8585dd5adfe411"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "5824"
+        },
+        "referencia": "REUE211FEHBN3",
+        "descricao": "aquec.gás  21 l/glp   E 211 (3094) BR",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "206892"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84802ec8585dd5adfe412"
+        }
+      }
+    ],
+    "valorTotal": {
+      "$numberInt": "2767140"
+    },
+    "lancamentosFluxo": [
+      {
+        "$oid": "6ab84802ec8585dd5adfe416"
+      },
+      {
+        "$oid": "6ab84802ec8585dd5adfe417"
+      },
+      {
+        "$oid": "6ab84802ec8585dd5adfe418"
+      }
+    ],
+    "observacao": "Pedido de teste montado a partir da nota 620819",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461954617"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790463306428"
+      }
+    },
+    "__v": {
+      "$numberInt": "1"
+    },
+    "canceladoEm": {
+      "$date": {
+        "$numberLong": "1790463306425"
+      }
+    },
+    "motivoCancelamento": "Cancelado pelo COMPRA-8 (pedido de teste)"
+  },
+  {
+    "_id": {
+      "$oid": "6ab84808953f4e376b3e28c1"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "numero": {
+      "$numberInt": "6"
+    },
+    "situacao": "C",
+    "fornecedor": {
+      "$oid": "68e002af6374d722404d456f"
+    },
+    "dataEmissao": {
+      "$date": {
+        "$numberLong": "1790461960531"
+      }
+    },
+    "dataEntregaPrevista": {
+      "$date": {
+        "$numberLong": "1791757960506"
+      }
+    },
+    "condicaoPagamento": {
+      "texto": "30/60 dias",
+      "dias": [
+        {
+          "$numberInt": "30"
+        },
+        {
+          "$numberInt": "60"
+        }
+      ]
+    },
+    "itens": [
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "4978"
+        },
+        "referencia": "200CFHB",
+        "descricao": "aquec.gás  20 l/gn    M 200 (1697)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "168214"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84808953f4e376b3e28c2"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "5353"
+        },
+        "referencia": "3202FFA",
+        "descricao": "aquec.gás 42 l/glp   3201 FFA-BE",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "350000"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84808953f4e376b3e28c3"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "5386"
+        },
+        "referencia": "150CFHB",
+        "descricao": "aquec.gás  15  l/gn    M 150 (3056)",
+        "quantidade": {
+          "$numberInt": "3"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "125464"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84808953f4e376b3e28c4"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "5451"
+        },
+        "referencia": "MSB-M",
+        "descricao": "master sistema MEC - MSB-M",
+        "quantidade": {
+          "$numberInt": "4"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "0"
+        },
+        "custoUnitario": {
+          "$numberInt": "73081"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84808953f4e376b3e28c5"
+        }
+      }
+    ],
+    "valorTotal": {
+      "$numberInt": "1536930"
+    },
+    "lancamentosFluxo": [
+      {
+        "$oid": "6ab84808953f4e376b3e28c7"
+      },
+      {
+        "$oid": "6ab84808953f4e376b3e28c8"
+      }
+    ],
+    "observacao": "Pedido avulso de teste",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461960554"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790633000256"
+      }
+    },
+    "__v": {
+      "$numberInt": "1"
+    },
+    "canceladoEm": {
+      "$date": {
+        "$numberLong": "1790633000254"
+      }
+    },
+    "motivoCancelamento": "Cancelado pelo COMPRA-8 (pedido de teste)"
+  },
+  {
+    "_id": {
+      "$oid": "6ab84d590455e868a56b84d9"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "numero": {
+      "$numberInt": "7"
+    },
+    "situacao": "L",
+    "fornecedor": {
+      "$oid": "68e002af6374d722404d456f"
+    },
+    "dataEmissao": {
+      "$date": {
+        "$numberLong": "1790463321541"
+      }
+    },
+    "dataEntregaPrevista": {
+      "$date": {
+        "$numberLong": "1790337453154"
+      }
+    },
+    "condicaoPagamento": {
+      "texto": "52/66/80 dias",
+      "dias": [
+        {
+          "$numberInt": "52"
+        },
+        {
+          "$numberInt": "66"
+        },
+        {
+          "$numberInt": "80"
+        }
+      ]
+    },
+    "itens": [
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "5838"
+        },
+        "referencia": "E211FEH",
+        "descricao": "aquec.gás  21 l/gn    E 211 (2584)",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "2"
+        },
+        "custoUnitario": {
+          "$numberInt": "206892"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84d590455e868a56b84da"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "4858"
+        },
+        "referencia": "REUM200CFHBLE",
+        "descricao": "aquec.gás  20 l/glp   M 200 (3011)",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "2"
+        },
+        "custoUnitario": {
+          "$numberInt": "168643"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84d590455e868a56b84db"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "6440"
+        },
+        "referencia": "REUE351FEABN3",
+        "descricao": "aquec.gás  35 l/GN   E 351  FEA",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "1"
+        },
+        "custoUnitario": {
+          "$numberInt": "390173"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84d590455e868a56b84dc"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "6047"
+        },
+        "referencia": "REUE331FEHBN3",
+        "descricao": "aquec.gás  33 l/gn   E 331 (2962)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "1"
+        },
+        "custoUnitario": {
+          "$numberInt": "359246"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84d590455e868a56b84dd"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "6023"
+        },
+        "referencia": "REUE271FEHBL3",
+        "descricao": "aquec.gás  27 l/glp  E 271(1832)(1696)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "1"
+        },
+        "custoUnitario": {
+          "$numberInt": "294051"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84d590455e868a56b84de"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "6418"
+        },
+        "referencia": "REUE351FEABL3",
+        "descricao": "aquec.gás  35 l/glp   E 351  FEA",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "1"
+        },
+        "custoUnitario": {
+          "$numberInt": "390173"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84d590455e868a56b84df"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "4978"
+        },
+        "referencia": "200CFHB",
+        "descricao": "aquec.gás  20 l/gn    M 200 (1697)",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "1"
+        },
+        "custoUnitario": {
+          "$numberInt": "168643"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84d590455e868a56b84e0"
+        }
+      },
+      {
+        "produto": null,
+        "codigoOrigem": {
+          "$numberInt": "5824"
+        },
+        "referencia": "REUE211FEHBN3",
+        "descricao": "aquec.gás  21 l/glp   E 211 (3094) BR",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "quantidadeAtendida": {
+          "$numberInt": "2"
+        },
+        "custoUnitario": {
+          "$numberInt": "206892"
+        },
+        "baseCalculo": {
+          "ajustadoAMao": true
+        },
+        "_id": {
+          "$oid": "6ab84d590455e868a56b84e1"
+        }
+      }
+    ],
+    "valorTotal": {
+      "$numberInt": "2767140"
+    },
+    "lancamentosFluxo": [
+      {
+        "$oid": "6ab84d590455e868a56b84e3"
+      },
+      {
+        "$oid": "6ab84d590455e868a56b84e4"
+      },
+      {
+        "$oid": "6ab84d590455e868a56b84e5"
+      }
+    ],
+    "observacao": "Pedido de teste montado a partir da nota 620819",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790463321564"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790513169364"
+      }
+    },
+    "__v": {
+      "$numberInt": "1"
+    },
+    "dataEntregaReal": {
+      "$date": {
+        "$numberLong": "1790513168844"
+      }
+    }
+  }
+]

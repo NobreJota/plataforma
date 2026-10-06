@@ -1,0 +1,43 @@
+==============================================================================
+Conferencia das janelas de consumo
+C:\Armação\Dados\2026B\2026B.mdb
+==============================================================================
+
+Cupons com data: 1100
+Itens usaveis:   3164   (sem cupom correspondente: 0)
+Codigos gravados em Compras_MédiaQuant: 161
+
+### Melhores ancoras para a janela de 30 dias
+
+    data         devolucao        acertos / 161
+    2026-09-21   incluida        130
+    2026-09-21   excluida        130
+    2026-09-18   incluida        109
+    2026-09-18   excluida        109
+    2026-09-17   incluida        102
+
+### Conferencia das 4 janelas   (ancora 2026-09-21, devolucao incluida)
+
+    15 dias ....  137 / 161   (85.1%)
+    30 dias ....  130 / 161   (80.7%)
+    60 dias ....  110 / 161   (68.3%)
+    90 dias ....   72 / 161   (44.7%)
+
+Codigos com alguma divergencia: 89
+
+    --- primeiras 15 ---
+    cod   6311   60d: antigo=4 meu=5   90d: antigo=4 meu=7
+    cod   6310   15d: antigo=1 meu=5   30d: antigo=2 meu=8   60d: antigo=2 meu=32   90d: antigo=2 meu=60
+    cod   5217   90d: antigo=10 meu=12
+    cod   5115   60d: antigo=6 meu=7   90d: antigo=6 meu=7
+    cod   6363   60d: antigo=12 meu=14   90d: antigo=16 meu=20
+    cod   6169   15d: antigo=2 meu=13   30d: antigo=4 meu=37   60d: antigo=12 meu=72   90d: antigo=17 meu=94
+    cod   6323   15d: antigo=2 meu=22   30d: antigo=2 meu=60   60d: antigo=7 meu=117   90d: antigo=9 meu=139
+    cod   6362   15d: antigo=1 meu=9   30d: antigo=3 meu=15   60d: antigo=5 meu=35   90d: antigo=6 meu=64
+    cod   6164   15d: antigo=1 meu=11   30d: antigo=1 meu=31   60d: antigo=2 meu=53   90d: antigo=2 meu=63
+    cod   6168   15d: antigo=1 meu=2   30d: antigo=2 meu=4   60d: antigo=3 meu=6   90d: antigo=3 meu=6
+    cod   5526   90d: antigo=2 meu=5
+    cod   5524   15d: antigo=2 meu=3   30d: antigo=2 meu=3   60d: antigo=2 meu=3   90d: antigo=2 meu=3
+    cod   5570   15d: antigo=1 meu=2   30d: antigo=1 meu=2   60d: antigo=1 meu=2   90d: antigo=2 meu=3
+    cod   6228   60d: antigo=3 meu=4   90d: antigo=13 meu=14
+    cod    404   60d: antigo=2 meu=14   90d: antigo=2 meu=26

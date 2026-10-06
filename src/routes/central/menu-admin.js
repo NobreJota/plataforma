@@ -56,8 +56,8 @@ router.post('/login',async(req,res)=>{
                                             console.log('-----------------------------');
                                             console.log(' vai carregar pages/central/centralMenu.handlebars');
                                             console.log('-----------------------------');
-                                            return res.render('pages/central/centralMenu.handlebars', {
-                                                   layout: 'central/admin.handlebars',
+                                            return res.render('central/pages/centralMenu.handlebars', {
+                                                   layout: 'central/pages/admin.handlebars',
                                                    usuarioNome: user.nome
                                             });
                            
@@ -72,10 +72,20 @@ router.post('/login',async(req,res)=>{
 //    }
 })
 
+/* O menu só existia como resposta do POST /login: voltar para ele pelo
+   navegador pedia reenvio do formulário (ERR_CACHE_MISS). Com esta rota ele
+   tem endereço próprio e qualquer tela pode linkar de volta. */
+router.get('/menu', eAdmin, (req, res) => {
+  return res.render('central/pages/centralMenu.handlebars', {
+    layout: 'central/pages/admin.handlebars',
+    usuarioNome: req.user ? req.user.nome : ''
+  });
+});
+
 // GET /usuarioloja/register  (opcional: renderizar o form de cadastro)
 router.get('/usuarioloja/register', (req, res) => {
-  return res.render('pages/central/register.handlebars', {
-    layout: 'central/admin.handlebars'
+  return res.render('central/pages/register.handlebars', {
+    layout: 'central/pages/admin.handlebars'
   });
 });
 

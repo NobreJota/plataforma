@@ -1,0 +1,1448 @@
+[
+  {
+    "_id": {
+      "$oid": "6a15f535e072b325efff3dad"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "5"
+    },
+    "pos": {
+      "$numberInt": "2"
+    },
+    "contaSubTitulo": {
+      "$oid": "6a105504e04820a3fec89e89"
+    },
+    "codigoConta": "3.01.001.003",
+    "nomeConta": "Papelaria",
+    "historico": "Papelaria",
+    "valor": {
+      "$numberInt": "290"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1778425200000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "5"
+    },
+    "totalParcelas": {
+      "$numberInt": "5"
+    },
+    "origem": "REALIZADA_CUSTEIO",
+    "orcamentoAno": null,
+    "lancamentoId": null,
+    "boletaId": {
+      "$oid": "6a15f556e072b325efff3e68"
+    },
+    "quitadoEm": {
+      "$date": {
+        "$numberLong": "1779823958476"
+      }
+    },
+    "documento": "doc 33",
+    "projecaoOrigemId": {
+      "$oid": "6a12f5096c1858f832fc2539"
+    },
+    "realizadaEm": null,
+    "status": "QUITADO",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779823925865"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779823958477"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a15f5fb77bd6bdb91080ecd"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "5"
+    },
+    "pos": {
+      "$numberInt": "2"
+    },
+    "contaSubTitulo": {
+      "$oid": "6a12fbb510eb5ae8f0ba036f"
+    },
+    "codigoConta": "3.07.001.001",
+    "nomeConta": "Uber",
+    "historico": "Uber",
+    "valor": {
+      "$numberInt": "250"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1779289200000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "5"
+    },
+    "totalParcelas": {
+      "$numberInt": "7"
+    },
+    "origem": "REALIZADA_CUSTEIO",
+    "orcamentoAno": null,
+    "lancamentoId": null,
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": {
+      "$oid": "6a12fbe010eb5ae8f0ba039a"
+    },
+    "realizadaEm": null,
+    "status": "ATIVO",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779824123094"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779824123094"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a189c58462b40a9ff9ed2e0"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "1"
+    },
+    "pos": {
+      "$numberInt": "2"
+    },
+    "contaSubTitulo": {
+      "$oid": "6a105504e04820a3fec89e89"
+    },
+    "codigoConta": "3.01.001.003",
+    "nomeConta": "Papelaria",
+    "historico": "Papelaria",
+    "valor": {
+      "$numberInt": "680"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1768057200000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "1"
+    },
+    "totalParcelas": {
+      "$numberInt": "5"
+    },
+    "origem": "REALIZADA_CUSTEIO",
+    "orcamentoAno": null,
+    "lancamentoId": null,
+    "boletaId": {
+      "$oid": "6a18ad53424db658ee9ecc9d"
+    },
+    "quitadoEm": {
+      "$date": {
+        "$numberLong": "1780002131775"
+      }
+    },
+    "documento": "nf : 5666",
+    "projecaoOrigemId": {
+      "$oid": "6a12f5096c1858f832fc2535"
+    },
+    "realizadaEm": null,
+    "status": "QUITADO",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779997784376"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1780002131776"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab57fb7cb0b09f254147698"
+    },
+    "ano": {
+      "$numberInt": "2027"
+    },
+    "mes": {
+      "$numberInt": "1"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.010",
+    "nomeConta": "KOMGROUP INDUSTRIAL LTDA",
+    "historico": "KOMGROUP INDUSTRIAL LTDA",
+    "valor": {
+      "$numberDouble": "13039.59"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1800057600000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "1"
+    },
+    "totalParcelas": {
+      "$numberInt": "2"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab57fb7cb0b09f25414768a"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790279607197"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790632981273"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab57fb7cb0b09f254147699"
+    },
+    "ano": {
+      "$numberInt": "2027"
+    },
+    "mes": {
+      "$numberInt": "2"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.010",
+    "nomeConta": "KOMGROUP INDUSTRIAL LTDA",
+    "historico": "KOMGROUP INDUSTRIAL LTDA",
+    "valor": {
+      "$numberDouble": "13039.6"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1802476800000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "2"
+    },
+    "totalParcelas": {
+      "$numberInt": "2"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab57fb7cb0b09f25414768a"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790279607197"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790632981420"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab7cef4b649c5c88513ecb0"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "12"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "16827.32"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1797811200000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "1"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab7cef4b649c5c88513eca5"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790430964305"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790461395513"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab7cef4b649c5c88513ecb1"
+    },
+    "ano": {
+      "$numberInt": "2027"
+    },
+    "mes": {
+      "$numberInt": "1"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "16827.32"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1799020800000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "2"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab7cef4b649c5c88513eca5"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790430964305"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790461396427"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab7cef4b649c5c88513ecb2"
+    },
+    "ano": {
+      "$numberInt": "2027"
+    },
+    "mes": {
+      "$numberInt": "1"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "16827.33"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1800230400000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "3"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab7cef4b649c5c88513eca5"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790430964305"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790461396555"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab845e3b8cd6ac916b4a8d2"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "11"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "Pedido 3 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "7684.65"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1794349410914"
+      }
+    },
+    "parcela": {
+      "$numberInt": "1"
+    },
+    "totalParcelas": {
+      "$numberInt": "2"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab845e2b8cd6ac916b4a8cc"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461411097"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790632986204"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab845e3b8cd6ac916b4a8d3"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "12"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "Pedido 3 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "7684.65"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1796941410914"
+      }
+    },
+    "parcela": {
+      "$numberInt": "2"
+    },
+    "totalParcelas": {
+      "$numberInt": "2"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab845e2b8cd6ac916b4a8cc"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461411097"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790632987572"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab8469ba02df9c8e7cfbb8b"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "12"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "16827.32"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1797811200000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "1"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab8469ba02df9c8e7cfbb7e"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461596000"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790632993467"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab8469ba02df9c8e7cfbb8c"
+    },
+    "ano": {
+      "$numberInt": "2027"
+    },
+    "mes": {
+      "$numberInt": "1"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "16827.32"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1799020800000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "2"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab8469ba02df9c8e7cfbb7e"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461596000"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790632993610"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab8469ba02df9c8e7cfbb8d"
+    },
+    "ano": {
+      "$numberInt": "2027"
+    },
+    "mes": {
+      "$numberInt": "1"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "16827.33"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1800230400000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "3"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab8469ba02df9c8e7cfbb7e"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461596000"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790632993757"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab84802ec8585dd5adfe416"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "11"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "Pedido 5 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "9223.8"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1794830253154"
+      }
+    },
+    "parcela": {
+      "$numberInt": "1"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab84802ec8585dd5adfe40a"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461954757"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790463306021"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab84802ec8585dd5adfe417"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "11"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "Pedido 5 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "9223.8"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1796039853154"
+      }
+    },
+    "parcela": {
+      "$numberInt": "2"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab84802ec8585dd5adfe40a"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461954757"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790463306162"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab84802ec8585dd5adfe418"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "12"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "Pedido 5 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "9223.8"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1797249453154"
+      }
+    },
+    "parcela": {
+      "$numberInt": "3"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab84802ec8585dd5adfe40a"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461954758"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790463306291"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab84808953f4e376b3e28c7"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "11"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "Pedido 6 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "7684.65"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1794349960506"
+      }
+    },
+    "parcela": {
+      "$numberInt": "1"
+    },
+    "totalParcelas": {
+      "$numberInt": "2"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab84808953f4e376b3e28c1"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461960691"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790632999968"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab84808953f4e376b3e28c8"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "12"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "Pedido 6 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "7684.65"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1796941960506"
+      }
+    },
+    "parcela": {
+      "$numberInt": "2"
+    },
+    "totalParcelas": {
+      "$numberInt": "2"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab84808953f4e376b3e28c1"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "CANCELADO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790461960691"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790633000115"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab84d590455e868a56b84e3"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "11"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "Pedido 7 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "9223.8"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1794830253154"
+      }
+    },
+    "parcela": {
+      "$numberInt": "1"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab84d590455e868a56b84d9"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": {
+      "$date": {
+        "$numberLong": "1790513168976"
+      }
+    },
+    "status": "REALIZADA",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790463321705"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790513168976"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab84d590455e868a56b84e4"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "11"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "Pedido 7 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "9223.8"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1796039853154"
+      }
+    },
+    "parcela": {
+      "$numberInt": "2"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab84d590455e868a56b84d9"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": {
+      "$date": {
+        "$numberLong": "1790513169106"
+      }
+    },
+    "status": "REALIZADA",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790463321705"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790513169106"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab84d590455e868a56b84e5"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "12"
+    },
+    "pos": {
+      "$numberInt": "7"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "Pedido 7 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "9223.8"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1797249453154"
+      }
+    },
+    "parcela": {
+      "$numberInt": "3"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "PEDIDO_COMPRA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab84d590455e868a56b84d9"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "",
+    "projecaoOrigemId": null,
+    "realizadaEm": {
+      "$date": {
+        "$numberLong": "1790513169233"
+      }
+    },
+    "status": "REALIZADA",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790463321705"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790513169234"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab910106ad9457a02f1488b"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "11"
+    },
+    "pos": {
+      "$numberInt": "2"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "NF 620819 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "9822.35"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1794830400000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "1"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "ENTRADA_NOTA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab661ad120d535da044544a"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "620819",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "ATIVO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790513168575"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790513168575"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab910106ad9457a02f1488c"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "11"
+    },
+    "pos": {
+      "$numberInt": "2"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "NF 620819 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "9822.35"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1796040000000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "2"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "ENTRADA_NOTA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab661ad120d535da044544a"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "620819",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "ATIVO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790513168575"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790513168575"
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab910106ad9457a02f1488d"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "mes": {
+      "$numberInt": "12"
+    },
+    "pos": {
+      "$numberInt": "2"
+    },
+    "contaSubTitulo": null,
+    "codigoConta": "2.01.001.001",
+    "nomeConta": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "historico": "NF 620819 RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "valor": {
+      "$numberDouble": "9825.29"
+    },
+    "vencimento": {
+      "$date": {
+        "$numberLong": "1797249600000"
+      }
+    },
+    "parcela": {
+      "$numberInt": "3"
+    },
+    "totalParcelas": {
+      "$numberInt": "3"
+    },
+    "origem": "ENTRADA_NOTA",
+    "orcamentoAno": null,
+    "lancamentoId": {
+      "$oid": "6ab661ad120d535da044544a"
+    },
+    "boletaId": null,
+    "quitadoEm": null,
+    "documento": "620819",
+    "projecaoOrigemId": null,
+    "realizadaEm": null,
+    "status": "ATIVO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790513168575"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790513168575"
+      }
+    }
+  }
+]

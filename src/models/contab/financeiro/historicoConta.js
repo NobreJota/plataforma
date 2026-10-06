@@ -1,4 +1,4 @@
-// src/models/financeiro/historicoConta.js
+// src/models/contab/financeiro/historicoConta.js
 // HISTÓRICOS SUGERIDOS por conta (autocomplete que aprende com o uso).
 // Cada vez que um histórico é usado num pagamento, ele entra/atualiza aqui.
 // Assim o dropdown sugere os mais usados daquela conta.
@@ -15,6 +15,15 @@ const HistoricoContaSchema = new mongoose.Schema({
   },
   // Também guardamos o código para busca rápida sem populate
   codigoConta: { type: String, default: '', index: true },
+
+  // Natureza do lançamento em que o histórico foi usado.
+  // Sem isso, "recebido" — aprendido num recebimento — apareceria como
+  // sugestão numa boleta de pagamento, que é saída de dinheiro.
+  tipo: {
+    type: String,
+    enum: ['PAGAMENTO', 'RECEBIMENTO', null],
+    default: null
+  },
 
   texto: { type: String, required: true, trim: true },
 
@@ -36,7 +45,10 @@ const HistoricoContaSchema = new mongoose.Schema({
 });
 
 // Evita duplicar o mesmo texto na mesma conta
-HistoricoContaSchema.index({ lojistaId: 1, codigoConta: 1, texto: 1 }, { unique: true });
+HistoricoContaSchema.index(
+  { lojistaId: 1, codigoConta: 1, tipo: 1, texto: 1 },
+  { unique: true }
+);
 HistoricoContaSchema.index({ usos: -1 });
 
 module.exports = mongoose.models.HistoricoConta ||

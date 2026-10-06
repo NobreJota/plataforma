@@ -1,0 +1,9398 @@
+[
+ {
+  "_id": {
+   "$oid": "6abd774f216b0dccf2991a21"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b2c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b2d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b2e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b2f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b30"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b31"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b32"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b33"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b34"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b35"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b36"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b37"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b3b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b3c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b3d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b3e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b3f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b40"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b41"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b42"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b43"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b44"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b45"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b46"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b47"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b48"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b49"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b4a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b4b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b4c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b4d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b4e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b4f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b50"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b51"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b52"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b53"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b54"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b55"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b56"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b57"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b58"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b59"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b5a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b5b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b5c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b5d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b5e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b5f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b60"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b61"
+  },
+  "localloja": "1"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b62"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b63"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b64"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b67"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b68"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b69"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b6a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b6b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b6c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b6d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b6e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b6f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b70"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b71"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b72"
+  },
+  "localloja": "A-06-07"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b73"
+  },
+  "localloja": "A-06-32"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b74"
+  },
+  "localloja": "A-06-31"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b75"
+  },
+  "localloja": "B-05-13"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b76"
+  },
+  "localloja": "B-05-11"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b77"
+  },
+  "localloja": "A-06-12"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b78"
+  },
+  "localloja": "A-06-42"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b79"
+  },
+  "localloja": "A-06-08"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b7c"
+  },
+  "localloja": "B-05-12"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b7d"
+  },
+  "localloja": "B-05-10"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b7e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b7f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b80"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b81"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b82"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b83"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b84"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b85"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b87"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b88"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b89"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b8a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b8d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b8e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b90"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b91"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b92"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b95"
+  },
+  "localloja": "P-05-75"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b96"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b97"
+  },
+  "localloja": "P-05-23"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b98"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b9a"
+  },
+  "localloja": "P-02-27"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b9b"
+  },
+  "localloja": "P-02-26"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b9c"
+  },
+  "localloja": "P-02-28"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b9d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b9e"
+  },
+  "localloja": "P-05-43"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994b9f"
+  },
+  "localloja": "P-05-41"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994ba0"
+  },
+  "localloja": "P-05-18"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994ba1"
+  },
+  "localloja": "P-05-19"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994ba2"
+  },
+  "localloja": "P-05-16"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994ba3"
+  },
+  "localloja": "P-05-17"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994ba4"
+  },
+  "localloja": "P-05-73"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994ba5"
+  },
+  "localloja": "P-05-20"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994ba6"
+  },
+  "localloja": "P-05-56"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994ba7"
+  },
+  "localloja": "P-05-24"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994ba8"
+  },
+  "localloja": "C-05-54"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994ba9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994baa"
+  },
+  "localloja": "P-04-12"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994bab"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994bac"
+  },
+  "localloja": "P-05-47"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994baf"
+  },
+  "localloja": "P-05-46"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994bb0"
+  },
+  "localloja": "P-05-20"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994bb1"
+  },
+  "localloja": "P-04-13"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7905216b0dccf2994bb2"
+  },
+  "localloja": "P-04-25"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bb3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bb4"
+  },
+  "localloja": "P-05-74"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bb5"
+  },
+  "localloja": "P-05-58"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bb6"
+  },
+  "localloja": "P-05-57"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bb7"
+  },
+  "localloja": "P-05-60"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bb8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bb9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bba"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bbb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bbc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bbd"
+  },
+  "localloja": "P-05-22"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bc0"
+  },
+  "localloja": "A-05-19"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bc1"
+  },
+  "localloja": "P-05-38"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bc2"
+  },
+  "localloja": "P-05-28"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bc3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bc4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bc7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bc8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bc9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bcc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bcd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bce"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bcf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bd0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bd1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bd2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bd5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bd6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bd7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bd9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bda"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bdb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bdc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bdd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bde"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bdf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bea"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994beb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bec"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bed"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bee"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bef"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bf0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bf1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bf7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bf8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bf9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bfa"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bfb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bfc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bfd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bfe"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c02"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c03"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c04"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c05"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c06"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c07"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c08"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c09"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c0a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c0b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c0c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c0d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c0e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c0f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c10"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c19"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c1b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c1c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c1d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c1e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c20"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c21"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c22"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c23"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c24"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c25"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c26"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c27"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c28"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c29"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c2a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c2b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c2c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c2d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c2e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c2f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c30"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c31"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c32"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c33"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c34"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c37"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c38"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c39"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c3a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c3b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c3c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c3d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c3e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c3f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c40"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c41"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c42"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c43"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c44"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c45"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c46"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c47"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c48"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c49"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c4a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c4b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c4e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c4f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c50"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c51"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c52"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c53"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c54"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c55"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c56"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c57"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c58"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c59"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c5a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c5b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c5c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c5d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c5f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c60"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c61"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c62"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c63"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c64"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c65"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c66"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c67"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c68"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c69"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c6a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c6b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c6c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c6d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c6e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c71"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c72"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c73"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c74"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c75"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c76"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c77"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c78"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c79"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c7a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c7b"
+  },
+  "localloja": "00"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c7c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c7d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c7e"
+  },
+  "localloja": "00"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c7f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c80"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c81"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c82"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c83"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c84"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c85"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c86"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c87"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c88"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c89"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c8a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c8d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c8e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c8f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c90"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c91"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c92"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c93"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c94"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c95"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c96"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c97"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c99"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c9a"
+  },
+  "localloja": "00"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c9b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c9c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c9d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c9e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c9f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cab"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cac"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cad"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cae"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994caf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cb0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cb1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cb2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cb3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cb4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cb5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cb6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cb7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cb8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cbb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cbc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cbd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cbe"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cc0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cc1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cc2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cc3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cc4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cc6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cc7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cc8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cc9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cca"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ccb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ccc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ccf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cd3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cd4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cd5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cd6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cd7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cd8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cd9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cdd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cdf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ce0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ce1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ce2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ce3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ce6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ce9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cea"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ceb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cec"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ced"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cee"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cef"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cf0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cf1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cf2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cf3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cf4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cf5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cf8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cf9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cfa"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cfb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cfc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cfd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cfe"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cff"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d00"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d01"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d02"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d03"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d04"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d05"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d06"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d07"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d08"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d09"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d0c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d0d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d0e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d0f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d10"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d12"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d13"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d14"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d15"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d16"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d17"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d19"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d1a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d1b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d1c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d1d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d1e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d1f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d20"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d21"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d22"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d23"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d24"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d25"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d26"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d27"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d28"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d29"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d2a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d2b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d2c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d2d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d2e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d2f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d32"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d33"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d35"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d37"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d38"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d39"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d3a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d3b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d3c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d3d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d3e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d3f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d40"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d41"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d42"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d43"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d44"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d45"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d46"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d49"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d4a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d4b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d4e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d4f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d50"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d51"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d52"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d53"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d54"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d55"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d56"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d57"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d58"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d59"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d5a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d5b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d5c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d5d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d5e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d5f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d60"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d61"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d62"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d63"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d65"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d66"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d67"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d68"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d69"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d6a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d6b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d6c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d6d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d6e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d6f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d71"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d72"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d73"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d74"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d77"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d78"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d79"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d7a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d7b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d7d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d7e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d7f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d80"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d82"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d83"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d84"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d85"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d86"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d87"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d88"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d89"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d8a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d8b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d8c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d8d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d8e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d8f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d90"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d91"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d93"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d94"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d95"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d96"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d97"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d98"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d99"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d9a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d9b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d9c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d9d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d9e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994da1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994da2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994da3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994da4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994da6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994da7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994da8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994daa"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dab"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dac"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dad"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dae"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994db1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994db2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994db3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994db4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994db5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994db6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994db7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994db9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dba"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dbb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dbc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dbd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dbf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dc0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dc1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dc2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dc3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dc5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dc6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dc7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dc8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dc9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dcb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dcc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dcf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dd0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dd1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dd2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dd3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dd4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dd5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dd6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dd7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dd9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dda"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ddc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ddd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dde"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ddf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dea"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994deb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dec"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ded"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dee"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994def"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994df0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994df3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994df4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994df5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994df6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994df7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994df8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994df9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dfa"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dfb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dfc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dfd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dfe"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dff"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e02"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e03"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e04"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e05"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e06"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e08"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e09"
+  },
+  "localloja": "P-02-29"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e0a"
+  },
+  "localloja": "P-02-19"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e0b"
+  },
+  "localloja": "P-02-43"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e0c"
+  },
+  "localloja": "P-03-23"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e0d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e0e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e0f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e10"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e11"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e12"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e13"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e14"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e15"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e16"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e17"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e18"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e19"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e1a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e1b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e1d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e1e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e1f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e20"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e22"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e23"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e24"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e25"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e26"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e28"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e2a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e2b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e2c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e2d"
+  },
+  "localloja": "P-04-19"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e2f"
+  },
+  "localloja": "P-04-23"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e30"
+  },
+  "localloja": "P-04-07"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e31"
+  },
+  "localloja": "P-04-04"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e33"
+  },
+  "localloja": "B-05-17"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e34"
+  },
+  "localloja": "B-05-20"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e36"
+  },
+  "localloja": "P-04-11"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e37"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e38"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e39"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e3a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e3c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e3d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e3e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e3f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e40"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e41"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e42"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e43"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e44"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e45"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e46"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e47"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e48"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e49"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e4b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e4c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e4d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e4e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e50"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e51"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e52"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e53"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e54"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e55"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e56"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e58"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e59"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e5a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e5b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e5c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e5d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e5e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e5f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e60"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e61"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e62"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e63"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e64"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e65"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e66"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e67"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e68"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e69"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e6a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e6b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e6e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e6f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e70"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e71"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e72"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e73"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e74"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e75"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e76"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e77"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e78"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e79"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e7a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e7b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e7c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e7d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e7e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e7f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e80"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e82"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e83"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e84"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e85"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e86"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e87"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e88"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e89"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e8a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e8b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e8c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e8d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e8e"
+  },
+  "localloja": "00"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e90"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e91"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e92"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e93"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e96"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e97"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e9a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e9b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e9c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e9d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e9e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e9f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ea1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ea2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ea3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ea4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ea5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ea6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ea7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ea8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ea9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eac"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ead"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eae"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eaf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eb1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eb2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eb3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eb4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eb5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eb8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eb9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eba"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ebb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ebc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ebd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ec0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ec1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ec2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ec3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ec5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ec6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ec9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ecb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ecd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ecf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ed2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ed3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ed4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ed6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ed7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ed9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eda"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994edb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994edc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994edd"
+  },
+  "localloja": "000"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ede"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994edf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ee0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ee3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ee4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ee5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ee6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ee7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ee8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ee9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eed"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eee"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ef0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ef1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ef2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ef3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ef4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ef5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ef6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ef7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ef8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ef9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994efa"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994efb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994efc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994efe"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994eff"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f00"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f01"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f02"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f03"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f04"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f05"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f06"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f07"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f0a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f0b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f0c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f0d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f0f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f10"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f11"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f12"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f14"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f15"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f16"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f17"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f18"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f19"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f1a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f1b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f1c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f1d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f1e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f21"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f23"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f24"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f25"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f26"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f27"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f28"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f29"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f2a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f2c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f2d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f2e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f2f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f30"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f32"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f33"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f34"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f35"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f36"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f37"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f38"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f39"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f3a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f3b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f3c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f3d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f3e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f3f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f40"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f43"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f44"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f45"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f46"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f48"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f49"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f4a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f4b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f4c"
+  },
+  "localloja": "00"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f4d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f4e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f4f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f50"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f51"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f52"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f53"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f54"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f55"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f56"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f57"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f5b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f5c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f5e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f60"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f61"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f62"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f63"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f64"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f65"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f66"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f67"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f69"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f6c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f6d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f6e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f6f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f70"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f71"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f72"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f73"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f75"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f76"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f77"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f78"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f7a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f7b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f7c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f7d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f7e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f7f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f80"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f83"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f84"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f85"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f86"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f87"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f88"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f89"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f8a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f8b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f8c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f8d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f8e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f91"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f92"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f93"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f94"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f95"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f96"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f99"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f9a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f9b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f9c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f9d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f9e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f9f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fa0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fa1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fa2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fa3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fa4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fa5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fa6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fa7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fa8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fa9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994faa"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fad"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fae"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994faf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fb0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fb1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fb2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fb3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fb4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fb5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fb6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fb7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fb8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fb9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fbb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fbc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fbd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fbe"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fbf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fc0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fc1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fc2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fc3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fc5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fc6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fc7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fc8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fca"
+  },
+  "localloja": "00"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fcb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fcc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fce"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fcf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fd3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fd4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fd5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994fd6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994fe5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994fe6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994fe7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994fe8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994fe9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994fea"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994feb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994fec"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994fed"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994fee"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994ff0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994ff1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994ff2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994ff3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994ff6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994ff7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994ff8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994ff9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994ffa"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994ffd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994ffe"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2994fff"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995000"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995002"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995003"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995004"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995005"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995006"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995009"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299500a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299500b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995019"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299501a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299501b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299501c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995020"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995024"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995026"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995027"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995028"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299502b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299502c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299502e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299502f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995032"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995033"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995034"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995035"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995036"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995038"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995039"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299503a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299503b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299503e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299503f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995040"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995041"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995042"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995046"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995047"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995048"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995049"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299504a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299504d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299504e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299504f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995050"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995052"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995055"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995056"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995057"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995058"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299505a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299505b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299505c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299505d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299505e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995061"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995069"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299506d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995076"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995077"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299507a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299507b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299507c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299507d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995080"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995081"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995082"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995083"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995084"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995088"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299508a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299508b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299508c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299508d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299508e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299508f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995090"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995091"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995095"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995096"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995097"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995098"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299509b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299509c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299509d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299509e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299509f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950a2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950a3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950a4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950a5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950a7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950a8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950a9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950aa"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950ab"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950ae"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950b0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950b1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950b2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950b5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950b7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950b8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950b9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950ba"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950bd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950be"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950bf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950c0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950c1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950c3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950c4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950c5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950c6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950c7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950c8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950c9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950cc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950cf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950d2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950d3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950d6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950d7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950d8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950da"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950db"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950dc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950dd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950de"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950e1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950e2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950e3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950e4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950e7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950e8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950e9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950ea"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950eb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950ee"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950f1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950f2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950f3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950f5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950f6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950f7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950f8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950fb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950fe"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29950ff"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995100"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995101"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995102"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995105"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995107"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995108"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995109"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299510c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299510d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299510e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299510f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995110"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995111"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995112"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995113"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995114"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995117"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995118"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995119"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299511a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299511b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299511e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299511f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995121"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995122"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995123"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995127"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299512a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299512b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299512d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299512e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299512f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995130"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995131"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995132"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995133"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995134"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995135"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995138"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995139"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299513a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299513e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995140"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995141"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995142"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995143"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995144"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995147"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995148"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995149"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299514a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299514c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299514d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299514e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299514f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995153"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995156"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995157"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995158"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995159"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299515b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299515e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995160"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995161"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995162"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995163"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995164"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995165"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995166"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995167"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995168"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995169"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299516a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299516b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299516c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299516d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299516e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299516f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995172"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995173"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995174"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995175"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995176"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995179"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299517b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299517e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299517f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995180"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995181"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995182"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995183"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995184"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995186"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995189"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299518a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299518b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299518c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299518d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299518e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299518f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995190"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995191"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995192"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995193"
+  },
+  "localloja": "00"
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995196"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995197"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995198"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995199"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299519c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299519d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299519e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299519f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951a0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951a3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951a4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951a7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951a8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ab"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ac"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ad"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ae"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951af"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951b2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951b3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951b5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951b6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951b7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ba"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951bb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951bc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951bd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951bf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ca"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951cb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951cc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951cf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951da"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951db"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951dc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951dd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951de"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951df"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951e0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951e1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951e2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951e3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951e4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951e5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951e9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951eb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ec"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ed"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ef"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951fa"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951fc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951fd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951fe"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ff"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995200"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995203"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995204"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995205"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995206"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995208"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995209"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299520a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299520d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299520e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299520f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995210"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995211"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995212"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995214"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995215"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995216"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995217"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995218"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995219"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299521c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299521d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299521e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299521f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995220"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995221"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995222"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995223"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995224"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995225"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995226"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995227"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995228"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995229"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299522a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299522b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299522c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299522d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995231"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995232"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995233"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995234"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995235"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995236"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995237"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995238"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299523b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299523c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299523d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299523e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995240"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995241"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995242"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995244"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995245"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995246"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995247"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995248"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995249"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299524a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299524b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299524c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299524d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299524e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299524f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995250"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995251"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995255"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995256"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995257"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995258"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299525b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299525c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299525d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299525e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299525f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995261"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995262"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995265"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995266"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995267"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995268"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995269"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299526a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299526b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299526c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299526d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299526e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995273"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995274"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995277"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995278"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995279"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299527a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299527b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299527f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995280"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995283"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995284"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995285"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995286"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995287"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995288"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995289"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299528a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299528b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299528c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299528d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299528e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995293"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995294"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995295"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995296"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995299"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299529d"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299529e"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299529f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952a3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952a5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952a6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952a7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952a8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952a9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952aa"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952ab"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952ac"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952ad"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952b0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952b1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952b2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952b5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952b6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952b7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952b8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952b9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952ba"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952bf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952ca"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952cb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952cc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952cd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952ce"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952cf"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952d0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952d1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952d2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952d5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952d6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952d7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952da"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952db"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952dc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952dd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952de"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952df"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952e0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952e1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952e2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952e3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952e4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952e5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952e6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952ea"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952eb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952ec"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952ed"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952ee"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952ef"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f0"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f1"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f2"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f3"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f4"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f5"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f6"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f7"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f8"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f9"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952fa"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952fb"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952fc"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952fd"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952fe"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995301"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995302"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995303"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995304"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995305"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995308"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995309"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299530a"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299530b"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299530c"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299530f"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995310"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995311"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995313"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995316"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995318"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995319"
+  },
+  "localloja": ""
+ },
+ {
+  "_id": {
+   "$oid": "6abeba11216b0dccf2bbd959"
+  },
+  "localloja": ""
+ }
+]

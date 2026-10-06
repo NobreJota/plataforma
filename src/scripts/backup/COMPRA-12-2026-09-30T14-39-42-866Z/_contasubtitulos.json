@@ -1,0 +1,1157 @@
+[
+  {
+    "_id": {
+      "$oid": "6aa5ad2721070596320cc632"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.001",
+    "nome": "Rinnai Equipamentos",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1789242663491"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1789242674717"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18663a8783bbbd5393c72"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.002",
+    "nome": "Fio & Ferro Mat. S.Constr Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790019171514"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790019171514"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab186f4a8783bbbd5393c87"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.003",
+    "nome": "Blukit Metalúrgica Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790019316261"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790019316261"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab188bd45a705e08be1a83a"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.004",
+    "nome": "Bozi Mat. p/Constr. Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790019773354"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790019773354"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18b2a45a705e08be1a846"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.005",
+    "nome": "Docol",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020394296"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020394296"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18b3645a705e08be1a852"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.006",
+    "nome": "Westaflex Brasil",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020406182"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020406182"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18b4a45a705e08be1a85e"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.007",
+    "nome": "Asia Impor. & Com. Ext. Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": false,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020426609"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020426609"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18b5a45a705e08be1a86a"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.008",
+    "nome": "Aliança Metalúrgica S/A",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020442391"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020442391"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18b6845a705e08be1a876"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.009",
+    "nome": "Rinnai - Assist. Técnica",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020456697"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020456697"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18b6d45a705e08be1a882"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.010",
+    "nome": "Komlog Importação Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020461466"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020461466"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18b7545a705e08be1a88e"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.011",
+    "nome": "Rowa do Brasil Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020469260"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020469260"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18b7a45a705e08be1a89a"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.012",
+    "nome": "Haenke",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020474440"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020474440"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18b9845a705e08be1a8a6"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.013",
+    "nome": "Distak Comercio e Distribuição Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020504636"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020504636"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18ba245a705e08be1a8b2"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.014",
+    "nome": "Sicflux Ind.Com. Prod.Elet. Met. Lt",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020514629"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020514629"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18bab45a705e08be1a8be"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.015",
+    "nome": "Sfera Com.Imp.Ltda Emmeti",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020523405"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020523405"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18bba45a705e08be1a8ca"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.016",
+    "nome": "Orbis Merting do Brasil Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020538206"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020538206"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18bc245a705e08be1a8d6"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.017",
+    "nome": "Orbis do Brasil - Assistência",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020546103"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020546103"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18bcc45a705e08be1a8e2"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.018",
+    "nome": "Rheem do Brasil",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020556892"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020556892"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18bd045a705e08be1a8ee"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.019",
+    "nome": "Maqenge Ind. Met. Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020560469"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020560469"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18bd645a705e08be1a8fa"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.020",
+    "nome": "Eplax Soluções",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020566972"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020566972"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18bde45a705e08be1a906"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.021",
+    "nome": "RR Brasil Ind. Com. Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020574640"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020574640"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18c1d45a705e08be1a923"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.022",
+    "nome": "A Verbeno Metelurgica ME",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020637937"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020637937"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18c3f45a705e08be1a92f"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.023",
+    "nome": "Jackwal S/A",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020671276"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020671276"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18c4845a705e08be1a93b"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.024",
+    "nome": "Deca - Metais",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020680000"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020680000"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18c4c45a705e08be1a947"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.025",
+    "nome": "Transportadora Continental",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020684662"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020684662"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18c5b45a705e08be1a953"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.026",
+    "nome": "Lao Ind. Com. Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020700000"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020700000"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18c6545a705e08be1a95f"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.027",
+    "nome": "Imexport Assitência Técnica",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020709096"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020709096"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18c6945a705e08be1a96b"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.028",
+    "nome": "Eberle",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020713116"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020713116"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18c6c45a705e08be1a977"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.029",
+    "nome": "Formetal Forn.Metais Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020716439"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020716439"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18c6f45a705e08be1a983"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.030",
+    "nome": "Viferro Ferramentas e Ferrag Lt",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020719359"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020719359"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18c9645a705e08be1a98f"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.031",
+    "nome": "Albacete Ind. Com. Equip. Lazer Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790020758475"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790020758475"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18dec45a705e08be1a99b"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.032",
+    "nome": "Tigre-Aquaterm",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790021100791"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790021100791"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18e1945a705e08be1a9a7"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.033",
+    "nome": "Tramontina Sudeste S.A",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790021145470"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790021145470"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18e4045a705e08be1a9b3"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.034",
+    "nome": "Tuboval Comercio Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790021184255"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790021184255"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6ab18e8445a705e08be1a9c8"
+    },
+    "contaTituloId": {
+      "$oid": "6aa5acb921070596320cc62a"
+    },
+    "codigoContaTitulo": "2.01.001",
+    "codigo": "2.01.001.035",
+    "nome": "Eplax Pro Efect Tecnology Ltda",
+    "descricao": "",
+    "saldoInicial": {
+      "$numberInt": "0"
+    },
+    "natureza": "credora",
+    "ativo": true,
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790021252397"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790021252397"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  }
+]

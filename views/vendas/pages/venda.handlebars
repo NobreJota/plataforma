@@ -1,0 +1,421 @@
+{{!--
+  Destino: C:\plataformaRota\views\vendas\pages\venda.handlebars
+  Criado em: 02/10/2026
+  Alterado em: 02/10/2026 - cabecalho do CLIENTE sempre visivel (dados completos, como o
+               destinatario da nota); duplo clique na lista escolhe; botao Novo cliente
+  Alterado em: 02/10/2026 - NOTA: ficha do cliente sempre com os campos; CUPOM: cabecalho da loja
+  Alterado em: 02/10/2026 - combo de fornecedor (filtro) ao lado da busca de produto
+  Alterado em: 02/10/2026 - listas de busca com linhas alternadas (zebra)
+  Alterado em: 02/10/2026 - DOCUMENTO vira menu lateral (Cupom / Nota fiscal); CONDICAO vira
+               select abaixo dos totais (decide-se depois de ver o total)
+  Alterado em: 03/10/2026 - ao gravar abre o modal de SUCESSO: Imprimir, Nova venda,
+               Continuar nesta venda, Voltar ao menu
+  Alterado em: 03/10/2026 - modal mais largo (4 botoes em linha), ordem Nova venda ·
+               Alterar venda · Menu · Imprimir; arrasta pelo titulo; fundo mais claro
+  Alterado em: 03/10/2026 - PARTE 2: botao "Fechar venda" e o modal de fechamento
+               (forma de pagamento, banco, cartao, parcelas e previa das parcelas)
+  Alterado em: 05/10/2026 - dinheiro: caixa "Valor recebido" (Enter confirma, mostra troco);
+               aviso grande quando o titulo em banco nao vale (so PJ com NF)
+  Alterado em: 05/10/2026 - nota fiscal: botoes P. fisica / P. juridica no menu lateral; a busca
+               do cliente procura so o tipo escolhido, mostrado ao lado de "Cliente"
+  Alterado em: 05/10/2026 - lista de clientes em colunas alinhadas e com paginacao
+  Alterado em: 05/10/2026 - conta contabil do cliente: coluna "contabil" na lista (aviso "sem
+               contabil"), botao "vincular conta" na ficha e o modal do plano (procurar ou criar)
+  Alterado em: 05/10/2026 - modal do plano: botoes "editar ficha" (abre a ficha do cliente com a
+               conta marcada) e "incluir plano" (so entao aparece o "criar conta nova")
+  Alterado em: 05/10/2026 - os dois botoes ficam em cada linha da lista do plano
+
+  VENDA — Parte 1: lancar a venda e gravar ABERTA.
+  Cupom (balcao, sem cliente) ou Nota fiscal (com cliente); a vista ou a prazo
+  (decide o preco); produtos com estoque e as duas descricoes; descontos.
+  Fechar (pagamento, estoque, fluxo) vem na Parte 2.
+
+  O JS fica em /js/vendas/venda.js  (caminho completo, sempre)
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venda</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root { --roxo:#6b21a8; --roxo-claro:#f3e8ff; --borda:#e5e7eb; --texto:#111827; --cinza:#6b7280;
+            --verde:#059669; --vermelho:#dc2626; }
+    body { margin:0 auto; max-width:1480px; padding:20px 40px 110px; color:var(--texto); background:#fff;
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
+    .topo { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; }
+    .topo h1 { margin:0; font-size:21px; }
+    .topo .sit { font-size:13px; color:var(--cinza); margin-left:10px; }
+    .topo a { color:var(--roxo); font-size:13px; text-decoration:none; }
+
+    .rot { font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; margin-right:6px; }
+
+    .pagina { display:grid; grid-template-columns:190px minmax(0,1fr); gap:24px; align-items:start; }
+    .menu-lado { position:sticky; top:20px; border:1px solid var(--borda); border-radius:10px; padding:10px; }
+    .menu-lado h2 { margin:2px 6px 8px; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--roxo); }
+    .menu-lado button { display:block; width:100%; text-align:left; border:0; background:none; border-radius:8px;
+                        padding:10px 12px; margin-bottom:4px; font-size:14px; font-weight:600; color:#374151; cursor:pointer; }
+    .menu-lado button:hover { background:var(--roxo-claro); }
+    .menu-lado button.ativo { background:var(--roxo); color:#fff; }
+    #bloco-tipo[hidden] { display:none; }
+    .cli-tipo { display:inline-block; margin-left:8px; padding:2px 10px; border-radius:6px; background:var(--roxo-claro);
+                color:var(--roxo); font-size:13px; letter-spacing:.04em; }
+
+    .condicao { display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-top:14px;
+                padding-top:12px; border-top:1px solid #f3f4f6; }
+    .condicao select { height:36px; min-width:160px; border:1px solid #d1d5db; border-radius:8px; padding:0 10px;
+                       font-size:14px; font-weight:600; }
+    .condicao select:focus { outline:2px solid var(--roxo-claro); border-color:var(--roxo); }
+
+    .bloco { border:1px solid var(--borda); border-radius:10px; padding:12px 14px; margin-bottom:12px; }
+    .bloco h2 { margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--roxo); }
+    .bloco[hidden] { display:none; }
+
+    .busca { position:relative; }
+    .busca input { width:100%; height:38px; border:1px solid #d1d5db; border-radius:8px; padding:0 12px; font-size:14px; }
+    .busca input:focus { outline:2px solid var(--roxo-claro); border-color:var(--roxo); }
+    .lista { position:absolute; left:0; right:0; top:40px; z-index:5; background:#fff; border:1px solid var(--borda);
+             border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.12); max-height:340px; overflow:auto; }
+    .lista[hidden] { display:none; }
+    .lista .op { padding:7px 12px; cursor:pointer; border-bottom:1px solid #f3f4f6; }
+    .lista .op:nth-child(even) { background:#f3f4f6; }
+    .lista .op:hover, .lista .op.sel { background:#ede9fe; }
+    .lista .op .s { font-size:12px; color:var(--cinza); }
+    #lista-clientes .op[data-k] { display:grid; grid-template-columns:76px minmax(0,1fr) 160px 110px 190px;
+                                  gap:12px; align-items:baseline; }
+    #lista-clientes .op[data-k] > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    #lista-clientes .c-cod { font-weight:700; }
+    #lista-clientes .c-doc, #lista-clientes .c-cid, #lista-clientes .c-cont { font-size:12px; color:var(--cinza); }
+    #lista-clientes .c-cont.sem { color:var(--vermelho); font-weight:700; }
+    .btn-conta { margin-left:6px; border:1px solid var(--vermelho); background:#fef2f2; color:var(--vermelho);
+                 border-radius:6px; padding:2px 8px; font-size:12px; font-weight:700; cursor:pointer; }
+    .btn-conta[hidden] { display:none; }
+    .cc-busca { width:100%; height:36px; border:1px solid #eab308; background:#fef9c3; border-radius:8px; padding:0 10px; font-size:14px; }
+    .cc-lista { max-height:240px; overflow:auto; border:1px solid var(--borda); border-radius:8px; margin:8px 0 14px; }
+    .cc-lista .op { display:grid; grid-template-columns:120px minmax(0,1fr) auto; gap:10px; padding:5px 6px 5px 10px;
+                    align-items:center; border-bottom:1px solid #f3f4f6; cursor:pointer; font-size:13px; }
+    .cc-lista .op .acoes { display:flex; gap:6px; }
+    .cc-lista .op .uso { display:block; }
+    .cc-lista .vazio .cc-btn { margin-left:8px; }
+    .cc-lista .op:nth-child(even) { background:#f9fafb; }
+    .cc-lista .op:hover, .cc-lista .op.sel { background:#ede9fe; }
+    .cc-lista .op .uso { color:var(--ambar); font-size:12px; }
+    .cc-lista .op.susp { color:#9ca3af; text-decoration:line-through; cursor:default; }
+    .cc-lista .vazio { padding:10px; color:var(--cinza); font-size:13px; }
+    .cc-nova { border-top:1px solid var(--borda); padding-top:12px; }
+    .cc-nova[hidden], #cc-criar[hidden] { display:none; }
+    .cc-btn { border:1px solid var(--roxo); background:#fff; color:var(--roxo); border-radius:6px;
+              padding:3px 10px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; }
+    .cc-btn:hover { background:var(--roxo-claro); }
+    .cc-btn:disabled { opacity:.4; cursor:default; }
+    #cf-fundo { z-index:42; } #cf-caixa { z-index:43; }
+    .cf-grade { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:8px 12px; margin:10px 0 6px; }
+    .cf-grade label { display:flex; flex-direction:column; gap:3px; }
+    .cf-grade label.l2 { grid-column:span 2; } .cf-grade label.l4 { grid-column:span 4; }
+    .cf-grade label > span { font-size:10px; font-weight:700; text-transform:uppercase; color:#374151; }
+    .cf-grade input { height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:14px; }
+    .cf-grade input[readonly] { background:#f3f4f6; color:#374151; }
+    .cf-grade input:not([readonly]):placeholder-shown { background:#fef9c3; }   /* vazio editavel: amarelo */
+    .cf-conta-nome { font-size:12px; color:var(--cinza); }
+    .cc-nova h4 { margin:0 0 8px; font-size:12px; text-transform:uppercase; color:var(--roxo); }
+    .cc-nova .fe-linha input { height:34px; flex:1; border:1px solid #d1d5db; border-radius:8px; padding:0 8px; font-size:14px; }
+    .lista .pagl { position:sticky; bottom:0; display:flex; justify-content:space-between; align-items:center;
+                   padding:6px 12px; background:#f8fafc !important; border-top:1px solid var(--borda);
+                   font-size:12px; color:#374151; cursor:default; }
+    .lista .pagl button { border:1px solid #d1d5db; background:#fff; border-radius:6px; padding:3px 10px;
+                          font-size:12px; font-weight:600; color:var(--roxo); cursor:pointer; }
+    .lista .pagl button:disabled { opacity:.35; cursor:default; }
+    .zero { color:var(--vermelho); }
+
+    .prod-linha { display:flex; gap:10px; align-items:flex-start; }
+    .prod-linha select { height:38px; min-width:220px; border:1px solid #d1d5db; border-radius:8px; padding:0 10px; font-size:14px; }
+    .prod-linha .busca { flex:1; }
+    .obrig { color:var(--vermelho); text-transform:none; letter-spacing:0; font-weight:600; }
+    .obrig[hidden] { display:none; }
+    .cli-busca-linha { display:flex; gap:10px; align-items:center; }
+    .cli-busca-linha[hidden] { display:none; }
+    .cli-busca-linha .busca { flex:1; }
+    .btn-novo-cli { white-space:nowrap; background:#1d4ed8; color:#fff; border-radius:8px; padding:9px 14px;
+                    font-size:13px; font-weight:700; text-decoration:none; }
+    .cli-ficha { background:#f8fafc; border-radius:8px; padding:10px 12px; margin-top:8px; }
+    .cli-ficha.vazia b { color:#cbd5e1; }
+    .btn-x[hidden] { display:none; }
+    .loja { background:#faf5ff; }
+    .loja .s { font-size:13px; color:#374151; }
+    .cli-ficha[hidden] { display:none; }
+    .cli-topo { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:15px; }
+    .cli-topo .s { font-size:12px; color:var(--cinza); }
+    .cli-grade { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:6px 16px; }
+    .cli-grade div span { display:block; font-size:10px; text-transform:uppercase; color:#374151; font-weight:700; }
+    .cli-grade div b { font-weight:500; }
+    .cli-grade .largo { grid-column: span 2; }
+    .btn-x { border:0; background:none; color:var(--vermelho); font-size:18px; cursor:pointer; }
+    .oc { margin-top:8px; }
+    .oc[hidden] { display:none; }
+    .oc input { height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 10px; width:220px; }
+
+    table { width:100%; border-collapse:collapse; margin-top:10px; }
+    th { text-align:left; font-size:11px; text-transform:uppercase; color:#374151; border-bottom:1px solid var(--borda); padding:6px 8px; }
+    td { padding:6px 8px; border-bottom:1px solid #f3f4f6; vertical-align:top; }
+    .num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    td .tec { font-size:12px; color:var(--cinza); }
+    td input { width:80px; height:30px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; text-align:right; }
+    .vazio { color:var(--cinza); padding:18px; text-align:center; }
+
+    .totais { display:flex; justify-content:flex-end; gap:28px; margin-top:12px; font-size:14px; }
+    .totais .t { text-align:right; }
+    .totais .t span { display:block; font-size:11px; text-transform:uppercase; color:#374151; font-weight:700; }
+    .totais .liq { font-size:22px; font-weight:800; color:var(--roxo); }
+    .totais input { width:110px; height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; text-align:right; }
+
+    .obs { width:100%; height:34px; border:1px solid #d1d5db; border-radius:6px; padding:0 10px; }
+
+    .rodape { position:fixed; left:0; right:0; bottom:0; background:#f8fafc; border-top:1px solid var(--borda);
+              display:flex; justify-content:space-between; align-items:center; gap:16px;
+              padding:12px max(40px, calc((100vw - 1280px) / 2 + 40px)); }
+    .recado { font-size:13px; }
+    .recado.ok { color:var(--verde); } .recado.erro { color:var(--vermelho); }
+    .btn-principal { background:var(--verde); color:#fff; border:0; border-radius:8px; padding:10px 22px;
+                     font-weight:700; cursor:pointer; font-size:14px; }
+    .btn-principal:disabled { opacity:.5; cursor:default; }
+    .rodape { padding:12px max(40px, calc((100vw - 1480px) / 2 + 40px)); }
+
+    .ok-fundo { position:fixed; inset:0; background:rgba(15,23,42,.10); z-index:40; }
+    .ok-fundo[hidden], .ok-caixa[hidden] { display:none; }
+    .ok-caixa { position:fixed; top:22vh; left:50%; transform:translateX(-50%); z-index:41;
+                width:min(640px, calc(100vw - 32px)); background:#fff; border-radius:12px;
+                box-shadow:0 18px 50px rgba(0,0,0,.30); padding:0 24px 20px; border:1px solid var(--borda); }
+    .ok-caixa h3 { margin:0 -24px 10px; padding:16px 24px 10px; font-size:19px; color:var(--verde);
+                   cursor:move; user-select:none; border-radius:12px 12px 0 0; }
+    .ok-caixa h3 small { float:right; font-size:11px; font-weight:500; color:var(--cinza); }
+    .ok-caixa .ok-det { color:#374151; font-size:14px; line-height:1.5; }
+    .ok-caixa .ok-liq { font-size:24px; font-weight:800; color:var(--roxo); margin:8px 0 4px; }
+    .ok-caixa .ok-obs { font-size:12px; color:var(--cinza); margin-bottom:16px; }
+    .ok-botoes { display:flex; flex-wrap:nowrap; gap:8px; }
+    .ok-botoes button { flex:1 1 0; white-space:nowrap; }
+    .ok-botoes button { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:9px 14px;
+                        font-size:14px; font-weight:600; color:#374151; cursor:pointer; }
+    .ok-botoes button.prim { background:var(--roxo); border-color:var(--roxo); color:#fff; }
+    .ok-botoes button:disabled { opacity:.5; cursor:default; }
+    .btn-fechar { background:var(--roxo); color:#fff; border:0; border-radius:8px; padding:10px 22px;
+                  font-weight:700; cursor:pointer; font-size:14px; }
+    .btn-fechar:disabled { opacity:.5; cursor:default; }
+    .rodape .botoes { display:flex; gap:10px; }
+    .fe-formas { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 12px; }
+    .fe-formas label { display:flex; align-items:center; gap:6px; border:1px solid #d1d5db; border-radius:8px;
+                       padding:8px 12px; cursor:pointer; font-weight:600; font-size:14px; }
+    .fe-formas label.ativo { border-color:var(--roxo); background:var(--roxo-claro); color:var(--roxo); }
+    .fe-formas label.off { opacity:.45; cursor:not-allowed; }
+    .fe-linha { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .fe-linha[hidden] { display:none; }
+    .fe-linha select { height:34px; min-width:220px; border:1px solid #d1d5db; border-radius:8px; padding:0 8px; font-size:14px; }
+    .fe-previa { font-size:13px; color:#374151; margin:4px 0 12px; }
+    .fe-previa table { border-collapse:collapse; }
+    .fe-previa td { padding:2px 14px 2px 0; font-variant-numeric:tabular-nums; }
+    .fe-msg { font-size:13px; color:var(--vermelho); min-height:18px; margin-bottom:8px; }
+    .fe-msg.ok { color:var(--verde); font-size:15px; font-weight:700; }
+    .fe-aviso { font-size:15px; font-weight:600; color:#92400e; background:#fef3c7; border:1px solid #fcd34d;
+                border-radius:8px; padding:8px 12px; margin:-4px 0 12px; }
+    .fe-aviso[hidden] { display:none; }
+    #fe-recebido { height:36px; width:180px; border:1px solid #eab308; background:#fef9c3; border-radius:8px;
+                   padding:0 10px; font-size:16px; font-weight:700; text-align:right; }
+    .ok-botoes button:focus { outline:2px solid var(--roxo-claro); outline-offset:1px; }
+  </style>
+</head>
+<body data-venda-id="{{vendaId}}">
+
+  <div class="topo">
+    <div><h1 id="titulo" style="display:inline">Nova venda</h1><span class="sit" id="situacao"></span></div>
+    <a href="/vendas/venda">+ nova venda</a>
+  </div>
+
+  <div class="pagina">
+
+  <nav class="menu-lado">
+    <h2>Documento</h2>
+    <div id="seg-doc">
+      <button type="button" data-v="CUPOM" class="ativo">Cupom (balcão)</button>
+      <button type="button" data-v="NFE">Nota fiscal</button>
+    </div>
+    <div id="bloco-tipo" hidden>
+      <h2 style="margin-top:16px">Cliente</h2>
+      <div id="seg-tipo">
+        <button type="button" data-v="PF" class="ativo">P. física</button>
+        <button type="button" data-v="PJ">P. jurídica</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+  <div class="bloco loja" id="bloco-loja">
+    <h2>Cupom · loja</h2>
+    <div class="loja-linha"><strong id="loja-nome">…</strong> <span class="s" id="loja-det"></span></div>
+  </div>
+
+  <div class="bloco" id="bloco-cliente" hidden>
+    <h2>Cliente <span class="cli-tipo" id="cli-tipo">pessoa física</span> <span class="obrig" id="cli-obrig" hidden>· obrigatório na nota fiscal</span></h2>
+    <div class="cli-busca-linha" id="cli-busca-linha">
+      <div class="busca">
+        <input type="search" id="busca-cliente" autocomplete="off" placeholder="nome (2 letras), número (17281 / F17281 / J1705) ou CPF/CNPJ — duplo clique escolhe">
+        <div class="lista" id="lista-clientes" hidden></div>
+      </div>
+      <a class="btn-novo-cli" href="/vendas/clientes" target="_blank" title="cadastrar em outra aba; depois volte e busque">+ Novo cliente</a>
+    </div>
+    <div class="cli-ficha" id="cli-escolhido">
+      <div class="cli-topo">
+        <div><strong id="cli-nome"></strong> <span class="s" id="cli-codigo"></span></div>
+        <button type="button" class="btn-x" id="cli-tirar" title="trocar o cliente">×</button>
+      </div>
+      <div class="cli-grade">
+        <div><span>CPF/CNPJ</span><b id="cli-doc"></b></div>
+        <div><span>Insc. estadual</span><b id="cli-ie"></b></div>
+        <div><span>Telefone</span><b id="cli-fone"></b></div>
+        <div><span>Conta contábil</span><b id="cli-conta"></b>
+          <button type="button" class="btn-conta" id="cli-vincular" hidden>vincular conta</button></div>
+        <div class="largo"><span>Endereço</span><b id="cli-end"></b></div>
+        <div><span>Bairro</span><b id="cli-bairro"></b></div>
+        <div><span>Cidade / UF</span><b id="cli-cidade"></b></div>
+        <div><span>CEP</span><b id="cli-cep"></b></div>
+      </div>
+      <div class="oc" id="bloco-oc" hidden>
+        <span class="rot">OC do cliente</span><input id="oc-cliente" autocomplete="off" placeholder="ordem de compra">
+      </div>
+    </div>
+  </div>
+
+  <div class="bloco">
+    <h2>Produtos</h2>
+    <div class="prod-linha">
+      <select id="filtro-fornec" title="filtrar pelo fornecedor"><option value="">todos os fornecedores</option></select>
+      <div class="busca">
+        <input type="search" id="busca-produto" autocomplete="off" placeholder="código, descrição ou referência — Enter adiciona">
+        <div class="lista" id="lista-produtos" hidden></div>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Código</th><th>Descrição</th><th>Ref.</th><th class="num">Estoque</th>
+            <th class="num">Qtd</th><th class="num">Unitário</th><th class="num">Desconto</th><th class="num">Total</th><th></th></tr>
+      </thead>
+      <tbody id="itens"><tr><td colspan="9" class="vazio">Nenhum produto. Busque acima.</td></tr></tbody>
+    </table>
+
+    <div class="totais">
+      <div class="t"><span>Bruto</span><b id="t-bruto">0,00</b></div>
+      <div class="t"><span>Desc. itens</span><b id="t-desc-itens">0,00</b></div>
+      <div class="t"><span>Desc. geral</span><input id="desc-geral" inputmode="decimal" placeholder="0,00"></div>
+      <div class="t"><span>Líquido</span><b class="liq" id="t-liquido">0,00</b></div>
+    </div>
+
+    <div class="condicao">
+      <span class="rot">Condição</span>
+      <select id="sel-cond">
+        <option value="VISTA">À vista</option>
+        <option value="PRAZO">A prazo</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="bloco">
+    <h2>Observação</h2>
+    <input class="obs" id="observacao" autocomplete="off">
+  </div>
+
+  </main>
+  </div>
+
+  <div class="rodape">
+    <div class="recado" id="recado"></div>
+    <div class="botoes">
+      <button class="btn-fechar" id="fechar" type="button">Fechar venda</button>
+      <button class="btn-principal" id="gravar" type="button">Gravar venda (aberta)</button>
+    </div>
+  </div>
+
+  <div class="ok-fundo" id="fe-fundo" hidden></div>
+  <div class="ok-caixa" id="fe-caixa" hidden role="dialog" aria-labelledby="fe-titulo">
+    <h3 id="fe-titulo" style="color:var(--roxo)">Fechar venda</h3>
+    <div class="ok-det" id="fe-det"></div>
+    <div class="ok-liq" id="fe-liq"></div>
+    <div class="fe-formas" id="fe-formas"></div>
+    <div class="fe-aviso" id="fe-aviso" hidden>Título em banco: só para pessoa jurídica com nota fiscal.</div>
+    <div class="fe-linha" id="fe-l-receb" hidden><span class="rot">Valor recebido</span>
+      <input type="text" id="fe-recebido" inputmode="decimal" autocomplete="off" placeholder="0,00"></div>
+    <div class="fe-linha" id="fe-l-banco" hidden><span class="rot">Banco</span><select id="fe-banco"></select></div>
+    <div class="fe-linha" id="fe-l-cartao" hidden><span class="rot">Cartão</span><select id="fe-cartao"></select></div>
+    <div class="fe-linha" id="fe-l-parc" hidden><span class="rot">Parcelas</span><select id="fe-parcelas"></select></div>
+    <div class="fe-previa" id="fe-previa"></div>
+    <div class="fe-msg" id="fe-msg"></div>
+    <div class="ok-botoes">
+      <button type="button" class="prim" id="fe-confirmar">Confirmar fechamento</button>
+      <button type="button" id="fe-cancelar">Voltar</button>
+    </div>
+  </div>
+
+  <div class="ok-fundo" id="ok-fundo" hidden></div>
+  <div class="ok-caixa" id="ok-caixa" hidden role="dialog" aria-labelledby="ok-titulo">
+    <h3 id="ok-titulo">✓ Venda gravada</h3>
+    <div class="ok-det" id="ok-det"></div>
+    <div class="ok-liq" id="ok-liq"></div>
+    <div class="ok-obs">Venda aberta. Pagamento, baixa de estoque e nota fiscal vêm no fechamento.</div>
+    <div class="ok-botoes">
+      <button type="button" class="prim" id="ok-nova">Nova venda</button>
+      <button type="button" id="ok-continuar">Alterar venda</button>
+      <button type="button" id="ok-menu">Menu</button>
+      <button type="button" id="ok-imprimir">Imprimir</button>
+    </div>
+  </div>
+
+  <div class="ok-fundo" id="cc-fundo" hidden></div>
+  <div class="ok-caixa" id="cc-caixa" hidden role="dialog" aria-labelledby="cc-titulo" style="width:min(760px, calc(100vw - 32px))">
+    <h3 id="cc-titulo" style="color:var(--roxo)">Conta contábil do cliente</h3>
+    <div class="ok-det" id="cc-det"></div>
+    <div style="margin:10px 0 0">
+      <input type="search" class="cc-busca" id="cc-busca" autocomplete="off"
+             placeholder="procurar no plano: nome (2 letras) ou código da conta — Enter ou duplo clique abre a ficha">
+    </div>
+    <div class="cc-lista" id="cc-lista" style="margin-top:12px"><div class="vazio">Digite para procurar.</div></div>
+    <div class="cc-nova" id="cc-nova" hidden>
+      <h4>Não achou? Criar conta nova</h4>
+      <div class="fe-linha"><span class="rot">Título</span><select id="cc-titulos"></select></div>
+      <div class="fe-linha"><span class="rot">Nome</span><input id="cc-nome" autocomplete="off"></div>
+    </div>
+    <div class="fe-msg" id="cc-msg"></div>
+    <div class="ok-botoes">
+      <button type="button" class="prim" id="cc-criar" hidden>Criar e vincular</button>
+      <button type="button" id="cc-cancelar">Voltar</button>
+    </div>
+  </div>
+
+  <div class="ok-fundo" id="cf-fundo" hidden></div>
+  <div class="ok-caixa" id="cf-caixa" hidden role="dialog" aria-labelledby="cf-titulo" style="width:min(860px, calc(100vw - 32px))">
+    <h3 id="cf-titulo" style="color:var(--roxo)">Ficha do cliente</h3>
+    <div class="cf-grade">
+      <label><span>Código</span><input id="cf-codigo" readonly tabindex="-1"></label>
+      <label><span>CPF / CNPJ</span><input id="cf-doc" readonly tabindex="-1"></label>
+      <label class="l2"><span>Nome</span><input id="cf-nome" placeholder=" " autocomplete="off"></label>
+      <label><span>Insc. estadual</span><input id="cf-ie" placeholder=" " autocomplete="off"></label>
+      <label><span>Telefone</span><input id="cf-fone" placeholder=" " autocomplete="off"></label>
+      <label class="l2"><span>E-mail</span><input id="cf-email" placeholder=" " autocomplete="off"></label>
+      <label class="l2"><span>Logradouro</span><input id="cf-logr" placeholder=" " autocomplete="off"></label>
+      <label><span>Número</span><input id="cf-num" placeholder=" " autocomplete="off"></label>
+      <label><span>Complemento</span><input id="cf-compl" placeholder=" " autocomplete="off"></label>
+      <label><span>Bairro</span><input id="cf-bairro" placeholder=" " autocomplete="off"></label>
+      <label><span>Cidade</span><input id="cf-cidade" placeholder=" " autocomplete="off"></label>
+      <label><span>UF</span><input id="cf-uf" placeholder=" " maxlength="2" autocomplete="off"></label>
+      <label><span>CEP</span><input id="cf-cep" placeholder=" " autocomplete="off"></label>
+      <label><span>Conta contábil</span><input id="cf-conta" placeholder=" " autocomplete="off"></label>
+      <label class="l2"><span>&nbsp;</span><span class="cf-conta-nome" id="cf-conta-nome"></span></label>
+    </div>
+    <div class="fe-msg" id="cf-msg"></div>
+    <div class="ok-botoes">
+      <button type="button" class="prim" id="cf-gravar">Gravar ficha</button>
+      <button type="button" id="cf-cancelar">Voltar</button>
+    </div>
+  </div>
+
+  <script src="/js/vendas/venda.js"></script>
+</body>
+</html>

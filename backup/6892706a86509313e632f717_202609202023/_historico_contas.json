@@ -1,0 +1,76 @@
+[
+ {
+  "_id": "6a15f536d74e28252774669b",
+  "codigoConta": "3.01.001.003",
+  "texto": "Papelaria",
+  "__v": 0,
+  "atualizadoEm": "2026-05-28T21:02:11.913Z",
+  "contaSubTitulo": null,
+  "criadoEm": "2026-05-26T19:32:06.152Z",
+  "ultimoUso": "2026-05-28T21:02:11.912Z",
+  "usos": 4,
+  "lojistaId": "6892706a86509313e632f717"
+ },
+ {
+  "_id": "6a15f5fbd74e282527747f6d",
+  "texto": "Uber",
+  "codigoConta": "3.07.001.001",
+  "__v": 0,
+  "atualizadoEm": "2026-05-26T19:35:23.363Z",
+  "contaSubTitulo": null,
+  "criadoEm": "2026-05-26T19:35:23.363Z",
+  "ultimoUso": "2026-05-26T19:35:23.362Z",
+  "usos": 1,
+  "lojistaId": "6892706a86509313e632f717"
+ },
+ {
+  "_id": "6aa55af2216b0dccf2078873",
+  "codigoConta": "1.01.002.002",
+  "texto": "recebido",
+  "__v": 0,
+  "atualizadoEm": "2026-09-12T14:00:18.525Z",
+  "contaSubTitulo": null,
+  "criadoEm": "2026-09-12T14:00:18.525Z",
+  "lojistaId": "6892706a86509313e632f717",
+  "ultimoUso": "2026-09-12T14:00:18.524Z",
+  "usos": 1
+ },
+ {
+  "_id": "6aa55af2216b0dccf2078881",
+  "codigoConta": "1.04.001.001",
+  "texto": "pago Nf 89876",
+  "__v": 0,
+  "atualizadoEm": "2026-09-12T14:00:18.669Z",
+  "contaSubTitulo": null,
+  "criadoEm": "2026-09-12T14:00:18.669Z",
+  "lojistaId": "6892706a86509313e632f717",
+  "ultimoUso": "2026-09-12T14:00:18.669Z",
+  "usos": 1
+ },
+ {
+  "_id": "6aa56157216b0dccf2084454",
+  "texto": "recebendo  NF 8765",
+  "codigoConta": "1.01.002.002",
+  "tipo": "RECEBIMENTO",
+  "__v": 0,
+  "atualizadoEm": "2026-09-12T14:27:35.556Z",
+  "contaSubTitulo": null,
+  "criadoEm": "2026-09-12T14:27:35.556Z",
+  "lojistaId": "6892706a86509313e632f717",
+  "ultimoUso": "2026-09-12T14:27:35.555Z",
+  "usos": 1
+ },
+ {
+  "_id": "6aa56157216b0dccf208445a",
+  "codigoConta": "1.04.001.001",
+  "texto": "Nf 8765",
+  "tipo": "RECEBIMENTO",
+  "__v": 0,
+  "atualizadoEm": "2026-09-12T14:27:35.702Z",
+  "contaSubTitulo": null,
+  "criadoEm": "2026-09-12T14:27:35.702Z",
+  "lojistaId": "6892706a86509313e632f717",
+  "ultimoUso": "2026-09-12T14:27:35.702Z",
+  "usos": 1
+ }
+]

@@ -1,49 +1,38 @@
-// src/routes/auxiliares/lookups-extra.js
-// Lookups auxiliares: SubTítulos do plano (dropdown ao vincular conta bancária)
-// VERSÃO DEFENSIVA: loga erros e não quebra se populate falhar.
+// =============================================================================
+// Destino: C:\plataformaRota\src\routes\contab\auxiliares\lookups-extra.js
+// Alterado em: 25/09/2026 — caminho do model corrigido depois da reestruturacao.
+//
+// Lookups auxiliares do contab.
+// Hoje serve um so dropdown: os subtitulos do plano, na hora de vincular uma
+// conta bancaria a uma conta contabil.
+//
+// Montado em /aux/api/lookup  (ver pages.js)
+// =============================================================================
+
+'use strict';
 
 const express = require('express');
 const router = express.Router();
 
-// Tenta carregar o model de forma flexível
-let ContaSubTitulo;
-try {
-  ContaSubTitulo = require('../../models/contaSubTitulo');
-} catch (e1) {
-  try {
-    ContaSubTitulo = require('../../models/ContaSubTitulo');
-  } catch (e2) {
-    console.error('⚠ Não encontrou model contaSubTitulo:', e2.message);
-  }
-}
+const ContaSubTitulo = require('../../../models/contab/financeiro/contaSubTitulo');
 
 /* GET /aux/api/lookup/subtitulos */
 router.get('/subtitulos', async (req, res) => {
   try {
-    if (!ContaSubTitulo) {
-      return res.status(500).json({ erro: 'Model ContaSubTitulo não carregado. Verifique o caminho.' });
-    }
+    const subs = await ContaSubTitulo
+      .find({})
+      .sort({ codigo: 1 })
+      .lean();
 
-    // Busca SEM populate primeiro (mais seguro)
-    const subs = await ContaSubTitulo.find({}).sort({ codigo: 1 }).lean();
-
-    console.log(`📊 /subtitulos: encontrados ${subs.length} subtítulos`);
-    if (subs.length > 0) {
-      console.log('   Exemplo do 1º registro:', JSON.stringify(subs[0], null, 2));
-    }
-
-    // Monta resposta plana usando os campos que existirem
-    const resposta = subs.map(s => ({
+    res.json(subs.map(s => ({
       _id: s._id,
       codigo: s.codigo || '',
       descricao: s.descricao || s.nome || s.titulo || '',
-      caminho: `${s.codigo || ''} ${s.descricao || s.nome || s.titulo || ''}`.trim()
-    }));
+      caminho: ((s.codigo || '') + ' ' + (s.descricao || s.nome || s.titulo || '')).trim(),
+    })));
 
-    res.json(resposta);
   } catch (err) {
-    console.error('❌ ERRO em /subtitulos:', err.message);
-    console.error(err.stack);
+    console.error('[lookup/subtitulos] ' + err.message);
     res.status(500).json({ erro: err.message });
   }
 });

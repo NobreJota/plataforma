@@ -19,7 +19,7 @@ router.get('/cadastro', async (req, res) => {
       ? await Lojista.findById(lojistaId, { marca: 1,bairro:1,cidade:1 }).lean()
       : null;
     //console.log('lojista [18 ] ? ',lojista)
-    return res.render('pages/empresa/produto_cadastro.handlebars', {
+    return res.render('empresa/pages/produto_cadastro.handlebars', {
       layout: '',
       departamentos,
       lojista

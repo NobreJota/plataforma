@@ -1,4 +1,9 @@
-// src/routes/financeiro/razao-api.js
+// Destino: C:\plataformaRota\src\routes\contab\financeiro\razao-api.js
+// Alterado em: 05/10/2026 - CONTRAPARTIDA INVERTIDA: valor NEGATIVO numa contrapartida
+//   vai para o lado oposto, em valor positivo. Ex.: recebimento de cartao com taxa —
+//   banco a debito pelo liquido, cartao a credito pelo total e a taxa (valor -12,00)
+//   a DEBITO na despesa. A boleta continua fechando: banco = soma das contrapartidas.
+//
 // RAZÃO contábil: monta os lançamentos de uma conta a partir das BOLETAS.
 // Cada boleta gera lançamentos:
 //   - na conta do BANCO (crédito p/ pagamento, débito p/ recebimento)
@@ -51,6 +56,7 @@ router.get('/lancamentos', async (req, res) => {
             documento: doc,
             boletaId: b._id,
             cPartida: '',                    // não há contrapartida, de propósito
+            cPartidaNome: '',
             debito:  v > 0 ?  v : 0,
             credito: v < 0 ? -v : 0
           });
@@ -69,6 +75,14 @@ router.get('/lancamentos', async (req, res) => {
           ? (codsContras.length > 1 ? `${codsContras[0]} +${codsContras.length - 1}` : codsContras[0])
           : '';
 
+        // O nome acompanha o código: ler "3.01.001.003" não diz nada, ler
+        // "Papelaria" ao lado resolve na hora. Com várias contrapartidas,
+        // mostra a da primeira e avisa que há outras.
+        const primeira = (b.contrapartidas || []).find(c => c.codigoConta === codsContras[0]);
+        const cPartidaNome = primeira
+          ? (codsContras.length > 1 ? `${primeira.nomeConta} e outras` : (primeira.nomeConta || ''))
+          : '';
+
         // pagamento: banco a crédito (saiu). recebimento: banco a débito (entrou)
         lancamentos.push({
           data: b.data,
@@ -76,6 +90,7 @@ router.get('/lancamentos', async (req, res) => {
           documento: doc,
           boletaId: b._id,
           cPartida,
+          cPartidaNome,
           debito:  ehPagamento ? 0 : b.valorTotal,
           credito: ehPagamento ? b.valorTotal : 0
         });
@@ -85,17 +100,24 @@ router.get('/lancamentos', async (req, res) => {
       for (const c of (b.contrapartidas || [])) {
         if (c.codigoConta === conta) {
           // contrapartida desta perna = o BANCO da boleta
-          const cPartida = b.bancoCodigo || '';
+          const cPartida     = b.bancoCodigo || '';
+          const cPartidaNome = b.bancoNome  || '';
 
-          // pagamento: despesa a débito. recebimento: receita a crédito
+          // pagamento: despesa a débito. recebimento: receita a crédito.
+          // Valor negativo = contrapartida invertida: vai para o outro lado, positivo.
+          const v = c.valor || 0;
+          let debito  = ehPagamento ? v : 0;
+          let credito = ehPagamento ? 0 : v;
+          if (v < 0) { const d = debito; debito = -credito; credito = -d; }
           lancamentos.push({
             data: b.data,
             historico: c.historico || c.nomeConta || '',
             documento: doc,
             boletaId: b._id,
             cPartida,
-            debito:  ehPagamento ? c.valor : 0,
-            credito: ehPagamento ? 0 : c.valor
+            cPartidaNome,
+            debito,
+            credito
           });
         }
       }

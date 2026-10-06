@@ -2,8 +2,53 @@
   <header class="for-header">
     <h1>🏭 Fornecedores</h1>
     <p class="for-subtitle">Cadastro unificado (compartilhado com o site)</p>
-    <button class="for-btn-novo" id="btn-novo">+ Novo fornecedor</button>
+    <div class="for-header-botoes">
+      <button class="for-btn-ajuda" id="btn-ajuda" type="button">? Ajuda</button>
+      <button class="for-btn-novo" id="btn-novo">+ Novo fornecedor</button>
+    </div>
   </header>
+
+  <!-- 30/09/2026: painel de ajuda (abre pelo botao "? Ajuda") -->
+  <aside class="for-ajuda" id="painel-ajuda" hidden>
+    <div class="for-ajuda-topo">
+      <strong>Ajuda — Fornecedores</strong>
+      <button class="for-ajuda-fechar" id="btn-ajuda-fechar" type="button" title="Fechar">✕</button>
+    </div>
+
+    <h4>Linha amarela com <span class="for-tag-ajustar">ajustar</span></h4>
+    <p>Fornecedor que veio do sistema antigo (Access) e ainda não entrou no cadastro.
+       A conta contábil dele já vem do Access. Passe o mouse na etiqueta para ver o motivo
+       e clique em ✏️ para completar.</p>
+
+    <h4>O que fazer em cada motivo</h4>
+    <dl>
+      <dt>sem CNPJ</dt>
+      <dd>Digite o CNPJ na ficha. A busca na Receita preenche razão social e endereço.
+          Confira e salve.</dd>
+      <dt>conta … fora do plano</dt>
+      <dd>O Access tem a conta no fornecedor, mas não no plano. Ao salvar, a conta é
+          criada no plano com o mesmo número.</dd>
+      <dt>sem conta no Access</dt>
+      <dd>Escolha o título contábil. A conta nasce com o próximo número livre.</dd>
+      <dt>mesmo CNPJ de …</dt>
+      <dd>É a mesma empresa com duas contas no Access (compra e assistência técnica).
+          O cadastro aceita um fornecedor por CNPJ, então este fica pendente até
+          decidirmos juntar as contas.</dd>
+    </dl>
+
+    <h4>Fornecedor novo</h4>
+    <p>Nasce aqui, pelo <strong>+ Novo fornecedor</strong>. Escolha o título; a conta é
+       criada sozinha, com o próximo número livre.</p>
+
+    <h4>Botões da linha</h4>
+    <dl>
+      <dt>✏️ Editar</dt><dd>Muda dados do cadastro. A conta não muda.</dd>
+      <dt>🗑️ Inativar</dt><dd>Some da lista desta empresa; conta e cadastro continuam.
+          "Incluir inativos" mostra de novo, com ♻️ para reativar.</dd>
+      <dt>⛓️‍💥 Desvincular</dt><dd>Tira o fornecedor da empresa e suspende a conta.
+          Só é permitido se a conta não tem lançamento.</dd>
+    </dl>
+  </aside>
 
   <div class="for-toolbar">
     <input type="search" id="busca" class="for-input" placeholder="🔍 Buscar por razão, CNPJ ou marca...">
@@ -19,13 +64,14 @@
         <th>RAZÃO SOCIAL</th>
         <th>CNPJ / CPF</th>
         <th>MARCA</th>
+        <th>CONTA</th>
         <th>CIDADE</th>
         <th>STATUS</th>
         <th>AÇÕES</th>
       </tr>
     </thead>
     <tbody id="lista-fornecedores">
-      <tr><td colspan="6" class="for-empty">Carregando...</td></tr>
+      <tr><td colspan="7" class="for-empty">Carregando...</td></tr>
     </tbody>
   </table>
 </div>
@@ -39,6 +85,7 @@
     </div>
 
     <form id="form-fornecedor" class="for-form" autocomplete="off">
+      <div id="aviso-vinculo" class="for-aviso-vinculo" hidden></div>
 
       <!-- Identificação -->
       <fieldset class="for-fieldset">
@@ -72,9 +119,15 @@
             <span>Marca</span>
             <input type="text" id="f-marca" tabindex="4" placeholder="Marca / fantasia" autocomplete="off">
           </label>
-          <label class="flex-fix" style="min-width:200px">
-            <span>Nº Contábil</span>
-            <input type="text" id="f-ncontabil" tabindex="5" placeholder="Vínculo contábil" autocomplete="off">
+          <label class="flex-grow" id="bloco-titulo">
+            <span>Título contábil <em>*</em></span>
+            <select id="f-titulo" tabindex="5">
+              <option value="">Carregando títulos...</option>
+            </select>
+          </label>
+          <label class="flex-fix" style="min-width:200px" id="bloco-ncontabil" hidden>
+            <span>Conta no plano</span>
+            <input type="text" id="f-ncontabil" readonly class="for-readonly">
           </label>
         </div>
       </fieldset>
@@ -229,10 +282,13 @@
   .for-table tr:hover { background:#faf5ff; }
   .for-empty { text-align:center; padding:32px; color:#9ca3af; }
 
-  .for-doc { font-family:monospace; font-size:.85rem; white-space:nowrap; }
+  .for-doc, .for-conta { font-family:monospace; font-size:.85rem; white-space:nowrap; }
   .for-col-acoes { white-space:nowrap; text-align:right; width:1%; }
   .for-tag-ativo { background:#d1fae5; color:#065f46; padding:3px 10px; border-radius:12px; font-size:.75rem; font-weight:600; }
   .for-tag-inativo { background:#fee2e2; color:#991b1b; padding:3px 10px; border-radius:12px; font-size:.75rem; font-weight:600; }
+  /* 30/09/2026: fornecedor do Access a completar, ou com dado faltando */
+  .for-tag-ajustar { background:#fef3c7; color:#92400e; padding:3px 10px; border-radius:12px; font-size:.75rem; font-weight:600; margin-left:4px; cursor:help; }
+  tr.for-pendente td { background:#fffbeb; }
   .for-btn-acao { background:none; border:none; cursor:pointer; font-size:1.1rem; padding:4px 8px; border-radius:4px; display:inline-block; }
   .for-btn-acao:hover { background:#e5e7eb; }
 
@@ -248,7 +304,9 @@
   .for-form * { box-sizing:border-box; }
   .for-fieldset { border:1px solid #e5e7eb; border-radius:8px; padding:12px 16px; margin-bottom:14px; }
   .for-fieldset legend { padding:0 8px; font-weight:600; color:#374151; font-size:.9rem; }
-  .for-fieldset[hidden] { display:none; }
+  .for-fieldset[hidden], .for-form label[hidden] { display:none; }
+  .for-readonly { background:#f3f4f6 !important; font-family:monospace; color:#374151; }
+  .for-aviso-vinculo { background:#ede9fe; color:#5b21b6; border-radius:7px; padding:8px 12px; font-size:.85rem; margin-bottom:12px; }
   .for-row { display:flex; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
   .flex-fix { flex:0 0 auto; }
   .flex-grow { flex:1; min-width:180px; }
@@ -286,6 +344,21 @@
   .for-btn-cancel { background:#f3f4f6; border:1px solid #d1d5db; border-radius:7px; padding:9px 18px; cursor:pointer; font-weight:500; }
   .for-btn-salvar { background:#7c3aed; color:#fff; border:none; border-radius:7px; padding:9px 24px; font-weight:600; cursor:pointer; }
   .for-btn-salvar:hover { background:#6d28d9; }
+
+  /* 30/09/2026: ajuda */
+  .for-header-botoes { display:flex; gap:10px; align-items:center; }
+  .for-btn-ajuda { background:#fbbf24; color:#1f2937; border:none; border-radius:8px; padding:10px 14px; font-weight:600; cursor:pointer; }
+  .for-btn-ajuda:hover { background:#f59e0b; }
+  .for-ajuda { position:fixed; top:0; right:0; width:min(400px, 92vw); height:100vh; overflow-y:auto;
+               background:#fff; border-left:1px solid #e5e7eb; box-shadow:-8px 0 24px rgba(0,0,0,.12);
+               padding:18px 20px 30px; z-index:900; font-size:.88rem; color:#1f2937; line-height:1.45; }
+  .for-ajuda[hidden] { display:none; }
+  .for-ajuda-topo { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:1rem; }
+  .for-ajuda-fechar { background:none; border:none; font-size:1.1rem; cursor:pointer; color:#6b7280; }
+  .for-ajuda h4 { margin:16px 0 6px; font-size:.9rem; color:#6d28d9; }
+  .for-ajuda p { margin:0 0 6px; }
+  .for-ajuda dt { font-weight:600; margin-top:8px; }
+  .for-ajuda dd { margin:2px 0 0 0; color:#374151; }
 </style>
 
-<script src="/js/auxiliares/fornecedores.js"></script>
+<script src="/js/contab/auxiliares/fornecedores.js"></script>

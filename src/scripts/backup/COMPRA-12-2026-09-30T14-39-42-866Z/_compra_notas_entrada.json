@@ -1,0 +1,1451 @@
+[
+  {
+    "_id": {
+      "$oid": "6ab661ad120d535da044544a"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "situacao": "EFETIVADA",
+    "chaveAcesso": "35260947173950000181550050006208191217124266",
+    "numero": "620819",
+    "serie": "5",
+    "modelo": "55",
+    "dataEmissao": {
+      "$date": {
+        "$numberLong": "1790009686000"
+      }
+    },
+    "dataEntrada": {
+      "$date": {
+        "$numberLong": "1790337453154"
+      }
+    },
+    "emitente": {
+      "cnpj": "47173950000181",
+      "razao": "RINNAI BRASIL TEC. DE AQUECIMENTO LTDA",
+      "fantasia": "",
+      "inscricao": "454072582116",
+      "logradouro": "R.TTE.ONOFRE R.DE AGUIAR, 200",
+      "complemento": "",
+      "bairro": "VILA INDUSTRIAL",
+      "cidade": "MOGI DAS CRUZES",
+      "uf": "SP",
+      "cep": "08770041",
+      "fone": "1147919696"
+    },
+    "fornecedor": {
+      "$oid": "68e002af6374d722404d456f"
+    },
+    "valorProdutos": {
+      "$numberInt": "2767140"
+    },
+    "valorFrete": {
+      "$numberInt": "0"
+    },
+    "valorSeguro": {
+      "$numberInt": "0"
+    },
+    "valorDesconto": {
+      "$numberInt": "0"
+    },
+    "valorIpi": {
+      "$numberInt": "179859"
+    },
+    "valorIcmsSt": {
+      "$numberInt": "0"
+    },
+    "valorTotal": {
+      "$numberInt": "2946999"
+    },
+    "frete": "CIF",
+    "transportadora": null,
+    "transportadoraXml": {
+      "cnpj": "20147617006859",
+      "razao": "JAMEF TRANSPORTES LTDA",
+      "inscricao": "120608102114",
+      "endereco": "AV. DOUTOR ALBERTO JACKSON BYINGTON 2990",
+      "cidade": "SAO PAULO",
+      "uf": "SP"
+    },
+    "duplicatas": [
+      {
+        "numero": "001",
+        "vencimento": {
+          "$date": {
+            "$numberLong": "1794830400000"
+          }
+        },
+        "valor": {
+          "$numberInt": "982235"
+        }
+      },
+      {
+        "numero": "002",
+        "vencimento": {
+          "$date": {
+            "$numberLong": "1796040000000"
+          }
+        },
+        "valor": {
+          "$numberInt": "982235"
+        }
+      },
+      {
+        "numero": "003",
+        "vencimento": {
+          "$date": {
+            "$numberLong": "1797249600000"
+          }
+        },
+        "valor": {
+          "$numberInt": "982529"
+        }
+      }
+    ],
+    "itens": [
+      {
+        "numeroItem": {
+          "$numberInt": "1"
+        },
+        "codigoFornec": "REUE211FEHBL3",
+        "ean": "7896576406932",
+        "eanTributavel": "7896576406932",
+        "descricaoXml": "AQUECEDOR DE AGUA A GAS BI-VOLT",
+        "ncm": "84191100",
+        "cest": "",
+        "cfop": "6102",
+        "unidade": "PC",
+        "infoAdicional": "Trib aprox R$: 625,32 Federal e 793,22 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:1FAA37D2-84F3-429C-9B32-53EA43845D71",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "valorUnitario": {
+          "$numberInt": "206892"
+        },
+        "valorTotal": {
+          "$numberInt": "413784"
+        },
+        "desconto": {
+          "$numberInt": "0"
+        },
+        "frete": {
+          "$numberInt": "0"
+        },
+        "seguro": {
+          "$numberInt": "0"
+        },
+        "outras": {
+          "$numberInt": "0"
+        },
+        "ipi": {
+          "$numberInt": "26895"
+        },
+        "icmsSt": {
+          "$numberInt": "0"
+        },
+        "origem": "5",
+        "cst": "00",
+        "bcIcms": {
+          "$numberInt": "413784"
+        },
+        "icms": {
+          "$numberInt": "28964"
+        },
+        "aliqIcms": {
+          "$numberInt": "7"
+        },
+        "aliqIpi": {
+          "$numberDouble": "6.5"
+        },
+        "rateio": {
+          "$numberInt": "0"
+        },
+        "custoUnitarioReal": {
+          "$numberInt": "220340"
+        },
+        "produto": null,
+        "codigoProd": {
+          "$numberInt": "5838"
+        },
+        "vinculadoPor": "manual",
+        "quantidadeConferida": {
+          "$numberInt": "2"
+        },
+        "conferidoEm": {
+          "$date": {
+            "$numberLong": "1790513071448"
+          }
+        },
+        "conferidoPor": null,
+        "itemPedidoId": null,
+        "quantidadePedida": {
+          "$numberInt": "0"
+        },
+        "custoPedido": {
+          "$numberInt": "0"
+        },
+        "observacao": "",
+        "_id": {
+          "$oid": "6ab6a53aca71c541d2a083ed"
+        },
+        "tentativas": [
+          {
+            "quantidade": {
+              "$numberInt": "2"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513071446"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "numeroItem": {
+          "$numberInt": "2"
+        },
+        "codigoFornec": "REUM200CFHBLE",
+        "ean": "7896576406031",
+        "eanTributavel": "7896576406031",
+        "descricaoXml": "AQUECEDOR DE AGUA A GAS GLP",
+        "ncm": "84191100",
+        "cest": "",
+        "cfop": "6102",
+        "unidade": "PC",
+        "infoAdicional": "Trib aprox R$: 648,37 Federal e 646,58 Estadual Fonte: IBPT/empresometro.co A906AF.",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "valorUnitario": {
+          "$numberInt": "168643"
+        },
+        "valorTotal": {
+          "$numberInt": "337286"
+        },
+        "desconto": {
+          "$numberInt": "0"
+        },
+        "frete": {
+          "$numberInt": "0"
+        },
+        "seguro": {
+          "$numberInt": "0"
+        },
+        "outras": {
+          "$numberInt": "0"
+        },
+        "ipi": {
+          "$numberInt": "21923"
+        },
+        "icmsSt": {
+          "$numberInt": "0"
+        },
+        "origem": "1",
+        "cst": "00",
+        "bcIcms": {
+          "$numberInt": "337286"
+        },
+        "icms": {
+          "$numberInt": "13492"
+        },
+        "aliqIcms": {
+          "$numberInt": "4"
+        },
+        "aliqIpi": {
+          "$numberDouble": "6.5"
+        },
+        "rateio": {
+          "$numberInt": "0"
+        },
+        "custoUnitarioReal": {
+          "$numberInt": "179605"
+        },
+        "produto": null,
+        "codigoProd": {
+          "$numberInt": "4858"
+        },
+        "vinculadoPor": "manual",
+        "quantidadeConferida": {
+          "$numberInt": "2"
+        },
+        "conferidoEm": {
+          "$date": {
+            "$numberLong": "1790513085378"
+          }
+        },
+        "conferidoPor": null,
+        "itemPedidoId": null,
+        "quantidadePedida": {
+          "$numberInt": "0"
+        },
+        "custoPedido": {
+          "$numberInt": "0"
+        },
+        "observacao": "",
+        "_id": {
+          "$oid": "6ab6a53aca71c541d2a083ee"
+        },
+        "tentativas": [
+          {
+            "quantidade": {
+              "$numberInt": "1"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513081107"
+              }
+            }
+          },
+          {
+            "quantidade": {
+              "$numberInt": "2"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513085377"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "numeroItem": {
+          "$numberInt": "3"
+        },
+        "codigoFornec": "REUE351FEABN3",
+        "ean": "7896576408523",
+        "eanTributavel": "7896576408523",
+        "descricaoXml": "AQUECEDOR DE AGUA A GAS BI-VOLT",
+        "ncm": "84191100",
+        "cest": "",
+        "cfop": "6101",
+        "unidade": "PC",
+        "infoAdicional": "Trib aprox R$: 589,64 Federal e 747,96 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:3A60E6B3-2D4F-416A-80D9-CA3C8791D497",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "valorUnitario": {
+          "$numberInt": "390173"
+        },
+        "valorTotal": {
+          "$numberInt": "390173"
+        },
+        "desconto": {
+          "$numberInt": "0"
+        },
+        "frete": {
+          "$numberInt": "0"
+        },
+        "seguro": {
+          "$numberInt": "0"
+        },
+        "outras": {
+          "$numberInt": "0"
+        },
+        "ipi": {
+          "$numberInt": "25361"
+        },
+        "icmsSt": {
+          "$numberInt": "0"
+        },
+        "origem": "5",
+        "cst": "00",
+        "bcIcms": {
+          "$numberInt": "390173"
+        },
+        "icms": {
+          "$numberInt": "27312"
+        },
+        "aliqIcms": {
+          "$numberInt": "7"
+        },
+        "aliqIpi": {
+          "$numberDouble": "6.5"
+        },
+        "rateio": {
+          "$numberInt": "0"
+        },
+        "custoUnitarioReal": {
+          "$numberInt": "415534"
+        },
+        "produto": null,
+        "codigoProd": {
+          "$numberInt": "6440"
+        },
+        "vinculadoPor": "manual",
+        "quantidadeConferida": {
+          "$numberInt": "1"
+        },
+        "conferidoEm": {
+          "$date": {
+            "$numberLong": "1790513095271"
+          }
+        },
+        "conferidoPor": null,
+        "itemPedidoId": null,
+        "quantidadePedida": {
+          "$numberInt": "0"
+        },
+        "custoPedido": {
+          "$numberInt": "0"
+        },
+        "observacao": "",
+        "_id": {
+          "$oid": "6ab6a53aca71c541d2a083ef"
+        },
+        "tentativas": [
+          {
+            "quantidade": {
+              "$numberInt": "2"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513092330"
+              }
+            }
+          },
+          {
+            "quantidade": {
+              "$numberInt": "1"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513095271"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "numeroItem": {
+          "$numberInt": "4"
+        },
+        "codigoFornec": "REUE331FEHBN3",
+        "ean": "7896576406888",
+        "eanTributavel": "7896576406888",
+        "descricaoXml": "AQUECEDOR DE AGUA A GAS BI-VOLT",
+        "ncm": "84191100",
+        "cest": "",
+        "cfop": "6101",
+        "unidade": "PC",
+        "infoAdicional": "Trib aprox R$: 542,90 Federal e 688,67 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:28E793D8-4ED7-45C0-ABCD-21D1930EE597",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "valorUnitario": {
+          "$numberInt": "359246"
+        },
+        "valorTotal": {
+          "$numberInt": "359246"
+        },
+        "desconto": {
+          "$numberInt": "0"
+        },
+        "frete": {
+          "$numberInt": "0"
+        },
+        "seguro": {
+          "$numberInt": "0"
+        },
+        "outras": {
+          "$numberInt": "0"
+        },
+        "ipi": {
+          "$numberInt": "23350"
+        },
+        "icmsSt": {
+          "$numberInt": "0"
+        },
+        "origem": "5",
+        "cst": "00",
+        "bcIcms": {
+          "$numberInt": "359246"
+        },
+        "icms": {
+          "$numberInt": "25147"
+        },
+        "aliqIcms": {
+          "$numberInt": "7"
+        },
+        "aliqIpi": {
+          "$numberDouble": "6.5"
+        },
+        "rateio": {
+          "$numberInt": "0"
+        },
+        "custoUnitarioReal": {
+          "$numberInt": "382596"
+        },
+        "produto": null,
+        "codigoProd": {
+          "$numberInt": "6047"
+        },
+        "vinculadoPor": "manual",
+        "quantidadeConferida": {
+          "$numberInt": "1"
+        },
+        "conferidoEm": {
+          "$date": {
+            "$numberLong": "1790513105545"
+          }
+        },
+        "conferidoPor": null,
+        "itemPedidoId": null,
+        "quantidadePedida": {
+          "$numberInt": "0"
+        },
+        "custoPedido": {
+          "$numberInt": "0"
+        },
+        "observacao": "",
+        "_id": {
+          "$oid": "6ab6a53aca71c541d2a083f0"
+        },
+        "tentativas": [
+          {
+            "quantidade": {
+              "$numberInt": "2"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513101419"
+              }
+            }
+          },
+          {
+            "quantidade": {
+              "$numberInt": "1"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513105545"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "numeroItem": {
+          "$numberInt": "5"
+        },
+        "codigoFornec": "REUE271FEHBL3",
+        "ean": "7896576406871",
+        "eanTributavel": "7896576406871",
+        "descricaoXml": "AQUECEDOR DE AGUA A GAS BI-VOLT",
+        "ncm": "84191100",
+        "cest": "",
+        "cfop": "6101",
+        "unidade": "PC",
+        "infoAdicional": "Trib aprox R$: 444,38 Federal e 563,70 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:77F8FF01-1629-4162-A5B3-02B1FD317E62",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "valorUnitario": {
+          "$numberInt": "294051"
+        },
+        "valorTotal": {
+          "$numberInt": "294051"
+        },
+        "desconto": {
+          "$numberInt": "0"
+        },
+        "frete": {
+          "$numberInt": "0"
+        },
+        "seguro": {
+          "$numberInt": "0"
+        },
+        "outras": {
+          "$numberInt": "0"
+        },
+        "ipi": {
+          "$numberInt": "19113"
+        },
+        "icmsSt": {
+          "$numberInt": "0"
+        },
+        "origem": "5",
+        "cst": "00",
+        "bcIcms": {
+          "$numberInt": "294051"
+        },
+        "icms": {
+          "$numberInt": "20583"
+        },
+        "aliqIcms": {
+          "$numberInt": "7"
+        },
+        "aliqIpi": {
+          "$numberDouble": "6.5"
+        },
+        "rateio": {
+          "$numberInt": "0"
+        },
+        "custoUnitarioReal": {
+          "$numberInt": "313164"
+        },
+        "produto": null,
+        "codigoProd": {
+          "$numberInt": "6023"
+        },
+        "vinculadoPor": "manual",
+        "quantidadeConferida": {
+          "$numberInt": "1"
+        },
+        "conferidoEm": {
+          "$date": {
+            "$numberLong": "1790513117520"
+          }
+        },
+        "conferidoPor": null,
+        "itemPedidoId": null,
+        "quantidadePedida": {
+          "$numberInt": "0"
+        },
+        "custoPedido": {
+          "$numberInt": "0"
+        },
+        "observacao": "",
+        "_id": {
+          "$oid": "6ab6a53aca71c541d2a083f1"
+        },
+        "tentativas": [
+          {
+            "quantidade": {
+              "$numberInt": "2"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513112043"
+              }
+            }
+          },
+          {
+            "quantidade": {
+              "$numberInt": "1"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513117520"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "numeroItem": {
+          "$numberInt": "6"
+        },
+        "codigoFornec": "REUE351FEABL3",
+        "ean": "7896576408530",
+        "eanTributavel": "7896576408530",
+        "descricaoXml": "AQUECEDOR DE AGUA A GAS BI-VOLT",
+        "ncm": "84191100",
+        "cest": "",
+        "cfop": "6101",
+        "unidade": "PC",
+        "infoAdicional": "Trib aprox R$: 574,68 Federal e 747,96 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:5443576E-4826-407D-A525-1E09C109E232",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "valorUnitario": {
+          "$numberInt": "390173"
+        },
+        "valorTotal": {
+          "$numberInt": "390173"
+        },
+        "desconto": {
+          "$numberInt": "0"
+        },
+        "frete": {
+          "$numberInt": "0"
+        },
+        "seguro": {
+          "$numberInt": "0"
+        },
+        "outras": {
+          "$numberInt": "0"
+        },
+        "ipi": {
+          "$numberInt": "25361"
+        },
+        "icmsSt": {
+          "$numberInt": "0"
+        },
+        "origem": "5",
+        "cst": "00",
+        "bcIcms": {
+          "$numberInt": "390173"
+        },
+        "icms": {
+          "$numberInt": "27313"
+        },
+        "aliqIcms": {
+          "$numberInt": "7"
+        },
+        "aliqIpi": {
+          "$numberDouble": "6.5"
+        },
+        "rateio": {
+          "$numberInt": "0"
+        },
+        "custoUnitarioReal": {
+          "$numberInt": "415534"
+        },
+        "produto": null,
+        "codigoProd": {
+          "$numberInt": "6418"
+        },
+        "vinculadoPor": "manual",
+        "quantidadeConferida": {
+          "$numberInt": "1"
+        },
+        "conferidoEm": {
+          "$date": {
+            "$numberLong": "1790513128732"
+          }
+        },
+        "conferidoPor": null,
+        "itemPedidoId": null,
+        "quantidadePedida": {
+          "$numberInt": "0"
+        },
+        "custoPedido": {
+          "$numberInt": "0"
+        },
+        "observacao": "",
+        "_id": {
+          "$oid": "6ab6a53bca71c541d2a083f2"
+        },
+        "tentativas": [
+          {
+            "quantidade": {
+              "$numberInt": "2"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513126294"
+              }
+            }
+          },
+          {
+            "quantidade": {
+              "$numberInt": "1"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513128732"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "numeroItem": {
+          "$numberInt": "7"
+        },
+        "codigoFornec": "REUM200CFHBNE",
+        "ean": "7896576406024",
+        "eanTributavel": "7896576406024",
+        "descricaoXml": "AQUECEDOR DE AGUA A GAS GN",
+        "ncm": "84191100",
+        "cest": "",
+        "cfop": "6102",
+        "unidade": "PC",
+        "infoAdicional": "Trib aprox R$: 324,19 Federal e 323,29 Estadual Fonte: IBPT/empresometro.co A906AF.",
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "valorUnitario": {
+          "$numberInt": "168643"
+        },
+        "valorTotal": {
+          "$numberInt": "168643"
+        },
+        "desconto": {
+          "$numberInt": "0"
+        },
+        "frete": {
+          "$numberInt": "0"
+        },
+        "seguro": {
+          "$numberInt": "0"
+        },
+        "outras": {
+          "$numberInt": "0"
+        },
+        "ipi": {
+          "$numberInt": "10961"
+        },
+        "icmsSt": {
+          "$numberInt": "0"
+        },
+        "origem": "1",
+        "cst": "00",
+        "bcIcms": {
+          "$numberInt": "168643"
+        },
+        "icms": {
+          "$numberInt": "6745"
+        },
+        "aliqIcms": {
+          "$numberInt": "4"
+        },
+        "aliqIpi": {
+          "$numberDouble": "6.5"
+        },
+        "rateio": {
+          "$numberInt": "0"
+        },
+        "custoUnitarioReal": {
+          "$numberInt": "179604"
+        },
+        "produto": null,
+        "codigoProd": {
+          "$numberInt": "4978"
+        },
+        "vinculadoPor": "manual",
+        "quantidadeConferida": {
+          "$numberInt": "1"
+        },
+        "conferidoEm": {
+          "$date": {
+            "$numberLong": "1790513146308"
+          }
+        },
+        "conferidoPor": null,
+        "itemPedidoId": null,
+        "quantidadePedida": {
+          "$numberInt": "0"
+        },
+        "custoPedido": {
+          "$numberInt": "0"
+        },
+        "observacao": "",
+        "_id": {
+          "$oid": "6ab6a53bca71c541d2a083f3"
+        },
+        "tentativas": [
+          {
+            "quantidade": {
+              "$numberInt": "2"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513141935"
+              }
+            }
+          },
+          {
+            "quantidade": {
+              "$numberInt": "1"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513146307"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "numeroItem": {
+          "$numberInt": "8"
+        },
+        "codigoFornec": "REUE211FEHBN3",
+        "ean": "7896576406925",
+        "eanTributavel": "7896576406925",
+        "descricaoXml": "AQUECEDOR DE AGUA A GAS BI-VOLT",
+        "ncm": "84191100",
+        "cest": "",
+        "cfop": "6102",
+        "unidade": "PC",
+        "infoAdicional": "Trib aprox R$: 625,32 Federal e 793,22 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:85F78F0F-4E51-4DC6-AC5E-94E274506951",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "valorUnitario": {
+          "$numberInt": "206892"
+        },
+        "valorTotal": {
+          "$numberInt": "413784"
+        },
+        "desconto": {
+          "$numberInt": "0"
+        },
+        "frete": {
+          "$numberInt": "0"
+        },
+        "seguro": {
+          "$numberInt": "0"
+        },
+        "outras": {
+          "$numberInt": "0"
+        },
+        "ipi": {
+          "$numberInt": "26895"
+        },
+        "icmsSt": {
+          "$numberInt": "0"
+        },
+        "origem": "5",
+        "cst": "00",
+        "bcIcms": {
+          "$numberInt": "413784"
+        },
+        "icms": {
+          "$numberInt": "28965"
+        },
+        "aliqIcms": {
+          "$numberInt": "7"
+        },
+        "aliqIpi": {
+          "$numberDouble": "6.5"
+        },
+        "rateio": {
+          "$numberInt": "0"
+        },
+        "custoUnitarioReal": {
+          "$numberInt": "220340"
+        },
+        "produto": null,
+        "codigoProd": {
+          "$numberInt": "5824"
+        },
+        "vinculadoPor": "manual",
+        "quantidadeConferida": {
+          "$numberInt": "2"
+        },
+        "conferidoEm": {
+          "$date": {
+            "$numberLong": "1790513159412"
+          }
+        },
+        "conferidoPor": null,
+        "itemPedidoId": null,
+        "quantidadePedida": {
+          "$numberInt": "0"
+        },
+        "custoPedido": {
+          "$numberInt": "0"
+        },
+        "observacao": "",
+        "_id": {
+          "$oid": "6ab6a53bca71c541d2a083f4"
+        },
+        "tentativas": [
+          {
+            "quantidade": {
+              "$numberInt": "3"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513156085"
+              }
+            }
+          },
+          {
+            "quantidade": {
+              "$numberInt": "2"
+            },
+            "em": {
+              "$date": {
+                "$numberLong": "1790513159412"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "pedido": {
+      "$oid": "6ab84d590455e868a56b84d9"
+    },
+    "tipoEntrada": "TOTAL",
+    "pedidoSaldoGerado": null,
+    "lancamentosFluxo": [
+      {
+        "$oid": "6ab910106ad9457a02f1488b"
+      },
+      {
+        "$oid": "6ab910106ad9457a02f1488c"
+      },
+      {
+        "$oid": "6ab910106ad9457a02f1488d"
+      }
+    ],
+    "estoqueAplicado": true,
+    "efetivadaEm": {
+      "$date": {
+        "$numberLong": "1790513169528"
+      }
+    },
+    "efetivadaPor": null,
+    "origemXml": "upload",
+    "xmlBruto": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><nfeProc xmlns=\"http://www.portalfiscal.inf.br/nfe\" versao=\"4.00\"><NFe xmlns=\"http://www.portalfiscal.inf.br/nfe\"><infNFe Id=\"NFe35260947173950000181550050006208191217124266\" versao=\"4.00\"><ide><cUF>35</cUF><cNF>21712426</cNF><natOp>VENDA MERC ADQ/REC TERCEIROS</natOp><mod>55</mod><serie>5</serie><nNF>620819</nNF><dhEmi>2026-09-21T13:54:46-03:00</dhEmi><tpNF>1</tpNF><idDest>2</idDest><cMunFG>3530607</cMunFG><tpImp>1</tpImp><tpEmis>1</tpEmis><cDV>6</cDV><tpAmb>1</tpAmb><finNFe>1</finNFe><indFinal>0</indFinal><indPres>9</indPres><procEmi>0</procEmi><verProc>Neogrid 4.00</verProc></ide><emit><CNPJ>47173950000181</CNPJ><xNome>RINNAI BRASIL TEC. DE AQUECIMENTO LTDA</xNome><enderEmit><xLgr>R.TTE.ONOFRE R.DE AGUIAR</xLgr><nro>200</nro><xBairro>VILA INDUSTRIAL</xBairro><cMun>3530607</cMun><xMun>MOGI DAS CRUZES</xMun><UF>SP</UF><CEP>08770041</CEP><cPais>1058</cPais><xPais>BRASIL</xPais><fone>1147919696</fone></enderEmit><IE>454072582116</IE><CRT>3</CRT></emit><dest><CNPJ>27323484000166</CNPJ><xNome>ARMACAO COMERCIAL LTDA ME</xNome><enderDest><xLgr>AV LEITCO DA SILVA</xLgr><nro>905</nro><xBairro>GURIGICA</xBairro><cMun>3205309</cMun><xMun>VITORIA</xMun><UF>ES</UF><CEP>29046010</CEP><cPais>1058</cPais><xPais>BRASIL</xPais><fone>552733253167</fone></enderDest><indIEDest>1</indIEDest><IE>080847609</IE></dest><det nItem=\"1\"><prod><cProd>REUE211FEHBL3</cProd><cEAN>7896576406932</cEAN><xProd>AQUECEDOR DE AGUA A GAS BI-VOLT</xProd><NCM>84191100</NCM><EXTIPI>01</EXTIPI><CFOP>6102</CFOP><uCom>PC</uCom><qCom>2.00</qCom><vUnCom>2068.92</vUnCom><vProd>4137.84</vProd><cEANTrib>7896576406932</cEANTrib><uTrib>PC</uTrib><qTrib>2.00</qTrib><vUnTrib>2068.92</vUnTrib><indTot>1</indTot><nFCI>1FAA37D2-84F3-429C-9B32-53EA43845D71</nFCI></prod><imposto><vTotTrib>1418.55</vTotTrib><ICMS><ICMS00><orig>5</orig><CST>00</CST><modBC>3</modBC><vBC>4137.84</vBC><pICMS>7.00</pICMS><vICMS>289.64</vICMS></ICMS00></ICMS><IPI><cEnq>999</cEnq><IPITrib><CST>50</CST><vBC>4137.84</vBC><pIPI>6.50</pIPI><vIPI>268.95</vIPI></IPITrib></IPI><PIS><PISAliq><CST>01</CST><vBC>3848.20</vBC><pPIS>1.65</pPIS><vPIS>63.50</vPIS></PISAliq></PIS><COFINS><COFINSAliq><CST>01</CST><vBC>3848.20</vBC><pCOFINS>7.60</pCOFINS><vCOFINS>292.46</vCOFINS></COFINSAliq></COFINS><IBSCBS><CST>000</CST><cClassTrib>000001</cClassTrib><gIBSCBS><vBC>3492.24</vBC><gIBSUF><pIBSUF>0.1000</pIBSUF><vIBSUF>3.49</vIBSUF></gIBSUF><gIBSMun><pIBSMun>0.0000</pIBSMun><vIBSMun>0.00</vIBSMun></gIBSMun><vIBS>3.49</vIBS><gCBS><pCBS>0.9000</pCBS><vCBS>31.43</vCBS></gCBS></gIBSCBS></IBSCBS></imposto><infAdProd>Trib aprox R$: 625,32 Federal e 793,22 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:1FAA37D2-84F3-429C-9B32-53EA43845D71</infAdProd><vItem>4406.79</vItem></det><det nItem=\"2\"><prod><cProd>REUM200CFHBLE</cProd><cEAN>7896576406031</cEAN><xProd>AQUECEDOR DE AGUA A GAS GLP</xProd><NCM>84191100</NCM><EXTIPI>01</EXTIPI><CFOP>6102</CFOP><uCom>PC</uCom><qCom>2.00</qCom><vUnCom>1686.43</vUnCom><vProd>3372.86</vProd><cEANTrib>7896576406031</cEANTrib><uTrib>PC</uTrib><qTrib>2.00</qTrib><vUnTrib>1686.43</vUnTrib><indTot>1</indTot></prod><imposto><vTotTrib>1294.95</vTotTrib><ICMS><ICMS00><orig>1</orig><CST>00</CST><modBC>3</modBC><vBC>3372.86</vBC><pICMS>4.00</pICMS><vICMS>134.92</vICMS></ICMS00></ICMS><IPI><cEnq>999</cEnq><IPITrib><CST>50</CST><vBC>3372.86</vBC><pIPI>6.50</pIPI><vIPI>219.23</vIPI></IPITrib></IPI><PIS><PISAliq><CST>01</CST><vBC>3237.94</vBC><pPIS>1.65</pPIS><vPIS>53.43</vPIS></PISAliq></PIS><COFINS><COFINSAliq><CST>01</CST><vBC>3237.94</vBC><pCOFINS>7.60</pCOFINS><vCOFINS>246.08</vCOFINS></COFINSAliq></COFINS><IBSCBS><CST>000</CST><cClassTrib>000001</cClassTrib><gIBSCBS><vBC>2938.43</vBC><gIBSUF><pIBSUF>0.1000</pIBSUF><vIBSUF>2.94</vIBSUF></gIBSUF><gIBSMun><pIBSMun>0.0000</pIBSMun><vIBSMun>0.00</vIBSMun></gIBSMun><vIBS>2.94</vIBS><gCBS><pCBS>0.9000</pCBS><vCBS>26.45</vCBS></gCBS></gIBSCBS></IBSCBS></imposto><infAdProd>Trib aprox R$: 648,37 Federal e 646,58 Estadual Fonte: IBPT/empresometro.co A906AF.</infAdProd><vItem>3592.09</vItem></det><det nItem=\"3\"><prod><cProd>REUE351FEABN3</cProd><cEAN>7896576408523</cEAN><xProd>AQUECEDOR DE AGUA A GAS BI-VOLT</xProd><NCM>84191100</NCM><EXTIPI>01</EXTIPI><CFOP>6101</CFOP><uCom>PC</uCom><qCom>1.00</qCom><vUnCom>3901.73</vUnCom><vProd>3901.73</vProd><cEANTrib>7896576408523</cEANTrib><uTrib>PC</uTrib><qTrib>1.00</qTrib><vUnTrib>3901.73</vUnTrib><indTot>1</indTot><nFCI>3A60E6B3-2D4F-416A-80D9-CA3C8791D497</nFCI></prod><imposto><vTotTrib>1337.60</vTotTrib><ICMS><ICMS00><orig>5</orig><CST>00</CST><modBC>3</modBC><vBC>3901.73</vBC><pICMS>7.00</pICMS><vICMS>273.12</vICMS></ICMS00></ICMS><IPI><cEnq>999</cEnq><IPITrib><CST>50</CST><vBC>3901.73</vBC><pIPI>6.50</pIPI><vIPI>253.61</vIPI></IPITrib></IPI><PIS><PISAliq><CST>01</CST><vBC>3628.61</vBC><pPIS>1.65</pPIS><vPIS>59.87</vPIS></PISAliq></PIS><COFINS><COFINSAliq><CST>01</CST><vBC>3628.61</vBC><pCOFINS>7.60</pCOFINS><vCOFINS>275.77</vCOFINS></COFINSAliq></COFINS><IBSCBS><CST>000</CST><cClassTrib>000001</cClassTrib><gIBSCBS><vBC>3292.97</vBC><gIBSUF><pIBSUF>0.1000</pIBSUF><vIBSUF>3.29</vIBSUF></gIBSUF><gIBSMun><pIBSMun>0.0000</pIBSMun><vIBSMun>0.00</vIBSMun></gIBSMun><vIBS>3.29</vIBS><gCBS><pCBS>0.9000</pCBS><vCBS>29.64</vCBS></gCBS></gIBSCBS></IBSCBS></imposto><infAdProd>Trib aprox R$: 589,64 Federal e 747,96 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:3A60E6B3-2D4F-416A-80D9-CA3C8791D497</infAdProd><vItem>4155.34</vItem></det><det nItem=\"4\"><prod><cProd>REUE331FEHBN3</cProd><cEAN>7896576406888</cEAN><xProd>AQUECEDOR DE AGUA A GAS BI-VOLT</xProd><NCM>84191100</NCM><EXTIPI>01</EXTIPI><CFOP>6101</CFOP><uCom>PC</uCom><qCom>1.00</qCom><vUnCom>3592.46</vUnCom><vProd>3592.46</vProd><cEANTrib>7896576406888</cEANTrib><uTrib>PC</uTrib><qTrib>1.00</qTrib><vUnTrib>3592.46</vUnTrib><indTot>1</indTot><nFCI>28E793D8-4ED7-45C0-ABCD-21D1930EE597</nFCI></prod><imposto><vTotTrib>1231.58</vTotTrib><ICMS><ICMS00><orig>5</orig><CST>00</CST><modBC>3</modBC><vBC>3592.46</vBC><pICMS>7.00</pICMS><vICMS>251.47</vICMS></ICMS00></ICMS><IPI><cEnq>999</cEnq><IPITrib><CST>50</CST><vBC>3592.46</vBC><pIPI>6.50</pIPI><vIPI>233.50</vIPI></IPITrib></IPI><PIS><PISAliq><CST>01</CST><vBC>3340.99</vBC><pPIS>1.65</pPIS><vPIS>55.13</vPIS></PISAliq></PIS><COFINS><COFINSAliq><CST>01</CST><vBC>3340.99</vBC><pCOFINS>7.60</pCOFINS><vCOFINS>253.92</vCOFINS></COFINSAliq></COFINS><IBSCBS><CST>000</CST><cClassTrib>000001</cClassTrib><gIBSCBS><vBC>3031.94</vBC><gIBSUF><pIBSUF>0.1000</pIBSUF><vIBSUF>3.03</vIBSUF></gIBSUF><gIBSMun><pIBSMun>0.0000</pIBSMun><vIBSMun>0.00</vIBSMun></gIBSMun><vIBS>3.03</vIBS><gCBS><pCBS>0.9000</pCBS><vCBS>27.29</vCBS></gCBS></gIBSCBS></IBSCBS></imposto><infAdProd>Trib aprox R$: 542,90 Federal e 688,67 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:28E793D8-4ED7-45C0-ABCD-21D1930EE597</infAdProd><vItem>3825.96</vItem></det><det nItem=\"5\"><prod><cProd>REUE271FEHBL3</cProd><cEAN>7896576406871</cEAN><xProd>AQUECEDOR DE AGUA A GAS BI-VOLT</xProd><NCM>84191100</NCM><EXTIPI>01</EXTIPI><CFOP>6101</CFOP><uCom>PC</uCom><qCom>1.00</qCom><vUnCom>2940.51</vUnCom><vProd>2940.51</vProd><cEANTrib>7896576406871</cEANTrib><uTrib>PC</uTrib><qTrib>1.00</qTrib><vUnTrib>2940.51</vUnTrib><indTot>1</indTot><nFCI>77F8FF01-1629-4162-A5B3-02B1FD317E62</nFCI></prod><imposto><vTotTrib>1008.07</vTotTrib><ICMS><ICMS00><orig>5</orig><CST>00</CST><modBC>3</modBC><vBC>2940.51</vBC><pICMS>7.00</pICMS><vICMS>205.83</vICMS></ICMS00></ICMS><IPI><cEnq>999</cEnq><IPITrib><CST>50</CST><vBC>2940.51</vBC><pIPI>6.50</pIPI><vIPI>191.13</vIPI></IPITrib></IPI><PIS><PISAliq><CST>01</CST><vBC>2734.68</vBC><pPIS>1.65</pPIS><vPIS>45.12</vPIS></PISAliq></PIS><COFINS><COFINSAliq><CST>01</CST><vBC>2734.68</vBC><pCOFINS>7.60</pCOFINS><vCOFINS>207.84</vCOFINS></COFINSAliq></COFINS><IBSCBS><CST>000</CST><cClassTrib>000001</cClassTrib><gIBSCBS><vBC>2481.72</vBC><gIBSUF><pIBSUF>0.1000</pIBSUF><vIBSUF>2.48</vIBSUF></gIBSUF><gIBSMun><pIBSMun>0.0000</pIBSMun><vIBSMun>0.00</vIBSMun></gIBSMun><vIBS>2.48</vIBS><gCBS><pCBS>0.9000</pCBS><vCBS>22.34</vCBS></gCBS></gIBSCBS></IBSCBS></imposto><infAdProd>Trib aprox R$: 444,38 Federal e 563,70 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:77F8FF01-1629-4162-A5B3-02B1FD317E62</infAdProd><vItem>3131.64</vItem></det><det nItem=\"6\"><prod><cProd>REUE351FEABL3</cProd><cEAN>7896576408530</cEAN><xProd>AQUECEDOR DE AGUA A GAS BI-VOLT</xProd><NCM>84191100</NCM><CFOP>6101</CFOP><uCom>PC</uCom><qCom>1.00</qCom><vUnCom>3901.73</vUnCom><vProd>3901.73</vProd><cEANTrib>7896576408530</cEANTrib><uTrib>PC</uTrib><qTrib>1.00</qTrib><vUnTrib>3901.73</vUnTrib><indTot>1</indTot><nFCI>5443576E-4826-407D-A525-1E09C109E232</nFCI></prod><imposto><vTotTrib>1322.64</vTotTrib><ICMS><ICMS00><orig>5</orig><CST>00</CST><modBC>3</modBC><vBC>3901.73</vBC><pICMS>7.00</pICMS><vICMS>273.13</vICMS></ICMS00></ICMS><IPI><cEnq>999</cEnq><IPITrib><CST>50</CST><vBC>3901.73</vBC><pIPI>6.50</pIPI><vIPI>253.61</vIPI></IPITrib></IPI><PIS><PISAliq><CST>01</CST><vBC>3628.60</vBC><pPIS>1.65</pPIS><vPIS>59.87</vPIS></PISAliq></PIS><COFINS><COFINSAliq><CST>01</CST><vBC>3628.60</vBC><pCOFINS>7.60</pCOFINS><vCOFINS>275.77</vCOFINS></COFINSAliq></COFINS><IBSCBS><CST>000</CST><cClassTrib>000001</cClassTrib><gIBSCBS><vBC>3292.96</vBC><gIBSUF><pIBSUF>0.1000</pIBSUF><vIBSUF>3.29</vIBSUF></gIBSUF><gIBSMun><pIBSMun>0.0000</pIBSMun><vIBSMun>0.00</vIBSMun></gIBSMun><vIBS>3.29</vIBS><gCBS><pCBS>0.9000</pCBS><vCBS>29.64</vCBS></gCBS></gIBSCBS></IBSCBS></imposto><infAdProd>Trib aprox R$: 574,68 Federal e 747,96 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:5443576E-4826-407D-A525-1E09C109E232</infAdProd><vItem>4155.34</vItem></det><det nItem=\"7\"><prod><cProd>REUM200CFHBNE</cProd><cEAN>7896576406024</cEAN><xProd>AQUECEDOR DE AGUA A GAS GN</xProd><NCM>84191100</NCM><EXTIPI>01</EXTIPI><CFOP>6102</CFOP><uCom>PC</uCom><qCom>1.00</qCom><vUnCom>1686.43</vUnCom><vProd>1686.43</vProd><cEANTrib>7896576406024</cEANTrib><uTrib>PC</uTrib><qTrib>1.00</qTrib><vUnTrib>1686.43</vUnTrib><indTot>1</indTot></prod><imposto><vTotTrib>647.47</vTotTrib><ICMS><ICMS00><orig>1</orig><CST>00</CST><modBC>3</modBC><vBC>1686.43</vBC><pICMS>4.00</pICMS><vICMS>67.45</vICMS></ICMS00></ICMS><IPI><cEnq>999</cEnq><IPITrib><CST>50</CST><vBC>1686.43</vBC><pIPI>6.50</pIPI><vIPI>109.61</vIPI></IPITrib></IPI><PIS><PISAliq><CST>01</CST><vBC>1618.98</vBC><pPIS>1.65</pPIS><vPIS>26.71</vPIS></PISAliq></PIS><COFINS><COFINSAliq><CST>01</CST><vBC>1618.98</vBC><pCOFINS>7.60</pCOFINS><vCOFINS>123.04</vCOFINS></COFINSAliq></COFINS><IBSCBS><CST>000</CST><cClassTrib>000001</cClassTrib><gIBSCBS><vBC>1469.23</vBC><gIBSUF><pIBSUF>0.1000</pIBSUF><vIBSUF>1.47</vIBSUF></gIBSUF><gIBSMun><pIBSMun>0.0000</pIBSMun><vIBSMun>0.00</vIBSMun></gIBSMun><vIBS>1.47</vIBS><gCBS><pCBS>0.9000</pCBS><vCBS>13.22</vCBS></gCBS></gIBSCBS></IBSCBS></imposto><infAdProd>Trib aprox R$: 324,19 Federal e 323,29 Estadual Fonte: IBPT/empresometro.co A906AF.</infAdProd><vItem>1796.04</vItem></det><det nItem=\"8\"><prod><cProd>REUE211FEHBN3</cProd><cEAN>7896576406925</cEAN><xProd>AQUECEDOR DE AGUA A GAS BI-VOLT</xProd><NCM>84191100</NCM><EXTIPI>01</EXTIPI><CFOP>6102</CFOP><uCom>PC</uCom><qCom>2.00</qCom><vUnCom>2068.92</vUnCom><vProd>4137.84</vProd><cEANTrib>7896576406925</cEANTrib><uTrib>PC</uTrib><qTrib>2.00</qTrib><vUnTrib>2068.92</vUnTrib><indTot>1</indTot><nFCI>85F78F0F-4E51-4DC6-AC5E-94E274506951</nFCI></prod><imposto><vTotTrib>1418.55</vTotTrib><ICMS><ICMS00><orig>5</orig><CST>00</CST><modBC>3</modBC><vBC>4137.84</vBC><pICMS>7.00</pICMS><vICMS>289.65</vICMS></ICMS00></ICMS><IPI><cEnq>999</cEnq><IPITrib><CST>50</CST><vBC>4137.84</vBC><pIPI>6.50</pIPI><vIPI>268.95</vIPI></IPITrib></IPI><PIS><PISAliq><CST>01</CST><vBC>3848.19</vBC><pPIS>1.65</pPIS><vPIS>63.50</vPIS></PISAliq></PIS><COFINS><COFINSAliq><CST>01</CST><vBC>3848.19</vBC><pCOFINS>7.60</pCOFINS><vCOFINS>292.46</vCOFINS></COFINSAliq></COFINS><IBSCBS><CST>000</CST><cClassTrib>000001</cClassTrib><gIBSCBS><vBC>3492.23</vBC><gIBSUF><pIBSUF>0.1000</pIBSUF><vIBSUF>3.49</vIBSUF></gIBSUF><gIBSMun><pIBSMun>0.0000</pIBSMun><vIBSMun>0.00</vIBSMun></gIBSMun><vIBS>3.49</vIBS><gCBS><pCBS>0.9000</pCBS><vCBS>31.43</vCBS></gCBS></gIBSCBS></IBSCBS></imposto><infAdProd>Trib aprox R$: 625,32 Federal e 793,22 Estadual Fonte: IBPT/empresometro.co A906AF. FCI:85F78F0F-4E51-4DC6-AC5E-94E274506951</infAdProd><vItem>4406.79</vItem></det><total><ICMSTot><vBC>27671.40</vBC><vICMS>1785.21</vICMS><vICMSDeson>0.00</vICMSDeson><vFCP>0.00</vFCP><vBCST>0.00</vBCST><vST>0.00</vST><vFCPST>0.00</vFCPST><vFCPSTRet>0.00</vFCPSTRet><vProd>27671.40</vProd><vFrete>0.00</vFrete><vSeg>0.00</vSeg><vDesc>0.00</vDesc><vII>0.00</vII><vIPI>1798.59</vIPI><vIPIDevol>0.00</vIPIDevol><vPIS>427.13</vPIS><vCOFINS>1967.34</vCOFINS><vOutro>0.00</vOutro><vNF>29469.99</vNF><vTotTrib>9679.41</vTotTrib></ICMSTot><IBSCBSTot><vBCIBSCBS>23491.72</vBCIBSCBS><gIBS><gIBSUF><vDif>0.00</vDif><vDevTrib>0.00</vDevTrib><vIBSUF>23.48</vIBSUF></gIBSUF><gIBSMun><vDif>0.00</vDif><vDevTrib>0.00</vDevTrib><vIBSMun>0.00</vIBSMun></gIBSMun><vIBS>23.48</vIBS><vCredPres>0.00</vCredPres><vCredPresCondSus>0.00</vCredPresCondSus></gIBS><gCBS><vDif>0.00</vDif><vDevTrib>0.00</vDevTrib><vCBS>211.44</vCBS><vCredPres>0.00</vCredPres><vCredPresCondSus>0.00</vCredPresCondSus></gCBS></IBSCBSTot><vNFTot>29469.99</vNFTot></total><transp><modFrete>0</modFrete><transporta><CNPJ>20147617006859</CNPJ><xNome>JAMEF TRANSPORTES LTDA</xNome><IE>120608102114</IE><xEnder>AV. DOUTOR ALBERTO JACKSON BYINGTON 2990</xEnder><xMun>SAO PAULO</xMun><UF>SP</UF></transporta><vol><qVol>4</qVol><esp>CAIXA DE PAPELAO</esp><marca>RINNAI</marca><pesoL>52.577</pesoL><pesoB>59.971</pesoB></vol><vol><qVol>1</qVol><esp>CAIXA DE PAPELAO</esp><marca>RINNAI</marca><pesoL>13.145</pesoL><pesoB>14.993</pesoB></vol><vol><qVol>2</qVol><esp>CAIXA DE PAPELAO</esp><marca>RINNAI</marca><pesoL>26.289</pesoL><pesoB>29.985</pesoB></vol><vol><qVol>1</qVol><esp>CAIXA DE PAPELAO</esp><marca>RINNAI</marca><pesoL>13.145</pesoL><pesoB>14.993</pesoB></vol><vol><qVol>3</qVol><esp>CAIXA DE PAPELAO</esp><marca>RINNAI</marca><pesoL>39.434</pesoL><pesoB>44.978</pesoB></vol></transp><cobr><fat><nFat>0620819</nFat><vOrig>29469.99</vOrig><vDesc>0.00</vDesc><vLiq>29469.99</vLiq></fat><dup><nDup>001</nDup><dVenc>2026-11-16</dVenc><vDup>9822.35</vDup></dup><dup><nDup>002</nDup><dVenc>2026-11-30</dVenc><vDup>9822.35</vDup></dup><dup><nDup>003</nDup><dVenc>2026-12-14</dVenc><vDup>9825.29</vDup></dup></cobr><pag><detPag><indPag>1</indPag><tPag>15</tPag><vPag>29469.99</vPag></detPag></pag><infAdic><infCpl>Pedido do Cliente: M20E21273335  Pedido Rinnai: 684036 Trib aprox R$: 4.374,81 Federal e 5.304,60 Estadual Fonte: IBPT/empresometro.com.br A906AF. Embarque: 264135  OBS DO PEDIDO:    Peso Cubado Total:  241,776</infCpl><obsCont xCampo=\"mailTransp\"><xTexto>expedicao@sao.jamef.com.br</xTexto></obsCont></infAdic><compra><xPed>SF00584988</xPed></compra><infRespTec><CNPJ>03553145000108</CNPJ><xContato>Daniel Yokosawa</xContato><email>fiscal.produto@neogrid.com</email><fone>4730437600</fone></infRespTec></infNFe><Signature xmlns=\"http://www.w3.org/2000/09/xmldsig#\"><SignedInfo><CanonicalizationMethod Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\" /><SignatureMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#rsa-sha1\" /><Reference URI=\"#NFe35260947173950000181550050006208191217124266\"><Transforms><Transform Algorithm=\"http://www.w3.org/2000/09/xmldsig#enveloped-signature\" /><Transform Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\" /></Transforms><DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\" /><DigestValue>dhx4nXMlRlxfrHYwo4ZSDg7W14g=</DigestValue></Reference></SignedInfo><SignatureValue>oAsmBr3NNJraynHh96LU2xTzuhvpqQACQksJw4S1cbR8ooeDO9+3nKvfZZoewvlEBluLXmTv7kkX+lhX3lre/llRSYBFw9WSX990LYEs97HGHDKea0H/3nUUfQTIf4H7pmXltYXo/5ACSLn3OrAh2Fn+M2BQyR+FyzPKSNuO5Xepeczp7jM9x4v+zcqk+ecjWa1pDgVaZBtQdsEpgdTLOfjPLOtBTQzjCTUPfz0V6A+P/yFlVffSh2oNFnv5UNQvWDZ0DqPdQfV1ksWISbH3bjyWzR5bOD5bWBoxYv99gjKgAlJiCb2ZzYKMHpfEC8OGrHhjncnHdtMiV0z+/6vKOQ==</SignatureValue><KeyInfo><X509Data><X509Certificate>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</X509Certificate></X509Data></KeyInfo></Signature></NFe><protNFe versao=\"4.00\"><infProt xmlns=\"http://www.portalfiscal.inf.br/nfe\"><tpAmb>1</tpAmb><verAplic>SP_NFE_PL009_V4</verAplic><chNFe>35260947173950000181550050006208191217124266</chNFe><dhRecbto>2026-09-21T13:55:26-03:00</dhRecbto><nProt>135263963302185</nProt><digVal>dhx4nXMlRlxfrHYwo4ZSDg7W14g=</digVal><cStat>100</cStat><xMotivo>Autorizado o uso da NF-e</xMotivo></infProt></protNFe></nfeProc>",
+    "recusadaMotivo": "",
+    "observacao": "",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790337453181"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790513169533"
+      }
+    },
+    "__v": {
+      "$numberInt": "26"
+    },
+    "dataSaida": null,
+    "destinatario": {
+      "cnpj": "27323484000166",
+      "razao": "ARMACAO COMERCIAL LTDA ME",
+      "inscricao": "080847609",
+      "cidade": "VITORIA",
+      "uf": "ES"
+    },
+    "informacoesComplementares": "Pedido do Cliente: M20E21273335  Pedido Rinnai: 684036 Trib aprox R$: 4.374,81 Federal e 5.304,60 Estadual Fonte: IBPT/empresometro.com.br A906AF. Embarque: 264135  OBS DO PEDIDO:    Peso Cubado Total:  241,776",
+    "modFrete": "0",
+    "naturezaOperacao": "VENDA MERC ADQ/REC TERCEIROS",
+    "protocolo": {
+      "numero": "135263963302185",
+      "data": {
+        "$date": {
+          "$numberLong": "1790009726000"
+        }
+      },
+      "status": "100",
+      "motivo": "Autorizado o uso da NF-e"
+    },
+    "valorBcIcms": {
+      "$numberInt": "2767140"
+    },
+    "valorBcIcmsSt": {
+      "$numberInt": "0"
+    },
+    "valorIcms": {
+      "$numberInt": "178521"
+    },
+    "valorOutras": {
+      "$numberInt": "0"
+    },
+    "volumes": [
+      {
+        "quantidade": {
+          "$numberInt": "4"
+        },
+        "especie": "CAIXA DE PAPELAO",
+        "marca": "RINNAI",
+        "numeracao": "",
+        "pesoBruto": {
+          "$numberDouble": "59.971"
+        },
+        "pesoLiquido": {
+          "$numberDouble": "52.577"
+        }
+      },
+      {
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "especie": "CAIXA DE PAPELAO",
+        "marca": "RINNAI",
+        "numeracao": "",
+        "pesoBruto": {
+          "$numberDouble": "14.993"
+        },
+        "pesoLiquido": {
+          "$numberDouble": "13.145"
+        }
+      },
+      {
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "especie": "CAIXA DE PAPELAO",
+        "marca": "RINNAI",
+        "numeracao": "",
+        "pesoBruto": {
+          "$numberDouble": "29.985"
+        },
+        "pesoLiquido": {
+          "$numberDouble": "26.289"
+        }
+      },
+      {
+        "quantidade": {
+          "$numberInt": "1"
+        },
+        "especie": "CAIXA DE PAPELAO",
+        "marca": "RINNAI",
+        "numeracao": "",
+        "pesoBruto": {
+          "$numberDouble": "14.993"
+        },
+        "pesoLiquido": {
+          "$numberDouble": "13.145"
+        }
+      },
+      {
+        "quantidade": {
+          "$numberInt": "3"
+        },
+        "especie": "CAIXA DE PAPELAO",
+        "marca": "RINNAI",
+        "numeracao": "",
+        "pesoBruto": {
+          "$numberDouble": "44.978"
+        },
+        "pesoLiquido": {
+          "$numberDouble": "39.434"
+        }
+      }
+    ],
+    "bloqueada": false,
+    "bloqueadaMotivo": ""
+  },
+  {
+    "_id": {
+      "$oid": "6aba70dd5bc39d1b6276af82"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "situacao": "RECEBIDA",
+    "chaveAcesso": "35260905949470000110550010001180061380513835",
+    "numero": "118006",
+    "serie": "1",
+    "modelo": "55",
+    "naturezaOperacao": "VENDA  MERCADORIA",
+    "dataEmissao": {
+      "$date": {
+        "$numberLong": "1789578780000"
+      }
+    },
+    "dataSaida": {
+      "$date": {
+        "$numberLong": "1789578780000"
+      }
+    },
+    "dataEntrada": {
+      "$date": {
+        "$numberLong": "1790603485244"
+      }
+    },
+    "emitente": {
+      "cnpj": "05949470000110",
+      "razao": "ROWA DO BRASIL INDUSTRIA E COMERCIO DE BOMBAS LTDA",
+      "fantasia": "ROWA DO BRASIL",
+      "inscricao": "116767097116",
+      "logradouro": "RUA CAMACAM, 505",
+      "complemento": "",
+      "bairro": "VILA ANASTACIO",
+      "cidade": "SAO PAULO",
+      "uf": "SP",
+      "cep": "05095000",
+      "fone": "1136489294"
+    },
+    "destinatario": {
+      "cnpj": "27323484000166",
+      "razao": "ARMACAO COMERCIAL LTDA",
+      "inscricao": "080847609",
+      "cidade": "VITORIA",
+      "uf": "ES"
+    },
+    "fornecedor": {
+      "$oid": "68e008576374d722404d4575"
+    },
+    "valorBcIcms": {
+      "$numberInt": "1302808"
+    },
+    "valorIcms": {
+      "$numberInt": "52112"
+    },
+    "valorBcIcmsSt": {
+      "$numberInt": "0"
+    },
+    "valorIcmsSt": {
+      "$numberInt": "0"
+    },
+    "valorProdutos": {
+      "$numberInt": "1302808"
+    },
+    "valorFrete": {
+      "$numberInt": "0"
+    },
+    "valorSeguro": {
+      "$numberInt": "0"
+    },
+    "valorDesconto": {
+      "$numberInt": "0"
+    },
+    "valorOutras": {
+      "$numberInt": "0"
+    },
+    "valorIpi": {
+      "$numberInt": "42341"
+    },
+    "valorTotal": {
+      "$numberInt": "1345149"
+    },
+    "frete": "CIF",
+    "modFrete": "0",
+    "transportadora": null,
+    "transportadoraXml": {
+      "cnpj": "44914992001371",
+      "razao": "RODONAVES TRANSPORTES E ENCOMENDAS LTDA (Tel.:11 2192 3100)",
+      "inscricao": "112782533118",
+      "endereco": "ALEXANDRE COLARES, 340",
+      "cidade": "SAO PAULO",
+      "uf": "SP"
+    },
+    "volumes": [
+      {
+        "quantidade": {
+          "$numberInt": "4"
+        },
+        "especie": "VOL",
+        "marca": "",
+        "numeracao": "",
+        "pesoBruto": {
+          "$numberInt": "48"
+        },
+        "pesoLiquido": {
+          "$numberInt": "48"
+        }
+      }
+    ],
+    "duplicatas": [
+      {
+        "numero": "001",
+        "vencimento": {
+          "$date": {
+            "$numberLong": "1791979200000"
+          }
+        },
+        "valor": {
+          "$numberInt": "672575"
+        }
+      },
+      {
+        "numero": "002",
+        "vencimento": {
+          "$date": {
+            "$numberLong": "1794398400000"
+          }
+        },
+        "valor": {
+          "$numberInt": "672574"
+        }
+      }
+    ],
+    "itens": [
+      {
+        "numeroItem": {
+          "$numberInt": "1"
+        },
+        "codigoFornec": "0005-0618",
+        "ean": "7794938022922",
+        "eanTributavel": "7794938022922",
+        "descricaoXml": "MAX PRESS 20E 220V",
+        "ncm": "84137080",
+        "cest": "",
+        "cfop": "6102",
+        "unidade": "UN",
+        "infoAdicional": "",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "valorUnitario": {
+          "$numberInt": "215998"
+        },
+        "valorTotal": {
+          "$numberInt": "431996"
+        },
+        "desconto": {
+          "$numberInt": "0"
+        },
+        "frete": {
+          "$numberInt": "0"
+        },
+        "seguro": {
+          "$numberInt": "0"
+        },
+        "outras": {
+          "$numberInt": "0"
+        },
+        "ipi": {
+          "$numberInt": "14040"
+        },
+        "icmsSt": {
+          "$numberInt": "0"
+        },
+        "origem": "1",
+        "cst": "00",
+        "bcIcms": {
+          "$numberInt": "431996"
+        },
+        "icms": {
+          "$numberInt": "17280"
+        },
+        "aliqIcms": {
+          "$numberInt": "4"
+        },
+        "aliqIpi": {
+          "$numberDouble": "3.25"
+        },
+        "rateio": {
+          "$numberInt": "0"
+        },
+        "custoUnitarioReal": {
+          "$numberInt": "223018"
+        },
+        "produto": null,
+        "codigoProd": {
+          "$numberInt": "6527"
+        },
+        "vinculadoPor": "codigoFornec",
+        "quantidadeConferida": {
+          "$numberInt": "0"
+        },
+        "conferidoEm": null,
+        "conferidoPor": null,
+        "itemPedidoId": null,
+        "quantidadePedida": {
+          "$numberInt": "0"
+        },
+        "custoPedido": {
+          "$numberInt": "0"
+        },
+        "observacao": "",
+        "_id": {
+          "$oid": "6aba70dd5bc39d1b6276af83"
+        },
+        "tentativas": []
+      },
+      {
+        "numeroItem": {
+          "$numberInt": "2"
+        },
+        "codigoFornec": "0005-0607",
+        "ean": "",
+        "eanTributavel": "",
+        "descricaoXml": "MAXPRESS 30 E 220V",
+        "ncm": "84137080",
+        "cest": "",
+        "cfop": "6102",
+        "unidade": "UN",
+        "infoAdicional": "",
+        "quantidade": {
+          "$numberInt": "2"
+        },
+        "valorUnitario": {
+          "$numberInt": "435406"
+        },
+        "valorTotal": {
+          "$numberInt": "870812"
+        },
+        "desconto": {
+          "$numberInt": "0"
+        },
+        "frete": {
+          "$numberInt": "0"
+        },
+        "seguro": {
+          "$numberInt": "0"
+        },
+        "outras": {
+          "$numberInt": "0"
+        },
+        "ipi": {
+          "$numberInt": "28301"
+        },
+        "icmsSt": {
+          "$numberInt": "0"
+        },
+        "origem": "1",
+        "cst": "00",
+        "bcIcms": {
+          "$numberInt": "870812"
+        },
+        "icms": {
+          "$numberInt": "34832"
+        },
+        "aliqIcms": {
+          "$numberInt": "4"
+        },
+        "aliqIpi": {
+          "$numberDouble": "3.25"
+        },
+        "rateio": {
+          "$numberInt": "0"
+        },
+        "custoUnitarioReal": {
+          "$numberInt": "449557"
+        },
+        "produto": null,
+        "codigoProd": null,
+        "vinculadoPor": "",
+        "quantidadeConferida": {
+          "$numberInt": "0"
+        },
+        "conferidoEm": null,
+        "conferidoPor": null,
+        "itemPedidoId": null,
+        "quantidadePedida": {
+          "$numberInt": "0"
+        },
+        "custoPedido": {
+          "$numberInt": "0"
+        },
+        "observacao": "",
+        "_id": {
+          "$oid": "6aba70dd5bc39d1b6276af84"
+        },
+        "tentativas": []
+      }
+    ],
+    "protocolo": {
+      "numero": "135263888924514",
+      "data": {
+        "$date": {
+          "$numberLong": "1789578931000"
+        }
+      },
+      "status": "100",
+      "motivo": "Autorizado o uso da NF-e"
+    },
+    "informacoesComplementares": "Numero(s) de Serie(s):  Produto: 0005-0607 A0012744/A0012739/  Produto: 0005-0618 A0020814/A0020782/   Ped.Venda: 148537 /",
+    "pedido": null,
+    "tipoEntrada": "",
+    "pedidoSaldoGerado": null,
+    "lancamentosFluxo": [],
+    "estoqueAplicado": false,
+    "efetivadaEm": null,
+    "efetivadaPor": null,
+    "origemXml": "upload",
+    "xmlBruto": "<nfeProc versao=\"4.00\" xmlns=\"http://www.portalfiscal.inf.br/nfe\"><NFe xmlns=\"http://www.portalfiscal.inf.br/nfe\"><infNFe Id=\"NFe35260905949470000110550010001180061380513835\" versao=\"4.00\"><ide><cUF>35</cUF><cNF>38051383</cNF><natOp>VENDA  MERCADORIA</natOp><mod>55</mod><serie>1</serie><nNF>118006</nNF><dhEmi>2026-09-16T14:13:00-03:00</dhEmi><dhSaiEnt>2026-09-16T14:13:00-03:00</dhSaiEnt><tpNF>1</tpNF><idDest>2</idDest><cMunFG>3550308</cMunFG><tpImp>1</tpImp><tpEmis>1</tpEmis><cDV>5</cDV><tpAmb>1</tpAmb><finNFe>1</finNFe><indFinal>0</indFinal><indPres>9</indPres><indIntermed>0</indIntermed><procEmi>0</procEmi><verProc>12.1.2510 | 3.0</verProc></ide><emit><CNPJ>05949470000110</CNPJ><xNome>ROWA DO BRASIL INDUSTRIA E COMERCIO DE BOMBAS LTDA</xNome><xFant>ROWA DO BRASIL</xFant><enderEmit><xLgr>RUA CAMACAM</xLgr><nro>505</nro><xBairro>VILA ANASTACIO</xBairro><cMun>3550308</cMun><xMun>SAO PAULO</xMun><UF>SP</UF><CEP>05095000</CEP><cPais>1058</cPais><xPais>BRASIL</xPais><fone>1136489294</fone></enderEmit><IE>116767097116</IE><CRT>3</CRT></emit><dest><CNPJ>27323484000166</CNPJ><xNome>ARMACAO COMERCIAL LTDA</xNome><enderDest><xLgr>AV LEITAO DA SILVA</xLgr><nro>915</nro><xCpl>ATIVO</xCpl><xBairro>SANTA LUCIA</xBairro><cMun>3205309</cMun><xMun>VITORIA</xMun><UF>ES</UF><CEP>29046010</CEP><cPais>1058</cPais><xPais>BRASIL</xPais><fone>2733253167</fone></enderDest><indIEDest>1</indIEDest><IE>080847609</IE><email>armacao.comercial@terra.com.br;caroline.guerra@rte.com.br</email></dest><det nItem=\"1\"><prod><cProd>0005-0618</cProd><cEAN>7794938022922</cEAN><xProd>MAX PRESS 20E 220V</xProd><NCM>84137080</NCM><CFOP>6102</CFOP><uCom>UN</uCom><qCom>2.0000</qCom><vUnCom>2159.9800000000</vUnCom><vProd>4319.96</vProd><cEANTrib>7794938022922</cEANTrib><uTrib>UN</uTrib><qTrib>2.0000</qTrib><vUnTrib>2159.9800000000</vUnTrib><indTot>1</indTot></prod><imposto><ICMS><ICMS00><orig>1</orig><CST>00</CST><modBC>3</modBC><vBC>4319.96</vBC><pICMS>4.0000</pICMS><vICMS>172.80</vICMS></ICMS00></ICMS><IPI><cEnq>999</cEnq><IPITrib><CST>50</CST><vBC>4319.96</vBC><pIPI>3.2500</pIPI><vIPI>140.40</vIPI></IPITrib></IPI><PIS><PISAliq><CST>01</CST><vBC>4147.16</vBC><pPIS>1.6500</pPIS><vPIS>68.43</vPIS></PISAliq></PIS><COFINS><COFINSAliq><CST>01</CST><vBC>4147.16</vBC><pCOFINS>7.6000</pCOFINS><vCOFINS>315.18</vCOFINS></COFINSAliq></COFINS><IBSCBS><CST>000</CST><cClassTrib>000001</cClassTrib><gIBSCBS><vBC>3763.55</vBC><gIBSUF><pIBSUF>0.1000</pIBSUF><vIBSUF>3.76</vIBSUF></gIBSUF><gIBSMun><pIBSMun>0</pIBSMun><vIBSMun>0</vIBSMun></gIBSMun><vIBS>3.76</vIBS><gCBS><pCBS>0.9000</pCBS><vCBS>33.87</vCBS></gCBS></gIBSCBS></IBSCBS></imposto><vItem>4460.36</vItem></det><det nItem=\"2\"><prod><cProd>0005-0607</cProd><cEAN>SEM GTIN</cEAN><xProd>MAXPRESS 30 E 220V</xProd><NCM>84137080</NCM><CFOP>6102</CFOP><uCom>UN</uCom><qCom>2.0000</qCom><vUnCom>4354.0600000000</vUnCom><vProd>8708.12</vProd><cEANTrib>SEM GTIN</cEANTrib><uTrib>UN</uTrib><qTrib>2.0000</qTrib><vUnTrib>4354.0600000000</vUnTrib><indTot>1</indTot></prod><imposto><ICMS><ICMS00><orig>1</orig><CST>00</CST><modBC>3</modBC><vBC>8708.12</vBC><pICMS>4.0000</pICMS><vICMS>348.32</vICMS></ICMS00></ICMS><IPI><cEnq>999</cEnq><IPITrib><CST>50</CST><vBC>8708.12</vBC><pIPI>3.2500</pIPI><vIPI>283.01</vIPI></IPITrib></IPI><PIS><PISAliq><CST>01</CST><vBC>8359.80</vBC><pPIS>1.6500</pPIS><vPIS>137.93</vPIS></PISAliq></PIS><COFINS><COFINSAliq><CST>01</CST><vBC>8359.80</vBC><pCOFINS>7.6000</pCOFINS><vCOFINS>635.35</vCOFINS></COFINSAliq></COFINS><IBSCBS><CST>000</CST><cClassTrib>000001</cClassTrib><gIBSCBS><vBC>7586.52</vBC><gIBSUF><pIBSUF>0.1000</pIBSUF><vIBSUF>7.59</vIBSUF></gIBSUF><gIBSMun><pIBSMun>0</pIBSMun><vIBSMun>0</vIBSMun></gIBSMun><vIBS>7.59</vIBS><gCBS><pCBS>0.9000</pCBS><vCBS>68.28</vCBS></gCBS></gIBSCBS></IBSCBS></imposto><vItem>8991.13</vItem></det><total><ICMSTot><vBC>13028.08</vBC><vICMS>521.12</vICMS><vICMSDeson>0</vICMSDeson><vFCPUFDest>0</vFCPUFDest><vICMSUFDest>0</vICMSUFDest><vICMSUFRemet>0</vICMSUFRemet><vFCP>0</vFCP><vBCST>0</vBCST><vST>0</vST><vFCPST>0</vFCPST><vFCPSTRet>0</vFCPSTRet><vProd>13028.08</vProd><vFrete>0</vFrete><vSeg>0</vSeg><vDesc>0</vDesc><vII>0</vII><vIPI>423.41</vIPI><vIPIDevol>0</vIPIDevol><vPIS>206.36</vPIS><vCOFINS>950.53</vCOFINS><vOutro>0</vOutro><vNF>13451.49</vNF></ICMSTot><IBSCBSTot><vBCIBSCBS>11350.07</vBCIBSCBS><gIBS><gIBSUF><vDif>0</vDif><vDevTrib>0</vDevTrib><vIBSUF>11.35</vIBSUF></gIBSUF><gIBSMun><vDif>0</vDif><vDevTrib>0</vDevTrib><vIBSMun>0</vIBSMun></gIBSMun><vIBS>11.35</vIBS><vCredPres>0.00</vCredPres><vCredPresCondSus>0.00</vCredPresCondSus></gIBS><gCBS><vDif>0</vDif><vDevTrib>0</vDevTrib><vCBS>102.15</vCBS><vCredPres>0.00</vCredPres><vCredPresCondSus>0.00</vCredPresCondSus></gCBS></IBSCBSTot><vNFTot>13451.49</vNFTot></total><transp><modFrete>0</modFrete><transporta><CNPJ>44914992001371</CNPJ><xNome>RODONAVES TRANSPORTES E ENCOMENDAS LTDA (Tel.:11 2192 3100)</xNome><IE>112782533118</IE><xEnder>ALEXANDRE COLARES, 340</xEnder><xMun>SAO PAULO</xMun><UF>SP</UF></transporta><vol><qVol>4</qVol><esp>VOL</esp><pesoL>48.000</pesoL><pesoB>48.000</pesoB></vol></transp><cobr><fat><nFat>1000118006</nFat><vOrig>13451.49</vOrig><vDesc>0</vDesc><vLiq>13451.49</vLiq></fat><dup><nDup>001</nDup><dVenc>2026-10-14</dVenc><vDup>6725.75</vDup></dup><dup><nDup>002</nDup><dVenc>2026-11-11</dVenc><vDup>6725.74</vDup></dup></cobr><pag><detPag><indPag>1</indPag><tPag>15</tPag><vPag>13451.49</vPag></detPag></pag><infAdic><infCpl>Numero(s) de Serie(s):  Produto: 0005-0607 A0012744/A0012739/  Produto: 0005-0618 A0020814/A0020782/   Ped.Venda: 148537 /</infCpl></infAdic><infRespTec><CNPJ>53113791000122</CNPJ><xContato>Rodrigo de Almeida Sartorio</xContato><email>resp_tecnico_dfe_protheus@totvs.com.br</email><fone>1128593904</fone></infRespTec></infNFe><Signature xmlns=\"http://www.w3.org/2000/09/xmldsig#\"><SignedInfo xmlns=\"http://www.w3.org/2000/09/xmldsig#\"><CanonicalizationMethod Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\" /><SignatureMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#rsa-sha1\" /><Reference URI=\"#NFe35260905949470000110550010001180061380513835\"><Transforms><Transform Algorithm=\"http://www.w3.org/2000/09/xmldsig#enveloped-signature\" /><Transform Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\" /></Transforms><DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\" /><DigestValue>bmJmjrRZXY8gN96dtkMVa4iZI74=</DigestValue></Reference></SignedInfo><SignatureValue>Gin3OuVW5F0WdQW/0z7gQr5oCQss6aOUZ0QmUHLxEpGB89qZJc5sTX5DbhE78BQrrol0JQ0/Lkq8sUan+sM3nSTdQWCNdup7T1IrXhl4qKEMp83tk2ShPK8KYE0WT+QbvAmDhl2IoSQWGJzZxIwtygamjUfmKQ6ar8cIGMN4gPOvvoXiJ3QBssBCEe8Tprk2OV/Fu5P2l0UrMzADgsCv5/FKAWjcBS/H01b0dnOw/limi+GaMTyRiE6f0W2qfNmU6d7Ou33SkuKxRWKMHcI6Q3JwqQdjL06fpXtmUN0rcE81RPBu1/yUOugLXoi0SVmdfqP5DkkqA0S8qakZ3QjSoQ==</SignatureValue><KeyInfo><X509Data><X509Certificate>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</X509Certificate></X509Data></KeyInfo></Signature></NFe><protNFe versao=\"4.00\"><infProt Id=\"Id135263888924514\"><tpAmb>1</tpAmb><verAplic>SP_NFE_PL009_V4</verAplic><chNFe>35260905949470000110550010001180061380513835</chNFe><dhRecbto>2026-09-16T14:15:31-03:00</dhRecbto><nProt>135263888924514</nProt><digVal>bmJmjrRZXY8gN96dtkMVa4iZI74=</digVal><cStat>100</cStat><xMotivo>Autorizado o uso da NF-e</xMotivo></infProt></protNFe></nfeProc>",
+    "bloqueada": false,
+    "bloqueadaEm": null,
+    "bloqueadaItem": null,
+    "bloqueadaMotivo": "",
+    "recusadaMotivo": "",
+    "observacao": "",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790603485257"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1790603485257"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  }
+]

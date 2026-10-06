@@ -1,0 +1,23 @@
+
+
+
+      Nota fiscal conferencia.
+
+      Antes de ser carregada a função analisa se todo os itens da nota possuem nosso código.
+         1   Se não tem códigoNosso=> botão capturar pedido visivle =true
+
+         2   Se tem códigoNosso => botão capturar pedido visivle =false
+                                  Se qte bate chegando e qte pedida sendo iguais linha fica verde 
+                                  Se não bate linha amarela
+
+
+          
+                                  
+        1.1   double click aparece o select para selecionar o  pedido
+
+             Entra a lista de pedido selecionado buscando o item similar.
+                  clicoudouble pega afunção que compara a qte e torna:
+                       linha verde = qte iguais
+                       linha amarela + qte =divergentes  
+
+        SE há qtes iguais e nossoCódigo então abre a nota e colocamos um Botão para conferencia física.               

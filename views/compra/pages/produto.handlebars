@@ -1,0 +1,119 @@
+{{!--
+  Destino: C:\plataformaRota\views\compra\pages\produto.handlebars
+  Criado em: 30/09/2026
+  Alterado em: 01/10/2026 - margens laterais e de base; rotulos e conteudo mais fortes;
+                           ficha em 4 colunas, campos mais juntos
+
+  UM PRODUTO, pela área de Compra. Abre por duplo clique na Relação de produtos.
+  Topo: estoque, consumo máximo e mínimo do mês, a caminho, custo.
+  Meio: peças vendidas em cada mês (número, não gráfico).
+  Baixo: a ficha, editável, gravando em arquivo_docs.
+
+  O JS fica em /js/compra/produto.js  (caminho completo, sempre)
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produto {{codigo}}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --roxo: #6b21a8; --roxo-claro: #f3e8ff; --borda: #e5e7eb;
+      --texto: #1f2937; --cinza: #6b7280; --verde: #059669; --vermelho: #dc2626;
+    }
+    body {
+      margin: 0 auto; max-width: 1280px; padding: 20px 40px 110px; background: #fff; color: var(--texto);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 14px;
+    }
+    .topo { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
+    .topo .sub { font-size: 13px; color: var(--cinza); }
+    .topo h1 { font-size: 21px; margin: 2px 0 0; font-weight: 700; }
+    .voltar { font-size: 13px; color: var(--roxo); text-decoration: none; white-space: nowrap; }
+
+    .numeros { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .num-card { background: #f8fafc; border: 1px solid var(--borda); border-radius: 8px; padding: 10px 12px; }
+    .num-card .rot { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #374151; font-weight: 700; }
+    .num-card .val { font-size: 22px; font-weight: 700; margin-top: 2px; }
+    .num-card .det { font-size: 12px; color: var(--cinza); }
+
+    .bloco { border: 1px solid var(--borda); border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
+    .bloco h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--roxo); margin: 0 0 10px; }
+
+    .meses { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; }
+    .mes { text-align: center; border: 1px solid var(--borda); border-radius: 6px; padding: 6px 2px; }
+    .mes .m { font-size: 11px; color: var(--cinza); text-transform: lowercase; }
+    .mes .q { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .mes.desconhecido .q { color: #cbd5e1; }
+    .mes.parcial { border-style: dashed; }
+    .mes.max { background: #ecfdf5; border-color: #a7f3d0; }
+    .mes.min { background: #fef2f2; border-color: #fecaca; }
+    .legenda { font-size: 12px; color: var(--cinza); margin-top: 8px; }
+
+    .grade { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 14px; }
+    @media (max-width: 900px) { .grade { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .titulo-grupo {
+      grid-column: 1 / -1; font-size: 11px; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--roxo); margin-top: 8px;
+      padding-top: 8px; border-top: 1px solid var(--borda);
+    }
+    .titulo-grupo:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
+    .campo.largo { grid-column: 1 / -1; }
+    .campo label { display: block; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #111827; font-weight: 700; margin-bottom: 2px; }
+    .campo input { width: 100%; padding: 6px 10px; font-size: 15px; font-weight: 500; color: #111827; border: 1px solid #d1d5db; border-radius: 6px; font-family: inherit; }
+    .campo input:focus { outline: none; border-color: var(--roxo); }
+    .campo input[readonly] { background: #f8fafc; color: var(--texto); }
+    .campo input:placeholder-shown { background: #fefce8; }
+
+    .rodape {
+      position: fixed; left: 0; right: 0; bottom: 0; background: #f8fafc; border-top: 1px solid var(--borda);
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      padding: 12px max(40px, calc((100vw - 1280px) / 2 + 40px));
+    }
+    .recado { font-size: 13px; }
+    .recado.ok { color: var(--verde); }
+    .recado.erro { color: var(--vermelho); }
+    .btn-principal { background: var(--verde); color: #fff; border: 0; border-radius: 8px; padding: 10px 22px; font-weight: 700; cursor: pointer; font-size: 14px; }
+    .btn-principal:disabled { opacity: .5; cursor: default; }
+    .vazio { padding: 40px; text-align: center; color: var(--cinza); }
+  </style>
+</head>
+<body data-codigo="{{codigo}}">
+
+  <div class="topo">
+    <div>
+      <div class="sub" id="sub">cód {{codigo}}</div>
+      <h1 id="titulo">Carregando…</h1>
+    </div>
+    <a class="voltar" id="voltar" href="/compra/produtos-relacao">← relação de produtos</a>
+  </div>
+
+  <div class="numeros">
+    <div class="num-card"><div class="rot">Estoque</div><div class="val" id="nEstoque">–</div></div>
+    <div class="num-card"><div class="rot">Consumo máx.</div><div class="val" id="nMax">–</div><div class="det" id="nMaxMes"></div></div>
+    <div class="num-card"><div class="rot">Consumo mín.</div><div class="val" id="nMin">–</div><div class="det" id="nMinMes"></div></div>
+    <div class="num-card"><div class="rot">A caminho</div><div class="val" id="nCaminho">–</div><div class="det" id="nCaminhoDet"></div></div>
+    <div class="num-card"><div class="rot">Custo médio / último</div><div class="val" id="nCusto" style="font-size:17px">–</div></div>
+  </div>
+
+  <div class="bloco">
+    <h2>Peças vendidas por mês</h2>
+    <div class="meses" id="meses"></div>
+    <div class="legenda">Verde: mês de maior consumo · vermelho: menor · tracejado: mês em andamento (fora do máx./mín.) · “–”: mês sem vendas sincronizadas.</div>
+  </div>
+
+  <div class="bloco">
+    <h2>Ficha</h2>
+    <div id="ficha"></div>
+  </div>
+
+  <div class="rodape">
+    <div class="recado" id="recado"></div>
+    <button class="btn-principal" id="gravar" disabled>Gravar alterações</button>
+  </div>
+
+  <script src="/js/compra/ficha-produto-campos.js"></script>
+  <script src="/js/compra/produto.js"></script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+==============================================================================
+Inspecao: C:\Armação\Dados\2026B\2026B.mdb
+Tamanho: 106.5 MB   Modificado: 23/09/2026, 17:37:57
+SOMENTE LEITURA -- nada foi alterado.
+==============================================================================
+
+Tabelas do modulo de compras (4):
+
+### PROD_Produto  --  2759 registros, 19 colunas
+
+    CódigoProd                   long (4)
+    DataReg                      datetime (8)
+    Descrição                    text (100)
+    Marca                        text (24)
+    NrFornec                     integer (2)
+    Refer 1                      text (24)
+    Refer 2                      text (24)
+    LocLoja                      text (14)
+    LocDep                       text (10)
+    Unid                         text (14)
+    EMin                         integer (2)
+    EMax                         integer (2)
+    UltAlteração                 datetime (8)
+    Ativado                      integer (2)
+    Nr_Grupo                     float (4)
+    Nm_Grupo                     text (60)
+    Vinculado                    float (4)
+    Cod_Cupom                    text (12)
+    IndexadorPeça                float (4)
+
+    --- amostra (3) ---
+    [1]
+        CódigoProd                 = 3
+        DataReg                    = 2002-03-05
+        Descrição                  = Acab. reg.  Adagio  T1
+        Marca                      = Fabrimar
+        NrFornec                   = 18
+        Refer 1                    = 0
+        Refer 2                    = 0
+        LocLoja                    = 
+        LocDep                     = 
+        Unid                       = pçs
+        EMin                       = 0
+        EMax                       = 0
+        UltAlteração               = 2008-08-21
+        Ativado                    = 0
+        Nr_Grupo                   = 1
+        Nm_Grupo                   = Acabamentos
+        Vinculado                  = null
+        Cod_Cupom                  = 000487
+        IndexadorPeça              = 0
+    [2]
+        CódigoProd                 = 5
+        DataReg                    = 2002-03-09
+        Descrição                  = prolong_ amarelo 1/2
+        Marca                      = Blukit
+        NrFornec                   = 30
+        Refer 1                    = 7010
+        Refer 2                    = 0
+        LocLoja                    = P-05-75
+        LocDep                     = 0
+        Unid                       = pçs
+        EMin                       = 0
+        EMax                       = 0
+        UltAlteração               = 2009-04-24
+        Ativado                    = 1
+        Nr_Grupo                   = 12
+        Nm_Grupo                   = Conexões Amarela
+        Vinculado                  = null
+        Cod_Cupom                  = 000464
+        IndexadorPeça              = 0
+    [3]
+        CódigoProd                 = 18
+        DataReg                    = 1999-06-13
+        Descrição                  = conector  15 x 1/2  - bolsa x fêmea  ...
+        Marca                      = Eluma
+        NrFornec                   = 77
+        Refer 1                    = 603
+        Refer 2                    = 0
+        LocLoja                    = 0
+        LocDep                     = 0
+        Unid                       = pçs
+        EMin                       = 0
+        EMax                       = 0
+        UltAlteração               = 2025-06-04
+        Ativado                    = 1
+        Nr_Grupo                   = 80
+        Nm_Grupo                   = Conexões Cobre
+        Vinculado                  = null
+        Cod_Cupom                  = 001881
+        IndexadorPeça              = 0
+
+### PROD_Produto_Detalhes  --  4663 registros, 11 colunas
+
+    NrProdut                     long (4)
+    Qte                          integer (2)
+    PreçoFabrica                 currency (8)
+    PLiquid                      currency (8)
+    IPI                          text (10)
+    PCusto                       currency (8)
+    PMédio                       currency (8)
+    Taxa                         float (4)
+    PreçoVista                   currency (8)
+    PreçoPrazo                   currency (8)
+    NovoHistórico                text (100)
+
+    --- amostra (3) ---
+    [1]
+        NrProdut                   = 1
+        Qte                        = 0
+        PreçoFabrica               = 0.0000
+        PLiquid                    = 0.0000
+        IPI                        = 12
+        PCusto                     = 1.0000
+        PMédio                     = 1.0000
+        Taxa                       = 50
+        PreçoVista                 = 1.8000
+        PreçoPrazo                 = 0.0000
+        NovoHistórico              = null
+    [2]
+        NrProdut                   = 2
+        Qte                        = 0
+        PreçoFabrica               = 0.0000
+        PLiquid                    = 8.5800
+        IPI                        = 15,00
+        PCusto                     = 9.8700
+        PMédio                     = 9.8700
+        Taxa                       = 140.52999877929688
+        PreçoVista                 = 23.7400
+        PreçoPrazo                 = 0.0000
+        NovoHistórico              = null
+    [3]
+        NrProdut                   = 3
+        Qte                        = 0
+        PreçoFabrica               = 0.0000
+        PLiquid                    = 16.7700
+        IPI                        = 12,00
+        PCusto                     = 18.7800
+        PMédio                     = 18.7800
+        Taxa                       = 70
+        PreçoVista                 = 31.9300
+        PreçoPrazo                 = 0.0000
+        NovoHistórico              = null
+
+### Vendas_SaídaCupom  --  1100 registros, 11 colunas
+
+    NrCupom                      long (4)
+    Data                         datetime (8)
+    VrBruto                      currency (8)
+    Desc                         currency (8)
+    VrLiquido                    currency (8)
+    Hora                         datetime (8)
+    Operador                     long (4)
+    Local                        float (4)
+    Condição                     text (2)
+    NrDevolução                  float (4)
+    VendPrzo_Chave               float (4)
+
+    --- amostra (3) ---
+    [1]
+        NrCupom                    = 1
+        Data                       = 2026-01-02
+        VrBruto                    = 2.2000
+        Desc                       = 0.0000
+        VrLiquido                  = 2.2000
+        Hora                       = 1899-12-30
+        Operador                   = 1
+        Local                      = 0
+        Condição                   = 0
+        NrDevolução                = 0
+        VendPrzo_Chave             = 0
+    [2]
+        NrCupom                    = 2
+        Data                       = 2026-01-02
+        VrBruto                    = 83.4300
+        Desc                       = 4.1700
+        VrLiquido                  = 79.2600
+        Hora                       = 1899-12-30
+        Operador                   = 1
+        Local                      = 0
+        Condição                   = 0
+        NrDevolução                = 0
+        VendPrzo_Chave             = 0
+    [3]
+        NrCupom                    = 3
+        Data                       = 2026-01-02
+        VrBruto                    = 186.9300
+        Desc                       = 0.0000
+        VrLiquido                  = 186.9300
+        Hora                       = 1899-12-30
+        Operador                   = 1
+        Local                      = 0
+        Condição                   = 1
+        NrDevolução                = 0
+        VendPrzo_Chave             = 41
+
+### Vendas_SaídaCupomItens  --  3164 registros, 16 colunas
+
+    Código                       long (4)
+    NrCupom                      float (4)
+    M                            float (4)
+    CódigoProd                   long (4)
+    Descrição                    text (100)
+    NrFornec                     integer (2)
+    Qte                          integer (2)
+    VrCusto                      currency (8)
+    VrTotalCusto                 currency (8)
+    VrVenda                      currency (8)
+    VrTotalVenda                 currency (8)
+    Taxa                         currency (8)
+    VrDesc                       currency (8)
+    VrTotalLiq                   currency (8)
+    Garantia                     integer (2)
+    NrDevolução                  float (4)
+
+    --- amostra (3) ---
+    [1]
+        Código                     = 1
+        NrCupom                    = 1
+        M                          = 1
+        CódigoProd                 = 6284
+        Descrição                  = Z_plug rosca 3/4 (2435)
+        NrFornec                   = 65
+        Qte                        = 1
+        VrCusto                    = 0.1900
+        VrTotalCusto               = 0.0000
+        VrVenda                    = 2.2000
+        VrTotalVenda               = 2.2000
+        Taxa                       = 0.0000
+        VrDesc                     = 0.0000
+        VrTotalLiq                 = 2.2000
+        Garantia                   = 0
+        NrDevolução                = 0
+    [2]
+        Código                     = 2
+        NrCupom                    = 2
+        M                          = 1
+        CódigoProd                 = 6032
+        Descrição                  = engate jumbo agua 1/2 x  40 cm (2848)
+        NrFornec                   = 275
+        Qte                        = 1
+        VrCusto                    = 15.2900
+        VrTotalCusto               = 0.0000
+        VrVenda                    = 83.4300
+        VrTotalVenda               = 83.4300
+        Taxa                       = 5.0000
+        VrDesc                     = 4.1700
+        VrTotalLiq                 = 79.2600
+        Garantia                   = 0
+        NrDevolução                = 0
+    [3]
+        Código                     = 3
+        NrCupom                    = 3
+        M                          = 1
+        CódigoProd                 = 5865
+        Descrição                  = chuveiro max
+        NrFornec                   = 115
+        Qte                        = 1
+        VrCusto                    = 133.5200
+        VrTotalCusto               = 0.0000
+        VrVenda                    = 186.9300
+        VrTotalVenda               = 186.9300
+        Taxa                       = 0.0000
+        VrDesc                     = 0.0000
+        VrTotalLiq                 = 186.9300
+        Garantia                   = 0
+        NrDevolução                = 0

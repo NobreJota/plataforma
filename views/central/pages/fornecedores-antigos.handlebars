@@ -1,0 +1,383 @@
+{{!--
+  Destino: C:\plataformaRota\views\central\pages\fornecedores-antigos.handlebars
+  Alterado em: 27/09/2026 — o aviso "sem CNPJ" some quando o campo enche;
+                            confirmar passa a dar retorno na tela.
+--}}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rotaes : Admin : Fornecedores do sistema antigo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background:#eef1f5; color:#1f2937; }
+    .topo { background:#03306b; color:#fff; padding:14px 24px; }
+    .topo h1 { font-size:1.35rem; font-weight:700; margin:0; }
+    .topo small { color:#c7d6ee; }
+    #filtros { background:#fff; border-bottom:1px solid #cfd4da; padding:10px 24px; }
+    .aviso { font-size:.85rem; color:#6b7280; }
+
+    /* o retorno de cada confirmação: sem isto a tela grava em silêncio e
+       a pessoa confirma duas vezes por não saber se deu certo */
+    .recado {
+      display:none; margin:0 0 .75rem; padding:.6rem .9rem; border-radius:.4rem;
+      font-size:.9rem; font-weight:500;
+    }
+    .recado.visivel { display:block; }
+    .recado.ok   { background:#dcfce7; color:#14532d; border:1px solid #86efac; }
+    .recado.erro { background:#fee2e2; color:#7f1d1d; border:1px solid #fca5a5; }
+
+    /* o que acabou de ser feito pisca na lista */
+    .linha.recem { animation: piscar 1.6s ease-out; }
+    @keyframes piscar {
+      0%   { background:#bbf7d0; }
+      100% { background:transparent; }
+    }
+
+    #corpo { display:grid; grid-template-columns: 1fr 1.15fr; gap:14px; padding:14px 24px 24px; }
+    .painel { background:#fff; border:1px solid #cfd4da; border-radius:10px; display:flex; flex-direction:column; min-height:0; }
+    .painel h2 { font-size:.95rem; font-weight:700; margin:0; padding:10px 14px; background:#e3e9f2;
+                 border-radius:10px 10px 0 0; display:flex; justify-content:space-between; align-items:center; }
+    .lista { overflow-y:auto; height:calc(100vh - 230px); min-height:300px; }
+
+    .linha { padding:8px 14px; border-bottom:1px solid #f0f2f5; cursor:pointer; }
+    .linha:hover { background:#f3f7ff; }
+    .linha .razao { font-weight:600; }
+    .linha .info { font-size:.8rem; color:#4b5563; display:flex; gap:10px; flex-wrap:wrap; margin-top:2px; }
+    .linha .cod { font-family:monospace; }
+    .linha.selecionada { background:#1d4ed8 !important; color:#fff; }
+    .linha.selecionada .info { color:#dbe6ff; }
+    .linha.feito    { opacity:.55; }
+    .linha.feito .razao { color:#0b5d2a; }
+    .linha.ignorado { opacity:.5; }
+    .linha.ignorado .razao { text-decoration:line-through; color:#6b7280; }
+    .mov { font-size:.72rem; font-weight:700; border-radius:10px; padding:1px 8px; background:#fde68a; color:#78350f; }
+    .semconta { color:#b91c1c; font-weight:600; }
+    .etq { font-size:.7rem; border-radius:4px; padding:1px 6px; font-weight:600; border:1px solid; }
+    .etq.feito { color:#0b5d2a; } .etq.ignorado { color:#6b7280; }
+
+    #ficha { padding:16px 18px; overflow-y:auto; height:calc(100vh - 230px); }
+    #ficha label { font-size:.8rem; font-weight:600; color:#374151; margin-bottom:2px; }
+    #ficha .form-control { font-size:.9rem; }
+    .destino { background:#eef4ff; border:1px solid #c7d7fe; border-radius:8px; padding:10px 12px; margin-bottom:14px; }
+    .destino .cod { font-family:monospace; font-weight:700; color:#03306b; }
+    .alerta { border-radius:8px; padding:8px 12px; font-size:.86rem; margin-bottom:12px; }
+    .alerta.amarelo { background:#fef3c7; color:#78350f; }
+    .alerta.vermelho { background:#fee2e2; color:#991b1b; }
+    .alerta.azul { background:#e0f2fe; color:#075985; }
+  </style>
+</head>
+<body>
+
+<div class="topo d-flex align-items-center justify-content-between flex-wrap gap-2">
+  <div>
+    <h1>Fornecedores do sistema antigo</h1>
+    <small>Clique num fornecedor, confira a ficha e confirme. Ele entra no cadastro já ligado à conta nova do de/para.</small>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/central/plano/depara" class="btn btn-light btn-sm">De/para</a>
+    <a href="/central/menu" class="btn btn-light btn-sm">&larr; Voltar ao menu</a>
+  </div>
+</div>
+
+<div id="filtros" class="d-flex align-items-center gap-3 flex-wrap">
+  <label class="fw-semibold mb-0" for="selEmpresa">Empresa:</label>
+  <select id="selEmpresa" class="form-select form-select-sm" style="max-width:300px"></select>
+  <select id="selSituacao" class="form-select form-select-sm" style="max-width:200px">
+    <option value="pendente" selected>Só pendentes</option>
+    <option value="todos">Todos</option>
+    <option value="feito">Só feitos</option>
+    <option value="ignorado">Só ignorados</option>
+  </select>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="chkMov" checked>
+    <label class="form-check-label" for="chkMov">só com movimento em 2026</label>
+  </div>
+  <input id="busca" class="form-control form-control-sm" style="width:220px" placeholder="buscar nome ou CNPJ">
+  <span class="ms-auto d-flex align-items-center gap-2">
+    <span class="aviso" id="resumo"></span>
+    <label class="btn btn-outline-primary btn-sm mb-0">
+      Carregar lista <input type="file" id="arqLista" accept=".csv" hidden>
+    </label>
+  </span>
+</div>
+
+<div id="recado" class="recado"></div>
+
+<div id="corpo">
+  <div class="painel">
+    <h2><span>Fornecedores</span><span class="aviso" id="contagem"></span></h2>
+    <div class="lista" id="lista"></div>
+  </div>
+  <div class="painel">
+    <h2><span>Ficha</span><span class="aviso" id="fichaSit"></span></h2>
+    <div id="ficha"><p class="aviso">Clique num fornecedor à esquerda.</p></div>
+  </div>
+</div>
+
+<script>
+const API = '/central/plano/api';
+let todos = [];
+let atual = null;
+let recem = null;   // o que acabou de ser confirmado, para piscar na lista
+
+async function api(metodo, caminho, corpo) {
+  const r = await fetch(API + caminho, {
+    method: metodo, headers: { 'Content-Type': 'application/json' },
+    body: corpo ? JSON.stringify(corpo) : undefined
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.erro || 'Erro na requisição.');
+  return d;
+}
+const empresa = () => document.getElementById('selEmpresa').value;
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+const digitos = s => String(s || '').replace(/\D/g, '');
+const fmtDoc = d => d.length === 14 ? d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+                  : d.length === 11 ? d.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4') : d;
+
+async function carregarEmpresas() {
+  const lista = await api('GET', '/empresas');
+  const sel = document.getElementById('selEmpresa');
+  sel.innerHTML = '<option value="">Escolha...</option>' +
+    lista.map(e => `<option value="${e._id}">${esc(e.razao || e.marca)}</option>`).join('');
+  const armacao = lista.find(e => /arma[cç][aã]o/i.test(e.razao || ''));
+  if (armacao) { sel.value = armacao._id; carregar(); }
+}
+
+async function carregar() {
+  if (!empresa()) return;
+  todos = await api('GET', `/fornec-origem/${empresa()}`);
+  const feitos = todos.filter(i => i.status === 'feito').length;
+  const ign = todos.filter(i => i.status === 'ignorado').length;
+  document.getElementById('resumo').textContent = todos.length
+    ? `${todos.length} na lista · ${feitos} feito(s) · ${ign} ignorado(s)`
+    : 'lista ainda não carregada';
+  desenharLista();
+}
+
+function filtrados() {
+  const sit = document.getElementById('selSituacao').value;
+  const soMov = document.getElementById('chkMov').checked;
+  const b = document.getElementById('busca').value.trim().toLowerCase();
+  return todos.filter(i =>
+    (sit === 'todos' || i.status === sit) &&
+    (!soMov || i.dados.lanc_2026 > 0) &&
+    (!b || i.dados.razao.toLowerCase().includes(b) || digitos(i.dados.cnpj).includes(digitos(b) || '§'))
+  );
+}
+
+function desenharLista() {
+  const lista = filtrados();
+  document.getElementById('contagem').textContent = `${lista.length} na tela`;
+  document.getElementById('lista').innerHTML = lista.map(i => {
+    const d = i.dados;
+    const conta = i.conta
+      ? (i.conta.acao === 'descartar' ? '<span class="semconta">conta descartada no de/para</span>'
+                                      : `<span class="cod">${esc(d.conta_antiga)} → ${esc(i.conta.codigoNovo)}</span>`)
+      : (d.conta_antiga ? `<span class="semconta">${esc(d.conta_antiga)}: sem decisão no de/para</span>`
+                        : '<span class="semconta">sem conta no plano antigo</span>');
+    const mov = d.lanc_2026 ? `<span class="mov">${d.lanc_2026} lanç.</span>` : '';
+    const cnpj = d.cnpj ? `<span class="cod">${fmtDoc(digitos(d.cnpj))}</span>` : '<span>sem CNPJ</span>';
+    const etq = i.status !== 'pendente' ? `<span class="etq ${i.status}">${i.status}</span>` : '';
+    const sel = atual && atual.chave === i.chave ? ' selecionada' : '';
+    const novo = recem === i.chave ? ' recem' : '';
+    return `<div class="linha ${i.status}${sel}${novo}" data-chave="${esc(i.chave)}">
+      <div class="razao">${esc(d.razao)} ${mov} ${etq}</div>
+      <div class="info">${conta}${cnpj}${d.cidade ? `<span>${esc(d.cidade)}</span>` : ''}</div>
+    </div>`;
+  }).join('') || '<p class="aviso m-3">Nada neste filtro.</p>';
+
+  recem = null;   // pisca uma vez, não a cada redesenho
+}
+
+function campo(id, rotulo, valor, col = 'col-md-6', extra = '') {
+  return `<div class="${col}"><label for="${id}">${rotulo}</label>
+    <input id="${id}" class="form-control form-control-sm" value="${esc(valor)}" ${extra}></div>`;
+}
+
+function abrirFicha(i) {
+  atual = i;
+  const d = i.dados;
+  const alertas = [];
+  if (!i.conta) alertas.push(['vermelho', `A conta ${esc(d.conta_antiga || '(nenhuma)')} ainda não foi decidida no de/para. Decida lá antes de confirmar.`]);
+  else if (i.conta.acao === 'descartar') alertas.push(['vermelho', 'A conta deste fornecedor foi descartada no de/para. Use Ignorar, ou desfaça o descarte lá.']);
+  if (i.cadastro) {
+    alertas.push(['azul', `Este CNPJ já está no cadastro como <strong>${esc(i.cadastro.razao)}</strong>. ` +
+      'Os dados de lá são mantidos; só o que estiver vazio é completado.' +
+      (i.cadastro.contaLigada ? ` Já ligado à conta <strong>${esc(i.cadastro.contaLigada)}</strong>.` : '')]);
+  }
+  if (d.observacao) alertas.push(['amarelo', esc(d.observacao)]);
+  if (d.ativo_no_antigo === 'não') alertas.push(['amarelo', 'Estava INATIVO no sistema antigo.']);
+  // O alerta do CNPJ vem marcado: ele nasce do dado do banco, mas some assim
+  // que o campo for preenchido na tela. Antes ficava dizendo "sem CNPJ" ao
+  // lado de um campo com CNPJ dentro.
+  if (!d.cnpj) alertas.push(['amarelo', 'Sem CNPJ. Digite e clique em Buscar na Receita para completar os dados.', 'alertaCnpj']);
+
+  const destino = i.conta && i.conta.codigoNovo
+    ? `<div class="destino">Conta nova: <span class="cod">${esc(i.conta.codigoNovo)}</span>
+        <span class="aviso">(no antigo: ${esc(d.conta_antiga)} ${esc(d.nome_no_plano)})</span></div>` : '';
+
+  document.getElementById('fichaSit').textContent = i.status === 'pendente' ? '' : `situação: ${i.status}`;
+  document.getElementById('ficha').innerHTML = `
+    ${destino}
+    ${alertas.map(([cor, txt, id]) => `<div class="alerta ${cor}"${id ? ` id="${id}"` : ''}>${txt}</div>`).join('')}
+    <div class="row g-2">
+      <div class="col-md-7"><label for="f_cnpj">CPF / CNPJ</label>
+        <div class="input-group input-group-sm">
+          <input id="f_cnpj" class="form-control" value="${esc(d.cnpj ? fmtDoc(digitos(d.cnpj)) : '')}">
+          <button class="btn btn-outline-primary" type="button" id="btnReceita">Buscar na Receita</button>
+        </div></div>
+      ${campo('f_inscricao', 'Inscrição estadual', d.inscricao, 'col-md-5')}
+      ${campo('f_razao', 'Razão social', d.razao, 'col-md-8')}
+      ${campo('f_marca', 'Marca', d.marca, 'col-md-4')}
+      ${campo('f_email', 'E-mail', '', 'col-md-6')}
+      ${campo('f_telefone', 'Telefone', d.fone_vendas || d.fone_cobranca, 'col-md-6')}
+      ${campo('f_cep', 'CEP', d.cep, 'col-md-3')}
+      ${campo('f_logradouro', 'Logradouro', d.logradouro, 'col-md-7')}
+      ${campo('f_numero', 'Número', '', 'col-md-2')}
+      ${campo('f_complemento', 'Complemento', '', 'col-md-4')}
+      ${campo('f_bairro', 'Bairro', d.bairro, 'col-md-4')}
+      ${campo('f_cidade', 'Cidade', d.cidade, 'col-md-3')}
+      ${campo('f_uf', 'UF', d.uf, 'col-md-1')}
+      ${campo('f_contato_vendas', 'Contato vendas', d.contato_vendas, 'col-md-6')}
+      ${campo('f_fone_vendas', 'Fone vendas', d.fone_vendas, 'col-md-6')}
+      ${campo('f_contato_cobranca', 'Contato cobrança', d.contato_cobranca, 'col-md-6')}
+      ${campo('f_fone_cobranca', 'Fone cobrança', d.fone_cobranca, 'col-md-6')}
+    </div>
+    <div class="d-flex gap-2 mt-3 flex-wrap">
+      ${i.status === 'pendente'
+        ? `<button class="btn btn-success" id="btnConfirmar" type="button">Confirmar e cadastrar</button>
+           <button class="btn btn-outline-secondary" id="btnIgnorar" type="button">Ignorar</button>`
+        : `<button class="btn btn-outline-primary" id="btnReabrir" type="button">Reabrir</button>
+           <span class="aviso align-self-center">${i.feitoEm ? 'feito em ' + new Date(i.feitoEm).toLocaleString('pt-BR') : ''} ${esc(i.feitoPor || '')}</span>`}
+    </div>`;
+
+  document.getElementById('btnReceita').onclick = buscarReceita;
+  document.getElementById('f_cnpj').addEventListener('input', conferirCnpj);
+  conferirCnpj();
+  document.getElementById('btnConfirmar')?.addEventListener('click', confirmar);
+  document.getElementById('btnIgnorar')?.addEventListener('click', () => mudarSituacao('ignorado'));
+  document.getElementById('btnReabrir')?.addEventListener('click', () => mudarSituacao('pendente'));
+  desenharLista();
+}
+
+/* O aviso "sem CNPJ" vale enquanto não houver CNPJ — e só enquanto isso */
+function conferirCnpj() {
+  const alerta = document.getElementById('alertaCnpj');
+  if (!alerta) return;
+  const n = digitos(document.getElementById('f_cnpj')?.value || '').length;
+  alerta.style.display = (n === 14 || n === 11) ? 'none' : '';
+}
+
+/* Completa só os campos vazios com os dados da Receita (BrasilAPI) */
+async function buscarReceita() {
+  const cnpj = digitos(document.getElementById('f_cnpj').value);
+  if (cnpj.length !== 14) { alert('Digite um CNPJ com 14 números.'); return; }
+  const botao = document.getElementById('btnReceita');
+  botao.disabled = true; botao.textContent = 'Buscando...';
+  try {
+    const r = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`);
+    if (!r.ok) throw new Error('CNPJ não encontrado na Receita.');
+    const x = await r.json();
+    const por = { f_razao: x.razao_social, f_marca: x.nome_fantasia, f_cep: x.cep, f_logradouro: x.logradouro,
+                  f_numero: x.numero, f_complemento: x.complemento, f_bairro: x.bairro, f_cidade: x.municipio,
+                  f_uf: x.uf, f_email: x.email, f_telefone: x.ddd_telefone_1 };
+    for (const [id, v] of Object.entries(por)) {
+      const el = document.getElementById(id);
+      if (el && !el.value.trim() && v) el.value = v;
+    }
+    document.getElementById('f_cnpj').value = fmtDoc(cnpj);
+    conferirCnpj();
+  } catch (err) { alert(err.message); }
+  finally { botao.disabled = false; botao.textContent = 'Buscar na Receita'; }
+}
+
+async function confirmar() {
+  const v = id => document.getElementById(id)?.value.trim() || '';
+  const ficha = {
+    cnpj: v('f_cnpj'), inscricao: v('f_inscricao'), razao: v('f_razao'), marca: v('f_marca'),
+    email: v('f_email'), telefone: v('f_telefone'), cep: v('f_cep'), logradouro: v('f_logradouro'),
+    numero: v('f_numero'), complemento: v('f_complemento'), bairro: v('f_bairro'), cidade: v('f_cidade'),
+    uf: v('f_uf'), contato_vendas: v('f_contato_vendas'), fone_vendas: v('f_fone_vendas'),
+    contato_cobranca: v('f_contato_cobranca'), fone_cobranca: v('f_fone_cobranca')
+  };
+  try {
+    const r = await api('POST', '/fornec-origem/confirmar', { lojistaId: empresa(), chave: atual.chave, ficha });
+    await proximo(r.criado ? 'cadastrado' : 'ligado ao cadastro existente');
+  } catch (err) { recado(err.message, 'erro'); }
+}
+
+async function mudarSituacao(status) {
+  try {
+    await api('POST', '/fornec-origem/status', { lojistaId: empresa(), chave: atual.chave, status });
+    if (status === 'pendente') {
+      await carregar();
+      abrirFicha(todos.find(i => i.chave === atual.chave));
+      recado('Reaberto. Confirme de novo quando quiser.', 'ok');
+    } else {
+      await proximo('marcado como ignorado');
+    }
+  } catch (err) { recado(err.message, 'erro'); }
+}
+
+/* Depois de confirmar ou ignorar, abre o próximo pendente da lista.
+   A mensagem era passada mas a função não a recebia: `proximo(r.criado ? ...)`
+   chamava uma função sem parâmetro, e o retorno se perdia no caminho. */
+let sumirRecado = null;
+function recado(texto, tipo) {
+  const el = document.getElementById('recado');
+  clearTimeout(sumirRecado);
+  el.className = 'recado visivel ' + (tipo || 'ok');
+  el.textContent = texto;
+  if (tipo !== 'erro') sumirRecado = setTimeout(() => el.classList.remove('visivel'), 5000);
+}
+
+async function proximo(mensagem) {
+  const feito = atual;
+  const antes = filtrados().map(i => i.chave);
+  const pos = antes.indexOf(atual.chave);
+
+  await carregar();
+
+  if (mensagem) {
+    const nome = feito?.dados?.razao || feito?.chave || '';
+    const soPendentes = document.getElementById('selSituacao').value === 'pendente';
+
+    recado('✓ ' + nome + ' — ' + mensagem
+      + (soPendentes ? '.  Saiu da lista: o filtro está em "Só pendentes".' : ''), 'ok');
+
+    recem = feito?.chave || null;
+  }
+
+  const agora = filtrados();
+  const seguinte = agora.find(i => i.status === 'pendente' && antes.indexOf(i.chave) > pos) || agora.find(i => i.status === 'pendente');
+  if (seguinte) abrirFicha(seguinte);
+  else { atual = null; document.getElementById('ficha').innerHTML = '<p class="aviso">Nenhum pendente neste filtro.</p>'; desenharLista(); }
+}
+
+document.getElementById('lista').addEventListener('click', e => {
+  const linha = e.target.closest('.linha');
+  if (linha) abrirFicha(todos.find(i => i.chave === linha.dataset.chave));
+});
+document.getElementById('arqLista').addEventListener('change', async e => {
+  const arq = e.target.files[0];
+  if (!arq || !empresa()) return;
+  const dados = new FormData();
+  dados.append('arquivo', arq); dados.append('lojistaId', empresa());
+  const r = await fetch(API + '/fornec-origem/carregar', { method: 'POST', body: dados });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) { alert(d.erro || 'Erro ao carregar.'); return; }
+  alert(`${d.fornecedores} fornecedores na lista. O trabalho já feito foi preservado.`);
+  e.target.value = '';
+  carregar();
+});
+document.getElementById('selEmpresa').addEventListener('change', carregar);
+['selSituacao', 'chkMov'].forEach(id => document.getElementById(id).addEventListener('change', desenharLista));
+document.getElementById('busca').addEventListener('input', desenharLista);
+
+carregarEmpresas().catch(err => alert(err.message));
+</script>
+</body>
+</html>

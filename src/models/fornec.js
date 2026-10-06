@@ -1,3 +1,7 @@
+// src/models/fornec.js
+// Fornecedor compartilhado entre empresas (1 documento por CNPJ).
+// Cada empresa se liga pelo array vinculos[], com a própria conta no plano.
+
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -33,6 +37,19 @@ const EnderecoSchema = new Schema({
   estado:      { type: String, default: '', uppercase: true, maxlength: 2 }
 }, { _id: false });
 
+// 🆕 Vínculo contábil por empresa: cada lojista tem a sua conta (subtítulo) e o seu status
+const VinculoSchema = new Schema({
+  lojistaId: { type: Schema.Types.ObjectId, ref: 'lojista', required: true },
+  ncontabil: { type: String, required: true, trim: true },   // código do subtítulo, ex. "2.01.001.007"
+  ativo:     { type: Boolean, default: true }
+}, { _id: false });
+
+const DesvinculoSchema = new Schema({
+  lojistaId:      { type: Schema.Types.ObjectId, ref: 'lojista', required: true },
+  ncontabil:      { type: String, required: true, trim: true },
+  desvinculadoEm: { type: Date, default: Date.now }
+}, { _id: false });
+
 const FornecedorSchema = new Schema({
   // 🆕 Tipo PF/PJ (default PJ — compatível com registros antigos)
   tipo: { type: String, enum: ['PF', 'PJ'], default: 'PJ' },
@@ -50,9 +67,16 @@ const FornecedorSchema = new Schema({
     marcaLoja: { type: String, default: '' }
   }],
 
+  // 🆕 Vínculo contábil por empresa (substitui o ncontabil global)
+  vinculos: { type: [VinculoSchema], default: [] },
+
+  // Contas desvinculadas: guardadas para que um recadastro volte a usar a
+  // mesma conta, em vez de criar um segundo código para o mesmo fornecedor.
+  vinculosAnteriores: { type: [DesvinculoSchema], default: [] },
+
   inscricao:  { type: String, default: '' },           // Inscrição Estadual (nome do site)
   inscricaoMunicipal: { type: String, default: '' },   // 🆕 Inscrição Municipal
-  ncontabil:  { type: String, default: '' },           // número contábil (vínculo plano de contas)
+  ncontabil:  { type: String, default: '' },           // ⚠ legado — o código agora mora em vinculos[].ncontabil
   marca:      { type: String, default: '' },
 
   // 🆕 Contato principal (preenchido pela BrasilAPI / nossas telas)
@@ -94,6 +118,8 @@ FornecedorSchema.pre('findOneAndUpdate', function (next) {
 
 // Índices úteis
 FornecedorSchema.index({ razao: 1 });
-FornecedorSchema.index({ ativo: 1 });
+// (ativo já tem index:true no campo; o índice repetido aqui gerava Duplicate schema index)
+FornecedorSchema.index({ 'vinculos.lojistaId': 1 });
 
-module.exports = mongoose.models.Fornecedor || mongoose.model('fornec', FornecedorSchema);
+// O model se chama 'fornec', então é essa a chave em mongoose.models
+module.exports = mongoose.models.fornec || mongoose.model('fornec', FornecedorSchema);

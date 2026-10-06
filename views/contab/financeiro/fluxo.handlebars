@@ -1,3 +1,10 @@
+{{!--
+  Destino: C:\plataformaRota\views\contab\financeiro\fluxo.handlebars
+  Alterado em: 03/10/2026 - antecipacao de cartao e valor liquido no modal de recebimento
+  Alterado em: 05/10/2026 - cabecalho com o caminho de destino
+  Alterado em: 05/10/2026 - cartao: botao "todos"; caixa "Valor total do cartao" a esquerda,
+               "Valor liquido" a direita e o aviso da taxa embaixo
+--}}
 <div class="flx-page">
   <header class="flx-header">
     <h1>🌊 Fluxo de Caixa</h1>
@@ -58,6 +65,14 @@
         </label>
       </div>
 
+      <!-- recebimento: antecipacao de cartao (todas as parcelas em aberto de um cartao) -->
+      <div class="pag-extra" id="pag-extra" hidden>
+        <button type="button" id="pag-antecipar" class="pag-btn-cancel">💳 Antecipação de cartão</button>
+        <button type="button" id="pag-todos-cartao" class="pag-btn-cancel" hidden title="todas as parcelas em aberto deste cliente neste cartão (todas as vendas dele)">todos</button>
+        <select id="pag-cartao-sel" hidden></select>
+        <span class="pag-dica" id="pag-data-dica"></span>
+      </div>
+
       <div class="pag-lista-wrap">
         <table class="pag-lista">
           <thead>
@@ -73,6 +88,21 @@
             <tr><td colspan="5" class="pag-empty">Carregando...</td></tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- cartao: o que a operadora pagou de fato; a diferenca vai para a despesa do cartao -->
+      <div class="pag-liq" id="pag-liq" hidden>
+        <div class="pag-liq-campos">
+          <label class="pag-campo">
+            <span>Valor total do cartão</span>
+            <input type="text" id="pag-total-cartao" readonly tabindex="-1">
+          </label>
+          <label class="pag-campo">
+            <span>Valor líquido pago pelo cartão</span>
+            <input type="text" id="pag-liquido" inputmode="decimal" placeholder="igual ao total, se não houve taxa" autocomplete="off">
+          </label>
+        </div>
+        <div class="pag-taxa" id="pag-taxa-info"></div>
       </div>
     </div>
     <div class="pag-modal-footer">
@@ -138,13 +168,24 @@
   .flx-page { padding:16px 20px; max-width:1400px; margin:0 auto; }
   .flx-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:10px; }
   .flx-header h1 { margin:0; font-size:1.5rem; }
-  .flx-controls { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
-  .flx-meses { display:flex; gap:2px; flex-wrap:wrap; }
-  .flx-mes-btn { padding:5px 9px; border:1px solid #d1d5db; background:#fff; border-radius:6px; cursor:pointer; font-size:.78rem; }
+
+  /* A faixa ocupa a largura toda: meses à esquerda distribuídos por igual,
+     "todos" logo depois deles, e o ano encostado na direita. */
+  .flx-controls { display:flex; align-items:center; gap:14px; flex:1 1 100%; }
+  .flx-meses { display:flex; gap:4px; flex:1; }
+  .flx-mes-btn { flex:1; padding:6px 4px; border:1px solid #d1d5db; background:#fff; border-radius:6px; cursor:pointer; font-size:.78rem; }
+  /* O "todos" não divide espaço com os meses: ele é outra coisa. */
+  .flx-mes-btn.flx-todos { flex:0 0 auto; padding:6px 16px; font-weight:600; margin-left:10px; }
+  .flx-ano-label { margin-left:auto; }
   .flx-mes-btn:hover { background:#f0f9ff; }
   .flx-mes-btn.ativo { background:#0891b2; color:#fff; border-color:#0891b2; font-weight:600; }
   .flx-ano-label { display:flex; align-items:center; gap:6px; font-weight:600; color:#374151; }
   .flx-ano-select { padding:6px 10px; border:1px solid #d1d5db; border-radius:7px; font-weight:600; }
+
+  /* Faixa que separa os meses no modo "todos". */
+  .flx-sep td { background:#f3f4f6; color:#6b7280; font-size:.72rem;
+    font-weight:600; letter-spacing:.5px; padding:5px 10px;
+    border-top:2px solid #e5e7eb; }
 
   .flx-legenda { display:flex; gap:16px; margin-bottom:10px; font-size:.8rem; }
   .flx-leg.verde    { color:#059669; }
@@ -226,6 +267,21 @@
   .pag-btn-ok:hover { background:#5b21b6; }
   .pag-btn-ok:disabled { opacity:.4; cursor:default; }
   .pag-empty { text-align:center; padding:24px; color:#9ca3af; }
+  /* 03/10/2026: antecipacao de cartao e valor liquido */
+  .pag-extra { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:-4px 0 12px; }
+  .pag-extra[hidden], .pag-liq[hidden] { display:none; }
+  .pag-extra select { padding:7px 10px; border:1px solid #d1d5db; border-radius:7px; font-size:.88rem; }
+  .pag-dica { font-size:.76rem; color:#6b7280; margin-left:auto; }
+  .pag-liq { display:block; margin-top:14px; padding:12px; background:#f0fdf4;
+             border:1px solid #bbf7d0; border-radius:8px; }
+  .pag-liq-campos { display:flex; justify-content:space-between; gap:16px; }
+  .pag-liq .pag-campo { flex:0 0 240px; }
+  .pag-liq input { text-align:right; font-weight:700; border-width:2px; }
+  #pag-total-cartao { background:#fef9c3 !important; border-color:#111827 !important; cursor:default; }
+  .pag-liq input:not(:disabled) { background:#fef9c3; border-color:#eab308; }   /* amarelo: e a vez dele */
+  .pag-liq input:disabled { background:#f3f4f6; }
+  .pag-taxa { margin-top:10px; font-size:.85rem; color:#374151; line-height:1.45; }
+  .pag-taxa b { color:#dc2626; }
 
   /* Boleta */
   .bol-content { background:#fff; border-radius:10px; width:92%; max-width:660px; max-height:88vh; display:flex; flex-direction:column; overflow:hidden; }
@@ -247,4 +303,4 @@
   .bol-btn-estornar:hover { background:#fee2e2; }
 </style>
 
-<script src="/js/financeiro/fluxo.js"></script>
+<script src="/js/contab/contabil/financeiro/fluxo.js"></script>

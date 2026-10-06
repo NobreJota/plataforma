@@ -118,6 +118,7 @@
   function selecionarTitulo(t) {
     st.titulo = t;
     st.sub = null;
+    atualizarMenuLancamentos();
     st.subtitulos = [];
     $('#rz-titulo-value').textContent = `${t.codigo} ${t.nome}`;
     $('#rz-sub-value').textContent = 'Carregando...';
@@ -167,7 +168,19 @@
     st.sub = s;
     const seq = (s.codigo || '').split('.').pop();
     $('#rz-sub-value').textContent = `${seq} ${s.nome}`;
+    atualizarMenuLancamentos();
     carregarRazao();
+  }
+
+  /* Sem conta escolhida não há de onde tirar a perna única da boleta, então
+     o item de Lançamentos fica apagado até a conta ser selecionada. */
+  function atualizarMenuLancamentos() {
+    const item = $('#rz-menu-lanc');
+    if (!item) return;
+    item.classList.toggle('desativado', !st.sub);
+    item.title = st.sub
+      ? `Lançar sobre ${st.sub.codigo} - ${st.sub.nome}`
+      : 'Escolha primeiro a conta no razão';
   }
 
   // ============================================================
@@ -215,6 +228,7 @@
         <div><span class="rz-chave-link" data-bid="${l.boletaId}">${chaveTxt}</span></div>
         <div>${fmtData(l.data)}</div>
         <div>${cpartHtml}</div>
+        <div class="rz-cpart-nome" title="${l.cPartidaNome || ''}">${l.cPartidaNome || ''}</div>
         <div class="rz-hist">${l.historico || ''}</div>
         <div class="rz-right ${l.debito  ? 'rz-deb' : ''}">${l.debito  ? fmt(l.debito)  : '<span class="rz-dash">—</span>'}</div>
         <div class="rz-right ${l.credito ? 'rz-cre' : ''}">${l.credito ? fmt(l.credito) : '<span class="rz-dash">—</span>'}</div>
@@ -234,6 +248,10 @@
       });
     });
   }
+
+  /* Chamada pelo módulo de lançamento depois de gravar, para a boleta nova
+     aparecer sem o usuário ter de recarregar a página. */
+  window.recarregarRazao = () => { if (st.sub) carregarRazao(); };
 
   // ============================================================
   // POPUP DA CONTRAPARTIDA
@@ -473,6 +491,15 @@
 
     item.addEventListener('click', (e) => {
       e.stopPropagation();
+
+      // Sem conta no razão não há de onde tirar a perna única da boleta, então
+      // o submenu nem chega a abrir — mostrar Crédito e Débito para depois
+      // recusar seria oferecer o que não funciona.
+      if (!st.sub) {
+        fecharDropdowns();
+        return;
+      }
+
       const vaiAbrir = drop.hidden;
       fecharDropdowns();
       drop.hidden = !vaiAbrir;
@@ -485,10 +512,20 @@
       e.stopPropagation();
       fecharMenus();
 
-      // As telas de lançamento ainda não existem. O menu já fica montado para
-      // não precisar mexer no layout quando elas chegarem.
-      if (acao === 'lanc-credito') alert('Tela de lançamento a crédito ainda não disponível.');
-      if (acao === 'lanc-debito')  alert('Tela de lançamento a débito ainda não disponível.');
+      // A boleta nasce da conta que está aberta no razão: é ela que vira a
+      // perna única do lançamento.
+      if (!st.sub) {
+        alert('Escolha primeiro a conta no razão.');
+        return;
+      }
+      if (typeof Lancamento === 'undefined') {
+        alert('lancamento.js não carregou.');
+        return;
+      }
+      Lancamento.abrir({
+        modo: acao === 'lanc-debito' ? 'debito' : 'credito',
+        conta: { codigo: st.sub.codigo, nome: st.sub.nome, _id: st.sub._id }
+      });
     });
 
     const btnImprimir = $('#rz-menu-imprimir');
@@ -524,6 +561,7 @@
         st.grupo = btn.dataset.grupo;
         st.titulo = null; st.sub = null;
         st.titulos = []; st.subtitulos = [];
+        atualizarMenuLancamentos();
         $('#rz-titulo-value').textContent = 'Selecione...';
         $('#rz-sub-value').textContent    = 'Selecione um título...';
         renderGrade([]);
@@ -548,6 +586,7 @@
     inicializarPeriodo();
     configurarCombos();
     configurarMenu();
+    atualizarMenuLancamentos();
     configurarPopContrapartida();
     configurarPeriodo();
     configurarGrupos();

@@ -1,4 +1,4 @@
-// src/routes/financeiro/fluxo-api.js
+// src/routes/contab/financeiro/fluxo-api.js
 // API da Tela do Fluxo de Caixa: lista lançamentos (projetados + futuros)
 // com saldo acumulado, filtrável por mês e ano.
 
@@ -33,8 +33,24 @@ router.get('/:ano', async (req, res) => {
       .sort({ vencimento: 1, _id: 1 })
       .lean();
 
+    /* Saldo que vem dos meses anteriores.
+       Abrindo setembro, o saldo precisa continuar de agosto — começar do zero
+       mostraria um número que não existe. Sem filtro de mês, começa em zero
+       porque aí janeiro é mesmo o começo. */
+    let saldoAnterior = 0;
+    if (mes) {
+      const anteriores = await FluxoProjetado.find({
+        ano, status: 'ATIVO', mes: { $lt: mes }
+      }).select('pos valor').lean();
+
+      for (const it of anteriores) {
+        const ehEntrada = (it.pos === 5 || it.pos === 1);
+        saldoAnterior += ehEntrada ? Math.abs(it.valor) : -Math.abs(it.valor);
+      }
+    }
+
     // Monta as linhas com saldo acumulado
-    let saldo = 0;
+    let saldo = saldoAnterior;
     let totalReceber = 0;
     let totalPagar = 0;
 
@@ -70,6 +86,7 @@ router.get('/:ano', async (req, res) => {
       ano, mes,
       linhas,
       resumo: {
+        saldoAnterior,
         totalReceber,
         totalPagar,
         saldoFinal: saldo,

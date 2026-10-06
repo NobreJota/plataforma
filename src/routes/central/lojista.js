@@ -43,7 +43,7 @@ router.get('/lojista', async (req, res) => {
     console.log('[ 22 lista de lojistas para listaLojista.handlebars ]:');
     console.log(' segue :', lojistas)
     
-    res.render("pages/central/listaLojista.handlebars", {
+    res.render("central/pages/listaLojista.handlebars", {
       layout: false,
       lojista: lojistas
     });
@@ -52,7 +52,7 @@ router.get('/lojista', async (req, res) => {
     console.error('[Erro ao buscar lojistas]:', err);
 
     // Renderiza mesmo com erro, apenas com lista vazia
-    res.render("pages/central/listaLojista.handlebars", {
+    res.render("central/pages/listaLojista.handlebars", {
       layout: false,
       lojista: [],
       erro: 'Erro ao carregar lojistas'
@@ -177,7 +177,7 @@ router.post('/salvar', async (req, res) => {
 
 router.get("/cadastro-cooperado", (req, res) => {
   console.log(5050)
-  return res.render("pages/central/cadastro-cooperado.handlebars",{
+  return res.render("central/pages/cadastro-cooperado.handlebars",{
     layout:false,
   });
 });
@@ -359,7 +359,7 @@ router.get("/editar/:id", async (req, res) => {
 
     if (!lojista) return res.status(404).send("Lojista não encontrado.");
 
-    res.render("pages/central/editando-lojista", {layout:false, lojista });
+    res.render("central/pages/editando-lojista.handlebars", {layout:false, lojista });
   } catch (err) {
     console.error("GET /lojistas/editar/:id", err);
     res.status(500).send("Erro ao abrir edição do lojista.");
@@ -464,7 +464,9 @@ router.post("/editar/:id", uploadMem.single("logoFile"), async (req, res) => {
   }
 });
 
-router.post("/editarcadLojista/:id", async (req, res) => {
+// uploadMem é obrigatório aqui: o formulário é multipart/form-data (tem o campo
+// de logo). Sem ele o req.body chega vazio e nada é gravado.
+router.post("/editarcadLojista/:id", uploadMem.single("logoFile"), async (req, res) => {
   console.log("[POST /lojista/editarcadLojista/:id] params:", req.params);
 
   try {
@@ -553,12 +555,30 @@ router.post("/editarcadLojista/:id", async (req, res) => {
     //   update.logoUrl = urlPublica;
     // }
 
-    await Lojista.findByIdAndUpdate(id, update);
+    // Só grava o que veio preenchido: campo em branco no formulário não deve
+    // apagar o que já estava no cadastro.
+    const limpo = {};
+    for (const [chave, valor] of Object.entries(update)) {
+      if (valor === undefined || valor === null) continue;
+      if (typeof valor === "string" && valor.trim() === "") continue;
+      limpo[chave] = valor;
+    }
 
-    return res.redirect("/lojista/listaLojista");
+    // "ativo" vem como texto livre (S / N) e o model espera booleano
+    if (limpo.ativo !== undefined) {
+      const v = String(limpo.ativo).trim().toLowerCase();
+      if (["s", "sim", "true", "1"].includes(v)) limpo.ativo = true;
+      else if (["n", "nao", "não", "false", "0"].includes(v)) limpo.ativo = false;
+      else delete limpo.ativo;
+    }
+
+    await Lojista.findByIdAndUpdate(id, limpo, { runValidators: true });
+
+    return res.redirect("/lojista/lojista");   // a lista é /lojista/lojista
   } catch (err) {
-    console.error("POST /lojista/editar/:id", err);
-    return res.status(500).send("Erro ao salvar lojista.");
+    console.error("POST /lojista/editarcadLojista/:id", err);
+    // A mensagem do erro vai junto: "Erro ao salvar lojista." sozinho não dizia nada.
+    return res.status(500).send("Erro ao salvar lojista: " + err.message);
   }
 });
 

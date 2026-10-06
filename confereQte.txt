@@ -1,0 +1,24 @@
+
+
+   ... qte do pedido escondida até você contar. Isso não faz sentido. Para esse problema se a nota
+       tiver  maior ou menor vai aparecer uma msg na hora antes de gravar. Falaremos mais na frente.
+
+
+       O que eu quiz dizer foi que na hora de passar o leitor no código de barra ou transferir a 
+       conferencia vamos colocar a quantidade que chegou - contagem físca - e colocar na caixa de
+       texto.  Aqui o modal cobre os dados da nota para que o funcionario não veja a nota e 
+       simplemente colocar o valor que vem na nota sem contar o fisico.
+
+       Vamos introduzir o seguinte. 
+          Nessa parte conferimos os produtos da nota fiscal e o que foi pedido.
+          Tudo Ok? 
+          Então passamos para uma nova page que o funcionario que recebe a mercadoria vai
+          passar o leitor e se consta aquele produto na nota abre uma caixa para colacar a 
+          qte .
+          Se bater aparece para ele o nome do produto código descrição e qte em uma lista.
+          Se não bater as qtes entra com aviso: "Contar de novo" pode fazer no maximo3 vezes.
+          A partir daí bloque toda entrada e chama o gerente da empresa.
+
+ 
+
+        

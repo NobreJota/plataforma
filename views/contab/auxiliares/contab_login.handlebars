@@ -1,3 +1,4 @@
+{{!-- views/contab/auxiliares/contab_login.handlebars — 26/09/2026: email volta preenchido após erro --}}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -74,14 +75,14 @@
       <div class="erro">{{erro}}</div>
     {{/if}}
 
-    <form action="/usuariocontab/login" method="POST" autocomplete="off">
+    <form action="/usuariocontab/login" method="POST">
       <label>
         <span>Email</span>
-        <input type="email" name="email" required autofocus>
+        <input type="email" name="email" value="{{email}}" autocomplete="username" required {{#unless email}}autofocus{{/unless}}>
       </label>
       <label>
         <span>Senha</span>
-        <input type="password" name="senha" required>
+        <input type="password" name="senha" autocomplete="current-password" required {{#if email}}autofocus{{/if}}>
       </label>
       <button type="submit" class="btn">Entrar</button>
     </form>

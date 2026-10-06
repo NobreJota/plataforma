@@ -1,3 +1,9 @@
+// =============================================================================
+// Destino: C:\plataformaRota\src\routes\contab\auxiliares\clientes-api.js
+// Alterado em: 02/10/2026 - LISTAR paginado: com ?pagina= devolve
+//   { itens, total, pagina, paginas, contagem: { PF, PJ } } e aceita ?tipo=PF|PJ.
+//   Sem ?pagina= continua devolvendo a lista simples (quem ja usava nao quebra).
+// =============================================================================
 // src/routes/auxiliares/clientes-api.js
 const express = require('express');
 const router  = express.Router();
@@ -74,6 +80,23 @@ router.get('/', async (req, res) => {
       const numerico = apenasNumeros(termo);
       filtro.$or = [{ nome: { $regex: termo, $options: 'i' } }];
       if (numerico) filtro.$or.push({ cpfCnpj: { $regex: numerico } });
+    }
+
+    // paginado (tela de clientes): uma aba por tipo, N por pagina
+    if (req.query.pagina !== undefined) {
+      const porPagina = Math.min(Math.max(parseInt(req.query.porPagina, 10) || 50, 10), 200);
+      const contagem = {
+        PF: await Cliente.countDocuments({ ...filtro, tipo: 'PF' }),
+        PJ: await Cliente.countDocuments({ ...filtro, tipo: 'PJ' }),
+      };
+      const tipo = ['PF', 'PJ'].includes(req.query.tipo) ? req.query.tipo : null;
+      const filtroTipo = tipo ? { ...filtro, tipo } : filtro;
+      const total = tipo ? contagem[tipo] : contagem.PF + contagem.PJ;
+      const paginas = Math.max(1, Math.ceil(total / porPagina));
+      const pagina = Math.min(Math.max(parseInt(req.query.pagina, 10) || 1, 1), paginas);
+      const itens = await Cliente.find(filtroTipo).sort({ nome: 1 })
+        .skip((pagina - 1) * porPagina).limit(porPagina);
+      return res.json({ itens: itens.map(decorar), total, pagina, paginas, contagem });
     }
 
     const clientes = await Cliente.find(filtro).sort({ codigo: 1 }).limit(500);

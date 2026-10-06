@@ -1,3 +1,9 @@
+// Destino: C:\plataformaRota\public\js\vendas\clientes.js
+// Alterado em: 02/10/2026 - mudou de lugar (era public/js/contab/auxiliares/clientes.js);
+//              a tela agora e /vendas/clientes. A API continua em /aux/api/clientes.
+//              02/10/2026 - abas PF/PJ, paginacao < > (50 por pagina) e busca so a
+//              partir de 2 letras
+//              02/10/2026 - trocar de aba limpa a caixa de busca
 /* public/js/auxiliares/clientes.js
  * v8 — Pelo menos um contato + CEP com fallback manual
  *  ✓ Email OU Telefone obrigatório (não ambos, mas pelo menos um)
@@ -293,9 +299,13 @@
   }
 
   // ============== Listagem ==============
+  const POR_PAGINA = 50;
+  const lista = { tipo: 'PF', pagina: 1, paginas: 1 };
+
   async function recarregar() {
     const tbody = $('#lista-clientes');
-    const busca = $('#busca').value.trim();
+    const digitado = $('#busca').value.trim();
+    const busca = digitado.length >= 2 ? digitado : '';   // 1 letra so: ainda nao busca
     const inativos = $('#incluir-inativos').checked;
 
     tbody.innerHTML = '<tr><td colspan="8" class="cli-empty">Carregando...</td></tr>';
@@ -304,12 +314,21 @@
       const params = new URLSearchParams();
       if (busca) params.set('busca', busca);
       if (inativos) params.set('incluirInativos', 'true');
-      const url = '/' + (params.toString() ? '?' + params.toString() : '');
+      params.set('tipo', lista.tipo);
+      params.set('pagina', lista.pagina);
+      params.set('porPagina', POR_PAGINA);
 
-      const clientes = await api('GET', url);
+      const r = await api('GET', '/?' + params.toString());
+      const clientes = r.itens;
+      lista.pagina = r.pagina;
+      lista.paginas = r.paginas;
 
-      $('#contador').textContent =
-        `${clientes.length} ${clientes.length === 1 ? 'cliente' : 'clientes'}`;
+      $('#cont-PF').textContent = r.contagem.PF;
+      $('#cont-PJ').textContent = r.contagem.PJ;
+      $('#contador').textContent = `${r.total} ${r.total === 1 ? 'cliente' : 'clientes'}`;
+      $('#pag-info').textContent = `Página ${r.pagina} de ${r.paginas}`;
+      $('#pag-anterior').disabled = r.pagina <= 1;
+      $('#pag-proxima').disabled = r.pagina >= r.paginas;
 
       if (!clientes.length) {
         tbody.innerHTML = `<tr><td colspan="8" class="cli-empty">
@@ -348,9 +367,23 @@
 
   $('#busca').addEventListener('input', () => {
     clearTimeout(state.debounceTimer);
+    lista.pagina = 1;
     state.debounceTimer = setTimeout(recarregar, 300);
   });
-  $('#incluir-inativos').addEventListener('change', recarregar);
+  $('#incluir-inativos').addEventListener('change', () => { lista.pagina = 1; recarregar(); });
+
+  // abas Pessoa Fisica / Pessoa Juridica
+  document.querySelectorAll('.cli-aba').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.cli-aba').forEach(x => x.classList.toggle('ativa', x === b));
+    lista.tipo = b.dataset.tipo;
+    lista.pagina = 1;
+    $('#busca').value = '';          // a busca de uma aba nao vale para a outra
+    recarregar();
+  }));
+
+  // paginacao < >
+  $('#pag-anterior').addEventListener('click', () => { if (lista.pagina > 1) { lista.pagina--; recarregar(); } });
+  $('#pag-proxima').addEventListener('click', () => { if (lista.pagina < lista.paginas) { lista.pagina++; recarregar(); } });
 
   $('#lista-clientes').addEventListener('click', async (e) => {
     const btn = e.target.closest('[data-acao]');

@@ -1,4 +1,18 @@
-{{!-- views/pages/auxiliares/clientes.handlebars --}}
+{{!--
+  Destino: C:\plataformaRota\views\vendas\pages\clientes.handlebars
+  Alterado em: 02/10/2026 - abas Pessoa Fisica / Pessoa Juridica; paginacao < >;
+               busca a partir de 2 letras
+  Alterado em: 02/10/2026 - mudou para vendas/pages; pagina inteira (layout:false), como
+               as telas de compra; o JS agora e /js/vendas/clientes.js
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clientes</title>
+</head>
+<body>
 
 <div class="cli-wrapper">
 
@@ -12,12 +26,17 @@
 
   <div class="cli-toolbar">
     <input type="search" id="busca" class="cli-input"
-           placeholder="🔍 Buscar por nome, CPF ou CNPJ...">
+           placeholder="🔍 Buscar por nome, CPF ou CNPJ (a partir de 2 letras)...">
     <label class="cli-check">
       <input type="checkbox" id="incluir-inativos">
       <span>Incluir inativos</span>
     </label>
     <span id="contador" class="cli-contador">0 clientes</span>
+  </div>
+
+  <div class="cli-abas">
+    <button type="button" class="cli-aba ativa" data-tipo="PF">Pessoa Física <span id="cont-PF">0</span></button>
+    <button type="button" class="cli-aba" data-tipo="PJ">Pessoa Jurídica <span id="cont-PJ">0</span></button>
   </div>
 
   <div class="cli-table-wrapper">
@@ -38,6 +57,12 @@
         <tr><td colspan="8" class="cli-empty">Carregando...</td></tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="cli-paginas">
+    <button type="button" id="pag-anterior" class="cli-pag-btn" title="Página anterior">&lt;</button>
+    <span id="pag-info">Página 1 de 1</span>
+    <button type="button" id="pag-proxima" class="cli-pag-btn" title="Próxima página">&gt;</button>
   </div>
 
 
@@ -246,6 +271,15 @@
   }
   .btn-secondary:hover { background:#d1d5db; }
 
+  /* 02/10/2026: abas PF/PJ e paginacao */
+  .cli-abas { display:flex; gap:4px; margin:4px 0 10px; border-bottom:1px solid #e5e7eb; }
+  .cli-aba { background:none; border:0; border-bottom:2px solid transparent; padding:8px 16px;
+             font-size:.92rem; font-weight:600; color:#6b7280; cursor:pointer; }
+  .cli-aba span { background:#eef2ff; color:#4338ca; border-radius:10px; padding:1px 8px; font-size:.75rem; margin-left:4px; }
+  .cli-aba.ativa { color:#1d4ed8; border-bottom-color:#1d4ed8; }
+  .cli-paginas { display:flex; justify-content:center; align-items:center; gap:14px; margin:14px 0 30px; font-size:.9rem; color:#374151; }
+  .cli-pag-btn { min-width:38px; height:34px; border:1px solid #d1d5db; background:#fff; border-radius:8px; font-size:1rem; font-weight:700; cursor:pointer; }
+  .cli-pag-btn:disabled { opacity:.35; cursor:default; }
   .cli-toolbar {
     display:flex; gap:12px; align-items:center; margin-bottom:14px; flex-wrap:wrap;
   }
@@ -439,4 +473,6 @@
   }
 </style>
 
-<script src="/js/auxiliares/clientes.js"></script>
+<script src="/js/vendas/clientes.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+[
+  {
+    "_id": {
+      "$oid": "68e002af6374d722404d456f"
+    },
+    "razao": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "cnpj": "47173950000181",
+    "inscricao": "454.072.582-116",
+    "ncontabil": "2.01.001.001",
+    "marca": "Rinnai",
+    "email": "johnson@rinnai.com.br",
+    "qlojistas": [
+      {
+        "$oid": "6892706a86509313e632f717"
+      }
+    ],
+    "address": {
+      "cep": "08.770-041",
+      "logradouro": "RUA TENENTE ONOFRE RODRIGUES DE AGUIAR",
+      "numero": "200",
+      "bairro": "VILA INDUSTRIAL",
+      "cidade": "MOGI DAS CRUZES",
+      "estado": "SP"
+    },
+    "contato": {
+      "representante": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "createAt": {
+      "$date": {
+        "$numberLong": "1759511215984"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "telefone": "011-4790-2522",
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790779183601"
+      }
+    },
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.159",
+        "ativo": true
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "68936e90198046c40856a443"
+    },
+    "razao": "KOMGROUP INDUSTRIAL LTDA",
+    "cnpj": "06114935001580",
+    "inscricao": "255649339",
+    "ncontabil": "",
+    "marca": "Komlog",
+    "email": "mmello@komlog.com.br",
+    "qlojistas": [
+      {
+        "$oid": "6892706a86509313e632f717"
+      }
+    ],
+    "address": {
+      "cep": "88.138-090",
+      "logradouro": "Rua Alair de Freitas",
+      "numero": "S/N",
+      "bairro": "Furadinho",
+      "cidade": "Palhoça",
+      "estado": "SC"
+    },
+    "contato": {
+      "representante": {
+        "nome": "Jaciel",
+        "email": "",
+        "celular": "48 9601-4447"
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "createAt": {
+      "$date": {
+        "$numberLong": "1754492560386"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "telefone": "48-3029-4900",
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790073479535"
+      }
+    },
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.010",
+        "ativo": true
+      }
+    ]
+  }
+]

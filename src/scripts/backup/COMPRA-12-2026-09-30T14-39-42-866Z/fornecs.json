@@ -1,0 +1,734 @@
+[
+  {
+    "_id": {
+      "$oid": "68936e90198046c40856a443"
+    },
+    "razao": "KOMGROUP INDUSTRIAL LTDA",
+    "cnpj": "06114935001580",
+    "inscricao": "255649339",
+    "ncontabil": "",
+    "marca": "Komlog",
+    "email": "mmello@komlog.com.br",
+    "qlojistas": [
+      {
+        "$oid": "6892706a86509313e632f717"
+      }
+    ],
+    "address": {
+      "cep": "88.138-090",
+      "logradouro": "Rua Alair de Freitas",
+      "numero": "S/N",
+      "bairro": "Furadinho",
+      "cidade": "Palhoça",
+      "estado": "SC"
+    },
+    "contato": {
+      "representante": {
+        "nome": "Jaciel",
+        "email": "",
+        "celular": "48 9601-4447"
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "createAt": {
+      "$date": {
+        "$numberLong": "1754492560386"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "telefone": "48-3029-4900",
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790073479535"
+      }
+    },
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.010",
+        "ativo": true
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "68dfd90a0f338c9f1358b516"
+    },
+    "razao": "WESTAFLEX TUBOS FLEXIVEIS LTDA",
+    "cnpj": "75024521000692",
+    "inscricao": "",
+    "ncontabil": "",
+    "marca": "Westaflex",
+    "email": "",
+    "qlojistas": [
+      {
+        "$oid": "6892706a86509313e632f717"
+      }
+    ],
+    "address": {
+      "cep": "24.006-900",
+      "logradouro": "AVENIDA AMARAL PEIXOTO",
+      "numero": "467",
+      "bairro": "CENTRO",
+      "cidade": "NITEROI",
+      "estado": "RJ"
+    },
+    "contato": {
+      "representante": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "createAt": {
+      "$date": {
+        "$numberLong": "1759500554102"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790073504690"
+      }
+    },
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.006",
+        "ativo": true
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "68e001af6374d722404d4567"
+    },
+    "razao": "MAQENGE - INDUSTRIA METALURGICA LTDA",
+    "cnpj": "05000896000122",
+    "inscricao": "",
+    "ncontabil": "",
+    "marca": "Maqenge",
+    "email": "maqenge@maqenge.com.br",
+    "qlojistas": [
+      {
+        "$oid": "6892706a86509313e632f717"
+      }
+    ],
+    "address": {
+      "cep": "95.074-410",
+      "logradouro": "RUA AUGUSTO ARTICO",
+      "numero": "26",
+      "bairro": "LOURDES",
+      "cidade": "CAXIAS DO SUL",
+      "estado": "RS"
+    },
+    "contato": {
+      "representante": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "createAt": {
+      "$date": {
+        "$numberLong": "1759510959913"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "telefone": "54-3535-3050",
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790629325114"
+      }
+    },
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.019",
+        "ativo": true
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "68e002af6374d722404d456f"
+    },
+    "razao": "RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.",
+    "cnpj": "47173950000181",
+    "inscricao": "454.072.582-116",
+    "ncontabil": "2.01.001.001",
+    "marca": "Rinnai",
+    "email": "johnson@rinnai.com.br",
+    "qlojistas": [
+      {
+        "$oid": "6892706a86509313e632f717"
+      }
+    ],
+    "address": {
+      "cep": "08.770-041",
+      "logradouro": "RUA TENENTE ONOFRE RODRIGUES DE AGUIAR",
+      "numero": "200",
+      "bairro": "VILA INDUSTRIAL",
+      "cidade": "MOGI DAS CRUZES",
+      "estado": "SP"
+    },
+    "contato": {
+      "representante": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "createAt": {
+      "$date": {
+        "$numberLong": "1759511215984"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "telefone": "011-4790-2522",
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790073493613"
+      }
+    },
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.001",
+        "ativo": true
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "68e005b40f338c9f1358b5b7"
+    },
+    "razao": "HAENKE TUBOS FLEXIVEIS LTDA.",
+    "cnpj": "55140099000119",
+    "inscricao": "",
+    "ncontabil": "",
+    "marca": "Haenke",
+    "email": "convir@convir.com.br",
+    "qlojistas": [
+      {
+        "$oid": "6892706a86509313e632f717"
+      }
+    ],
+    "address": {
+      "cep": "09.960-320",
+      "logradouro": "R JOAO CORREIA DE SA",
+      "numero": "97",
+      "bairro": "VILA NOGUEIRA",
+      "cidade": "DIADEMA",
+      "estado": "SP"
+    },
+    "contato": {
+      "representante": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "comercial": {
+        "nome": "",
+        "email": "comercial@haenke.com.br",
+        "celular": " (11) 4092-7722"
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "createAt": {
+      "$date": {
+        "$numberLong": "1759511988917"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "telefone": "11-4092-7722",
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790619751337"
+      }
+    },
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.012",
+        "ativo": true
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "68e007660f338c9f1358b5bd"
+    },
+    "razao": "ORBIS MERTIG DO BRASIL LTDA",
+    "cnpj": "01402079000140",
+    "inscricao": "",
+    "ncontabil": "",
+    "marca": "Orbis",
+    "email": "administra@orbisdobrasil.com.br",
+    "qlojistas": [
+      {
+        "$oid": "6892706a86509313e632f717"
+      }
+    ],
+    "address": {
+      "cep": "83.420-000",
+      "logradouro": "AVENIDA AVENIDA PREFEITO DOMINGOS MOCELIN NETO",
+      "numero": "155",
+      "bairro": "CENTRO",
+      "cidade": "QUATRO BARRAS",
+      "estado": "PR"
+    },
+    "contato": {
+      "representante": {
+        "nome": "",
+        "email": "sac@orbisdobrasil.com.br",
+        "celular": "41 3679-8355"
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "createAt": {
+      "$date": {
+        "$numberLong": "1759512422876"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "telefone": "41-3679-8300",
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790073514843"
+      }
+    },
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.016",
+        "ativo": true
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "68e0249c6374d722404d45ca"
+    },
+    "razao": "TIGRE MATERIAIS E SOLUCOES PARA CONSTRUCAO LTDA.",
+    "cnpj": "08862530001475",
+    "inscricao": "",
+    "ncontabil": "",
+    "marca": "Tigre",
+    "email": "",
+    "qlojistas": [
+      {
+        "$oid": "6892706a86509313e632f717"
+      }
+    ],
+    "address": {
+      "cep": "29.161-232",
+      "logradouro": "AVENIDA EUROPIPE",
+      "numero": "709",
+      "bairro": "JACUHY",
+      "cidade": "SERRA",
+      "estado": "ES"
+    },
+    "contato": {
+      "representante": {
+        "nome": "",
+        "email": "",
+        "celular": "(47) 1111-1111"
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "createAt": {
+      "$date": {
+        "$numberLong": "1759519900784"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "telefone": "0800-113456",
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790074905877"
+      }
+    },
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.032",
+        "ativo": true
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6abad2d354867cfe394632ed"
+    },
+    "tipo": "PJ",
+    "razao": "Sicflux Ind. Com. Prod. Elet. Met. Ltda",
+    "razaoNorm": "sicflux ind. com. prod. elet. met. ltda",
+    "cnpj": "12324116000165",
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.014",
+        "ativo": true
+      }
+    ],
+    "inscricao": "256.193.835",
+    "inscricaoMunicipal": "",
+    "ncontabil": "",
+    "marca": "Sictell",
+    "email": "",
+    "telefone": "47-3452-3003",
+    "address": {
+      "cep": "89245000",
+      "logradouro": "R Prosperidade, 656 B",
+      "numero": "656-B",
+      "complemento": "",
+      "bairro": "Porto Alegre",
+      "cidade": "Araquari",
+      "estado": "SC"
+    },
+    "contato": {
+      "representante": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": "47-3452-3003"
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "ativo": true,
+    "lojistas": [],
+    "vinculosAnteriores": [],
+    "createAt": {
+      "$date": {
+        "$numberLong": "1790628563224"
+      }
+    },
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790628563227"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6abad31054867cfe394632f9"
+    },
+    "tipo": "PJ",
+    "razao": "Fio & Ferro Materiais, Serviços e Construções Ltda",
+    "razaoNorm": "fio & ferro materiais, servicos e construcoes ltda",
+    "cnpj": "30571749000150",
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.002",
+        "ativo": true
+      }
+    ],
+    "inscricao": "081.040.48-2",
+    "inscricaoMunicipal": "",
+    "ncontabil": "",
+    "marca": "Fio & Ferro",
+    "email": "",
+    "telefone": "3334-6100",
+    "address": {
+      "cep": "29045201",
+      "logradouro": "Av. Leitão da Silva, 1.523",
+      "numero": "",
+      "complemento": "",
+      "bairro": "Santa Lúcia",
+      "cidade": "Vitória",
+      "estado": "ES"
+    },
+    "contato": {
+      "representante": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": "3334-6100"
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "ativo": true,
+    "lojistas": [],
+    "vinculosAnteriores": [],
+    "createAt": {
+      "$date": {
+        "$numberLong": "1790628624903"
+      }
+    },
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790628624904"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6abad39a54867cfe39463307"
+    },
+    "tipo": "PJ",
+    "razao": "Viferro Ferramentas e Ferrag Lt",
+    "razaoNorm": "viferro ferramentas e ferrag lt",
+    "cnpj": "28415370000109",
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.030",
+        "ativo": true
+      }
+    ],
+    "inscricao": "",
+    "inscricaoMunicipal": "",
+    "ncontabil": "",
+    "marca": "",
+    "email": "",
+    "telefone": "2731832100",
+    "address": {
+      "cep": "29056184",
+      "logradouro": "LEITAO DA SILVA",
+      "numero": "1452",
+      "complemento": "LOJA 01",
+      "bairro": "SANTA LUCIA",
+      "cidade": "VITORIA",
+      "estado": "ES"
+    },
+    "contato": {
+      "representante": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "ativo": true,
+    "lojistas": [],
+    "vinculosAnteriores": [],
+    "createAt": {
+      "$date": {
+        "$numberLong": "1790628762011"
+      }
+    },
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790628762012"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6abade2a58810ef07e2e3fa2"
+    },
+    "tipo": "PJ",
+    "razao": "Distak Comercio e Distribuição Ltda",
+    "razaoNorm": "distak comercio e distribuicao ltda",
+    "cnpj": "28141158000796",
+    "vinculos": [
+      {
+        "lojistaId": {
+          "$oid": "6892706a86509313e632f717"
+        },
+        "ncontabil": "2.01.001.013",
+        "ativo": true
+      }
+    ],
+    "inscricao": "",
+    "inscricaoMunicipal": "",
+    "ncontabil": "",
+    "marca": "Distak",
+    "email": "",
+    "telefone": "48-3259-6605",
+    "address": {
+      "cep": "07140000",
+      "logradouro": "R João Josino de Souza,518",
+      "numero": "800",
+      "complemento": "",
+      "bairro": "Costa e Silva",
+      "cidade": "Joinville",
+      "estado": "SC"
+    },
+    "contato": {
+      "representante": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      },
+      "comercial": {
+        "nome": "",
+        "email": "",
+        "celular": "48-3259-6605"
+      },
+      "tecnica": {
+        "nome": "",
+        "email": "",
+        "celular": ""
+      }
+    },
+    "ativo": true,
+    "lojistas": [],
+    "vinculosAnteriores": [],
+    "createAt": {
+      "$date": {
+        "$numberLong": "1790631466909"
+      }
+    },
+    "updateAt": {
+      "$date": {
+        "$numberLong": "1790631466911"
+      }
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  }
+]

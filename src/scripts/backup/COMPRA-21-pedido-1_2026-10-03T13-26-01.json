@@ -1,0 +1,390 @@
+{
+ "pedido": {
+  "_id": {
+   "$oid": "6abea73fdc8f8cfd977fac0c"
+  },
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "numero": {
+   "$numberInt": "1"
+  },
+  "situacao": "P",
+  "fornecedor": {
+   "$oid": "68dfd90a0f338c9f1358b516"
+  },
+  "nrFornecOrigem": {
+   "$numberInt": "43"
+  },
+  "dataEmissao": {
+   "$date": {
+    "$numberLong": "1790879551023"
+   }
+  },
+  "dataEntregaPrevista": {
+   "$date": {
+    "$numberLong": "1793404800000"
+   }
+  },
+  "condicaoPagamento": {
+   "texto": "30/60/90 dias",
+   "dias": [
+    {
+     "$numberInt": "30"
+    },
+    {
+     "$numberInt": "60"
+    },
+    {
+     "$numberInt": "90"
+    }
+   ]
+  },
+  "representante": "",
+  "itens": [
+   {
+    "codigoOrigem": {
+     "$numberInt": "5278"
+    },
+    "referencia": "1053",
+    "descricao": "kit Chaminé  1.5  x  80  [ 370 mm ] (2355)",
+    "quantidade": {
+     "$numberInt": "6"
+    },
+    "quantidadeAtendida": {
+     "$numberInt": "0"
+    },
+    "custoUnitario": {
+     "$numberInt": "9222"
+    },
+    "baseCalculo": {
+     "janelaDias": {
+      "$numberInt": "30"
+     },
+     "saidaNoPeriodo": {
+      "$numberInt": "7"
+     },
+     "estoqueNaData": {
+      "$numberInt": "1"
+     },
+     "aCaminhoNaData": {
+      "$numberInt": "0"
+     },
+     "ajustadoAMao": false
+    },
+    "_id": {
+     "$oid": "6abea73fdc8f8cfd977fac0d"
+    }
+   },
+   {
+    "codigoOrigem": {
+     "$numberInt": "5296"
+    },
+    "referencia": "70",
+    "descricao": "braçadeira    150 mm (2870)",
+    "quantidade": {
+     "$numberInt": "2"
+    },
+    "quantidadeAtendida": {
+     "$numberInt": "0"
+    },
+    "custoUnitario": {
+     "$numberInt": "1492"
+    },
+    "baseCalculo": {
+     "janelaDias": {
+      "$numberInt": "30"
+     },
+     "saidaNoPeriodo": {
+      "$numberInt": "2"
+     },
+     "estoqueNaData": {
+      "$numberInt": "0"
+     },
+     "aCaminhoNaData": {
+      "$numberInt": "0"
+     },
+     "ajustadoAMao": false
+    },
+    "_id": {
+     "$oid": "6abea73fdc8f8cfd977fac0e"
+    }
+   },
+   {
+    "codigoOrigem": {
+     "$numberInt": "3636"
+    },
+    "referencia": "157",
+    "descricao": "chapéu tee     80 mm (2120)",
+    "quantidade": {
+     "$numberInt": "2"
+    },
+    "quantidadeAtendida": {
+     "$numberInt": "0"
+    },
+    "custoUnitario": {
+     "$numberInt": "2646"
+    },
+    "baseCalculo": {
+     "janelaDias": {
+      "$numberInt": "30"
+     },
+     "saidaNoPeriodo": {
+      "$numberInt": "3"
+     },
+     "estoqueNaData": {
+      "$numberInt": "2"
+     },
+     "aCaminhoNaData": {
+      "$numberInt": "0"
+     },
+     "ajustadoAMao": true
+    },
+    "_id": {
+     "$oid": "6abea73fdc8f8cfd977fac0f"
+    }
+   },
+   {
+    "codigoOrigem": {
+     "$numberInt": "3531"
+    },
+    "referencia": "1050",
+    "descricao": "Flextic  1.5 mts x 100  [ 370 mm ] (1050)",
+    "quantidade": {
+     "$numberInt": "4"
+    },
+    "quantidadeAtendida": {
+     "$numberInt": "0"
+    },
+    "custoUnitario": {
+     "$numberInt": "6024"
+    },
+    "baseCalculo": {
+     "janelaDias": {
+      "$numberInt": "30"
+     },
+     "saidaNoPeriodo": {
+      "$numberInt": "2"
+     },
+     "estoqueNaData": {
+      "$numberInt": "1"
+     },
+     "aCaminhoNaData": {
+      "$numberInt": "0"
+     },
+     "ajustadoAMao": true
+    },
+    "_id": {
+     "$oid": "6abea73fdc8f8cfd977fac10"
+    }
+   }
+  ],
+  "valorTotal": {
+   "$numberInt": "87704"
+  },
+  "lancamentosFluxo": [
+   {
+    "$oid": "6abea73fdc8f8cfd977fac12"
+   },
+   {
+    "$oid": "6abea73fdc8f8cfd977fac13"
+   },
+   {
+    "$oid": "6abea73fdc8f8cfd977fac14"
+   }
+  ],
+  "observacao": "Frete CIF",
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1790879551036"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1790879551412"
+   }
+  },
+  "__v": {
+   "$numberInt": "1"
+  }
+ },
+ "fluxo": [
+  {
+   "_id": {
+    "$oid": "6abea73fdc8f8cfd977fac12"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "11"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.030",
+   "nomeConta": "WESTAFLEX TUBOS FLEXIVEIS LTDA",
+   "historico": "WESTAFLEX TUBOS FLEXIVEIS LTDA",
+   "valor": {
+    "$numberDouble": "292.34"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1795996800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_COMPRA",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6abea73fdc8f8cfd977fac0c"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1790879551269"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1790879551269"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6abea73fdc8f8cfd977fac13"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "12"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.030",
+   "nomeConta": "WESTAFLEX TUBOS FLEXIVEIS LTDA",
+   "historico": "WESTAFLEX TUBOS FLEXIVEIS LTDA",
+   "valor": {
+    "$numberDouble": "292.34"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1798588800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_COMPRA",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6abea73fdc8f8cfd977fac0c"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1790879551270"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1790879551270"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6abea73fdc8f8cfd977fac14"
+   },
+   "ano": {
+    "$numberInt": "2027"
+   },
+   "mes": {
+    "$numberInt": "1"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.030",
+   "nomeConta": "WESTAFLEX TUBOS FLEXIVEIS LTDA",
+   "historico": "WESTAFLEX TUBOS FLEXIVEIS LTDA",
+   "valor": {
+    "$numberDouble": "292.36"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1801180800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "3"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_COMPRA",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6abea73fdc8f8cfd977fac0c"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1790879551270"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1790879551270"
+    }
+   }
+  }
+ ]
+}

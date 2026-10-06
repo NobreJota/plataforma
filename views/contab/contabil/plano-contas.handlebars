@@ -1,9 +1,17 @@
-{{!-- views/pages/contabil/plano-contas.handlebars --}}
+{{!-- views/contab/contabil/plano-contas.handlebars
+     Alterado em: 02/10/2026 - caixa de busca no topo das Contas-titulo: procura os
+     subtitulos em todos os titulos do subgrupo (so aparece em subgrupo com muitas contas) --}}
 
 <div class="contab-wrapper">
 
+  {{!-- Título com a linha embaixo, e os botões numa faixa própria ao centro.
+        O botão "Contas suspensas" não está aqui: ele é criado pelo
+        contabil-plano.js e entra ao lado deste. --}}
   <div class="razao-header">
-    <h2>📘 Razão · Contabilidade</h2>
+    <h2>📘 Plano de Contas · Contabilidade</h2>
+  </div>
+
+  <div class="plano-barra">
     <button id="btn-abrir-grupos" class="btn-primary">⚙ Plano de Contas</button>
   </div>
 
@@ -48,6 +56,8 @@
     <div class="contab-modal-card large">
       <header>
         <h3 id="titulo-modal-titulos">Contas-título</h3>
+        <input type="search" id="busca-sub-titulos" class="busca-sub" hidden autocomplete="off"
+               placeholder="buscar conta por nome ou código…">
         <button class="contab-close" data-close="modal-titulos">×</button>
       </header>
       <div class="contab-content">
@@ -165,7 +175,18 @@
 <style>
   /* ========= ESTILO ========= */
   .contab-wrapper { padding: 24px; }
-  .razao-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+  .razao-header {
+    display:flex; align-items:center;
+    padding-bottom:12px; margin-bottom:0;
+    border-bottom:2px solid #1d4ed8;
+  }
+
+  /* Os dois botões juntos e centralizados. O de contas suspensas é injetado
+     pelo JS logo depois deste, e herda a mesma classe. */
+  .plano-barra {
+    display:flex; justify-content:center; gap:14px;
+    padding:22px 0 26px;
+  }
 
   .btn-primary {
     background:#1d4ed8; color:#fff; border:0; padding:10px 18px;
@@ -178,20 +199,27 @@
   }
   .btn-secondary:hover { background:#d1d5db; }
 
+  /* Sem véu escuro: as caixas se revezam no mesmo ponto e escurecer o fundo
+     a cada troca deixava a tela piscando. O clique fora continua não fazendo
+     nada, porque a área do meio é a única interativa. */
   .contab-modal {
-    position:fixed; inset:0; background:rgba(0,0,0,.45);
+    position:fixed; inset:0;
     display:flex; align-items:center; justify-content:center; z-index:1000;
+    pointer-events:none;
   }
+  .contab-modal > * { pointer-events:auto; }
   .contab-modal[hidden] { display:none; }
 
   /* Modal padrão (form): mais largo para aproveitar espaço lateral */
   .contab-modal-card {
     background:#fff; border-radius:12px; width:540px; max-width:92vw;
     max-height: 90vh; overflow-y: auto;
-    box-shadow:0 20px 60px rgba(0,0,0,.25);
+    border:1px solid #c7d7fe;
+    box-shadow:0 20px 60px rgba(29,78,216,.18);
     animation: pop .18s ease-out;
   }
-  .contab-modal-card.large { width:680px; }
+  /* 860px: nomes de cliente como "Flavia Braga Teixeira de Almeida" cabem numa linha */
+  .contab-modal-card.large { width:860px; max-width:94vw; }
   @keyframes pop { from{ transform:scale(.95); opacity:0;} to{transform:scale(1); opacity:1;} }
 
   .contab-modal-card header {
@@ -200,6 +228,11 @@
     position: sticky; top: 0; z-index: 2;
   }
   .contab-modal-card header h3 { margin:0; font-size:1.05rem; }
+  /* 02/10/2026: busca de subtitulos no topo das Contas-titulo */
+  .busca-sub { flex:1; max-width:320px; margin:0 14px; height:32px; border:0; border-radius:6px;
+               padding:0 10px; font-size:.9rem; color:#111827; }
+  .busca-sub[hidden] { display:none; }
+  .item.achado .tit { color:#6b7280; font-size:.8rem; margin-left:6px; }
   .contab-close {
     background:transparent; color:#fff; border:0; font-size:1.5rem;
     cursor:pointer; line-height:1;
@@ -209,14 +242,25 @@
     border-top:1px solid #eee;
   }
 
-  /* Lista de grupos (Modal 1) */
+  /* Lista de grupos (Modal 1).
+     Sai o roxo: a tela inteira trabalha na faixa do azul do login e da linha
+     do cabeçalho, e o roxo era o único elemento fora dessa família. */
   .contab-grupos-list { padding:18px; display:flex; flex-direction:column; gap:10px; }
   .contab-grupos-list button {
-    background:#a855f7; color:#fff; border:0; padding:14px;
-    font-weight:700; font-size:1rem; border-radius:8px; cursor:pointer;
-    transition: background .15s;
+    background:#eff4ff; color:#1e3a8a; border:1px solid #c7d7fe;
+    padding:14px 18px; font-weight:600; font-size:1rem; border-radius:8px;
+    cursor:pointer; transition: background .15s, border-color .15s;
+    /* Número numa coluna fixa e nome logo ao lado, os dois à esquerda: assim
+       os nomes dos quatro grupos começam na mesma altura. */
+    display:flex; align-items:center; gap:14px; text-align:left;
   }
-  .contab-grupos-list button:hover { background:#9333ea; }
+  .contab-grupos-list button .gr-num {
+    font-family: ui-monospace, monospace; color:#1d4ed8;
+    min-width:18px; text-align:right;
+  }
+  .contab-grupos-list button:hover {
+    background:#dbe6ff; border-color:#93b4fc;
+  }
 
   /* Listbox + actions */
   .contab-content { display:flex; gap:14px; padding:18px; }

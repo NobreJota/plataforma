@@ -24,6 +24,7 @@ const router  = express.Router();
 
 const Boleta         = require('../../../models/contab/financeiro/boleta');
 const ContaSubTitulo = require('../../../models/contab/financeiro/contaSubTitulo');
+const ContaTitulo    = require('../../../models/contab/financeiro/contaTitulo');
 
 const HISTORICO = 'SALDO TRANSFERIDO';
 
@@ -48,6 +49,13 @@ router.get('/saldo-transferido', async (req, res) => {
       .sort({ codigo: 1 })
       .lean();
 
+    // A tela agrupa por conta-título, e para isso precisa do nome dele.
+    // Uma consulta só com $in, em vez de um populate por linha.
+    const idsTitulos = [...new Set(contas.map(c => String(c.contaTituloId)).filter(Boolean))];
+    const titulos = await ContaTitulo.find({ _id: { $in: idsTitulos } })
+      .select('codigo nome').lean();
+    const tituloPorId = new Map(titulos.map(t => [String(t._id), t]));
+
     const saldos = await Boleta
       .find({ tipo: 'SALDO_TRANSFERIDO', status: 'ATIVO', ano })
       .lean();
@@ -59,11 +67,14 @@ router.get('/saldo-transferido', async (req, res) => {
 
     const linhas = contas.map(c => {
       const s = porCodigo.get(c.codigo);
+      const t = tituloPorId.get(String(c.contaTituloId));
       return {
         contaSubTituloId: c._id,
         codigo:   c.codigo,
         nome:     c.nome,
         grupo:    c.codigo.charAt(0) === '2' ? 'Passivo' : 'Ativo',
+        tituloCodigo: t ? t.codigo : (c.codigoContaTitulo || ''),
+        tituloNome:   t ? t.nome   : '',
         valor:    s ? s.valorTotal : 0,
         data:     s ? s.data : null,
         boletaId: s ? s._id : null

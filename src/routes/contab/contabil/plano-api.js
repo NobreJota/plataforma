@@ -1,4 +1,7 @@
 // src/routes/contab/contabil/plano-api.js
+// Alterado em: 02/10/2026 - GET /busca-subtitulos/:subGrupoId?q= : procura subtitulos
+//   em TODOS os titulos de um subgrupo (nome ou codigo). Sem q, devolve so o total,
+//   que a tela usa para decidir se mostra a caixa de busca.
 // API JSON do Plano de Contas
 // Endpoints publicados: /contab/api/grupos, /subgrupos, /titulos, /subtitulos
 // (o prefixo /contab/api é definido pelo pages.js e pelo server.js)
@@ -14,55 +17,15 @@ const SubGrupo       = require('../../../models/grupoSub');
 const ContaTitulo    = require('../../../models/contab/financeiro/contaTitulo');
 const ContaSubTitulo = require('../../../models/contab/financeiro/contaSubTitulo');
 
-// Models financeiros, usados para detectar movimento na conta.
-// ATENÇÃO: o caminho certo passa por /contab/. Antes estava
-// '../../../models/financeiro/boleta', que não existe — e como o require
-// ficava dentro de um try/catch vazio, falhava calado: Boleta virava null e
-// a checagem de movimento em boletas nunca chegou a acontecer.
-// Agora o require é direto: se o caminho quebrar, o servidor reclama na hora
-// em vez de deixar passar uma conta que tem lançamento.
-const Boleta         = require('../../../models/contab/financeiro/boleta');
-const FluxoProjetado = require('../../../models/contab/financeiro/fluxoProjetado');
+// A regra de movimento e de suspensão mora em src/utils/contab/movimentoConta.js.
+// Saiu daqui porque o cadastro de fornecedor faz a mesma pergunta antes de
+// desvincular a conta, e duas cópias da regra acabariam divergindo.
+const { temMovimento, podeSuspender } = require('../../../utils/contab/movimentoConta');
 
-/* Detecta se um subtítulo TEM MOVIMENTO de valores.
-   Movimento = aparece em boletas (banco/contrapartida) OU no fluxo OU saldo inicial ≠ 0.
-   Regra contábil: conta com movimento não pode ter o número editado nem ser deletada
-   — primeiro é preciso transferir os valores para outra conta. */
-async function temMovimento(subtitulo) {
-  if (!subtitulo) return false;
-  const codigo = subtitulo.codigo;
-
-  // Saldo inicial diferente de zero já é "movimento"
-  if (subtitulo.saldoInicial && Number(subtitulo.saldoInicial) !== 0) {
-    return { tem: true, motivo: 'saldo inicial diferente de zero' };
-  }
-
-  // Aparece em alguma boleta? (como banco ou contrapartida)
-  const naBoleta = await Boleta.countDocuments({
-    $or: [
-      { bancoCodigo: codigo },
-      { 'contrapartidas.codigoConta': codigo }
-    ]
-  });
-  if (naBoleta > 0) return { tem: true, motivo: `${naBoleta} lançamento(s) em boletas` };
-
-  // Aparece no fluxo projetado?
-  const noFluxo = await FluxoProjetado.countDocuments({ codigoConta: codigo });
-  if (noFluxo > 0) return { tem: true, motivo: `${noFluxo} lançamento(s) no fluxo` };
-
-  return { tem: false };
-}
-
-/* Mesma pergunta, mas para um SubGrupo ou Conta-título: basta que UM dos
-   subtítulos abaixo dele tenha movimento para o pai não poder ser inativado. */
-async function algumFilhoTemMovimento(filtroSubtitulos) {
-  const subs = await ContaSubTitulo.find(filtroSubtitulos).lean();
-  for (const s of subs) {
-    const mov = await temMovimento(s);
-    if (mov.tem) return { tem: true, conta: `${s.codigo} - ${s.nome}`, motivo: mov.motivo };
-  }
-  return { tem: false };
-}
+// Fornecedor não se cadastra pelo plano: o subtítulo nasce no cadastro de
+// fornecedor, que escolhe o título. Por isso a inserção manual sob 2.01 é
+// recusada aqui.
+const { GRUPO_FORNECEDORES } = require('../../../utils/contab/contaFornecedor');
 
 /* As telas do plano agora mostram tambem as contas suspensas, em cor
    diferente, para o usuario poder reativar no proprio lugar onde a conta
@@ -77,22 +40,15 @@ function filtroAtivo(req) {
    HELPERS - Próximo código sequencial
    ========================================================= */
 
-async function proxCodigoSubGrupo(grupoId, codigoGrupo) {
-  const ultimo = await SubGrupo.findOne({ grupoId }).sort({ codigo: -1 }).lean();
-  if (!ultimo) return `${codigoGrupo}.01`;
-  const seq = parseInt(ultimo.codigo.split('.')[1], 10) + 1;
-  return `${codigoGrupo}.${String(seq).padStart(2, '0')}`;
-}
-
-async function proxCodigoContaTitulo(subGrupoId, codigoSubGrupo) {
-  const ultimo = await ContaTitulo.findOne({ subGrupoId }).sort({ codigo: -1 }).lean();
+async function proxCodigoContaTitulo(subGrupoId, codigoSubGrupo, lojistaId) {
+  const ultimo = await ContaTitulo.findOne({ subGrupoId, lojistaId }).sort({ codigo: -1 }).lean();
   if (!ultimo) return `${codigoSubGrupo}.001`;
   const seq = parseInt(ultimo.codigo.split('.')[2], 10) + 1;
   return `${codigoSubGrupo}.${String(seq).padStart(3, '0')}`;
 }
 
-async function proxCodigoContaSubTitulo(contaTituloId, codigoContaTitulo) {
-  const ultimo = await ContaSubTitulo.findOne({ contaTituloId }).sort({ codigo: -1 }).lean();
+async function proxCodigoContaSubTitulo(contaTituloId, codigoContaTitulo, lojistaId) {
+  const ultimo = await ContaSubTitulo.findOne({ contaTituloId, lojistaId }).sort({ codigo: -1 }).lean();
   if (!ultimo) return `${codigoContaTitulo}.001`;
   const seq = parseInt(ultimo.codigo.split('.')[3], 10) + 1;
   return `${codigoContaTitulo}.${String(seq).padStart(3, '0')}`;
@@ -100,8 +56,8 @@ async function proxCodigoContaSubTitulo(contaTituloId, codigoContaTitulo) {
 
 // Retorna as sequências (números) já usadas sob um título.
 // Inclui inativos também, para NÃO reaproveitar códigos que já existiram fisicamente.
-async function sequenciasUsadas(contaTituloId) {
-  const todos = await ContaSubTitulo.find({ contaTituloId }).select('codigo').lean();
+async function sequenciasUsadas(contaTituloId, lojistaId) {
+  const todos = await ContaSubTitulo.find({ contaTituloId, lojistaId }).select('codigo').lean();
   const usadas = new Set();
   todos.forEach(s => {
     const partes = (s.codigo || '').split('.');
@@ -146,11 +102,26 @@ router.get('/grupos', async (req, res) => {
 
 /* =========================================================
    NÍVEL 2: SUBGRUPOS
+
+   SubGrupo é POR EMPRESA (Etapa 2C): cada empresa tem os seus, e o código só
+   é único dentro dela. Os Grupos (1 a 4) continuam comuns, porque são
+   fundamento contábil e não variam por cliente.
+
+   Mas aqui o subgrupo é SOMENTE LEITURA: quem cria, renomeia e suspende é a
+   administração da plataforma, em /central/plano/estrutura. Se cada cooperada
+   criasse os seus livremente, uma chamaria 2.02 de "fornecedores diversos" e
+   outra de "despesas gerais", e os relatórios deixariam de ser comparáveis.
+   A empresa cria títulos e subtítulos dentro da estrutura recebida.
    ========================================================= */
+
+const ESTRUTURA_ADMIN =
+  'Os subgrupos são definidos pela administração da plataforma. Crie títulos e ' +
+  'subtítulos dentro do subgrupo, ou peça a inclusão de um novo subgrupo.';
+
 router.get('/subgrupos/:grupoId', async (req, res) => {
   try {
     const subs = await SubGrupo
-      .find({ grupoId: req.params.grupoId, ...filtroAtivo(req) })
+      .find({ grupoId: req.params.grupoId, lojistaId: req.lojistaId, ...filtroAtivo(req) })
       .sort({ codigo: 1 });
     res.json(subs);
   } catch (err) {
@@ -158,79 +129,25 @@ router.get('/subgrupos/:grupoId', async (req, res) => {
   }
 });
 
-router.post('/subgrupos', async (req, res) => {
-  try {
-    const { grupoId, nome, descricao } = req.body;
-    if (!grupoId || !nome) {
-      return res.status(400).json({ erro: 'grupoId e nome são obrigatórios.' });
-    }
-    const grupo = await Grupo.findById(grupoId);
-    if (!grupo) return res.status(404).json({ erro: 'Grupo não encontrado.' });
+// Somente leitura no contab: ver ESTRUTURA_ADMIN acima.
+router.post('/subgrupos', (req, res) => res.status(403).json({ erro: ESTRUTURA_ADMIN }));
 
-    const codigo = await proxCodigoSubGrupo(grupoId, grupo.codigo);
-    const novo = await SubGrupo.create({
-      grupoId,
-      codigoGrupo: grupo.codigo,
-      codigo,
-      nome,
-      descricao: descricao || ''
-    });
-    res.status(201).json(novo);
-  } catch (err) {
-    if (err.code === 11000) return res.status(409).json({ erro: 'Subgrupo já existe.' });
-    res.status(500).json({ erro: err.message });
-  }
-});
+router.put('/subgrupos/:id', (req, res) => res.status(403).json({ erro: ESTRUTURA_ADMIN }));
 
-router.put('/subgrupos/:id', async (req, res) => {
+/* GET /contab/api/pode-suspender/:nivel/:id
+   Consultado pela tela antes de abrir a caixa de confirmação, para o usuário
+   não confirmar uma ação que já se sabe que vai ser recusada. */
+router.get('/pode-suspender/:nivel/:id', async (req, res) => {
   try {
-    const { nome, descricao } = req.body;
-    const upd = await SubGrupo.findByIdAndUpdate(
-      req.params.id, { nome, descricao },
-      { new: true, runValidators: true }
-    );
-    if (!upd) return res.status(404).json({ erro: 'Subgrupo não encontrado.' });
-    res.json(upd);
+    if (req.params.nivel === 'subgrupo') return res.json({ pode: false, erro: ESTRUTURA_ADMIN });
+    const r = await podeSuspender(req.params.nivel, req.params.id, req.lojistaId);
+    res.json({ pode: r.ok, erro: r.erro || null });
   } catch (err) {
     res.status(500).json({ erro: err.message });
   }
 });
 
-/* INATIVAR subgrupo.
-   Não apaga: marca ativo:false. Como todos os GETs deste arquivo já filtram
-   por ativo:true, a conta some das telas mas o registro fica no banco. */
-router.delete('/subgrupos/:id', async (req, res) => {
-  try {
-    const sg = await SubGrupo.findById(req.params.id);
-    if (!sg) return res.status(404).json({ erro: 'Subgrupo não encontrado.' });
-
-    const titulosAtivos = await ContaTitulo
-      .find({ subGrupoId: sg._id, ativo: true }).select('_id').lean();
-
-    if (titulosAtivos.length > 0) {
-      // Se algum neto tem movimento, a mensagem diz qual conta é — assim o
-      // usuário sabe onde mexer, em vez de só ouvir "não pode".
-      const mov = await algumFilhoTemMovimento({
-        contaTituloId: { $in: titulosAtivos.map(t => t._id) },
-        ativo: true
-      });
-      if (mov.tem) {
-        return res.status(409).json({
-          erro: `Conta ${mov.conta} com movimento. Impossível suspender.`
-        });
-      }
-      return res.status(409).json({
-        erro: `Este subgrupo possui ${titulosAtivos.length} título(s) ativo(s). Inative-os antes.`
-      });
-    }
-
-    sg.ativo = false;
-    await sg.save();
-    res.json({ ok: true, inativado: true });
-  } catch (err) {
-    res.status(500).json({ erro: err.message });
-  }
-});
+router.delete('/subgrupos/:id', (req, res) => res.status(403).json({ erro: ESTRUTURA_ADMIN }));
 
 /* =========================================================
    NÍVEL 3: CONTAS TÍTULO
@@ -238,7 +155,7 @@ router.delete('/subgrupos/:id', async (req, res) => {
 router.get('/titulos/:subGrupoId', async (req, res) => {
   try {
     const titulos = await ContaTitulo
-      .find({ subGrupoId: req.params.subGrupoId, ...filtroAtivo(req) })
+      .find({ subGrupoId: req.params.subGrupoId, lojistaId: req.lojistaId, ...filtroAtivo(req) })
       .sort({ codigo: 1 });
     res.json(titulos);
   } catch (err) {
@@ -252,17 +169,18 @@ router.post('/titulos', async (req, res) => {
     if (!subGrupoId || !nome) {
       return res.status(400).json({ erro: 'subGrupoId e nome são obrigatórios.' });
     }
-    const sub = await SubGrupo.findById(subGrupoId);
+    const sub = await SubGrupo.findOne({ _id: subGrupoId, lojistaId: req.lojistaId });
     if (!sub) return res.status(404).json({ erro: 'Subgrupo não encontrado.' });
 
-    const codigo = await proxCodigoContaTitulo(subGrupoId, sub.codigo);
+    const codigo = await proxCodigoContaTitulo(subGrupoId, sub.codigo, req.lojistaId);
     const novo = await ContaTitulo.create({
       subGrupoId,
       codigoSubGrupo: sub.codigo,
       codigo,
       nome,
       descricao: descricao || '',
-      aceitaLancamento: aceitaLancamento ?? false
+      aceitaLancamento: aceitaLancamento ?? false,
+      lojistaId: req.lojistaId      // 2C: sem isto o título nasce sem dono
     });
     res.status(201).json(novo);
   } catch (err) {
@@ -274,8 +192,8 @@ router.post('/titulos', async (req, res) => {
 router.put('/titulos/:id', async (req, res) => {
   try {
     const { nome, descricao, aceitaLancamento } = req.body;
-    const upd = await ContaTitulo.findByIdAndUpdate(
-      req.params.id,
+    const upd = await ContaTitulo.findOneAndUpdate(
+      { _id: req.params.id, lojistaId: req.lojistaId },
       { nome, descricao, aceitaLancamento },
       { new: true, runValidators: true }
     );
@@ -286,27 +204,14 @@ router.put('/titulos/:id', async (req, res) => {
   }
 });
 
-/* INATIVAR conta-título (mesma regra do subgrupo). */
+/* SUSPENDER conta-título (mesma regra do subgrupo). */
 router.delete('/titulos/:id', async (req, res) => {
   try {
-    const ct = await ContaTitulo.findById(req.params.id);
-    if (!ct) return res.status(404).json({ erro: 'Título não encontrado.' });
+    const r = await podeSuspender('titulo', req.params.id, req.lojistaId);
+    if (!r.ok) return res.status(r.status).json({ erro: r.erro });
 
-    const filhosAtivos = await ContaSubTitulo.countDocuments({ contaTituloId: ct._id, ativo: true });
-    if (filhosAtivos > 0) {
-      const mov = await algumFilhoTemMovimento({ contaTituloId: ct._id, ativo: true });
-      if (mov.tem) {
-        return res.status(409).json({
-          erro: `Conta ${mov.conta} com movimento. Impossível suspender.`
-        });
-      }
-      return res.status(409).json({
-        erro: `Este título possui ${filhosAtivos} subtítulo(s) ativo(s). Inative-os antes.`
-      });
-    }
-
-    ct.ativo = false;
-    await ct.save();
+    r.doc.ativo = false;
+    await r.doc.save();
     res.json({ ok: true, inativado: true });
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -316,10 +221,34 @@ router.delete('/titulos/:id', async (req, res) => {
 /* =========================================================
    NÍVEL 4: SUB-TÍTULOS
    ========================================================= */
+router.get('/busca-subtitulos/:subGrupoId', async (req, res) => {
+  try {
+    const titulos = await ContaTitulo
+      .find({ subGrupoId: req.params.subGrupoId, lojistaId: req.lojistaId })
+      .select('_id codigo nome');
+    const ids = titulos.map(t => t._id);
+    const q = String(req.query.q || '').trim();
+
+    if (q.length < 2) {
+      const total = await ContaSubTitulo.countDocuments({ contaTituloId: { $in: ids }, lojistaId: req.lojistaId });
+      return res.json({ total });
+    }
+
+    const rx = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+    const achados = await ContaSubTitulo
+      .find({ contaTituloId: { $in: ids }, lojistaId: req.lojistaId, $or: [{ nome: rx }, { codigo: rx }] })
+      .sort({ nome: 1 }).limit(60)
+      .select('_id codigo nome ativo contaTituloId codigoContaTitulo');
+    res.json({ itens: achados, limite: 60 });
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+});
+
 router.get('/subtitulos/:contaTituloId', async (req, res) => {
   try {
     const subs = await ContaSubTitulo
-      .find({ contaTituloId: req.params.contaTituloId, ...filtroAtivo(req) })
+      .find({ contaTituloId: req.params.contaTituloId, lojistaId: req.lojistaId, ...filtroAtivo(req) })
       .sort({ codigo: 1 });
     res.json(subs);
   } catch (err) {
@@ -332,10 +261,10 @@ router.get('/subtitulos/:contaTituloId', async (req, res) => {
    Retorna: codigoBase, usadas[], sugestao (1ª livre), proximoCodigo formatado. */
 router.get('/subtitulos-codigos/:contaTituloId', async (req, res) => {
   try {
-    const tit = await ContaTitulo.findById(req.params.contaTituloId).lean();
+    const tit = await ContaTitulo.findOne({ _id: req.params.contaTituloId, lojistaId: req.lojistaId }).lean();
     if (!tit) return res.status(404).json({ erro: 'Título não encontrado.' });
 
-    const usadas = await sequenciasUsadas(req.params.contaTituloId);
+    const usadas = await sequenciasUsadas(req.params.contaTituloId, req.lojistaId);
     const usadasArr = Array.from(usadas).sort((a, b) => a - b);
     const sugestao = primeiraLivre(usadas);
 
@@ -355,10 +284,10 @@ router.get('/subtitulos-codigos/:contaTituloId', async (req, res) => {
    Retorna a próxima sequência LIVRE (pulando ocupadas). */
 router.get('/subtitulos-codigos/:contaTituloId/navegar', async (req, res) => {
   try {
-    const tit = await ContaTitulo.findById(req.params.contaTituloId).lean();
+    const tit = await ContaTitulo.findOne({ _id: req.params.contaTituloId, lojistaId: req.lojistaId }).lean();
     if (!tit) return res.status(404).json({ erro: 'Título não encontrado.' });
 
-    const usadas = await sequenciasUsadas(req.params.contaTituloId);
+    const usadas = await sequenciasUsadas(req.params.contaTituloId, req.lojistaId);
     const atual = parseInt(req.query.atual, 10) || primeiraLivre(usadas);
     const dir = req.query.dir === 'down' ? 'down' : 'up';
 
@@ -377,7 +306,7 @@ router.get('/subtitulos-codigos/:contaTituloId/navegar', async (req, res) => {
    GET /contab/api/subtitulos-codigos/:contaTituloId/checar?seq=4 */
 router.get('/subtitulos-codigos/:contaTituloId/checar', async (req, res) => {
   try {
-    const usadas = await sequenciasUsadas(req.params.contaTituloId);
+    const usadas = await sequenciasUsadas(req.params.contaTituloId, req.lojistaId);
     const seq = parseInt(req.query.seq, 10);
     res.json({ seq, livre: !usadas.has(seq) });
   } catch (err) {
@@ -390,9 +319,9 @@ router.get('/subtitulos-codigos/:contaTituloId/checar', async (req, res) => {
    GET /contab/api/subtitulo/:id/movimento */
 router.get('/subtitulo/:id/movimento', async (req, res) => {
   try {
-    const sub = await ContaSubTitulo.findById(req.params.id).lean();
+    const sub = await ContaSubTitulo.findOne({ _id: req.params.id, lojistaId: req.lojistaId }).lean();
     if (!sub) return res.status(404).json({ erro: 'Subtítulo não encontrado.' });
-    const mov = await temMovimento(sub);
+    const mov = await temMovimento(sub, req.lojistaId);
     res.json({ codigo: sub.codigo, temMovimento: mov.tem, motivo: mov.motivo || '' });
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -414,14 +343,24 @@ router.post('/subtitulos', async (req, res) => {
         erro: 'contaTituloId, nome e natureza são obrigatórios.'
       });
     }
-    const tit = await ContaTitulo.findById(contaTituloId);
+    const tit = await ContaTitulo.findOne({ _id: contaTituloId, lojistaId: req.lojistaId });
     if (!tit) return res.status(404).json({ erro: 'Título não encontrado.' });
+
+    // Fornecedor não se cadastra pelo plano. A conta dele nasce no cadastro de
+    // fornecedor, que escolhe o título e segue a sequência — se pudesse nascer
+    // aqui também, existiria conta de fornecedor sem fornecedor.
+    if (String(tit.codigo).startsWith(GRUPO_FORNECEDORES + '.')) {
+      return res.status(409).json({
+        erro: 'Conta de fornecedor não se cria pelo plano. Use Auxiliares → Fornecedores: ' +
+              'ao cadastrar, escolha o título e a conta é criada automaticamente.'
+      });
+    }
 
     // Define o código: se o stepper enviou uma sequência, valida que está livre.
     let codigo;
     if (seqEscolhida != null && !isNaN(parseInt(seqEscolhida, 10))) {
       const seq = parseInt(seqEscolhida, 10);
-      const usadas = await sequenciasUsadas(contaTituloId);
+      const usadas = await sequenciasUsadas(contaTituloId, req.lojistaId);
       if (usadas.has(seq)) {
         // Segurança real: não grava duplicata, mesmo que o front tenha falhado.
         return res.status(409).json({
@@ -431,7 +370,7 @@ router.post('/subtitulos', async (req, res) => {
       codigo = `${tit.codigo}.${String(seq).padStart(3, '0')}`;
     } else {
       // Sem escolha do stepper: usa a primeira livre (reaproveita furos)
-      const usadas = await sequenciasUsadas(contaTituloId);
+      const usadas = await sequenciasUsadas(contaTituloId, req.lojistaId);
       const livre = primeiraLivre(usadas);
       codigo = `${tit.codigo}.${String(livre).padStart(3, '0')}`;
     }
@@ -443,7 +382,8 @@ router.post('/subtitulos', async (req, res) => {
       nome,
       descricao:    descricao || '',
       saldoInicial: saldoInicial || 0,
-      natureza
+      natureza,
+      lojistaId: req.lojistaId      // 2C
     });
     res.status(201).json(novo);
   } catch (err) {
@@ -459,7 +399,7 @@ router.put('/subtitulos/:id', async (req, res) => {
       seqEscolhida    // (opcional) nova sequência do código, vinda do stepper
     } = req.body;
 
-    const atual = await ContaSubTitulo.findById(req.params.id);
+    const atual = await ContaSubTitulo.findOne({ _id: req.params.id, lojistaId: req.lojistaId });
     if (!atual) return res.status(404).json({ erro: 'Subtítulo não encontrado.' });
 
     const update = { nome, descricao, saldoInicial, natureza };
@@ -471,7 +411,7 @@ router.put('/subtitulos/:id', async (req, res) => {
 
       if (novaSeq !== seqAtual) {
         // 1) Conta com movimento NÃO pode ter o número alterado
-        const mov = await temMovimento(atual);
+        const mov = await temMovimento(atual, req.lojistaId);
         if (mov.tem) {
           return res.status(409).json({
             erro: `Não é possível alterar o número: esta conta tem movimento (${mov.motivo}). ` +
@@ -479,7 +419,7 @@ router.put('/subtitulos/:id', async (req, res) => {
           });
         }
         // 2) Novo número não pode já estar em uso
-        const usadas = await sequenciasUsadas(atual.contaTituloId);
+        const usadas = await sequenciasUsadas(atual.contaTituloId, req.lojistaId);
         if (usadas.has(novaSeq)) {
           return res.status(409).json({
             erro: `O código ${atual.codigoContaTitulo}.${String(novaSeq).padStart(3,'0')} já está em uso.`
@@ -489,8 +429,8 @@ router.put('/subtitulos/:id', async (req, res) => {
       }
     }
 
-    const upd = await ContaSubTitulo.findByIdAndUpdate(
-      req.params.id, update,
+    const upd = await ContaSubTitulo.findOneAndUpdate(
+      { _id: req.params.id, lojistaId: req.lojistaId }, update,
       { new: true, runValidators: true }
     );
     res.json(upd);
@@ -500,21 +440,14 @@ router.put('/subtitulos/:id', async (req, res) => {
   }
 });
 
+/* SUSPENDER sub-título. */
 router.delete('/subtitulos/:id', async (req, res) => {
   try {
-    const sub = await ContaSubTitulo.findById(req.params.id);
-    if (!sub) return res.status(404).json({ erro: 'Subtítulo não encontrado.' });
+    const r = await podeSuspender('subtitulo', req.params.id, req.lojistaId);
+    if (!r.ok) return res.status(r.status).json({ erro: r.erro });
 
-    // Regra de ouro: conta com movimento não pode ser inativada
-    const mov = await temMovimento(sub);
-    if (mov.tem) {
-      return res.status(409).json({
-        erro: 'Conta com movimento. Impossível suspender.'
-      });
-    }
-
-    sub.ativo = false;
-    await sub.save();
+    r.doc.ativo = false;
+    await r.doc.save();
     res.json({ ok: true, inativado: true });
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -553,10 +486,11 @@ router.get('/suspensas', async (req, res) => {
       filtro.$or = [{ nome: rx }, { codigo: rx }];
     }
 
+    const daEmpresa = { ...filtro, lojistaId: req.lojistaId };
     const [subgrupos, titulos, subtitulos] = await Promise.all([
-      SubGrupo.find(filtro).sort({ codigo: 1 }).limit(200).lean(),
-      ContaTitulo.find(filtro).sort({ codigo: 1 }).limit(200).lean(),
-      ContaSubTitulo.find(filtro).sort({ codigo: 1 }).limit(200).lean()
+      SubGrupo.find(daEmpresa).sort({ codigo: 1 }).limit(200).lean(),
+      ContaTitulo.find(daEmpresa).sort({ codigo: 1 }).limit(200).lean(),
+      ContaSubTitulo.find(daEmpresa).sort({ codigo: 1 }).limit(200).lean()
     ]);
 
     const lista = [
@@ -576,21 +510,15 @@ router.post('/suspensas/:nivel/:id/reativar', async (req, res) => {
   try {
     const { nivel, id } = req.params;
 
-    if (nivel === 'subgrupo') {
-      const sg = await SubGrupo.findById(id);
-      if (!sg) return res.status(404).json({ erro: 'Subgrupo não encontrado.' });
-      sg.ativo = true;
-      await sg.save();
-      return res.json({ ok: true, conta: `${sg.codigo} - ${sg.nome}` });
-    }
+    if (nivel === 'subgrupo') return res.status(403).json({ erro: ESTRUTURA_ADMIN });
 
     if (nivel === 'titulo') {
-      const ct = await ContaTitulo.findById(id);
+      const ct = await ContaTitulo.findOne({ _id: id, lojistaId: req.lojistaId });
       if (!ct) return res.status(404).json({ erro: 'Título não encontrado.' });
 
       // Reativar um filho sem reativar o pai deixaria a conta "viva" mas
       // invisível: as telas navegam de cima para baixo e nunca chegariam nela.
-      const pai = await SubGrupo.findById(ct.subGrupoId).lean();
+      const pai = await SubGrupo.findOne({ _id: ct.subGrupoId, lojistaId: req.lojistaId }).lean();
       if (pai && !pai.ativo) {
         return res.status(409).json({
           erro: `Reative antes o subgrupo ${pai.codigo} - ${pai.nome}.`
@@ -603,17 +531,17 @@ router.post('/suspensas/:nivel/:id/reativar', async (req, res) => {
     }
 
     if (nivel === 'subtitulo') {
-      const st = await ContaSubTitulo.findById(id);
+      const st = await ContaSubTitulo.findOne({ _id: id, lojistaId: req.lojistaId });
       if (!st) return res.status(404).json({ erro: 'Subtítulo não encontrado.' });
 
-      const pai = await ContaTitulo.findById(st.contaTituloId).lean();
+      const pai = await ContaTitulo.findOne({ _id: st.contaTituloId, lojistaId: req.lojistaId }).lean();
       if (pai && !pai.ativo) {
         return res.status(409).json({
           erro: `Reative antes a conta-título ${pai.codigo} - ${pai.nome}.`
         });
       }
       if (pai) {
-        const avo = await SubGrupo.findById(pai.subGrupoId).lean();
+        const avo = await SubGrupo.findOne({ _id: pai.subGrupoId, lojistaId: req.lojistaId }).lean();
         if (avo && !avo.ativo) {
           return res.status(409).json({
             erro: `Reative antes o subgrupo ${avo.codigo} - ${avo.nome}.`

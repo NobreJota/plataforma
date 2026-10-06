@@ -1,0 +1,1826 @@
+[
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fd98"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "11"
+    },
+    "ativo": false,
+    "cidade": "São Paulo",
+    "cnpj": "61.323.390/0004-78",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Cumulus",
+    "ncontabilAntigo": "",
+    "razao": "Aquecedores Cumulus S.A"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fd99"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "14"
+    },
+    "ativo": false,
+    "cidade": "Rio de Janeiro",
+    "cnpj": "33.561.853/0001-51",
+    "contaNova": "",
+    "estado": "Rio de Janeiro",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Dancor",
+    "ncontabilAntigo": "",
+    "razao": "Dancor S.A Ind. Mec."
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fd9a"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "16"
+    },
+    "ativo": true,
+    "cidade": "Joinville",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Docol",
+    "ncontabilAntigo": "",
+    "razao": "Docol Mat. H. Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fd9b"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "18"
+    },
+    "ativo": true,
+    "cidade": "Rio de Janeiro",
+    "cnpj": "33.064.262/0001-79",
+    "contaNova": "",
+    "estado": "Rio de Janeiro",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Fabrimar",
+    "ncontabilAntigo": "",
+    "razao": "Fabrimar S/A Ind. Com."
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fd9c"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "21"
+    },
+    "ativo": false,
+    "cidade": "São Paulo",
+    "cnpj": "61.413.282/0001-43",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Lorenzetti",
+    "ncontabilAntigo": "",
+    "razao": "Lorenzetti S/A"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fd9d"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "30"
+    },
+    "ativo": false,
+    "cidade": "Blumenau",
+    "cnpj": "81.604.803/0001-57",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Blukit",
+    "ncontabilAntigo": "",
+    "razao": "Blukit Metalúrgica Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fd9e"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "34"
+    },
+    "ativo": true,
+    "cidade": "Vitória",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Espírito Santo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Bozi",
+    "ncontabilAntigo": "",
+    "razao": "Bozi Material p/Construção Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fda0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "43"
+    },
+    "ativo": true,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Westaflex",
+    "ncontabilAntigo": "",
+    "razao": "Westaflex Brasil"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fda1"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "52"
+    },
+    "ativo": false,
+    "cidade": "Vitória",
+    "cnpj": "27.272.103/0001-67",
+    "contaNova": "",
+    "estado": "Espírito Santo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Coml.Mar",
+    "ncontabilAntigo": "",
+    "razao": "Fornecedora Comercial Mar Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fda2"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "58"
+    },
+    "ativo": false,
+    "cidade": "Vitória",
+    "cnpj": "27.757.814/0001-21",
+    "contaNova": "",
+    "estado": "Espírito Santo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Servipeças",
+    "ncontabilAntigo": "",
+    "razao": "Servipeças Comércio e Serviços Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fda3"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "65"
+    },
+    "ativo": true,
+    "cidade": "Rio Claro",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Tigre_Aquath",
+    "ncontabilAntigo": "",
+    "razao": "Tigre S/A  - Div.Aquatherm"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fda4"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "67"
+    },
+    "ativo": true,
+    "cidade": "Jardim Itapecerica da Serra",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Komeco",
+    "ncontabilAntigo": "",
+    "razao": "Asia Import.& Com.Ext.Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fda5"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "68"
+    },
+    "ativo": false,
+    "cidade": "Porto Alegre",
+    "cnpj": "92.088.608/0001-38",
+    "contaNova": "",
+    "estado": "Rio Grande do Sul",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Texius",
+    "ncontabilAntigo": "",
+    "razao": "Texius Máq.Eq.Elet-M. Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fda7"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "73"
+    },
+    "ativo": true,
+    "cidade": "Joinville",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Akros",
+    "ncontabilAntigo": "",
+    "razao": "Akros S/A"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fda8"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "77"
+    },
+    "ativo": false,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Eluma",
+    "ncontabilAntigo": "",
+    "razao": "Eluma S/A"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fda9"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "81"
+    },
+    "ativo": true,
+    "cidade": "Campinas",
+    "cnpj": "45.990.181/0001-89",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Bosch",
+    "ncontabilAntigo": "",
+    "razao": "Robert Bosch Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdaa"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "82"
+    },
+    "ativo": true,
+    "cidade": "Mogi das Cruzes",
+    "cnpj": "47.173.950/0001-81",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Rinnai",
+    "ncontabilAntigo": "",
+    "razao": "Rinnai - Equip. NGK-Rinnai Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdab"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "90"
+    },
+    "ativo": true,
+    "cidade": "Vitória",
+    "cnpj": "30.571.749/0001-50",
+    "contaNova": "",
+    "estado": "Espírito Santo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Fio & Ferro",
+    "ncontabilAntigo": "",
+    "razao": "Fio & Ferro Materiais, Serviços e Construções Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdac"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "97"
+    },
+    "ativo": true,
+    "cidade": "Gravataí",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Rio Grande do Sul",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Jackwal",
+    "ncontabilAntigo": "",
+    "razao": "Jackwal S/A"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdad"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "109"
+    },
+    "ativo": true,
+    "cidade": "Guarulhos",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Akros/Galv.",
+    "ncontabilAntigo": "",
+    "razao": "Akros - Galvanizado"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdae"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "115"
+    },
+    "ativo": true,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Deca-Metais",
+    "ncontabilAntigo": "",
+    "razao": "Deca - Metais"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdaf"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "207"
+    },
+    "ativo": true,
+    "cidade": "São Paulo",
+    "cnpj": "61.143.632./0001-07",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Aliança",
+    "ncontabilAntigo": "",
+    "razao": "Aliança Metalurgica"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdb0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "212"
+    },
+    "ativo": true,
+    "cidade": "Ozasco",
+    "cnpj": "60.761.889/0007-47",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Lao",
+    "ncontabilAntigo": "",
+    "razao": "Liceu de Artes e Ofícios de São Paulo"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdb1"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "218"
+    },
+    "ativo": true,
+    "cidade": "Vitória",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Espírito Santo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Docol/Assist",
+    "ncontabilAntigo": "",
+    "razao": "Docol - Assist. Técnica"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdb2"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "220"
+    },
+    "ativo": true,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Bosch Assis.",
+    "ncontabilAntigo": "",
+    "razao": "Bosch Assistência Técnica"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdb3"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "221"
+    },
+    "ativo": true,
+    "cidade": "Caxias do Sul",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Rio Grande do Sul",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Imexport Ass",
+    "ncontabilAntigo": "",
+    "razao": "Imexport Assitência Técnica"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdb5"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "224"
+    },
+    "ativo": true,
+    "cidade": "São Paulo",
+    "cnpj": "61.413.282/0001-43",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Lorenzetti/A",
+    "ncontabilAntigo": "",
+    "razao": "Lorenzetti S.A / Aquecedor"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdb6"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "225"
+    },
+    "ativo": true,
+    "cidade": "Caxias do Sul",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Rio Grande do Sul",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Eberle",
+    "ncontabilAntigo": "",
+    "razao": "Eberle Equip. Processos S.A"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdb7"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "230"
+    },
+    "ativo": false,
+    "cidade": "Campo Belo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Arwek",
+    "ncontabilAntigo": "",
+    "razao": "Arwek"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdb8"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "235"
+    },
+    "ativo": false,
+    "cidade": "Caxias do Sul",
+    "cnpj": "90.446.048/0001-10",
+    "contaNova": "",
+    "estado": "Rio Grande do Sul",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Full Gauge",
+    "ncontabilAntigo": "",
+    "razao": "Full Gauge Eletro Controles Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdb9"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "238"
+    },
+    "ativo": true,
+    "cidade": "Barueri",
+    "cnpj": "61.652.608/0001-95",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Tramontina",
+    "ncontabilAntigo": "",
+    "razao": "Tramontina Sudeste S.A"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdba"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "239"
+    },
+    "ativo": false,
+    "cidade": "Rio de Janeiro",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Rio de Janeiro",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Arix",
+    "ncontabilAntigo": "",
+    "razao": "Arix"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdbb"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "241"
+    },
+    "ativo": true,
+    "cidade": "Mogi das Cruzes",
+    "cnpj": "47.173.950/0001-81",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Rinnai -Assi",
+    "ncontabilAntigo": "",
+    "razao": "Rinnai - Assist. Técnica"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdbd"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "242"
+    },
+    "ativo": true,
+    "cidade": "São José",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Komlog",
+    "ncontabilAntigo": "",
+    "razao": "Komlog Importação Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdbe"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "244"
+    },
+    "ativo": false,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "General Heat",
+    "ncontabilAntigo": "",
+    "razao": "General Heater"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdbf"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "245"
+    },
+    "ativo": false,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "konlong-cest",
+    "ncontabilAntigo": "",
+    "razao": "Komlong - cestas"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdc0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "247"
+    },
+    "ativo": false,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Amanco-PPR",
+    "ncontabilAntigo": "",
+    "razao": "Amanco - PPR"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdc1"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "250"
+    },
+    "ativo": false,
+    "cidade": "São Paulo",
+    "cnpj": "04.191.310/0001-91",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Yorkex",
+    "ncontabilAntigo": "",
+    "razao": "Yorkex"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdc2"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "251"
+    },
+    "ativo": true,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "WestGrelhas",
+    "ncontabilAntigo": "",
+    "razao": "Westaflex - grelhas"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdc3"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "254"
+    },
+    "ativo": false,
+    "cidade": "Itajaí",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "KomCoifa",
+    "ncontabilAntigo": "",
+    "razao": "Komlog - Coifa"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdc4"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "255"
+    },
+    "ativo": true,
+    "cidade": "Blumenau",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Rowa",
+    "ncontabilAntigo": "",
+    "razao": "Rowa do Brasil Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdc5"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "256"
+    },
+    "ativo": false,
+    "cidade": "São Carlos",
+    "cnpj": "00.217.622/0001-76",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Latina",
+    "ncontabilAntigo": "",
+    "razao": "Latina Eletodomésticos S.A"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdc6"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "257"
+    },
+    "ativo": false,
+    "cidade": "São Paulo",
+    "cnpj": "61.371.993/0001-00",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Soc.Paulista",
+    "ncontabilAntigo": "",
+    "razao": "Soc. Paulista Tubos e Flexiveis Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdc7"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "258"
+    },
+    "ativo": false,
+    "cidade": "Venâncio Aires",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Rio Grande Sul",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Venax",
+    "ncontabilAntigo": "",
+    "razao": "Venax Eletrodoméstico Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdc8"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "262"
+    },
+    "ativo": true,
+    "cidade": "Diadema",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Haenke",
+    "ncontabilAntigo": "",
+    "razao": "Haenke Tubos Flexiveis Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdca"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "263"
+    },
+    "ativo": true,
+    "cidade": "Joinville",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Distak",
+    "ncontabilAntigo": "",
+    "razao": "Distak Comercio e Distribuição Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdcb"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "264"
+    },
+    "ativo": false,
+    "cidade": "São Bernardo Campo",
+    "cnpj": "02.599.337/0001-92",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Grundfos",
+    "ncontabilAntigo": "",
+    "razao": "Bombas Grundfos do Brasil Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdcc"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "266"
+    },
+    "ativo": true,
+    "cidade": "Vila Velha",
+    "cnpj": "00.587.271/0001-95",
+    "contaNova": "",
+    "estado": "Espírito Santo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Docelar",
+    "ncontabilAntigo": "",
+    "razao": "Docelar Mat. Constr. Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdcd"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "267"
+    },
+    "ativo": true,
+    "cidade": "Araquari",
+    "cnpj": "12.324.116/0001-65",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Sictell",
+    "ncontabilAntigo": "",
+    "razao": "Sicflux Ind. Com. Prod. Elet. Met. Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdce"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "268"
+    },
+    "ativo": false,
+    "cidade": "Joinville",
+    "cnpj": "84.685.106/0001-66",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Schneider",
+    "ncontabilAntigo": "",
+    "razao": "Franklin Eletric Ind. Motobombas S.A"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdcf"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "269"
+    },
+    "ativo": false,
+    "cidade": "São Paulo",
+    "cnpj": "01.025.316/0003-62",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Joogbo",
+    "ncontabilAntigo": "",
+    "razao": "Joogbo Quimica do Brasil Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdd0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "272"
+    },
+    "ativo": false,
+    "cidade": "Joinville",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Mexichem Bra",
+    "ncontabilAntigo": "",
+    "razao": "Mexichem Brasil Ind. de Transf. Plastica Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdd2"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "274"
+    },
+    "ativo": false,
+    "cidade": "São Bernardo Campo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Aquec.Chama",
+    "ncontabilAntigo": "",
+    "razao": "Makio Ind. Com. Instalações Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdd3"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "275"
+    },
+    "ativo": true,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Emmeti",
+    "ncontabilAntigo": "",
+    "razao": "Sfera Com.Imp.Ltda Emmeti"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdd4"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "276"
+    },
+    "ativo": false,
+    "cidade": "Brusque",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Fischer",
+    "ncontabilAntigo": "",
+    "razao": "Irmãos Fischer S.A Ind. Com."
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdd5"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "277"
+    },
+    "ativo": false,
+    "cidade": "Joinville",
+    "cnpj": "02.314.099/0001-21",
+    "contaNova": "",
+    "estado": "Santa Catarina",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Franke*",
+    "ncontabilAntigo": "",
+    "razao": "Franke Sistemas de Cozinhas do Brasil Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdd6"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "278"
+    },
+    "ativo": false,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Heliodin",
+    "ncontabilAntigo": "",
+    "razao": "Heliodin do Brasil"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdd7"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "279"
+    },
+    "ativo": true,
+    "cidade": "Campinas Grande Sul",
+    "cnpj": "01.402.079/0001-40",
+    "contaNova": "",
+    "estado": "Paraná",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Orbis",
+    "ncontabilAntigo": "",
+    "razao": "Orbis Merting do Brasil Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdd9"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "281"
+    },
+    "ativo": false,
+    "cidade": "Valinhos",
+    "cnpj": "61.775.474/0001-08",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Vitoria Quim",
+    "ncontabilAntigo": "",
+    "razao": "Vitoria Quimica Tintas e Anticor. Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdda"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "282"
+    },
+    "ativo": true,
+    "cidade": "Teresópolis",
+    "cnpj": "32.193.369/0001-54",
+    "contaNova": "",
+    "estado": "Rio de Janeiro",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Albacete",
+    "ncontabilAntigo": "",
+    "razao": "Albacete Ind. Com. Equip. Lazer Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fddb"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "283"
+    },
+    "ativo": true,
+    "cidade": "Curitiba",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Paraná",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Orbis Assist",
+    "ncontabilAntigo": "",
+    "razao": "Orbis do Brasil - Assistência"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fddc"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "284"
+    },
+    "ativo": true,
+    "cidade": "Viana",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Espírito Santo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Perfil",
+    "ncontabilAntigo": "",
+    "razao": "Perfil Aluminio do Brasil S/A"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fddd"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "285"
+    },
+    "ativo": false,
+    "cidade": "São José dos Campos",
+    "cnpj": "08.805.119/0001-43",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Inova",
+    "ncontabilAntigo": "",
+    "razao": "Inova Equip.e Instrumentos Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdde"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "286"
+    },
+    "ativo": false,
+    "cidade": "Serra",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Espírito Santo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "ADM",
+    "ncontabilAntigo": "",
+    "razao": "ADM Comercio"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fddf"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "287"
+    },
+    "ativo": false,
+    "cidade": "Betim",
+    "cnpj": "07.062.380/0001-38",
+    "contaNova": "",
+    "estado": "Minas Gerais",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Del Rey",
+    "ncontabilAntigo": "",
+    "razao": "Del  Rey Minerals Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fde0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "288"
+    },
+    "ativo": false,
+    "cidade": "Curitiba",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Paraná",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Novellini",
+    "ncontabilAntigo": "",
+    "razao": "Novellini"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fde1"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "289"
+    },
+    "ativo": false,
+    "cidade": "Vila Velha",
+    "cnpj": "36.008.076/0001-00",
+    "contaNova": "",
+    "estado": "Espírito Santo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Contubos",
+    "ncontabilAntigo": "",
+    "razao": "Contubos Equip. Industr. Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fde2"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "290"
+    },
+    "ativo": true,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Rheem",
+    "ncontabilAntigo": "",
+    "razao": "Rheem do Brasil"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fde3"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "292"
+    },
+    "ativo": false,
+    "cidade": "Campinas",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Amanc_Pex",
+    "ncontabilAntigo": "",
+    "razao": "Amanco_Pex"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fde4"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "294"
+    },
+    "ativo": true,
+    "cidade": "Serra",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Espírito Santo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "TigreMarron",
+    "ncontabilAntigo": "",
+    "razao": "Tigre - Marron"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fde5"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "296"
+    },
+    "ativo": true,
+    "cidade": "Caxias do Sul",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Rio Grande do Sul",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Maqenge",
+    "ncontabilAntigo": "",
+    "razao": "Maqenge Ind. Met. Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fde7"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "297"
+    },
+    "ativo": false,
+    "cidade": "São Jose dos Campos",
+    "cnpj": "03.052.811/0001-24",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Thermotini",
+    "ncontabilAntigo": "",
+    "razao": "Contini & Porto ind. Com. Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fde8"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "299"
+    },
+    "ativo": true,
+    "cidade": "Parapicuiba",
+    "cnpj": "04.924.760/0001-46",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Eplax",
+    "ncontabilAntigo": "",
+    "razao": "Eplax Pro Efect Tecnology Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fde9"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "300"
+    },
+    "ativo": false,
+    "cidade": "São Paulo",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "Presystem",
+    "ncontabilAntigo": "",
+    "razao": "Presystem Proj. e Sist. Eletr. Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdea"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "301"
+    },
+    "ativo": true,
+    "cidade": "Arujá",
+    "cnpj": "05.606.242/0001-47",
+    "contaNova": "",
+    "estado": "São Paulo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "RR Brasil",
+    "ncontabilAntigo": "",
+    "razao": "RR Brasil Ind. Com. Ltda"
+  },
+  {
+    "_id": {
+      "$oid": "6abbae4a216b0dccf268fdeb"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "nrFornec": {
+      "$numberInt": "302"
+    },
+    "ativo": true,
+    "cidade": "Vila Velha",
+    "cnpj": "",
+    "contaNova": "",
+    "estado": "Espírito Santo",
+    "importadoEm": {
+      "$date": {
+        "$numberLong": "1790779198834"
+      }
+    },
+    "marca": "A. Verbeno",
+    "ncontabilAntigo": "",
+    "razao": "A Verbeno Metelurgica ME"
+  }
+]

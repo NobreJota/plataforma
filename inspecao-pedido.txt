@@ -1,0 +1,567 @@
+==============================================================================
+Inspecao: C:\Armação\Dados\2026B\2026B.mdb
+Tamanho: 106.5 MB   Modificado: 23/09/2026, 17:37:57
+SOMENTE LEITURA -- nada foi alterado.
+==============================================================================
+
+Tabelas do pedido no sistema antigo (10):
+
+### Compras_MédiaQuant  --  161 registros, 5 colunas
+
+    Cod                          float (4)
+    Quinze                       float (4)
+    Trinta                       float (4)
+    Sessenta                     float (4)
+    Noventa                      long (4)
+
+    --- amostra (3) ---
+    [1]
+        Cod                        = 6027
+        Quinze                     = 1
+        Trinta                     = 1
+        Sessenta                   = 1
+        Noventa                    = 1
+    [2]
+        Cod                        = 5698
+        Quinze                     = 3
+        Trinta                     = 3
+        Sessenta                   = 3
+        Noventa                    = 3
+    [3]
+        Cod                        = 6311
+        Quinze                     = 1
+        Trinta                     = 2
+        Sessenta                   = 4
+        Noventa                    = 4
+
+### Compras_MédiaSintetizada  --  161 registros, 8 colunas
+
+    Cod                          long (4)
+    Descrição                    text (100)
+    Média                        long (4)
+    Est                          long (4)
+    Ped                          long (4)
+    VCusto                       currency (8)
+    Vtotal                       currency (8)
+    Fornec                       long (4)
+
+    --- amostra (3) ---
+    [1]
+        Cod                        = 353
+        Descrição                  = elumaflex 22 mm  1 mts
+        Média                      = 0
+        Est                        = 48
+        Ped                        = 0
+        VCusto                     = 4.0400
+        Vtotal                     = 0.0000
+        Fornec                     = 77
+    [2]
+        Cod                        = 390
+        Descrição                  = tee 90 x 22 mm aquath (40) (3115)
+        Média                      = 1
+        Est                        = 4
+        Ped                        = 0
+        VCusto                     = 3.6500
+        Vtotal                     = 0.0000
+        Fornec                     = 65
+    [3]
+        Cod                        = 404
+        Descrição                  = tubo 22 mm aq. 03 mts (20) (669)
+        Média                      = 2
+        Est                        = 15
+        Ped                        = 0
+        VCusto                     = 30.6500
+        Vtotal                     = 0.0000
+        Fornec                     = 65
+
+### PED_PedidoFornecedor  --  13 registros, 11 colunas
+
+    NrPedido                     long (4)
+    DataEmisPedido               datetime (8)
+    NrFornec                     integer (2)
+    NrTranspMatriz               long (4)
+    NrTranspFilial               long (4)
+    CondPag                      text (60)
+    Previsão                     datetime (8)
+    VTotal                       currency (8)
+    Entrega                      datetime (8)
+    Pos                          integer (2)
+    Fluxo                        double (8)
+
+    --- amostra (3) ---
+    [1]
+        NrPedido                   = 6866
+        DataEmisPedido             = 2025-06-20
+        NrFornec                   = 67
+        NrTranspMatriz             = 0
+        NrTranspFilial             = 0
+        CondPag                    = 84/112 dias
+        Previsão                   = 2026-09-23
+        VTotal                     = 21190.0000
+        Entrega                    = 1933-01-01
+        Pos                        = 0
+        Fluxo                      = 5302
+    [2]
+        NrPedido                   = 7063
+        DataEmisPedido             = 2026-04-24
+        NrFornec                   = 65
+        NrTranspMatriz             = 0
+        NrTranspFilial             = 0
+        CondPag                    = 60 dias
+        Previsão                   = 2026-08-15
+        VTotal                     = 585.5000
+        Entrega                    = 1933-01-01
+        Pos                        = 1
+        Fluxo                      = 3021
+    [3]
+        NrPedido                   = 7109
+        DataEmisPedido             = 2026-07-06
+        NrFornec                   = 267
+        NrTranspMatriz             = 0
+        NrTranspFilial             = 0
+        CondPag                    = 28 dias
+        Previsão                   = 2026-09-07
+        VTotal                     = 620.2500
+        Entrega                    = 1933-01-01
+        Pos                        = 1
+        Fluxo                      = 5272
+
+### PED_PedidoFornecedorItens  --  44 registros, 7 colunas
+
+    Código                       long (4)
+    NrPedido                     long (4)
+    NossoCódigo                  long (4)
+    Qte                          long (4)
+    Saldo                        long (4)
+    VCusto                       currency (8)
+    Pos                          integer (2)
+
+    --- amostra (3) ---
+    [1]
+        Código                     = 15733
+        NrPedido                   = 2588
+        NossoCódigo                = 4307
+        Qte                        = 3
+        Saldo                      = 0
+        VCusto                     = 506.8100
+        Pos                        = 0
+    [2]
+        Código                     = 15734
+        NrPedido                   = 2588
+        NossoCódigo                = 4848
+        Qte                        = 2
+        Saldo                      = 0
+        VCusto                     = 843.8100
+        Pos                        = 0
+    [3]
+        Código                     = 15735
+        NrPedido                   = 2588
+        NossoCódigo                = 4814
+        Qte                        = 1
+        Saldo                      = 0
+        VCusto                     = 1397.7100
+        Pos                        = 0
+
+### PED_PedidoZerado  --  64 registros, 10 colunas
+
+    Cod                          long (4)
+    Refer                        text (24)
+    Descrição                    text (100)
+    Média                        long (4)
+    Estoque                      long (4)
+    Pedido                       long (4)
+    VCusto                       currency (8)
+    Vtotal                       currency (8)
+    Grupo                        text (60)
+    Vinculado                    float (4)
+
+    --- amostra (3) ---
+    [1]
+        Cod                        = 3142
+        Refer                      = TP 825
+        Descrição                  = pressur. TP 825  /20 mts m.c.a (2335)
+        Média                      = 1
+        Estoque                    = 2
+        Pedido                     = 0
+        VCusto                     = 1015.6200
+        Vtotal                     = 0.0000
+        Grupo                      = null
+        Vinculado                  = 0
+    [2]
+        Cod                        = 3143
+        Refer                      = TP 820 T
+        Descrição                  = pressur. agua TP 820  /12 mts m.c.a (...
+        Média                      = 0
+        Estoque                    = 1
+        Pedido                     = 0
+        VCusto                     = 932.2500
+        Vtotal                     = 0.0000
+        Grupo                      = null
+        Vinculado                  = 0
+    [3]
+        Cod                        = 3608
+        Refer                      = TP 40
+        Descrição                  = mini-bomba TP 40  110 V - Bronze (260...
+        Média                      = 0
+        Estoque                    = 7
+        Pedido                     = 0
+        VCusto                     = 409.9200
+        Vtotal                     = 0.0000
+        Grupo                      = null
+        Vinculado                  = 0
+
+### PED_Previsão  --  51 registros, 9 colunas
+
+    NrPedido                     long (4)
+    DataEmis                     datetime (8)
+    NrFornec                     integer (2)
+    CondPag                      text (60)
+    Previsão                     datetime (8)
+    VTotal                       currency (8)
+    Entrega                      datetime (8)
+    Pos                          float (4)
+    Fluxo                        integer (2)
+
+    --- amostra (3) ---
+    [1]
+        NrPedido                   = 300
+        DataEmis                   = 2007-07-06
+        NrFornec                   = 17
+        CondPag                    = 1
+        Previsão                   = 2009-02-02
+        VTotal                     = 1300.0000
+        Entrega                    = null
+        Pos                        = 0
+        Fluxo                      = 9564
+    [2]
+        NrPedido                   = 929
+        DataEmis                   = 2021-01-09
+        NrFornec                   = 282
+        CondPag                    = 1
+        Previsão                   = 2026-11-18
+        VTotal                     = 3600.0000
+        Entrega                    = null
+        Pos                        = 0
+        Fluxo                      = 12943
+    [3]
+        NrPedido                   = 934
+        DataEmis                   = 2021-01-09
+        NrFornec                   = 279
+        CondPag                    = 1
+        Previsão                   = 2026-11-10
+        VTotal                     = 6500.0000
+        Entrega                    = null
+        Pos                        = 0
+        Fluxo                      = 12948
+
+### Compras_Fornecedores  --  104 registros, 25 colunas
+
+    NrFornec                     long (4)
+    DataRegistro                 datetime (8)
+    Classificação                float (4)
+    Razão                        text (100)
+    End                          text (100)
+    Marca                        text (24)
+    Cep                          text (18)
+    Estado                       text (40)
+    Cidade                       text (60)
+    Bairro                       text (60)
+    CGC                          text (40)
+    Insc                         text (40)
+    ContVend1                    text (60)
+    ContVend2                    text (60)
+    FoneVend1                    text (40)
+    FoneVend2                    text (40)
+    FaxVend                      text (40)
+    ContCobr1                    text (60)
+    ContCobr2                    text (60)
+    FoneCobr1                    text (40)
+    FoneCobr2                    text (40)
+    FaxCobr                      text (40)
+    Representante                float (4)
+    NrContabil                   text (24)
+    Ativado                      float (4)
+
+    --- amostra (3) ---
+    [1]
+        NrFornec                   = 10
+        DataRegistro               = null
+        Classificação              = 3
+        Razão                      = Astra S/A Indústria e Comércio
+        End                        = Av. Marginal Via Anhanguera,S/Nº Km 62
+        Marca                      = Astra
+        Cep                        = 13211-090
+        Estado                     = São Paulo
+        Cidade                     = Jundiaí
+        Bairro                     = Trevo de Itu
+        CGC                        = 50.949.528/0010-70
+        Insc                       = 407.185.445.116
+        ContVend1                  = 0
+        ContVend2                  = 0
+        FoneVend1                  = 7396-7977
+        FoneVend2                  = 0
+        FaxVend                    = 434-7332
+        ContCobr1                  = 0
+        ContCobr2                  = 0
+        FoneCobr1                  = 7396-7977
+        FoneCobr2                  = 0
+        FaxCobr                    = 434-7332
+        Representante              = 6
+        NrContabil                 = 2.02.001.001
+        Ativado                    = 0
+    [2]
+        NrFornec                   = 11
+        DataRegistro               = null
+        Classificação              = 3
+        Razão                      = Aquecedores Cumulus S.A
+        End                        = Estrada Albino martelo, s/nº
+        Marca                      = Cumulus
+        Cep                        = 07190-970
+        Estado                     = São Paulo
+        Cidade                     = São Paulo
+        Bairro                     = Bonsucesso
+        CGC                        = 61.323.390/0004-78
+        Insc                       = 336.103.248.119
+        ContVend1                  = Zinha
+        ContVend2                  = Francisco
+        FoneVend1                  = 257-1800
+        FoneVend2                  = 6436-2277
+        FaxVend                    = 6436-1716
+        ContCobr1                  = 0
+        ContCobr2                  = 0
+        FoneCobr1                  = 0
+        FoneCobr2                  = 0
+        FaxCobr                    = 0
+        Representante              = 5
+        NrContabil                 = 2.02.001.002
+        Ativado                    = 1
+    [3]
+        NrFornec                   = 14
+        DataRegistro               = null
+        Classificação              = 3
+        Razão                      = Dancor S.A Ind. Mec.
+        End                        = Av. Brasil, 49.259
+        Marca                      = Dancor
+        Cep                        = 23078-000
+        Estado                     = Rio de Janeiro
+        Cidade                     = Rio de Janeiro
+        Bairro                     = Campo Grande
+        CGC                        = 33.561.853/0001-51
+        Insc                       = 81.958.254
+        ContVend1                  = 0
+        ContVend2                  = 0
+        FoneVend1                  = 21-413-6262
+        FoneVend2                  = 0
+        FaxVend                    = 21-413-6052
+        ContCobr1                  = 00
+        ContCobr2                  = 0
+        FoneCobr1                  = 0
+        FoneCobr2                  = 0
+        FaxCobr                    = 0
+        Representante              = 6
+        NrContabil                 = 2.02.001.011
+        Ativado                    = 1
+
+### Compras_Transportadoras  --  20 registros, 17 colunas
+
+    NTransp                      float (4)
+    RzTransp                     text (80)
+    Marca                        text (60)
+    End                          text (80)
+    Cep                          text (20)
+    CGC                          text (40)
+    Inscr                        text (30)
+    Estado                       text (60)
+    Cidade                       text (60)
+    Bairro                       text (60)
+    Fone1                        text (40)
+    Fone2                        text (40)
+    Fone3                        text (40)
+    Fax                          text (40)
+    Gerente                      text (80)
+    Contato                      text (80)
+    NrContabil                   text (24)
+
+    --- amostra (3) ---
+    [1]
+        NTransp                    = 0
+        RzTransp                   = O próprio
+        Marca                      = O Próprio
+        End                        = x
+        Cep                        = 00000-000
+        CGC                        = 0
+        Inscr                      = 0
+        Estado                     =  -x-x-x-
+        Cidade                     = -x-x-x
+        Bairro                     = -x-x-x-
+        Fone1                      = 0
+        Fone2                      = 0
+        Fone3                      = 0
+        Fax                        = 0
+        Gerente                    = x 
+        Contato                    = x
+        NrContabil                 = null
+    [2]
+        NTransp                    = 19
+        RzTransp                   = Benjamin C. Transp.Ltda
+        Marca                      = Expresso Miranda
+        End                        = Rua. Benjamin Constant, 3249 - Fundos
+        Cep                        = 89217-001
+        CGC                        = 00.948.907/0001-87
+        Inscr                      = 253.172.047
+        Estado                     = Santa Catarina
+        Cidade                     = Joinville
+        Bairro                     = Costa e Silva
+        Fone1                      = 473-7425
+        Fone2                      = 473-6857
+        Fone3                      = 0
+        Fax                        = 473-7425
+        Gerente                    = 0
+        Contato                    = 0
+        NrContabil                 = 2.02.001.044
+    [3]
+        NTransp                    = 20
+        RzTransp                   = Aguia Branca Cargas
+        Marca                      = Aguia Branca
+        End                        = Rod.Br 262 - Km 6,3
+        Cep                        = null
+        CGC                        = 27.436.302/0001-63
+        Inscr                      = 081.987.86-2
+        Estado                     = Espírito Santo
+        Cidade                     = Cariacica
+        Bairro                     = Vila Capixaba
+        Fone1                      = 346-1100
+        Fone2                      = 346-1101
+        Fone3                      = 0
+        Fax                        = 0
+        Gerente                    = 0 
+        Contato                    = 0
+        NrContabil                 = 2.02.001.057
+
+### Compras_Representantes  --  21 registros, 13 colunas
+
+    RzRepres                     text (100)
+    NRepres                      integer (2)
+    End                          text (100)
+    Cep                          text (24)
+    Estado                       text (60)
+    Cidade                       text (60)
+    Bairro                       text (60)
+    NmContato                    text (80)
+    FoneContato                  text (40)
+    NmVendedor                   text (80)
+    FoneVendedor                 text (40)
+    Fone                         text (40)
+    Fax                          text (20)
+
+    --- amostra (3) ---
+    [1]
+        RzRepres                   = Assis Representações Com. Ltda
+        NRepres                    = 1
+        End                        = Av. Luciano das Neves, 3074
+        Cep                        = 29000-052
+        Estado                     = E.Santo
+        Cidade                     = Vila Velha
+        Bairro                     = Centro
+        NmContato                  = Helena
+        FoneContato                = 9962-5206
+        NmVendedor                 = Helena
+        FoneVendedor               = 9962-5206
+        Fone                       = 339-1233
+        Fax                        = 339-1233
+    [2]
+        RzRepres                   = Barcellos Representações Ltda
+        NRepres                    = 6
+        End                        = Rua. Wallace Borges de Freitas, 35
+        Cep                        = 29123-110
+        Estado                     = Espírito Santo
+        Cidade                     = Vila Velha
+        Bairro                     = Jaburuna
+        NmContato                  = Tereza
+        FoneContato                = 0
+        NmVendedor                 = Vagner
+        FoneVendedor               = 0
+        Fone                       = 329-0607
+        Fax                        = 329-0479
+    [3]
+        RzRepres                   = Corrêa Representações Ltda
+        NRepres                    = 15
+        End                        = Rua. Carolina Leal,289
+        Cep                        = 29100-360
+        Estado                     = Espírito Santo
+        Cidade                     = Vila Velha
+        Bairro                     = Centro
+        NmContato                  = Augusto
+        FoneContato                = 0
+        NmVendedor                 = 0
+        FoneVendedor               = 0
+        Fone                       = 229-2882
+        Fax                        = 239-2074
+
+### PROD_Estatística_Mensal  --  396 registros, 15 colunas
+
+    NrFornec                     float (4)
+    ProdCod                      float (4)
+    Qte_01                       integer (2)
+    Qte_02                       integer (2)
+    Qte_03                       integer (2)
+    Qte_04                       integer (2)
+    Qte_05                       integer (2)
+    Qte_06                       integer (2)
+    Qte_07                       integer (2)
+    Qte_08                       integer (2)
+    Qte_09                       integer (2)
+    Qte_10                       integer (2)
+    Qte_11                       integer (2)
+    Qte_12                       integer (2)
+    Data_Zero                    datetime (8)
+
+    --- amostra (3) ---
+    [1]
+        NrFornec                   = 263
+        ProdCod                    = 5719
+        Qte_01                     = 0
+        Qte_02                     = 1
+        Qte_03                     = 0
+        Qte_04                     = 2
+        Qte_05                     = 1
+        Qte_06                     = 3
+        Qte_07                     = 3
+        Qte_08                     = 2
+        Qte_09                     = 3
+        Qte_10                     = 1
+        Qte_11                     = 1
+        Qte_12                     = 0
+        Data_Zero                  = 1933-01-01
+    [2]
+        NrFornec                   = 263
+        ProdCod                    = 5720
+        Qte_01                     = 7
+        Qte_02                     = 2
+        Qte_03                     = 4
+        Qte_04                     = 15
+        Qte_05                     = 3
+        Qte_06                     = 16
+        Qte_07                     = 10
+        Qte_08                     = 9
+        Qte_09                     = 1
+        Qte_10                     = 16
+        Qte_11                     = 4
+        Qte_12                     = 1
+        Data_Zero                  = 1933-01-01
+    [3]
+        NrFornec                   = 263
+        ProdCod                    = 5721
+        Qte_01                     = 1
+        Qte_02                     = 2
+        Qte_03                     = 9
+        Qte_04                     = 6
+        Qte_05                     = 1
+        Qte_06                     = 5
+        Qte_07                     = 8
+        Qte_08                     = 8
+        Qte_09                     = 2
+        Qte_10                     = 4
+        Qte_11                     = 6
+        Qte_12                     = 0
+        Data_Zero                  = 1933-01-01

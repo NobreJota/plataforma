@@ -1,0 +1,522 @@
+{{!-- 
+  Destino: C:\plataformaRota\views\compra\pages\pedidos.handlebars
+  Alterado em: 24/09/2026  (modal do cabecalho do pedido)
+  Alterado em: 30/09/2026  (modal do produto: duplo clique no PEDIDO)
+  Alterado em: 01/10/2026  (modal do produto: sem consumo max/min; cabecalho das notas legivel)
+  Alterado em: 01/10/2026  (modal do produto: arrasta pelo topo; aviso de estoque acima do consumo max.)
+  Alterado em: 01/10/2026  (modal do produto: botao Ajuda com as notas em duvida do produto)
+  Alterado em: 01/10/2026  (PEDIDO na grade so leitura, sem setas)
+  O JS fica em /js/compra/pedidos.js  (caminho completo, sempre)
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido de Compra</title>
+  <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --roxo: #6b21a8;
+      --roxo-claro: #f3e8ff;
+      --borda: #e5e7eb;
+      --texto: #1f2937;
+      --cinza: #6b7280;
+      --falta: #fef3c7;
+      --falta-borda: #f59e0b;
+    }
+
+    html, body { height: 100%; }
+    body {
+      background: #fff;
+      color: var(--texto);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      margin: 0;
+      padding: 20px 28px 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 22px; font-weight: 700; margin: 0 0 16px;
+      display: flex; align-items: center; gap: 10px; flex: none;
+    }
+    h1 .icone { font-size: 24px; }
+
+    /* ---------- controles ---------- */
+    .controles {
+      display: flex; flex-wrap: wrap; align-items: flex-end;
+      gap: 16px; margin-bottom: 14px; flex: none;
+    }
+    .campo { display: flex; flex-direction: column; gap: 4px; }
+    .campo label {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+      color: var(--cinza); font-weight: 600;
+    }
+    select, input[type="text"], input[type="date"], input[type="number"] {
+      border: 1px solid var(--borda); border-radius: 6px;
+      padding: 7px 10px; font-size: 14px; background: #fff;
+    }
+    .controles select, .controles input[type="text"] { min-width: 220px; }
+    select:focus, input:focus {
+      outline: none; border-color: var(--roxo);
+      box-shadow: 0 0 0 2px var(--roxo-claro);
+    }
+
+    .janelas { display: flex; gap: 6px; }
+    .janelas button {
+      border: 1px solid var(--borda); background: #fff; border-radius: 6px;
+      padding: 7px 16px; font-size: 14px; cursor: pointer;
+    }
+    .janelas button:hover { background: #f9fafb; }
+    .janelas button.ativo {
+      background: var(--roxo); border-color: var(--roxo);
+      color: #fff; font-weight: 600;
+    }
+
+    /* ---------- abas ---------- */
+    .abas { display: flex; border-bottom: 2px solid var(--borda); flex: none; }
+    .abas button {
+      border: none; background: none; padding: 9px 20px; font-size: 14px;
+      cursor: pointer; color: var(--cinza);
+      border-bottom: 2px solid transparent; margin-bottom: -2px;
+    }
+    .abas button.ativo {
+      color: var(--roxo); font-weight: 700; border-bottom-color: var(--roxo);
+    }
+    .abas .contagem {
+      background: var(--roxo-claro); color: var(--roxo); border-radius: 10px;
+      padding: 1px 7px; font-size: 11px; font-weight: 700; margin-left: 6px;
+    }
+
+    .busca-zero { display: none; margin-top: 10px; flex: none; }
+    .busca-zero.visivel { display: block; }
+    .periodo { font-size: 12px; color: var(--cinza); margin: 8px 0 6px; flex: none; }
+
+    /* ---------- grade ---------- */
+    .grade-area {
+      flex: 1 1 auto; min-height: 100px; overflow: auto;
+      border: 1px solid var(--borda); border-radius: 6px;
+    }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    thead th {
+      background: var(--roxo); color: #fff; font-size: 11px;
+      text-transform: uppercase; letter-spacing: .04em;
+      padding: 9px 10px; text-align: left;
+      position: sticky; top: 0; z-index: 2;
+    }
+    thead th.num { text-align: right; }
+    tbody td { padding: 7px 10px; border-bottom: 1px solid #f3f4f6; background: #fff; }
+    tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tbody tr:hover td { background: #fafafa; }
+    tbody tr.tem-pedido td { background: #f0fdf4; }
+    tbody tr.tem-pedido:hover td { background: #dcfce7; }
+    .desc { max-width: 420px; }
+    .ref { color: var(--cinza); font-size: 12px; }
+
+    input.qtd {
+      width: 64px; text-align: right; border: 1px solid var(--borda);
+      border-radius: 5px; padding: 3px 7px; font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+    input.qtd.alterado { border-color: var(--roxo); font-weight: 700; }
+    input.qtd[readonly] { background: #fff; caret-color: transparent; }
+
+    /* ---------- rodape ---------- */
+    .rodape {
+      display: flex; justify-content: flex-end; align-items: center;
+      gap: 28px; padding: 12px 6px 0; flex: none;
+    }
+    .rodape .bloco { text-align: right; }
+    .rodape .rotulo {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--cinza);
+    }
+    .rodape .valor { font-size: 19px; font-weight: 700; }
+    .rodape .valor.total { color: var(--roxo); }
+
+    .btn-principal {
+      background: var(--roxo); color: #fff; border: none; border-radius: 6px;
+      padding: 10px 24px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .btn-principal:disabled { background: #d1d5db; cursor: not-allowed; }
+    .btn-secundario {
+      background: #fff; color: var(--texto); border: 1px solid var(--borda);
+      border-radius: 6px; padding: 10px 20px; font-size: 14px; cursor: pointer;
+    }
+    .btn-secundario:hover { background: #f9fafb; }
+
+    .aviso { padding: 36px; text-align: center; color: var(--cinza); }
+
+    /* =================== MODAL DO CABECALHO =================== */
+    .fundo-modal {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(17, 24, 39, .55);
+      z-index: 50;
+      align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .fundo-modal.aberto { display: flex; }
+
+    .modal {
+      background: #fff; border-radius: 10px;
+      width: 100%; max-width: 920px; max-height: 100%;
+      display: flex; flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,.3);
+    }
+    .modal-topo {
+      padding: 16px 22px; border-bottom: 1px solid var(--borda);
+      display: flex; align-items: center; justify-content: space-between; flex: none;
+    }
+    .modal-topo h2 { font-size: 17px; font-weight: 700; margin: 0; }
+    .fechar {
+      background: none; border: none; font-size: 24px; line-height: 1;
+      color: var(--cinza); cursor: pointer; padding: 0 4px;
+    }
+    .modal-corpo { padding: 18px 22px; overflow: auto; flex: 1 1 auto; }
+    .modal-rodape {
+      padding: 14px 22px; border-top: 1px solid var(--borda);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex: none;
+    }
+
+    /* =================== MODAL DO PRODUTO (30/09/2026) =================== */
+    .modal-produto { max-width: 880px; }
+    .modal-produto .modal-topo { cursor: move; user-select: none; }
+    .mp-aviso { font-size: 13px; color: #b45309; background: #fef3c7; border-radius: 6px; padding: 6px 10px; }
+    .mp-aviso[hidden] { display: none; }
+    .mp-btn-ajuda[hidden] { display: none; }
+    .mp-btn-ajuda { background: #fbbf24; color: #1f2937; border: 0; border-radius: 6px; padding: 5px 10px; font-weight: 700; cursor: pointer; font-size: 13px; }
+    .mp-btn-ajuda.alerta { background: #f97316; color: #fff; }
+    .mp-ajuda { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: 13px; }
+    .mp-ajuda[hidden] { display: none; }
+    .mp-ajuda p { margin: 0 0 8px; }
+    .mp-ajuda table { width: 100%; border-collapse: collapse; }
+    .mp-ajuda th { text-align: left; font-size: 11px; text-transform: uppercase; color: #92400e; padding: 4px 6px; border-bottom: 1px solid #fde68a; }
+    .mp-ajuda td { padding: 4px 6px; border-bottom: 1px solid #fef3c7; vertical-align: top; }
+    .mp-sub { font-size: 13px; color: var(--cinza); margin-top: 2px; }
+    .mp-numeros { display: grid; grid-template-columns: repeat(2, minmax(0, 200px)); gap: 10px; margin-bottom: 14px; }
+    .mp-card { background: #f8fafc; border: 1px solid var(--borda); border-radius: 8px; padding: 8px 12px; }
+    .mp-card .rot { font-size: 11px; text-transform: uppercase; color: #374151; font-weight: 700; }
+    .mp-card .val { font-size: 20px; font-weight: 700; }
+    .mp-card .det { font-size: 12px; color: var(--cinza); }
+    .mp-titulo { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--roxo); font-weight: 700; margin: 4px 0 8px; }
+    .mp-meses { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 5px; margin-bottom: 16px; }
+    .mp-mes { text-align: center; border: 1px solid var(--borda); border-radius: 6px; padding: 5px 2px; }
+    .mp-mes .m { font-size: 11px; color: var(--cinza); }
+    .mp-mes .q { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .mp-mes.desconhecido .q { color: #cbd5e1; }
+    .mp-mes.parcial { border-style: dashed; }
+    .mp-mes.max { background: #ecfdf5; border-color: #a7f3d0; }
+    .mp-mes.min { background: #fef2f2; border-color: #fecaca; }
+    .mp-notas { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .mp-notas th { text-align: left; font-size: 11px; text-transform: uppercase; color: #fff; background: var(--roxo); padding: 7px 8px; }
+    .mp-notas td { padding: 6px 8px; border-bottom: 1px solid #f3f4f6; }
+    .mp-notas .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .mp-qtd { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+    .mp-qtd input { width: 110px; font-size: 20px; padding: 6px 10px; text-align: right; border: 2px solid var(--roxo); border-radius: 8px; }
+    input.qtd { cursor: pointer; }
+
+    .secao {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
+      color: var(--roxo); font-weight: 700;
+      margin: 18px 0 8px; padding-bottom: 5px;
+      border-bottom: 1px solid var(--borda);
+    }
+    .secao:first-child { margin-top: 0; }
+
+    .linha { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 10px; }
+    .grupo { display: flex; flex-direction: column; gap: 3px; flex: 1 1 160px; }
+    .grupo.largo { flex: 3 1 340px; }
+    .grupo.estreito { flex: 0 0 120px; }
+    .grupo label {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
+      color: var(--cinza); font-weight: 600;
+    }
+    .grupo input, .grupo select { width: 100%; }
+    .grupo .leitura {
+      padding: 7px 10px; border: 1px solid transparent;
+      border-radius: 6px; background: #f9fafb; min-height: 35px;
+    }
+    /* campo que falta preencher — cor forte, mas nao trava */
+    .grupo .leitura.faltando, .grupo input.faltando {
+      background: var(--falta);
+      border-color: var(--falta-borda);
+    }
+    .grupo .leitura.faltando::after { content: 'preencher'; color: #92400e; font-size: 12px; }
+
+    .etiqueta-origem {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 10px; margin-left: 8px;
+    }
+    .etiqueta-origem.antigo { background: var(--falta); color: #92400e; }
+    .etiqueta-origem.vigente { background: #dcfce7; color: #166534; }
+
+    .radio-linha { display: flex; gap: 18px; align-items: center; padding-top: 6px; }
+    .radio-linha label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 14px; text-transform: none; letter-spacing: 0;
+      color: var(--texto); font-weight: 400; cursor: pointer;
+    }
+
+    /* titulos */
+    table.titulos { width: 100%; margin-top: 8px; }
+    table.titulos th {
+      background: #f3f4f6; color: var(--cinza); position: static;
+      font-size: 11px; padding: 7px 10px;
+    }
+    table.titulos td { padding: 6px 10px; border-bottom: 1px solid #f3f4f6; }
+    table.titulos input { width: 100%; }
+    .soma-titulos { font-size: 13px; margin-top: 8px; text-align: right; }
+    .soma-titulos.confere { color: #166534; }
+    .soma-titulos.difere { color: #b91c1c; font-weight: 700; }
+
+    .resumo-modal { font-size: 13px; color: var(--cinza); }
+    .resumo-modal strong { color: var(--roxo); font-size: 17px; }
+  </style>
+</head>
+<body>
+
+  <h1><span class="icone">🛒</span> Pedido de Compra</h1>
+
+  <div class="controles">
+    <div class="campo">
+      <label for="fornecedor">Fornecedor</label>
+      <select id="fornecedor"><option value="">Carregando...</option></select>
+    </div>
+    <div class="campo">
+      <label>Período de consumo</label>
+      <div class="janelas" id="janelas">
+        <button data-janela="15">15 dias</button>
+        <button data-janela="30" class="ativo">30 dias</button>
+        <button data-janela="60">60 dias</button>
+        <button data-janela="90">90 dias</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="abas">
+    <button id="aba-pedido" class="ativo">Pedido <span class="contagem" id="qtd-pedido">0</span></button>
+    <button id="aba-zero">Pedido Zero <span class="contagem" id="qtd-zero">0</span></button>
+  </div>
+
+  <div class="busca-zero" id="busca-zero">
+    <input type="text" id="filtro" placeholder="Buscar por descrição ou referência...">
+  </div>
+
+  <div id="periodo" class="periodo"></div>
+
+  <div class="grade-area">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:70px">Código</th>
+          <th style="width:110px">Refer.</th>
+          <th>Descrição</th>
+          <th class="num" style="width:70px">Saída</th>
+          <th class="num" style="width:70px">Estoque</th>
+          <th class="num" style="width:90px">A caminho</th>
+          <th class="num" style="width:90px">Pedido</th>
+          <th class="num" style="width:100px">V. Custo</th>
+          <th class="num" style="width:110px">V. Total</th>
+        </tr>
+      </thead>
+      <tbody id="grade">
+        <tr><td colspan="9" class="aviso">Selecione um fornecedor.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="rodape">
+    <div class="bloco">
+      <div class="rotulo">Itens no pedido</div>
+      <div class="valor" id="itens-pedido">0</div>
+    </div>
+    <div class="bloco">
+      <div class="rotulo">Valor total</div>
+      <div class="valor total" id="valor-total">0,00</div>
+    </div>
+    <button class="btn-principal" id="btn-gravar" disabled>Gravar pedido</button>
+  </div>
+
+  <!-- =================== MODAL DO CABECALHO =================== -->
+  <div class="fundo-modal" id="fundo-modal">
+    <div class="modal">
+
+      <div class="modal-topo">
+        <h2>Cabeçalho do Pedido <span id="etiqueta-origem"></span></h2>
+        <button class="fechar" id="fechar-modal" title="Fechar">&times;</button>
+      </div>
+
+      <div class="modal-corpo">
+
+        <div class="secao">Fornecedor</div>
+        <div class="linha">
+          <div class="grupo largo">
+            <label>Razão social</label>
+            <div class="leitura" id="cab-razao"></div>
+          </div>
+          <div class="grupo">
+            <label>CNPJ</label>
+            <div class="leitura" id="cab-cnpj"></div>
+          </div>
+        </div>
+        <div class="linha">
+          <div class="grupo largo">
+            <label>Endereço</label>
+            <div class="leitura" id="cab-logradouro"></div>
+          </div>
+          <div class="grupo">
+            <label>Bairro</label>
+            <div class="leitura" id="cab-bairro"></div>
+          </div>
+        </div>
+        <div class="linha">
+          <div class="grupo">
+            <label>Cidade</label>
+            <div class="leitura" id="cab-cidade"></div>
+          </div>
+          <div class="grupo estreito">
+            <label>UF</label>
+            <div class="leitura" id="cab-uf"></div>
+          </div>
+          <div class="grupo">
+            <label>Contato de vendas</label>
+            <div class="leitura" id="cab-contato"></div>
+          </div>
+          <div class="grupo">
+            <label>Telefone</label>
+            <div class="leitura" id="cab-fone"></div>
+          </div>
+        </div>
+
+        <div class="secao">Pedido</div>
+        <div class="linha">
+          <div class="grupo">
+            <label for="cab-representante">Representante</label>
+            <input type="text" id="cab-representante" placeholder="venda direta">
+          </div>
+          <div class="grupo">
+            <label>Frete</label>
+            <div class="radio-linha">
+              <label><input type="radio" name="frete" value="CIF" checked> CIF</label>
+              <label><input type="radio" name="frete" value="FOB"> FOB</label>
+            </div>
+          </div>
+          <div class="grupo largo" id="box-transportadora">
+            <label for="cab-transportadora">Transportadora</label>
+            <select id="cab-transportadora"></select>
+          </div>
+        </div>
+
+        <div class="secao">Entrega e pagamento</div>
+        <div class="linha">
+          <div class="grupo">
+            <label for="cab-entrega">Entrega prevista</label>
+            <input type="date" id="cab-entrega">
+          </div>
+          <div class="grupo largo">
+            <label for="cab-condicao">Condição de pagamento</label>
+            <input type="text" id="cab-condicao" list="lista-condicoes"
+                   placeholder="ex.: 30/60/90 dias">
+            <datalist id="lista-condicoes"></datalist>
+          </div>
+          <div class="grupo estreito">
+            <label for="cab-ntitulos">Nº de títulos</label>
+            <input type="number" id="cab-ntitulos" min="1" max="12" value="1">
+          </div>
+        </div>
+
+        <table class="titulos">
+          <thead>
+            <tr>
+              <th style="width:60px">#</th>
+              <th style="width:140px">Dias</th>
+              <th>Vencimento</th>
+              <th style="width:170px" class="num">Valor</th>
+            </tr>
+          </thead>
+          <tbody id="cab-titulos"></tbody>
+        </table>
+        <div class="soma-titulos" id="cab-soma"></div>
+
+      </div>
+
+      <div class="modal-rodape">
+        <div class="resumo-modal">
+          <span id="cab-resumo-itens">0 itens</span> ·
+          total <strong id="cab-resumo-total">0,00</strong>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn-secundario" id="cancelar-modal">Cancelar</button>
+          <button class="btn-principal" id="confirmar-pedido">Confirmar pedido</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 30/09/2026: modal do produto (duplo clique no campo PEDIDO da grade) -->
+  <div class="fundo-modal" id="fundo-produto">
+    <div class="modal modal-produto">
+      <div class="modal-topo">
+        <div>
+          <h2 id="mp-titulo">Produto</h2>
+          <div class="mp-sub" id="mp-sub"></div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="mp-btn-ajuda alerta" id="mp-btn-ajuda" type="button" hidden>? Ajuda</button>
+          <button class="fechar" id="mp-fechar" title="Fechar">&times;</button>
+        </div>
+      </div>
+
+      <div class="modal-corpo">
+        <div class="mp-numeros">
+          <div class="mp-card"><div class="rot">Estoque</div><div class="val" id="mp-estoque">–</div></div>
+          <div class="mp-card"><div class="rot">A caminho</div><div class="val" id="mp-caminho">–</div><div class="det" id="mp-caminho-det"></div></div>
+        </div>
+
+        <div class="mp-titulo">Peças vendidas por mês</div>
+        <div class="mp-meses" id="mp-meses"></div>
+
+        <div class="mp-ajuda" id="mp-ajuda" hidden>
+          <p>Este fornecedor tem <strong>notas emitidas no ano que estão no Access sem itens</strong>.
+             As peças dessas notas não aparecem em “Notas de entrada” de nenhum produto, então a
+             lista abaixo pode estar incompleta.</p>
+          <p>Lance os itens dessas notas no Access; na próxima sincronização (COMPRA-17) elas entram
+             e somem daqui.</p>
+          <div id="mp-duvidas"></div>
+        </div>
+
+        <div class="mp-titulo">Notas de entrada do produto</div>
+        <table class="mp-notas">
+          <thead>
+            <tr><th>Nota</th><th>Emissão</th><th>Entrada</th><th class="num">Qte</th>
+                <th class="num">Unit.</th><th class="num">IPI %</th><th class="num">Unit. c/ IPI</th></tr>
+          </thead>
+          <tbody id="mp-notas"></tbody>
+        </table>
+      </div>
+
+      <div class="modal-rodape">
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <label class="mp-qtd" for="mp-qtd">Quantidade a pedir
+            <input type="number" min="0" step="1" id="mp-qtd">
+          </label>
+          <span class="mp-aviso" id="mp-aviso" hidden></span>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn-secundario" id="mp-cancelar">Cancelar</button>
+          <button class="btn-principal" id="mp-aplicar">Aplicar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/compra/pedidos.js"></script>
+</body>
+</html>

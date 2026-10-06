@@ -1,9 +1,13 @@
+// server.js (raiz: C:\plataformaRota\server.js) — 26/09/2026: sessão em connect-mongo (compatível v5/v6), 12h com renovação
 'use strict';
 
 const express = require('express');
 const app = express();
 const cors = require('cors');
 const session = require('express-session');
+// connect-mongo: a v5 exporta a classe direto; a v6 exporta { MongoStore } / default
+const _cm = require('connect-mongo');
+const MongoStore = _cm.MongoStore || _cm.default || _cm;
 const flash = require('connect-flash');
 const path = require('path');
 const morgan = require('morgan');
@@ -62,8 +66,8 @@ function formatarDecimalDeCentavos(valor) {
 // -------------------------------------------------------------------
 app.engine('handlebars', engine({
         defaultLayout: 'main',
-        layoutsDir: path.join(__dirname, 'views', 'layout'),
-        partialsDir: path.join(__dirname, 'views', 'partials'),
+        layoutsDir: path.join(__dirname, 'views', '_layout'),
+        partialsDir: path.join(__dirname, 'views', '_partials'),
         helpers: {
           eq: (a, b) => String(a) === String(b),
           moeda: (v) =>
@@ -283,11 +287,35 @@ hbs.registerHelper('formatLocalloja', function (item) {
 // -------------------------------------------------------------------
 // Sessão, flash e Passport
 // -------------------------------------------------------------------
+// Sessão gravada no Mongo (coleção _sessoes): sobrevive ao restart do nodemon.
+// Antes era MemoryStore — cada arquivo salvo derrubava todos os logins.
+// SESSAO_HORAS no .env muda a duração (padrão 12h). rolling: cada
+// requisição renova o prazo, então só cai depois de 12h SEM uso.
+const SESSAO_HORAS = Number(process.env.SESSAO_HORAS || 12);
+
+// O store usa a MESMA conexão do mongoose, aberta depois no boot
+// (connectToDatabase). A promessa resolve quando a conexão sobe.
+const clientPromise = new Promise(resolve => {
+  if (mongoose.connection.readyState === 1) return resolve(mongoose.connection.getClient());
+  mongoose.connection.once('connected', () => resolve(mongoose.connection.getClient()));
+});
+
 app.use(session({
   secret: process.env.SECRET || 'seusegredo',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 4 } // 4h
+  rolling: true,
+  store: MongoStore.create({
+    clientPromise,
+    collectionName: '_sessoes',
+    ttl: SESSAO_HORAS * 60 * 60,      // segundos; o Mongo apaga as vencidas sozinho
+    touchAfter: 10 * 60               // regrava no banco no máximo a cada 10 min
+  }),
+  cookie: {
+    maxAge: SESSAO_HORAS * 60 * 60 * 1000,
+    httpOnly: true,
+    sameSite: 'lax'
+  }
 }));
  
 app.use(flash());
@@ -375,6 +403,8 @@ const { ensureContab } = require('./src/routes/contab/auxiliares/rotina');
 const contabil    =require('./src/routes/contab/contabil/pages');
 const auxiliares = require('./src/routes/contab/auxiliares/pages');
 const financeiro = require('./src/routes/contab/financeiro/pages');
+const compra     = require('./src/routes/compra/pages');
+const vendas     = require('./src/routes/vendas/pages');   // 02/10/2026: modulo de vendas (clientes...)
 const loja        = require('./src/routes/empresa/rotina');
 const produto     = require('./src/routes/empresa/produtos');
 const cadproduto  = require("./src/routes/empresa/produto_cadastro");
@@ -391,6 +421,7 @@ const auth = require('./src/routes/auth');
 app.use('/admin-plata_forma', admin);
 app.use('/homeadmin', homeadmin);
 app.use('/central', central);
+app.use('/central/plano', require('./src/routes/central/plano-estrutura'));
 app.use('/lojista', lojista);
 app.use('/segmento', segmento);
 app.use('/similares', similares);
@@ -405,6 +436,8 @@ app.use('/usuariocontab', usuariocontab);
 app.use('/contab',ensureContab, contabil);
 app.use('/aux',ensureContab, auxiliares);
 app.use('/financeiro',ensureContab,financeiro);
+app.use('/compra',ensureContab,compra);
+app.use('/vendas',ensureContab,vendas);
 app.use('/loja', loja);
 app.use('/produto', produto);
 app.use('/cadproduto',cadproduto);

@@ -1,0 +1,24 @@
+==============================================================================
+Inspecao: C:\Armação\Dados\2026B\2026B.mdb
+Tamanho: 106.5 MB   Modificado: 23/09/2026, 17:37:57
+SOMENTE LEITURA -- nada foi alterado.
+==============================================================================
+
+### Periodo das vendas  --  Vendas_SaídaCupom
+
+    Cupons ....... 1100
+    Sem data ..... 0
+    Primeiro ..... 2026-01-02
+    Ultimo ....... 2026-09-21
+    Defasagem .... 3 dias em relacao a hoje
+
+    Cupons por mes:
+        2026-01      128
+        2026-02       91
+        2026-03      132
+        2026-04      111
+        2026-05      123
+        2026-06      154
+        2026-07      134
+        2026-08      151
+        2026-09       76

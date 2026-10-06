@@ -101,9 +101,10 @@
     {{!-- ====== GRADE DE LANÇAMENTOS ====== --}}
     <div class="rz-grade">
       <div class="rz-grade-head">
-        <div>CHAVE</div>
-        <div>DATA</div>
-        <div>C/PART.</div>
+        <div class="rz-center">CHAVE</div>
+        <div class="rz-center">DATA</div>
+        <div class="rz-center">C/PART.</div>
+        <div>CONTA</div>
         <div>HISTÓRICO</div>
         <div class="rz-right">DÉBITO</div>
         <div class="rz-right">CRÉDITO</div>
@@ -349,6 +350,10 @@
   }
   .rz-menu-item:hover { background: #f3f4f6; color: #111; }
   .rz-menu-item.aberto { background: #eef2ff; color: #1d4ed8; }
+  /* Sem conta escolhida no razão não há de onde tirar a perna única da
+     boleta, então o item fica visível mas inerte. */
+  .rz-menu-item.desativado { color: #9ca3af; cursor: not-allowed; }
+  .rz-menu-item.desativado:hover { background: transparent; }
   .rz-menu-drop {
     position: absolute; top: 100%; left: 0; margin-top: 4px; z-index: 70;
     background: #fff; border: 1px solid #d1d5db; border-radius: 6px;
@@ -356,6 +361,7 @@
     padding: 4px; display: flex; flex-direction: column;
   }
   .rz-menu-opt {
+    display: block; text-decoration: none;
     text-align: left; padding: 6px 10px; border: 0; border-radius: 4px;
     background: transparent; font-size: 13px; font-family: inherit;
     color: #1f2937; cursor: pointer;
@@ -368,16 +374,36 @@
 
   /* GRADE */
   .rz-grade { background: #fff; }
+
+  /* A chave da boleta tem 12 a 13 dígitos em fonte monoespaçada: nos 70px de
+     antes ela transbordava por cima da data. As colunas de valor também
+     subiram, porque "1.234.567,89" não cabia em 100px.
+     As larguras ficam num lugar só, na variável, para cabeçalho e linhas não
+     saírem de sincronia. */
+  .rz-grade { background: #fff; --rz-cols: 130px 90px 125px 190px 1fr 115px 115px 115px; }
   .rz-grade-head {
-    display: grid; grid-template-columns: 70px 80px 110px 1fr 100px 100px 100px;
+    display: grid; grid-template-columns: var(--rz-cols);
     background: #1d4ed8; color: #fff; font-size: 11px;
-    padding: 7px 16px; gap: 8px; font-weight: 500;
+    padding: 7px 16px; gap: 10px; font-weight: 500;
   }
   .rz-row {
-    display: grid; grid-template-columns: 70px 80px 110px 1fr 100px 100px 100px;
-    padding: 9px 16px; gap: 8px; font-size: 13px; color: #111;
+    display: grid; grid-template-columns: var(--rz-cols);
+    padding: 9px 16px; gap: 10px; font-size: 13px; color: #111;
     font-family: ui-monospace, monospace; border-bottom: 1px solid #f3f4f6;
+    align-items: center;
   }
+  /* Chave, data e contrapartida centralizadas; histórico à esquerda;
+     valores à direita. */
+  .rz-row > div:nth-child(1),
+  .rz-row > div:nth-child(2),
+  .rz-row > div:nth-child(3) { text-align: center; }
+  /* Nome da contrapartida e histórico longos cortam com reticências, em vez
+     de empurrar as colunas de valor para fora da tela. */
+  .rz-row .rz-hist,
+  .rz-row .rz-cpart-nome {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .rz-row .rz-cpart-nome { font-family: system-ui, sans-serif; color: #374151; }
   .rz-row:hover { background: #fafafa; }
   .rz-row .rz-chave-link,
   .rz-row .rz-cpart-link {
@@ -386,7 +412,8 @@
   .rz-row .rz-chave-link:hover,
   .rz-row .rz-cpart-link:hover { color: #1e40af; }
   .rz-row .rz-hist { font-family: system-ui, sans-serif; }
-  .rz-right { text-align: right; }
+  .rz-right  { text-align: right; }
+  .rz-center { text-align: center; }
   .rz-row .rz-deb { color: #15803d; }
   .rz-row .rz-cre { color: #b91c1c; }
   .rz-row .rz-saldo-neg { color: #b91c1c; }
@@ -448,4 +475,5 @@
   }
 </style>
 
+<script src="/js/contab/contabil/lancamento.js"></script>
 <script src="/js/contab/contabil/razao.js"></script>

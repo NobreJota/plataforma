@@ -1,33 +1,30 @@
-const express = require('express')
-const router = express.Router()
-const passport = require('passport')
-//ATENÇÃO =>> usuarioloja/login
+// ==================================================================
+// src/routes/empresa/usuario.js   (montado em /usuarioloja no server.js)
+// Alterado em 26/09/2026:
+//   - POST /usuarioloja/login passa a existir (usa a mesma função do
+//     POST /loja/cooperados, em src/routes/empresa/rotina.js)
+//   - GET /login pula direto para /loja/cooperados se já estiver logado
+//   - logout encerra só a sessão da loja (antes chamava req.logout do
+//     passport, que derrubava o login da central, e ia para /usuario/login,
+//     rota que não existe)
+// ==================================================================
+const express = require('express');
+const router  = express.Router();
+const { autenticarLojista } = require('./rotina');
 
-router.get('/logout',(req,res) => {
-    console.log('--> /logout')
-    req.logout()
-    req.flash("success_msg","Deslogado com successo!")
-    res.redirect('/usuario/login')
-})
+router.get('/login', (req, res) => {
+  if (req.session && req.session.lojistaId) {
+    return res.redirect('/loja/cooperados');
+  }
+  res.render('empresa/pages/lojalogin.handlebars', { layout: 'empresa/login' });
+});
 
-router.get('/login',(req,res)=>{
-    console.log('');
-    console.log('_______________________________________');
-    console.log('');
-    console.log(' [ empresa-17 ]');
-    console.log(' origem views : views/empresa/usuario/{loja/login} ');
-    console.log(' origem route : /empresa/usuario.js(get(/login))');
-    console.log(' obs : renderizou a page do login.handlebars"');
-    console.log('');
-    console.log(' destino :empresas/pages/lojalogin.handlebars');
-    console.log('');
-    console.log('__________________________________________________');
-    console.log('')
-   
-    res.render("empresas/pages/lojalogin.handlebars",{layout:"empresa/login"})
-    //...............................................................
-})
+router.post('/login', autenticarLojista);
 
-
+router.get('/logout', (req, res) => {
+  if (req.session) delete req.session.lojistaId;
+  req.flash('success_msg', 'Deslogado com sucesso!');
+  return req.session.save(() => res.redirect('/usuarioloja/login'));
+});
 
 module.exports = router;

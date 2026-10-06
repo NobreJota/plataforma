@@ -1,0 +1,3509 @@
+[
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481b2"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "5702",
+  "descricao": "vaso expansão vertical",
+  "complete": "2 litros sanit AR2",
+  "referencia": "AR2",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "68f76bbac4ba5a635e5663b3"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "691252d1c35913489fd95d7a"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "691252eec35913489fd95d87"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": null,
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "1"
+  },
+  "precovista": {
+   "$numberDecimal": "17234"
+  },
+  "precoprazo": {
+   "$numberDecimal": "17234"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764930850185_vaso_expansaoEmmetti.png",
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764930850185_vaso_expansaoEmmetti.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "6759999847"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525603"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1768911258766"
+   }
+  },
+  "descricaoNorm": "vaso expansao vertical"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481b3"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "5703",
+  "descricao": "vaso expansão vertical",
+  "complete": "5 litros sanit VA5",
+  "referencia": "VA5",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692ad60d5503268e6863ab9b"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "1"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "17436"
+  },
+  "precovista": {
+   "$numberDecimal": "17436"
+  },
+  "precoprazo": {
+   "$numberDecimal": "292.24"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764930741963_vaso_expansao1.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "6761000061"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525604"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477530626"
+   }
+  },
+  "descricaoNorm": "vaso expansao vertical"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481b5"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "5777",
+  "descricao": "válvula redutora pressão P",
+  "complete": "25",
+  "referencia": "08026100",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692d6bab50248a274e3c5e0c"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "1"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "26558"
+  },
+  "precovista": {
+   "$numberDecimal": "26558"
+  },
+  "precoprazo": {
+   "$numberDecimal": "808.74"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931317832_valvula_redutora_pressao.png",
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1765226686228_valvula_redutora_pressao1.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "100"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525606"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477530892"
+   }
+  },
+  "descricaoNorm": "valvula redutora pressao p"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481b6"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "5778",
+  "descricao": "válvula retenção horizontal",
+  "complete": "1",
+  "referencia": "19206",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "12"
+  },
+  "precovista": {
+   "$numberDecimal": "3303"
+  },
+  "precoprazo": {
+   "$numberDecimal": "33.03"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931240945_valvula_retencao_horizontal.png",
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931240945_valvula_retencao_horizontal.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "300"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525607"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765960234600"
+   }
+  },
+  "descricaoNorm": "valvula retencao horizontal"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481b7"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "5798",
+  "descricao": "válvula redução pressão F X F",
+  "complete": "3/4",
+  "referencia": "28104222",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "17164"
+  },
+  "precovista": {
+   "$numberDecimal": "17164"
+  },
+  "precoprazo": {
+   "$numberDecimal": "284.00"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [],
+  "pageok": false,
+  "ativo": false,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "4740000153"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525607"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477531157"
+   }
+  },
+  "descricaoNorm": "valvula reducao pressao f x f"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481ba"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "5898",
+  "descricao": "filtro Y c",
+  "complete": "/tela inox 1/2",
+  "referencia": "17004",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692ad60d5503268e6863ab9b"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "1"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "6833"
+  },
+  "precovista": {
+   "$numberDecimal": "4720"
+  },
+  "precoprazo": {
+   "$numberDecimal": "89.10"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764930294001_V%C3%A1lvula_filtro_Y.png",
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1765960742547_filtro_de_linha_Y.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "70"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525609"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765960743839"
+   }
+  },
+  "descricaoNorm": "filtro y c"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481bb"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "5899",
+  "descricao": "filtro Y c ",
+  "complete": "/tela inox 3/4",
+  "referencia": "17005",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692ad60d5503268e6863ab9b"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "1"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "2078"
+  },
+  "precovista": {
+   "$numberDecimal": "2122"
+  },
+  "precoprazo": {
+   "$numberDecimal": "89.10"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764930294001_V%C3%A1lvula_filtro_Y.png"
+  ],
+  "pageok": false,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "277"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525610"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477531686"
+   }
+  },
+  "descricaoNorm": "filtro y c"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481bc"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "5900",
+  "descricao": "válvula segurança MF",
+  "complete": "1/2 - 6 bar",
+  "referencia": "00206060",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "9"
+  },
+  "precovista": {
+   "$numberDecimal": "4027"
+  },
+  "precoprazo": {
+   "$numberDecimal": "36.43"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931078840_valvula_seguranca_MF.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "3537200012"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525610"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765960168529"
+   }
+  },
+  "descricaoNorm": "valvula seguranca mf"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481bd"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "5991",
+  "descricao": "registro gás",
+  "complete": "",
+  "referencia": "LL1092A12",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "1"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "2279"
+  },
+  "precovista": {
+   "$numberDecimal": "2214"
+  },
+  "precoprazo": {
+   "$numberDecimal": "0"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931962048_registro_gas_sfera.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "8066999817"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525611"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477531974"
+   }
+  },
+  "descricaoNorm": "registro gas"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481be"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "5996",
+  "descricao": "kit ligação",
+  "complete": "30 cm 1/2 x 1/2",
+  "referencia": "0",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "7686"
+  },
+  "precovista": {
+   "$numberDecimal": "7686"
+  },
+  "precoprazo": {
+   "$numberDecimal": "0"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764932387164_kit_aquecedor.png"
+  ],
+  "pageok": true,
+  "ativo": false,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "100"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525611"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477532111"
+   }
+  },
+  "descricaoNorm": "kit ligacao"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481bf"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "5997",
+  "descricao": "kit ligação",
+  "complete": "40 cm 1/2 x 1/2",
+  "referencia": "0",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "7927"
+  },
+  "precovista": {
+   "$numberDecimal": "7927"
+  },
+  "precoprazo": {
+   "$numberDecimal": "0"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764932308754_kit_gas.png"
+  ],
+  "pageok": true,
+  "ativo": false,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "100"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525611"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477532245"
+   }
+  },
+  "descricaoNorm": "kit ligacao"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481c0"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6000",
+  "descricao": "engate gás",
+  "complete": "1/2 x 40 cm",
+  "referencia": "FLT1240M",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "12"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "128"
+  },
+  "precovista": {
+   "$numberDecimal": "128"
+  },
+  "precoprazo": {
+   "$numberDecimal": "721"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764953745303_engate_gas.png"
+  ],
+  "pageok": true,
+  "ativo": false,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "35"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525612"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477532377"
+   }
+  },
+  "descricaoNorm": "engate gas"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481c1"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6001",
+  "descricao": "engate gás",
+  "complete": "1/2 x 30 cm",
+  "referencia": "FLT1230M",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "6303"
+  },
+  "precovista": {
+   "$numberDecimal": "6303"
+  },
+  "precoprazo": {
+   "$numberDecimal": "0"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764932481409_engate_gas2.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "70"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525612"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477532511"
+   }
+  },
+  "descricaoNorm": "engate gas"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481c2"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6002",
+  "descricao": "registro gás",
+  "complete": "1/2 - reto",
+  "referencia": "C685R104",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "1912"
+  },
+  "precovista": {
+   "$numberDecimal": "1912"
+  },
+  "precoprazo": {
+   "$numberDecimal": "0"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931992344_registroG%C3%A1s.jpg"
+  ],
+  "pageok": true,
+  "ativo": false,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "1164199982"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525612"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477532643"
+   }
+  },
+  "descricaoNorm": "registro gas"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481c3"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6015",
+  "descricao": "registro gás c",
+  "complete": "/borboleta",
+  "referencia": "6922R104",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "2481"
+  },
+  "precovista": {
+   "$numberDecimal": "2311"
+  },
+  "precoprazo": {
+   "$numberDecimal": "0"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931459053_regG%C3%A1s.png"
+  ],
+  "pageok": true,
+  "ativo": false,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "1165699997"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525613"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477532774"
+   }
+  },
+  "descricaoNorm": "registro gas c"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481c4"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6024",
+  "descricao": "registro gás LL",
+  "complete": "1517",
+  "referencia": "LL1517A12",
+  "referencia2": "",
+  "codEcf": "2975",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "1"
+  },
+  "precovista": {
+   "$numberDecimal": "2182"
+  },
+  "precoprazo": {
+   "$numberDecimal": "21.59"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764930454809_regG%C3%A1s.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "1598399963"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525613"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765960360030"
+   }
+  },
+  "descricaoNorm": "registro gás LL"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481c5"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6031",
+  "descricao": "engate jumbo agua",
+  "complete": "1/2 x 30 cm",
+  "referencia": "HO524300J",
+  "referencia2": "",
+  "codEcf": "2850",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692ad3ee5503268e6863ab7f"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "2"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "1733"
+  },
+  "precovista": {
+   "$numberDecimal": "1733"
+  },
+  "precoprazo": {
+   "$numberDecimal": "69.07"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1765188707720_engate_gas.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "2985599976"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525613"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477533037"
+   }
+  },
+  "descricaoNorm": "engate jumbo agua"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481c6"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6032",
+  "descricao": "engate jumbo agua",
+  "complete": "1/2 x 40 cm",
+  "referencia": "HO524400J",
+  "referencia2": "",
+  "codEcf": "2848",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692d6c2a50248a274e3c5e24"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "4"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "1872"
+  },
+  "precovista": {
+   "$numberDecimal": "1754"
+  },
+  "precoprazo": {
+   "$numberDecimal": "83.43"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764929948556_engate_distak.png"
+  ],
+  "pageok": false,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "3756600037"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525614"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477533169"
+   }
+  },
+  "descricaoNorm": "engate jumbo agua"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481c7"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6033",
+  "descricao": "engate jumbo agua",
+  "complete": "1/2 x 60 cm",
+  "referencia": "HO524600J",
+  "referencia2": "",
+  "codEcf": "3241",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692ad3705503268e6863ab68"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "5"
+  },
+  "precovista": {
+   "$numberDecimal": "1891"
+  },
+  "precoprazo": {
+   "$numberDecimal": "18.60"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764929948556_engate_distak.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "2322599945"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525614"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1768488036667"
+   }
+  },
+  "descricaoNorm": "engate jumbo agua"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481c8"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6034",
+  "descricao": "engate jumbo agua",
+  "complete": "1/2 x 10 cm",
+  "referencia": "HO5241000J",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692ad3ee5503268e6863ab7f"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "9"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "2295"
+  },
+  "precovista": {
+   "$numberDecimal": "2194"
+  },
+  "precoprazo": {
+   "$numberDecimal": "88.76"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764930209783_engate_distak.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "3045599976"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525615"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477533435"
+   }
+  },
+  "descricaoNorm": "engate jumbo agua"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481c9"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6039",
+  "descricao": "bucha redução latão",
+  "complete": "3/4 M x 1/2 F",
+  "referencia": "P28202650",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "50"
+  },
+  "precovista": {
+   "$numberDecimal": "781"
+  },
+  "precoprazo": {
+   "$numberDecimal": "780"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764932665474_bucha_reducao.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "3058999939"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525615"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765960381431"
+   }
+  },
+  "descricaoNorm": "bucha red.metal"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481ca"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6041",
+  "descricao": "engate gás",
+  "complete": "1/2 x 60 cm",
+  "referencia": "FLT1260m",
+  "referencia2": "",
+  "codEcf": "2946",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692ad3ee5503268e6863ab7f"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "1"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "7744"
+  },
+  "precovista": {
+   "$numberDecimal": "6377"
+  },
+  "precoprazo": {
+   "$numberDecimal": "79.86"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1765226844945_engate_gas2.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "70"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525616"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477533698"
+   }
+  },
+  "descricaoNorm": "engate gas"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481cb"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6042",
+  "descricao": "engate gás",
+  "complete": "1/2 x   100 cm",
+  "referencia": "FLT12100m",
+  "referencia2": "",
+  "codEcf": "2947",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692d6d1250248a274e3c5e40"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "1"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "15163"
+  },
+  "precovista": {
+   "$numberDecimal": "12004"
+  },
+  "precoprazo": {
+   "$numberDecimal": "154.49"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1765226903569_engate_gas2.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "70"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525616"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477533862"
+   }
+  },
+  "descricaoNorm": "engate gas"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481cc"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6043",
+  "descricao": "engate gás",
+  "complete": "1/2 x   120 cm ",
+  "referencia": "FLT12120m",
+  "referencia2": "",
+  "codEcf": "2948",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692ad3ee5503268e6863ab7f"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "1"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "13000"
+  },
+  "precovista": {
+   "$numberDecimal": "13000"
+  },
+  "precoprazo": {
+   "$numberDecimal": "191.17"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764930230458_engate_jackwall.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "4704999924"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525616"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477533994"
+   }
+  },
+  "descricaoNorm": "engate gas"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481cd"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6044",
+  "descricao": "engate gás",
+  "complete": "1/2 x    80 cm",
+  "referencia": "FLT1280m",
+  "referencia2": "",
+  "codEcf": "2949",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692ad3ee5503268e6863ab7f"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "1"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "11472"
+  },
+  "precovista": {
+   "$numberDecimal": "9282"
+  },
+  "precoprazo": {
+   "$numberDecimal": "102.70"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764929980352_engate_jackwall.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "60"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525617"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477534127"
+   }
+  },
+  "descricaoNorm": "engate gas"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481ce"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6053",
+  "descricao": "engate gás",
+  "complete": "1/2 x   150 cm",
+  "referencia": "FLT12150M",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "11791"
+  },
+  "precovista": {
+   "$numberDecimal": "10141"
+  },
+  "precoprazo": {
+   "$numberDecimal": "212.23"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [],
+  "pageok": false,
+  "ativo": false,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "70"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525617"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477534257"
+   }
+  },
+  "descricaoNorm": "engate gas"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481d0"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6066",
+  "descricao": "Z_FLEX.ANTIVIBRACAO A.P.",
+  "complete": "1X50 cm",
+  "referencia": "06083050",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "1"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "3953"
+  },
+  "precovista": {
+   "$numberDecimal": "3953"
+  },
+  "precoprazo": {
+   "$numberDecimal": "90.92"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [],
+  "pageok": false,
+  "ativo": false,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "130"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525618"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477534520"
+   }
+  },
+  "descricaoNorm": "z_flex.antivibracao a.p."
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481d1"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6087",
+  "descricao": "valv.ret.vertical",
+  "complete": "3/4 poliet",
+  "referencia": "19105",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "1870"
+  },
+  "precovista": {
+   "$numberDecimal": "1779"
+  },
+  "precoprazo": {
+   "$numberDecimal": "88.90"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764930992656_valvula_retencao_vertical.png"
+  ],
+  "pageok": true,
+  "ativo": false,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "3997200012"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525618"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477534652"
+   }
+  },
+  "descricaoNorm": "valv.ret.vertical"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481d3"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6095",
+  "descricao": "válvula retenção vertical",
+  "complete": "3/4 metal",
+  "referencia": "19205",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "16"
+  },
+  "precovista": {
+   "$numberDecimal": "2861"
+  },
+  "precoprazo": {
+   "$numberDecimal": "28.62"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764930970265_valvula_retencao_vertical.png",
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1767214309846_15_valvula-G%C3%A1s.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "3012900085"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525619"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1767214310977"
+   }
+  },
+  "descricaoNorm": "valvula retencao vertical"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481d4"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6096",
+  "descricao": "niple metal",
+  "complete": "1/2 x 1/2",
+  "referencia": "P28202480",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692ad3805503268e6863ab6c"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "15"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "674"
+  },
+  "precovista": {
+   "$numberDecimal": "668"
+  },
+  "precoprazo": {
+   "$numberDecimal": "12.18"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764932118313_niple_metal34.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "1046399994"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525620"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477535046"
+   }
+  },
+  "descricaoNorm": "niple metal"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481d5"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6097",
+  "descricao": "niple metal",
+  "complete": "3/4 x 3/4",
+  "referencia": "P28202482",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692d6bab50248a274e3c5e0c"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "10"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "871"
+  },
+  "precovista": {
+   "$numberDecimal": "871"
+  },
+  "precoprazo": {
+   "$numberDecimal": "20.28"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931837864_niple_metal34.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "1328399963"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525622"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477535178"
+   }
+  },
+  "descricaoNorm": "niple metal"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481d6"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6098",
+  "descricao": "niple metal",
+  "complete": "1 x 1",
+  "referencia": "P28202484",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [
+   {
+    "departamento": [
+     {
+      "$oid": "688d38773f72c76ca2cac07c"
+     }
+    ],
+    "setor": [
+     {
+      "idSetor": {
+       "$oid": "692ad34a5503268e6863ab64"
+      },
+      "secao": [
+       {
+        "idSecao": {
+         "$oid": "692d6bab50248a274e3c5e0c"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "5"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "1693"
+  },
+  "precovista": {
+   "$numberDecimal": "1659"
+  },
+  "precoprazo": {
+   "$numberDecimal": "28.41"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931798433_niple_metal.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "7125"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525622"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477535310"
+   }
+  },
+  "descricaoNorm": "niple metal"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481d7"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6161",
+  "descricao": "canopla redonda",
+  "complete": "1/2",
+  "referencia": "HO492X37",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "0"
+  },
+  "precovista": {
+   "$numberDecimal": "128"
+  },
+  "precoprazo": {
+   "$numberDecimal": "128"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764932586834_canopla.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "4632799988"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525622"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765960396684"
+   }
+  },
+  "descricaoNorm": "canopla redonsa"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481d8"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6298",
+  "descricao": "válvula quebra vacuo",
+  "complete": "3/4\" LL5033",
+  "referencia": "LL5033034",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "1"
+  },
+  "precovista": {
+   "$numberDecimal": "5732"
+  },
+  "precoprazo": {
+   "$numberDecimal": "57.32"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931543704_valvula_quebra_vacuo.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "1602599945"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525623"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765960143855"
+   }
+  },
+  "descricaoNorm": "valvula quebra vacuo"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481d9"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6299",
+  "descricao": "vaso expansão vertical",
+  "complete": "8L sanitario mod..VA8",
+  "referencia": "00800008",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "1"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "24235"
+  },
+  "precovista": {
+   "$numberDecimal": "24235"
+  },
+  "precoprazo": {
+   "$numberDecimal": "637.10"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764930634231_vaso_expansao.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "1628800049"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525623"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477535719"
+   }
+  },
+  "descricaoNorm": "vaso expansao vertical"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481da"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6302",
+  "descricao": "filtro Y c",
+  "complete": "/tela inox 1",
+  "referencia": "17006",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "2699"
+  },
+  "precovista": {
+   "$numberDecimal": "2699"
+  },
+  "precoprazo": {
+   "$numberDecimal": "80.97"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [],
+  "pageok": false,
+  "ativo": false,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "200"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525623"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477535850"
+   }
+  },
+  "descricaoNorm": "filtro y c"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481db"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6325",
+  "descricao": "prolongador médio",
+  "complete": "1/2 x 1/2",
+  "referencia": "P28202260M",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "4"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "1162"
+  },
+  "precovista": {
+   "$numberDecimal": "1211"
+  },
+  "precoprazo": {
+   "$numberDecimal": "31.60"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931701065_prolongador.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "1239499969"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525623"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477535981"
+   }
+  },
+  "descricaoNorm": "prolongador medio"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481dc"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6392",
+  "descricao": "válvula redução pressão F X F",
+  "complete": "1",
+  "referencia": "28104224",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "0"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "2"
+  },
+  "precovista": {
+   "$numberDecimal": "25113"
+  },
+  "precoprazo": {
+   "$numberDecimal": "251.13"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764931436729_valvula_redutora_pressao1.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "4095999908"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525624"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765960336584"
+   }
+  },
+  "descricaoNorm": "valvula reducao pressao f x f"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481dd"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6409",
+  "descricao": "luva metal",
+  "complete": "1/2",
+  "referencia": "P28292370",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "20"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "835"
+  },
+  "precovista": {
+   "$numberDecimal": "827"
+  },
+  "precoprazo": {
+   "$numberDecimal": "12.58"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764932134505_luva_metal_cromada1.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "9745999908"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525624"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477536246"
+   }
+  },
+  "descricaoNorm": "luva metal"
+ },
+ {
+  "_id": {
+   "$oid": "6931f4751739b172147481de"
+  },
+  "loja_id": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "marcaloja": "Armação",
+  "cidade": "Vitória",
+  "bairro": "Gurigica",
+  "codigo": "6410",
+  "descricao": "luva metal",
+  "complete": "3/4",
+  "referencia": "P28292372",
+  "referencia2": "",
+  "codEcf": "",
+  "localloja": [],
+  "fornecedor": {
+   "$oid": "68e004f20f338c9f1358b5b4"
+  },
+  "similares": [],
+  "qte": {
+   "$numberInt": "7"
+  },
+  "qte_negativa": {
+   "$numberInt": "0"
+  },
+  "qte_reservada": {
+   "$numberInt": "0"
+  },
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDecimal": "1233"
+  },
+  "precovista": {
+   "$numberDecimal": "1224"
+  },
+  "precoprazo": {
+   "$numberDecimal": "21.90"
+  },
+  "artigo": "",
+  "pageposicao": {
+   "$numberInt": "0"
+  },
+  "pageurls": [
+   "https://amelia.nyc3.digitaloceanspaces.com/01_1764932097842_luva_metal_cromada.png"
+  ],
+  "pageok": true,
+  "ativo": true,
+  "datadel": null,
+  "figure_mini": "false",
+  "figure_media": "false",
+  "csosn": "",
+  "ncm": "",
+  "taxa": {
+   "$numberDecimal": "1324299927"
+  },
+  "cfop_ecf": "",
+  "cfop_nfe": "",
+  "__v": {
+   "$numberInt": "0"
+  },
+  "createdAt": {
+   "$date": {
+    "$numberLong": "1764881525624"
+   }
+  },
+  "updatedAt": {
+   "$date": {
+    "$numberLong": "1765477536378"
+   }
+  },
+  "descricaoNorm": "luva metal"
+ }
+]

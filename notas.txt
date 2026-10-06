@@ -1,0 +1,250 @@
+==============================================================================
+Levantamento para o modelo de compra
+C:\Armação\Dados\2026B\2026B.mdb
+SOMENTE LEITURA -- nada foi alterado.
+==============================================================================
+
+////////////////////////////// 1. NOTAS DE ENTRADA ////////////////////////////
+
+### NFE_Cabeçalho  --  5127 registros, 14 colunas
+
+    Chave                        long (4)
+    NrNota                       text (24)
+    NrFornec                     integer (2)
+    NrPedido                     long (4)
+    VrNota                       currency (8)
+    Emissão                      datetime (8)
+    DataEntr                     datetime (8)
+    NrTransp                     long (4)
+    NrContabilTransp             text (24)
+    NrConhec                     text (16)
+    VrFrete                      currency (8)
+    Perc                         text (10)
+    TaxaCredIcms                 text (8)
+    NrTítulos                    float (4)
+
+    --- amostra ---
+    [1]
+        Chave                      = 299
+        NrNota                     = 87163
+        NrFornec                   = 52
+        NrPedido                   = 262
+        VrNota                     = 183.0000
+        Emissão                    = 2015-01-09
+        DataEntr                   = 2015-01-09
+        NrTransp                   = 0
+        NrContabilTransp           = null
+        NrConhec                   = 0
+        VrFrete                    = 0.0000
+        Perc                       = 0
+        TaxaCredIcms               = 0
+        NrTítulos                  = 0
+    [2]
+        Chave                      = 302
+        NrNota                     = 209579
+        NrFornec                   = 238
+        NrPedido                   = 4147
+        VrNota                     = 2204.6200
+        Emissão                    = 2014-12-22
+        DataEntr                   = 2015-01-09
+        NrTransp                   = 0
+        NrContabilTransp           = 0.00.000.000
+        NrConhec                   = 0000
+        VrFrete                    = 0.0000
+        Perc                       = 0
+        TaxaCredIcms               = 0
+        NrTítulos                  = 0
+    [3]
+        Chave                      = 459
+        NrNota                     = 31807
+        NrFornec                   = 225
+        NrPedido                   = 4158
+        VrNota                     = 530.4700
+        Emissão                    = 2015-01-06
+        DataEntr                   = 2015-01-12
+        NrTransp                   = 0
+        NrContabilTransp           = 0.00.000.000
+        NrConhec                   = 0000
+        VrFrete                    = 0.0000
+        Perc                       = 0
+        TaxaCredIcms               = 0
+        NrTítulos                  = 0
+
+### NFE_Itens  --  23570 registros, 13 colunas
+
+    Chave                        long (4)
+    Código                       long (4)
+    NotaFiscal                   text (510)
+    Nr_Fornec                    long (4)
+    Refer                        text (30)
+    Ordem                        long (4)
+    Unid                         text (2)
+    Qte                          text (8)
+    VrCusto                      currency (8)
+    Descont                      currency (8)
+    IPI                          text (10)
+    VrIpi                        currency (8)
+    Vrtotal                      currency (8)
+
+    --- amostra ---
+    [1]
+        Chave                      = 2194
+        Código                     = 5824
+        NotaFiscal                 = 447860
+        Nr_Fornec                  = 82
+        Refer                      = REU-E211FEHB 
+        Ordem                      = 2
+        Unid                       = U
+        Qte                        = 1
+        VrCusto                    = 1734.0900
+        Descont                    = 0.0000
+        IPI                        = 6
+        VrIpi                      = 112.7200
+        Vrtotal                    = 1846.8100
+    [2]
+        Chave                      = 2194
+        Código                     = 5838
+        NotaFiscal                 = 447860
+        Nr_Fornec                  = 82
+        Refer                      = REUE211FEH 
+        Ordem                      = 3
+        Unid                       = U
+        Qte                        = 3
+        VrCusto                    = 1734.0900
+        Descont                    = 0.0000
+        IPI                        = 6
+        VrIpi                      = 338.1500
+        Vrtotal                    = 5540.4200
+    [3]
+        Chave                      = 2194
+        Código                     = 4858
+        NotaFiscal                 = 447860
+        Nr_Fornec                  = 82
+        Refer                      = REU 200 BR 
+        Ordem                      = 4
+        Unid                       = U
+        Qte                        = 2
+        VrCusto                    = 1414.5400
+        Descont                    = 0.0000
+        IPI                        = 6
+        VrIpi                      = 183.8900
+        Vrtotal                    = 3012.9700
+
+### NFE_Títulos  --  1784 registros, 12 colunas
+
+    Código                       long (4)
+    Chave                        long (4)
+    NrFornec                     float (4)
+    NrNota                       text (24)
+    Tipo                         text (2)
+    NrTítulo                     text (20)
+    Pos                          text (2)
+    Valor                        currency (8)
+    Vect                         datetime (8)
+    Pago                         datetime (8)
+    NvChave                      long (4)
+    Transfer                     integer (2)
+
+    --- amostra ---
+    [1]
+        Código                     = 1
+        Chave                      = 183
+        NrFornec                   = 67
+        NrNota                     = 180050
+        Tipo                       = P
+        NrTítulo                   = 180050
+        Pos                        = 0
+        Valor                      = 3255.0000
+        Vect                       = 2023-03-15
+        Pago                       = 2023-03-15
+        NvChave                    = 0
+        Transfer                   = 0
+    [2]
+        Código                     = 2
+        Chave                      = 183
+        NrFornec                   = 67
+        NrNota                     = 180050
+        Tipo                       = P
+        NrTítulo                   = 180050
+        Pos                        = 0
+        Valor                      = 3255.0000
+        Vect                       = 2023-04-12
+        Pago                       = 2023-04-12
+        NvChave                    = 0
+        Transfer                   = 0
+    [3]
+        Código                     = 3
+        Chave                      = 192
+        NrFornec                   = 263
+        NrNota                     = 8013
+        Tipo                       = P
+        NrTítulo                   = 8013
+        Pos                        = 0
+        Valor                      = 6543.7500
+        Vect                       = 2023-02-21
+        Pago                       = 2023-02-22
+        NvChave                    = 0
+        Transfer                   = 0
+
+////////////////////////////// 2. SERIE MENSAL ////////////////////////////////
+
+### Indice dos meses em PROD_Estatística_Mensal
+
+    Produtos na tabela: 396
+
+    desloc   Qte_01 =    iguais!=0   iguais    difere
+       0      jan          191      3337      1415
+       8      set          103      3235      1517
+      11      dez           97      3229      1523
+       7      ago           95      3231      1521
+
+    => Qte_01 corresponde a JAN
+
+### Perfil da serie mensal
+
+    Giro anual por produto:
+        zero ............ 147
+        1 a 2 ........... 58
+        3 a 5 ........... 50
+        6 a 12 .......... 51
+        13 a 50 ......... 71
+        acima de 50 ..... 19
+
+    Em quantos meses do ano houve venda:
+         0 meses ...... 147
+         1 meses ...... 39
+         2 meses ...... 26
+         3 meses ...... 23
+         4 meses ...... 23
+         5 meses ...... 9
+         6 meses ...... 15
+         7 meses ...... 12
+         8 meses ...... 9
+         9 meses ...... 11
+        10 meses ...... 9
+        11 meses ...... 18
+        12 meses ...... 55
+
+    Produtos com giro >= 3: 191
+    Destes, com metade ou mais do ano concentrado em UM mes: 23
+    (esse e o grupo que exige tratamento sazonal)
+
+////////////////////////////// 3. PRAZO DE ENTREGA ////////////////////////////
+
+### Prazo de entrega em PED_PedidoFornecedor
+
+    Pedidos ................... 13
+    Com data de Entrega real .. 0
+    Com Previsão real ......... 13
+
+    [sem dado] O campo Entrega nao foi preenchido.
+    O prazo tera que sair do cruzamento com as notas de entrada,
+    ou de faixas informadas por fornecedor.
+
+    Condicoes de pagamento usadas:
+           4  28 dias
+           3  30/60/90 dias
+           2  84/112 dias
+           2  28/56 dias
+           1  60 dias
+           1  56/70/84 dias

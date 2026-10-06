@@ -1,17 +1,92 @@
-// src/routes/financeiro/pagamento-api.js
+// Destino: C:\plataformaRota\src\routes\contab\financeiro\pagamento-api.js
+// (caminho corrigido em 05/10/2026; antes dizia src/routes/financeiro/pagamento-api.js)
 // Pagamento/Recebimento em LOTE a partir do Fluxo de Caixa.
 // Lista títulos numa janela de dias, e grava a Boleta (partida dobrada com rateio):
 //   PAGAMENTO  → banco creditado (sai $), contrapartidas = débitos (despesas)
 //   RECEBIMENTO→ banco debitado (entra $), contrapartidas = créditos (receitas)
 // Após gravar, remove os títulos do Fluxo Projetado (some do Fluxo de Caixa).
+//
+// Alterado em 03/10/2026:
+//  - DATA DO MOVIMENTO: nunca depois de hoje, nunca sabado/domingo, e no maximo
+//    5 dias uteis para tras (evita lancamento em data errada). Vale para pagar e receber.
+//  - CARTAO (pos 5 em 1.01.005.xxx):
+//      GET /cartoes            os cartoes do plano com a conta da taxa de cada um
+//      GET /cartao?conta=&historico=   as parcelas em aberto de um cartao (todas as
+//                              datas); com historico, so as daquela venda
+//      POST /quitar + valorLiquido: o que o cartao pagou de fato. Grava a boleta do
+//      recebimento pelo TOTAL (cartao a credito, banco a debito) e uma segunda boleta
+//      <codigo>-TAXA: banco a credito pela taxa, contra a despesa do cartao (contaTaxa
+//      do subtitulo: Mastercard 3.03.001.017, Visa 3.03.001.018). No banco fica o liquido.
+//      Estornar a boleta estorna a taxa junto.
+//  05/10/2026: TAXA NA MESMA BOLETA. O recebimento de cartao com liquido menor grava UMA
+//      boleta: banco a debito pelo LIQUIDO; contrapartidas = as parcelas do cartao (credito,
+//      pelo total) + a taxa com valor NEGATIVO (= debito na despesa do cartao; o razao le
+//      o negativo no lado oposto). Banco = soma das contrapartidas. Boletas antigas com
+//      <codigo>-TAXA continuam sendo estornadas juntas.
+//  05/10/2026: GET /cartao?...&historico=...&cliente=1 traz as parcelas em aberto do
+//      cartao de TODAS as vendas do mesmo cliente daquela venda (venda -> cliente.id ->
+//      vendas dele). Venda de balcao (sem cliente): as vendas de balcao daquele cartao.
 
 const express = require('express');
+const mongoose = require('mongoose');
 const FluxoProjetado = require('../../../models/contab/financeiro/fluxoProjetado');
 const Boleta = require('../../../models/contab/financeiro/boleta');
 const ContaBancaria = require('../../../models/contab/auxiliares/contaBancaria');
 const HistoricoConta = require('../../../models/contab/financeiro/historicoConta');
 
 const router = express.Router();
+
+const PREFIXO_CARTAO = '1.01.005.';
+const col = n => mongoose.connection.collection(n);
+const lojaDe = req => (req.lojistaId ? new mongoose.Types.ObjectId(String(req.lojistaId)) : null);
+const emCentavos = v => Math.round(Number(v || 0) * 100);
+
+/* Data do movimento: 'AAAA-MM-DD'. Devolve o erro em texto, ou '' se vale.
+   Nao pode ser depois de hoje, nem sabado/domingo, nem mais de 5 dias uteis atras. */
+function erroDataMovimento(txt) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(txt || ''))) return 'Informe a data do movimento.';
+  const d = new Date(txt + 'T12:00:00');
+  if (isNaN(d)) return 'Data do movimento inválida.';
+  const hoje = new Date(); hoje.setHours(12, 0, 0, 0);
+  if (d > hoje) return 'A data do movimento não pode ser depois de hoje.';
+  if (d.getDay() === 0 || d.getDay() === 6) return 'A data do movimento não pode ser sábado nem domingo.';
+  let uteis = 0;
+  for (const x = new Date(d); x < hoje; ) {
+    x.setDate(x.getDate() + 1);
+    if (x.getDay() !== 0 && x.getDay() !== 6) uteis++;
+  }
+  if (uteis > 5) return 'A data do movimento pode voltar no máximo 5 dias úteis.';
+  return '';
+}
+
+/* O cartao (subtitulo 1.01.005.xxx) e a conta da taxa dele (campo contaTaxa). */
+async function cartaoComTaxa(loja, codigo) {
+  const filtro = { codigo, ativo: { $ne: false } };
+  if (loja) filtro.lojistaId = loja;
+  const c = await col('_contasubtitulos').findOne(filtro);
+  if (!c) return null;
+  let taxa = null;
+  if (c.contaTaxa) {
+    const ft = { codigo: c.contaTaxa, ativo: { $ne: false } };
+    if (loja) ft.lojistaId = loja;
+    taxa = await col('_contasubtitulos').findOne(ft);
+  }
+  return { _id: c._id, codigo: c.codigo, nome: c.nome,
+           contaTaxa: taxa ? { _id: taxa._id, codigo: taxa.codigo, nome: taxa.nome } : null };
+}
+
+const tituloParaTela = (it, base) => ({
+  _id: it._id,
+  vencimento: it.vencimento,
+  historico: it.historico || it.nomeConta || '',
+  nomeConta: it.nomeConta || '',
+  codigoConta: it.codigoConta || '',
+  contaSubTitulo: it.contaSubTitulo || null,
+  pos: it.pos,
+  valor: Math.abs(it.valor),
+  parcela: it.parcela, totalParcelas: it.totalParcelas,
+  noDia: base ? new Date(it.vencimento).toDateString() === base.toDateString() : false,
+});
 
 // pos de recebimento (entrada) vs pagamento (saída)
 const POS_RECEBE = new Set([1, 5]);
@@ -89,12 +164,63 @@ router.get('/bancos', async (req, res) => {
   }
 });
 
+/* GET /financeiro/api/pagamento/cartoes   cartoes do plano (1.01.005.xxx) */
+router.get('/cartoes', async (req, res) => {
+  try {
+    const loja = lojaDe(req);
+    const filtro = { codigo: new RegExp('^' + PREFIXO_CARTAO.replace(/\./g, '\\.')), ativo: { $ne: false } };
+    if (loja) filtro.lojistaId = loja;
+    const lista = await col('_contasubtitulos').find(filtro).sort({ codigo: 1 }).toArray();
+    res.json(lista.map(c => ({ codigo: c.codigo, nome: c.nome, contaTaxa: c.contaTaxa || '' })));
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* GET /financeiro/api/pagamento/cartao?conta=1.01.005.003[&historico=...]
+   Parcelas EM ABERTO (pos 5) de um cartao, de qualquer data. Com historico,
+   so as daquela venda (o historico da venda e o mesmo em todas as parcelas). */
+router.get('/cartao', async (req, res) => {
+  try {
+    const loja = lojaDe(req);
+    const conta = String(req.query.conta || '');
+    if (!conta.startsWith(PREFIXO_CARTAO)) return res.status(400).json({ erro: 'Conta de cartão inválida.' });
+    const filtro = { status: 'ATIVO', pos: 5, codigoConta: conta };
+    if (loja) filtro.lojistaId = loja;
+    if (req.query.cliente && req.query.historico) {
+      // todas as vendas do mesmo cliente: parte da parcela clicada para chegar na venda
+      const uma = await FluxoProjetado.findOne({ ...filtro, historico: String(req.query.historico) }).lean();
+      const venda = uma?.lancamentoId ? await col('_vendas').findOne({ _id: uma.lancamentoId }) : null;
+      if (venda?.cliente?.id) {
+        const fv = { 'cliente.id': venda.cliente.id };
+        if (loja) fv.lojistaId = loja;
+        const ids = (await col('_vendas').find(fv).project({ _id: 1 }).toArray()).map(v => v._id);
+        filtro.lancamentoId = { $in: ids };
+      } else {
+        filtro.historico = /^Venda \d+ balcão · /;          // balcao: as de balcao deste cartao
+      }
+    } else if (req.query.historico) filtro.historico = String(req.query.historico);
+    const itens = await FluxoProjetado.find(filtro).sort({ vencimento: 1, parcela: 1 }).lean();
+    const base = req.query.data ? new Date(req.query.data + 'T12:00:00') : null;
+    res.json({
+      cartao: await cartaoComTaxa(loja, conta),
+      titulos: itens.map(it => tituloParaTela(it, base)),
+    });
+  } catch (err) {
+    console.error('❌ /pagamento/cartao:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
+
 /* POST /financeiro/api/pagamento/quitar
    Body: { tipo, data, contaBancariaId, titulosIds: [...], historico }
    Grava a Boleta e remove os títulos do Fluxo. */
 router.post('/quitar', async (req, res) => {
   try {
-    const { tipo = 'pagar', data, contaBancariaId, titulosIds, historico, historicos } = req.body;
+    const { tipo = 'pagar', data, contaBancariaId, titulosIds, historico, historicos, valorLiquido } = req.body;
+    const erroData = erroDataMovimento(data);
+    if (erroData) return res.status(400).json({ erro: erroData });
+    const loja = lojaDe(req);
     if (!Array.isArray(titulosIds) || titulosIds.length === 0) {
       return res.status(400).json({ erro: 'Selecione ao menos um título.' });
     }
@@ -128,6 +254,45 @@ router.post('/quitar', async (req, res) => {
     }));
     const valorTotal = contrapartidas.reduce((s, c) => s + c.valor, 0);
 
+    // CARTAO: o que a operadora pagou de fato. A diferenca e a taxa.
+    let taxa = null;   // { centavos, cartao }
+    const temLiquido = valorLiquido !== undefined && valorLiquido !== null && String(valorLiquido).trim() !== '';
+    if (temLiquido) {
+      if (!ehRec) return res.status(400).json({ erro: 'Valor líquido só existe no recebimento de cartão.' });
+      const contas = [...new Set(titulos.map(t => t.codigoConta || ''))];
+      if (contas.length !== 1 || !contas[0].startsWith(PREFIXO_CARTAO)) {
+        return res.status(400).json({ erro: 'Para informar o valor líquido, marque parcelas de um único cartão.' });
+      }
+      const totalC = emCentavos(valorTotal), liqC = emCentavos(valorLiquido);
+      if (liqC <= 0) return res.status(400).json({ erro: 'O valor líquido deve ser maior que zero.' });
+      if (liqC > totalC) return res.status(400).json({ erro: 'O valor líquido não pode passar do total das parcelas.' });
+      if (liqC < totalC) {
+        const cartao = await cartaoComTaxa(loja, contas[0]);
+        if (!cartao) return res.status(400).json({ erro: 'O cartão ' + contas[0] + ' não está no plano.' });
+        if (!cartao.contaTaxa) {
+          return res.status(400).json({ erro: 'O cartão ' + cartao.nome + ' não tem conta de taxa (despesa) ligada.' });
+        }
+        taxa = { centavos: totalC - liqC, cartao };
+      }
+    }
+
+    // taxa do cartao: entra na MESMA boleta, como contrapartida negativa (debito na despesa)
+    let valorBoleta = valorTotal;
+    if (taxa) {
+      const v = taxa.centavos / 100;
+      const pct = (taxa.centavos / emCentavos(valorTotal) * 100).toFixed(2).replace('.', ',');
+      contrapartidas.push({
+        contaSubTitulo: taxa.cartao.contaTaxa._id,
+        codigoConta: taxa.cartao.contaTaxa.codigo,
+        nomeConta: taxa.cartao.contaTaxa.nome,
+        historico: 'Taxa ' + taxa.cartao.nome + ' ' + pct + '% s/ ' + valorTotal.toFixed(2).replace('.', ','),
+        valor: -v,
+        fluxoLancamentoId: null,
+        pos: null
+      });
+      valorBoleta = (emCentavos(valorTotal) - taxa.centavos) / 100;   // o que caiu no banco
+    }
+
     // Código sequencial simples (timestamp)
     const codigo = `BOL-${Date.now()}`;
     const dataBoleta = data ? new Date(data + 'T12:00:00') : new Date();
@@ -138,10 +303,11 @@ router.post('/quitar', async (req, res) => {
       bancoSubTitulo: banco.contaSubTitulo?._id || null,
       bancoCodigo: banco.contaSubTitulo?.codigo || '',
       bancoNome: banco.apelido || banco.banco?.nome || 'Banco',
-      valorTotal,
+      valorTotal: valorBoleta,
       contrapartidas,
-      historico: historico || `${tipoBoleta} em lote — ${contrapartidas.length} título(s)`,
-      origem: 'FLUXO'
+      historico: historico || `${tipoBoleta} em lote — ${titulos.length} título(s)`,
+      origem: 'FLUXO',
+      lojistaId: loja
     });
 
     // Remove os títulos quitados do Fluxo (Fluxo Projetado guarda memória,
@@ -161,7 +327,9 @@ router.post('/quitar', async (req, res) => {
       boletaId: boleta._id,
       codigo: boleta.codigo,
       valorTotal,
-      titulosQuitados: titulos.length
+      titulosQuitados: titulos.length,
+      liquido: valorBoleta,
+      taxa: taxa ? taxa.centavos / 100 : 0
     });
   } catch (err) {
     console.error('❌ /pagamento/quitar:', err.message);
@@ -197,7 +365,13 @@ router.post('/boleta/:id/estornar', async (req, res) => {
     b.status = 'CANCELADO';
     await b.save();
 
-    res.json({ ok: true, titulosDevolvidos: b.contrapartidas.length });
+    // a taxa do cartao (se houve) sai junto
+    const t = await Boleta.updateOne(
+      { codigo: b.codigo + '-TAXA', status: 'ATIVO' },
+      { $set: { status: 'CANCELADO' } }
+    );
+
+    res.json({ ok: true, titulosDevolvidos: b.contrapartidas.length, taxaEstornada: t.modifiedCount > 0 });
   } catch (err) {
     console.error('❌ /pagamento/estornar:', err.message);
     res.status(500).json({ erro: err.message });

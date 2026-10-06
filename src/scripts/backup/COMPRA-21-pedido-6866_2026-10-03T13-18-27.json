@@ -1,0 +1,210 @@
+{
+ "pedido": {
+  "_id": {
+   "$oid": "6ac0fd694e9c97c32666bd1d"
+  },
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "numero": {
+   "$numberInt": "6866"
+  },
+  "situacao": "P",
+  "fornecedor": null,
+  "fornecedorNome": "Komeco",
+  "nrFornecOrigem": {
+   "$numberInt": "67"
+  },
+  "dataEmissao": {
+   "$date": {
+    "$numberLong": "1750377600000"
+   }
+  },
+  "dataEntregaPrevista": {
+   "$date": {
+    "$numberLong": "1790121600000"
+   }
+  },
+  "condicaoPagamento": {
+   "texto": "84/112 dias",
+   "dias": [
+    {
+     "$numberInt": "84"
+    },
+    {
+     "$numberInt": "112"
+    }
+   ]
+  },
+  "itens": [
+   {
+    "produto": null,
+    "codigoOrigem": {
+     "$numberInt": "3608"
+    },
+    "referencia": "TP 40",
+    "descricao": "mini-bomba TP 40  110 V - Bronze (2603)(2523)",
+    "quantidade": {
+     "$numberInt": "50"
+    },
+    "quantidadeAtendida": {
+     "$numberInt": "0"
+    },
+    "custoUnitario": {
+     "$numberInt": "42380"
+    },
+    "baseCalculo": {
+     "ajustadoAMao": false
+    },
+    "_id": {
+     "$oid": "6ac0fd694e9c97c32666bd1e"
+    }
+   }
+  ],
+  "valorTotal": {
+   "$numberInt": "2119000"
+  },
+  "lancamentosFluxo": [
+   {
+    "$oid": "6ac0fd694e9c97c32666bd20"
+   },
+   {
+    "$oid": "6ac0fd694e9c97c32666bd21"
+   }
+  ],
+  "observacao": "Importado do sistema antigo (pedido 6866)",
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791032681165"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791032681447"
+   }
+  },
+  "__v": {
+   "$numberInt": "1"
+  }
+ },
+ "fluxo": [
+  {
+   "_id": {
+    "$oid": "6ac0fd694e9c97c32666bd20"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "12"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.056",
+   "nomeConta": "Asia Import.& Com.Ext.Ltda",
+   "historico": "Pedido 6866 Komeco",
+   "valor": {
+    "$numberInt": "10595"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1797379200000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd694e9c97c32666bd1d"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032681309"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032681309"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd694e9c97c32666bd21"
+   },
+   "ano": {
+    "$numberInt": "2027"
+   },
+   "mes": {
+    "$numberInt": "1"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.056",
+   "nomeConta": "Asia Import.& Com.Ext.Ltda",
+   "historico": "Pedido 6866 Komeco",
+   "valor": {
+    "$numberInt": "10595"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1799798400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd694e9c97c32666bd1d"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032681309"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032681309"
+    }
+   }
+  }
+ ]
+}

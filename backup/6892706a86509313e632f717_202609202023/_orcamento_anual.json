@@ -1,0 +1,172 @@
+[
+ {
+  "_id": "6a12f0eacd1f20b0ed982ec9",
+  "ano": 2026,
+  "contas": [
+   {
+    "orcamentoConta": "6a11923cba22b3b9d52310a9",
+    "codigo": "3.01.001.002",
+    "nome": "Despesas Contabeis",
+    "meses": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     500,
+     500,
+     500,
+     500,
+     500,
+     500,
+     500
+    ],
+    "lancamentos": [
+     {
+      "historico": "Despesas Contabeis",
+      "valor": 500,
+      "numParcelas": 7,
+      "mesInicial": 6,
+      "diaVencimento": 10,
+      "mesesAfetados": [
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "_id": "6a12f0eacd1f20b0ed982ecc",
+      "criadoEm": "2026-05-24T12:36:58.200Z"
+     }
+    ],
+    "_id": "6a12f0eacd1f20b0ed982ecb"
+   },
+   {
+    "orcamentoConta": "6a11923cba22b3b9d52310b2",
+    "codigo": "3.01.001.003",
+    "nome": "Papelaria",
+    "meses": [
+     320,
+     320,
+     320,
+     320,
+     320,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "lancamentos": [
+     {
+      "historico": "Papelaria",
+      "valor": 320,
+      "numParcelas": 5,
+      "mesInicial": 1,
+      "diaVencimento": 10,
+      "mesesAfetados": [
+       1,
+       2,
+       3,
+       4,
+       5
+      ],
+      "_id": "6a12f1f4cd1f20b0ed982f0b",
+      "criadoEm": "2026-05-24T12:41:24.610Z"
+     }
+    ],
+    "_id": "6a12f1cbcd1f20b0ed982ee7"
+   },
+   {
+    "orcamentoConta": "6a11923dba22b3b9d52310c4",
+    "codigo": "3.01.001.005",
+    "nome": "Informática",
+    "meses": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     960,
+     960,
+     960,
+     960,
+     960,
+     960,
+     960
+    ],
+    "lancamentos": [
+     {
+      "historico": "Informática",
+      "valor": 960,
+      "numParcelas": 7,
+      "mesInicial": 6,
+      "diaVencimento": 25,
+      "mesesAfetados": [
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "_id": "6a12fb7910eb5ae8f0ba0357",
+      "criadoEm": "2026-05-24T13:22:01.137Z"
+     }
+    ],
+    "_id": "6a12fb7910eb5ae8f0ba0356"
+   },
+   {
+    "orcamentoConta": "6a12fbc510eb5ae8f0ba0386",
+    "codigo": "3.07.001.001",
+    "nome": "Uber",
+    "meses": [
+     250,
+     250,
+     250,
+     250,
+     250,
+     250,
+     250,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "lancamentos": [
+     {
+      "historico": "Uber",
+      "valor": 250,
+      "numParcelas": 7,
+      "mesInicial": 1,
+      "diaVencimento": 20,
+      "mesesAfetados": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7
+      ],
+      "_id": "6a12fbe010eb5ae8f0ba0394",
+      "criadoEm": "2026-05-24T13:23:44.665Z"
+     }
+    ],
+    "_id": "6a12fbe010eb5ae8f0ba0393"
+   }
+  ],
+  "observacoes": "",
+  "status": "ABERTO",
+  "criadoEm": "2026-05-24T12:36:58.054Z",
+  "atualizadoEm": "2026-05-24T13:23:44.665Z",
+  "__v": 8,
+  "lojistaId": "6892706a86509313e632f717"
+ }
+]

@@ -1,0 +1,843 @@
+{{!--
+  Destino: C:\plataformaRota\views\compra\pages\nota.handlebars
+  Criado em:   25/09/2026
+  Alterado em: 25/09/2026 — desenho aproximado do DANFE.
+  Alterado em: 25/09/2026 — cabeçalho e linhas em dois tamanhos, com lupa.
+  Alterado em: 25/09/2026 — modais de efetivar a entrada e de recusar a nota.
+  Alterado em: 25/09/2026 — grade enxuta: dez colunas, só o que se decide.
+  Alterado em: 25/09/2026 — o código do nosso produto é digitado na linha.
+  Alterado em: 25/09/2026 — os candidatos de cada item são as linhas do pedido.
+  Alterado em: 25/09/2026 — coluna NOSSO CÓD.: só o número.
+  Alterado em: 26/09/2026 — conferência cega e botão de capturar o pedido.
+  Alterado em: 26/09/2026 — janelas arrastáveis pela faixa do título.
+  Alterado em: 26/09/2026 — coluna CUSTO DO PEDIDO; modal da referência divergente.
+  Alterado em: 26/09/2026 — a linha tratada pelo modal fica acesa em amarelo.
+  Alterado em: 26/09/2026 — legenda das cores e dos botões embaixo da grade,
+                            cada verbete na cor da linha que descreve.
+
+  A tela imita o papel que o usuario ja conhece: quadros de rotulo miudo,
+  reguas finas, e a grade de produtos nas mesmas colunas do DANFE.
+  As duas colunas que o papel nao tem sao as do trabalho: LIDO e CUSTO REAL.
+
+  A aba "Titulos" saiu: as duplicatas viraram o quadro FATURA / DUPLICATAS,
+  na mesma posicao em que aparecem no DANFE.
+
+  O JS fica em /js/compra/nota.js  (caminho completo, sempre)
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nota de Entrada</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --roxo: #6b21a8;
+      --roxo-claro: #f3e8ff;
+      --regua: #cbd5e1;          /* hairline dos quadros, como o DANFE */
+      --regua-forte: #94a3b8;
+      --borda: #e5e7eb;
+      --texto: #1f2937;
+      --cinza: #6b7280;
+      --verde: #059669;
+      --verde-claro: #ecfdf5;
+      --ambar: #d97706;
+      --ambar-claro: #fffbeb;
+      --vermelho: #dc2626;
+      --vermelho-claro: #fef2f2;
+      --azul-claro: #eff6ff;
+    }
+
+    html, body { height: 100%; }
+    body {
+      background: #fff; color: var(--texto);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px; margin: 0; padding: 12px 18px 10px;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+
+    /* ================= barra de topo ================= */
+    .barra {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 10px; flex: none;
+    }
+    .voltar {
+      background: none; border: 1px solid var(--borda); border-radius: 6px;
+      width: 34px; height: 34px; font-size: 17px; cursor: pointer;
+      color: var(--cinza); flex: none;
+    }
+    .voltar:hover { background: #f9fafb; }
+    .voltar:focus-visible { outline: 2px solid var(--roxo); outline-offset: 2px; }
+
+    .barra .documento { flex: 1 1 auto; display: flex; align-items: baseline; gap: 10px; }
+    .barra .documento .tipo {
+      font-size: 11px; letter-spacing: .09em; color: var(--cinza);
+      text-transform: uppercase; font-weight: 700;
+    }
+    .barra .documento .numero { font-size: 22px; font-weight: 700; }
+    .barra .documento .serie { font-size: 13px; color: var(--cinza); }
+
+    .etiqueta {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .05em;
+      padding: 3px 9px; border-radius: 9px; color: #fff;
+    }
+    .etiqueta.RECEBIDA       { background: #2563eb; }
+    .etiqueta.VINCULADA      { background: #7c3aed; }
+    .etiqueta.EM_CONFERENCIA { background: var(--ambar); }
+    .etiqueta.EFETIVADA      { background: var(--verde); }
+    .etiqueta.RECUSADA       { background: var(--vermelho); }
+
+    .barra .valor { text-align: right; flex: none; }
+    .barra .valor .n {
+      font-size: 22px; font-weight: 700; color: var(--roxo);
+      font-variant-numeric: tabular-nums;
+    }
+    .barra .valor .r { font-size: 10px; letter-spacing: .07em; color: var(--cinza);
+                       text-transform: uppercase; font-weight: 700; }
+
+    .btn-lupa {
+      border: 1px solid var(--borda); background: #fff; border-radius: 6px;
+      width: 46px; height: 34px; font-size: 14px; cursor: pointer;
+      color: var(--cinza); flex: none; line-height: 1;
+      display: flex; align-items: center; justify-content: center; gap: 1px;
+    }
+    .btn-lupa span { font-size: 13px; font-weight: 700; }
+    .btn-lupa:hover { background: #f9fafb; }
+    .btn-lupa:focus-visible { outline: 2px solid var(--roxo); outline-offset: 2px; }
+
+    /* ================= quadros do DANFE ================= */
+    #quadros { flex: none; margin-bottom: 10px; }
+    #quadros[hidden] { display: none; }
+
+    .quadro {
+      border: 1px solid var(--regua-forte); border-radius: 4px;
+      margin-bottom: 6px; overflow: hidden; background: #fff;
+    }
+    .quadro > .rotulo {
+      font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--cinza); font-weight: 700;
+      padding: 4px 8px 2px; border-bottom: 1px solid var(--regua);
+      background: #f8fafc;
+    }
+    .celas { display: flex; flex-wrap: wrap; }
+    .cela {
+      flex: 1 1 0; min-width: 96px; padding: 4px 8px 6px;
+      border-left: 1px solid var(--regua);
+    }
+    .cela:first-child { border-left: none; }
+    .cela .r {
+      font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+      color: var(--cinza); font-weight: 700; display: block;
+    }
+    .cela .v {
+      font-size: 13px; margin-top: 1px; line-height: 1.25;
+      font-variant-numeric: tabular-nums; word-break: break-word;
+    }
+    .cela .v.num { text-align: right; }
+    .cela .v.vazio { color: var(--ambar); font-weight: 600; }
+    .cela .v.alerta { color: var(--vermelho); font-weight: 700; }
+    .cela .v.ok { color: var(--verde); font-weight: 600; }
+    .cela.larga { flex: 3 1 0; }
+    .cela.media { flex: 2 1 0; }
+    .cela.estreita { flex: 0 0 auto; min-width: 0; }
+    .cela .chave {
+      font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+      font-size: 11px; letter-spacing: .02em;
+    }
+
+    /* cabeçalho encolhido: uma faixa só, o essencial */
+    .quadro.compacto > .rotulo { display: none; }
+    .quadro.compacto .cela { padding: 3px 8px 4px; }
+    .quadro.compacto .cela .r { font-size: 8px; }
+    .quadro.compacto .cela .v { font-size: 12px; }
+    .quadro.compacto .cela .v.grande { font-size: 14px; font-weight: 700; }
+
+    .nota-rodape-quadro {
+      font-size: 11px; color: var(--cinza);
+      padding: 5px 8px; border-top: 1px solid var(--regua); background: #f8fafc;
+    }
+
+    /* ================= abas ================= */
+    .abas { display: flex; border-bottom: 2px solid var(--borda); flex: none; }
+    .abas button {
+      border: none; background: none; padding: 8px 18px; font-size: 14px;
+      cursor: pointer; color: var(--cinza);
+      border-bottom: 2px solid transparent; margin-bottom: -2px;
+    }
+    .abas button.ativo { color: var(--roxo); font-weight: 700; border-bottom-color: var(--roxo); }
+    .abas button:focus-visible { outline: 2px solid var(--roxo); outline-offset: -2px; }
+    .abas .contagem {
+      background: var(--roxo-claro); color: var(--roxo); border-radius: 9px;
+      padding: 1px 7px; font-size: 11px; font-weight: 700; margin-left: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .painel { flex: 1 1 auto; overflow: auto; padding-top: 10px; }
+    .painel[hidden] { display: none; }
+
+    #painel-itens { display: flex; flex-direction: column; overflow: hidden; }
+    #painel-itens[hidden] { display: none; }
+    #painel-itens .rolagem { flex: 1 1 auto; overflow: auto; }
+
+    .recado {
+      padding: 10px 14px; border-radius: 8px; margin-bottom: 10px;
+      font-size: 14px; display: none;
+    }
+    .recado.visivel { display: block; }
+    .recado.ok   { background: var(--verde-claro);    color: #065f46; }
+    .recado.erro { background: var(--vermelho-claro); color: #991b1b; }
+    .recado.aviso{ background: var(--ambar-claro);    color: #92400e; }
+
+    /* ================= grade de produtos, colunas do DANFE ================= */
+    .rolagem { overflow-x: auto; }
+
+    table.danfe {
+      width: 100%; border-collapse: collapse; font-size: 12px;
+      border: 1px solid var(--regua-forte);
+    }
+    table.danfe thead th {
+      background: #f1f5f9; color: #334155;
+      font-size: 9px; letter-spacing: .06em; text-transform: uppercase;
+      font-weight: 700; text-align: left; padding: 5px 6px;
+      border: 1px solid var(--regua); white-space: nowrap;
+      position: sticky; top: 0; z-index: 3;
+    }
+    table.danfe thead th.n { text-align: right; }
+    table.danfe thead th.c { text-align: center; }
+    table.danfe thead th.trabalho { background: #ede9fe; color: var(--roxo); }
+
+    table.danfe tbody td {
+      padding: 6px; border: 1px solid var(--regua);
+      vertical-align: top; font-variant-numeric: tabular-nums;
+    }
+    table.danfe tbody td.n { text-align: right; }
+    table.danfe tbody td.c { text-align: center; }
+
+    table.danfe tbody tr.conferido td { background: var(--verde-claro); }
+    table.danfe tbody tr.parcial   td { background: var(--ambar-claro); }
+    table.danfe tbody tr.excesso   td { background: var(--vermelho-claro); }
+    /* a linha que o modal está tratando: amarelo forte, texto intacto */
+    table.danfe tbody tr.linha-foco > td {
+      background: #fde68a !important;
+    }
+    table.danfe tbody tr.linha-foco > td:first-child {
+      box-shadow: inset 4px 0 0 var(--ambar);
+    }
+
+    table.danfe tbody tr.recem td { animation: piscar 1.1s ease-out; }
+    @keyframes piscar {
+      0%   { background: #bbf7d0; }
+      100% { background: var(--verde-claro); }
+    }
+
+    .prod-desc { font-weight: 600; }
+    .prod-meta { font-size: 11px; color: var(--cinza); margin-top: 2px; }
+    .prod-meta code {
+      background: #f1f5f9; padding: 1px 4px; border-radius: 3px;
+      font-family: ui-monospace, Consolas, monospace; font-size: 10px;
+    }
+    .prod-meta .pendente { color: var(--ambar); font-weight: 600; }
+    .prod-meta .ligado   { color: var(--verde); font-weight: 600; }
+
+    /* a NOSSA descrição: sempre visível, inclusive no modo compacto */
+    .prod-nosso { font-size: 11px; color: var(--cinza); margin-top: 1px; }
+    .prod-nosso .ligado   { color: #047857; font-weight: 600; }
+    .prod-nosso .pendente { color: var(--ambar); font-weight: 600; }
+
+    /* modo compacto: uma linha por item. A marca de identificado vira um
+       ponto colorido antes da descrição; o resto abre na lupa. */
+    table.danfe.compacta tbody td { padding: 3px 6px; }
+    table.danfe.compacta tbody tr:not(.aberta) .prod-meta { display: none; }
+
+    /* régua grossa abrindo cada item: com o detalhe aberto, sem isso as
+       linhas se misturam e não se sabe onde um item termina */
+    table.danfe tbody tr.item > td { border-top: 2px solid #64748b; }
+    table.danfe tbody tr.item:first-child > td { border-top: 1px solid var(--regua); }
+
+    .ponto {
+      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+      margin-right: 6px; vertical-align: middle; flex: none;
+    }
+    .ponto.sim { background: var(--verde); }
+    .ponto.nao { background: var(--ambar); }
+
+    .lupa-th {
+      background: none; border: none; cursor: pointer; padding: 0 0 0 5px;
+      font-size: 11px; color: var(--cinza);
+    }
+    .lupa-linha {
+      background: none; border: none; cursor: pointer; padding: 0 4px;
+      font-size: 12px; color: var(--cinza); line-height: 1;
+    }
+    .lupa-linha:hover { color: var(--roxo); }
+
+    tr.detalhe { display: none; }
+    tr.detalhe.aberta { display: table-row; }
+    tr.detalhe td {
+      background: #f8fafc !important; padding: 10px 14px !important;
+      font-size: 12px;
+    }
+    .detalhe-grade {
+      display: flex; flex-wrap: wrap; gap: 6px 26px; align-items: flex-start;
+    }
+    .detalhe-grade .par { min-width: 110px; }
+    .detalhe-grade .par .r {
+      font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+      color: var(--cinza); font-weight: 700; display: block;
+    }
+    .detalhe-grade .par .v { font-variant-numeric: tabular-nums; }
+    .conta-custo {
+      margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--regua);
+      font-variant-numeric: tabular-nums;
+    }
+    .conta-custo b { color: var(--roxo); }
+    .info-xml {
+      margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--regua);
+      color: var(--cinza); font-size: 11px; white-space: pre-wrap;
+    }
+
+    .qtd-nota { font-size: 15px; font-weight: 700; color: var(--verde); }
+    .qtd-lida { font-size: 15px; font-weight: 700; }
+    .qtd-lida small { font-size: 11px; font-weight: 400; color: var(--cinza); }
+    .qtd-lida.zero    { color: var(--cinza); }
+    .qtd-lida.parcial { color: var(--ambar); }
+    .qtd-lida.fecha   { color: var(--verde); }
+    .qtd-lida.excesso { color: var(--vermelho); }
+
+    .custo-real { font-weight: 700; }
+    .custo-sobe { font-size: 10px; color: var(--ambar); display: block; }
+
+    /* a quantidade bate com o pedido? */
+    .qtd-ped { font-size: 14px; font-weight: 600; }
+    .qtd-ped.fecha   { color: var(--verde); }
+    .qtd-ped.parcial { color: var(--ambar); }
+    .qtd-ped.excesso { color: var(--vermelho); }
+    .fora {
+      font-size: 10px; text-transform: uppercase; letter-spacing: .05em;
+      font-weight: 700; color: var(--vermelho);
+    }
+    .neutro { color: #cbd5e1; }
+
+    /* o nosso código: número e pronto, sem caixa de botão */
+    .cod-nosso {
+      font-size: 15px; font-weight: 700; color: var(--roxo);
+      font-variant-numeric: tabular-nums;
+      background: none; border: none; padding: 0; margin: 0;
+      font-family: inherit; line-height: inherit;
+    }
+    button.cod-nosso { cursor: pointer; }
+    button.cod-nosso:hover { text-decoration: underline; }
+    button.cod-nosso:focus-visible { outline: 2px solid var(--roxo); outline-offset: 2px; }
+
+    .in-codigo {
+      width: 92px; padding: 4px 7px; font-size: 14px; font-weight: 600;
+      border: 2px solid var(--roxo); border-radius: 5px;
+      font-variant-numeric: tabular-nums; text-align: right;
+    }
+    .in-codigo:focus { outline: none; box-shadow: 0 0 0 3px rgba(107,33,168,.2); }
+
+    /* o custo mudou? */
+    .var { font-size: 14px; font-weight: 700; }
+    .var.igual       { color: var(--cinza); }
+    .var.sobe        { color: var(--ambar); }
+    .var.sobe-forte  { color: var(--vermelho); }
+    .var.desce       { color: var(--verde); }
+    .var.desce-forte { color: var(--verde); }
+    .var.neutro      { color: #cbd5e1; font-weight: 400; }
+
+    td.ref {
+      font-family: ui-monospace, Consolas, monospace; font-size: 11px;
+    }
+
+    table.danfe tfoot td {
+      padding: 6px; border: 1px solid var(--regua-forte);
+      background: #f8fafc; font-weight: 700; font-variant-numeric: tabular-nums;
+    }
+    table.danfe tfoot td.n { text-align: right; }
+
+    .acoes-linha { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+
+    .btn-mini {
+      border: 1px solid var(--borda); background: #fff; border-radius: 5px;
+      padding: 5px 9px; font-size: 12px; cursor: pointer; white-space: nowrap;
+      font-family: inherit; color: var(--texto);
+    }
+    .btn-mini:hover { background: #f9fafb; }
+    .btn-mini:focus-visible { outline: 2px solid var(--roxo); outline-offset: 1px; }
+    .btn-mini.destaque { border-color: var(--roxo); color: var(--roxo); font-weight: 600; }
+
+    /* legenda embaixo da grade. Cada verbete com a cor da linha que
+       descreve — legenda cinza ninguém lê. */
+    .legenda {
+      display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center;
+      margin-top: 12px; padding: 12px 14px;
+      background: #f8fafc; border: 1px solid var(--borda); border-radius: 8px;
+      font-size: 12px; color: var(--texto);
+    }
+    .legenda .verbete { display: flex; align-items: center; gap: 7px; }
+    .legenda .amostra {
+      width: 26px; height: 15px; border-radius: 4px; flex: none;
+      border: 1px solid;
+    }
+
+    .legenda .v-verde    { color: #065f46; font-weight: 600; }
+    .legenda .v-verde    .amostra { background: var(--verde-claro); border-color: var(--verde); }
+    .legenda .v-ambar    { color: #92400e; font-weight: 600; }
+    .legenda .v-ambar    .amostra { background: var(--ambar-claro); border-color: var(--ambar); }
+    .legenda .v-vermelho { color: #991b1b; font-weight: 600; }
+    .legenda .v-vermelho .amostra { background: var(--vermelho-claro); border-color: var(--vermelho); }
+
+    /* ================= comparacao com o pedido ================= */
+    table.simples { width: 100%; border-collapse: separate; border-spacing: 0; }
+    table.simples thead th {
+      background: var(--roxo); color: #fff; font-size: 10px;
+      text-transform: uppercase; letter-spacing: .05em;
+      padding: 8px 10px; text-align: left; position: sticky; top: 0; z-index: 2;
+    }
+    table.simples thead th.n { text-align: right; }
+    table.simples tbody td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; }
+    table.simples tbody td.n { text-align: right; font-variant-numeric: tabular-nums; }
+    table.simples tbody tr.falta td { background: var(--ambar-claro); }
+    table.simples tbody tr.extra td { background: var(--azul-claro); }
+
+    select {
+      border: 1px solid var(--borda); border-radius: 6px;
+      padding: 8px 11px; font-size: 14px; background: #fff; min-width: 260px;
+    }
+
+    .aviso { padding: 34px; text-align: center; color: var(--cinza); }
+
+    /* ================= rodape ================= */
+    .rodape {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px; padding: 16px 2px 10px; border-top: 1px solid var(--borda);
+      margin-top: 14px; flex: none;
+    }
+    .rodape .estado { font-size: 13px; color: var(--cinza); }
+    .rodape .botoes { display: flex; gap: 10px; }
+
+    .btn-principal {
+      background: var(--verde); color: #fff; border: none; border-radius: 6px;
+      padding: 11px 24px; font-size: 15px; font-weight: 600; cursor: pointer;
+    }
+    .btn-principal:disabled { background: #d1d5db; cursor: not-allowed; }
+    .btn-secundario {
+      background: #fff; color: var(--texto); border: 1px solid var(--borda);
+      border-radius: 6px; padding: 11px 18px; font-size: 15px; cursor: pointer;
+    }
+    .btn-perigo { color: var(--vermelho); border-color: #fecaca; }
+
+    /* leva para a contagem física, em outra página e com outro operador */
+    .btn-contar {
+      background: #fff; color: var(--roxo); border: 2px solid var(--roxo);
+      border-radius: 6px; padding: 10px 20px; font-size: 15px;
+      font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+    .btn-contar:hover:not(:disabled) { background: var(--roxo-claro); }
+    .btn-contar:disabled {
+      color: #9ca3af; border-color: var(--borda); cursor: not-allowed;
+    }
+    .btn-contar[hidden] { display: none; }
+
+    /* ================= modal de identificacao ================= */
+    .cobertura {
+      position: fixed; inset: 0; background: rgba(15,23,42,.45);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 60px 20px; z-index: 50;
+    }
+    .cobertura[hidden] { display: none; }
+    .caixa {
+      background: #fff; border-radius: 12px; width: min(720px, 100%);
+      max-height: 100%; display: flex; flex-direction: column;
+      border: 2px solid var(--roxo); overflow: hidden;
+    }
+    .caixa .cab { padding: 16px 18px 12px; background: var(--roxo-claro); }
+    .caixa .cab.arrastavel { cursor: move; touch-action: none; }
+    .caixa .cab.arrastavel::after {
+      content: '⠿'; position: absolute; right: 14px; top: 12px;
+      color: var(--roxo); opacity: .5; font-size: 14px; letter-spacing: -2px;
+    }
+    .caixa { position: relative; will-change: transform; }
+    .caixa.arrastando { user-select: none; box-shadow: 0 18px 40px rgba(15,23,42,.3); }
+    .caixa .cab .r {
+      font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--roxo); font-weight: 700;
+    }
+    .caixa .cab .d { font-size: 17px; font-weight: 700; margin: 6px 0 2px; }
+    .caixa .cab .m { font-size: 12px; color: var(--cinza); }
+    .caixa .corpo { padding: 14px 18px; overflow: auto; }
+    .caixa .corpo input[type=text] {
+      width: 100%; padding: 11px 13px; font-size: 15px;
+      border: 1px solid var(--borda); border-radius: 8px;
+    }
+    .caixa .pe {
+      padding: 12px 18px; border-top: 1px solid var(--borda);
+      display: flex; justify-content: flex-end;
+    }
+    .achado {
+      padding: 9px 11px; border-bottom: 1px solid #f3f4f6; cursor: pointer;
+      border-radius: 6px;
+    }
+    .achado:hover { background: var(--roxo-claro); }
+    .achado .t { font-weight: 600; }
+    .achado .s { font-size: 12px; color: var(--cinza); }
+
+    .caixa.larga { width: min(980px, 100%); }
+    .caixa.estreita { width: min(520px, 100%); }
+
+    .par-ref {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 12px;
+    }
+    .par-ref > div { flex: 1 1 auto; }
+    .par-ref .seta { flex: none; font-size: 20px; color: var(--cinza); }
+    .par-ref .r {
+      font-size: 9px; letter-spacing: .07em; text-transform: uppercase;
+      color: var(--cinza); font-weight: 700; display: block;
+    }
+    .par-ref .v {
+      font-family: ui-monospace, Consolas, monospace; font-size: 15px;
+      margin-top: 3px; word-break: break-all;
+    }
+    .par-ref .v.forte { color: var(--roxo); font-weight: 700; }
+    .ref-aviso { font-size: 12px; color: var(--cinza); margin: 0; line-height: 1.5; }
+    .caixa .pe { gap: 10px; }
+
+    textarea {
+      width: 100%; padding: 11px 13px; font-size: 15px;
+      border: 1px solid var(--borda); border-radius: 8px;
+      font-family: inherit; resize: vertical;
+    }
+
+    .alerta-caixa {
+      padding: 11px 13px; border-radius: 8px; margin-bottom: 14px;
+      background: var(--ambar-claro); color: #92400e; font-size: 13px;
+      border: 1px solid #fde68a;
+    }
+    .alerta-caixa.grave {
+      background: var(--vermelho-claro); color: #991b1b; border-color: #fecaca;
+    }
+    .alerta-caixa b { display: block; margin-bottom: 4px; }
+
+    /* sugestões do identificar */
+    .sugestao {
+      display: flex; gap: 12px; align-items: center;
+      padding: 10px 12px; border: 1px solid var(--borda); border-radius: 8px;
+      cursor: pointer; margin-bottom: 6px;
+    }
+    .sugestao:hover { background: var(--roxo-claro); border-color: var(--roxo); }
+    .sugestao .corpo { flex: 1 1 auto; min-width: 0; }
+    .sugestao .t { font-weight: 600; }
+    .sugestao .s { font-size: 12px; color: var(--cinza); margin-top: 2px; }
+    .sugestao .s code {
+      background: #f1f5f9; padding: 1px 4px; border-radius: 3px;
+      font-family: ui-monospace, Consolas, monospace; font-size: 11px;
+    }
+    .sugestao .motivo {
+      flex: none; font-size: 10px; text-transform: uppercase; font-weight: 700;
+      letter-spacing: .05em; padding: 3px 8px; border-radius: 9px;
+      background: #f1f5f9; color: var(--cinza); white-space: nowrap;
+    }
+    .sugestao .motivo.forte { background: #dcfce7; color: #166534; }
+    .sugestao .motivo.media { background: #fef3c7; color: #92400e; }
+    /* linha já usada por outro item: MARCADA, não apagada. Transparência
+       deixa o texto ilegível justamente quando ele precisa ser lido. */
+    .sugestao.usada {
+      background: #f8fafc; border-style: dashed; border-color: #94a3b8;
+    }
+    .sugestao.usada .t { color: var(--cinza); }
+    .sugestao .tomada {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .05em;
+      padding: 2px 7px; border-radius: 9px; margin-left: 6px;
+      background: #fee2e2; color: #991b1b;
+    }
+    .sugestao.marcada, .achado.marcada {
+      background: var(--roxo-claro); border-color: var(--roxo);
+      box-shadow: 0 0 0 2px rgba(107,33,168,.18);
+    }
+
+    .dica-dblclick {
+      text-align: center; font-size: 12px; color: var(--roxo);
+      padding: 8px 0 0; font-weight: 600;
+    }
+
+    .separador-busca {
+      display: flex; align-items: center; gap: 10px; margin: 14px 0 10px;
+      font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--cinza); font-weight: 700;
+    }
+    .separador-busca::before, .separador-busca::after {
+      content: ''; flex: 1 1 auto; height: 1px; background: var(--borda);
+    }
+
+    .alargar { text-align: center; padding: 12px 0 2px; }
+    .ocultadas {
+      text-align: center; font-size: 11px; color: var(--cinza);
+      padding: 8px 0 0;
+    }
+
+    /* ajuda */
+    .ajuda-svg { width: 100%; height: auto; display: block; margin-bottom: 14px; }
+    .ajuda-texto { font-size: 13px; line-height: 1.55; }
+    .ajuda-texto p { margin: 0 0 9px; }
+    .ajuda-texto b { color: var(--roxo); }
+
+    @media (prefers-reduced-motion: reduce) {
+      table.danfe tbody tr.recem { animation: none; }
+    }
+
+    /* ================= telas estreitas ================= */
+    @media (max-width: 1100px) {
+      table.danfe { min-width: 900px; }
+    }
+    @media (max-width: 860px) {
+      body { padding: 10px 12px 8px; }
+      .barra { flex-wrap: wrap; }
+      .barra .valor { width: 100%; text-align: left; }
+      .btn-mini { padding: 9px 13px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body data-nota="{{notaId}}">
+
+  <div class="barra">
+    <button class="voltar" id="voltar" title="Voltar">←</button>
+    <div class="documento" id="documento">
+      <span class="numero">Carregando…</span>
+    </div>
+    <button class="btn-lupa" id="btn-ajuda" title="Como funciona esta tela">?</button>
+    <button class="btn-lupa" id="btn-quadros" title="Ampliar o cabeçalho">🔍<span>+</span></button>
+    <div class="valor">
+      <div class="n" id="valor-total">—</div>
+      <div class="r">valor total da nota</div>
+    </div>
+  </div>
+
+  <div id="quadros"></div>
+
+  <div class="abas">
+    <button id="aba-itens" class="ativo">
+      Conferência <span class="contagem" id="qtd-itens">0</span>
+    </button>
+    <button id="aba-pedido">Pedido</button>
+  </div>
+
+  <!-- ============ conferencia ============ -->
+  <div class="painel" id="painel-itens">
+    <div class="recado" id="recado"></div>
+    <div class="rolagem"><div id="itens"></div></div>
+  </div>
+
+  <!-- ============ pedido ============ -->
+  <div class="painel" id="painel-pedido" hidden>
+    <div id="vinculo"></div>
+    <div id="comparacao"></div>
+  </div>
+
+  <div class="rodape">
+    <div class="estado" id="estado">—</div>
+    <div class="botoes">
+      <button class="btn-secundario btn-perigo" id="btn-recusar">Recusar nota</button>
+      <button class="btn-contar" id="btn-contar">Conferência física →</button>
+    </div>
+  </div>
+
+  <!-- ============ identificar produto ============ -->
+  <div class="cobertura" id="modal-ligar" hidden>
+    <div class="caixa" role="dialog" aria-modal="true" aria-labelledby="ligar-desc">
+      <div class="cab">
+        <div class="r">Identificar produto</div>
+        <div class="d" id="ligar-desc"></div>
+        <div class="m" id="ligar-meta"></div>
+      </div>
+      <div class="corpo">
+        <input type="text" id="busca-prod" autocomplete="off"
+               placeholder="Buscar por código, descrição ou referência...">
+        <div id="achados" style="margin-top:10px"></div>
+      </div>
+      <div class="pe">
+        <button class="btn-mini" id="cancelar-ligar">cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ recusar nota ============ -->
+  <div class="cobertura" id="modal-recusar" hidden>
+    <div class="caixa" role="dialog" aria-modal="true" aria-labelledby="rec-titulo">
+      <div class="cab">
+        <div class="r">Recusar nota</div>
+        <div class="d" id="rec-titulo"></div>
+        <div class="m">Nada de estoque, nada de fluxo. A nota fica fechada com o motivo.</div>
+      </div>
+      <div class="corpo">
+        <textarea id="rec-motivo" rows="3"
+          placeholder="Por que esta nota está sendo recusada?"></textarea>
+      </div>
+      <div class="pe">
+        <button class="btn-mini" id="rec-cancelar">cancelar</button>
+        <button class="btn-secundario btn-perigo" id="rec-confirmar">Recusar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ referência divergente ============ -->
+  <div class="cobertura" id="modal-ref" hidden>
+    <div class="caixa estreita" role="dialog" aria-modal="true" aria-labelledby="ref-titulo">
+      <div class="cab">
+        <div class="r">Referência diferente</div>
+        <div class="d" id="ref-titulo">Atualizar a nossa referência?</div>
+      </div>
+      <div class="corpo">
+        <div class="par-ref">
+          <div><span class="r">A nossa hoje</span>
+               <div class="v" id="ref-nossa">—</div></div>
+          <div class="seta">→</div>
+          <div><span class="r">No fabricante</span>
+               <div class="v forte" id="ref-fab">—</div></div>
+        </div>
+        <p class="ref-aviso" id="ref-aviso"></p>
+      </div>
+      <div class="pe">
+        <button class="btn-mini" id="ref-cancelar">cancelar</button>
+        <button class="btn-mini" id="ref-manter">manter a nossa</button>
+        <button class="btn-principal" id="ref-atualizar">atualizar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ajuda: a ordem das operações ============ -->
+  <div class="cobertura" id="modal-ajuda" hidden>
+    <div class="caixa larga" role="dialog" aria-modal="true" aria-labelledby="aj-titulo">
+      <div class="cab">
+        <div class="r">Como funciona</div>
+        <div class="d" id="aj-titulo">A ordem das operações numa entrada</div>
+      </div>
+      <div class="corpo">
+
+        <svg class="ajuda-svg" viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg"
+             role="img" aria-label="Diagrama: importar, casar fornecedor, identificar, conferir, efetivar">
+          <defs>
+            <marker id="seta" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+            </marker>
+          </defs>
+
+          <!-- etapas -->
+          <g font-family="system-ui, sans-serif">
+            <rect x="8"   y="24" width="160" height="70" rx="8"
+                  fill="#f3e8ff" stroke="#6b21a8" stroke-width="1.5"/>
+            <text x="88" y="48" text-anchor="middle" font-size="13" font-weight="700"
+                  fill="#6b21a8">1 · Importar</text>
+            <text x="88" y="68" text-anchor="middle" font-size="11" fill="#4b5563">o XML da NF-e</text>
+            <text x="88" y="84" text-anchor="middle" font-size="10" fill="#6b7280">uma vez por nota</text>
+
+            <rect x="188" y="24" width="160" height="70" rx="8"
+                  fill="#eff6ff" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="268" y="48" text-anchor="middle" font-size="13" font-weight="700"
+                  fill="#1e40af">2 · Fornecedor</text>
+            <text x="268" y="68" text-anchor="middle" font-size="11" fill="#4b5563">casa pelo CNPJ</text>
+            <text x="268" y="84" text-anchor="middle" font-size="10" fill="#6b7280">automático</text>
+
+            <rect x="368" y="24" width="160" height="70" rx="8"
+                  fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+            <text x="448" y="48" text-anchor="middle" font-size="13" font-weight="700"
+                  fill="#92400e">3 · Identificar</text>
+            <text x="448" y="68" text-anchor="middle" font-size="11" fill="#4b5563">qual é o nosso produto</text>
+            <text x="448" y="84" text-anchor="middle" font-size="10" fill="#6b7280">grava o EAN</text>
+
+            <rect x="548" y="24" width="160" height="70" rx="8"
+                  fill="#f3e8ff" stroke="#6b21a8" stroke-width="1.5"/>
+            <text x="628" y="48" text-anchor="middle" font-size="13" font-weight="700"
+                  fill="#6b21a8">4 · Contar</text>
+            <text x="628" y="68" text-anchor="middle" font-size="11" fill="#4b5563">em outra página</text>
+            <text x="628" y="84" text-anchor="middle" font-size="10" fill="#6b7280">um item por vez</text>
+
+            <rect x="728" y="24" width="164" height="70" rx="8"
+                  fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+            <text x="810" y="48" text-anchor="middle" font-size="13" font-weight="700"
+                  fill="#065f46">5 · Efetivar</text>
+            <text x="810" y="68" text-anchor="middle" font-size="11" fill="#4b5563">no fim da contagem</text>
+            <text x="810" y="84" text-anchor="middle" font-size="10" fill="#6b7280">não dá para desfazer</text>
+
+            <!-- setas entre as etapas -->
+            <line x1="170" y1="59" x2="184" y2="59" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#seta)"/>
+            <line x1="350" y1="59" x2="364" y2="59" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#seta)"/>
+            <line x1="530" y1="59" x2="544" y2="59" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#seta)"/>
+            <line x1="710" y1="59" x2="724" y2="59" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#seta)"/>
+
+            <!-- o laço do 3 para o 4, item a item -->
+            <path d="M448 100 L448 124 L628 124 L628 100" fill="none"
+                  stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="538" y="140" text-anchor="middle" font-size="10" fill="#6b7280">
+              item a item, até todos terem o nosso código
+            </text>
+
+            <!-- distribuição dos efeitos -->
+            <line x1="810" y1="100" x2="810" y2="176" stroke="#059669" stroke-width="1.5"/>
+            <line x1="150" y1="176" x2="810" y2="176" stroke="#059669" stroke-width="1.5"/>
+            <line x1="150" y1="176" x2="150" y2="206" stroke="#059669" stroke-width="1.5" marker-end="url(#seta)"/>
+            <line x1="450" y1="176" x2="450" y2="206" stroke="#059669" stroke-width="1.5" marker-end="url(#seta)"/>
+            <line x1="750" y1="176" x2="750" y2="206" stroke="#059669" stroke-width="1.5" marker-end="url(#seta)"/>
+
+            <!-- efeitos -->
+            <rect x="10"  y="212" width="280" height="66" rx="8"
+                  fill="#fff" stroke="#059669" stroke-width="1.5"/>
+            <text x="150" y="236" text-anchor="middle" font-size="12" font-weight="700"
+                  fill="#065f46">Estoque sobe</text>
+            <text x="150" y="256" text-anchor="middle" font-size="11" fill="#4b5563">pela quantidade conferida</text>
+            <text x="150" y="271" text-anchor="middle" font-size="10" fill="#6b7280">custo médio recalculado</text>
+
+            <rect x="310" y="212" width="280" height="66" rx="8"
+                  fill="#fff" stroke="#059669" stroke-width="1.5"/>
+            <text x="450" y="236" text-anchor="middle" font-size="12" font-weight="700"
+                  fill="#065f46">Títulos no fluxo</text>
+            <text x="450" y="256" text-anchor="middle" font-size="11" fill="#4b5563">uma linha por duplicata</text>
+            <text x="450" y="271" text-anchor="middle" font-size="10" fill="#6b7280">obrigação a pagar, T = 2</text>
+
+            <rect x="610" y="212" width="280" height="66" rx="8"
+                  fill="#fff" stroke="#059669" stroke-width="1.5"/>
+            <text x="750" y="236" text-anchor="middle" font-size="12" font-weight="700"
+                  fill="#065f46">Pedido encerra</text>
+            <text x="750" y="256" text-anchor="middle" font-size="11" fill="#4b5563">liquidado ou com saldo</text>
+            <text x="750" y="271" text-anchor="middle" font-size="10" fill="#6b7280">a previsão T = 7 sai do fluxo</text>
+
+            <text x="450" y="308" text-anchor="middle" font-size="11" fill="#6b7280">
+              Da segunda nota deste fornecedor em diante, o passo 3 desaparece: o código de barras já é conhecido.
+            </text>
+          </g>
+        </svg>
+
+        <div class="ajuda-texto">
+          <p><b>O ponto ao lado da descrição</b> diz se o produto já foi identificado:
+             verde sim, âmbar ainda não. O botão <b>identificar</b> abre a lista de
+             candidatos, já ordenada por semelhança de referência — quase sempre o
+             primeiro da lista é o certo.</p>
+          <p><b>QUANT em verde</b> é o que a nota diz. <b>LIDO</b> é o que você contou.
+             A linha fica verde quando os dois fecham, âmbar no meio do caminho e
+             vermelha se passar da quantidade da nota.</p>
+          <p><b>CUSTO REAL</b> é produto + IPI + ST + rateio de frete − desconto, dividido
+             pela quantidade. É esse valor que entra no estoque, não o valor unitário
+             da nota. A lupa de cada linha mostra a conta por extenso.</p>
+          <p><b>capturar pedido</b> só aparece enquanto falta o nosso código:
+             ele abre o pedido para você dizer qual linha é aquela. Assim que
+             o código existe, o botão some.</p>
+          <p>Aqui não se conta mercadoria. Quando a nota bater com o pedido,
+             o botão <b>Conferência física</b> leva para a página onde o
+             conferente conta, um item por vez, sem ver as quantidades.</p>
+          <p>Se a conferência não fechar com a nota, a efetivação pede um
+             <b>motivo escrito</b> antes de deixar passar.</p>
+        </div>
+      </div>
+      <div class="pe">
+        <button class="btn-mini" id="aj-fechar">entendi</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/compra/nota.js"></script>
+</body>
+</html>

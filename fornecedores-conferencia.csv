@@ -1,0 +1,129 @@
+﻿conta_antiga;nome_no_plano_antigo;razao_cadastro_antigo;cnpj_antigo;cnpj_cadastro_atual;razao_cadastro_atual;ativo_no_antigo;situacao;sugestao;cidade;uf;inscricao
+2.02.001.001;(conta não existe no plano);Astra S/A Indústria e Comércio;50949528001070;;;não;CNPJ só no antigo;criar no cadastro com os dados do antigo — está INATIVO no antigo;Jundiaí;São Paulo;407.185.445.116
+2.02.001.002;(conta não existe no plano);Aquecedores Cumulus S.A;61323390000478;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;São Paulo;São Paulo;336.103.248.119
+2.02.001.004;Blukit Metalúrgica Ltda;Blukit Metalúrgica Ltda;81604803000157;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Blumenau;Santa Catarina;251.944.000
+2.02.001.005;Bozi Mat. p/Constr. Ltda;Bozi Material p/Construção Ltda;;27830116000104;Bozi Materiais para Construcao Ltda;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Vitória;Espírito Santo;0
+2.02.001.008;(conta não existe no plano);Censi Indústria e Comércio de Reparos Ltda;02308456000149;;;não;CNPJ só no antigo;criar no cadastro com os dados do antigo — está INATIVO no antigo;Blumenau;Santa Catarina;253.610.010
+2.02.001.011;(conta não existe no plano);Dancor S.A Ind. Mec.;33561853000151;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Rio de Janeiro;Rio de Janeiro;81.958.254
+2.02.001.013;Docol;Docol Mat. H. Ltda;;75339051000141;DOCOL INDUSTRIA E COMERCIO LTDA;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Joinville;Santa Catarina;0
+2.02.001.015;Fabrimar;Fabrimar S/A Ind. Com.;33064262000179;33064262000179;TIGRE FERRAMENTAS PARA CONSTRUCAO CIVIL S.A;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Rio de Janeiro;Rio de Janeiro;82.054.480
+2.02.001.021;Lorenzetti;Lorenzetti S/A;61413282000143;61413282000143;LORENZETTI SA INDUSTRIAS BRASILEIRAS ELETROMETALURGICAS;sim;já no cadastro;vincular à conta nova quando o de/para decidir;São Paulo;São Paulo;100.682.431.117
+2.02.001.030;Westaflex Brasil;Westaflex Brasil;;75024521000692;WESTAFLEX TUBOS FLEXIVEIS LTDA;sim;já no cadastro;vincular à conta nova quando o de/para decidir;São Paulo;São Paulo;0
+2.02.001.037;(conta não existe no plano);Fornecedora Comercial Mar Ltda;27272103000167;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Vitória;Espírito Santo;080.640.58-3
+2.02.001.045;Emidio Pais Mat.Constr.Ltda;Emidio Pais Mat. Constr. Ltda;;;;não;sem CNPJ;descartar (inativo);Vitória;Espírito Santo;0
+2.02.001.047;(conta não existe no plano);Servipeças Comércio e Serviços Ltda;27757814000121;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Vitória;Espírito Santo;080.916.04-0
+2.02.001.054;Tigre-Aquaterm;Tigre S/A  - Div.Aquatherm;;08862530001475;TIGRE MATERIAIS E SOLUCOES PARA CONSTRUCAO LTDA.;sim;já no cadastro;"CONFERIR se é a mesma empresa; depois vincular";Rio Claro;São Paulo;0
+2.02.001.056;Asia Impor. & Com. Ext. Ltda;Asia Import.& Com.Ext.Ltda;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Jardim Itapecerica da Serra;São Paulo;0
+2.02.001.058;(conta não existe no plano);Texius Máq.Eq.Elet-M. Ltda;92088608000138;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Porto Alegre;Rio Grande do Sul;096.200.2348
+2.02.001.063;Akros;Akros S/A;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Joinville;Santa Catarina;0
+2.02.001.067;Rodoviário Ramos Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.068;(conta não existe no plano);Eluma S/A;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";São Paulo;São Paulo;0
+2.02.001.072;Braspress;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.073;Robert Bosch Ltda;Robert Bosch Ltda;45990181000189;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Campinas;São Paulo;244.007.410.115
+2.02.001.074;Rinnai - Equip.NGK-Rinnai Ltda;Rinnai - Equip. NGK-Rinnai Ltda;47173950000181;47173950000181;RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Mogi das Cruzes;São Paulo;454.072.582-116
+2.02.001.083;Fio & Ferro Mat. S.Constr Ltda;Fio & Ferro Materiais, Serviços e Construções Ltda;30571749000150;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Vitória;Espírito Santo;081.040.48-2
+2.02.001.088;Jackwal S/A;Jackwal S/A;;92782366000188;JACKWAL S/A;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Gravataí;Rio Grande do Sul;0
+2.02.001.097;(conta não existe no plano);Bognar Metais Santários Ltda;;;;não;sem CNPJ;descartar (inativo);São Paulo;São Paulo;0
+2.02.001.106;Deca - Metais;Deca - Metais;;08806318000176;DECA INDUSTRIA E COMERCIO DE MATERIAIS SANITARIOS LTDA;sim;já no cadastro;vincular à conta nova quando o de/para decidir;São Paulo;São Paulo;0
+2.02.001.112;Transportadora Continental;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.126;Aliança Metalúrgica S/A;Aliança Metalurgica;61143632000107;61143632000107;ALIANCA METALURGICA S.A.;sim;já no cadastro;vincular à conta nova quando o de/para decidir;São Paulo;São Paulo;103.394.696.116
+2.02.001.128;(conta não existe no plano);Rao Flex Industrial Ltda;03582456000103;;;não;CNPJ só no antigo;criar no cadastro com os dados do antigo — está INATIVO no antigo;São Paulo;São Paulo;0
+2.02.001.131;Lao Ind. Com. Ltda;Liceu de Artes e Ofícios de São Paulo;60761889000747;00946219000188;LAO INDUSTRIA LTDA;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Ozasco;São Paulo;492.155.301-117
+2.02.001.133;(conta não existe no plano);Incodral Componentes Hidraúlicos Ltda;65019887000105;;;não;CNPJ só no antigo;criar no cadastro com os dados do antigo — está INATIVO no antigo;Santa Bárbara D Oeste;São Paulo;165.107.636-115
+2.02.001.137;Bosch Assistência Técnica;Bosch Assistência Técnica;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";São Paulo;São Paulo;0
+2.02.001.138;(conta não existe no plano);Cumulus/Assit.Técnica;;;;não;sem CNPJ;descartar (inativo);São Paulo;São Paulo;0
+2.02.001.141;Imexport Assitência Técnica;Imexport Assitência Técnica;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Caxias do Sul;Rio Grande do Sul;0
+2.02.001.142;(conta não existe no plano);Docol - Assist. Técnica;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Vitória;Espírito Santo;0
+2.02.001.143;Eberle;Eberle Equip. Processos S.A;;90770413000148;EBERLE EQUIPAMENTOS E PROCESSOS SA;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Caxias do Sul;Rio Grande do Sul;0
+2.02.001.144;Formetal Forn.Metais Ltda;Formetal Forn.Metais Ltda;;;;não;sem CNPJ;descartar (inativo);Vitória;Espírito Santo;0
+2.02.001.147;(conta não existe no plano);Mallory;00153282000167;;;não;CNPJ só no antigo;criar no cadastro com os dados do antigo — está INATIVO no antigo;Maranguape;Ceará;0
+2.02.001.148;Viferro Ferramentas e Ferrag Lt;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.149;(conta não existe no plano);Falmec do Brasil;;;;não;sem CNPJ;descartar (inativo);São Paulo;São Paulo;0
+2.02.001.150;Arwek;Arwek;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Campo Belo;São Paulo;0
+2.02.001.154;(conta não existe no plano);Full Gauge Eletro Controles Ltda;90446048000110;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Caxias do Sul;Rio Grande do Sul;024.012.1317
+2.02.001.155;(conta não existe no plano);Cupro Brasil Ltda;;;;não;sem CNPJ;descartar (inativo);São Paulo;São Paulo;0
+2.02.001.156;Tramontina Sudeste S.A;Tramontina Sudeste S.A;61652608000195;61652608000195;TRAMONTINA SUDESTE S.A.;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Barueri;São Paulo;206.039.940-115
+2.02.001.157;(conta não existe no plano);Akros - Galvanizado;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Guarulhos;São Paulo;0
+2.02.001.158;(conta não existe no plano);Arix;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Rio de Janeiro;Rio de Janeiro;0
+2.02.001.159;Rinnai - Assist. Técnica;Rinnai - Assist. Técnica;47173950000181;47173950000181;RINNAI BRASIL TECNOLOGIA DE AQUECIMENTO LTDA.;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Mogi das Cruzes;São Paulo;454.072.582-116
+2.02.001.160;Komlog Importação Ltda;Komlog Importação Ltda;;06114935001580;KOMGROUP INDUSTRIAL LTDA;sim;já no cadastro;"CONFERIR se é a mesma empresa; depois vincular";São José;Santa Catarina;0
+2.02.001.161;(conta não existe no plano);Cata Brasil S.A;;;;não;sem CNPJ;descartar (inativo);São Paulo;São Paulo;0
+2.02.001.162;(conta não existe no plano);General Heater;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";São Paulo;São Paulo;0
+2.02.001.163;(conta não existe no plano);Komlong - cestas;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";São Paulo;São Paulo;0
+2.02.001.165;Doce Lar Material de Construção Lt;Amanco - PPR;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";São Paulo;São Paulo;0
+2.02.001.166;Tuboval Comercio Ltda;Tuboval Comercio Ltda;;;;não;sem CNPJ;descartar (inativo);Vitória;Espírito Santo;0
+2.02.001.167;(conta não existe no plano);Yorkex;04191310000191;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;São Paulo;São Paulo;116.062.749-110
+2.02.001.168;(conta não existe no plano);Westaflex - grelhas;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";São Paulo;São Paulo;0
+2.02.001.169;(conta não existe no plano);Ricozon Fermoplas Ferr.M.Plast.Ltda;;;;não;sem CNPJ;descartar (inativo);Arujá;São Paulo;0
+2.02.001.170;Distriferro Prod. Sid. Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.171;(conta não existe no plano);Lorenzetti S.A / Aquecedor;61413282000143;61413282000143;LORENZETTI SA INDUSTRIAS BRASILEIRAS ELETROMETALURGICAS;sim;já no cadastro;vincular à conta nova quando o de/para decidir;São Paulo;São Paulo;100.682.431-117
+2.02.001.172;(conta não existe no plano);Komlog - Coifa;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Itajaí;Santa Catarina;0
+2.02.001.173;Rowa do Brasil Ltda;Rowa do Brasil Ltda;;05949470000110;ROWA DO BRASIL INDUSTRIA E COMERCIO DE BOMBAS LTDA.;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Blumenau;Santa Catarina;0
+2.02.001.174;(conta não existe no plano);Latina Eletodomésticos S.A;00217622000176;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;São Carlos;São Paulo;0
+2.02.001.175;(conta não existe no plano);Soc. Paulista Tubos e Flexiveis Ltda;61371993000100;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;São Paulo;São Paulo;103.460.528.117
+2.02.001.176;Venax Eletrodoméstico Ltda;Venax Eletrodoméstico Ltda;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Venâncio Aires;Rio Grande Sul;0
+2.02.001.177;(conta não existe no plano);PHD - Barras de Apóio;;;;não;sem CNPJ;descartar (inativo);São Paulo;São Paulo;0
+2.02.001.178;(conta não existe no plano);JMS Industrial Ltda;;;;não;sem CNPJ;descartar (inativo);Contagem;Minas Gerais;0
+2.02.001.179;(conta não existe no plano);Global Vix Distribuidora de Importados Ltda;;;;não;sem CNPJ;descartar (inativo);Vitória;Esp.Santo;0
+2.02.001.180;Transportadora Fiorot Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.181;(conta não existe no plano);Wog Comercio Metais Sanit. Ltda;96459599000103;;;não;CNPJ só no antigo;criar no cadastro com os dados do antigo — está INATIVO no antigo;São Paulo;São Paulo;113.657.412.110
+2.02.001.182;Haenke;Haenke Tubos Flexiveis Ltda;;55140099000119;HAENKE TUBOS FLEXIVEIS LTDA.;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Diadema;São Paulo;0
+2.02.001.183;Distak Comercio e Distribuição Ltda;Distak Comercio e Distribuição Ltda;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Joinville;Santa Catarina;0
+2.02.001.184;Bombas Grundfos do Brasil Ltda;Bombas Grundfos do Brasil Ltda;02599337000192;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;São Bernardo Campo;São Paulo;635.081.856.115
+2.02.001.185;Fenix Metais Não Ferrosos Com.Ind.Ltda;Fenix Metais Não Ferrosos Com.Ind.Ltda;56698871000185;;;não;CNPJ só no antigo;criar no cadastro com os dados do antigo — está INATIVO no antigo;Campinas;São Paulo;244.282.181.14
+2.02.001.186;Docelar Mat. Constr. Ltda;Docelar Mat. Constr. Ltda;00587271000195;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Vila Velha;Espírito Santo;081.746.74-1
+2.02.001.187;Franklin Eletric Ind. Motobombas S.A;Franklin Eletric Ind. Motobombas S.A;84685106000166;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Joinville;Santa Catarina;0
+2.02.001.188;Joogbo Quimica do Brasil Ltda;Joogbo Quimica do Brasil Ltda;01025316000362;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;São Paulo;São Paulo;149.391.459-110
+2.02.001.189;José Osvaldo de Oliveira Trans;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.190;Sicflux Ind.Com. Prod.Elet. Met. Lt;Sicflux Ind. Com. Prod. Elet. Met. Ltda;12324116000165;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Araquari;Santa Catarina;256.193.835
+2.02.001.191;Continental;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.192;MG Transportes e Logisticas Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.193;Transportadora MMA Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.194;(conta não existe no plano);Ariston Thermo Brasil Tec.Aquec. Ltda;;;;não;sem CNPJ;descartar (inativo);São Paulo;São Paulo;0
+2.02.001.196;Mexichem Brasil Ind. Transf. Plast Lt;Mexichem Brasil Ind. de Transf. Plastica Ltda;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Joinville;Santa Catarina;0
+2.02.001.197;(conta não existe no plano);Cata do Brasil_Exaustão;;;;não;sem CNPJ;descartar (inativo);Guarulhos;São Paulo;0
+2.02.001.198;Makio Ind. Com. Instalações Ltda;Makio Ind. Com. Instalações Ltda;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";São Bernardo Campo;São Paulo;0
+2.02.001.199;Sfera Com.Imp.Ltda Emmeti;Sfera Com.Imp.Ltda Emmeti;;72741051000185;SFERA COMERCIAL E IMPORTADORA LTDA;sim;já no cadastro;vincular à conta nova quando o de/para decidir;São Paulo;São Paulo;0
+2.02.001.200;Meridional Cargas Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.201;Irmãos Fischer S.A Ind. Com.;Irmãos Fischer S.A Ind. Com.;;33347196000578;FISCHER BRASIL INDUSTRIA E COMERCIO LTDA;sim;já no cadastro;"CONFERIR se é a mesma empresa; depois vincular";Brusque;Santa Catarina;0
+2.02.001.202;Franke Sistemas de Cozinhas do Brasil Ltda;Franke Sistemas de Cozinhas do Brasil Ltda;02314099000121;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Joinville;Santa Catarina;0
+2.02.001.203;(conta não existe no plano);Heliodin do Brasil;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";São Paulo;São Paulo;0
+2.02.001.204;Orbis Merting do Brasil Ltda;Orbis Merting do Brasil Ltda;01402079000140;01402079000140;ORBIS MERTIG DO BRASIL LTDA;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Campinas Grande Sul;Paraná;0
+2.02.001.205;Vitoria Quimica Tintas e Anticor. Ltda;Vitoria Quimica Tintas e Anticor. Ltda;61775474000108;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Valinhos;São Paulo;708.005.071-114
+2.02.001.206;Albacete Ind. Com. Equip. Lazer Ltda;Albacete Ind. Com. Equip. Lazer Ltda;32193369000154;32193369000154;ALBACETE INDUSTRIA E COMERCIO DE EQUIPAMENTOS DE LAZER LTDA - EM RECUPERACAO JUDICIAL;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Teresópolis;Rio de Janeiro;0
+2.02.001.207;Gelopar Refrigeração Paranaense Ltda;Gelopar Refrigeração Paranaense Ltda;;;;não;sem CNPJ;descartar (inativo);Araucaria;Paraná;0
+2.02.001.208;Dominio Log Transportes e Logistica Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.209;Orbis do Brasil - Assistência;Orbis do Brasil - Assistência;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Curitiba;Paraná;0
+2.02.001.210;Tecnopar Brasil Comercial Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.211;Perfil Alumnio do Brasil S.A;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.212;Inova Equip.e Instrumentos Ltda;Inova Equip.e Instrumentos Ltda;08805119000143;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;São José dos Campos;São Paulo;0
+2.02.001.213;Transcachoeiro Transp. de Cargas Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.214;Franke Sistema de Coz.do Brasil Ltda;Franke Sistema de Coz.do Brasil Ltda;;;;não;sem CNPJ;descartar (inativo);Joinville;Santa Catarina;0
+2.02.001.215;ADM Comercio;ADM Comercio;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Serra;Espírito Santo;0
+2.02.001.216;Del Rey Minerals Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.217;Noveline;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.218;Contubos Equip. Industr. Ltda;Contubos Equip. Industr. Ltda;36008076000100;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Vila Velha;Espírito Santo;081.457.09-0
+2.02.001.219;Rheem do Brasil;Rheem do Brasil;;10755792000168;RHEEM DO BRASIL COMERCIO E DISTRIBUICAO DE AR CONDICIONADO E AQUECIMENTO LTDA;sim;já no cadastro;vincular à conta nova quando o de/para decidir;São Paulo;São Paulo;0
+2.02.001.220;Alfapress Proj.Conf.Circ.Impressos Ltda;Alfapress Proj.Conf.Circ.Impressos Ltda;57569733000169;;;não;CNPJ só no antigo;criar no cadastro com os dados do antigo — está INATIVO no antigo;Campinas;São Paulo;244299945119
+2.02.001.221;Amanco_Pex;Amanco_Pex;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Campinas;São Paulo;0
+2.02.001.222;Maqenge Ind. Met. Ltda;Maqenge Ind. Met. Ltda;;05000896000122;MAQENGE - INDUSTRIA METALURGICA LTDA;sim;já no cadastro;vincular à conta nova quando o de/para decidir;Caxias do Sul;Rio Grande do Sul;0
+2.02.001.223;Contini & Porto ind. Com. Ltda;Contini & Porto ind. Com. Ltda;03052811000124;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;São Jose dos Campos;São Paulo;0
+2.02.001.224;Rodonaves;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.225;Rodonaves Transp.Enc. Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.226;Eplax Soluções;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.227;Eplax Pro Efect Tecnology Ltda;Eplax Pro Efect Tecnology Ltda;04924760000146;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Parapicuiba;São Paulo;0
+2.02.001.228;Presystem Proj.Sist.Eletr.Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.229;Presystem Proj. e Sist. Eletr. Ltda;Presystem Proj. e Sist. Eletr. Ltda;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";São Paulo;São Paulo;0
+2.02.001.230;Full Gauge Eletro Constroles Ltda;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.231;Vazio;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+2.02.001.232;RR Brasil Ind. Com. Ltda;RR Brasil Ind. Com. Ltda;05606242000147;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Arujá;São Paulo;0
+2.02.001.233;A Verbeno Metelurgica ME;A Verbeno Metelurgica ME;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Vila Velha;Espírito Santo;0
+2.02.002.004;adiantamento/fornecedor;;;;;;só no plano;conta sem cadastro de fornecedor no antigo: decidir no de/para;;;
+;(sem conta no plano antigo);Vedasil -Vedação,Esq.,Anod.Ltda;48632939000103;;;não;CNPJ só no antigo;criar no cadastro com os dados do antigo — está INATIVO no antigo;Valinhos;São Paulo;708.014.503.118
+;(sem conta no plano antigo);Perfil Aluminio do Brasil S/A;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Viana;Espírito Santo;0
+;(sem conta no plano antigo);Del  Rey Minerals Ltda;07062380000138;;;sim;CNPJ só no antigo;criar no cadastro com os dados do antigo;Betim;Minas Gerais;0
+;(sem conta no plano antigo);Novellini;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Curitiba;Paraná;0
+;(sem conta no plano antigo);Tigre - Marron;;;;não;sem CNPJ;descartar (inativo);Serra;Espírito Santo;0
+;(sem conta no plano antigo);Tigre - Marron;;;;sim;sem CNPJ;"buscar o CNPJ; sem ele não entra no cadastro";Serra;Espírito Santo;0
+;(sem conta no plano antigo);Eplax;;;;não;sem CNPJ;descartar (inativo);Campinas;São Paulo;0
+;(sem conta no plano antigo);TIGRE_Marron;;;;não;sem CNPJ;descartar (inativo);Serra;Espírito Santo;0

@@ -1,10 +1,22 @@
-/* public/js/auxiliares/fornecedores.js
- * Cadastro de Fornecedores — unificado com o site (model fornec)
+/* Destino: C:\plataformaRota\public\js\contab\auxiliares\fornecedores.js
+ * Alterado em: 30/09/2026
+ *   - lista mostra os fornecedores do Access ainda nao transferidos, com a
+ *     etiqueta "ajustar"; o botao Completar abre a ficha preenchida com o que
+ *     veio do Access e a conta dele (sem escolher titulo)
+ *   - fornecedor sem telefone nem e-mail tambem mostra "ajustar"
+ *   - botao "? Ajuda" abre o painel lateral de orientacao
+ *   - e-mail/telefone deixam de ser obrigatorios
+ *   - Enter num campo da ficha vai para o proximo campo; no ultimo, para o
+ *     botao Salvar (so Enter no botao ou clique salva)
+ *
+ * public/js/contab/auxiliares/fornecedores.js
+ * Cadastro de Fornecedores — compartilhado entre empresas (model fornec).
+ * O cadastro escolhe o título contábil; a conta (subtítulo) é criada pela API.
  */
 (() => {
   'use strict';
 
-  console.log('%c🟣 fornecedores.js v5 — title case lista + ações horizontais', 'background:#7c3aed;color:white;padding:6px 12px;border-radius:4px;font-weight:bold;');
+  console.log('%c🟣 fornecedores.js v7 — título contábil, vínculo e desvincular conta', 'background:#7c3aed;color:white;padding:6px 12px;border-radius:4px;font-weight:bold;');
 
   const API = '/aux/api/fornecedores';
   const LOOKUP = '/aux/api/lookup';
@@ -17,8 +29,46 @@
     cnpjConsultado: '',
     cepConsultado: '',
     debounceTimer: null,
-    lookupCepEmAndamento: false
+    lookupCepEmAndamento: false,
+    vinculando: false,       // CNPJ já existe no cadastro compartilhado, sem vínculo com esta empresa
+    titulos: [],
+    access: null,            // NrFornec do Access quando a ficha completa um pendente
+    lista: []
   };
+
+  /* ===== Títulos contábeis (2.01.xxx) ===== */
+  async function carregarTitulos() {
+    try {
+      state.titulos = await api('GET', '/titulos');
+    } catch (err) {
+      state.titulos = [];
+      console.error('Títulos:', err.message);
+    }
+    preencherTitulos();
+  }
+  function preencherTitulos() {
+    const sel = $('#f-titulo');
+    if (!state.titulos.length) {
+      sel.innerHTML = '<option value="">Nenhum título sob 2.01 no plano</option>';
+      return;
+    }
+    sel.innerHTML = '<option value="">Escolha o título...</option>' +
+      state.titulos.map(t => `<option value="${t.codigo}">${t.codigo} - ${t.nome}</option>`).join('');
+  }
+  function modoTitulo(f) {
+    // Novo/vínculo: escolhe o título. Edição: mostra a conta, que não muda mais.
+    const editando = !!(f && f.ncontabil && !state.vinculando);
+    $('#bloco-titulo').hidden = editando;
+    $('#bloco-ncontabil').hidden = !editando;
+    $('#f-titulo').value = '';
+    $('#f-ncontabil').value = editando ? f.ncontabil : '';
+  }
+  function avisoVinculo(nome) {
+    const el = $('#aviso-vinculo');
+    if (!nome) { el.hidden = true; el.textContent = ''; return; }
+    el.textContent = `${nome} já está no cadastro compartilhado. Ao salvar, ele é vinculado à sua empresa com uma conta própria no plano; os dados cadastrais não são alterados.`;
+    el.hidden = false;
+  }
 
   /* ===== Helpers de API ===== */
   async function api(method, path = '', body) {
@@ -174,17 +224,22 @@
   /* ===== Modal ===== */
   function abrirModal(f) {
     state.editandoId = f?._id || null;
+    state.vinculando = false;
+    state.access = null;
     state.cnpjConsultado = '';
     state.cepConsultado = '';
     $('#modal-titulo').textContent = f ? `Editar fornecedor` : 'Novo fornecedor';
 
+    $$('.for-form input, .for-form select').forEach(el => { el.disabled = false; });
+    $$('.btn-isento').forEach(b => b.disabled = false);
     $('#f-tipo').value = f?.tipo || 'PJ';
     $('#f-tipo').disabled = !!f;
     $('#f-cpfCnpj').value = f?.cpfCnpjFormatado || '';
     $('#f-cpfCnpj').disabled = !!f;
     $('#f-nome').value = f?.razao || '';
     $('#f-marca').value = f?.marca || '';
-    $('#f-ncontabil').value = f?.ncontabil || '';
+    modoTitulo(f);
+    avisoVinculo(null);
     $('#f-inscricaoEstadual').value = f?.inscricao || '';
     $('#f-inscricaoMunicipal').value = f?.inscricaoMunicipal || '';
     $('#f-email').value = f?.email || '';
@@ -229,6 +284,66 @@
   function fecharModal() {
     $('#modal-fornecedor').hidden = true;
     state.editandoId = null;
+    state.vinculando = false;
+    state.access = null;
+  }
+
+  /* Completa um fornecedor do Access que ainda nao esta no cadastro.
+     Vem preenchido com o que o Access tem; a conta e a dele. */
+  function abrirCompletar(p) {
+    abrirModal(null);
+    state.access = p.nrFornec;
+    $('#modal-titulo').textContent = 'Completar fornecedor do Access';
+    $('#f-cpfCnpj').value = p.cpfCnpjFormatado || '';
+    $('#f-nome').value = titleCase(p.razao || '');
+    $('#f-marca').value = p.marca || '';
+    $('#cob-cidade').value = titleCase(p.address?.cidade || '');
+    if (p.ncontabil) {
+      $('#bloco-titulo').hidden = true;
+      $('#bloco-ncontabil').hidden = false;
+      $('#f-ncontabil').value = p.ncontabil;
+    }
+    const el = $('#aviso-vinculo');
+    el.textContent = 'Ajustar: ' + (p.ajustar || []).join('; ')
+      + (p.ncontabil ? '. A conta ' + p.ncontabil + ' vem do Access.' : '. Sem conta no Access: escolha o título.');
+    el.hidden = false;
+    $$('.for-form input').forEach(el => marcarPreenchido(el));
+    setTimeout(() => $('#f-cpfCnpj').focus(), 50);
+  }
+
+  /* Preenche o formulário com o cadastro compartilhado e passa para o modo vínculo */
+  function prepararVinculo(f) {
+    abrirModal(null);
+    state.vinculando = true;
+    $('#modal-titulo').textContent = 'Vincular fornecedor';
+    $('#f-tipo').value = f.tipo || 'PJ';
+    $('#f-cpfCnpj').value = f.cpfCnpjFormatado || '';
+    state.cnpjConsultado = f.cnpj || '';
+    $('#f-nome').value = f.razao || '';
+    $('#f-marca').value = f.marca || '';
+    $('#f-inscricaoEstadual').value = f.inscricao || '';
+    $('#f-inscricaoMunicipal').value = f.inscricaoMunicipal || '';
+    $('#f-email').value = f.email || '';
+    $('#f-telefone').value = f.telefone || '';
+    const a = f.address || {};
+    $('#cob-cep').value = a.cep ? mascaraCEP(a.cep) : '';
+    $('#cob-logradouro').value = a.logradouro || '';
+    $('#cob-numero').value = a.numero || '';
+    $('#cob-complemento').value = a.complemento || '';
+    $('#cob-bairro').value = a.bairro || '';
+    $('#cob-cidade').value = a.cidade || '';
+    $('#cob-uf').value = a.estado || '';
+    // No vínculo só se escolhe o título; o resto é do cadastro compartilhado.
+    $$('.for-form input, .for-form select').forEach(el => {
+      if (el.id !== 'f-titulo') el.disabled = true;
+    });
+    $$('.btn-isento').forEach(b => b.disabled = true);
+    atualizarLabelDoc();
+    atualizarVisibilidadeInscricoes();
+    atualizarBotoesIsento();
+    avisoVinculo(f.razao || 'Este fornecedor');
+    $$('.for-form input').forEach(el => marcarPreenchido(el));
+    setTimeout(() => $('#f-titulo').focus(), 50);
   }
 
   /* ===== Listagem ===== */
@@ -236,31 +351,48 @@
     const tbody = $('#lista-fornecedores');
     const busca = $('#busca').value.trim();
     const inativos = $('#incluir-inativos').checked;
-    tbody.innerHTML = '<tr><td colspan="6" class="for-empty">Carregando...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" class="for-empty">Carregando...</td></tr>';
     try {
       const params = new URLSearchParams();
       if (busca) params.set('busca', busca);
       if (inativos) params.set('incluirInativos', 'true');
       const lista = await api('GET', '/' + (params.toString() ? '?' + params : ''));
+      state.lista = lista;
       $('#contador').textContent = `${lista.length} ${lista.length === 1 ? 'fornecedor' : 'fornecedores'}`;
       if (lista.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="for-empty">Nenhum fornecedor encontrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="for-empty">Nenhum fornecedor encontrado.</td></tr>';
         return;
       }
-      tbody.innerHTML = lista.map(f => `
+      const etqAjustar = f => (f.ajustar && f.ajustar.length)
+        ? ` <span class="for-tag-ajustar" title="${f.ajustar.join('; ')}">ajustar</span>` : '';
+      tbody.innerHTML = lista.map(f => f.pendente ? `
+        <tr class="for-pendente">
+          <td>${titleCase(f.razao || '') || '-'}</td>
+          <td class="for-doc">${f.cpfCnpjFormatado || '-'}</td>
+          <td>${f.marca || '-'}</td>
+          <td class="for-conta">${f.ncontabil || '-'}</td>
+          <td>${titleCase(f.address?.cidade || '') || '-'}</td>
+          <td>${etqAjustar(f)}</td>
+          <td class="for-col-acoes">
+            <button class="for-btn-acao" data-action="completar" data-nr="${f.nrFornec}" title="Completar cadastro">✏️</button>
+          </td>
+        </tr>
+      ` : `
         <tr>
           <td>${titleCase(f.razao || '') || '-'}</td>
           <td class="for-doc">${f.cpfCnpjFormatado || f.cnpj || '-'}</td>
           <td>${f.marca || '-'}</td>
+          <td class="for-conta">${f.ncontabil || '-'}</td>
           <td>${titleCase(f.address?.cidade || '') || '-'}</td>
           <td>${f.ativo === false
             ? '<span class="for-tag-inativo">Inativo</span>'
-            : '<span class="for-tag-ativo">Ativo</span>'}</td>
+            : '<span class="for-tag-ativo">Ativo</span>'}${etqAjustar(f)}</td>
           <td class="for-col-acoes">
             <button class="for-btn-acao" data-action="editar" data-id="${f._id}" title="Editar">✏️</button>
             ${f.ativo === false
               ? `<button class="for-btn-acao" data-action="reativar" data-id="${f._id}" title="Reativar">♻️</button>`
               : `<button class="for-btn-acao" data-action="inativar" data-id="${f._id}" title="Inativar">🗑️</button>`}
+            <button class="for-btn-acao" data-action="desvincular" data-id="${f._id}" title="Desvincular conta">⛓️‍💥</button>
           </td>
         </tr>
       `).join('');
@@ -268,13 +400,40 @@
       $$('.for-btn-acao').forEach(btn => {
         btn.addEventListener('click', async () => {
           const id = btn.dataset.id, action = btn.dataset.action;
-          if (action === 'editar') { abrirModal(await api('GET', '/' + id)); }
+          if (action === 'completar') {
+            const p = state.lista.find(x => x.pendente && String(x.nrFornec) === btn.dataset.nr);
+            if (p) abrirCompletar(p);
+          }
+          else if (action === 'editar') { abrirModal(await api('GET', '/' + id)); }
           else if (action === 'inativar') { if (confirm('Inativar este fornecedor?')) { await api('DELETE','/'+id); recarregar(); } }
           else if (action === 'reativar') { await api('POST','/'+id+'/reativar'); recarregar(); }
+          else if (action === 'desvincular') { await desvincular(id); }
         });
       });
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="6" class="for-empty">Erro: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="for-empty">Erro: ${err.message}</td></tr>`;
+    }
+  }
+
+  /* Desvincular: tira o fornecedor desta empresa e suspende a conta dele no
+     plano. Só é permitido quando a conta não tem movimento — a mesma regra do
+     plano de contas, perguntada ao servidor antes da confirmação. */
+  async function desvincular(id) {
+    let r;
+    try {
+      r = await api('GET', '/' + id + '/pode-desvincular');
+    } catch (err) {
+      alert('Não consegui verificar se a conta tem movimento.\n\n' + err.message);
+      return;
+    }
+    if (!r.pode) { alert('Não foi possível desvincular.\n\n' + r.erro); return; }
+    const conta = r.conta ? `\n\nA conta ${r.conta} fica suspensa no plano e pode ser reativada.` : '';
+    if (!confirm('Desvincular este fornecedor da sua empresa?' + conta)) return;
+    try {
+      await api('DELETE', '/' + id + '/vinculo');
+      recarregar();
+    } catch (err) {
+      alert('Erro: ' + err.message);
     }
   }
 
@@ -301,10 +460,18 @@
         e.target.classList.add('for-erro-flash'); setTimeout(()=>e.target.classList.remove('for-erro-flash'),600);
         return;
       }
-      // Duplicidade antes de BrasilAPI
-      if (!state.editandoId) {
+      // Duplicidade antes de BrasilAPI (completando do Access, quem decide e o servidor)
+      if (!state.editandoId && !state.access) {
         try {
           const d = await (await fetch(`${API}/buscar-cpfcnpj/${num}`)).json();
+          if (d.existe && !d.vinculado && d.fornecedor) {
+            if (confirm(`Este CNPJ já está no cadastro compartilhado:\n\n${d.nome}\n\nVincular à sua empresa?`)) {
+              prepararVinculo(d.fornecedor);
+            } else {
+              setTimeout(()=>{ resetar(); $('#f-cpfCnpj').focus(); },0);
+            }
+            return;
+          }
           if (d.existe) {
             $('#status-cnpj').textContent=`✗ Já cadastrado`; $('#status-cnpj').className='status-busca erro';
             e.target.classList.add('for-erro-flash');
@@ -330,7 +497,7 @@
   });
 
   $('#f-cpfCnpj').addEventListener('blur', async (e) => {
-    if (state.editandoId) return;
+    if (state.editandoId || state.vinculando || state.access) return;
     const tipo = $('#f-tipo').value;
     const num = apenasNumeros(e.target.value);
     if (!num) return;
@@ -348,6 +515,14 @@
     if (tipo === 'PF') {
       try {
         const d = await (await fetch(`${API}/buscar-cpfcnpj/${num}`)).json();
+        if (d.existe && !d.vinculado && d.fornecedor) {
+          if (confirm(`Este CPF já está no cadastro compartilhado:\n\n${d.nome}\n\nVincular à sua empresa?`)) {
+            prepararVinculo(d.fornecedor);
+          } else {
+            setTimeout(()=>{ resetar(); $('#f-cpfCnpj').focus(); },0);
+          }
+          return;
+        }
         if (d.existe) {
           $('#status-cnpj').textContent='✗ Já cadastrado'; $('#status-cnpj').className='status-busca erro';
           alert(`Este CPF já está cadastrado:\n\n${d.nome}\n\nUse a lista para editar.`);
@@ -358,7 +533,7 @@
   });
 
   function resetar() {
-    $('#f-cpfCnpj').value=''; $('#f-nome').value=''; $('#f-marca').value=''; $('#f-ncontabil').value='';
+    $('#f-cpfCnpj').value=''; $('#f-nome').value=''; $('#f-marca').value=''; $('#f-titulo').value='';
     $('#f-inscricaoEstadual').value=''; $('#f-inscricaoMunicipal').value='';
     $('#f-email').value=''; $('#f-telefone').value='';
     ['cep','logradouro','numero','complemento','bairro','cidade','uf'].forEach(c => $('#cob-'+c) && ($('#cob-'+c).value=''));
@@ -433,6 +608,20 @@
   });
 
   // Submit
+  // Enter: proximo campo visivel e habilitado; depois do ultimo, o botao Salvar.
+  $('#form-fornecedor').addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const t = e.target;
+    if (!(t.tagName === 'INPUT' || t.tagName === 'SELECT')) return;
+    e.preventDefault();
+    const campos = $$('.for-form input, .for-form select')
+      .filter(el => !el.disabled && !el.readOnly && el.type !== 'hidden' && el.offsetParent !== null);
+    const i = campos.indexOf(t);
+    const prox = campos[i + 1];
+    if (prox) { prox.focus(); if (prox.select && prox.tagName === 'INPUT') prox.select(); }
+    else $('#btn-salvar').focus();
+  });
+
   $('#form-fornecedor').addEventListener('submit', async (e) => {
     e.preventDefault();
     const tipo = $('#f-tipo').value;
@@ -449,10 +638,13 @@
       setTimeout(()=>$('#f-cpfCnpj').classList.remove('for-erro-flash'),600);
       return;
     }
-    if (!email && !telefone) { alert('Informe pelo menos um contato (e-mail ou telefone).'); return; }
+    const tituloCodigo = $('#f-titulo').value;
+    if (!state.editandoId && !tituloCodigo && !$('#bloco-titulo').hidden) {
+      $('#f-titulo').focus(); alert('Escolha o título contábil do fornecedor.'); return;
+    }
 
     // Aviso IE/IM para PJ
-    if (tipo === 'PJ') {
+    if (tipo === 'PJ' && !state.vinculando) {
       const ie = $('#f-inscricaoEstadual').value.trim();
       const im = $('#f-inscricaoMunicipal').value.trim();
       if (!ie || !im) {
@@ -465,7 +657,8 @@
       tipo, nome, cpfCnpj, email, telefone,
       inscricaoEstadual:  $('#f-inscricaoEstadual').value.trim(),
       inscricaoMunicipal: $('#f-inscricaoMunicipal').value.trim(),
-      ncontabil: $('#f-ncontabil').value.trim(),
+      tituloCodigo,
+      nrFornecAccess: state.access || undefined,
       marca: $('#f-marca').value.trim(),
       enderecoCobranca: {
         cep: apenasNumeros($('#cob-cep').value),
@@ -498,10 +691,13 @@
   });
 
   $('#btn-novo').addEventListener('click', () => abrirModal(null));
+  $('#btn-ajuda').addEventListener('click', () => { $('#painel-ajuda').hidden = !$('#painel-ajuda').hidden; });
+  $('#btn-ajuda-fechar').addEventListener('click', () => { $('#painel-ajuda').hidden = true; });
   $('#btn-fechar').addEventListener('click', fecharModal);
   $('#btn-cancelar').addEventListener('click', fecharModal);
   $('#incluir-inativos').addEventListener('change', recarregar);
   $('#busca').addEventListener('input', () => { clearTimeout(state.debounceTimer); state.debounceTimer = setTimeout(recarregar, 300); });
 
+  carregarTitulos();
   recarregar();
 })();

@@ -8,12 +8,12 @@ const Usuario = require('../../models/usuario'); // ajuste o caminho se sua past
 router.get('/login', (req, res) => {
   console.log("line 9 : route/central/usuario.js")
   if (process.env.TEST_JSON) return res.json({ page: 'login' });
-  return res.render('central/pages/loginCentral.handlebars', { layout: 'central/login.handlebars' });
+  return res.render('central/pages/loginCentral.handlebars', { layout: 'central/pages/login.handlebars' });
 });
 
 router.get('/register', (req, res) => {
   if (process.env.TEST_JSON) return res.json({ page: 'register' });
-  return res.render('pages/central/register.handlebars', { layout: 'central/admin.handlebars' });
+  return res.render('central/pages/register.handlebars', { layout: 'central/pages/admin.handlebars' });
 });
 
 // REGISTRO (com hash)
@@ -95,8 +95,9 @@ router.post('/login', async (req, res) => {
 
     if (process.env.TEST_JSON) return res.json({ login: 'ok', user: { _id: user._id, nome: user.nome, email: user.email } });
 
-    return res.render('pages/central/centralmenu.handlebars', {
-      layout: 'central/admin.handlebars',
+    // ⚠ centralMenu tem M maiúsculo: no Windows passa, no Linux de produção não.
+    return res.render('central/pages/centralMenu.handlebars', {
+      layout: 'central/pages/admin.handlebars',
       usuarioNome: user.nome
     });
   } catch (err) {

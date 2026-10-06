@@ -1,0 +1,324 @@
+{{!--
+  Destino: C:\plataformaRota\views\compra\pages\conferencia.handlebars
+  Criado em:   26/09/2026
+  Alterado em: 26/09/2026 — a lista mostra a nota inteira e a caixa do item
+                            da vez mostra também o nosso código.
+  Alterado em: 26/09/2026 — a quantidade entra na própria faixa do leitor,
+                            no campo ao lado. O modal saiu.
+  Alterado em: 26/09/2026 — clicar no código vale como leitura; o atalho se
+                            desliga quando um leitor de verdade é reconhecido.
+
+  CONFERINDO QUANTIDADES.
+
+  Um item por vez. O conferente vê o que precisa para achar a caixa —
+  descrição e código de barras — e nada mais. A quantidade da nota não sai
+  do servidor antes de ele contar.
+
+  O JS fica em /js/compra/conferencia.js  (caminho completo, sempre)
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conferindo quantidades</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --roxo: #6b21a8;
+      --roxo-claro: #f3e8ff;
+      --borda: #e5e7eb;
+      --regua: #cbd5e1;
+      --texto: #1f2937;
+      --cinza: #6b7280;
+      --verde: #059669;
+      --verde-claro: #ecfdf5;
+      --ambar: #d97706;
+      --ambar-claro: #fffbeb;
+      --vermelho: #dc2626;
+      --vermelho-claro: #fef2f2;
+    }
+
+    html, body { height: 100%; }
+    body {
+      margin: 0; padding: 18px 22px 14px;
+      background: #fff; color: var(--texto);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+
+    /* ================= topo ================= */
+    .titulo {
+      display: flex; align-items: center; gap: 14px; flex: none;
+      margin-bottom: 12px;
+    }
+    .voltar {
+      background: none; border: 1px solid var(--borda); border-radius: 6px;
+      width: 36px; height: 36px; font-size: 18px; cursor: pointer;
+      color: var(--cinza); flex: none;
+    }
+    .voltar:hover { background: #f9fafb; }
+    .titulo h1 {
+      font-size: 20px; margin: 0; font-weight: 700; flex: 1 1 auto;
+      letter-spacing: -.01em;
+    }
+    .progresso {
+      font-size: 13px; color: var(--cinza); font-variant-numeric: tabular-nums;
+    }
+    .progresso b { color: var(--roxo); font-size: 17px; }
+
+    /* ================= cabeçalho do documento ================= */
+    .documento {
+      border: 1px solid var(--regua); border-radius: 6px;
+      margin-bottom: 16px; flex: none;
+    }
+    .documento .linha {
+      display: flex; gap: 0; border-top: 1px solid var(--regua);
+    }
+    .documento .linha:first-child { border-top: none; }
+    .documento .cela { padding: 7px 12px; border-left: 1px solid var(--regua); }
+    .documento .cela:first-child { border-left: none; }
+    .documento .cela.larga { flex: 1 1 auto; }
+    .documento .cela.numero { flex: 0 0 190px; }
+    .documento .r {
+      font-size: 9px; letter-spacing: .09em; text-transform: uppercase;
+      color: var(--cinza); font-weight: 700; display: block;
+    }
+    .documento .v { font-size: 15px; margin-top: 1px; }
+    .documento .v b { font-size: 17px; }
+
+    /* ================= o item da vez ================= */
+    .painel { flex: 1 1 auto; overflow: auto; }
+
+    .alvo {
+      border: 2px solid var(--roxo); border-radius: 10px;
+      padding: 18px 20px; margin-bottom: 14px;
+      background: var(--roxo-claro);
+    }
+    .alvo .ordem {
+      font-size: 10px; letter-spacing: .09em; text-transform: uppercase;
+      color: var(--roxo); font-weight: 700;
+    }
+    .alvo .fab { font-size: 24px; font-weight: 700; margin: 6px 0 2px; }
+    .alvo .nosso { font-size: 16px; color: #4b5563; }
+    .alvo .barras {
+      margin-top: 12px; display: flex; gap: 10px; align-items: center;
+      flex-wrap: wrap;
+    }
+    .alvo .barras .rot {
+      font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--cinza); font-weight: 700;
+    }
+    .alvo code {
+      font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+      font-size: 19px; letter-spacing: .06em; font-weight: 700;
+      background: #fff; border: 1px solid var(--regua); border-radius: 5px;
+      padding: 4px 10px;
+    }
+    .alvo code.nosso-cod { color: var(--roxo); border-color: var(--roxo); }
+
+    /* um clique no código vale como leitura — muleta de quem não tem o
+       aparelho. Com leitor ligado, o atalho some. */
+    .alvo code { cursor: pointer; user-select: all; transition: background .15s; }
+    .alvo code:hover { background: #fff; box-shadow: 0 0 0 2px rgba(107,33,168,.25); }
+    .alvo code.copiado {
+      background: #dcfce7; border-color: var(--verde); color: #065f46;
+    }
+    .alvo code::after { content: ' ⌖'; font-size: 14px; opacity: .5; }
+
+    body.com-leitor .alvo code { cursor: text; }
+    body.com-leitor .alvo code:hover { background: #fff; box-shadow: none; }
+    body.com-leitor .alvo code::after { content: none; }
+
+    .leitor {
+      display: flex; gap: 12px; align-items: center; flex: none;
+      padding: 12px 14px; background: #fff;
+      border: 2px solid var(--roxo); border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .leitor .icone { font-size: 28px; }
+    .leitor #codigo {
+      flex: 1 1 auto; min-width: 0;
+      border: 2px solid var(--roxo); border-radius: 8px;
+      padding: 14px 16px; font-size: 21px; font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .leitor input:focus { outline: none; box-shadow: 0 0 0 4px rgba(107,33,168,.2); }
+    .leitor .passo {
+      font-size: 11px; color: var(--roxo); font-weight: 700; flex: none;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+
+    /* a quantidade entra na mesma faixa: dois campos, dois Enters, sem
+       janela abrindo e fechando no meio da contagem */
+    .leitor .rot-qtd {
+      font-size: 11px; color: var(--cinza); font-weight: 700; flex: none;
+      text-transform: uppercase; letter-spacing: .06em;
+      border-left: 1px solid var(--borda); padding-left: 16px;
+    }
+    .leitor #qtd {
+      flex: 0 0 120px; text-align: center;
+      border: 2px solid var(--roxo); border-radius: 8px;
+      padding: 14px 10px; font-size: 26px; font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .leitor #qtd:disabled {
+      border-color: var(--borda); background: #f9fafb; color: #cbd5e1;
+    }
+    .leitor.contando #codigo { border-color: var(--borda); background: #f9fafb; }
+    .leitor.contando #qtd { box-shadow: 0 0 0 4px rgba(107,33,168,.2); }
+
+    .recado {
+      padding: 12px 16px; border-radius: 8px; margin-bottom: 12px;
+      font-size: 15px; display: none; font-weight: 500;
+    }
+    .recado.visivel { display: block; }
+    .recado.ok    { background: var(--verde-claro);    color: #065f46; }
+    .recado.erro  { background: var(--vermelho-claro); color: #991b1b; }
+    .recado.aviso { background: var(--ambar-claro);    color: #92400e; }
+
+    /* ================= confirmados ================= */
+    .conferidos { margin-top: 6px; }
+    .conferidos h2 {
+      font-size: 10px; letter-spacing: .09em; text-transform: uppercase;
+      color: var(--cinza); font-weight: 700; margin: 0 0 8px;
+    }
+    table.lista { width: 100%; border-collapse: collapse; font-size: 14px; }
+    table.lista th {
+      text-align: left; font-size: 9px; letter-spacing: .07em;
+      text-transform: uppercase; color: var(--cinza); font-weight: 700;
+      padding: 5px 10px; border-bottom: 1px solid var(--regua);
+    }
+    table.lista th.n, table.lista td.n { text-align: right; }
+    table.lista td {
+      padding: 8px 10px; border-bottom: 1px solid #f3f4f6;
+    }
+    table.lista tr.feito td { background: var(--verde-claro); }
+    table.lista tr.agora td {
+      background: var(--roxo-claro);
+      box-shadow: inset 0 0 0 1px rgba(107,33,168,.25);
+    }
+    table.lista tr.falta td { background: #fff; color: var(--cinza); }
+
+    table.lista .qtd {
+      font-size: 17px; font-weight: 700; color: var(--verde);
+      font-variant-numeric: tabular-nums;
+    }
+    table.lista .agora-rot {
+      font-size: 10px; letter-spacing: .07em; text-transform: uppercase;
+      font-weight: 700; color: var(--roxo);
+    }
+    table.lista .falta-rot { color: #cbd5e1; font-weight: 700; }
+    table.lista .num {
+      font-variant-numeric: tabular-nums; color: var(--cinza);
+      font-size: 13px;
+    }
+    table.lista .cod {
+      font-family: ui-monospace, Consolas, monospace;
+      font-weight: 700; color: var(--roxo);
+    }
+    table.lista tr.falta .cod { color: #94a3b8; }
+    table.lista .xml { font-size: 12px; color: var(--cinza); }
+    .vazio { color: var(--cinza); font-size: 14px; padding: 10px 0; }
+
+    /* ================= travada ================= */
+    .travada {
+      border: 2px solid var(--vermelho); border-radius: 10px;
+      background: var(--vermelho-claro); padding: 22px 24px;
+      margin-bottom: 14px;
+    }
+    .travada h2 {
+      margin: 0 0 8px; font-size: 20px; color: #991b1b;
+    }
+    .travada p { margin: 0 0 6px; color: #7f1d1d; line-height: 1.55; }
+    .travada .contagens {
+      font-variant-numeric: tabular-nums; font-weight: 700; font-size: 17px;
+    }
+
+    /* nada a contar: nota efetivada, recusada, sem pedido... */
+    .encerrada {
+      border: 1px solid var(--borda); border-radius: 10px;
+      padding: 28px 30px; margin-bottom: 14px; background: #f8fafc;
+    }
+    .encerrada h2 { margin: 0 0 8px; font-size: 21px; }
+    .encerrada p { margin: 0 0 18px; color: var(--cinza); line-height: 1.55; }
+    .encerrada .saidas { display: flex; gap: 10px; }
+    .encerrada a.btn-mini { text-decoration: none; display: inline-block; }
+
+    /* ================= rodapé ================= */
+    .rodape {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 16px; padding: 16px 2px 8px; border-top: 1px solid var(--borda);
+      margin-top: 14px; flex: none;
+    }
+    .rodape .estado { font-size: 14px; color: var(--cinza); }
+    .rodape .btn-principal[hidden] { display: none; }
+
+    .btn-principal {
+      background: var(--verde); color: #fff; border: none; border-radius: 6px;
+      padding: 12px 26px; font-size: 16px; font-weight: 600; cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-principal:disabled { background: #d1d5db; cursor: not-allowed; }
+    .btn-mini {
+      border: 1px solid var(--borda); background: #fff; border-radius: 5px;
+      padding: 8px 14px; font-size: 14px; cursor: pointer; font-family: inherit;
+      color: var(--texto);
+    }
+    .btn-mini:hover { background: #f9fafb; }
+
+    @media (max-width: 720px) {
+      .documento .linha { flex-direction: column; }
+      .documento .cela { border-left: none; border-top: 1px solid var(--regua); }
+      .documento .cela:first-child { border-top: none; }
+      .alvo .fab { font-size: 20px; }
+      .leitor { flex-wrap: wrap; }
+      .leitor #codigo { flex: 1 1 100%; }
+      .leitor #qtd { flex: 0 0 110px; }
+    }
+  </style>
+</head>
+<body data-nota="{{notaId}}">
+
+  <div class="titulo">
+    <button class="voltar" id="voltar" title="Voltar">←</button>
+    <h1>Conferindo quantidades</h1>
+    <div class="progresso" id="progresso"></div>
+  </div>
+
+  <div class="documento" id="documento"></div>
+
+  <div class="painel">
+    <div id="travada"></div>
+
+    <div id="alvo"></div>
+
+    <div class="leitor" id="leitor">
+      <span class="icone">📷</span>
+      <input type="text" id="codigo" autocomplete="off"
+             placeholder="Passe o leitor no código de barras...">
+      <span class="passo">Enter</span>
+      <label class="rot-qtd" for="qtd">Quantidade</label>
+      <input type="text" id="qtd" inputmode="numeric" autocomplete="off"
+             placeholder="—" disabled>
+      <span class="passo">Enter confere</span>
+    </div>
+
+    <div class="recado" id="recado"></div>
+
+    <div class="conferidos">
+      <h2>Itens da nota</h2>
+      <div id="conferidos"></div>
+    </div>
+  </div>
+
+  <div class="rodape">
+    <div class="estado" id="estado">—</div>
+    <button class="btn-principal" id="btn-efetivar" disabled>Confirmar a entrada</button>
+  </div>
+
+  <script src="/js/compra/conferencia.js"></script>
+</body>
+</html>

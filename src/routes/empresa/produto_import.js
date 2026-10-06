@@ -387,7 +387,7 @@ router.get('/importacao/import-itens', async (req, res) => {
     console.log(' importacao/import-itens : 9000',camposInternos);
     console.log('')  ;
 
-    return res.render('pages/empresa/produto_import_itens', {
+    return res.render('empresa/pages/produto_import_itens', {
       layout: false,
       lojistaId,
       lojista,
@@ -1100,7 +1100,7 @@ router.get('/empresa/cadfornecedores', async (req, res) => {
     { nome: "Fornecedores", link: "/fornecedor/cadastro" }
   ];
 
-  res.render("pages/empresa/cadfornecedores",
+  res.render("empresa/pages/cadfornecedores",
      { layout: false, menuItens,
        lojaId :Id,
        lojistaMarca:M

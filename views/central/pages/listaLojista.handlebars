@@ -65,11 +65,127 @@
         min-width: 100px; max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
 
+      /* ===== Grade: leitura, cabeçalho fixo e coluna Razão fixa ===== */
+
+      /* O container é quem rola; o sticky se apoia nele. */
+      #tabelaScroll {
+        background-color: #fff;
+        width: 100%;
+        height: 78vh;
+        margin: auto;
+        overflow: auto;
+        padding: 0;
+        position: relative;
+      }
+
+      #tabelaLojistas {
+        font-size: .875rem;          /* era small */
+        font-weight: 400;            /* era 300 */
+        color: #1f2937;              /* cinza bem escuro, no lugar do cinza claro */
+        margin-bottom: 0;
+        border-collapse: separate;   /* necessário para a borda acompanhar o sticky */
+        border-spacing: 0;
+      }
+
+      #tabelaLojistas td, #tabelaLojistas th { border: 1px solid #dee2e6; }
+
+      /* Cabeçalho preso ao topo */
+      #tabelaLojistas thead th {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        background-color: #eef1f5;
+        color: #111827;
+        font-weight: 600;
+        font-size: .8rem;
+        text-transform: uppercase;
+        letter-spacing: .02em;
+        padding: 10px 8px;
+        white-space: nowrap;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      /* Coluna Razão presa à esquerda: é a âncora da linha, por isso não se esconde */
+      #tabelaLojistas tbody td:first-child,
+      #tabelaLojistas thead th:first-child {
+        position: sticky;
+        left: 0;
+        background-color: #fff;
+        z-index: 2;
+        box-shadow: 1px 0 0 #cfd4da;   /* separa visualmente do resto ao rolar */
+        font-weight: 500;
+      }
+      /* O cruzamento (cabeçalho da Razão) fica acima dos dois */
+      #tabelaLojistas thead th:first-child { background-color: #eef1f5; z-index: 4; }
+
+      #tabelaLojistas tbody tr:nth-child(even) td { background-color: #f7f9fa; }
+      #tabelaLojistas tbody tr:nth-child(even) td:first-child { background-color: #f7f9fa; }
+      #tabelaLojistas tbody tr:hover td { background-color: #eaf3ff; }
+
+      /* "x" de esconder: aparece só quando o mouse passa, para o clique no
+         título continuar livre para ordenar (Ctrl + clique) */
+      #tabelaLojistas thead th .fechar-col {
+        float: right;
+        margin-left: 8px;
+        color: #4b5563;
+        font-weight: 700;
+        visibility: hidden;
+      }
+      #tabelaLojistas thead th:hover .fechar-col { visibility: visible; }
+      #tabelaLojistas thead th .fechar-col:hover { color: #bb0404; }
+
+      /* Complemento e Status: quem forçava a largura era o título, e max-width
+         não vale em célula de tabela com layout automático. Então limita-se o
+         texto do cabeçalho, que quebra em duas linhas, e a coluna acompanha. */
+      #tabelaLojistas th.col-estreita { white-space: normal; }
+      #tabelaLojistas th.col-estreita .rotulo {
+        display: inline-block;
+        max-width: 70px;
+        overflow-wrap: anywhere;
+        line-height: 1.15;
+      }
+      #tabelaLojistas td:nth-child(12),
+      #tabelaLojistas td:nth-child(17) { min-width: 70px; }
+
+      /* ===== Barra do rodapé: devolve as colunas escondidas ===== */
+      /* Margens folgadas nas pontas; o espaço do meio é dividido em dois,
+         com os dois grupos equidistantes. O contador fica encostado à direita,
+         fora dessa divisão, para não desequilibrar. */
+      #barraColunas {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 12px 6vw;
+        background: #eef1f5;
+        border-top: 1px solid #cfd4da;
+        font-size: .9rem;
+        color: #1f2937;
+      }
+      #barraColunas .grupo { display: flex; align-items: center; gap: 10px; }
+      #barraColunas label { font-weight: 600; color: #111827; margin: 0; }
+      #barraColunas select {
+        min-width: 220px;
+        font-size: .9rem;
+        font-weight: 500;
+        color: #1f2937;
+        background-color: #fff;
+        border: 1px solid #9aa3ad;
+      }
+      #barraColunas .btn { font-weight: 600; }
+      #barraColunas .contador {
+        position: absolute;
+        right: 1.5vw;
+        color: #6b7280;
+        font-size: .85rem;
+      }
+
 </style>
  </head>
 
 <script>
-  let =jaCarregouDepartamentos=false;
+  // (a declaração de jaCarregouDepartamentos vive mais abaixo, junto das outras)
   let selecionados = [];
 </script>
 <div id="corpo" style="width: 99vw;height: 96vh;margin: auto;background-color: #d0d3d0;">
@@ -191,7 +307,7 @@
           <div style="display: flex;flex-direction: row;justify-content: center;">
           <button style="border: none;background-color:transparent;" class="btn btn-sm" onclick="openCadLojistaModal()">
             
-            <h1 style="font-weight:200;color:#054288;font-size:medium">Cadastro de Lojista</h1>
+            <h1 style="font-weight:700;color:#03306b;font-size:1.5rem;letter-spacing:.01em;">Cadastro de Lojista</h1>
           </button>
           </div>  
             <div id="barraSelect" style="display: flex;flex-direction: row;justify-content: space-between;width: 96vw;margin: auto;">
@@ -200,36 +316,32 @@
                 </div>
                
             </div>
-            <div style="background-color:#fff;width: 100%;height: 80vh;margin: auto;overflow: auto;padding: 4px;">
+            <div id="tabelaScroll">
                     <div>
                       {{!-- {{lojista.segmentos}} --}}
                     </div>    
-                    <table class="table table-bordered" spellcheck="false" style="font-size: small;font-weight: 300;">
+                    <table id="tabelaLojistas" class="table table-bordered" spellcheck="false">
                           <thead>
                               <tr class="cabecalho-tabela">
-                                  <th class="click-hide" data-column="0"><i data-lucide="eye-off"></i>Razão</th>
-                                  {{!-- <th>Situação</th>
-                                  <th>Template</th>
-                                  <th>Atividade</th> --}}
-                                  {{!-- <th>Resp.</th>
-                                  <th>CPF</th> --}}
-                                  <th class="click-hide" data-column="1"><i data-lucide="eye-off"></i>CNPJ</th>
-                                  <th class="click-hide" data-column="2">Inscrição</th>
-                                  <th class="click-hide" data-column="3">Site</th>
-                                  <th class="click-hide" data-column="4">Marca</th>
-                                  <th class="click-hide" data-column="5">Celular</th>
-                                  <th class="click-hide" data-column="6">Fone</th>
-                                  <th class="click-hide" data-column="7">Email</th>
-                                  <th class="click-hide" data-column="8">Cep</th>
-                                  <th class="click-hide" data-column="9">Logradouro</th>
-                                  <th class="click-hide" data-column="9">Numero</th>
-                                  <th class="click-hide" data-column="10">Complemento</th>
-                                  <th class="click-hide" data-column="11">Cidade</th>
-                                  <th class="click-hide" data-column="12">Bairro</th>
-                                  <th class="click-hide" data-column="13">Estado</th>
-                                  <th class="click-hide" data-column="14">Segmentos</th>
-                                  <th class="click-hide" data-column="15">Status</th>
-                                  <th class="click-hide" data-column="16">Ações</th>
+                                  {{!-- Razão fica fixa: é a âncora da linha e não se esconde --}}
+                                  <th>Razão</th>
+                                  <th class="click-hide">CNPJ<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Inscrição<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Site<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Marca<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Celular<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Fone<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Email<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Cep<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Logradouro<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Numero<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide col-estreita"><span class="rotulo">Complemento</span><span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Cidade<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Bairro<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Estado<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Segmentos<span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide col-estreita"><span class="rotulo">Status</span><span class="fechar-col" title="Esconder coluna">&times;</span></th>
+                                  <th class="click-hide">Ações<span class="fechar-col" title="Esconder coluna">&times;</span></th>
                               </tr>
                           </thead>
                           <tbody>
@@ -260,9 +372,8 @@
                                   <td>{{this.ativo}}</td>
                                   <td>
                                   <div class="d-flex justify-content-center align-items-center gap-2">
-                                    <button id="show-all" class="save-line btn btn-sm btn-secondary flex-fill text-center" style="min-width: 80px;margin-left: 3px;background-color: #bb048e;border: 2px white solid;">
-                                      <a href="" class="btn btn-sm flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: #bb048e;">All</a>
-                                    </button>
+                                    {{!-- Salva de uma vez todas as células editadas nesta linha --}}
+                                    <button type="button" data-id="{{this._id}}" class="save-line btn btn-sm text-center" style="min-width: 80px;margin-left: 3px;background-color: #bb048e;border: 2px white solid;color:#fff;">Salvar</button>
                                     <button data-id="{{this._id}}"  class="btn btn-sm flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: coral;">
                                       {{!-- <a class="btn btn-sm flex-fill text-center" style="min-width: 80px;margin-left: 3px;border: 2px white solid;background-color: coral;">Editar</a> --}}
                                       <a href="/lojista/editar/{{this._id}}"
@@ -282,6 +393,19 @@
                           </tbody>
                     </table>
             </div>
+            <div id="barraColunas">
+              <div class="grupo">
+                <label for="selColunas">Colunas escondidas:</label>
+                <select id="selColunas" class="form-select form-select-sm">
+                  <option value="">nenhuma</option>
+                </select>
+                <button id="btnMostrarColuna" class="btn btn-sm btn-primary" type="button">Mostrar</button>
+              </div>
+              <div class="grupo">
+                <button id="btnMostrarTodas" class="btn btn-sm btn-outline-dark" type="button">Mostrar todas</button>
+              </div>
+              <span class="contador" id="contadorLinhas"></span>
+            </div>
             
     </div>
 {{!-- ///////////////////////////////////////////////////////////////// --}}
@@ -289,46 +413,89 @@
 
 
 <script>
-  //lucide.createIcons();
+/* Esconder e devolver colunas.
+   O índice vem da posição real da célula (cellIndex), não de um data-column
+   escrito à mão — os antigos estavam repetidos (Logradouro e Numero eram os
+   dois "9"), e daí em diante escondia-se a coluna errada.
+   Clique no "x" esconde; Ctrl + clique no título ordena. */
+(function () {
+  const tabela   = document.getElementById("tabelaLojistas");
+  const combo    = document.getElementById("selColunas");
+  const contador = document.getElementById("contadorLinhas");
+  if (!tabela) return;
 
-    document.querySelectorAll(".click-hide").forEach(th => {
-      th.addEventListener("click", (e) => {
-        const columnIndex = parseInt(th.dataset.column);
-        const table = th.closest("table");
-        const icon = th.querySelector("svg");
-        if (e.ctrlKey) {
-          const rowsArray = Array.from(table.querySelectorAll("tbody tr"));
-          rowsArray.sort((a, b) => {
-            const valA = a.children[columnIndex].textContent.trim().toLowerCase();
-            const valB = b.children[columnIndex].textContent.trim().toLowerCase();
-            return valA.localeCompare(valB);
-          });
-          rowsArray.forEach(row => table.querySelector("tbody").appendChild(row));
-        } else {
-          table.querySelectorAll("tr").forEach(row => {
-            if (row.children[columnIndex]) {
-              row.children[columnIndex].classList.toggle("d-none");
-            }
-          });
-          icon.setAttribute("data-lucide", icon.getAttribute("data-lucide") === "eye-off" ? "eye" : "eye-off");
-          lucide.createIcons();
-        }
-      });
+  const escondidas = new Map();   // índice → nome da coluna
+
+  function aplicar(indice, esconder) {
+    tabela.querySelectorAll("tr").forEach(linha => {
+      const celula = linha.children[indice];
+      if (celula) celula.style.display = esconder ? "none" : "";
     });
+  }
 
-    document.getElementById("show-all").addEventListener("click", () => {
-      document.querySelectorAll("table tr").forEach(row => {
-        Array.from(row.children).forEach(cell => {
-          cell.classList.remove("d-none");
-          cell.style.display = "";
-        });
-      });
-      document.querySelectorAll(".click-hide svg").forEach(icon => {
-        icon.setAttribute("data-lucide", "eye-off");
-      });
-      lucide.createIcons();
+  function atualizarCombo() {
+    if (!combo) return;
+    if (!escondidas.size) {
+      combo.innerHTML = '<option value="">nenhuma</option>';
+      return;
+    }
+    combo.innerHTML = [...escondidas.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([i, nome]) => `<option value="${i}">${nome}</option>`)
+      .join("");
+  }
+
+  function esconder(th) {
+    const i = th.cellIndex;
+    if (escondidas.has(i)) return;
+    const rotulo = th.querySelector(".rotulo");
+    escondidas.set(i, (rotulo || th.childNodes[0]).textContent.trim());
+    aplicar(i, true);
+    atualizarCombo();
+  }
+
+  function mostrar(i) {
+    if (!escondidas.has(i)) return;
+    escondidas.delete(i);
+    aplicar(i, false);
+    atualizarCombo();
+  }
+
+  tabela.querySelectorAll("thead th.click-hide").forEach(th => {
+    th.addEventListener("click", (e) => {
+      if (e.ctrlKey) {              // Ctrl + clique ordena pela coluna
+        const i = th.cellIndex;
+        const corpo = tabela.querySelector("tbody");
+        const linhas = Array.from(corpo.querySelectorAll("tr"));
+        linhas.sort((a, b) =>
+          (a.children[i]?.textContent || "").trim().toLowerCase()
+            .localeCompare((b.children[i]?.textContent || "").trim().toLowerCase(), "pt")
+        );
+        linhas.forEach(l => corpo.appendChild(l));
+        return;
+      }
+      if (e.target.classList.contains("fechar-col")) esconder(th);
     });
+  });
 
+  document.getElementById("btnMostrarColuna")?.addEventListener("click", () => {
+    const i = parseInt(combo.value, 10);
+    if (!Number.isNaN(i)) mostrar(i);
+  });
+
+  document.getElementById("btnMostrarTodas")?.addEventListener("click", () => {
+    [...escondidas.keys()].forEach(i => aplicar(i, false));
+    escondidas.clear();
+    atualizarCombo();
+  });
+
+  if (contador) {
+    const n = tabela.querySelectorAll("tbody tr").length;
+    contador.textContent = `${n} lojista${n === 1 ? "" : "s"}`;
+  }
+})();
+</script>
+<script>
     document.querySelectorAll("td[contenteditable=true]").forEach(cell => {
       cell.addEventListener("blur", async () => {
         const row = cell.closest("tr");
@@ -360,8 +527,8 @@
 <script>
   document.querySelectorAll(".save-line").forEach(button => {
   button.addEventListener("click", async () => {
+    const row = button.closest("tr");   // antes: usava "row" antes de declarar
     const id = row.dataset.id;
-    const row = row.closest("tr");
     const data = {};
 
     row.querySelectorAll("td[contenteditable=true]").forEach(cell => {
@@ -369,7 +536,7 @@
     });
 
     try {
-      const response = await fetch(`/lojistas/update/${id}`, {
+      const response = await fetch(`/lojista/lojista/update/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)

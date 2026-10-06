@@ -1,0 +1,286 @@
+[
+  {
+    "_id": {
+      "$oid": "6a15f556e072b325efff3e68"
+    },
+    "codigo": "BOL-1779823958336",
+    "tipo": "PAGAMENTO",
+    "data": {
+      "$date": {
+        "$numberLong": "1778425200000"
+      }
+    },
+    "contaBancaria": {
+      "$oid": "6a0dfda5b7604ce06084eefe"
+    },
+    "bancoSubTitulo": {
+      "$oid": "6a18a8af096f263465c257a7"
+    },
+    "bancoCodigo": "1.01.002.003",
+    "bancoNome": "Caixa Econômica",
+    "valorTotal": {
+      "$numberInt": "290"
+    },
+    "contrapartidas": [
+      {
+        "contaSubTitulo": {
+          "$oid": "6a105504e04820a3fec89e89"
+        },
+        "codigoConta": "3.01.001.003",
+        "nomeConta": "Papelaria",
+        "historico": "Papelaria",
+        "nrTitulo": "",
+        "valor": {
+          "$numberInt": "290"
+        },
+        "fluxoLancamentoId": null,
+        "pos": {
+          "$numberInt": "2"
+        },
+        "fornecedor": null,
+        "cliente": null,
+        "_id": {
+          "$oid": "6a15f556e072b325efff3e69"
+        }
+      }
+    ],
+    "historico": "PAGAMENTO em lote — 1 título(s)",
+    "origem": "FLUXO",
+    "operador": "",
+    "status": "ATIVO",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1779823958341"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1779823958341"
+      }
+    },
+    "mes": {
+      "$numberInt": "5"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a18ad53424db658ee9ecc9d"
+    },
+    "codigo": "BOL-1780002131622",
+    "tipo": "PAGAMENTO",
+    "data": {
+      "$date": {
+        "$numberLong": "1768057200000"
+      }
+    },
+    "contaBancaria": {
+      "$oid": "6a0dfd19b7604ce06084eeee"
+    },
+    "bancoSubTitulo": {
+      "$oid": "6a18a8af096f263465c257a6"
+    },
+    "bancoCodigo": "1.01.002.002",
+    "bancoNome": "Banestes",
+    "valorTotal": {
+      "$numberInt": "680"
+    },
+    "contrapartidas": [
+      {
+        "contaSubTitulo": {
+          "$oid": "6a105504e04820a3fec89e89"
+        },
+        "codigoConta": "3.01.001.003",
+        "nomeConta": "Papelaria",
+        "historico": "Papelaria",
+        "nrTitulo": "",
+        "valor": {
+          "$numberInt": "680"
+        },
+        "fluxoLancamentoId": null,
+        "pos": {
+          "$numberInt": "2"
+        },
+        "fornecedor": null,
+        "cliente": null,
+        "_id": {
+          "$oid": "6a18ad53424db658ee9ecc9e"
+        }
+      }
+    ],
+    "historico": "PAGAMENTO em lote — 1 título(s)",
+    "origem": "FLUXO",
+    "operador": "",
+    "status": "ATIVO",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1780002131629"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1780002131629"
+      }
+    },
+    "mes": {
+      "$numberInt": "1"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "__v": {
+      "$numberInt": "0"
+    },
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa55af24dcdbc04dd5381f8"
+    },
+    "codigo": "BOL-1789221618369",
+    "tipo": "RECEBIMENTO",
+    "data": {
+      "$date": {
+        "$numberLong": "1789225200000"
+      }
+    },
+    "contaBancaria": null,
+    "bancoSubTitulo": {
+      "$oid": "6a18a8af096f263465c257a6"
+    },
+    "bancoCodigo": "1.01.002.002",
+    "bancoNome": "Banestes/Armação",
+    "valorTotal": {
+      "$numberInt": "890"
+    },
+    "contrapartidas": [
+      {
+        "contaSubTitulo": {
+          "$oid": "6aa291af4c57eb3f50806fd8"
+        },
+        "codigoConta": "1.04.001.001",
+        "nomeConta": "Macalé Incorporadora",
+        "historico": "pago Nf 89876",
+        "nrTitulo": "",
+        "valor": {
+          "$numberInt": "890"
+        },
+        "fluxoLancamentoId": null,
+        "pos": {
+          "$numberInt": "1"
+        },
+        "fornecedor": null,
+        "cliente": null,
+        "_id": {
+          "$oid": "6aa55af24dcdbc04dd5381f9"
+        }
+      }
+    ],
+    "historico": "recebido",
+    "origem": "MANUAL",
+    "operador": "",
+    "status": "ATIVO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1789221618376"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1789221618376"
+      }
+    },
+    "mes": {
+      "$numberInt": "9"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6aa5615734d0205f45d12430"
+    },
+    "codigo": "BOL-1789223255394",
+    "tipo": "RECEBIMENTO",
+    "data": {
+      "$date": {
+        "$numberLong": "1789225200000"
+      }
+    },
+    "contaBancaria": null,
+    "bancoSubTitulo": {
+      "$oid": "6a18a8af096f263465c257a6"
+    },
+    "bancoCodigo": "1.01.002.002",
+    "bancoNome": "Banestes/Armação",
+    "valorTotal": {
+      "$numberInt": "3000"
+    },
+    "contrapartidas": [
+      {
+        "contaSubTitulo": {
+          "$oid": "6aa291af4c57eb3f50806fd8"
+        },
+        "codigoConta": "1.04.001.001",
+        "nomeConta": "Macalé Incorporadora",
+        "historico": "Nf 8765",
+        "nrTitulo": "",
+        "valor": {
+          "$numberInt": "3000"
+        },
+        "fluxoLancamentoId": null,
+        "pos": {
+          "$numberInt": "1"
+        },
+        "fornecedor": null,
+        "cliente": null,
+        "_id": {
+          "$oid": "6aa5615734d0205f45d12431"
+        }
+      }
+    ],
+    "historico": "recebendo  NF 8765",
+    "origem": "MANUAL",
+    "operador": "",
+    "status": "ATIVO",
+    "lojistaId": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1789223255402"
+      }
+    },
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1789223255402"
+      }
+    },
+    "mes": {
+      "$numberInt": "9"
+    },
+    "ano": {
+      "$numberInt": "2026"
+    },
+    "__v": {
+      "$numberInt": "0"
+    }
+  }
+]

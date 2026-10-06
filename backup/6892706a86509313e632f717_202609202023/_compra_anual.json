@@ -1,0 +1,152 @@
+[
+ {
+  "_id": "6a14b38c32b667630a906ec2",
+  "ano": 2026,
+  "fornecedores": [
+   {
+    "compraFornecedor": "6a14ad99eb5fa4738dcf47f2",
+    "razao": "KOMGROUP INDUSTRIAL LTDA",
+    "meses": [
+     55000,
+     55000,
+     55000,
+     55000,
+     55000,
+     55000,
+     55000,
+     55000,
+     55000,
+     55000,
+     55000,
+     55000
+    ],
+    "lancamentos": [
+     {
+      "historico": "Komgroup Industrial LTDA",
+      "valor": 25000,
+      "numParcelas": 1,
+      "mesInicial": 1,
+      "diaVencimento": 10,
+      "intervalo": 1,
+      "mesesAfetados": [
+       1
+      ],
+      "_id": "6a14b38c32b667630a906ec6",
+      "criadoEm": "2026-05-25T20:39:40.433Z"
+     },
+     {
+      "historico": "Komgroup Industrial LTDA",
+      "valor": 30000,
+      "numParcelas": 1,
+      "mesInicial": 1,
+      "diaVencimento": 20,
+      "intervalo": 1,
+      "mesesAfetados": [
+       1
+      ],
+      "_id": "6a14b3a532b667630a906f50",
+      "criadoEm": "2026-05-25T20:40:05.824Z"
+     },
+     {
+      "historico": "Komgroup Industrial LTDA",
+      "valor": 25000,
+      "numParcelas": 11,
+      "mesInicial": 2,
+      "diaVencimento": 10,
+      "intervalo": 1,
+      "mesesAfetados": [
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "_id": "6a14b48e32b667630a906fae",
+      "criadoEm": "2026-05-25T20:43:58.146Z"
+     },
+     {
+      "historico": "Komgroup Industrial LTDA",
+      "valor": 30000,
+      "numParcelas": 11,
+      "mesInicial": 2,
+      "diaVencimento": 20,
+      "intervalo": 1,
+      "mesesAfetados": [
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "_id": "6a14b4a532b667630a906fc8",
+      "criadoEm": "2026-05-25T20:44:21.873Z"
+     }
+    ],
+    "_id": "6a14b38c32b667630a906ec5"
+   },
+   {
+    "compraFornecedor": "6a14ad9beb5fa4738dcf47fe",
+    "razao": "MAQENGE - INDUSTRIA METALURGICA LTDA",
+    "meses": [
+     4000,
+     4000,
+     4000,
+     4000,
+     4000,
+     4000,
+     4000,
+     4000,
+     4000,
+     4000,
+     4000,
+     4000
+    ],
+    "lancamentos": [
+     {
+      "historico": "Maqenge - Industria Metalurgica LTDA",
+      "valor": 4000,
+      "numParcelas": 12,
+      "mesInicial": 1,
+      "diaVencimento": 15,
+      "intervalo": 1,
+      "mesesAfetados": [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6,
+       7,
+       8,
+       9,
+       10,
+       11,
+       12
+      ],
+      "_id": "6a14b41832b667630a906f78",
+      "criadoEm": "2026-05-25T20:42:00.365Z"
+     }
+    ],
+    "_id": "6a14b3fa32b667630a906f5d"
+   }
+  ],
+  "observacoes": "",
+  "status": "ABERTO",
+  "criadoEm": "2026-05-25T20:39:40.293Z",
+  "atualizadoEm": "2026-05-25T20:44:21.874Z",
+  "__v": 7,
+  "lojistaId": "6892706a86509313e632f717"
+ }
+]

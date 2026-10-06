@@ -1,0 +1,234 @@
+{{!-- views/contab/contabil/saldo-transferido.handlebars
+      Saldo que cada conta traz do exercício anterior.
+      Só Ativo e Passivo: Despesa e Receita zeram na virada do ano. --}}
+
+<div class="contab-app">
+
+  {{!-- ====== SIDEBAR ====== --}}
+  <nav class="cb-side">
+    <a class="cb-side-item" href="/financeiro/fluxo" title="Fluxo de Caixa">
+      <i class="ti ti-cash" aria-hidden="true"></i>
+    </a>
+    <a class="cb-side-item active" href="/contab/razao" title="Contabilidade">
+      <i class="ti ti-calculator" aria-hidden="true"></i>
+    </a>
+    <a class="cb-side-item" href="/aux/fornecedores" title="Compra">
+      <i class="ti ti-shopping-cart" aria-hidden="true"></i>
+    </a>
+    <a class="cb-side-item" href="/aux/clientes" title="Venda">
+      <i class="ti ti-tag" aria-hidden="true"></i>
+    </a>
+    <a class="cb-side-item" href="/site/configuracoes" title="Site">
+      <i class="ti ti-world" aria-hidden="true"></i>
+    </a>
+  </nav>
+
+  {{!-- ====== SUBMENU ====== --}}
+  <aside class="cb-submenu">
+    <div class="cb-submenu-title">CONTABILIDADE</div>
+    <a class="cb-sub-item" href="/contab/plano">Plano de contas</a>
+    <a class="cb-sub-item active" href="/contab/razao">Razão</a>
+    <a class="cb-sub-item" href="/contabil/pessoal">Pessoal</a>
+    <a class="cb-sub-item" href="/contabil/relatorios">Relatórios</a>
+  </aside>
+
+  {{!-- ====== CONTEÚDO ====== --}}
+  <main class="cb-content">
+
+    <div class="sd-topo">
+      <h1>Saldo transferido</h1>
+      <label class="sd-ano">
+        Exercício
+        <select id="sd-ano"></select>
+      </label>
+      <div class="sd-busca">
+        <span>🔍</span>
+        <input type="text" id="sd-busca" placeholder="filtrar por nome ou código" autocomplete="off">
+      </div>
+      <a class="sd-voltar" href="/contab/razao">‹ voltar ao razão</a>
+    </div>
+
+    <p class="sd-explica">
+      O saldo que cada conta trouxe do ano anterior. Positivo aumenta o saldo da
+      conta, negativo diminui — Ativo normalmente entra positivo e Passivo
+      negativo. Sai do campo e o valor é gravado. Zero apaga o lançamento.
+    </p>
+
+    {{!-- Abas de grupo: só Ativo e Passivo têm saldo a transportar. --}}
+    <div class="sd-abas">
+      <button class="sd-aba ativa" data-grupo="1">Ativo</button>
+      <button class="sd-aba" data-grupo="2">Passivo</button>
+    </div>
+
+    {{!-- Dois painéis: conta-título à esquerda, sub-títulos à direita.
+          Com fornecedores e clientes a lista corrida ficaria imensa. --}}
+    <div class="sd-paineis">
+      <div class="sd-painel sd-painel-titulos">
+        <div class="sd-painel-head">CONTAS-TÍTULO</div>
+        <div id="sd-titulos"><div class="sd-vazio">Carregando...</div></div>
+      </div>
+
+      <div class="sd-painel sd-painel-subs">
+        <div class="sd-head">
+          <div class="sd-center">CONTA</div>
+          <div>NOME</div>
+          <div class="sd-right">SALDO</div>
+          <div class="sd-center">&nbsp;</div>
+        </div>
+        <div id="sd-corpo">
+          <div class="sd-vazio">Escolha uma conta-título à esquerda.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sd-totais">
+      <span>Positivos: <b class="sd-pos" id="sd-pos">0,00</b></span>
+      <span>Negativos: <b class="sd-neg" id="sd-neg">0,00</b></span>
+      <span class="sd-dif">Diferença: <b id="sd-dif">0,00</b></span>
+      <span class="sd-nota" id="sd-nota"></span>
+    </div>
+
+  </main>
+</div>
+
+<style>
+  @import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css');
+
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body { font-family: system-ui, -apple-system, sans-serif; }
+
+  .contab-app { display: flex; min-height: 100vh; background: #fff; }
+
+  .cb-side { width: 50px; background: #1e2a3a; display: flex; flex-direction: column;
+    padding: 12px 0; gap: 4px; flex-shrink: 0; }
+  .cb-side-item { height: 42px; display: flex; align-items: center; justify-content: center;
+    color: #8fa3bd; text-decoration: none; }
+  .cb-side-item:hover, .cb-side-item.active { background: #16202c; color: #fff; }
+  .cb-side-item i { font-size: 20px; }
+
+  .cb-submenu { width: 170px; background: #f8f9fa; border-right: 1px solid #e5e7eb;
+    padding: 14px 0; flex-shrink: 0; }
+  .cb-submenu-title { padding: 0 16px 10px; font-size: 10px; font-weight: 600;
+    letter-spacing: .5px; color: #adb5bd; }
+  .cb-sub-item { display: block; padding: 8px 16px; text-decoration: none;
+    color: #495057; font-size: 13px; }
+  .cb-sub-item:hover { background: #eef0f2; }
+  .cb-sub-item.active { background: #e7f1ff; color: #1d4ed8; font-weight: 500; }
+
+  .cb-content { flex: 1; min-width: 0; }
+
+  /* ====== TOPO ====== */
+  .sd-topo {
+    display: flex; align-items: center; gap: 18px;
+    padding: 14px 20px; border-bottom: 1px solid #e5e7eb;
+  }
+  .sd-topo h1 { margin: 0; font-size: 18px; color: #111; font-weight: 600; }
+  .sd-ano { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #374151; }
+  .sd-ano select {
+    border: 1px solid #d1d5db; border-radius: 6px; padding: 5px 9px;
+    font-size: 13px; font-family: inherit; color: #111; background: #fff;
+  }
+  .sd-busca {
+    display: flex; align-items: center; gap: 6px; border: 1px solid #d1d5db;
+    border-radius: 6px; padding: 4px 10px; background: #fff; width: 280px;
+  }
+  .sd-busca input { border: 0; outline: 0; flex: 1; font-size: 13px; font-family: inherit; }
+  .sd-voltar { margin-left: auto; color: #1d4ed8; font-size: 13px; text-decoration: none; }
+  .sd-voltar:hover { text-decoration: underline; }
+
+  .sd-explica {
+    margin: 0; padding: 10px 20px; font-size: 13px; color: #6b7280;
+    background: #f9fafb; border-bottom: 1px solid #e5e7eb;
+  }
+
+  /* ====== ABAS ======
+     Largura fixa em vez de dividir a linha: com só duas abas, esticá-las de
+     ponta a ponta dá um par de faixas enormes sem função. */
+  .sd-abas { display: flex; gap: 8px; padding: 14px 20px 0; }
+  .sd-aba {
+    width: 130px; padding: 7px 14px; font-size: 13px; font-weight: 600;
+    border: 1px solid #d1d5db; border-radius: 6px; background: #fff;
+    color: #374151; cursor: pointer; font-family: inherit;
+  }
+  .sd-aba:hover { background: #f3f4f6; }
+  .sd-aba.ativa { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
+
+  /* ====== PAINÉIS ====== */
+  .sd-paineis {
+    display: grid; grid-template-columns: 340px 1fr; gap: 14px;
+    padding: 22px 20px 12px; align-items: start;
+  }
+  .sd-painel { border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+  /* Mesma faixa azul do cabeçalho da direita, para os dois painéis lerem
+     como partes de uma coisa só. */
+  .sd-painel-head {
+    background: #1d4ed8; color: #fff; font-size: 11px; font-weight: 500;
+    padding: 8px 12px;
+  }
+  .sd-painel-titulos > div:last-child,
+  .sd-painel-subs #sd-corpo { max-height: 62vh; overflow: auto; }
+
+  .sd-titulo-item {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    padding: 9px 12px; border: 0; border-bottom: 1px solid #f3f4f6;
+    background: transparent; cursor: pointer; text-align: left;
+    font-size: 13px; font-family: inherit; color: #111;
+  }
+  .sd-titulo-item:hover { background: #f9fafb; }
+  .sd-titulo-item.ativa { background: #e7f1ff; color: #1d4ed8; font-weight: 600; }
+  .sd-titulo-cod { font-family: ui-monospace, monospace; }
+  .sd-titulo-nome { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* Bolinha nas contas-título que já têm algum saldo lançado: evita ter de
+     abrir uma por uma para descobrir onde parou. */
+  .sd-titulo-marca { color: #15803d; font-size: 11px; }
+
+  /* ====== GRADE DOS SUB-TÍTULOS ====== */
+  .sd-painel-subs { --sd-cols: 150px 1fr 150px 90px; }
+  .sd-head {
+    display: grid; grid-template-columns: var(--sd-cols); gap: 10px;
+    background: #1d4ed8; color: #fff; font-size: 11px;
+    padding: 8px 14px; font-weight: 500;
+  }
+  .sd-linha {
+    display: grid; grid-template-columns: var(--sd-cols); gap: 10px;
+    padding: 6px 14px; align-items: center; font-size: 13px; color: #111;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .sd-linha:hover { background: #fafafa; }
+  .sd-cod { font-family: ui-monospace, monospace; text-align: center; color: #1d4ed8; }
+  .sd-nome { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sd-grupo { text-align: center; font-size: 11px; color: #6b7280; }
+  .sd-center { text-align: center; }
+  .sd-right  { text-align: right; }
+
+  .sd-linha input {
+    width: 100%; box-sizing: border-box; height: 30px; text-align: right;
+    border: 1px solid #9ca3af; border-radius: 6px; padding: 3px 9px;
+    font-size: 13px; font-family: ui-monospace, monospace; color: #111;
+  }
+  .sd-linha input:focus { outline: 2px solid #bfdbfe; border-color: #1d4ed8; }
+  .sd-linha input.tem-valor { background: #f0f9ff; font-weight: 600; }
+
+  .sd-marca { font-size: 11px; text-align: center; }
+  .sd-marca.ok   { color: #15803d; }
+  .sd-marca.erro { color: #b91c1c; cursor: help; }
+  .sd-marca.indo { color: #6b7280; }
+
+  .sd-vazio { padding: 26px; text-align: center; color: #9ca3af; font-size: 13px; }
+
+  /* ====== TOTAIS ====== */
+  .sd-totais {
+    display: flex; align-items: center; gap: 26px;
+    padding: 12px 20px; border-top: 1px solid #e5e7eb;
+    font-size: 13px; color: #374151; background: #f9fafb;
+    position: sticky; bottom: 0;
+  }
+  .sd-totais b { color: #111; font-family: ui-monospace, monospace; }
+  .sd-pos { color: #15803d !important; }
+  .sd-neg { color: #b91c1c !important; }
+  .sd-dif b.fechado  { color: #15803d !important; }
+  .sd-dif b.aberto   { color: #b91c1c !important; }
+  .sd-nota { font-size: 12px; color: #6b7280; margin-left: auto; }
+</style>
+
+<script src="/js/contab/contabil/saldo-transferido.js"></script>

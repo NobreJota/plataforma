@@ -1,0 +1,168 @@
+{{!--
+  Destino: C:\plataformaRota\views\compra\pages\pedidos-pendentes.handlebars
+  Criado em: 27/09/2026
+  Alterado em: 01/10/2026 - legenda: o de/para nao existe mais; vermelho = fornecedor
+                           sem cadastro completo ("ajustar" em Fornecedores)
+
+  PEDIDO PENDENTE: o que foi comprado e ainda não chegou.
+
+  Inclui os pedidos importados do sistema antigo. Quando o fornecedor ainda
+  não tem cadastro completo na plataforma (aparece com "ajustar" na tela de
+  Fornecedores), o nome aparece em VERMELHO.
+
+  O JS fica em /js/compra/pedidos-pendentes.js  (caminho completo, sempre)
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedidos pendentes</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --roxo: #6b21a8;
+      --roxo-claro: #f3e8ff;
+      --borda: #e5e7eb;
+      --regua: #cbd5e1;
+      --texto: #1f2937;
+      --cinza: #6b7280;
+      --verde: #059669;
+      --verde-claro: #ecfdf5;
+      --ambar: #d97706;
+      --ambar-claro: #fffbeb;
+      --vermelho: #dc2626;
+      --vermelho-claro: #fef2f2;
+    }
+
+    body {
+      margin: 0; padding: 18px 22px;
+      background: #fff; color: var(--texto);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+    }
+
+    h1 {
+      font-size: 22px; margin: 0 0 16px; font-weight: 700;
+      display: flex; align-items: baseline; gap: 12px;
+    }
+    h1 small { font-size: 13px; font-weight: 400; color: var(--cinza); }
+
+    /* ---------- resumo ---------- */
+    .resumo {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .caixa {
+      flex: 1 1 180px; border: 1px solid var(--borda); border-radius: 8px;
+      padding: 12px 14px; border-left: 4px solid var(--regua);
+    }
+    .caixa .r {
+      font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--cinza); font-weight: 700;
+    }
+    .caixa .n {
+      font-size: 26px; font-weight: 700; line-height: 1.1; margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+    .caixa .v { font-size: 12px; color: var(--cinza); font-variant-numeric: tabular-nums; }
+    .caixa.total     { border-left-color: var(--roxo); }
+    .caixa.atrasado  { border-left-color: var(--ambar); }
+    .caixa.semcad    { border-left-color: var(--vermelho); }
+    .caixa.comnota   { border-left-color: var(--verde); }
+
+    /* ---------- barra ---------- */
+    .barra { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+    .barra input {
+      flex: 1 1 auto; padding: 11px 13px; font-size: 14px;
+      border: 1px solid var(--borda); border-radius: 8px; font-family: inherit;
+    }
+    .barra input:focus { outline: none; border-color: var(--roxo); }
+    .barra label {
+      display: flex; align-items: center; gap: 7px; font-size: 13px;
+      color: var(--cinza); font-weight: 600; white-space: nowrap; cursor: pointer;
+    }
+
+    /* ---------- tabela ---------- */
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead th {
+      background: var(--roxo); color: #fff; text-align: left;
+      font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+      padding: 9px 10px; position: sticky; top: 0; z-index: 2;
+    }
+    thead th.n { text-align: right; }
+    tbody td {
+      padding: 10px; border-bottom: 1px solid #f3f4f6; vertical-align: top;
+    }
+    tbody td.n { text-align: right; font-variant-numeric: tabular-nums; }
+    tbody tr:hover td { background: #fafafa; }
+
+    .num { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .num small {
+      display: block; font-size: 11px; font-weight: 400; color: var(--cinza);
+    }
+
+    /* o fornecedor sem cadastro vigente: vermelho, sem rodeio */
+    .fornec { font-weight: 600; }
+    .fornec.sem { color: var(--vermelho); }
+    .fornec small {
+      display: block; font-size: 11px; font-weight: 400; color: var(--cinza);
+    }
+    .fornec.sem small { color: var(--vermelho); }
+
+    .entrega { font-variant-numeric: tabular-nums; }
+    .entrega.atrasada { color: var(--ambar); font-weight: 700; }
+    .entrega small { display: block; font-size: 11px; color: var(--cinza); }
+
+    .etq {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .05em;
+      padding: 2px 8px; border-radius: 9px;
+    }
+    .etq.antigo { background: #f1f5f9; color: #475569; }
+    .etq.nota   { background: var(--verde-claro); color: #065f46; }
+
+    .vazio {
+      padding: 40px; text-align: center; color: var(--cinza);
+    }
+    .vazio strong { display: block; font-size: 16px; color: var(--texto);
+                    margin-bottom: 6px; }
+
+    .legenda {
+      display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center;
+      margin-top: 16px; padding: 12px 14px; background: #f8fafc;
+      border: 1px solid var(--borda); border-radius: 8px; font-size: 12px;
+    }
+    .legenda .v { display: flex; align-items: center; gap: 7px; }
+    .legenda .vermelho { color: var(--vermelho); font-weight: 600; }
+    .legenda .ambar { color: #92400e; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <h1>Pedidos pendentes <small>comprado e ainda não entregue</small></h1>
+
+  <div class="resumo" id="resumo"></div>
+
+  <div class="barra">
+    <input type="text" id="busca" placeholder="Buscar por número ou fornecedor...">
+    <label><input type="checkbox" id="soSemCadastro"> só sem cadastro</label>
+    <label><input type="checkbox" id="soAtrasados"> só atrasados</label>
+  </div>
+
+  <div id="lista"></div>
+
+  <div class="legenda">
+    <span class="v"><span class="vermelho">nome em vermelho</span>
+      fornecedor sem cadastro completo (completar em Fornecedores)</span>
+    <span class="v"><span class="ambar">entrega em âmbar</span>
+      previsão já venceu</span>
+    <span class="v"><span class="etq antigo">antigo</span>
+      veio do sistema em Access</span>
+    <span class="v"><span class="etq nota">NF 620819</span>
+      já tem nota fiscal ligada</span>
+  </div>
+
+  <script src="/js/compra/pedidos-pendentes.js"></script>
+</body>
+</html>

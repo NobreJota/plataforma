@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rotaes : Admin : De/para do plano</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background:#eef1f5; color:#1f2937; }
+    .topo { background:#03306b; color:#fff; padding:14px 24px; }
+    .topo h1 { font-size:1.35rem; font-weight:700; margin:0; }
+    .topo small { color:#c7d6ee; }
+    #filtros { background:#fff; border-bottom:1px solid #cfd4da; padding:10px 24px; }
+    .aviso { font-size:.85rem; color:#6b7280; }
+
+    /* Caixa superior: o par que está sendo decidido */
+    #decisao {
+      background:#fff; border:1px solid #cfd4da; border-radius:10px;
+      margin:14px 24px 0; padding:12px 16px;
+      display:grid; grid-template-columns: 1fr auto 1fr auto; gap:14px; align-items:center;
+    }
+    .escolha { border:1px dashed #9aa3ad; border-radius:8px; padding:8px 12px; min-height:44px; background:#f9fafb; }
+    .escolha.cheia { border-style:solid; border-color:#03306b; background:#eef4ff; }
+    .escolha .cod { font-family:monospace; font-weight:700; color:#03306b; margin-right:8px; }
+    .seta { font-size:1.4rem; color:#6b7280; }
+
+    /* Os dois lados */
+    #lados { display:grid; grid-template-columns: 1fr 1fr; gap:14px; padding:14px 24px 24px; }
+    .lado { background:#fff; border:1px solid #cfd4da; border-radius:10px; display:flex; flex-direction:column; min-height:0; }
+    .lado h2 { font-size:.95rem; font-weight:700; margin:0; padding:10px 14px; background:#e3e9f2; border-radius:10px 10px 0 0;
+               display:flex; justify-content:space-between; align-items:center; }
+    .lista { overflow-y:auto; height:calc(100vh - 330px); min-height:260px; }
+    .linha { display:flex; gap:10px; align-items:baseline; padding:6px 14px; border-bottom:1px solid #f0f2f5; cursor:pointer; font-size:.9rem; }
+    .linha:hover { background:#f3f7ff; }
+    .linha .cod { font-family:monospace; font-weight:600; color:#03306b; min-width:112px; }
+    .linha .nome { flex:1; }
+    .linha .dest { font-family:monospace; font-size:.8rem; color:#374151; }
+    .linha.titulo { background:#f7f9fb; font-weight:700; }
+    .linha.selecionada { background:#1d4ed8 !important; color:#fff; }
+    .linha.selecionada .cod, .linha.selecionada .dest { color:#fff; }
+
+    /* Simbologia das decididas, pela cor do texto:
+         equivalência → verde · criada → ocre · descartada → riscada
+       e todas ficam sem foco (mais apagadas). */
+    .linha.vincular  .nome, .linha.vincular  .cod { color:#0b5d2a; }
+    .linha.criar     .nome, .linha.criar     .cod { color:#7a4e00; }
+    .linha.descartar .nome, .linha.descartar .cod { color:#6b7280; text-decoration:line-through; }
+    .linha.decidida  { opacity:.78; }
+    .linha.decidida:hover { opacity:1; }
+    .etq { font-size:.7rem; border-radius:4px; padding:1px 6px; font-weight:600; }
+    .etq.vincular  { color:#0b5d2a; border:1px solid #0b5d2a; }
+    .etq.criar     { color:#7a4e00; border:1px solid #7a4e00; }
+    .etq.descartar { color:#6b7280; border:1px solid #9aa3ad; }
+    #motivo { grid-column: 1 / -1; font-size:.82rem; color:#6b7280; margin-top:-4px; }
+
+    /* Painel de ajuda, na lateral direita */
+    #ajuda {
+      position:fixed; top:0; right:0; width:430px; max-width:92vw; height:100vh;
+      background:#fff; border-left:3px solid #03306b; box-shadow:-8px 0 30px rgba(0,0,0,.15);
+      z-index:50; overflow-y:auto; padding:18px 22px; font-size:.92rem; line-height:1.45;
+    }
+    #ajuda[hidden] { display:none; }
+    #ajuda h3 { font-size:1.1rem; font-weight:700; color:#03306b; margin:0 0 10px; }
+    #ajuda h4 { font-size:.95rem; font-weight:700; margin:16px 0 6px; }
+    #ajuda .exemplo { background:#f3f6fb; border-radius:6px; padding:8px 10px; font-size:.86rem; }
+    #ajuda code { color:#03306b; font-weight:600; }
+    .leg { font-weight:600; }
+    .leg.v { color:#0b5d2a; } .leg.c { color:#7a4e00; } .leg.d { color:#6b7280; text-decoration:line-through; }
+    .linha.inativa .nome { color:#9aa3ad; font-style:italic; }
+  </style>
+</head>
+<body>
+
+<div class="topo d-flex align-items-center justify-content-between flex-wrap gap-2">
+  <div>
+    <h1>De/para: plano antigo → plano novo</h1>
+    <small>Clique numa conta à esquerda, depois na equivalente à direita, e confirme. Cada decisão vai para o mapa que traduz os lançamentos.</small>
+  </div>
+  <div class="d-flex gap-2">
+    <button id="btnAjuda" class="btn btn-warning btn-sm fw-semibold" type="button">? Ajuda</button>
+    <a href="/central/plano/fornecedores-antigos" class="btn btn-success btn-sm">Fornecedores antigos</a>
+    <a href="/central/plano/estrutura" class="btn btn-light btn-sm">Estrutura</a>
+    <a href="/central/menu" class="btn btn-light btn-sm">&larr; Voltar ao menu</a>
+  </div>
+</div>
+
+<div id="filtros" class="d-flex align-items-center gap-3 flex-wrap">
+  <label class="fw-semibold mb-0" for="selEmpresa">Empresa:</label>
+  <select id="selEmpresa" class="form-select form-select-sm" style="max-width:300px"></select>
+
+  <label class="fw-semibold mb-0" for="selEtapa">Etapa:</label>
+  <select id="selEtapa" class="form-select form-select-sm" style="max-width:320px">
+    <option value="2.02|2.01" selected>Fornecedores — antigo 2.02 → novo 2.01</option>
+    <option value="1.01|1.01">Disponível — 1.01 → 1.01</option>
+    <option value="|">Livre (preencha os prefixos)</option>
+  </select>
+  <input id="prefAntigo" class="form-control form-control-sm" style="width:90px" placeholder="antigo">
+  <input id="prefNovo" class="form-control form-control-sm" style="width:90px" placeholder="novo">
+  <input id="busca" class="form-control form-control-sm" style="width:200px" placeholder="buscar nome no antigo">
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="chkEsconder">
+    <label class="form-check-label" for="chkEsconder">esconder decididas</label>
+  </div>
+
+  <span class="ms-auto d-flex align-items-center gap-2">
+    <span class="aviso" id="infoOrigem"></span>
+    <button id="btnExportar" class="btn btn-outline-dark btn-sm" type="button">Exportar mapa</button>
+    <label class="btn btn-outline-primary btn-sm mb-0">
+      Carregar plano antigo <input type="file" id="arqOrigem" accept=".csv,.xlsx" hidden>
+    </label>
+  </span>
+</div>
+
+<aside id="ajuda" hidden>
+  <div class="d-flex justify-content-between align-items-start">
+    <h3>Como funciona o de/para</h3>
+    <button class="btn btn-sm btn-outline-secondary" type="button" onclick="document.getElementById('ajuda').hidden=true">Fechar</button>
+  </div>
+
+  <p>Para cada conta do <strong>plano antigo</strong> (esquerda), responda:
+     <em>no plano novo (direita), onde esta conta vai morar?</em>
+     Cada resposta fica gravada no mapa que traduz os lançamentos antigos.</p>
+
+  <h4>1. Já existe no plano novo → Confirmar equivalência</h4>
+  <p>Clique na conta à esquerda e na <strong>mesma conta</strong> à direita, do mesmo nível
+     (subtítulo com subtítulo, título com título). Nada é criado; fica anotado que uma é a outra.</p>
+  <div class="exemplo">Rinnai: antigo <code>2.02.001.074</code> → novo <code>2.01.001.001 Rinnai Equipamentos</code></div>
+
+  <h4>2. Ainda não existe → Criar no título</h4>
+  <p>Clique na conta à esquerda e, à direita, no <strong>título</strong> onde ela deve nascer.
+     A conta é criada com o nome do antigo e o próximo número do título.</p>
+  <div class="exemplo">Blukit: antigo <code>2.02.001.004</code> + título <code>2.01.001 fornecedores revenda</code>
+     → nasce <code>2.01.001.002 Blukit Metalúrgica Ltda</code></div>
+  <p class="mt-2">Fornecedor de manutenção vai no título <code>2.01.002</code>.</p>
+
+  <h4>3. Não deve entrar → Descartar</h4>
+  <p>Contas mortas, repetidas ou improvisadas. Ficam registradas como descartadas, não esquecidas.</p>
+
+  <h4>Conta criada por engano → duplo clique</h4>
+  <p>Duplo clique numa conta do <strong>plano novo</strong> suspende a conta. Nada é apagado: ela vai
+     para Contas suspensas e pode ser reativada. Só é permitido se a conta não tiver movimento e não
+     estiver recebendo nenhuma conta antiga (nesse caso, desfaça a decisão antes).</p>
+
+  <h4>O que significa cada cor</h4>
+  <p><span class="leg v">Verde</span> — equivalência confirmada<br>
+     <span class="leg c">Ocre</span> — conta criada no plano novo<br>
+     <span class="leg d">Riscada</span> — descartada<br>
+     Linhas decididas ficam mais apagadas. Sem cor: pendente.</p>
+
+  <h4>Dicas de uso</h4>
+  <p>Marque <strong>esconder decididas</strong> e desça a lista de cima para baixo: depois de cada decisão,
+     a próxima pendente já fica selecionada.<br>
+     Errou? Clique na linha decidida e use <strong>Desfazer decisão</strong>. Se ela tinha criado conta,
+     a conta continua no plano; só o vínculo sai.<br>
+     À direita, ao lado de cada conta, aparece <code>← código antigo</code> quando ela já recebe alguma.</p>
+
+  <h4>Por que isto importa</h4>
+  <p>Na transferência dos lançamentos, uma boleta antiga em <code>2.02.001.074</code> será gravada em
+     <code>2.01.001.001</code>. Lançamento numa conta sem decisão <strong>não entra</strong>: o importador
+     para e avisa, em vez de perder o valor.</p>
+
+  <h4>Conferência</h4>
+  <p>Cada decisão guarda data e quem decidiu. Desfazer ou mudar uma decisão não apaga a anterior:
+     ela vai para o histórico. <strong>Exportar mapa</strong> baixa tudo em CSV para abrir no Excel,
+     com ou sem o histórico.<br>
+     O mapa é permanente: ele será usado de novo para traduzir os anos anteriores.</p>
+
+  <h4>Etapas</h4>
+  <p>O campo <strong>Etapa</strong> escolhe que parte dos dois planos aparece. Os dois campos ao lado
+     são os prefixos (antigo e novo) e podem ser editados à mão para qualquer conta.</p>
+</aside>
+
+<div id="decisao">
+  <div class="escolha" id="boxAntigo"><span class="aviso">conta antiga: clique à esquerda</span></div>
+  <div class="seta">→</div>
+  <div class="escolha" id="boxNovo"><span class="aviso">destino: clique à direita (subtítulo para vincular, título para criar)</span></div>
+  <div class="d-flex gap-2 flex-wrap">
+    <button class="btn btn-success btn-sm" id="btnVincular" disabled>Confirmar equivalência</button>
+    <button class="btn btn-primary btn-sm" id="btnCriar" disabled>Criar no título</button>
+    <button class="btn btn-outline-secondary btn-sm" id="btnDescartar" disabled>Descartar</button>
+    <button class="btn btn-outline-danger btn-sm" id="btnDesfazer" disabled hidden>Desfazer decisão</button>
+  </div>
+  <div id="motivo"></div>
+</div>
+
+<div id="lados">
+  <div class="lado">
+    <h2><span>Plano antigo</span><span class="aviso" id="contaEsq"></span></h2>
+    <div class="lista" id="listaEsq"></div>
+  </div>
+  <div class="lado">
+    <h2><span>Plano novo</span><span class="aviso" id="contaDir"></span></h2>
+    <div class="lista" id="listaDir"></div>
+  </div>
+</div>
+
+<script>
+const API = '/central/plano/api';
+const estado = { antigo: null, novo: null, dados: null };
+
+async function api(metodo, caminho, corpo) {
+  const r = await fetch(API + caminho, {
+    method: metodo, headers: { 'Content-Type': 'application/json' },
+    body: corpo ? JSON.stringify(corpo) : undefined
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.erro || 'Erro na requisição.');
+  return d;
+}
+const empresa = () => document.getElementById('selEmpresa').value;
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+
+async function carregarEmpresas() {
+  const lista = await api('GET', '/empresas');
+  const sel = document.getElementById('selEmpresa');
+  sel.innerHTML = '<option value="">Escolha...</option>' +
+    lista.map(e => `<option value="${e._id}">${esc(e.razao || e.marca)}</option>`).join('');
+  const armacao = lista.find(e => /arma[cç][aã]o/i.test(e.razao || ''));
+  if (armacao) { sel.value = armacao._id; carregar(); }
+}
+
+function aplicarEtapa() {
+  const [a, n] = document.getElementById('selEtapa').value.split('|');
+  if (a || n) {
+    document.getElementById('prefAntigo').value = a;
+    document.getElementById('prefNovo').value = n;
+  }
+}
+
+async function carregar() {
+  if (!empresa()) return;
+  const q = new URLSearchParams({
+    antigo: document.getElementById('prefAntigo').value.trim(),
+    novo: document.getElementById('prefNovo').value.trim(),
+    busca: document.getElementById('busca').value.trim()
+  });
+  estado.dados = await api('GET', `/depara/${empresa()}?${q}`);
+  document.getElementById('infoOrigem').textContent =
+    estado.dados.totalOrigem ? `${estado.dados.totalOrigem} contas antigas carregadas` : 'plano antigo ainda não carregado';
+  desenhar();
+}
+
+function desenhar() {
+  const esconder = document.getElementById('chkEsconder').checked;
+  const esq = estado.dados.esquerda;
+  const pend = esq.filter(c => !c.decisao && c.nivel === 'subtitulo').length;
+  const dec = esq.filter(c => c.decisao).length;
+  document.getElementById('contaEsq').textContent = `${pend} pendente(s) · ${dec} decidida(s)`;
+
+  document.getElementById('listaEsq').innerHTML = esq
+    .filter(c => !(esconder && c.decisao))
+    .map(c => {
+      const d = c.decisao;
+      const classes = ['linha', c.nivel];
+      if (d) classes.push(d.acao, 'decidida');
+      if (estado.antigo?.codigo === c.codigo) classes.push('selecionada');
+      const destino = d ? (d.codigoNovo ? `→ ${esc(d.codigoNovo)}` : '') : '';
+      const rotulo = { vincular: 'equivale', criar: 'criada', descartar: 'descartada' };
+      const etq = d ? `<span class="etq ${d.acao}">${rotulo[d.acao]}</span>` : '';
+      return `<div class="${classes.join(' ')}" data-lado="esq" data-cod="${esc(c.codigo)}">
+        <span class="cod">${esc(c.codigo)}</span><span class="nome">${esc(c.nome)}</span>
+        <span class="dest">${destino}</span>${etq}</div>`;
+    }).join('') || '<p class="aviso m-3">Nenhuma conta antiga neste filtro.</p>';
+
+  const dir = estado.dados.direita;
+  document.getElementById('contaDir').textContent = `${dir.filter(c => c.nivel === 'subtitulo').length} subtítulo(s)`;
+  document.getElementById('listaDir').innerHTML = dir.map(c => {
+    const classes = ['linha', c.nivel];
+    if (!c.ativo) classes.push('inativa');
+    if (estado.novo?.codigo === c.codigo) classes.push('selecionada');
+    const recebe = c.recebeDe?.length ? `<span class="dest">← ${c.recebeDe.map(esc).join(', ')}</span>` : '';
+    return `<div class="${classes.join(' ')}" data-lado="dir" data-cod="${esc(c.codigo)}">
+      <span class="cod">${esc(c.codigo)}</span><span class="nome">${esc(c.nome)}</span>${recebe}</div>`;
+  }).join('') || '<p class="aviso m-3">Nenhuma conta no plano novo neste prefixo.</p>';
+
+  atualizarCaixa();
+}
+
+function atualizarCaixa() {
+  const a = estado.antigo, n = estado.novo;
+  const bA = document.getElementById('boxAntigo'), bN = document.getElementById('boxNovo');
+  bA.className = 'escolha' + (a ? ' cheia' : '');
+  bN.className = 'escolha' + (n ? ' cheia' : '');
+  bA.innerHTML = a ? `<span class="cod">${esc(a.codigo)}</span>${esc(a.nome)}` : '<span class="aviso">conta antiga: clique à esquerda</span>';
+  bN.innerHTML = n ? `<span class="cod">${esc(n.codigo)}</span>${esc(n.nome)} <span class="aviso">(${n.nivel})</span>`
+                   : '<span class="aviso">destino: clique à direita (subtítulo para vincular, título para criar)</span>';
+
+  const decidida = !!a?.decisao;
+  const podeVincular = a && !decidida && n && a.nivel === n.nivel;
+  const podeCriar = a && !decidida && n && a.nivel === 'subtitulo' && n.nivel === 'titulo';
+  document.getElementById('btnVincular').disabled = !podeVincular;
+  document.getElementById('btnCriar').disabled = !podeCriar;
+  document.getElementById('btnDescartar').disabled = !a || decidida;
+  const desfazer = document.getElementById('btnDesfazer');
+  desfazer.hidden = !decidida; desfazer.disabled = !decidida;
+
+  // Diz por que o botão está apagado, em vez de deixar adivinhar
+  let motivo = '';
+  if (!a) motivo = 'Escolha uma conta do plano antigo, à esquerda.';
+  else if (decidida) motivo = 'Esta conta já foi decidida. Para mudar, use Desfazer decisão.';
+  else if (!n) motivo = 'Agora escolha à direita: o subtítulo equivalente, ou o título onde ela deve nascer. Ou descarte.';
+  else if (!podeVincular && !podeCriar) motivo = `Não combina: à esquerda é ${a.nivel}, à direita é ${n.nivel}.`;
+  else if (podeCriar) motivo = 'Título escolhido: Criar no título faz nascer a conta ali. Para equivalência, escolha um subtítulo.';
+  else motivo = 'Mesmo nível: Confirmar equivalência anota que uma conta é a outra.';
+  document.getElementById('motivo').textContent = motivo;
+}
+
+/* Duplo clique numa conta do plano novo: suspender (não apaga, reativa depois) */
+document.getElementById('listaDir').addEventListener('dblclick', async e => {
+  const linha = e.target.closest('.linha');
+  if (!linha) return;
+  const conta = estado.dados.direita.find(c => c.codigo === linha.dataset.cod);
+  if (!conta || conta.nivel !== 'subtitulo') { alert('Só subtítulos podem ser suspensos por aqui.'); return; }
+  if (!conta.ativo) { alert('Esta conta já está suspensa. Reative pela tela Estrutura ou pelo plano de contas.'); return; }
+  if (!confirm(`Suspender a conta ${conta.codigo} ${conta.nome}?\n\n` +
+               'Ela sai de uso mas não é apagada: fica em Contas suspensas e pode ser reativada.')) return;
+  try {
+    await api('POST', '/depara/suspender', { lojistaId: empresa(), codigo: conta.codigo });
+    if (estado.novo?.codigo === conta.codigo) estado.novo = null;
+    await carregar();
+  } catch (err) { alert(err.message); }
+});
+
+document.getElementById('lados').addEventListener('click', e => {
+  const linha = e.target.closest('.linha');
+  if (!linha) return;
+  const cod = linha.dataset.cod;
+  if (linha.dataset.lado === 'esq') estado.antigo = estado.dados.esquerda.find(c => c.codigo === cod);
+  else estado.novo = estado.dados.direita.find(c => c.codigo === cod);
+  desenhar();
+});
+
+async function decidir(acao) {
+  const a = estado.antigo, n = estado.novo;
+  const corpo = { lojistaId: empresa(), codigoAntigo: a.codigo, acao };
+  if (acao === 'vincular') corpo.codigoNovo = n.codigo;
+  if (acao === 'criar') corpo.tituloDestino = n.codigo;
+  try {
+    await api('POST', '/depara/decidir', corpo);
+    // Próxima pendente fica selecionada, para o trabalho seguir no teclado do mouse
+    const lista = estado.dados.esquerda;
+    const i = lista.findIndex(c => c.codigo === a.codigo);
+    const prox = lista.slice(i + 1).find(c => !c.decisao && c.nivel === 'subtitulo');
+    if (acao === 'vincular') estado.novo = null;
+    await carregar();
+    estado.antigo = prox ? estado.dados.esquerda.find(c => c.codigo === prox.codigo) : null;
+    desenhar();
+  } catch (err) { alert(err.message); }
+}
+
+document.getElementById('btnVincular').onclick = () => decidir('vincular');
+document.getElementById('btnCriar').onclick = () => decidir('criar');
+document.getElementById('btnDescartar').onclick = () => decidir('descartar');
+document.getElementById('btnDesfazer').onclick = async () => {
+  const a = estado.antigo;
+  if (!confirm(`Desfazer a decisão de ${a.codigo}?` +
+    (a.decisao?.acao === 'criar' ? '\n\nA conta criada no plano novo continua lá; só o vínculo sai.' : ''))) return;
+  try {
+    await api('POST', '/depara/desfazer', { lojistaId: empresa(), codigoAntigo: a.codigo });
+    await carregar();
+    estado.antigo = estado.dados.esquerda.find(c => c.codigo === a.codigo) || null;
+    desenhar();
+  } catch (err) { alert(err.message); }
+};
+
+document.getElementById('arqOrigem').addEventListener('change', async e => {
+  const arq = e.target.files[0];
+  if (!arq || !empresa()) { if (!empresa()) alert('Escolha a empresa.'); return; }
+  const dados = new FormData();
+  dados.append('arquivo', arq); dados.append('lojistaId', empresa());
+  const r = await fetch(API + '/origem/carregar', { method: 'POST', body: dados });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) { alert(d.erro || 'Erro ao carregar.'); return; }
+  alert(`${d.contas} contas antigas carregadas${d.referencia ? ' (documentos até ' + d.referencia + ')' : ''}.`);
+  e.target.value = '';
+  carregar();
+});
+
+document.getElementById('selEmpresa').addEventListener('change', () => { estado.antigo = estado.novo = null; carregar(); });
+document.getElementById('selEtapa').addEventListener('change', () => { aplicarEtapa(); estado.antigo = estado.novo = null; carregar(); });
+['prefAntigo', 'prefNovo'].forEach(id => document.getElementById(id).addEventListener('change', carregar));
+let atraso;
+document.getElementById('busca').addEventListener('input', () => { clearTimeout(atraso); atraso = setTimeout(carregar, 300); });
+document.getElementById('chkEsconder').addEventListener('change', desenhar);
+
+document.getElementById('btnExportar').onclick = () => {
+  if (!empresa()) { alert('Escolha a empresa.'); return; }
+  const historico = confirm('Incluir também as decisões desfeitas ou substituídas?\n\nOK = sim · Cancelar = só as vigentes');
+  window.location = `${API}/depara/${empresa()}/exportar?historico=${historico}`;
+};
+
+document.getElementById('btnAjuda').onclick = () => {
+  const painel = document.getElementById('ajuda');
+  painel.hidden = !painel.hidden;
+};
+
+aplicarEtapa();
+carregarEmpresas().catch(err => alert(err.message));
+</script>
+</body>
+</html>

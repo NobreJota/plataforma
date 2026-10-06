@@ -1,3 +1,12 @@
+{{!--
+  Destino: C:\plataformaRota\views\contab\contabil\cooperado_menu.handlebars
+  Alterado em: 27/09/2026 — submenu Produtos.
+  Alterado em: 30/09/2026 — sai "Alteração de produtos": o produto abre por duplo clique na Relação.
+  Alterado em: 02/10/2026 — Venda > Nova venda (/vendas/venda).
+  Alterado em: 03/10/2026 — Venda > Relatórios aponta para /vendas/relatorio (era /venda/relatorios, 404).
+  Alterado em: 26/09/2026 — Pedidos e Entrada de mercadoria passam a abrir o
+                            terceiro nível em vez de navegar direto.
+--}}
 <div class="coop-menu-wrap">
 
   {{!-- Sidebar principal --}}
@@ -47,7 +56,7 @@
     <ul class="coop-sub-list" data-sub="fluxo">
       <li class="coop-sub-title" >Fluxo de Caixa?</li>
       <li class="coop-sub-item" data-url="/financeiro/fluxo">
-        <span>Grid mês a mês</span>
+        <span>Fluxo de Caixa</span>
       </li>
       <li class="coop-sub-item" data-url="/financeiro/orcamento">
         <span>Orçamento Anual</span>
@@ -77,11 +86,14 @@
       <li class="coop-sub-item" data-url="/aux/fornecedores">
         <span>Fornecedores</span>
       </li>
-      <li class="coop-sub-item" data-url="/compra/pedidos">
-        <span>Pedidos</span>
+      <li class="coop-sub-item" data-leaf="pedidos">
+        <span>Pedidos</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
       </li>
-      <li class="coop-sub-item" data-url="/compra/entrada">
-        <span>Entrada de mercadoria</span>
+      <li class="coop-sub-item" data-leaf="produtos">
+        <span>Produtos</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      </li>
+      <li class="coop-sub-item" data-leaf="entrada">
+        <span>Entrada de mercadoria</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
       </li>
       <li class="coop-sub-item" data-url="/compra/relatorios">
         <span>Relatórios</span>
@@ -91,13 +103,16 @@
     {{!-- Venda --}}
     <ul class="coop-sub-list" data-sub="venda">
       <li class="coop-sub-title">Venda</li>
-      <li class="coop-sub-item" data-url="/aux/clientes">
+      <li class="coop-sub-item" data-url="/vendas/clientes">
         <span>Clientes</span>
+      </li>
+      <li class="coop-sub-item" data-url="/vendas/venda">
+        <span>Nova venda</span>
       </li>
       <li class="coop-sub-item" data-url="/venda/notas-fiscais">
         <span>Notas fiscais</span>
       </li>
-      <li class="coop-sub-item" data-url="/venda/relatorios">
+      <li class="coop-sub-item" data-url="/vendas/relatorio">
         <span>Relatórios</span>
       </li>
     </ul>
@@ -118,6 +133,26 @@
     {{!-- Folhas de recebendo/pagando/lancamentos/pesquisa REMOVIDAS:
          agora o recebimento/pagamento é feito clicando na linha do
          Grid do Fluxo de Caixa (modal), não por menu. --}}
+
+    <ul class="coop-leaf-list" data-leaf="pedidos">
+      <li class="coop-sub-title">Pedidos</li>
+      <li class="coop-leaf-item"><a href="/compra/pedidos">Emitir</a></li>
+      <li class="coop-leaf-item"><a href="/compra/pedidos-pendentes">Pedido pendente</a></li>
+      <li class="coop-leaf-item"><a href="/compra/pedidos-liquidados">Pedido liquidado</a></li>
+    </ul>
+
+    <ul class="coop-leaf-list" data-leaf="produtos">
+      <li class="coop-sub-title">Produtos</li>
+      <li class="coop-leaf-item"><a href="/compra/produtos">Cadastro</a></li>
+      <li class="coop-leaf-item"><a href="/compra/produtos-relacao">Relação de produtos</a></li>
+    </ul>
+
+    <ul class="coop-leaf-list" data-leaf="entrada">
+      <li class="coop-sub-title">Entrada de mercadoria</li>
+      <li class="coop-leaf-item"><a href="/compra/entrada">Entrada com a nota</a></li>
+      <li class="coop-leaf-item"><a href="/compra/desbloqueio">Desbloqueio da nota</a></li>
+      <li class="coop-leaf-item"><a href="/compra/notas">Pesquisa de notas</a></li>
+    </ul>
 
     <ul class="coop-leaf-list" data-leaf="pessoal">
       <li class="coop-sub-title">Pessoal</li>

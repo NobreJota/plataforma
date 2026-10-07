@@ -1,7 +1,12 @@
-/* public/js/contab/contabil/razao.js
+/* Destino: C:\plataformaRota\public\js\contab\contabil\razao.js
  * Tela do Razão — combos Conta-título + Subtítulo, busca rápida,
  * filtro de período, grade de lançamentos, modal de boleta,
  * navegação por contrapartida (clica no código C/PART → pula pra outra conta).
+ *
+ * Alterado em 06/10/2026: janela da boleta em DÉBITO e CRÉDITO, com o sinal da
+ *   convenção (débito +, crédito −). Contrapartida com valor NEGATIVO (ex.: taxa do
+ *   cartão num recebimento) vai para o lado oposto, em valor positivo — como o
+ *   razão já lança. Valor da boleta = total do débito = total do crédito.
  */
 (() => {
   'use strict';
@@ -357,36 +362,44 @@
       const b = await getJson(`${API_PAG}/boleta/${boletaId}`);
       const ehRec = b.tipo === 'RECEBIMENTO';
       $('#bol-titulo').textContent = `Boleta ${b.codigo} — ${b.tipo}`;
-      const bancoLinha = `
+      // Monta os dois lados. RECEBIMENTO: banco a débito, contrapartidas a crédito.
+      // PAGAMENTO: o contrário. Contrapartida negativa troca de lado (valor positivo).
+      const banco = { cod: b.bancoCodigo, nome: b.bancoNome, hist: b.historico, v: b.valorTotal || 0 };
+      const debito = [], credito = [];
+      (ehRec ? debito : credito).push(banco);
+      for (const c of (b.contrapartidas || [])) {
+        const v = c.valor || 0;
+        const l = { cod: c.codigoConta, nome: c.nomeConta, hist: c.historico, v: Math.abs(v) };
+        const ladoNormal = ehRec ? credito : debito;
+        const ladoOposto = ehRec ? debito : credito;
+        (v < 0 ? ladoOposto : ladoNormal).push(l);
+      }
+      const soma = lista => lista.reduce((t, l) => t + l.v, 0);
+      const tabela = (lista, sinal) => `
         <table class="bol-tabela">
           <thead><tr><th>Nº Conta</th><th>Nome</th><th>Histórico</th><th class="v">Valor</th></tr></thead>
-          <tbody><tr>
-            <td class="bol-cod">${b.bancoCodigo || '-'}</td>
-            <td>${b.bancoNome}</td>
-            <td>${b.historico || ''}</td>
-            <td class="v">${ehRec ? '' : '-'}${fmt(b.valorTotal)}</td>
-          </tr></tbody>
+          <tbody>${lista.map(l => `
+            <tr>
+              <td class="bol-cod">${l.cod || '-'}</td>
+              <td>${l.nome || '-'}</td>
+              <td>${l.hist || ''}</td>
+              <td class="v">${sinal}${fmt(l.v)}</td>
+            </tr>`).join('')}</tbody>
         </table>`;
-      const contras = (b.contrapartidas || []).map(c => `
-        <tr>
-          <td class="bol-cod">${c.codigoConta || '-'}</td>
-          <td>${c.nomeConta || '-'}</td>
-          <td>${c.historico || ''}</td>
-          <td class="v">${fmt(c.valor)}</td>
-        </tr>`).join('');
+      const totD = soma(debito), totC = soma(credito);
       $('#bol-body').innerHTML = `
         <div class="bol-secao">
-          <h3>${ehRec ? 'Débito (entrada no banco)' : 'Crédito (saída do banco)'}</h3>
-          ${bancoLinha}
+          <h3>Débito${ehRec ? ' (entrada no banco)' : ''}</h3>
+          ${tabela(debito, '')}
+          <div class="bol-total">Total débito: ${fmt(totD)}</div>
         </div>
         <div class="bol-secao">
-          <h3>${ehRec ? 'Crédito (receitas)' : 'Débito (contrapartidas)'}</h3>
-          <table class="bol-tabela">
-            <thead><tr><th>Nº Conta</th><th>Nome</th><th>Histórico</th><th class="v">Valor</th></tr></thead>
-            <tbody>${contras}</tbody>
-          </table>
-          <div class="bol-total">Total: ${fmt(b.valorTotal)}</div>
-        </div>`;
+          <h3>Crédito${ehRec ? '' : ' (saída do banco)'}</h3>
+          ${tabela(credito, '-')}
+          <div class="bol-total">Total crédito: -${fmt(totC)}</div>
+        </div>
+        <div class="bol-total" style="margin-top:6px">Valor da boleta: ${fmt(totD)}${
+          Math.round(totD * 100) !== Math.round(totC * 100) ? ' &nbsp;<span style="color:#dc2626">(débito e crédito não batem!)</span>' : ''}</div>`;
       $('#bol-modal').hidden = false;
     } catch (err) {
       alert('Erro: ' + err.message);

@@ -25,6 +25,10 @@
  *    total do cartao" ao lado do valor liquido
  * Alterado em 05/10/2026: "todos" = todas as parcelas em aberto do CLIENTE daquela
  *    venda neste cartao (todas as vendas dele), ja marcadas
+ * Alterado em 07/10/2026: VARIOS USUARIOS — a cada 15 s (e ao voltar para a aba) a
+ *    tela pergunta a /versao do fluxo; se mudou, recarrega a grade e o modal aberto.
+ *    Parcela baixada por outro usuario sai da lista com aviso; as marcadas continuam
+ *    marcadas. Erro de "ja baixada" ao gravar tambem recarrega na hora.
  * Alterado em 05/10/2026: janela da boleta mostra a contrapartida NEGATIVA (taxa do
  *    cartao) do lado do banco, em valor positivo; cada lado com o seu total
  */
@@ -291,6 +295,7 @@
   // modo: 'clicado' = so a(s) parcela(s) do dia clicado; 'venda' = todas daquela venda
   //       (mantem as ja marcadas); 'cartao' = todas do cartao, todas marcadas
   async function carregarCartao(conta, historico, dataBase, modo = 'venda') {
+    pag.recarregar = () => carregarCartao(conta, historico, dataBase, modo === 'clicado' ? 'venda' : modo);
     const tbody = $('#pag-tbody');
     tbody.innerHTML = '<tr><td colspan="5" class="pag-empty">Carregando...</td></tr>';
     try {
@@ -370,6 +375,7 @@
   }
 
   async function carregarJanela() {
+    pag.recarregar = () => carregarJanela();
     const tbody = $('#pag-tbody');
     tbody.innerHTML = '<tr><td colspan="5" class="pag-empty">Carregando...</td></tr>';
     try {
@@ -504,11 +510,52 @@
       abrirBoleta(r.boletaId);
     } catch (err) {
       alert('Erro: ' + err.message);
+      if (/já foi baixada|já foram baixadas|marcadas já/.test(err.message)) {   // outro usuario baixou antes
+        await recarregarModal(true);
+        carregar();
+      }
     } finally {
       btn.disabled = false;
       btn.textContent = pag.tipo === 'receber' ? '💵 Receber selecionados' : '💰 Pagar selecionados';
     }
   }
+
+  /* ===== VARIOS USUARIOS: acompanha as baixas dos outros ===== */
+  // Recarrega a lista do modal aberto mantendo as marcas; avisa o que sumiu.
+  async function recarregarModal(avisar) {
+    if ($('#pag-modal').hidden || !pag.recarregar) return;
+    const antes = new Map(pag.titulos.map(t => [String(t._id), t]));
+    const marcadas = new Set([...pag.marcados].map(String));
+    await pag.recarregar();
+    const agora = new Set(pag.titulos.map(t => String(t._id)));
+    const sumiram = [...antes.keys()].filter(id => !agora.has(id));
+    pag.marcados = new Set(pag.titulos.filter(t => marcadas.has(String(t._id))).map(t => t._id));
+    pag.liqOk = false;
+    renderJanela();
+    if (sumiram.length && (avisar || [...marcadas].some(id => sumiram.includes(id)))) {
+      alert(sumiram.length + ' parcela(s) foram baixadas por outro usuário e saíram da lista:\n'
+        + sumiram.map(id => '• ' + (antes.get(id).historico || '') + ' — ' + fmt(antes.get(id).valor)).join('\n'));
+    }
+  }
+
+  let versaoFluxo = null, conferindo = false;
+  async function conferirVersao() {
+    if (conferindo || document.hidden) return;
+    conferindo = true;
+    try {
+      const d = await pagApi('GET', '/versao');
+      if (versaoFluxo !== null && d.versao !== versaoFluxo) {
+        await carregar();                 // a grade do fluxo
+        await recarregarModal(false);     // e o modal, se estiver aberto
+      }
+      versaoFluxo = d.versao;
+    } catch (_) { /* sem rede: tenta na proxima */ }
+    conferindo = false;
+  }
+  setInterval(conferirVersao, 15000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) conferirVersao(); });
+  window.addEventListener('focus', conferirVersao);
+  conferirVersao();
 
   /* ===== REALIZAÇÃO DE DESPESA (pos 8 → pos 2) ===== */
   const REAL_API = '/financeiro/api/realizacao';

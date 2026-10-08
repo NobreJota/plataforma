@@ -14,6 +14,8 @@
 //                           referencia casa por "contem", nao so por prefixo)
 // Alterado em: 25/09/2026  (nao existe nota sem pedido: os candidatos de cada
 //                           item sao as linhas do pedido, nao o cadastro inteiro)
+// Alterado em: 07/10/2026  (TRANSACAO no /ligar: o aprendizado no produto e o item da
+//                           nota gravam juntos ou nada. O /efetivar ja era transacao)
 //
 // APIs da entrada de nota fiscal de mercadoria.
 //
@@ -604,17 +606,26 @@ router.post('/:id/ligar', express.json(), async (req, res) => {
       }
     }
 
-    await col('_produto_origem').updateOne(
-      { lojistaId, codigoProd },
-      { $set: aprendido },
-    );
-
     // NAO conta unidade nenhuma. Ligar um item ao nosso produto e comparar a
     // nota com o pedido; contar mercadoria e outra coisa, em outra pagina,
     // com outro operador. Enquanto as duas escreviam no mesmo campo, a
     // contagem fisica nascia com itens ja "conferidos" sem ninguem ter
     // contado nada.
-    await nota.save();
+    //
+    // Produto (aprendizado) e nota gravam juntos: TRANSACAO, tudo ou nada.
+    const sessao = await mongoose.startSession();
+    try {
+      await sessao.withTransaction(async () => {
+        await col('_produto_origem').updateOne(
+          { lojistaId, codigoProd },
+          { $set: aprendido },
+          { session: sessao },
+        );
+        await nota.save({ session: sessao });
+      });
+    } finally {
+      sessao.endSession();
+    }
 
     res.json({
       ok: true,

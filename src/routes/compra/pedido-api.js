@@ -9,6 +9,9 @@
 //                           de pendentes: cabecalho, itens, parcelas do fluxo, nota)
 // Alterado em: 03/10/2026  (POST /entrega/:id — nova previsao de entrega; as parcelas
 //                           do pedido no fluxo andam a mesma diferenca de dias)
+// Alterado em: 07/10/2026  (TRANSACAO: emitir o pedido grava pedido + linhas pos 7 do
+//                           fluxo juntos ou nada; mudar a entrega move as parcelas e
+//                           grava o pedido juntos ou nada)
 //
 // APIs da tela de pedido de compra.
 //
@@ -530,10 +533,14 @@ router.post('/gravar', async (req, res) => {
       });
     }
 
-    // ---- gravar o pedido ----------------------------------------------------
-    const numero = await proximoNumero(lojistaId);
+    // ---- gravar o pedido e o fluxo: TRANSACAO, tudo ou nada ------------------
+    let numero, pedido, linhas, gravadas;
+    const sessao = await mongoose.startSession();
+    try {
+     await sessao.withTransaction(async () => {
+    numero = await proximoNumero(lojistaId);
 
-    const pedido = await Pedido.create({
+    [pedido] = await Pedido.create([{
       lojistaId,
       numero,
       situacao: 'P',
@@ -549,10 +556,10 @@ router.post('/gravar', async (req, res) => {
       itens,
       valorTotal,
       observacao: b.frete === 'FOB' ? 'Frete FOB' : 'Frete CIF',
-    });
+    }], { session: sessao });
 
     // ---- lancar no fluxo projetado (pos 7, valor negativo) ------------------
-    const linhas = titulos.map((t, i) => {
+    linhas = titulos.map((t, i) => {
       const venc = t.vencimento || new Date(entrega.getTime() + t.dias * DIA);
       return {
         lojistaId,
@@ -573,10 +580,14 @@ router.post('/gravar', async (req, res) => {
       };
     });
 
-    const gravadas = await FluxoProjetado.insertMany(linhas);
+    gravadas = await FluxoProjetado.insertMany(linhas, { session: sessao });
 
     pedido.lancamentosFluxo = gravadas.map(l => l._id);
-    await pedido.save();
+    await pedido.save({ session: sessao });
+     });
+    } finally {
+      sessao.endSession();
+    }
 
     res.json({
       ok: true,
@@ -761,20 +772,28 @@ router.post('/entrega/:id', async (req, res) => {
     const diferenca = Math.round((nova - antiga) / DIA) * DIA;   // dias inteiros
     if (!diferenca) return res.json({ ok: true, semMudanca: true, parcelas: 0 });
 
-    const linhas = await col('_fluxo_projetado').find({ lojistaId, lancamentoId: _id }).toArray();
-    const ops = linhas.filter(l => l.vencimento).map(l => {
+    const sessao = await mongoose.startSession();
+    let ops = [];
+    try {
+     await sessao.withTransaction(async () => {
+    const linhas = await col('_fluxo_projetado').find({ lojistaId, lancamentoId: _id }, { session: sessao }).toArray();
+    ops = linhas.filter(l => l.vencimento).map(l => {
       const venc = new Date(new Date(l.vencimento).getTime() + diferenca);
       return { updateOne: {
         filter: { _id: l._id, lojistaId },
         update: { $set: { vencimento: venc, ano: venc.getUTCFullYear(), mes: venc.getUTCMonth() + 1 } },
       } };
     });
-    if (ops.length) await col('_fluxo_projetado').bulkWrite(ops);
+    if (ops.length) await col('_fluxo_projetado').bulkWrite(ops, { session: sessao });
 
     await col('_compra_pedidos').updateOne({ _id, lojistaId }, {
       $set: { dataEntregaPrevista: nova },
       $push: { alteracoesEntrega: { de: antiga, para: nova, em: new Date() } },
-    });
+    }, { session: sessao });
+     });
+    } finally {
+      sessao.endSession();
+    }
 
     res.json({ ok: true, dias: diferenca / DIA, parcelas: ops.length });
   } catch (err) {

@@ -33,6 +33,9 @@
 //   - 05/10/2026: conta contabil do cliente: coluna na lista ("sem contábil" em vermelho);
 //     na ficha, "vincular conta" abre o modal do plano: procura (Enter/duplo clique liga)
 //     ou cria a conta nova no titulo escolhido (proximo numero) e liga ao cliente
+//   - 07/10/2026: trocar P. fisica <-> P. juridica com produtos lancados pergunta antes e
+//     LIMPA cliente e produtos (nao fica produto com cabecalho vazio). Venda ja gravada
+//     vira uma venda nova; a antiga fica aberta, como rascunho
 //   - 05/10/2026: no modal do plano, "editar ficha" (ou Enter/duplo clique na conta) abre a
 //     FICHA do cliente com a conta marcada, para conferir e gravar; "incluir plano" mostra
 //     o "criar conta nova" (escondido ate la); os dois botoes ficam em cada linha
@@ -112,7 +115,24 @@
       ? 'pessoa física: nome (2 letras), número (17281 / F17281) ou CPF — duplo clique escolhe'
       : 'pessoa jurídica: nome (2 letras), número (1705 / J1705) ou CNPJ — duplo clique escolhe';
   }
+  let tipoAnterior = 'PF';
   ligarSeg('seg-tipo', 'tipoCliente', () => {
+    if (estado.tipoCliente === tipoAnterior) return;
+    if (estado.itens.length) {
+      const ok = confirm('Trocar para ' + (estado.tipoCliente === 'PJ' ? 'pessoa jurídica' : 'pessoa física')
+        + ' começa a venda de novo: o cliente e os ' + estado.itens.length + ' produto(s) lançados saem da tela. Continuar?');
+      if (!ok) { estado.tipoCliente = tipoAnterior; marcarSeg('seg-tipo', tipoAnterior); return; }
+      estado.itens = [];
+      $('desc-geral').value = '';
+      estado.cliente = null; $('oc-cliente').value = ''; desenharCliente();
+      if (estado.id) {                               // a gravada fica como rascunho; esta e nova
+        estado.id = null;
+        history.replaceState(null, '', '/vendas/venda');
+        $('titulo').textContent = 'Nova venda'; $('situacao').textContent = ''; document.title = 'Nova venda';
+      }
+      desenharItens();
+    }
+    tipoAnterior = estado.tipoCliente;
     mostrarTipo();
     $('busca-cliente').value = '';
     $('lista-clientes').hidden = true;
@@ -816,7 +836,7 @@
       estado.documento = v.documento; estado.condicao = v.condicao;
       marcarSeg('seg-doc', v.documento); $('sel-cond').value = v.condicao;
       if (v.cliente && (v.cliente.tipo === 'PF' || v.cliente.tipo === 'PJ')) {
-        estado.tipoCliente = v.cliente.tipo; marcarSeg('seg-tipo', v.cliente.tipo); mostrarTipo();
+        estado.tipoCliente = v.cliente.tipo; tipoAnterior = v.cliente.tipo; marcarSeg('seg-tipo', v.cliente.tipo); mostrarTipo();
       }
       const e = (v.cliente && v.cliente.endereco) || {};
       estado.cliente = v.cliente && v.cliente.id ? {

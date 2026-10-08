@@ -23,6 +23,13 @@
 //      pelo total) + a taxa com valor NEGATIVO (= debito na despesa do cartao; o razao le
 //      o negativo no lado oposto). Banco = soma das contrapartidas. Boletas antigas com
 //      <codigo>-TAXA continuam sendo estornadas juntas.
+//  06/10/2026: TRANSACAO (o BeginTrans/CommitTrans do Access) no /quitar e no estorno:
+//      boleta + baixa das parcelas no fluxo (ou a volta delas) gravam juntas ou nada.
+//      Parcela que ja foi recebida/paga por outra boleta derruba a operacao inteira, e
+//      a boleta so grava se o banco for igual a soma das contrapartidas (em centavos).
+//  07/10/2026: GET /versao — "impressao digital" do fluxo (parcelas ativas, ultima linha,
+//      ultima baixa). A tela consulta a cada 15 s: mudou, recarrega a grade e o modal
+//      aberto — o que outro usuario baixou some da tela dos outros.
 //  05/10/2026: GET /cartao?...&historico=...&cliente=1 traz as parcelas em aberto do
 //      cartao de TODAS as vendas do mesmo cliente daquela venda (venda -> cliente.id ->
 //      vendas dele). Venda de balcao (sem cliente): as vendas de balcao daquele cartao.
@@ -164,6 +171,22 @@ router.get('/bancos', async (req, res) => {
   }
 });
 
+/* GET /financeiro/api/pagamento/versao   muda sempre que o fluxo muda */
+router.get('/versao', async (req, res) => {
+  try {
+    const loja = lojaDe(req);
+    const f = loja ? { lojistaId: loja } : {};
+    const [ativos, ultima, baixa] = await Promise.all([
+      FluxoProjetado.countDocuments({ ...f, status: 'ATIVO' }),
+      FluxoProjetado.findOne(f).sort({ _id: -1 }).select('_id').lean(),
+      FluxoProjetado.findOne({ ...f, quitadoEm: { $ne: null } }).sort({ quitadoEm: -1 }).select('quitadoEm').lean(),
+    ]);
+    res.json({ versao: ativos + '|' + (ultima?._id || '') + '|' + (baixa?.quitadoEm ? new Date(baixa.quitadoEm).getTime() : '') });
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+});
+
 /* GET /financeiro/api/pagamento/cartoes   cartoes do plano (1.01.005.xxx) */
 router.get('/cartoes', async (req, res) => {
   try {
@@ -238,6 +261,9 @@ router.post('/quitar', async (req, res) => {
     // Carrega os títulos do fluxo
     const titulos = await FluxoProjetado.find({ _id: { $in: titulosIds }, status: 'ATIVO' }).lean();
     if (titulos.length === 0) return res.status(404).json({ erro: 'Nenhum título válido encontrado.' });
+    if (titulos.length !== new Set(titulosIds.map(String)).size) {
+      return res.status(409).json({ erro: 'Uma das parcelas marcadas já foi baixada. Nada foi gravado; abra o fluxo de novo.' });
+    }
 
     const ehRec = (tipo === 'receber');
     const tipoBoleta = ehRec ? 'RECEBIMENTO' : 'PAGAMENTO';
@@ -293,29 +319,50 @@ router.post('/quitar', async (req, res) => {
       valorBoleta = (emCentavos(valorTotal) - taxa.centavos) / 100;   // o que caiu no banco
     }
 
+    // conferencia da partida dobrada, em centavos: banco = soma das contrapartidas
+    const somaContras = contrapartidas.reduce((t, c) => t + emCentavos(c.valor), 0);
+    if (somaContras !== emCentavos(valorBoleta)) {
+      return res.status(409).json({ erro: 'A boleta não fecha: banco ' + valorBoleta.toFixed(2)
+        + ' × contrapartidas ' + (somaContras / 100).toFixed(2) + '. Nada foi gravado.' });
+    }
+
     // Código sequencial simples (timestamp)
     const codigo = `BOL-${Date.now()}`;
     const dataBoleta = data ? new Date(data + 'T12:00:00') : new Date();
 
-    const boleta = await Boleta.create({
-      codigo, tipo: tipoBoleta, data: dataBoleta,
-      contaBancaria: banco._id,
-      bancoSubTitulo: banco.contaSubTitulo?._id || null,
-      bancoCodigo: banco.contaSubTitulo?.codigo || '',
-      bancoNome: banco.apelido || banco.banco?.nome || 'Banco',
-      valorTotal: valorBoleta,
-      contrapartidas,
-      historico: historico || `${tipoBoleta} em lote — ${titulos.length} título(s)`,
-      origem: 'FLUXO',
-      lojistaId: loja
-    });
+    // ---- TRANSACAO: boleta + baixa das parcelas, tudo ou nada ----
+    let boleta = null;
+    const session = await mongoose.startSession();
+    try {
+      await session.withTransaction(async () => {
+        [boleta] = await Boleta.create([{
+          codigo, tipo: tipoBoleta, data: dataBoleta,
+          contaBancaria: banco._id,
+          bancoSubTitulo: banco.contaSubTitulo?._id || null,
+          bancoCodigo: banco.contaSubTitulo?.codigo || '',
+          bancoNome: banco.apelido || banco.banco?.nome || 'Banco',
+          valorTotal: valorBoleta,
+          contrapartidas,
+          historico: historico || `${tipoBoleta} em lote — ${titulos.length} título(s)`,
+          origem: 'FLUXO',
+          lojistaId: loja
+        }], { session });
 
-    // Remove os títulos quitados do Fluxo (Fluxo Projetado guarda memória,
-    // mas marcamos como QUITADO; o Fluxo de Caixa só mostra ATIVO).
-    await FluxoProjetado.updateMany(
-      { _id: { $in: titulosIds } },
-      { $set: { status: 'QUITADO', boletaId: boleta._id, quitadoEm: new Date() } }
-    );
+        // Baixa das parcelas no Fluxo (o Fluxo Projetado guarda memória: marca QUITADO;
+        // o Fluxo de Caixa só mostra ATIVO). So as que ainda estao ATIVAS: se alguma ja
+        // foi baixada por outra boleta no meio do caminho, desfaz tudo.
+        const r = await FluxoProjetado.updateMany(
+          { _id: { $in: titulos.map(t => t._id) }, status: 'ATIVO' },
+          { $set: { status: 'QUITADO', boletaId: boleta._id, quitadoEm: new Date() } },
+          { session }
+        );
+        if (r.modifiedCount !== titulos.length) {
+          throw Object.assign(new Error('Uma das parcelas já foi baixada por outra boleta. Nada foi gravado; abra o fluxo de novo.'), { status: 409 });
+        }
+      });
+    } finally {
+      session.endSession();
+    }
 
     // Aprende os históricos usados (para sugestões futuras)
     for (const c of contrapartidas) {
@@ -333,7 +380,7 @@ router.post('/quitar', async (req, res) => {
     });
   } catch (err) {
     console.error('❌ /pagamento/quitar:', err.message);
-    res.status(500).json({ erro: err.message });
+    res.status(err.status || 500).json({ erro: err.message });
   }
 });
 
@@ -351,30 +398,39 @@ router.get('/boleta/:id', async (req, res) => {
 /* POST /financeiro/api/pagamento/boleta/:id/estornar
    Desfaz a boleta: cancela e devolve os títulos ao Fluxo (status ATIVO). */
 router.post('/boleta/:id/estornar', async (req, res) => {
+  const session = await mongoose.startSession();
   try {
-    const b = await Boleta.findById(req.params.id);
-    if (!b) return res.status(404).json({ erro: 'Boleta não encontrada.' });
-    if (b.status === 'CANCELADO') return res.status(400).json({ erro: 'Boleta já estornada.' });
+    let resposta = null;
+    // TRANSACAO: cancelar a boleta, a taxa antiga (-TAXA) e devolver as parcelas, tudo ou nada
+    await session.withTransaction(async () => {
+      const b = await Boleta.findById(req.params.id).session(session);
+      if (!b) throw Object.assign(new Error('Boleta não encontrada.'), { status: 404 });
+      if (b.status === 'CANCELADO') throw Object.assign(new Error('Boleta já estornada.'), { status: 400 });
 
-    // Devolve os títulos ao Fluxo (QUITADO → ATIVO)
-    await FluxoProjetado.updateMany(
-      { boletaId: b._id },
-      { $set: { status: 'ATIVO' }, $unset: { boletaId: '', quitadoEm: '' } }
-    );
+      // Devolve os títulos ao Fluxo (QUITADO → ATIVO)
+      const f = await FluxoProjetado.updateMany(
+        { boletaId: b._id },
+        { $set: { status: 'ATIVO' }, $unset: { boletaId: '', quitadoEm: '' } },
+        { session }
+      );
 
-    b.status = 'CANCELADO';
-    await b.save();
+      b.status = 'CANCELADO';
+      await b.save({ session });
 
-    // a taxa do cartao (se houve) sai junto
-    const t = await Boleta.updateOne(
-      { codigo: b.codigo + '-TAXA', status: 'ATIVO' },
-      { $set: { status: 'CANCELADO' } }
-    );
-
-    res.json({ ok: true, titulosDevolvidos: b.contrapartidas.length, taxaEstornada: t.modifiedCount > 0 });
+      // a taxa do cartao gravada do jeito antigo (boleta <codigo>-TAXA) sai junto
+      const t = await Boleta.updateOne(
+        { codigo: b.codigo + '-TAXA', status: 'ATIVO' },
+        { $set: { status: 'CANCELADO' } },
+        { session }
+      );
+      resposta = { ok: true, titulosDevolvidos: f.modifiedCount, taxaEstornada: t.modifiedCount > 0 };
+    });
+    res.json(resposta);
   } catch (err) {
     console.error('❌ /pagamento/estornar:', err.message);
-    res.status(500).json({ erro: err.message });
+    res.status(err.status || 500).json({ erro: err.message });
+  } finally {
+    session.endSession();
   }
 });
 

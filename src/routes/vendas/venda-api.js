@@ -36,6 +36,12 @@
 //   POST /clientes/:id/conta      { codigo }          liga uma conta existente
 //   POST /clientes/:id/conta-nova { titulo, nome }    cria o subtitulo (proximo numero) e liga
 //   GET  /clientes/:id/ficha · POST /clientes/:id/ficha   ficha do cliente (com a conta)
+// Alterado em: 07/10/2026 - CANCELAR VENDA e relatorio so das EMITIDAS:
+//   GET  /relatorio   so vendas fechadas (F) e canceladas (C), pela data do fechamento
+//   GET  /:id/espelho a venda + as parcelas dela no fluxo (aberta / recebida / cancelada)
+//   POST /:id/cancelar { motivo }  numa TRANSACAO: devolve o estoque, cancela as parcelas
+//        pos 5, cancela as boletas da NF (ou tira o valor do "Vendas balcao" do dia) e marca
+//        a venda C. BLOQUEADO se alguma parcela ja foi recebida: estorne o recebimento antes.
 //
 // API da VENDA — Parte 1: buscar produto e cliente, abrir, alterar e listar
 // vendas ABERTAS (situacao A). Fechar (pagamento, estoque, fluxo, lancamento
@@ -454,14 +460,15 @@ router.get('/relatorio', async (req, res) => {
     const inicio = mes ? new Date(ano, mes - 1, 1) : new Date(ano, 0, 1);
     const fim = mes ? new Date(ano, mes, 1) : new Date(ano + 1, 0, 1);
 
-    const docs = await Venda.find({ lojistaId: loja, data: { $gte: inicio, $lt: fim } })
-      .sort({ data: 1, numero: 1 })
-      .select('numero data situacao documento condicao cliente.nome cliente.codigo itens.quantidade itens.precoUnitario itens.desconto descontoGeral totalLiquido')
+    // so as EMITIDAS (fechadas e as canceladas depois de fechadas), pela data do fechamento
+    const docs = await Venda.find({ lojistaId: loja, situacao: { $in: ['F', 'C'] }, fechadaEm: { $gte: inicio, $lt: fim } })
+      .sort({ fechadaEm: 1, numero: 1 })
+      .select('numero data fechadaEm situacao documento condicao cliente.nome cliente.codigo itens.quantidade itens.precoUnitario itens.desconto descontoGeral totalLiquido pagamentos.forma')
       .lean();
 
     const anos = (await Venda.aggregate([
-      { $match: { lojistaId: loja } },
-      { $group: { _id: { $year: '$data' } } },
+      { $match: { lojistaId: loja, fechadaEm: { $ne: null } } },
+      { $group: { _id: { $year: '$fechadaEm' } } },
     ])).map(a => a._id).filter(Boolean);
     if (!anos.includes(hoje.getFullYear())) anos.push(hoje.getFullYear());
     anos.sort((a, b) => b - a);
@@ -471,7 +478,8 @@ router.get('/relatorio', async (req, res) => {
       const bruto = itens.reduce((s, i) => s + (i.quantidade || 0) * (i.precoUnitario || 0), 0);
       const desconto = itens.reduce((s, i) => s + (i.desconto || 0), 0) + (v.descontoGeral || 0);
       return {
-        _id: v._id, numero: v.numero, data: v.data, situacao: v.situacao,
+        _id: v._id, numero: v.numero, data: v.fechadaEm || v.data, situacao: v.situacao,
+        forma: v.pagamentos?.[0]?.forma || '',
         documento: v.documento, condicao: v.condicao,
         cliente: v.cliente?.nome || '', codigoCliente: v.cliente?.codigo || '',
         itens: itens.length, bruto, desconto,
@@ -707,6 +715,105 @@ router.post('/:id/fechar', async (req, res) => {
     res.json({ ok: true, venda: resposta });
   } catch (err) {
     console.error('[vendas/fechar]', err.message);
+    res.status(err.status || 400).json({ ok: false, erro: err.message });
+  } finally {
+    session.endSession();
+  }
+});
+
+// ---------------------------------------------------------------------------
+// GET /:id/espelho   a venda + as parcelas no fluxo, com a situacao de cada uma
+// ---------------------------------------------------------------------------
+router.get('/:id/espelho', async (req, res) => {
+  try {
+    const loja = lojaDe(req);
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ ok: false, erro: 'id inválido' });
+    const v = await Venda.findOne({ _id: req.params.id, lojistaId: loja }).lean();
+    if (!v) return res.status(404).json({ ok: false, erro: 'venda não encontrada' });
+    const linhas = await col('_fluxo_projetado').find({ lojistaId: loja, lancamentoId: v._id }).sort({ vencimento: 1 }).toArray();
+    const bols = new Map((await col('_boletas').find({ _id: { $in: linhas.map(l => l.boletaId).filter(Boolean) } })
+      .project({ codigo: 1 }).toArray()).map(b => [String(b._id), b.codigo]));
+    res.json({ ok: true, venda: v, parcelas: linhas.map(l => ({
+      parcela: l.parcela, totalParcelas: l.totalParcelas, vencimento: l.vencimento, valor: l.valor,
+      codigoConta: l.codigoConta, nomeConta: l.nomeConta, status: l.status,
+      boleta: l.boletaId ? (bols.get(String(l.boletaId)) || '') : '',
+    })) });
+  } catch (err) {
+    res.status(500).json({ ok: false, erro: err.message });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// POST /:id/cancelar   { motivo }
+// Desfaz o fechamento numa TRANSACAO. Parcela ja recebida BLOQUEIA: o recebimento
+// tem que ser estornado antes, no fluxo (a boleta do recebimento).
+// ---------------------------------------------------------------------------
+router.post('/:id/cancelar', async (req, res) => {
+  const loja = lojaDe(req);
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ ok: false, erro: 'id inválido' });
+  const motivo = String(req.body?.motivo || '').trim();
+  if (motivo.length < 3) return res.status(400).json({ ok: false, erro: 'informe o motivo do cancelamento' });
+  let resposta = null;
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const v = await Venda.findOne({ _id: req.params.id, lojistaId: loja }).session(session);
+      if (!v) throw Object.assign(new Error('venda não encontrada'), { status: 404 });
+      if (v.situacao === 'C') throw Object.assign(new Error('a venda já está cancelada'), { status: 409 });
+      const agora = new Date();
+
+      if (v.situacao === 'F') {
+        // 1) parcela recebida bloqueia
+        const linhas = await col('_fluxo_projetado').find({ lojistaId: loja, lancamentoId: v._id }, { session }).toArray();
+        const recebidas = linhas.filter(l => l.status === 'QUITADO');
+        if (recebidas.length) {
+          const bols = new Map((await col('_boletas').find({ _id: { $in: recebidas.map(l => l.boletaId).filter(Boolean) } }, { session })
+            .project({ codigo: 1 }).toArray()).map(b => [String(b._id), b.codigo]));
+          throw Object.assign(new Error('não dá para cancelar: '
+            + recebidas.map(l => 'a parcela ' + l.parcela + '/' + l.totalParcelas + ' já foi recebida (boleta '
+              + (bols.get(String(l.boletaId)) || '?') + ')').join('; ')
+            + '. Estorne o recebimento no fluxo antes.'), { status: 409 });
+        }
+
+        // 2) parcelas em aberto: canceladas (somem do fluxo, ficam na memoria)
+        await col('_fluxo_projetado').updateMany(
+          { lojistaId: loja, lancamentoId: v._id, status: 'ATIVO' },
+          { $set: { status: 'CANCELADO', canceladoEm: agora } }, { session });
+
+        // 3) estoque volta
+        for (const i of v.itens) {
+          await col('arquivo_docs').updateOne({ loja_id: loja, codigo: i.codigo },
+            { $inc: { qte: i.quantidade }, $set: { atualizadoEm: agora } }, { session });
+        }
+
+        // 4) contabil
+        if (v.documento === 'NFE') {
+          const ids = [v.contabil?.boletaId, ...(v.pagamentos || []).map(p => p.boletaId)].filter(Boolean);
+          if (ids.length) await Boleta.updateMany({ _id: { $in: ids }, lojistaId: loja, status: 'ATIVO' },
+            { $set: { status: 'CANCELADO' } }, { session });
+        } else {
+          // cupom: tira o valor do lancamento do dia "Vendas balcao"; zerou, cancela
+          for (const p of (v.pagamentos || [])) {
+            if (!p.boletaId) continue;
+            const b = await Boleta.findOne({ _id: p.boletaId, lojistaId: loja, status: 'ATIVO' }).session(session);
+            if (!b) continue;
+            const novo = Math.round(b.valorTotal * 100) - (p.valor || 0);
+            if (novo <= 0) b.status = 'CANCELADO';
+            else { b.valorTotal = novo / 100; if (b.contrapartidas[0]) b.contrapartidas[0].valor = novo / 100; }
+            await b.save({ session });
+          }
+        }
+      }
+
+      v.situacao = 'C';
+      v.canceladaEm = agora;
+      v.motivoCancelamento = motivo;
+      await v.save({ session });
+      resposta = v;
+    });
+    res.json({ ok: true, venda: resposta });
+  } catch (err) {
+    console.error('[vendas/cancelar]', err.message);
     res.status(err.status || 400).json({ ok: false, erro: err.message });
   } finally {
     session.endSession();

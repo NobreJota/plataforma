@@ -4,6 +4,8 @@
   Alterado em: 07/10/2026 - so as vendas EMITIDAS (fechadas; canceladas riscadas), pela data do
                fechamento. Clique na linha abre o ESPELHO da venda num modal, com as parcelas
                no fluxo e o botao "Cancelar venda" (pede o motivo)
+  Alterado em: 08/10/2026 - espelho so como modal (saiu "Abrir na tela da venda"); secao COBRANCA
+               diz como cada parte foi cobrada (onde entrou, ou as parcelas no fluxo)
 
   RELATORIO DE VENDAS, mes a mes (como o Fluxo de Caixa): botoes Jan..Dez,
   "todos" e o ano. Uma linha por venda; duplo clique abre a venda.
@@ -93,6 +95,12 @@
     .esp-botoes .perigo { background:var(--vermelho); border-color:var(--vermelho); color:#fff; }
     .esp-botoes button:disabled { opacity:.5; cursor:default; }
     .esp-msg { font-size:13px; color:var(--vermelho); margin-top:8px; min-height:18px; }
+    .cob { border:1px solid var(--borda); border-radius:8px; margin-bottom:8px; }
+    .cob-cab { display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:8px 12px;
+               background:#f9fafb; border-radius:8px 8px 0 0; }
+    .cob-cab b { font-variant-numeric:tabular-nums; }
+    .cob-txt { padding:8px 12px; font-size:13px; color:#374151; }
+    .cob table { margin:0; }
     .esp-cancelada { padding:10px 12px; border-radius:8px; background:#f3f4f6; color:#374151; margin-top:12px; }
   </style>
 </head>
@@ -146,7 +154,6 @@
       </div>
       <div class="esp-msg" id="esp-msg"></div>
       <div class="esp-botoes">
-        <a id="esp-abrir" href="#">Abrir na tela da venda</a>
         <button type="button" id="esp-cancelar" class="perigo">Cancelar venda</button>
         <button type="button" id="esp-fechar">Fechar</button>
       </div>

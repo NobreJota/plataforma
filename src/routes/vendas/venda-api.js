@@ -41,6 +41,8 @@
 //   tem que dar o total. Cada parte vai para o seu destino (cupom: soma no "Vendas balcao" do
 //   dia de cada conta; NF: um recebimento por parte). Venda A VISTA aceita tambem cartao de
 //   CREDITO parcelado (preco a vista). O formato antigo { forma, ... } continua valendo.
+// Alterado em: 08/10/2026 - GET /:id/espelho devolve tambem as boletas (codigo, data) e os nomes
+//   das contas de destino, para o espelho dizer COMO cada parte foi cobrada
 // Alterado em: 07/10/2026 - CANCELAR VENDA e relatorio so das EMITIDAS:
 //   GET  /relatorio   so vendas fechadas (F) e canceladas (C), pela data do fechamento
 //   GET  /:id/espelho a venda + as parcelas dela no fluxo (aberta / recebida / cancelada)
@@ -761,9 +763,18 @@ router.get('/:id/espelho', async (req, res) => {
     const v = await Venda.findOne({ _id: req.params.id, lojistaId: loja }).lean();
     if (!v) return res.status(404).json({ ok: false, erro: 'venda não encontrada' });
     const linhas = await col('_fluxo_projetado').find({ lojistaId: loja, lancamentoId: v._id }).sort({ vencimento: 1 }).toArray();
-    const bols = new Map((await col('_boletas').find({ _id: { $in: linhas.map(l => l.boletaId).filter(Boolean) } })
-      .project({ codigo: 1 }).toArray()).map(b => [String(b._id), b.codigo]));
-    res.json({ ok: true, venda: v, parcelas: linhas.map(l => ({
+    // boletas: as dos recebimentos das parcelas e as da propria venda (para dizer onde entrou)
+    const idsBol = [...linhas.map(l => l.boletaId), v.contabil?.boletaId, ...(v.pagamentos || []).map(p => p.boletaId)].filter(Boolean);
+    const bolDocs = await col('_boletas').find({ _id: { $in: idsBol } }).project({ codigo: 1, data: 1, status: 1 }).toArray();
+    const bols = new Map(bolDocs.map(b => [String(b._id), b.codigo]));
+    // nomes das contas de destino (caixa, banco, cartao)
+    const cods = [...new Set((v.pagamentos || []).map(p => p.contaDestino).filter(Boolean))];
+    const contas = Object.fromEntries((await col('_contasubtitulos').find({ lojistaId: loja, codigo: { $in: cods } })
+      .project({ codigo: 1, nome: 1 }).toArray()).map(c => [c.codigo, c.nome]));
+    res.json({ ok: true, venda: v, contas,
+      boletas: Object.fromEntries(bolDocs.map(b => [String(b._id), { codigo: b.codigo, data: b.data, status: b.status }])),
+      parcelas: linhas.map(l => ({
+      _id: l._id,
       parcela: l.parcela, totalParcelas: l.totalParcelas, vencimento: l.vencimento, valor: l.valor,
       codigoConta: l.codigoConta, nomeConta: l.nomeConta, status: l.status,
       boleta: l.boletaId ? (bols.get(String(l.boletaId)) || '') : '',

@@ -1,4 +1,7 @@
-{{!-- views/contab/contabil/razao.handlebars --}}
+{{!-- Destino: C:\plataformaRota\views\contab\contabil\razao.handlebars
+     Alterado em: 08/10/2026 - menu: "Relatórios" (/contabil/relatorios, 404) vira "Balancete"
+                  (/contab/balancete); o icone de Venda vai para /vendas/clientes (a rota
+                  /aux/clientes foi removida em 02/10) --}}
 
 <div class="contab-app">
 
@@ -13,7 +16,7 @@
     <a class="cb-side-item" href="/aux/fornecedores" title="Compra">
       <i class="ti ti-shopping-cart" aria-hidden="true"></i>
     </a>
-    <a class="cb-side-item" href="/aux/clientes" title="Venda">
+    <a class="cb-side-item" href="/vendas/clientes" title="Venda">
       <i class="ti ti-tag" aria-hidden="true"></i>
     </a>
     <a class="cb-side-item" href="/site/configuracoes" title="Site">
@@ -27,7 +30,7 @@
     <a class="cb-sub-item" href="/contab/plano">Plano de contas</a>
     <a class="cb-sub-item active" href="/contab/razao">Razão</a>
     <a class="cb-sub-item" href="/contabil/pessoal">Pessoal</a>
-    <a class="cb-sub-item" href="/contabil/relatorios">Relatórios</a>
+    <a class="cb-sub-item" href="/contab/balancete">Balancete</a>
   </aside>
 
   {{!-- ====== CONTEÚDO ====== --}}

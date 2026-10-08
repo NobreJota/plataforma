@@ -1,0 +1,103 @@
+{{!--
+  Destino: C:\plataformaRota\views\contab\contabil\balancete.handlebars
+  Criado em: 08/10/2026
+
+  BALANCETE: por periodo, cada conta com saldo anterior, debitos, creditos e saldo
+  atual, somando por titulo, subgrupo e grupo. Nivel de detalhe escolhido na tela.
+  Sinal da casa: debito +, credito − (Ativo e Despesa positivos; Passivo e Receita
+  negativos). Rodape confere: total de debitos = total de creditos.
+
+  JS: /js/contab/contabil/balancete.js    API: /financeiro/api/razao/balancete
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Balancete</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root { --azul:#1d4ed8; --azul-claro:#eff6ff; --borda:#e5e7eb; --texto:#111827; --cinza:#6b7280;
+            --verde:#059669; --vermelho:#dc2626; }
+    body { margin:0 auto; max-width:1400px; padding:20px 32px 40px; color:var(--texto); background:#fff;
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
+    .topo { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; }
+    .topo h1 { margin:0; font-size:21px; }
+    .topo a { color:var(--azul); font-size:13px; text-decoration:none; margin-left:14px; }
+    .filtros { display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; padding:12px 14px; border:1px solid var(--borda);
+               border-radius:10px; margin-bottom:12px; background:#f9fafb; }
+    .filtros label { display:flex; flex-direction:column; gap:3px; font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; }
+    .filtros input, .filtros select { height:34px; border:1px solid #d1d5db; border-radius:8px; padding:0 8px; font-size:14px; }
+    .filtros .chk { flex-direction:row; align-items:center; gap:6px; text-transform:none; font-size:13px; font-weight:600; height:34px; }
+    .filtros button { height:34px; border:0; border-radius:8px; padding:0 16px; font-weight:700; cursor:pointer;
+                      background:var(--azul); color:#fff; }
+    .filtros button.sec { background:#fff; color:#374151; border:1px solid #d1d5db; }
+    .grade { border:1px solid var(--borda); border-radius:10px; overflow:auto; }
+    table { width:100%; border-collapse:collapse; }
+    th { background:var(--azul); color:#fff; text-align:left; font-size:12px; padding:8px 10px; white-space:nowrap; position:sticky; top:0; }
+    td { padding:5px 10px; border-bottom:1px solid #f3f4f6; }
+    .n { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .cod { font-family: ui-monospace, Consolas, monospace; font-size:13px; white-space:nowrap; }
+    tr.g1 td { background:#dbeafe; font-weight:800; font-size:15px; }
+    tr.g2 td { background:#eff6ff; font-weight:700; }
+    tr.g3 td { background:#f8fafc; font-weight:600; }
+    tr.g4 td { font-weight:400; }
+    tr.g2 td.nome { padding-left:22px; } tr.g3 td.nome { padding-left:40px; } tr.g4 td.nome { padding-left:58px; }
+    .neg { color:var(--vermelho); }
+    .fora { color:var(--vermelho); font-style:italic; }
+    .rodape { display:flex; justify-content:flex-end; gap:28px; margin-top:12px; padding:12px 16px; background:#f8fafc; border-radius:10px; }
+    .rodape div { text-align:right; }
+    .rodape span { display:block; font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; }
+    .rodape b { font-size:16px; font-variant-numeric:tabular-nums; }
+    .ok { color:var(--verde); } .erro { color:var(--vermelho); }
+    .vazio { padding:24px; text-align:center; color:var(--cinza); }
+    @media print {
+      body { padding:0; max-width:none; font-size:11px; }
+      .filtros, .topo a { display:none; }
+      th { position:static; background:#e5e7eb !important; color:#111 !important; }
+      tr.g1 td, tr.g2 td, tr.g3 td { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topo">
+    <h1>Balancete <span id="titulo-periodo" style="font-size:14px; font-weight:500; color:var(--cinza)"></span></h1>
+    <div><a href="/contab/razao">razão</a><a href="/contab/plano">plano de contas</a></div>
+  </div>
+
+  <div class="filtros">
+    <label>De <input type="date" id="de"></label>
+    <label>Até <input type="date" id="ate"></label>
+    <label>Detalhe
+      <select id="nivel">
+        <option value="1">grupo</option>
+        <option value="2">subgrupo</option>
+        <option value="3">título</option>
+        <option value="4" selected>subtítulo (conta)</option>
+      </select>
+    </label>
+    <label class="chk"><input type="checkbox" id="so-mov"> só contas com movimento no período</label>
+    <button type="button" id="aplicar">Aplicar</button>
+    <button type="button" class="sec" id="imprimir">Imprimir</button>
+  </div>
+
+  <div class="grade">
+    <table>
+      <thead><tr><th>Conta</th><th>Nome</th><th class="n">Saldo anterior</th><th class="n">Débitos</th>
+                 <th class="n">Créditos</th><th class="n">Saldo atual</th></tr></thead>
+      <tbody id="linhas"><tr><td colspan="6" class="vazio">Escolha o período e clique em Aplicar.</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="rodape">
+    <div><span>Total de débitos</span><b id="t-deb">0,00</b></div>
+    <div><span>Total de créditos</span><b id="t-cred">0,00</b></div>
+    <div><span>Débitos − créditos</span><b id="t-dif">0,00</b></div>
+    <div><span>Soma dos saldos atuais</span><b id="t-saldo">0,00</b></div>
+  </div>
+  <div id="aviso" style="margin-top:8px; font-size:13px; color:var(--cinza)"></div>
+
+  <script src="/js/contab/contabil/balancete.js"></script>
+</body>
+</html>

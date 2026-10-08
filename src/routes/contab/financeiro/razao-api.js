@@ -3,6 +3,11 @@
 //   vai para o lado oposto, em valor positivo. Ex.: recebimento de cartao com taxa —
 //   banco a debito pelo liquido, cartao a credito pelo total e a taxa (valor -12,00)
 //   a DEBITO na despesa. A boleta continua fechando: banco = soma das contrapartidas.
+// Alterado em: 08/10/2026 - GET /balancete?de=&ate= : saldo anterior, debitos, creditos e
+//   saldo atual de cada subtitulo no periodo (mesma leitura do razao: SALDO_TRANSFERIDO
+//   pelo sinal, banco e contrapartidas pelo tipo, contrapartida negativa no lado oposto).
+//   Filtra a empresa (lojistaId; boletas antigas sem lojistaId entram junto).
+//   O SALDO TRANSFERIDO entra sempre como saldo anterior; assim, no periodo, debitos = creditos.
 //
 // RAZÃO contábil: monta os lançamentos de uma conta a partir das BOLETAS.
 // Cada boleta gera lançamentos:
@@ -11,6 +16,7 @@
 // O razão de uma conta = todos os lançamentos onde ela aparece.
 
 const express = require('express');
+const mongoose = require('mongoose');
 const Boleta = require('../../../models/contab/financeiro/boleta');
 
 const router = express.Router();
@@ -136,6 +142,75 @@ router.get('/lancamentos', async (req, res) => {
     res.json({ conta, lancamentos, totalDebito, totalCredito, saldo });
   } catch (err) {
     console.error('❌ /razao/lancamentos:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* GET .../razao/balancete?de=YYYY-MM-DD&ate=YYYY-MM-DD
+   Uma linha por subtitulo com movimento ou saldo: anterior (antes de "de"), debitos e
+   creditos no periodo, atual. Valores em REAIS; saldo = debito - credito (debito +). */
+router.get('/balancete', async (req, res) => {
+  try {
+    const { de, ate } = req.query;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(de || '') || !/^\d{4}-\d{2}-\d{2}$/.test(ate || '')) {
+      return res.status(400).json({ erro: 'Informe o período (de e até).' });
+    }
+    const ini = new Date(de + 'T00:00:00');
+    const fim = new Date(ate + 'T23:59:59.999');
+    const loja = req.lojistaId ? new mongoose.Types.ObjectId(String(req.lojistaId)) : null;
+
+    const filtro = { status: 'ATIVO', data: { $lte: fim } };
+    if (loja) filtro.$or = [{ lojistaId: loja }, { lojistaId: null }, { lojistaId: { $exists: false } }];
+    const boletas = await Boleta.find(filtro)
+      .select('tipo data valorTotal bancoCodigo contrapartidas.codigoConta contrapartidas.valor').lean();
+
+    const cent = v => Math.round((Number(v) || 0) * 100);
+    const contas = new Map();                    // codigo -> { ant, deb, cred } em centavos
+    const lanca = (cod, d, c, antes) => {
+      if (!cod) return;
+      if (!contas.has(cod)) contas.set(cod, { ant: 0, deb: 0, cred: 0 });
+      const x = contas.get(cod);
+      if (antes) x.ant += d - c; else { x.deb += d; x.cred += c; }
+    };
+    for (const b of boletas) {
+      const antes = new Date(b.data) < ini;
+      if (b.tipo === 'SALDO_TRANSFERIDO') {
+        // saldo de abertura: entra sempre no SALDO ANTERIOR (nao e movimento do periodo)
+        const v = cent(b.valorTotal);
+        if (new Date(b.data) <= fim) lanca(b.bancoCodigo, v > 0 ? v : 0, v < 0 ? -v : 0, true);
+        continue;
+      }
+      const ehPag = b.tipo === 'PAGAMENTO';
+      const V = cent(b.valorTotal);
+      lanca(b.bancoCodigo, ehPag ? 0 : V, ehPag ? V : 0, antes);
+      for (const c of (b.contrapartidas || [])) {
+        const v = cent(c.valor);
+        let d = ehPag ? v : 0, cr = ehPag ? 0 : v;
+        if (v < 0) { const t = d; d = -cr; cr = -t; }     // invertida: lado oposto
+        lanca(c.codigoConta, d, cr, antes);
+      }
+    }
+
+    // nomes: subtitulos, titulos e subgrupos da empresa
+    const col = n => mongoose.connection.collection(n);
+    const doLoja = loja ? { $or: [{ lojistaId: loja }, { lojistaId: { $exists: false } }, { lojistaId: null }] } : {};
+    const nomeSub = new Map((await col('_contasubtitulos').find(doLoja).project({ codigo: 1, nome: 1 }).toArray())
+      .map(c => [c.codigo, c.nome]));
+    const titulos = Object.fromEntries((await col('_contatitulos').find(doLoja).project({ codigo: 1, nome: 1 }).toArray())
+      .map(t => [t.codigo, t.nome]));
+    const subgrupos = Object.fromEntries((await col('subgrupos').find(doLoja).toArray())
+      .filter(g => g.codigo).map(g => [g.codigo, g.nome || g.descricao || '']));
+
+    const reais = c => c / 100;
+    const lista = [...contas].map(([codigo, x]) => ({
+      codigo, nome: nomeSub.get(codigo) || '(fora do plano)',
+      anterior: reais(x.ant), debito: reais(x.deb), credito: reais(x.cred), atual: reais(x.ant + x.deb - x.cred),
+    })).filter(l => l.anterior || l.debito || l.credito)
+      .sort((a, b) => a.codigo.localeCompare(b.codigo, 'pt-BR', { numeric: true }));
+
+    res.json({ de, ate, contas: lista, titulos, subgrupos, boletas: boletas.length });
+  } catch (err) {
+    console.error('❌ /razao/balancete:', err.message);
     res.status(500).json({ erro: err.message });
   }
 });

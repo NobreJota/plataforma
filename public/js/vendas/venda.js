@@ -759,6 +759,12 @@
   $('fe-cancelar').addEventListener('click', fecharModalFechamento);
   $('fe-fundo').addEventListener('click', fecharModalFechamento);
 
+  function mostrarCabecalho(v) {
+    $('titulo').textContent = 'Venda nº ' + v.numero;
+    $('situacao').textContent = { A: 'aberta', F: 'fechada', C: 'cancelada' }[v.situacao] || '';
+    document.title = 'Venda ' + v.numero;
+  }
+
   // ---- modal de sucesso ---------------------------------------------------------------
   let gravada = null;     // a venda que acabou de gravar (para imprimir)
 

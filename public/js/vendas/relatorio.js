@@ -13,6 +13,9 @@
 //   (aberta / recebida / cancelada). "Cancelar venda" pede o motivo e chama POST /:id/cancelar;
 //   se alguma parcela ja foi recebida, o servidor recusa e diz qual boleta estornar.
 // Alterado em 07/10/2026: venda paga em mais de uma forma — o espelho lista todas as partes.
+// Alterado em 08/10/2026: espelho so como modal (sem "Abrir na tela da venda"). Secao COBRANCA:
+//   para cada parte, como foi cobrada — dinheiro/PIX: "recebido, entrou em <conta>" com a
+//   boleta; cartao/titulo: a conta e as parcelas no fluxo com a situacao de cada uma.
 // =============================================================================
 
 'use strict';
@@ -149,25 +152,23 @@
       if (r.status === 401) { window.location.href = '/usuariocontab/login'; return; }
       const d = await r.json();
       if (!d.ok) throw new Error(d.erro || 'falha na API');
-      desenharEspelho(d.venda, d.parcelas || []);
+      desenharEspelho(d.venda, d.parcelas || [], d.boletas || {}, d.contas || {});
     } catch (e) { $('esp-conteudo').textContent = 'Erro: ' + e.message; }
   }
 
-  function desenharEspelho(v, parcelas) {
+  function desenharEspelho(v, parcelas, boletas, contas) {
     const c = v.cliente || {};
     const pags = v.pagamentos || [];
     const p = pags[0] || {};
-    const partes = pags.map(x => escapar(FORMA[x.forma] || x.forma) + (x.parcelas && x.parcelas.length > 1 ? ' ' + x.parcelas.length + 'x' : '')
-      + ' <b>' + brl(x.valor) + '</b> <span class="cinza">' + escapar(x.contaDestino || '') + '</span>').join('<br>');
+    const resumo = pags.map(x => escapar(FORMA[x.forma] || x.forma) + ' <b>' + brl(x.valor) + '</b>').join(' + ');
     $('esp-titulo').textContent = 'Venda nº ' + v.numero + ' · ' + (v.documento === 'NFE' ? 'Nota fiscal' : 'Cupom') + ' · '
       + (SITUACAO[v.situacao] || v.situacao);
-    $('esp-abrir').href = '/vendas/venda/' + v._id;
     const campo = (r, val, cl) => '<div' + (cl ? ' class="' + cl + '"' : '') + '><span>' + r + '</span>' + (val || '—') + '</div>';
     const cab = '<div class="esp-grade">'
       + campo('Cliente', c.nome ? escapar(c.nome) + ' <span class="cinza">' + escapar(c.codigo) + '</span>' : 'balcão', 'l2')
       + campo('Fechada em', v.fechadaEm ? dia(v.fechadaEm) + ' ' + hora(v.fechadaEm) : '')
       + campo('Condição', v.condicao === 'PRAZO' ? 'a prazo' : 'à vista')
-      + campo('Pagamento' + (pags.length > 1 ? ' (' + pags.length + ' partes)' : ''), partes, 'l2')
+      + campo('Pagamento' + (pags.length > 1 ? ' (' + pags.length + ' partes)' : ''), resumo, 'l2')
       + campo('Conta do cliente', escapar(v.contabil?.contaCliente || ''))
       + campo('Receita', escapar(v.contabil?.contaReceita || ''))
       + '</div>';
@@ -178,6 +179,34 @@
         + '</td><td class="n">' + brl(i.quantidade * i.precoUnitario - (i.desconto || 0)) + '</td></tr>').join('')
       + '</tbody><tfoot><tr><td colspan="5"><b>Líquido</b>' + (v.descontoGeral ? ' (desc. geral ' + brl(v.descontoGeral) + ')' : '')
       + '</td><td class="n"><b>' + brl(v.totalLiquido) + '</b></td></tr></tfoot></table>';
+    // COBRANCA: como cada parte foi cobrada
+    const porId = new Map(parcelas.map(x => [String(x._id), x]));
+    const vreais = x => Number(x || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const cobranca = pags.map(x => {
+      const conta = escapar(x.contaDestino || '') + (contas[x.contaDestino] ? ' ' + escapar(contas[x.contaDestino]) : '');
+      const bol = x.boletaId && boletas[String(x.boletaId)];
+      let corpo;
+      if (x.parcelas && x.parcelas.length) {
+        const onde = x.forma === 'TITULO' ? 'título em cobrança no ' + conta + ' — a receber do cliente' : 'a receber do cartão ' + conta;
+        corpo = '<div class="cob-txt">' + onde + ':</div><table><thead><tr><th>Parcela</th><th>Vencimento</th>'
+          + '<th class="n">Valor</th><th>Situação</th></tr></thead><tbody>'
+          + x.parcelas.map(pp => {
+              const f = porId.get(String(pp.fluxoId)) || {};
+              const st = f.status || 'ATIVO';
+              return '<tr><td>' + pp.numero + '/' + x.parcelas.length + '</td><td>' + dia(pp.vencimento) + '</td><td class="n">'
+                + brl(pp.valor) + '</td><td><span class="st ' + escapar(st) + '">' + (ST[st] || escapar(st)) + '</span>'
+                + (f.boleta ? ' <span class="cinza">' + escapar(f.boleta) + '</span>' : '') + '</td></tr>';
+            }).join('')
+          + '</tbody></table>';
+      } else {
+        corpo = '<div class="cob-txt">Recebido no ato — entrou em <b>' + conta + '</b>'
+          + (bol ? ' · lançamento ' + escapar(bol.codigo) + (v.documento === 'NFE' ? '' : ' (Vendas balcão do dia)') : '')
+          + '.</div>';
+      }
+      return '<div class="cob"><div class="cob-cab"><span>' + escapar(FORMA[x.forma] || x.forma)
+        + (x.parcelas && x.parcelas.length > 1 ? ' · ' + x.parcelas.length + 'x' : '') + '</span><b>R$ ' + brl(x.valor) + '</b></div>'
+        + corpo + '</div>';
+    }).join('') || '<div class="cinza">Sem pagamento registrado.</div>';
     const parc = parcelas.length
       ? '<table><thead><tr><th>Parcela</th><th>Vencimento</th><th>Conta</th><th class="n">Valor</th><th>Situação</th></tr></thead><tbody>'
         + parcelas.map(x => '<tr><td>' + x.parcela + '/' + x.totalParcelas + '</td><td>' + dia(x.vencimento) + '</td><td>'
@@ -190,7 +219,7 @@
     const cancelada = v.situacao === 'C'
       ? '<div class="esp-cancelada">Cancelada em ' + dia(v.canceladaEm) + ' ' + hora(v.canceladaEm)
         + ' — motivo: ' + escapar(v.motivoCancelamento || '') + '</div>' : '';
-    $('esp-conteudo').innerHTML = cab + '<h4>Itens</h4>' + itens + '<h4>Parcelas no fluxo</h4>' + parc + cancelada;
+    $('esp-conteudo').innerHTML = cab + '<h4>Itens</h4>' + itens + '<h4>Cobrança</h4>' + cobranca + cancelada;
     const podeCancelar = v.situacao === 'F';
     $('esp-cancelar').hidden = !podeCancelar;
     const recebida = parcelas.some(x => x.status === 'QUITADO');

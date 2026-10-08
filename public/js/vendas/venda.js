@@ -39,6 +39,8 @@
 //   - 05/10/2026: no modal do plano, "editar ficha" (ou Enter/duplo clique na conta) abre a
 //     FICHA do cliente com a conta marcada, para conferir e gravar; "incluir plano" mostra
 //     o "criar conta nova" (escondido ate la); os dois botoes ficam em cada linha
+//   - 07/10/2026: fechamento com MAIS DE UMA FORMA de pagamento (lista de partes, "Falta
+//     receber", troco no dinheiro) e cartao de CREDITO parcelado tambem na venda a vista
 //   - Produto: codigo, descricao ou referencia; Enter adiciona o primeiro achado
 //   - Quantidade inteira; desconto por item e geral (moeda); totais sozinhos
 // O preco que vale e o do servidor: a tela so mostra.
@@ -574,17 +576,21 @@
   $('gravar').addEventListener('click', gravar);
 
   // ---- fechamento (Parte 2) -------------------------------------------------------------
+  // 07/10/2026: a venda pode ser paga em MAIS DE UMA FORMA. O editor monta uma parte por vez
+  // (forma, banco/cartao, parcelas, valor) e Enter inclui na lista; "Falta receber" mostra o
+  // que sobra. Dinheiro acima do que falta vira troco. Confirmar so com falta = 0.
   const NOMES = { DINHEIRO: 'Dinheiro', PIX: 'PIX / transferência', DEBITO: 'Cartão de débito',
                   CREDITO: 'Cartão de crédito', TITULO: 'Título em banco' };
   let formas = null;            // caixa, bancos e cartoes (GET /formas)
   let aFechar = null;           // a venda salva que vai ser fechada
   let formaEscolhida = '';
-  let dinheiroOk = false;       // Enter no "Valor recebido" ja confirmou
+  let pagos = [];               // as partes ja incluidas
 
   function somenteConsulta(sit) {
     $('gravar').disabled = true; $('fechar').disabled = true;
     recado('Venda ' + sit + ': só consulta.', 'ok');
   }
+  const falta = () => (aFechar ? aFechar.totalLiquido : 0) - pagos.reduce((t, p) => t + p.valor, 0);
 
   async function abrirFechamento() {
     $('fechar').disabled = true;
@@ -593,13 +599,14 @@
       if (!v) return;
       if (!formas) formas = await api('GET', '/formas');
       aFechar = v;
+      pagos = [];
       $('fe-titulo').innerHTML = 'Fechar venda nº ' + v.numero + ' <small>arraste por aqui</small>';
       $('fe-det').textContent = (v.documento === 'NFE' ? 'Nota fiscal' : 'Cupom (balcão)')
         + (v.cliente && v.cliente.nome ? ' · ' + v.cliente.nome : '')
         + ' · ' + (v.condicao === 'PRAZO' ? 'a prazo' : 'à vista') + ' · ' + v.itens.length + ' item(ns)';
       $('fe-liq').textContent = 'R$ ' + brl(v.totalLiquido);
 
-      const lista = v.condicao === 'PRAZO' ? ['CREDITO', 'TITULO'] : ['DINHEIRO', 'PIX', 'DEBITO'];
+      const lista = v.condicao === 'PRAZO' ? ['CREDITO', 'TITULO'] : ['DINHEIRO', 'PIX', 'DEBITO', 'CREDITO'];
       const podeTitulo = v.documento === 'NFE' && v.cliente && v.cliente.tipo === 'PJ';
       $('fe-aviso').hidden = !(v.condicao === 'PRAZO' && !podeTitulo);
       $('fe-formas').innerHTML = lista.map(f => {
@@ -612,12 +619,13 @@
       $('fe-cartao').innerHTML = formas.cartoes.map(c => '<option value="' + escapar(c.codigo) + '">' + escapar(c.nome) + ' · ' + escapar(c.codigo) + '</option>').join('')
         || '<option value="">nenhum cartão no plano (1.01.005)</option>';
       $('fe-parcelas').innerHTML = Array.from({ length: 10 }, (_, i) => '<option value="' + (i + 1) + '">' + (i + 1) + 'x</option>').join('');
+      $('fe-msg').textContent = ''; $('fe-msg').className = 'fe-msg';
+      desenharPagos();
       escolherForma(lista[0]);
-      $('fe-msg').textContent = '';
       const cx = $('fe-caixa');
-      cx.style.left = '50%'; cx.style.top = '16vh'; cx.style.transform = 'translateX(-50%)';
+      cx.style.left = '50%'; cx.style.top = '10vh'; cx.style.transform = 'translateX(-50%)';
       $('fe-fundo').hidden = false; cx.hidden = false;
-      if (formaEscolhida === 'DINHEIRO') $('fe-recebido').focus(); else $('fe-confirmar').focus();
+      $('fe-recebido').focus(); $('fe-recebido').select();
     } catch (e) {
       recado(e.message, 'erro');
     } finally {
@@ -635,99 +643,121 @@
     $('fe-l-banco').hidden = f !== 'PIX';
     $('fe-l-cartao').hidden = !(f === 'DEBITO' || f === 'CREDITO');
     $('fe-l-parc').hidden = !(f === 'CREDITO' || f === 'TITULO');
-    $('fe-l-receb').hidden = f !== 'DINHEIRO';
     if (!(f === 'CREDITO' || f === 'TITULO')) $('fe-parcelas').value = '1';
-    dinheiroOk = false;
-    $('fe-recebido').value = '';
+    $('fe-rot-valor').textContent = f === 'DINHEIRO' ? 'Valor recebido' : 'Valor';
+    $('fe-recebido').value = brl(Math.max(0, falta()));
     $('fe-msg').textContent = ''; $('fe-msg').className = 'fe-msg';
-    $('fe-confirmar').disabled = f === 'DINHEIRO';
     previa();
-    if (f === 'DINHEIRO') setTimeout(() => $('fe-recebido').focus(), 0);
   }
 
-  // dinheiro: digita o valor recebido, Enter confirma (troco se for maior)
-  function confirmarDinheiro() {
-    const total = aFechar ? aFechar.totalLiquido : 0;
-    const recebido = paraCentavos($('fe-recebido').value);
-    const msg = $('fe-msg');
-    if (!recebido) { msg.className = 'fe-msg'; msg.textContent = 'Digite o valor recebido.'; return; }
-    if (recebido < total) {
-      msg.className = 'fe-msg';
-      msg.textContent = 'Valor recebido menor que o total (faltam R$ ' + brl(total - recebido) + ').';
-      return;
-    }
-    dinheiroOk = true;
-    msg.className = 'fe-msg ok';
-    msg.textContent = 'Confirma o valor de R$ ' + brl(recebido) + '?'
-      + (recebido > total ? '  Troco: R$ ' + brl(recebido - total) : '');
-    $('fe-confirmar').disabled = false;
-    $('fe-confirmar').focus();
-  }
-
-  // as parcelas como o servidor vai gravar: debito no dia seguinte; credito/titulo de 30 em 30
+  // as parcelas da parte em edicao, como o servidor vai gravar
   function previa() {
-    const f = formaEscolhida, total = aFechar ? aFechar.totalLiquido : 0;
-    const destino = f === 'DINHEIRO' ? 'entra no caixa' : f === 'PIX' ? 'entra no banco escolhido' : '';
-    const cobranca = f === 'TITULO' ? '<div>Cobrança no <b>Banestes/Armação</b>.</div>' : '';
-    if (!(f === 'DEBITO' || f === 'CREDITO' || f === 'TITULO')) { $('fe-previa').textContent = destino; return; }
+    const f = formaEscolhida;
+    const valor = Math.min(paraCentavos($('fe-recebido').value) || 0, Math.max(0, falta()));
+    if (f === 'DINHEIRO') { $('fe-previa').textContent = 'entra no caixa'; return; }
+    if (f === 'PIX') { $('fe-previa').textContent = 'entra no banco escolhido'; return; }
     const n = f === 'DEBITO' ? 1 : Number($('fe-parcelas').value) || 1;
-    const base = Math.floor(total / n);
+    const base = Math.floor(valor / n);
     const hoje = new Date(); hoje.setHours(12, 0, 0, 0);
     let html = '<div>A receber no fluxo (pos 5)' + (f === 'TITULO' ? ', na conta do cliente' : ', na conta do cartão') + ':</div><table>';
     for (let i = 0; i < n; i++) {
       const venc = new Date(hoje.getTime() + (f === 'DEBITO' ? 1 : (i + 1) * 30) * 86400000);
-      const valor = base + (i === 0 ? total - base * n : 0);
-      html += '<tr><td>' + (i + 1) + '/' + n + '</td><td>' + venc.toLocaleDateString('pt-BR') + '</td><td>R$ ' + brl(valor) + '</td></tr>';
+      html += '<tr><td>' + (i + 1) + '/' + n + '</td><td>' + venc.toLocaleDateString('pt-BR') + '</td><td>R$ '
+        + brl(base + (i === 0 ? valor - base * n : 0)) + '</td></tr>';
     }
-    $('fe-previa').innerHTML = html + '</table>' + cobranca;
+    $('fe-previa').innerHTML = html + '</table>' + (f === 'TITULO' ? '<div>Cobrança no <b>Banestes/Armação</b>.</div>' : '');
+  }
+
+  // inclui a parte em edicao na lista
+  function adicionarPagamento() {
+    const f = formaEscolhida, resta = falta();
+    const msg = $('fe-msg');
+    const digitado = paraCentavos($('fe-recebido').value);
+    msg.className = 'fe-msg';
+    if (resta <= 0) { msg.textContent = 'Já está tudo pago.'; return false; }
+    if (!digitado) { msg.textContent = 'Digite o valor.'; $('fe-recebido').focus(); return false; }
+    if (digitado > resta && f !== 'DINHEIRO') {
+      msg.textContent = 'O valor passa do que falta (R$ ' + brl(resta) + '). Só no dinheiro sobra troco.'; return false;
+    }
+    const p = { forma: f, valor: Math.min(digitado, resta) };
+    if (f === 'DINHEIRO' && digitado > resta) { p.recebido = digitado; p.troco = digitado - resta; }
+    if (f === 'PIX') {
+      if (!$('fe-banco').value) { msg.textContent = 'Escolha o banco.'; return false; }
+      p.contaBancaria = $('fe-banco').value; p.destino = $('fe-banco').selectedOptions[0].textContent;
+    }
+    if (f === 'DEBITO' || f === 'CREDITO') {
+      if (!$('fe-cartao').value) { msg.textContent = 'Escolha o cartão.'; return false; }
+      p.cartao = $('fe-cartao').value; p.destino = $('fe-cartao').selectedOptions[0].textContent;
+    }
+    if (f === 'CREDITO' || f === 'TITULO') p.parcelas = Number($('fe-parcelas').value) || 1;
+    pagos.push(p);
+    desenharPagos();
+    $('fe-recebido').value = brl(Math.max(0, falta()));
+    previa();
+    if (falta() === 0) {
+      if (p.troco) { msg.className = 'fe-msg ok'; msg.textContent = 'Troco: R$ ' + brl(p.troco); }
+      $('fe-confirmar').focus();
+    } else { $('fe-recebido').focus(); $('fe-recebido').select(); }
+    return true;
+  }
+
+  function desenharPagos() {
+    $('fe-pagos').innerHTML = pagos.map((p, k) => '<div class="pg"><span>' + NOMES[p.forma]
+      + (p.parcelas > 1 ? ' · ' + p.parcelas + 'x' : '')
+      + '<small>' + escapar(p.destino || (p.forma === 'DINHEIRO' ? 'caixa' : p.forma === 'TITULO' ? 'cobrança Banestes/Armação' : ''))
+      + (p.troco ? ' · recebido ' + brl(p.recebido) + ', troco ' + brl(p.troco) : '') + '</small></span>'
+      + '<b>R$ ' + brl(p.valor) + '</b><button type="button" data-k="' + k + '" title="tirar">×</button></div>').join('');
+    const f = falta();
+    $('fe-falta').classList.toggle('zero', f === 0);
+    $('fe-falta').firstElementChild.textContent = f === 0 ? 'Tudo pago' : 'Falta receber';
+    $('fe-falta-v').textContent = 'R$ ' + brl(Math.max(0, f));
+    $('fe-editor').hidden = f === 0;
+    $('fe-confirmar').disabled = f !== 0;
   }
 
   function fecharModalFechamento() { $('fe-fundo').hidden = true; $('fe-caixa').hidden = true; }
 
   async function confirmarFechamento() {
-    if (formaEscolhida === 'DINHEIRO' && !dinheiroOk) { $('fe-recebido').focus(); return; }
-    const corpo = { forma: formaEscolhida };
-    if (formaEscolhida === 'PIX') corpo.contaBancaria = $('fe-banco').value;
-    if (formaEscolhida === 'DEBITO' || formaEscolhida === 'CREDITO') corpo.cartao = $('fe-cartao').value;
-    if (formaEscolhida === 'CREDITO' || formaEscolhida === 'TITULO') corpo.parcelas = Number($('fe-parcelas').value) || 1;
+    if (falta() !== 0) { $('fe-recebido').focus(); return; }
+    const corpo = { pagamentos: pagos.map(p => ({ forma: p.forma, valor: p.valor, contaBancaria: p.contaBancaria,
+                                                   cartao: p.cartao, parcelas: p.parcelas })) };
     $('fe-confirmar').disabled = true;
-    $('fe-msg').textContent = '';
+    $('fe-msg').className = 'fe-msg'; $('fe-msg').textContent = '';
     try {
       const v = (await api('POST', '/' + aFechar._id + '/fechar', corpo)).venda;
       aFechar = v;
       fecharModalFechamento();
       mostrarCabecalho(v);
       somenteConsulta('fechada');
-      recado('✓ venda nº ' + v.numero + ' fechada — ' + NOMES[formaEscolhida].toLowerCase() + ' — líquido ' + brl(v.totalLiquido), 'ok');
+      const resumo = pagos.map(p => NOMES[p.forma].toLowerCase() + ' ' + brl(p.valor)).join(' + ');
+      recado('✓ venda nº ' + v.numero + ' fechada — ' + resumo, 'ok');
       abrirSucesso(v);
     } catch (e) {
-      $('fe-msg').className = 'fe-msg';
       $('fe-msg').textContent = e.message;
     } finally {
-      $('fe-confirmar').disabled = formaEscolhida === 'DINHEIRO' && !dinheiroOk;
+      $('fe-confirmar').disabled = falta() !== 0;
     }
   }
 
   $('fechar').addEventListener('click', abrirFechamento);
   $('fe-formas').addEventListener('change', ev => { if (ev.target.name === 'fe-forma') escolherForma(ev.target.value); });
   $('fe-parcelas').addEventListener('change', previa);
-  $('fe-recebido').addEventListener('input', () => {
-    dinheiroOk = false;
-    $('fe-confirmar').disabled = true;
-    $('fe-msg').textContent = '';
-  });
+  $('fe-recebido').addEventListener('input', previa);
   $('fe-recebido').addEventListener('keydown', ev => {
-    if (ev.key === 'Enter') { ev.preventDefault(); confirmarDinheiro(); }
+    if (ev.key === 'Enter') { ev.preventDefault(); adicionarPagamento(); }
+  });
+  $('fe-add').addEventListener('click', adicionarPagamento);
+  $('fe-pagos').addEventListener('click', ev => {
+    const bt = ev.target.closest('button[data-k]'); if (!bt) return;
+    pagos.splice(Number(bt.dataset.k), 1);
+    desenharPagos();
+    $('fe-recebido').value = brl(Math.max(0, falta())); previa();
+    $('fe-msg').textContent = '';
+    $('fe-recebido').focus();
   });
   $('fe-confirmar').addEventListener('click', confirmarFechamento);
   $('fe-cancelar').addEventListener('click', fecharModalFechamento);
   $('fe-fundo').addEventListener('click', fecharModalFechamento);
-
-  function mostrarCabecalho(v) {
-    $('titulo').textContent = 'Venda nº ' + v.numero;
-    $('situacao').textContent = { A: 'aberta', F: 'fechada', C: 'cancelada' }[v.situacao] || '';
-    document.title = 'Venda ' + v.numero;
-  }
 
   // ---- modal de sucesso ---------------------------------------------------------------
   let gravada = null;     // a venda que acabou de gravar (para imprimir)

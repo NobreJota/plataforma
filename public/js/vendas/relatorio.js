@@ -12,6 +12,7 @@
 //   ESPELHO da venda (GET /:id/espelho): cabecalho, itens, pagamento e as parcelas no fluxo
 //   (aberta / recebida / cancelada). "Cancelar venda" pede o motivo e chama POST /:id/cancelar;
 //   se alguma parcela ja foi recebida, o servidor recusa e diz qual boleta estornar.
+// Alterado em 07/10/2026: venda paga em mais de uma forma — o espelho lista todas as partes.
 // =============================================================================
 
 'use strict';
@@ -154,7 +155,10 @@
 
   function desenharEspelho(v, parcelas) {
     const c = v.cliente || {};
-    const p = (v.pagamentos || [])[0] || {};
+    const pags = v.pagamentos || [];
+    const p = pags[0] || {};
+    const partes = pags.map(x => escapar(FORMA[x.forma] || x.forma) + (x.parcelas && x.parcelas.length > 1 ? ' ' + x.parcelas.length + 'x' : '')
+      + ' <b>' + brl(x.valor) + '</b> <span class="cinza">' + escapar(x.contaDestino || '') + '</span>').join('<br>');
     $('esp-titulo').textContent = 'Venda nº ' + v.numero + ' · ' + (v.documento === 'NFE' ? 'Nota fiscal' : 'Cupom') + ' · '
       + (SITUACAO[v.situacao] || v.situacao);
     $('esp-abrir').href = '/vendas/venda/' + v._id;
@@ -163,8 +167,7 @@
       + campo('Cliente', c.nome ? escapar(c.nome) + ' <span class="cinza">' + escapar(c.codigo) + '</span>' : 'balcão', 'l2')
       + campo('Fechada em', v.fechadaEm ? dia(v.fechadaEm) + ' ' + hora(v.fechadaEm) : '')
       + campo('Condição', v.condicao === 'PRAZO' ? 'a prazo' : 'à vista')
-      + campo('Pagamento', escapar(FORMA[p.forma] || p.forma || ''))
-      + campo('Conta de destino', escapar(p.contaDestino || ''))
+      + campo('Pagamento' + (pags.length > 1 ? ' (' + pags.length + ' partes)' : ''), partes, 'l2')
       + campo('Conta do cliente', escapar(v.contabil?.contaCliente || ''))
       + campo('Receita', escapar(v.contabil?.contaReceita || ''))
       + '</div>';

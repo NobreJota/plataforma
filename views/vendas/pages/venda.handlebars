@@ -24,6 +24,8 @@
   Alterado em: 05/10/2026 - modal do plano: botoes "editar ficha" (abre a ficha do cliente com a
                conta marcada) e "incluir plano" (so entao aparece o "criar conta nova")
   Alterado em: 05/10/2026 - os dois botoes ficam em cada linha da lista do plano
+  Alterado em: 07/10/2026 - fechamento com MAIS DE UMA FORMA de pagamento: editor da parte
+               (forma, banco/cartao, parcelas, valor) + lista das partes + "Falta R$"
 
   VENDA — Parte 1: lancar a venda e gravar ABERTA.
   Cupom (balcao, sem cliente) ou Nota fiscal (com cliente); a vista ou a prazo
@@ -218,6 +220,21 @@
     .fe-aviso { font-size:15px; font-weight:600; color:#92400e; background:#fef3c7; border:1px solid #fcd34d;
                 border-radius:8px; padding:8px 12px; margin:-4px 0 12px; }
     .fe-aviso[hidden] { display:none; }
+    .fe-editor[hidden] { display:none; }
+    .fe-falta { display:flex; justify-content:space-between; align-items:baseline; margin:4px 0 10px;
+                padding:8px 12px; border-radius:8px; background:#fef3c7; color:#92400e; font-weight:700; }
+    .fe-falta.zero { background:#ecfdf5; color:var(--verde); }
+    .fe-falta b { font-size:20px; }
+    .fe-pagos { border:1px solid var(--borda); border-radius:8px; margin-bottom:10px; }
+    .fe-pagos:empty { display:none; }
+    .fe-pagos .pg { display:grid; grid-template-columns:minmax(0,1fr) auto auto; gap:12px; align-items:center;
+                    padding:7px 12px; border-bottom:1px solid #f3f4f6; font-size:14px; }
+    .fe-pagos .pg:last-child { border-bottom:0; }
+    .fe-pagos .pg small { display:block; color:var(--cinza); font-size:12px; }
+    .fe-pagos .pg b { font-variant-numeric:tabular-nums; }
+    .fe-pagos .pg button { border:0; background:none; color:var(--vermelho); font-size:18px; cursor:pointer; }
+    .fe-add { height:36px; border:1px solid var(--roxo); background:#fff; color:var(--roxo); border-radius:8px;
+              padding:0 14px; font-weight:700; cursor:pointer; }
     #fe-recebido { height:36px; width:180px; border:1px solid #eab308; background:#fef9c3; border-radius:8px;
                    padding:0 10px; font-size:16px; font-weight:700; text-align:right; }
     .ok-botoes button:focus { outline:2px solid var(--roxo-claro); outline-offset:1px; }
@@ -339,14 +356,19 @@
     <h3 id="fe-titulo" style="color:var(--roxo)">Fechar venda</h3>
     <div class="ok-det" id="fe-det"></div>
     <div class="ok-liq" id="fe-liq"></div>
-    <div class="fe-formas" id="fe-formas"></div>
-    <div class="fe-aviso" id="fe-aviso" hidden>Título em banco: só para pessoa jurídica com nota fiscal.</div>
-    <div class="fe-linha" id="fe-l-receb" hidden><span class="rot">Valor recebido</span>
-      <input type="text" id="fe-recebido" inputmode="decimal" autocomplete="off" placeholder="0,00"></div>
-    <div class="fe-linha" id="fe-l-banco" hidden><span class="rot">Banco</span><select id="fe-banco"></select></div>
-    <div class="fe-linha" id="fe-l-cartao" hidden><span class="rot">Cartão</span><select id="fe-cartao"></select></div>
-    <div class="fe-linha" id="fe-l-parc" hidden><span class="rot">Parcelas</span><select id="fe-parcelas"></select></div>
-    <div class="fe-previa" id="fe-previa"></div>
+    <div class="fe-pagos" id="fe-pagos"></div>
+    <div class="fe-falta" id="fe-falta"><span>Falta receber</span><b id="fe-falta-v">0,00</b></div>
+    <div class="fe-editor" id="fe-editor">
+      <div class="fe-formas" id="fe-formas"></div>
+      <div class="fe-aviso" id="fe-aviso" hidden>Título em banco: só para pessoa jurídica com nota fiscal.</div>
+      <div class="fe-linha" id="fe-l-banco" hidden><span class="rot">Banco</span><select id="fe-banco"></select></div>
+      <div class="fe-linha" id="fe-l-cartao" hidden><span class="rot">Cartão</span><select id="fe-cartao"></select></div>
+      <div class="fe-linha" id="fe-l-parc" hidden><span class="rot">Parcelas</span><select id="fe-parcelas"></select></div>
+      <div class="fe-linha" id="fe-l-receb"><span class="rot" id="fe-rot-valor">Valor</span>
+        <input type="text" id="fe-recebido" inputmode="decimal" autocomplete="off" placeholder="0,00">
+        <button type="button" class="fe-add" id="fe-add">+ incluir (Enter)</button></div>
+      <div class="fe-previa" id="fe-previa"></div>
+    </div>
     <div class="fe-msg" id="fe-msg"></div>
     <div class="ok-botoes">
       <button type="button" class="prim" id="fe-confirmar">Confirmar fechamento</button>

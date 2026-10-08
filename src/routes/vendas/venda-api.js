@@ -36,6 +36,11 @@
 //   POST /clientes/:id/conta      { codigo }          liga uma conta existente
 //   POST /clientes/:id/conta-nova { titulo, nome }    cria o subtitulo (proximo numero) e liga
 //   GET  /clientes/:id/ficha · POST /clientes/:id/ficha   ficha do cliente (com a conta)
+// Alterado em: 07/10/2026 - PAGAMENTO EM MAIS DE UMA FORMA: POST /:id/fechar recebe
+//   { pagamentos: [{ forma, valor (centavos), contaBancaria?, cartao?, parcelas? }] } e a soma
+//   tem que dar o total. Cada parte vai para o seu destino (cupom: soma no "Vendas balcao" do
+//   dia de cada conta; NF: um recebimento por parte). Venda A VISTA aceita tambem cartao de
+//   CREDITO parcelado (preco a vista). O formato antigo { forma, ... } continua valendo.
 // Alterado em: 07/10/2026 - CANCELAR VENDA e relatorio so das EMITIDAS:
 //   GET  /relatorio   so vendas fechadas (F) e canceladas (C), pela data do fechamento
 //   GET  /:id/espelho a venda + as parcelas dela no fluxo (aberta / recebida / cancelada)
@@ -499,7 +504,7 @@ const CAIXA = '1.01.001.001';
 const BANCO_TITULO = '1.01.002.002';   // Banestes/Armacao: banco de cobranca dos titulos
 const PREFIXO_CARTAO = '1.01.005.';
 const DIA = 24 * 60 * 60 * 1000;
-const FORMAS_VISTA = ['DINHEIRO', 'PIX', 'DEBITO'];
+const FORMAS_VISTA = ['DINHEIRO', 'PIX', 'DEBITO', 'CREDITO'];   // credito a vista: preco a vista, parcelado
 const FORMAS_PRAZO = ['CREDITO', 'TITULO'];
 const NOME_FORMA = { DINHEIRO: 'dinheiro', PIX: 'PIX/transferência', DEBITO: 'débito', CREDITO: 'crédito', TITULO: 'título' };
 
@@ -551,7 +556,6 @@ router.post('/:id/fechar', async (req, res) => {
   const loja = lojaDe(req);
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ ok: false, erro: 'id inválido' });
   const b = req.body || {};
-  const forma = String(b.forma || '').toUpperCase();
   let resposta = null;
 
   const session = await mongoose.startSession();
@@ -565,14 +569,15 @@ router.post('/:id/fechar', async (req, res) => {
       const total = v.totalLiquido;
       if (total <= 0) throw new Error('a venda está com total zero');
 
-      // forma x condicao x documento
-      const permitidas = v.condicao === 'PRAZO' ? FORMAS_PRAZO : FORMAS_VISTA;
-      if (!permitidas.includes(forma)) {
-        throw new Error('venda ' + (v.condicao === 'PRAZO' ? 'a prazo' : 'à vista') + ' aceita: '
-          + permitidas.map(f => NOME_FORMA[f]).join(', '));
-      }
-      if (forma === 'TITULO' && (v.documento !== 'NFE' || v.cliente?.tipo !== 'PJ')) {
-        throw new Error('título em banco só para pessoa jurídica com nota fiscal');
+      // os pagamentos: lista nova, ou o formato antigo (uma forma so, pelo total)
+      const pedidos = Array.isArray(b.pagamentos) && b.pagamentos.length
+        ? b.pagamentos
+        : [{ forma: b.forma, valor: total, contaBancaria: b.contaBancaria, cartao: b.cartao, parcelas: b.parcelas }];
+      if (pedidos.length > 6) throw new Error('no máximo 6 formas de pagamento');
+      const soma = pedidos.reduce((t, p) => t + Math.round(Number(p.valor) || 0), 0);
+      if (soma !== total) {
+        throw new Error('os pagamentos somam R$ ' + (soma / 100).toFixed(2).replace('.', ',')
+          + ' e a venda é R$ ' + (total / 100).toFixed(2).replace('.', ','));
       }
 
       // conta do cliente (NFE)
@@ -584,42 +589,57 @@ router.post('/:id/fechar', async (req, res) => {
         if (!contaCliente) throw new Error('a conta ' + v.cliente.ncontabil + ' do cliente não está no plano (ou está suspensa)');
       }
 
-      // conta de destino do dinheiro
-      let destino = null;
-      if (forma === 'DINHEIRO') {
-        destino = await subtitulo(loja, CAIXA, session);
-        if (!destino) throw new Error('o caixa ' + CAIXA + ' não está no plano');
-      } else if (forma === 'PIX') {
-        if (!mongoose.Types.ObjectId.isValid(b.contaBancaria)) throw new Error('escolha o banco');
-        const cb = await col('_aux_contas_bancarias').findOne({
-          _id: new mongoose.Types.ObjectId(b.contaBancaria), lojistaId: loja, recebeVenda: true, ativo: { $ne: false },
-        }, { session });
-        if (!cb) throw new Error('este banco não recebe venda');
-        destino = await col('_contasubtitulos').findOne({ _id: cb.contaSubTitulo, ativo: { $ne: false } }, { session });
-        if (!destino) throw new Error('o banco ' + (cb.apelido || '') + ' não tem conta contábil ativa');
-      } else if (forma === 'DEBITO' || forma === 'CREDITO') {
-        const cod = String(b.cartao || '');
-        if (!cod.startsWith(PREFIXO_CARTAO)) throw new Error('escolha o cartão');
-        destino = await subtitulo(loja, cod, session);
-        if (!destino) throw new Error('o cartão ' + cod + ' não está no plano');
-      } else if (forma === 'TITULO') {
-        destino = contaCliente;          // fica a receber do proprio cliente
-        if (!(await subtitulo(loja, BANCO_TITULO, session))) {
-          throw new Error('o banco de cobrança ' + BANCO_TITULO + ' não está no plano');
-        }
-      }
-
-      // parcelas (pos 5): debito 1 no dia seguinte; credito e titulo de 30 em 30 dias
       const agora = new Date();
       const dataBoleta = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 12, 0, 0);
-      let parcelas = [];
-      if (forma === 'DEBITO') parcelas = [{ numero: 1, vencimento: new Date(dataBoleta.getTime() + DIA), valor: total }];
-      if (forma === 'CREDITO' || forma === 'TITULO') {
-        const n = Math.floor(Number(b.parcelas) || 1);
-        if (n < 1 || n > 10) throw new Error('de 1 a 10 parcelas');
-        parcelas = dividir(total, n).map((valor, i) => ({
-          numero: i + 1, vencimento: new Date(dataBoleta.getTime() + (i + 1) * 30 * DIA), valor,
-        }));
+      const permitidas = v.condicao === 'PRAZO' ? FORMAS_PRAZO : FORMAS_VISTA;
+
+      // ---- confere cada pagamento e acha o destino e as parcelas dele ----
+      const prontos = [];
+      for (const p of pedidos) {
+        const forma = String(p.forma || '').toUpperCase();
+        const valor = Math.round(Number(p.valor) || 0);
+        if (valor <= 0) throw new Error('pagamento com valor zero');
+        if (!permitidas.includes(forma)) {
+          throw new Error('venda ' + (v.condicao === 'PRAZO' ? 'a prazo' : 'à vista') + ' aceita: '
+            + permitidas.map(f => NOME_FORMA[f]).join(', '));
+        }
+        if (forma === 'TITULO' && (v.documento !== 'NFE' || v.cliente?.tipo !== 'PJ')) {
+          throw new Error('título em banco só para pessoa jurídica com nota fiscal');
+        }
+        let destino = null;
+        if (forma === 'DINHEIRO') {
+          destino = await subtitulo(loja, CAIXA, session);
+          if (!destino) throw new Error('o caixa ' + CAIXA + ' não está no plano');
+        } else if (forma === 'PIX') {
+          if (!mongoose.Types.ObjectId.isValid(p.contaBancaria)) throw new Error('escolha o banco do PIX');
+          const cb = await col('_aux_contas_bancarias').findOne({
+            _id: new mongoose.Types.ObjectId(p.contaBancaria), lojistaId: loja, recebeVenda: true, ativo: { $ne: false },
+          }, { session });
+          if (!cb) throw new Error('este banco não recebe venda');
+          destino = await col('_contasubtitulos').findOne({ _id: cb.contaSubTitulo, ativo: { $ne: false } }, { session });
+          if (!destino) throw new Error('o banco ' + (cb.apelido || '') + ' não tem conta contábil ativa');
+        } else if (forma === 'DEBITO' || forma === 'CREDITO') {
+          const cod = String(p.cartao || '');
+          if (!cod.startsWith(PREFIXO_CARTAO)) throw new Error('escolha o cartão');
+          destino = await subtitulo(loja, cod, session);
+          if (!destino) throw new Error('o cartão ' + cod + ' não está no plano');
+        } else if (forma === 'TITULO') {
+          destino = contaCliente;          // fica a receber do proprio cliente
+          if (!(await subtitulo(loja, BANCO_TITULO, session))) {
+            throw new Error('o banco de cobrança ' + BANCO_TITULO + ' não está no plano');
+          }
+        }
+        // parcelas (pos 5): debito 1 no dia seguinte; credito e titulo de 30 em 30 dias
+        let parcelas = [];
+        if (forma === 'DEBITO') parcelas = [{ numero: 1, vencimento: new Date(dataBoleta.getTime() + DIA), valor }];
+        if (forma === 'CREDITO' || forma === 'TITULO') {
+          const n = Math.floor(Number(p.parcelas) || 1);
+          if (n < 1 || n > 10) throw new Error('de 1 a 10 parcelas');
+          parcelas = dividir(valor, n).map((x, i) => ({
+            numero: i + 1, vencimento: new Date(dataBoleta.getTime() + (i + 1) * 30 * DIA), valor: x,
+          }));
+        }
+        prontos.push({ forma, valor, destino, parcelas });
       }
 
       const receitaCod = v.documento === 'NFE' && v.condicao === 'PRAZO' ? CONTAS.RECEITA_PRAZO : CONTAS.RECEITA_VISTA;
@@ -631,12 +651,9 @@ router.post('/:id/fechar', async (req, res) => {
         contaSubTitulo: conta._id, codigoConta: conta.codigo, nomeConta: conta.nome,
         historico, valor: valorC / 100, cliente: v.cliente?.id || null,
       });
-      const pagamento = { forma, valor: total, boletaId: null, parcelas: [],
-                          contaDestino: forma === 'TITULO' ? BANCO_TITULO : destino.codigo };
-      if (forma === 'DEBITO' || forma === 'CREDITO') { pagamento.operadora = destino.nome; pagamento.contaOperadora = destino.codigo; }
 
+      // NFE: a venda uma vez so — cliente (debito) x receita (credito), pelo total
       if (v.documento === 'NFE') {
-        // 1) a venda: cliente (debito) x receita (credito)
         const [bv] = await Boleta.create([{
           codigo: codigoBoleta(), tipo: 'RECEBIMENTO', data: dataBoleta,
           bancoSubTitulo: contaCliente._id, bancoCodigo: contaCliente.codigo, bancoNome: contaCliente.nome,
@@ -645,57 +662,70 @@ router.post('/:id/fechar', async (req, res) => {
           historico: 'Venda ' + v.numero + ' · ' + nomeCli, origem: 'VENDA', status: 'ATIVO', lojistaId: loja,
         }], { session });
         v.contabil = { contaCliente: contaCliente.codigo, contaReceita: receita.codigo, boletaId: bv._id, diaBalcao: null };
-
-        // 2) o recebimento: destino (debito) x cliente (credito) — titulo fica a receber
-        if (forma !== 'TITULO') {
-          const [br] = await Boleta.create([{
-            codigo: codigoBoleta(), tipo: 'RECEBIMENTO', data: dataBoleta,
-            bancoSubTitulo: destino._id, bancoCodigo: destino.codigo, bancoNome: destino.nome,
-            valorTotal: total / 100,
-            contrapartidas: [contra(contaCliente, total, 'Venda ' + v.numero + ' · ' + NOME_FORMA[forma])],
-            historico: 'Recebimento venda ' + v.numero + ' · ' + nomeCli, origem: 'VENDA', status: 'ATIVO', lojistaId: loja,
-          }], { session });
-          pagamento.boletaId = br._id;
-        }
-      } else {
-        // CUPOM: soma no lancamento do dia "Vendas balcao" desta conta de destino
-        const dia = await Boleta.findOne({
-          lojistaId: loja, origem: 'VENDA_BALCAO', bancoCodigo: destino.codigo, data: dataBoleta, status: 'ATIVO',
-        }).session(session);
-        let bd;
-        if (dia) {
-          const novo = Math.round(dia.valorTotal * 100) + total;
-          dia.valorTotal = novo / 100;
-          dia.contrapartidas[0].valor = novo / 100;
-          bd = await dia.save({ session });
-        } else {
-          [bd] = await Boleta.create([{
-            codigo: codigoBoleta(), tipo: 'RECEBIMENTO', data: dataBoleta,
-            bancoSubTitulo: destino._id, bancoCodigo: destino.codigo, bancoNome: destino.nome,
-            valorTotal: total / 100,
-            contrapartidas: [{ contaSubTitulo: receita._id, codigoConta: receita.codigo, nomeConta: receita.nome,
-                               historico: HISTORICO_BALCAO, valor: total / 100 }],
-            historico: HISTORICO_BALCAO, origem: 'VENDA_BALCAO', status: 'ATIVO', lojistaId: loja,
-          }], { session });
-        }
-        v.contabil = { contaCliente: '', contaReceita: receita.codigo, boletaId: bd._id, diaBalcao: dataBoleta };
-        pagamento.boletaId = bd._id;
       }
 
-      // fluxo: uma linha pos 5 por parcela (reais, positivo)
-      if (parcelas.length) {
-        const linhas = await FluxoProjetado.insertMany(parcelas.map(p => ({
-          lojistaId: loja,
-          ano: p.vencimento.getFullYear(), mes: p.vencimento.getMonth() + 1,
-          pos: 5,
-          codigoConta: destino.codigo, nomeConta: destino.nome,
-          historico: 'Venda ' + v.numero + ' ' + nomeCli + ' · ' + NOME_FORMA[forma],
-          valor: p.valor / 100,
-          vencimento: p.vencimento,
-          parcela: p.numero, totalParcelas: parcelas.length,
-          origem: 'VENDA', lancamentoId: v._id, status: 'ATIVO',
-        })), { session });
-        pagamento.parcelas = parcelas.map((p, i) => ({ ...p, fluxoId: linhas[i]._id }));
+      // ---- cada pagamento: lancamento e parcelas ----
+      const gravados = [];
+      for (const p of prontos) {
+        const pag = { forma: p.forma, valor: p.valor, boletaId: null, parcelas: [],
+                      contaDestino: p.forma === 'TITULO' ? BANCO_TITULO : p.destino.codigo };
+        if (p.forma === 'DEBITO' || p.forma === 'CREDITO') { pag.operadora = p.destino.nome; pag.contaOperadora = p.destino.codigo; }
+
+        if (v.documento === 'NFE') {
+          // o recebimento: destino (debito) x cliente (credito) — titulo fica a receber
+          if (p.forma !== 'TITULO') {
+            const [br] = await Boleta.create([{
+              codigo: codigoBoleta(), tipo: 'RECEBIMENTO', data: dataBoleta,
+              bancoSubTitulo: p.destino._id, bancoCodigo: p.destino.codigo, bancoNome: p.destino.nome,
+              valorTotal: p.valor / 100,
+              contrapartidas: [contra(contaCliente, p.valor, 'Venda ' + v.numero + ' · ' + NOME_FORMA[p.forma])],
+              historico: 'Recebimento venda ' + v.numero + ' · ' + nomeCli, origem: 'VENDA', status: 'ATIVO', lojistaId: loja,
+            }], { session });
+            pag.boletaId = br._id;
+          }
+        } else {
+          // CUPOM: soma no lancamento do dia "Vendas balcao" desta conta de destino
+          const dia = await Boleta.findOne({
+            lojistaId: loja, origem: 'VENDA_BALCAO', bancoCodigo: p.destino.codigo, data: dataBoleta, status: 'ATIVO',
+          }).session(session);
+          let bd;
+          if (dia) {
+            const novo = Math.round(dia.valorTotal * 100) + p.valor;
+            dia.valorTotal = novo / 100;
+            dia.contrapartidas[0].valor = novo / 100;
+            bd = await dia.save({ session });
+          } else {
+            [bd] = await Boleta.create([{
+              codigo: codigoBoleta(), tipo: 'RECEBIMENTO', data: dataBoleta,
+              bancoSubTitulo: p.destino._id, bancoCodigo: p.destino.codigo, bancoNome: p.destino.nome,
+              valorTotal: p.valor / 100,
+              contrapartidas: [{ contaSubTitulo: receita._id, codigoConta: receita.codigo, nomeConta: receita.nome,
+                                 historico: HISTORICO_BALCAO, valor: p.valor / 100 }],
+              historico: HISTORICO_BALCAO, origem: 'VENDA_BALCAO', status: 'ATIVO', lojistaId: loja,
+            }], { session });
+          }
+          pag.boletaId = bd._id;
+          if (!v.contabil?.boletaId) {
+            v.contabil = { contaCliente: '', contaReceita: receita.codigo, boletaId: bd._id, diaBalcao: dataBoleta };
+          }
+        }
+
+        // fluxo: uma linha pos 5 por parcela (reais, positivo)
+        if (p.parcelas.length) {
+          const linhas = await FluxoProjetado.insertMany(p.parcelas.map(x => ({
+            lojistaId: loja,
+            ano: x.vencimento.getFullYear(), mes: x.vencimento.getMonth() + 1,
+            pos: 5,
+            codigoConta: p.destino.codigo, nomeConta: p.destino.nome,
+            historico: 'Venda ' + v.numero + ' ' + nomeCli + ' · ' + NOME_FORMA[p.forma],
+            valor: x.valor / 100,
+            vencimento: x.vencimento,
+            parcela: x.numero, totalParcelas: p.parcelas.length,
+            origem: 'VENDA', lancamentoId: v._id, status: 'ATIVO',
+          })), { session });
+          pag.parcelas = p.parcelas.map((x, i) => ({ ...x, fluxoId: linhas[i]._id }));
+        }
+        gravados.push(pag);
       }
 
       // estoque
@@ -706,7 +736,7 @@ router.post('/:id/fechar', async (req, res) => {
           { session });
       }
 
-      v.pagamentos = [pagamento];
+      v.pagamentos = gravados;
       v.situacao = 'F';
       v.fechadaEm = agora;
       await v.save({ session });

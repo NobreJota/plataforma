@@ -23,6 +23,7 @@
   na mesma posicao em que aparecem no DANFE.
 
   O JS fica em /js/compra/nota.js  (caminho completo, sempre)
+  Alterado em: 10/10/2026 - botoes "← Voltar" e "☰ Menu" (public/js/comum/navegacao.js)
 --}}
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -61,7 +62,7 @@
     /* ================= barra de topo ================= */
     .barra {
       display: flex; align-items: center; gap: 14px;
-      margin-bottom: 10px; flex: none;
+      margin-bottom: 10px; flex: none; padding-right: 190px;
     }
     .voltar {
       background: none; border: 1px solid var(--borda); border-radius: 6px;
@@ -839,5 +840,6 @@
   </div>
 
   <script src="/js/compra/nota.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
 </body>
 </html>

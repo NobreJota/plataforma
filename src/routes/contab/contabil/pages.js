@@ -1,4 +1,6 @@
-// src/routes/contab/contabil/pages.js
+// Destino: C:\plataformaRota\src\routes\contab\contabil\pages.js
+// Alterado em: 08/10/2026 - tela do BALANCETE (/contab/balancete); a API dela fica no
+//              razao-api (GET /financeiro/api/razao/balancete)
 // Responsável apenas por RENDERIZAR as telas (views).
 // Delega tudo que começa com /api para o plano-api.js (e demais APIs do módulo).
 
@@ -31,6 +33,14 @@ router.get('/razao', (req, res) => {
 // Tela de saldo transferido: o saldo que cada conta traz do ano anterior.
 router.get('/saldo-transferido', (req, res) => {
   res.render('contab/contabil/saldo-transferido', {
+    layout: false,
+    activeMenu: 'contabil'
+  });
+});
+
+// Balancete: saldo anterior, debitos, creditos e saldo atual por conta, no periodo
+router.get('/balancete', (req, res) => {
+  res.render('contab/contabil/balancete', {
     layout: false,
     activeMenu: 'contabil'
   });

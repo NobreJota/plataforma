@@ -1,6 +1,7 @@
 {{!--
   Destino: C:\plataformaRota\views\contab\contabil\balancete.handlebars
   Criado em: 08/10/2026
+  Alterado em: 10/10/2026 - botoes "← Voltar" e "☰ Menu" (public/js/comum/navegacao.js)
 
   BALANCETE: por periodo, cada conta com saldo anterior, debitos, creditos e saldo
   atual, somando por titulo, subgrupo e grupo. Nivel de detalhe escolhido na tela.
@@ -21,7 +22,7 @@
             --verde:#059669; --vermelho:#dc2626; }
     body { margin:0 auto; max-width:1400px; padding:20px 32px 40px; color:var(--texto); background:#fff;
            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
-    .topo { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; }
+    .topo { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; padding-right:190px; }   /* espaco dos botoes Voltar/Menu */
     .topo h1 { margin:0; font-size:21px; }
     .topo a { color:var(--azul); font-size:13px; text-decoration:none; margin-left:14px; }
     .filtros { display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; padding:12px 14px; border:1px solid var(--borda);
@@ -99,5 +100,6 @@
   <div id="aviso" style="margin-top:8px; font-size:13px; color:var(--cinza)"></div>
 
   <script src="/js/contab/contabil/balancete.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
 </body>
 </html>

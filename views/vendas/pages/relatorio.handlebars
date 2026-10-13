@@ -6,6 +6,7 @@
                no fluxo e o botao "Cancelar venda" (pede o motivo)
   Alterado em: 08/10/2026 - espelho so como modal (saiu "Abrir na tela da venda"); secao COBRANCA
                diz como cada parte foi cobrada (onde entrou, ou as parcelas no fluxo)
+  Alterado em: 10/10/2026 - botoes "← Voltar" e "☰ Menu" (public/js/comum/navegacao.js)
 
   RELATORIO DE VENDAS, mes a mes (como o Fluxo de Caixa): botoes Jan..Dez,
   "todos" e o ano. Uma linha por venda; duplo clique abre a venda.
@@ -26,7 +27,7 @@
             --verde:#059669; --vermelho:#dc2626; --ambar:#d97706; }
     body { margin:0 auto; max-width:1400px; padding:20px 40px 40px; color:var(--texto); background:#fff;
            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
-    .topo { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; }
+    .topo { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; padding-right:190px; }   /* espaco dos botoes Voltar/Menu */
     .topo h1 { margin:0; font-size:21px; }
     .topo a { color:var(--roxo); font-size:13px; text-decoration:none; }
 
@@ -161,5 +162,6 @@
   </div>
 
   <script src="/js/vendas/relatorio.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
 </body>
 </html>

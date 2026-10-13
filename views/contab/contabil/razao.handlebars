@@ -1,26 +1,31 @@
 {{!-- Destino: C:\plataformaRota\views\contab\contabil\razao.handlebars
      Alterado em: 08/10/2026 - menu: "Relatórios" (/contabil/relatorios, 404) vira "Balancete"
                   (/contab/balancete); o icone de Venda vai para /vendas/clientes (a rota
-                  /aux/clientes foi removida em 02/10) --}}
+                  /aux/clientes foi removida em 02/10)
+     Alterado em: 10/10/2026 - barra fina com o NOME embaixo de cada icone (Fluxo, Contábil,
+                  Compra, Venda, Site), alem do title na passagem do mouse; o icone Venda
+                  volta ao MENU da venda (/usuariocontab/menu?abrir=venda: Clientes, Nova venda,
+                  Notas fiscais, Relatorios) em vez de cair direto em Clientes
+     Alterado em: 10/10/2026 - botoes "← Voltar" e "☰ Menu" (public/js/comum/navegacao.js) --}}
 
 <div class="contab-app">
 
   {{!-- ====== SIDEBAR FINA (só ícones) ====== --}}
   <nav class="cb-side">
     <a class="cb-side-item" href="/financeiro/fluxo" title="Fluxo de Caixa">
-      <i class="ti ti-cash" aria-hidden="true"></i>
+      <i class="ti ti-cash" aria-hidden="true"></i><span>Fluxo</span>
     </a>
     <a class="cb-side-item active" href="#" title="Contabilidade">
-      <i class="ti ti-calculator" aria-hidden="true"></i>
+      <i class="ti ti-calculator" aria-hidden="true"></i><span>Contábil</span>
     </a>
     <a class="cb-side-item" href="/aux/fornecedores" title="Compra">
-      <i class="ti ti-shopping-cart" aria-hidden="true"></i>
+      <i class="ti ti-shopping-cart" aria-hidden="true"></i><span>Compra</span>
     </a>
-    <a class="cb-side-item" href="/vendas/clientes" title="Venda">
-      <i class="ti ti-tag" aria-hidden="true"></i>
+    <a class="cb-side-item" href="/usuariocontab/menu?abrir=venda" title="Venda">
+      <i class="ti ti-tag" aria-hidden="true"></i><span>Venda</span>
     </a>
     <a class="cb-side-item" href="/site/configuracoes" title="Site">
-      <i class="ti ti-world" aria-hidden="true"></i>
+      <i class="ti ti-world" aria-hidden="true"></i><span>Site</span>
     </a>
   </nav>
 
@@ -166,16 +171,16 @@
 
   /* ====== SIDEBAR FINA ====== */
   .cb-side {
-    width: 50px;
+    width: 64px;
     background: #1e2a3a;
     display: flex; flex-direction: column;
     padding: 12px 0; gap: 4px;
     flex-shrink: 0;
   }
   .cb-side-item {
-    width: 38px; height: 38px;
-    margin: 0 6px;
-    display: flex; align-items: center; justify-content: center;
+    width: 56px; height: 50px;
+    margin: 0 4px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
     color: #a8bdd0; cursor: pointer; border-radius: 6px;
     text-decoration: none;
     transition: all 0.12s;
@@ -188,6 +193,7 @@
     margin-left: 3px;
   }
   .cb-side-item i { font-size: 20px; }
+  .cb-side-item span { font-size: 10px; line-height: 1; letter-spacing: .2px; }   /* nome embaixo do icone */
 
   /* ====== SUBMENU ====== */
   .cb-submenu {
@@ -229,7 +235,7 @@
 
   /* GRUPOS */
   .rz-grupos {
-    display: flex; gap: 12px; padding: 10px 16px; align-items: center;
+    display: flex; gap: 12px; padding: 10px 196px 10px 16px; align-items: center;   /* direita: botoes Voltar/Menu */
     border-bottom: 1px solid #e5e7eb; background: #fff;
   }
   /* A linha inteira é dividida em 5 partes iguais: as 4 abas e o período.
@@ -480,3 +486,4 @@
 
 <script src="/js/contab/contabil/lancamento.js"></script>
 <script src="/js/contab/contabil/razao.js"></script>
+<script src="/js/comum/navegacao.js"></script>

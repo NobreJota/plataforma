@@ -5,6 +5,8 @@
 // RELAÇÃO DE PRODUTOS: escolhe o fornecedor (ou busca), lista o que está
 // cadastrado em arquivo_docs. Só consulta.
 // Alterado em: 30/09/2026 — duplo clique na linha abre a página do produto.
+// Alterado em: 10/10/2026 — o combo mostra só os fornecedores ATIVOS: saiu o grupo
+//              "Inativos no Access" (e os "(sem nome)" que vinham nele).
 //
 // API: /compra/api/produto/relacao-fornecedores  e  /compra/api/produto/relacao
 // =============================================================================
@@ -130,15 +132,11 @@
       const d = await buscar('/compra/api/produto/relacao-fornecedores');
       if (!d) return;
       const lista = d.fornecedores.filter(f => f.nrFornec);   // sem numero nao tem como filtrar
-      const ativos = lista.filter(f => !f.inativo);
-      const inativos = lista.filter(f => f.inativo);
+      const ativos = lista.filter(f => !f.inativo);              // inativos no Access: fora
       const opcao = f => '<option value="' + (f.nrFornec || '') + '">'
         + escapar(f.nome) + '</option>';
       el.fornecedor.innerHTML = '<option value="">— selecione —</option>'
-        + ativos.map(opcao).join('')
-        + (inativos.length
-            ? '<optgroup label="Inativos no Access">' + inativos.map(opcao).join('') + '</optgroup>'
-            : '');
+        + ativos.map(opcao).join('');
     } catch (e) {
       el.fornecedor.innerHTML = '<option value="">erro ao carregar</option>';
       console.error('[relacao-fornecedores]', e);

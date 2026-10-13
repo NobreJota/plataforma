@@ -4,6 +4,7 @@
 // Alterado em: 02/10/2026 - tela da venda (/vendas/venda e /vendas/venda/:id)
 //                           e a API dela (/vendas/api/venda)
 // Alterado em: 03/10/2026 - Relatorio de vendas mes a mes (/vendas/relatorio)
+// Alterado em: 10/10/2026 - Servico > Agenda do dia (/vendas/servicos)
 //
 // Telas do modulo de vendas. Montado em /vendas no server.js, protegido por
 // ensureContab (que expoe req.lojistaId).
@@ -32,6 +33,11 @@ router.get('/venda/:id', (req, res) => {
 // relatorio de vendas, mes a mes (como o fluxo)
 router.get('/relatorio', (req, res) => {
   res.render('vendas/pages/relatorio', { layout: false, activeMenu: 'vendas' });
+});
+
+// servico: agenda do dia dos tecnicos (instalacoes)
+router.get('/servicos', (req, res) => {
+  res.render('vendas/pages/servicos', { layout: false, activeMenu: 'servico' });
 });
 
 /* ===== APIs ===== */

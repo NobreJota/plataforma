@@ -4,6 +4,12 @@
   Alterado em: 30/09/2026 — sai "Alteração de produtos": o produto abre por duplo clique na Relação.
   Alterado em: 02/10/2026 — Venda > Nova venda (/vendas/venda).
   Alterado em: 03/10/2026 — Venda > Relatórios aponta para /vendas/relatorio (era /venda/relatorios, 404).
+  Alterado em: 10/10/2026 — Contabilidade > "Relatórios" (/contabil/relatorios, 404) vira "Balancete"
+                (/contab/balancete), igual ao menu do razão.
+  Alterado em: 10/10/2026 — Serviço (abaixo de Venda) > Agenda do dia (/vendas/servicos).
+  Alterado em: 10/10/2026 — /usuariocontab/menu?abrir=venda abre direto o submenu da Venda
+                (Clientes, Nova venda, Notas fiscais, Relatórios); serve para fluxo, contabil,
+                compra e site também. O ícone Venda do razão usa isso.
   Alterado em: 26/09/2026 — Pedidos e Entrada de mercadoria passam a abrir o
                             terceiro nível em vez de navegar direto.
 --}}
@@ -41,6 +47,12 @@
         <span>Venda</span>
         <i class="ti ti-chevron-right coop-arrow" aria-hidden="true"></i>
       </li>
+      <li class="coop-nav-item {{#if (eq activeMenu 'servico')}}active{{/if}}"
+          data-menu="servico">
+        <i class="ti ti-tool" aria-hidden="true"></i>
+        <span>Serviço</span>
+        <i class="ti ti-chevron-right coop-arrow" aria-hidden="true"></i>
+      </li>
       <li class="coop-nav-item {{#if (eq activeMenu 'site')}}active{{/if}}"
           data-menu="site">
         <i class="ti ti-world" aria-hidden="true"></i>
@@ -75,8 +87,8 @@
       <li class="coop-sub-item" data-leaf="pessoal" data-url="/contabil/pessoal">
         <span>Pessoal</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
       </li>
-      <li class="coop-sub-item" data-url="/contabil/relatorios">
-        <span>Relatórios</span>
+      <li class="coop-sub-item" data-url="/contab/balancete">
+        <span>Balancete</span>
       </li>
     </ul>
 
@@ -114,6 +126,14 @@
       </li>
       <li class="coop-sub-item" data-url="/vendas/relatorio">
         <span>Relatórios</span>
+      </li>
+    </ul>
+
+    {{!-- Servico --}}
+    <ul class="coop-sub-list" data-sub="servico">
+      <li class="coop-sub-title">Serviço</li>
+      <li class="coop-sub-item" data-url="/vendas/servicos">
+        <span>Agenda do dia</span>
       </li>
     </ul>
 
@@ -320,5 +340,10 @@
       if (url) window.location.href = url;
     });
   });
+
+  // ?abrir=venda (ou fluxo, contabil, compra, site): ja abre o submenu dessa area
+  const abrir = new URLSearchParams(window.location.search).get('abrir');
+  const navAbrir = abrir && document.querySelector('.coop-nav-item[data-menu="' + abrir + '"]');
+  if (navAbrir) navAbrir.click();
 })();
 </script>

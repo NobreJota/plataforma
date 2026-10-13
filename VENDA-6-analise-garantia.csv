@@ -1,0 +1,575 @@
+﻿situacao;codigo;marca;descricao;estoque
+MARCADO;2906;Akros/Galv.;"joelho galvanizado 1/2""  90º";1
+MARCADO;5607;Aquec.Chama;aquecedor eletrico horiz. 200 litros;0
+MARCADO;5549;Aquec.Chama;reservatório térmico p/sistema solar;0
+MARCADO;5456;Ariston;Aquec. 30 lts Eletr/shape 30 Bra;0
+MARCADO;5457;Ariston;Aquec. 50 lts Eletr/Pro R 50 V  Bra;0
+MARCADO;5458;Ariston;Aquec. 80 lts Eletr/Pro R 80 V  Bra;0
+MARCADO;5467;Ariston;Aquec.100 lts Eletr.Vert/Ther MO  Bra;0
+MARCADO;5459;Ariston;Aquec.200 lts Eletr.Vert/Ther MO  Bra;0
+MARCADO;4305;Arix;coifa aura pared 60cm/110V;0
+MARCADO;4306;Arix;coifa aura pared 80cm/110V;0
+MARCADO;4307;Arix;coifa aura pared 90cm/110V;0
+MARCADO;5054;Arix;coifa bora pared 60cm/110V;0
+MARCADO;5010;Arix;coifa bora pared 90cm/110V;0
+MARCADO;4791;Arix;coifa brisa  pared 60cm/110V;0
+MARCADO;4848;Arix;coifa brisa  pared 80cm/110V;0
+MARCADO;4794;Arix;coifa brisa  pared 90 cm/110V;0
+MARCADO;5030;Arix;coifa brisa ilha 60 cm/110V aço/vidro;0
+MARCADO;4829;Arix;coifa brisa ilha 80 cm/110V aço/vidro;0
+MARCADO;4814;Arix;coifa brisa ilha 90 cm/110V aço/vidro;0
+MARCADO;5743;Arix;coifa isis parede 90 cm;0
+MARCADO;4816;Arix;coifa mistral  pared 60cm/110V;0
+MARCADO;4790;Arix;coifa mistral  pared 80cm/110V;0
+MARCADO;4792;Arix;coifa mistral  pared 90cm/110V;0
+MARCADO;5111;Arix;cooktops 60 cm - gás grelha gusa;0
+MARCADO;5067;Arix;cooktops 70 cm - gás grelha gusa;0
+MARCADO;5069;Arix;forno eletr.60 cm inox - 3 funç/ 220 V;0
+MARCADO;3949;Arwek;coifa Arcádia 06 B 90 cm 127 V inox;0
+MARCADO;4929;Arwek;coifa Arcádia 06 bocas/95 x 65 cm 127 V Br;0
+MARCADO;3940;Arwek;coifa Curvilinea 04 B 60 cm 127 V branca;0
+MARCADO;4250;Arwek;coifa Curvilinea 04 B 60 cm 127 V inox;0
+MARCADO;3999;Arwek;coifa Curvilínea 06 B 80 cm 127 V Br;0
+MARCADO;3941;Arwek;coifa Curvilínea 06 B 80 cm 127 V inox;1
+MARCADO;5014;Bosch;aquec. gás/GLP 36 lts/GWH 720;0
+MARCADO;5742;Bosch;aquec. gás/GN 16 lts/GWH 320;1
+MARCADO;5309;Cata;coifa   apelson  / 60 cm   - 110 V;0
+MARCADO;5310;Cata;coifa   apelson  / 70 cm   - 110 V;0
+MARCADO;5311;Cata;coifa   apelson  / 90 cm   - 110 V;0
+MARCADO;4851;Cata;coifa   beta VL 3  / 60 cm   - 110 V;0
+MARCADO;4454;Cata;coifa   beta VL 3  / 70 cm   - 110 V;0
+MARCADO;4405;Cata;coifa   beta VL 3  / 90 cm   - 110 V;0
+MARCADO;5366;Cata;coifa   flat - Nodor / 90 cm   - 110 V;0
+MARCADO;4594;Cata;coifa   neblia / 90 cm   - 110 V;0
+MARCADO;5202;Cata;coifa   PV   VL 3   - 90 cm  - 110 V;0
+MARCADO;4655;Cata;coifa   S 700  - 110 V;0
+MARCADO;5165;Cata;coifa   S 900  - 110 V;0
+MARCADO;4383;Cata;coifa   V Plus  - 110 V;0
+MARCADO;5355;Cata;coifa   verene  - 70 cm   - 110 V;0
+MARCADO;4697;Cata;coifa   verene  - 90 cm   - 110 V;0
+MARCADO;4411;Cata;coifa  C Glass 70 cm - 110 V;0
+MARCADO;4773;Cata;coifa  C Glass 90 cm - 110 V;0
+MARCADO;5112;Cata;coifa  C Glass ilha - 90 cm - 110 V;0
+MARCADO;4382;Cata;coifa  CM  DT4 - 110 V;0
+MARCADO;5215;Cata;coifa  Gamma Glass 70 cm - 110 V;0
+MARCADO;4604;Cata;coifa  omega-inox / 70 cm   - 110 V;0
+MARCADO;4436;Cata;coifa  omega-inox / 90 cm   - 110 V;0
+MARCADO;5214;Cata;cooktop 04 bocas inox ferro guza bivolt;0
+MARCADO;4873;Cata;cooktop 70 cm ferro guza 220 V;0
+MARCADO;4933;Cata;cooktops 60 cm vidro preto 110/220 V;0
+MARCADO;4660;Cata;duto polywest  100 x 3 mts;0
+MARCADO;4658;Cata;exaustor B 10   STD - 110 v;0
+MARCADO;4650;Cata;extensor omega/beta inox;0
+MARCADO;4934;Cata;forno eletr. 60 cm ME 611 DI inox /220 V;0
+MARCADO;4659;Cata;grade movel B-10/B-12;0
+MARCADO;2689;cumulus;aquecedor elétr/Luxo   75 lts/vertical;0
+MARCADO;2691;Cumulus;aquecedor elétr/Luxo   50 lts/ horizontal;0
+MARCADO;2244;Cumulus;aquecedor elétr/Luxo   75 lts/horizontal;0
+MARCADO;2155;Cumulus;aquecedor elétr/Luxo  100 lts/horizontal;0
+MARCADO;3070;Cumulus;aquecedor elétr/Luxo  100 lts/vertical;0
+MARCADO;3330;Cumulus;aquecedor elétr/Luxo  125 lts/horizontal;0
+MARCADO;4276;Cumulus;aquecedor elétr/Luxo  125 lts/vertical;0
+MARCADO;2770;Cumulus;aquecedor elétr/Luxo  150 lts/horizontal;0
+MARCADO;2772;Cumulus;aquecedor elétr/Luxo  175 lts/vertical;0
+MARCADO;5392;Cumulus;aquecedor eletr/Luxo  200  lts/horizontal;0
+MARCADO;3057;Cumulus;aquecedor eletr/Luxo  200  lts/vertical;0
+MARCADO;5384;Cumulus;aquecedor eletr/Luxo  250  lts/horizontal;0
+MARCADO;5250;Cumulus;aquecedor eletr/Luxo  250  lts/vertical;0
+MARCADO;3539;Cumulus;aquecedor elétr/Luxo  300 lts/horizontal;0
+MARCADO;5142;Cumulus;aquecedor elétr/solar  150 lts/vertical;0
+MARCADO;244;Cumulus;aquecedor elétr/vitrif   100 lts/horizontal;0
+MARCADO;4583;Cumulus;aquecedor elétr/vitrif   100 lts/vertical;0
+MARCADO;4963;Cumulus;aquecedor elétr/vitrif   125 lts/horizontal;0
+MARCADO;4209;Cumulus;aquecedor elétr/vitrif   125 lts/vertical;0
+MARCADO;4410;Cumulus;aquecedor eletr/vitrif   150  lts/horiz.;0
+MARCADO;3972;Cumulus;aquecedor eletr/vitrif  200  lts/horiz.AP;0
+MARCADO;3971;Cumulus;aquecedor eletr/vitrif  200  lts/horiz.BP;0
+MARCADO;3624;Cumulus;aquecedor gás  75 lts/GLP   -vitrificado;0
+MARCADO;615;Cumulus;aquecedor gás  75 lts/GN   - vitrificado;0
+MARCADO;3722;Cumulus;aquecedor gás 110 lts/GLP -vitrificado;0
+MARCADO;3082;Cumulus;Aquecedor gás 150 lts/GLP - aço inox;0
+MARCADO;587;Cumulus;aquecedor gás 150 lts/GLP -vitrificado;0
+MARCADO;3777;Cumulus;aquecedor gás 175 lts;0
+MARCADO;3669;Cumulus;aquecedor gás 200 lts GLP    - vitrific.;0
+MARCADO;4282;Cumulus;aquecedor gás 240 lts GLP    - vitrific.;0
+MARCADO;3548;Cumulus;aquecedor gás 300 lts /;0
+MARCADO;3952;Cumulus;aquecedor solar/elétr      75 lts/horizontal;0
+MARCADO;5068;Cumulus;aquecedor solar/eletr.  300 lts/horizontal;0
+MARCADO;5003;Cumulus;aquecedor solar/Luxo  150 lts/horizontal;0
+MARCADO;4912;Cumulus;central térm horiz.c/contr.prum 125 lts;0
+MARCADO;4575;Cumulus;central térm horiz.c/contr.prum 150 lts;0
+MARCADO;4862;Cumulus;central térm horiz.s/contr.prum 125 lts;0
+MARCADO;4831;Cumulus;central térm horiz.s/contr.prum 150 lts;0
+MARCADO;4595;Cumulus;Central térm vert.c/contr.prum  150 lts;0
+MARCADO;3984;Cumulus;Central térm vert.c/contr.prum  200 lts;0
+MARCADO;4312;Cumulus;Central térm vert.s/contr.prum  200 lts gn;0
+MARCADO;4857;Cumulus;Central térm vert.s/contr.prum  300 lts;0
+MARCADO;3939;Cumulus;conj. resid. 250 L horiz.;0
+MARCADO;4035;Cumulus/Ass.;conj. abraçadeira;0
+MARCADO;2930;Cumulus/Ass.;resist. 110 x 1500 w/mod.novo;0
+MARCADO;3991;Cumulus/Ass.;resist. 110 x 2000 w/mod.novo;0
+MARCADO;3992;Cumulus/Ass.;resist. 110 x 3000 w/mod.novo;0
+MARCADO;3581;Cumulus/Ass.;resist. 220 V x 1500 w;0
+MARCADO;4000;Cumulus/Ass.;resist. 220 x 3000 w;0
+MARCADO;3580;Cumulus/Ass.;resist.110/220 V.x 1500 Wmod. antigo;0
+MARCADO;4259;Cupro;"tubo cobre flexivel  3/8""  mm/01 kg";0
+MARCADO;3853;Dancor;Bomba  Mod : CP-6R     110  V;0
+MARCADO;4298;Dancor;Sistema Pressurização TDV-100-Horiz. 220 V;0
+MARCADO;3852;Dancor;Sistema Pressurização TDV-200-Hor- 110 V;0
+MARCADO;3897;Dancor;Sistema Pressurização TDV-200-Hor- 220 V;0
+MARCADO;3849;Eberle;conj.bomba + pressostato 1.0 CV x 110 V;0
+MARCADO;4881;Falmec;barbecue dominó 30 cm/220 V;0
+MARCADO;4808;Falmec;barbecue elétr.inox 30 cm/Smeg 220 V;0
+MARCADO;4810;Falmec;coifa apollo pared 120cm/220 V;0
+MARCADO;4023;Falmec;coifa apollo pared 60cm/110V;0
+MARCADO;3994;Falmec;coifa apollo pared 80cm/110V;0
+MARCADO;3918;Falmec;coifa apollo pared 90cm/110V;0
+MARCADO;4014;Falmec;coifa apolo ilha  90cm inox/110V;0
+MARCADO;5085;Falmec;coifa aurora  parede 80 cm/110V;0
+MARCADO;5098;Falmec;coifa aurora ilha 80cm inox/110V;0
+MARCADO;5267;Falmec;coifa aurora ilha 90cm inox/110V;0
+MARCADO;4954;Falmec;coifa aurora pared 90cm/110V;0
+MARCADO;4941;Falmec;coifa ícaro pared 60cm/110V;0
+MARCADO;4424;Falmec;coifa ícaro pared 80cm/110V;0
+MARCADO;5077;Falmec;coifa ícaro pared 90cm/110V;0
+MARCADO;3998;Falmec;coifa roma pared 60cm/110V;0
+MARCADO;3904;Falmec;coifa roma pared 80cm/110V;0
+MARCADO;3935;Falmec;coifa roma pared 90cm/110V inox;0
+MARCADO;4230;Falmec;coifa siena 60 cm inox/110V;0
+MARCADO;4435;Falmec;coifa siena 80 cm inox/110V;0
+MARCADO;3925;Falmec;coifa siena 90 cm inox/110V;0
+MARCADO;3919;Falmec;coifa siena ilha 60cm vidro/110V;0
+MARCADO;4642;Falmec;coifa siena ilha 80cm vidro/110V;0
+MARCADO;4278;Falmec;coifa siena ilha 90cm vidro/110V;0
+MARCADO;3917;Falmec;coifa veneza pared 60cm/110V;0
+MARCADO;3983;Falmec;coifa veneza pared 90cm/110V;0
+MARCADO;4030;Falmec;coifa verona  ilha 60cm inox/220 V;0
+MARCADO;4953;Falmec;coifa verona  ilha 90cm aço inox/vidro110 V;0
+MARCADO;3978;Falmec;coifa verona  ilha 90cm inox/110 V;0
+MARCADO;3951;Falmec;coifa verona pared 60cm - vidro/110V;0
+MARCADO;3930;Falmec;coifa verona pared 90cm - inox - vidro/110V;0
+MARCADO;4005;Falmec;coifa verona pared 90cm - inox/110V;0
+MARCADO;4640;Falmec;cooktop c/gás stop 70 cm/colletion;0
+MARCADO;4807;Falmec;cooktop gás inox 72 cm 220 V/Smeg;0
+MARCADO;5108;Falmec;cooktops 30 cm - gás stop/grelha gusa;0
+MARCADO;3931;Falmec;cooktops 60 cm;0
+MARCADO;5178;Falmec;cooktops 60 cm - gás stop/grelha gusa;0
+MARCADO;3932;Falmec;cooktops 70 cm;0
+MARCADO;5057;Falmec;cooktops 75 cm - gás stop/grelha gusa;0
+MARCADO;5080;Falmec;cooktops 90 cm - gás stop/grelha gusa;0
+MARCADO;3933;Falmec;cooktops 90 cm/milano;0
+MARCADO;4246;Falmec;dominó gás stop 30 inox/02 queimadores;0
+MARCADO;4425;Falmec;forno eletr. 60 cm inox / 127 V;0
+MARCADO;4883;Falmec;forno eletr. estático  60 cm inox / 220 V;0
+MARCADO;4809;Falmec;forno gás 60 cm 220 V/Smeg;0
+MARCADO;4272;Falmec;forno gás 60 cm inox / 127 V;0
+MARCADO;4314;Falmec;forno gás 90 cm inox / 127 V;0
+MARCADO;4663;Falmec;motor p/coifa falmec vazão 1000 M³;0
+MARCADO;5385;Fenix;duto chaminé 100 x 1.20 mts;135
+MARCADO;5660;Fischer;coifa parede 90 cm Talent;0
+MARCADO;5683;Franke;coifa parede 90 cm  ARKETTO;2
+MARCADO;5684;Franke;coifa parede 90 cm Vetro;2
+MARCADO;5696;Franke;cooktop 5 bc gás inox  70 cm;2
+MARCADO;5682;Franke;cooktop 5 bc gás inox  90 cm;1
+MARCADO;5715;Franke*;coifa parede cartesio 60 cm 110 V;0
+MARCADO;5766;Gelopar;cervejeira GRBA 230 - 220 V;0
+MARCADO;4449;General Heat;aquec.ambiente ext.ph-plus 1800 br-glp;0
+MARCADO;4452;General Heat;exterminador mosquito fotoc.trap;0
+MARCADO;4450;General Heat;luminária solar light  3713;0
+MARCADO;4451;General Heat;luminária solar light 1011 B;0
+MARCADO;5846;Grundfos;bomba booester NXD-2 x 110 V;0
+MARCADO;5707;Grundfos;"CMBE 10-1 A-R-A-E AQQE1"" x  220 V";0
+MARCADO;5446;Grundfos;"CMBE 5-3 A-R-A-E 1"" x  220 V";0
+MARCADO;5316;Grundfos;motobomba mq3-35 A 220 V;0
+MARCADO;5325;Grundfos;motobomba mq3-45 A-B-A  220 V;0
+MARCADO;5794;Grundfos;pressurizador MQ3-25;0
+MARCADO;5818;Grundfos;scala 2 - 3 akcdde 1 x 200-2;0
+MARCADO;5787;Grundfos;UPA15-90  160  1 x 220;0
+MARCADO;5786;Grundfos;UPS25-62  180  1 x 220;0
+MARCADO;5740;Heliodin;aquecedor solar/elétrico 100 litros horizontal;0
+MARCADO;5701;Heliodin;aquecedor solar/elétrico 100 litros vertical;0
+MARCADO;5700;Heliodin;aquecedor solar/elétrico 150 litros vertical;0
+MARCADO;5685;Heliodin;reservatório 150 litros horizontal;0
+MARCADO;5712;Heliodin;tanque 1000 litros horiz. AP  eletrico;0
+MARCADO;5084;JMS;aquecedor elétr/Luxo   80 lts/hoiz.cobre;0
+MARCADO;5429;JMS;aquecedor eletrico 100 litros cobre horiz;0
+MARCADO;5430;JMS;valvula segurança;0
+MARCADO;4818;KomCoifa;coifa aço inox - vidro 60 cm / 110 V;0
+MARCADO;4817;KomCoifa;coifa aço inox - vidro 90 cm / 110 V;0
+MARCADO;5581;Komeco;Aquec. GLP/KO 15 DI Inox(1725);1
+MARCADO;5553;Komeco;Aquec. GLP/KO 16 D  BR   16 lts(3575);1
+MARCADO;5550;Komeco;Aquec. GLP/KO 21 D  BR   19,5(2679);4
+MARCADO;5552;Komeco;Aquec. GLP/KO 21 Di  Inox   21 lts(2973);1
+MARCADO;5210;Komeco;Aquec. GN      KO 07 B    BR  7.5 lts(2158);1
+MARCADO;5554;Komeco;Aquec. GN      KO 16 D  BR   16lts(3552);3
+MARCADO;5589;Komeco;Aquec. GN      KO 16 Di  Inox   16 (2800);0
+MARCADO;5551;Komeco;Aquec. GN      KO 21 D    BR   21(3553);8
+MARCADO;5588;Komeco;Aquec. GN      KO 21 Di  Inox (3556);0
+MARCADO;3608;Komeco;mini-bomba TP 40  110 V - Bronze (2603)(2523);7
+MARCADO;3801;Komeco;mini-bomba TP 40  220 V - Bronze (3110);2
+MARCADO;5323;Komeco;mini-bomba TP 40 thermo  110 V (2603);0
+MARCADO;5144;Komeco;mini-bomba TP 80  110 V - Bronze (3326);1
+MARCADO;3143;Komeco;pressur. agua TP 820  /12 mts m.c.a (2269);1
+MARCADO;3142;Komeco;pressur. TP 825  /20 mts m.c.a (2335);2
+MARCADO;3828;Komeco;pressur. TQC 200 - 110 V (534);3
+MARCADO;3655;Komeco;pressur. TQC 400 - 110 V (1115);3
+MARCADO;3993;Lao;"hidromêtro  1""  / 10 mts";0
+MARCADO;3582;Lao;"hidromêtro 3/4"" unijato";0
+MARCADO;4948;Lao;"hidromêtro MJ 3/4"" 5 M";0
+MARCADO;3576;Lao;medidor gás G 0,6;0
+MARCADO;5155;Lao;medidor gás G 1.0;0
+MARCADO;3577;Lao;medidor gás G 1.6 (2076);2
+MARCADO;4911;Lao;medidor gás G 2.5 (493);0
+MARCADO;3934;Lao;medidor gás G 4.0;1
+MARCADO;4871;Latina;purificador de agua minerilizer;0
+MARCADO;4889;Latina;purificador de agua puri ice;0
+MARCADO;4890;Latina;purificador de agua puri tronic;0
+MARCADO;4872;Latina;purificador de agua sterilizer;0
+MARCADO;4879;Latina;suporte coluna p/beb/pur branco;0
+MARCADO;4880;Latina;suporte parede SKIN/6102;0
+MARCADO;4657;Mallory;coiffa mallorca spain 60 cm/110 V;0
+MARCADO;5724;Orbis;aquecedor gás 130 lts (1662);0
+MARCADO;5725;Orbis;aquecedor gás 160 lts (1668);0
+MARCADO;4714;Ricozon;BSO - ozonizador banheira;1
+MARCADO;4711;Ricozon;purificador agua Arujá - br;0
+MARCADO;4715;Ricozon;purificador agua Arujá - titânio;0
+MARCADO;4712;Ricozon;purificador agua Cantareira - br;0
+MARCADO;4716;Ricozon;purificador agua Cantareira - titânio;0
+MARCADO;4713;Ricozon;purificador ar  Desodora;2
+MARCADO;5863;Rinnai;aquec.gás  12 l/glp  1002 (2376);0
+MARCADO;5765;Rinnai;aquec.gás  15  l/glp    M 150 (3015);1
+MARCADO;5386;Rinnai;aquec.gás  15  l/gn    M 150 (3056);2
+MARCADO;5893;Rinnai;aquec.gás  15  l/gn    M 150 (3156);2
+MARCADO;4858;Rinnai;aquec.gás  20 l/glp   M 200 (3011);0
+MARCADO;4978;Rinnai;aquec.gás  20 l/gn    M 200 (1697);0
+MARCADO;5824;Rinnai;aquec.gás  21 l/glp   E 211 (3094) BR;0
+MARCADO;5838;Rinnai;aquec.gás  21 l/gn    E 211 (2584);1
+MARCADO;5839;Rinnai;aquec.gás  21 l/gn   E 211 Prata;0
+MARCADO;5353;Rinnai;aquec.gás 42 l/glp   3201 FFA-BE;0
+MARCADO;5451;Rinnai;master sistema MEC - MSB-M;0
+MARCADO;5452;Rinnai;Smart Start  RSC7 BR;0
+MARCADO;4861;Rowa;eletrobombas recirculadora;0
+MARCADO;4860;Rowa;eletrobombas recirculadora;0
+MARCADO;5187;Rowa;pressurizador Rowa  MaxPress 30 E 220;0
+MARCADO;5402;Schneider;quickpak subdrive inline bomba centr.trif;0
+MARCADO;3916;Texius;bomba circulação agua quente;0
+MARCADO;3889;Texius;bomba circulação agua quente 1/4 CV;0
+MARCADO;3613;Texius;"filtro de linha bronze 1/2""";0
+MARCADO;3550;Texius;"filtro de linha bronze 3/4""";0
+MARCADO;4783;Texius;pressurizador  TPHX  BR 100 W  127 V;0
+MARCADO;3894;Texius;suporte p/pressurizador c/coxin;0
+MARCADO;4287;Tramontina;coifa new dritta inox pared 60cm/110V;2
+MARCADO;4286;Tramontina;coifa new dritta wall inox pared 90cm/110V;2
+MARCADO;4288;Tramontina;coifa new vetro inox/vidro pared 60cm/220V;0
+MARCADO;4289;Tramontina;coifa new vetro inox/vidro pared 90cm/110V;0
+MARCADO;4784;Tramontina;lixeira p/granito - 8 litros;0
+MARCADO;5121;Venax;fogão a lenha nº 1  s/tampa;0
+MARCADO;4913;Venax;forno emb.mod.cristallo 50 L inox. c/grade 127 V;0
+MARCADO;4886;Venax;forno emb.mod.cristallo 90 L inox c/grade 127V;0
+MARCADO;4887;Venax;forno emb.mod.nero 50 L c/grade127 V;0
+MARCADO;3578;Westaflex;aro de arremate  130 mm (73);5
+MARCADO;3543;Westaflex;Fita adesiva poliester Aluminizada (334);18
+MARCADO;3471;Westaflex;Flextic  1.5 mts x 130 mm (338);0
+INATIVO;2850;Akros/Galv.;"tee  galvanizado    1/2""";0
+INATIVO;5775;Albacete;aquec.eletrico/solar 100 litros horiz aço 316;0
+INATIVO;5855;Albacete;aquec.eletrico/solar 150 litros horiz aço 316;0
+INATIVO;5835;Albacete;aquec.eletrico/solar 150 litros vertical aço 316;0
+INATIVO;5840;Albacete;aquec.eletrico/solar 200 litros vertical aço 316;0
+INATIVO;5847;Albacete;aquec.eletrico/solar 50 litros horiz aço 316;0
+INATIVO;4231;Bosch;aquec. gás/GLP  08 lts/ GWH 169 B;0
+INATIVO;5647;Bosch;aquec. gás/GLP 16 lts/GWH 320;0
+INATIVO;3909;Bosch;aquec. gás/GLP 16,5 lts/ COB;0
+INATIVO;4260;Bosch;aquec. gás/GLP 16,5 lts/ GWH;0
+INATIVO;3910;Bosch;aquec. gás/GLP 20,5 lts/ CODB;0
+INATIVO;3914;Bosch;aquec. gás/GLP 21,5 lts/ exaustão Silver;0
+INATIVO;4654;Bosch;aquec. gás/GLP 25 lts/GWH 500;0
+INATIVO;5779;Bosch;aquec. gás/GLP 25 lts/GWH 520;0
+INATIVO;3911;Bosch;aquec. gás/GN  16,5 lts/ COB;0
+INATIVO;4261;Bosch;aquec. gás/GN  16,5 lts/ GWH;0
+INATIVO;3863;Bosch;Aquec. gás/GN  17.6 lts   WB 350;0
+INATIVO;3912;Bosch;aquec. gás/GN  20,5 lts/ CODB;0
+INATIVO;5774;Bosch;aquec. gás/GN 18  lts/GWH 350;0
+INATIVO;4653;Bosch;aquec. gás/GN 23 lts/GWH 500;0
+INATIVO;5772;Bosch;aquec. gás/GN 23 lts/GWH 520;0
+INATIVO;4844;Bosch;aquec. gás/GN 36 lts/GWH 720;0
+INATIVO;3860;Bosch;pressurizador PB 135/  13.0 mts mca;0
+INATIVO;3861;Bosch;pressurizador PB 350/  21.0 mts/110 V;0
+INATIVO;3899;Bosch;pressurizador PB 350/  21.0 mts/220 V;0
+INATIVO;4279;Cupro;"tubo elumagás 3/8""    1.0 mts";28
+INATIVO;5728;Eberle;press.c/flux interno-MB 63 1/2 CV 220 V;0
+INATIVO;3979;Eberle;press.c/flux interno-MB 63 1/4 CV 120 V;0
+INATIVO;3980;Eberle;press.c/flux.interno-MB 63 1/3 CV 120 V;0
+INATIVO;4221;Eluma;tubo cobre A 15 mm 01.00 mts  gás;0
+INATIVO;5673;Fischer;churrasqueira embutir gás 3 espetos;0
+INATIVO;5674;Fischer;churrasqueira embutir gás 5 espetos;0
+INATIVO;5672;Fischer;coifa ilha 90 cm island slin;0
+INATIVO;5659;Fischer;coifa parede 60 cm Talent;1
+INATIVO;5667;Fischer;coifa parede steel 90 cm;0
+INATIVO;5675;Fischer;cooktop inox 5 bocas tripla;0
+INATIVO;3589;Incodral;engate gás 0,30 cm F x F;1
+INATIVO;3590;Incodral;engate gás 0,40 cm  F x F;1
+INATIVO;4238;Incodral;engate gás 0,50 cm F x F;1
+INATIVO;3616;Incodral;engate gás 0,80 cm;0
+INATIVO;3617;Incodral;engate gás 1.20 mts;1
+INATIVO;3618;Incodral;engate gás 1.80 mts;1
+INATIVO;3619;Incodral;engate gás 2.00  mts;0
+INATIVO;2291;Jackwal;"reg.esf.90º 1/2""npt(e)x(e)";0
+INATIVO;5273;Komeco;Aquec. GLP/KO 07 B     BR    7.5 lts;0
+INATIVO;5319;Komeco;Aquec. GLP/KO 12  M     BR    12.0 lts;0
+INATIVO;5318;Komeco;Aquec. GN      KO 12  M     BR    11.5 lts;0
+INATIVO;3760;Lorenzetti;aquec.   8.5 litros gás/gn;0
+INATIVO;3055;Lorenzetti;aquec.   9.0 litros gás/glp;0
+INATIVO;1351;Lorenzetti;aquec. 13.5 litros gás/glp;0
+INATIVO;3761;Lorenzetti;aquec. 14.4 litros gás/gn;0
+INATIVO;1844;Lorenzetti;aquec. 17.0 litros gás/glp;0
+INATIVO;3762;Lorenzetti;aquec. 17.5 litros gás/gn;0
+INATIVO;3056;Lorenzetti;aquec. gás/GLP  08 lts/prata;0
+INATIVO;4277;Lorenzetti;desv..Capri ABS 4994 C-16 Lorenz.;0
+INATIVO;5422;Rinnai;aquec.gás  35 l/glp   2802  (1821);0
+INATIVO;5496;Rinnai;aquec.gás  35 l/gn    2802 (1626);0
+INATIVO;5356;Rinnai;aquec.gás  35.5 lts/GLP  306 UBR;0
+INATIVO;3283;Rinnai;aquec.gás  37.0 lts/GLP  304 UBR;0
+INATIVO;4328;Rinnai;aquec.gás  37.0 lts/GN   304 UBR;0
+INATIVO;4965;Rinnai;aquecedor gás 15  lts/glp - 110 V;0
+INATIVO;3532;Rinnai;aquecedor gás 15 lts;0
+INATIVO;3890;Rinnai;aquecedor gás 23.5 lts/glp REU 16 / Rinnai;7
+INATIVO;3891;Rinnai;aquecedor gás 30 lts/glp - 220 V;0
+INATIVO;3593;Rinnai;aquecedor gás 37.0  lts - GLP - Rinnai;1
+INATIVO;5837;Rinnai;Z_aquec.gás  21.0 l/gn     Prata(2343);0
+INATIVO;4349;Rinnai -Assi;conj. tocador de calor sem estanho;0
+INATIVO;3566;Rinnai -Assi;filtro de agua industrial 30;0
+INATIVO;3839;Rinnai -Assi;rotor industrial 30;0
+INATIVO;5395;Rowa;pressurizador Rowa Press 25;0
+INATIVO;5166;Rowa;pressurizador Rowa Press 270 monof;0
+INATIVO;5118;Rowa;Rowa press 200 Trifasica;0
+INATIVO;4856;Rowa;Rowa press 40;0
+INATIVO;5075;Rowa;Rowa RW 9 mini - 110 V;0
+INATIVO;4961;Tramontina;coifa new dritta isla 90 inox/110 V-220 V;0
+INATIVO;4767;Tramontina;coifa new vetro isla 90 inox/vidro/220 V;0
+INATIVO;4766;Tramontina;coifa vetro isla 90 inox/vidro/110 V;0
+INATIVO;4428;Tramontina;cooktop aço inox 30 x 50 1 Q TC  gás;0
+INATIVO;4429;Tramontina;cooktop glass 31 x 51  2 Q TC  gás;0
+INATIVO;5073;Tramontina;cooktop glass 4 bocas gás/Brasil;0
+INATIVO;4296;Tramontina;cooktop penta 5 GX Tri inox;0
+INATIVO;4294;Tramontina;cooktop trapézio 4 GG Tri/70 cm;0
+INATIVO;5114;Tramontina;cooktop vitroceramico 30  1 Q TC  gás;0
+INATIVO;4290;Tramontina;depurador inox pared 60 cm/110V;0
+INATIVO;5176;Tramontina;forno elétr.glass cód.94851/220;0
+INATIVO;2532;Westaflex;Flextic  3.0 mts x   60 mm [ 740 mm ];0
+INATIVO;3039;Westaflex;kit chaminé  80 x 3.0  mts;0
+INATIVO;4706;Westaflex;zk__ duto form sandwiche 76 x 1.0;0
+Z_;3620;Deca-Metais;Z_chuveiro spot;0
+Z_;3561;Komeco;Z_Aquec. gás/GN 20 lts / KO 2000 SE;0
+Z_;5850;Rinnai;Z_aquec.gás  17.0 lts/GLP    FEH;0
+Z_;5851;Rinnai;Z_aquec.gás  17.0 lts/GN    FEH;0
+Z_;5331;Rinnai;Z_aquec.gás  18.1 lts/GLP  1302 FEH;0
+Z_;5590;Rinnai;Z_aquec.gás  20 l/glp   1602  (1837);0
+Z_;5746;Rinnai;Z_aquec.gás  35 l/gn    2802  Prata;0
+Z_;5611;Rinnai;Z_aquec.gás  35.5 lts/GLP   2802  RFA;0
+Z_;5086;Rinnai;Z_aquec.gás 47.0 l/gn    3230 FFA-BE;0
+SEM_PRODUTO;1352;;;0
+SEM_PRODUTO;1350;;;0
+SEM_PRODUTO;2442;;;0
+SEM_PRODUTO;409;;;0
+SEM_PRODUTO;2471;;;0
+SEM_PRODUTO;444;;;0
+SEM_PRODUTO;2637;;;0
+SEM_PRODUTO;2440;;;0
+SEM_PRODUTO;2536;;;0
+SEM_PRODUTO;2325;;;0
+SEM_PRODUTO;1617;;;0
+SEM_PRODUTO;2716;;;0
+SEM_PRODUTO;586;;;0
+SEM_PRODUTO;1480;;;0
+SEM_PRODUTO;2769;;;0
+SEM_PRODUTO;2893;;;0
+SEM_PRODUTO;2773;;;0
+SEM_PRODUTO;243;;;0
+SEM_PRODUTO;2663;;;0
+SEM_PRODUTO;234;;;0
+SEM_PRODUTO;343;;;0
+SEM_PRODUTO;1419;;;0
+SEM_PRODUTO;237;;;0
+SEM_PRODUTO;105;;;0
+SEM_PRODUTO;1502;;;0
+SEM_PRODUTO;636;;;0
+SEM_PRODUTO;429;;;0
+SEM_PRODUTO;250;;;0
+SEM_PRODUTO;2676;;;0
+SEM_PRODUTO;2666;;;0
+SEM_PRODUTO;2687;;;0
+SEM_PRODUTO;3006;;;0
+SEM_PRODUTO;2529;;;0
+SEM_PRODUTO;2528;;;0
+SEM_PRODUTO;2527;;;0
+SEM_PRODUTO;3007;;;0
+SEM_PRODUTO;2500;;;0
+SEM_PRODUTO;2861;;;0
+SEM_PRODUTO;2584;;;0
+SEM_PRODUTO;1359;;;0
+SEM_PRODUTO;178;;;0
+SEM_PRODUTO;743;;;0
+SEM_PRODUTO;1836;;;0
+SEM_PRODUTO;209;;;0
+SEM_PRODUTO;1417;;;0
+SEM_PRODUTO;1317;;;0
+SEM_PRODUTO;442;;;0
+SEM_PRODUTO;1348;;;0
+SEM_PRODUTO;647;;;0
+SEM_PRODUTO;649;;;0
+SEM_PRODUTO;640;;;0
+SEM_PRODUTO;1306;;;0
+SEM_PRODUTO;619;;;0
+SEM_PRODUTO;620;;;0
+SEM_PRODUTO;703;;;0
+SEM_PRODUTO;643;;;0
+SEM_PRODUTO;645;;;0
+SEM_PRODUTO;2417;;;0
+SEM_PRODUTO;618;;;0
+SEM_PRODUTO;1355;;;0
+SEM_PRODUTO;1356;;;0
+SEM_PRODUTO;1357;;;0
+SEM_PRODUTO;1358;;;0
+SEM_PRODUTO;1353;;;0
+SEM_PRODUTO;2414;;;0
+SEM_PRODUTO;2888;;;0
+SEM_PRODUTO;1363;;;0
+SEM_PRODUTO;1361;;;0
+SEM_PRODUTO;2656;;;0
+SEM_PRODUTO;1463;;;0
+SEM_PRODUTO;1460;;;0
+SEM_PRODUTO;449;;;0
+SEM_PRODUTO;1728;;;0
+SEM_PRODUTO;2466;;;0
+SEM_PRODUTO;2468;;;0
+SEM_PRODUTO;2572;;;0
+SEM_PRODUTO;2465;;;0
+SEM_PRODUTO;2928;;;0
+SEM_PRODUTO;1600;;;0
+SEM_PRODUTO;3282;;;0
+SEM_PRODUTO;3287;;;0
+SEM_PRODUTO;3054;;;0
+SEM_PRODUTO;3084;;;0
+SEM_PRODUTO;3214;;;0
+SEM_PRODUTO;3319;;;0
+SEM_PRODUTO;3329;;;0
+SEM_PRODUTO;3275;;;0
+SEM_PRODUTO;3021;;;0
+SEM_PRODUTO;3325;;;0
+SEM_PRODUTO;3334;;;0
+SEM_PRODUTO;3269;;;0
+SEM_PRODUTO;3270;;;0
+SEM_PRODUTO;3320;;;0
+SEM_PRODUTO;3343;;;0
+SEM_PRODUTO;3023;;;0
+SEM_PRODUTO;3233;;;0
+SEM_PRODUTO;3300;;;0
+SEM_PRODUTO;3022;;;0
+SEM_PRODUTO;3375;;;0
+SEM_PRODUTO;3483;;;0
+SEM_PRODUTO;3497;;;0
+SEM_PRODUTO;3481;;;0
+SEM_PRODUTO;3482;;;0
+SEM_PRODUTO;3568;;;0
+SEM_PRODUTO;3599;;;0
+SEM_PRODUTO;3141;;;0
+SEM_PRODUTO;3470;;;0
+SEM_PRODUTO;3597;;;0
+SEM_PRODUTO;3202;;;0
+SEM_PRODUTO;3025;;;0
+SEM_PRODUTO;3462;;;0
+SEM_PRODUTO;3688;;;0
+SEM_PRODUTO;3689;;;0
+SEM_PRODUTO;3706;;;0
+SEM_PRODUTO;3713;;;0
+SEM_PRODUTO;3686;;;0
+SEM_PRODUTO;3687;;;0
+SEM_PRODUTO;3692;;;0
+SEM_PRODUTO;3716;;;0
+SEM_PRODUTO;3712;;;0
+SEM_PRODUTO;3794;;;0
+SEM_PRODUTO;3836;;;0
+SEM_PRODUTO;3834;;;0
+SEM_PRODUTO;3819;;;0
+SEM_PRODUTO;3851;;;0
+SEM_PRODUTO;3850;;;0
+SEM_PRODUTO;3788;;;0
+SEM_PRODUTO;3859;;;0
+SEM_PRODUTO;3206;;;0
+SEM_PRODUTO;3864;;;0
+SEM_PRODUTO;3865;;;0
+SEM_PRODUTO;3858;;;0
+SEM_PRODUTO;3898;;;0
+SEM_PRODUTO;3900;;;0
+SEM_PRODUTO;3913;;;0
+SEM_PRODUTO;3928;;;0
+SEM_PRODUTO;3817;;;0
+SEM_PRODUTO;3938;;;0
+SEM_PRODUTO;3418;;;0
+SEM_PRODUTO;3421;;;0
+SEM_PRODUTO;3905;;;0
+SEM_PRODUTO;3950;;;0
+SEM_PRODUTO;3970;;;0
+SEM_PRODUTO;3144;;;0
+SEM_PRODUTO;3530;;;0
+SEM_PRODUTO;3088;;;0
+SEM_PRODUTO;4038;;;0
+SEM_PRODUTO;4039;;;0
+SEM_PRODUTO;4227;;;0
+SEM_PRODUTO;4280;;;0
+SEM_PRODUTO;3846;;;0
+SEM_PRODUTO;4330;;;0
+SEM_PRODUTO;4284;;;0
+SEM_PRODUTO;4285;;;0
+SEM_PRODUTO;4291;;;0
+SEM_PRODUTO;4292;;;0
+SEM_PRODUTO;4293;;;0
+SEM_PRODUTO;4295;;;0
+SEM_PRODUTO;4315;;;0
+SEM_PRODUTO;3906;;;0
+SEM_PRODUTO;4427;;;0
+SEM_PRODUTO;4605;;;0
+SEM_PRODUTO;4824;;;0
+SEM_PRODUTO;3422;;;0
+SEM_PRODUTO;4870;;;0
+SEM_PRODUTO;4827;;;0
+SEM_PRODUTO;4826;;;0
+SEM_PRODUTO;4825;;;0
+SEM_PRODUTO;4701;;;0
+SEM_PRODUTO;5001;;;0
+SEM_PRODUTO;4329;;;0
+SEM_PRODUTO;4964;;;0
+SEM_PRODUTO;4979;;;0
+SEM_PRODUTO;5135;;;0
+SEM_PRODUTO;5129;;;0
+SEM_PRODUTO;5133;;;0
+SEM_PRODUTO;5130;;;0
+SEM_PRODUTO;5134;;;0
+SEM_PRODUTO;5156;;;0
+SEM_PRODUTO;5157;;;0
+SEM_PRODUTO;5158;;;0
+SEM_PRODUTO;5159;;;0
+SEM_PRODUTO;5160;;;0
+SEM_PRODUTO;5161;;;0
+SEM_PRODUTO;5177;;;0
+SEM_PRODUTO;5168;;;0
+SEM_PRODUTO;5169;;;0
+SEM_PRODUTO;5170;;;0
+SEM_PRODUTO;5209;;;0
+SEM_PRODUTO;3908;;;0
+SEM_PRODUTO;5212;;;0
+SEM_PRODUTO;5248;;;0
+SEM_PRODUTO;5269;;;0
+SEM_PRODUTO;5332;;;0
+SEM_PRODUTO;5587;;;0
+SEM_PRODUTO;5626;;;0
+SEM_PRODUTO;5723;;;0
+SEM_PRODUTO;5744;;;0
+SEM_PRODUTO;5708;;;0
+SEM_PRODUTO;5436;;;0
+SEM_PRODUTO;5494;;;0
+SEM_PRODUTO;5747;;;0
+SEM_PRODUTO;5745;;;0
+SEM_PRODUTO;5780;;;0
+SEM_PRODUTO;5826;;;0
+SEM_PRODUTO;5843;;;0

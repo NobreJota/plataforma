@@ -43,6 +43,31 @@
 //   CREDITO parcelado (preco a vista). O formato antigo { forma, ... } continua valendo.
 // Alterado em: 08/10/2026 - GET /:id/espelho devolve tambem as boletas (codigo, data) e os nomes
 //   das contas de destino, para o espelho dizer COMO cada parte foi cobrada
+// Alterado em: 09/10/2026 - INSTALACAO (so NF):
+//   GET  /tecnicos                     subtitulos 2.06.001.NNN (+ receita 4.03.002.NNN)
+//   POST /produtos/:codigo/instala     { instala } aprende que o produto e de instalar
+//        (arquivo_docs.instala); a busca de produto devolve "instala"
+//   venda.instalacao vem da tela (montar); ao FECHAR, item marcado sem instalacao
+//   confirmada recusa; com ela, nasce a OS em _ordens_servico (status P, numero
+//   sequencial da empresa) na mesma transacao. Cancelar a venda cancela a OS.
+// Alterado em: 10/10/2026 - GET /servicos?dia=YYYY-MM-DD : os servicos do dia (tela Servico >
+//   Agenda do dia): OS em aberto e vendas abertas com instalacao confirmada, todos os tecnicos.
+// Alterado em: 10/10/2026 - AGENDA DO TECNICO: GET /agenda?tecnico=&dia=&venda= devolve os
+//   horarios ja tomados naquele dia (OS em aberto e vendas abertas com instalacao confirmada,
+//   fora a propria venda). Ao FECHAR, a mesma conferencia roda dentro da transacao: dois
+//   clientes no mesmo horario do mesmo tecnico = recusa.
+// Alterado em: 10/10/2026 - /titulos-cliente devolve "proximaConta" (ex.: 1.03.017.772): a tela
+//   mostra so ela, sem lista de titulos.
+// Alterado em: 10/10/2026 - CONTA NOVA DE CLIENTE vai no ULTIMO titulo do grupo (1.03.017...).
+//   /titulos-cliente diz o ultimo numero de cada titulo e se esta CHEIO (999); se o ultimo
+//   titulo encheu, devolve "novoTitulo" (proximo codigo, ex.: 1.03.018, nome no padrao
+//   "Cliente Pessoa Física/MM/AAAA"). POST /conta-nova com titulo "NOVO" cria o titulo
+//   (copia dos campos do ultimo) e a conta .001 nele — numa TRANSACAO, junto com a ligacao.
+// Alterado em: 09/10/2026 - GARANTIA no lugar do "instala": arquivo_docs.garantia (0/1) —
+//   produto com garantia, servico e manutencao (o que pode ser instalado).
+//   POST /produtos/:codigo/garantia { garantia: 1|0 }; a busca devolve "garantia".
+//   PRECO NEGOCIADO: o item pode vir com "preco" (centavos) diferente da tabela; grava
+//   precoUnitario = negociado e precoTabela = o do cadastro.
 // Alterado em: 07/10/2026 - CANCELAR VENDA e relatorio so das EMITIDAS:
 //   GET  /relatorio   so vendas fechadas (F) e canceladas (C), pela data do fechamento
 //   GET  /:id/espelho a venda + as parcelas dela no fluxo (aberta / recebida / cancelada)
@@ -106,7 +131,7 @@ router.get('/produtos', async (req, res) => {
 
     const docs = await col('arquivo_docs').find(filtro)
       .project({ codigo: 1, descricao: 1, descricaoTecnica: 1, referencia: 1, marcaproduto: 1,
-                 fornecedor: 1, qte: 1, precovista: 1, precoprazo: 1 })
+                 fornecedor: 1, qte: 1, precovista: 1, precoprazo: 1, garantia: 1, instala: 1 })
       .sort({ descricao: 1 }).limit(fornecedor && !busca ? 300 : 30).toArray();
 
     // codigo digitado exato vem primeiro
@@ -116,12 +141,155 @@ router.get('/produtos', async (req, res) => {
       codigo: p.codigo, descricao: p.descricao || '', descricaoTecnica: p.descricaoTecnica || '',
       referencia: p.referencia || '', marca: p.marcaproduto || p.fornecedor || '', estoque: Number(p.qte) || 0,
       precoVista: centavos(p.precovista), precoPrazo: centavos(p.precoprazo),
+      garantia: Number(p.garantia) === 1 || p.instala === true,   // instala: marcacao antiga
     })) });
   } catch (err) {
     console.error('[vendas/produtos]', err);
     res.status(500).json({ ok: false, erro: err.message });
   }
 });
+
+// ---------------------------------------------------------------------------
+// INSTALACAO
+// ---------------------------------------------------------------------------
+const PREFIXO_TECNICO = '2.06.001.';
+const PREFIXO_RECEITA_SERVICO = '4.03.002.';
+
+// GET /tecnicos   os tecnicos sao os subtitulos de 2.06.001; a receita e o mesmo final em 4.03.002
+router.get('/tecnicos', async (req, res) => {
+  try {
+    const loja = lojaDe(req);
+    const subs = await col('_contasubtitulos').find({
+      lojistaId: loja, ativo: { $ne: false },
+      codigo: { $regex: '^(' + escapar(PREFIXO_TECNICO) + '|' + escapar(PREFIXO_RECEITA_SERVICO) + ')' },
+    }).project({ codigo: 1, nome: 1 }).sort({ codigo: 1 }).toArray();
+    const receitas = new Map(subs.filter(s => s.codigo.startsWith(PREFIXO_RECEITA_SERVICO))
+      .map(s => [s.codigo.split('.').pop(), s.codigo]));
+    res.json({ ok: true, tecnicos: subs.filter(s => s.codigo.startsWith(PREFIXO_TECNICO)).map(s => ({
+      conta: s.codigo, nome: s.nome, receita: receitas.get(s.codigo.split('.').pop()) || '',
+    })) });
+  } catch (err) {
+    res.status(500).json({ ok: false, erro: err.message });
+  }
+});
+
+// POST /produtos/:codigo/garantia   { garantia: 1|0 }   produto com garantia (servico e manutencao)
+router.post('/produtos/:codigo/garantia', async (req, res) => {
+  try {
+    const codigo = Number(req.params.codigo);
+    if (!codigo) return res.status(400).json({ ok: false, erro: 'código inválido' });
+    const r = await col('arquivo_docs').updateOne({ loja_id: lojaDe(req), codigo },
+      { $set: { garantia: Number(req.body?.garantia) === 1 ? 1 : 0, atualizadoEm: new Date() },
+        $unset: { instala: '' } });
+    if (!r.matchedCount) return res.status(404).json({ ok: false, erro: 'produto não encontrado' });
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ ok: false, erro: err.message });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// AGENDA do tecnico num dia: os horarios ja tomados
+//   OS de instalacao em aberto (_ordens_servico, status diferente de C) e vendas ainda
+//   abertas com instalacao confirmada (reserva), menos a venda `excetoVenda`.
+//   Sem hora marcada: vai em semHorario (so o nome).
+// ---------------------------------------------------------------------------
+const paraMin = s => { const [h, m] = String(s || '').split(':').map(Number); return h * 60 + (m || 0); };
+async function agendaDoTecnico(loja, tecnicoConta, diaIso, excetoVenda, session) {
+  const ini = new Date(diaIso + 'T00:00:00'), fim = new Date(diaIso + 'T23:59:59');
+  const opt = session ? { session } : {};
+  const oss = await col('_ordens_servico').find({ lojistaId: loja, tecnicoConta, status: { $ne: 'C' },
+    diaPrevisto: { $gte: ini, $lte: fim } }, opt)
+    .project({ numero: 1, horaIni: 1, horaFim: 1, cliente: 1, venda: 1 }).toArray();
+  const filtroV = { lojistaId: loja, situacao: 'A', 'instalacao.confirmada': true,
+    'instalacao.tecnicoConta': tecnicoConta, 'instalacao.diaPrevisto': { $gte: ini, $lte: fim } };
+  if (excetoVenda && mongoose.Types.ObjectId.isValid(excetoVenda)) filtroV._id = { $ne: new mongoose.Types.ObjectId(excetoVenda) };
+  const abertas = await col('_vendas').find(filtroV, opt).project({ numero: 1, instalacao: 1, cliente: 1 }).toArray();
+  const todos = [
+    ...oss.filter(o => !excetoVenda || String(o.venda?.id) !== String(excetoVenda)).map(o => ({
+      horaIni: o.horaIni || '', horaFim: o.horaFim || '', cliente: o.cliente?.nome || '',
+      texto: 'OS ' + o.numero + ' · ' + (o.cliente?.nome || '') })),
+    ...abertas.map(v => ({
+      horaIni: v.instalacao.horaIni || '', horaFim: v.instalacao.horaFim || '', cliente: v.cliente?.nome || '',
+      texto: 'venda ' + v.numero + ' (aberta) · ' + (v.cliente?.nome || '') })),
+  ];
+  return {
+    ocupados: todos.filter(o => o.horaIni).sort((a, b) => paraMin(a.horaIni) - paraMin(b.horaIni)),
+    semHorario: todos.filter(o => !o.horaIni).map(o => o.texto),
+  };
+}
+
+// GET /agenda?tecnico=2.06.001.015&dia=2026-10-15&venda=<id da venda atual>
+router.get('/agenda', async (req, res) => {
+  try {
+    const tec = String(req.query.tecnico || '').trim(), dia = String(req.query.dia || '').trim();
+    if (!tec.startsWith(PREFIXO_TECNICO) || !/^\d{4}-\d{2}-\d{2}$/.test(dia)) {
+      return res.status(400).json({ ok: false, erro: 'técnico ou dia inválido' });
+    }
+    res.json({ ok: true, ...(await agendaDoTecnico(lojaDe(req), tec, dia, req.query.venda)) });
+  } catch (err) {
+    res.status(500).json({ ok: false, erro: err.message });
+  }
+});
+
+// GET /servicos?dia=2026-10-15   tudo o que esta marcado para o dia, de todos os tecnicos
+router.get('/servicos', async (req, res) => {
+  try {
+    const dia = String(req.query.dia || '').trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dia)) return res.status(400).json({ ok: false, erro: 'dia inválido' });
+    const loja = lojaDe(req);
+    const ini = new Date(dia + 'T00:00:00'), fim = new Date(dia + 'T23:59:59');
+    const campos = i => ({
+      tecnicoConta: i.tecnicoConta || '', tecnicoNome: i.tecnicoNome || '',
+      horaIni: i.horaIni || '', horaFim: i.horaFim || '',
+      endereco: i.endereco || {}, edificio: i.edificio || '', apto: i.apto || '',
+      pontoReferencia: i.pontoReferencia || '', telefone: i.telefone || '', celular: i.celular || '',
+      observacao: i.observacao || '', itens: i.itens || [],
+    });
+    const oss = await col('_ordens_servico').find({ lojistaId: loja, status: { $ne: 'C' },
+      diaPrevisto: { $gte: ini, $lte: fim } }).toArray();
+    const abertas = await col('_vendas').find({ lojistaId: loja, situacao: 'A', 'instalacao.confirmada': true,
+      'instalacao.diaPrevisto': { $gte: ini, $lte: fim } }).project({ numero: 1, instalacao: 1, cliente: 1 }).toArray();
+    const servicos = [
+      ...oss.map(o => ({ tipo: 'OS', numero: o.numero, status: o.status, venda: o.venda?.numero || null,
+                         cliente: o.cliente || {}, ...campos(o) })),
+      ...abertas.map(v => ({ tipo: 'RESERVA', numero: null, status: 'A', venda: v.numero,
+                             cliente: v.cliente || {}, ...campos(v.instalacao) })),
+    ].sort((a, b) => (a.horaIni || '99').localeCompare(b.horaIni || '99'));
+    res.json({ ok: true, dia, servicos });
+  } catch (err) {
+    res.status(500).json({ ok: false, erro: err.message });
+  }
+});
+
+// a instalacao que veio da tela, limpa (so os campos conhecidos)
+function lerInstalacao(b, itensVenda) {
+  if (!b || typeof b !== 'object') return null;
+  const t = v => String(v ?? '').trim();
+  const marcados = new Map(itensVenda.filter(i => i.precisaInstalacao).map(i => [i.codigo, i]));
+  const dia = /^\d{4}-\d{2}-\d{2}$/.test(t(b.diaPrevisto)) ? new Date(t(b.diaPrevisto) + 'T12:00:00') : null;
+  const e = b.endereco || {};
+  return {
+    confirmada: b.confirmada === true,
+    tecnicoConta: t(b.tecnicoConta).startsWith(PREFIXO_TECNICO) ? t(b.tecnicoConta) : '',
+    tecnicoNome: t(b.tecnicoNome),
+    receitaConta: t(b.receitaConta).startsWith(PREFIXO_RECEITA_SERVICO) ? t(b.receitaConta) : '',
+    diaPrevisto: dia,
+    periodo: ['MANHA', 'TARDE', 'FIXO'].includes(b.periodo) ? b.periodo : 'NENHUM',
+    horaIni: /^\d{2}:\d{2}$/.test(t(b.horaIni)) ? t(b.horaIni) : '',
+    horaFim: /^\d{2}:\d{2}$/.test(t(b.horaFim)) ? t(b.horaFim) : '',
+    endereco: { logradouro: t(e.logradouro), numero: t(e.numero), complemento: t(e.complemento),
+                bairro: t(e.bairro), cidade: t(e.cidade), uf: t(e.uf).toUpperCase().slice(0, 2),
+                cep: t(e.cep).replace(/\D/g, '') },
+    edificio: t(b.edificio), apto: t(b.apto), pontoReferencia: t(b.pontoReferencia),
+    telefone: t(b.telefone), celular: t(b.celular), observacao: t(b.observacao),
+    // so os itens que estao marcados na venda
+    itens: (Array.isArray(b.itens) ? b.itens : [])
+      .filter(i => marcados.has(Number(i.codigo)))
+      .map(i => ({ codigo: Number(i.codigo), descricao: marcados.get(Number(i.codigo)).descricao,
+                   servico: t(i.servico) || 'Instalação', observacao: t(i.observacao) })),
+  };
+}
 
 // ---------------------------------------------------------------------------
 // GET /fornecedores   para o combo: fornecedores ATIVOS no Access (_fornec_access)
@@ -244,6 +412,26 @@ router.get('/contas-cliente', async (req, res) => {
   }
 });
 
+// ultimo titulo do grupo e, se estiver cheio, o proximo (codigo e nome no padrao do ultimo)
+async function tituloDoGrupo(loja, grupo, session) {
+  const titulos = await col('_contatitulos')
+    .find({ lojistaId: loja, codigo: new RegExp('^' + escapar(grupo) + '\\.\\d+$') }, { session })
+    .sort({ codigo: 1 }).toArray();
+  const ultimoTit = titulos[titulos.length - 1] || null;
+  if (!ultimoTit) return { ultimoTit: null, cheio: false, novo: null };
+  const irmas = await col('_contasubtitulos')
+    .find({ lojistaId: loja, codigo: new RegExp('^' + escapar(ultimoTit.codigo) + '\\.\\d+$') }, { session })
+    .project({ codigo: 1 }).toArray();
+  const maior = irmas.reduce((m, s) => Math.max(m, Number(s.codigo.split('.').pop()) || 0), 0);
+  if (maior < 999) return { ultimoTit, cheio: false, novo: null };
+  const n = Number(ultimoTit.codigo.split('.').pop()) + 1;
+  const hoje = new Date();
+  const base = String(ultimoTit.nome || '').replace(/[\s\-\/]*\d{1,2}\s*\/\s*\d{2,4}\s*$/, '').trim() || 'Clientes';
+  return { ultimoTit, cheio: true, novo: {
+    codigo: grupo + '.' + String(n).padStart(3, '0'),
+    nome: base + '/' + String(hoje.getMonth() + 1).padStart(2, '0') + '/' + hoje.getFullYear() } };
+}
+
 // GET /titulos-cliente?tipo=PF   titulos do grupo, para criar conta nova
 router.get('/titulos-cliente', async (req, res) => {
   try {
@@ -252,7 +440,23 @@ router.get('/titulos-cliente', async (req, res) => {
     const titulos = await col('_contatitulos')
       .find({ lojistaId: lojaDe(req), codigo: new RegExp('^' + escapar(grupo) + '\\.'), ativo: { $ne: false } })
       .sort({ codigo: 1 }).toArray();
-    res.json({ ok: true, grupo, titulos: titulos.map(t => ({ codigo: t.codigo, nome: t.nome })) });
+    // ultimo numero usado em cada titulo (contando suspensas): 999 = cheio
+    const subs = await col('_contasubtitulos')
+      .find({ lojistaId: lojaDe(req), codigo: new RegExp('^' + escapar(grupo) + '\\.') }).project({ codigo: 1 }).toArray();
+    const ultimo = new Map();
+    for (const s of subs) {
+      const p = String(s.codigo).split('.');
+      const tit = p.slice(0, -1).join('.');
+      ultimo.set(tit, Math.max(ultimo.get(tit) || 0, Number(p[p.length - 1]) || 0));
+    }
+    const g = await tituloDoGrupo(lojaDe(req), grupo);
+    // a conta que o cliente vai ganhar: proximo numero do ultimo titulo (ou .001 do titulo novo)
+    const proximaConta = g.novo ? g.novo.codigo + '.001'
+      : g.ultimoTit ? g.ultimoTit.codigo + '.' + String((ultimo.get(g.ultimoTit.codigo) || 0) + 1).padStart(3, '0') : null;
+    res.json({ ok: true, grupo, ultimoTitulo: g.ultimoTit ? g.ultimoTit.codigo : null, novoTitulo: g.novo, proximaConta,
+      nomeUltimoTitulo: g.ultimoTit ? g.ultimoTit.nome : null,
+      titulos: titulos.map(t => ({
+        codigo: t.codigo, nome: t.nome, ultimo: ultimo.get(t.codigo) || 0, cheio: (ultimo.get(t.codigo) || 0) >= 999 })) });
   } catch (err) {
     res.status(500).json({ ok: false, erro: err.message });
   }
@@ -347,37 +551,64 @@ router.post('/clientes/:id/conta', async (req, res) => {
 
 // POST /clientes/:id/conta-nova   { titulo, nome }   cria no titulo (proximo numero) e liga
 router.post('/clientes/:id/conta-nova', async (req, res) => {
+  const session = await mongoose.startSession();
   try {
     const loja = lojaDe(req);
     const c = await clienteDaLoja(loja, req.params.id);
     if (!c) return res.status(404).json({ ok: false, erro: 'cliente não encontrado' });
     if (c.ncontabil) return res.status(409).json({ ok: false, erro: 'o cliente já tem a conta ' + c.ncontabil });
     const grupo = grupoDoTipo(c.tipo);
-    const tituloCod = String(req.body?.titulo || '').trim();
-    if (!grupo || !tituloCod.startsWith(grupo + '.')) {
+    const pedido = String(req.body?.titulo || '').trim();
+    if (!grupo || (pedido !== 'NOVO' && !pedido.startsWith(grupo + '.'))) {
       return res.status(400).json({ ok: false, erro: 'escolha um título do grupo ' + (grupo || '1.03/1.04') });
     }
-    const titulo = await col('_contatitulos').findOne({ lojistaId: loja, codigo: tituloCod, ativo: { $ne: false } });
-    if (!titulo) return res.status(404).json({ ok: false, erro: 'título ' + tituloCod + ' não encontrado' });
     const nome = String(req.body?.nome || c.nome || '').trim();
     if (!nome) return res.status(400).json({ ok: false, erro: 'informe o nome da conta' });
 
-    // proximo numero do titulo (contando as suspensas: numero nao se reaproveita)
-    const irmas = await col('_contasubtitulos').find({ lojistaId: loja, codigo: new RegExp('^' + escapar(tituloCod) + '\\.\\d+$') })
-      .project({ codigo: 1 }).toArray();
-    const maior = irmas.reduce((m, s) => Math.max(m, Number(s.codigo.split('.').pop()) || 0), 0);
-    if (maior >= 999) return res.status(409).json({ ok: false, erro: 'o título ' + tituloCod + ' já chegou ao 999' });
-    const codigo = tituloCod + '.' + String(maior + 1).padStart(3, '0');
+    let resposta = null;
+    // TRANSACAO: titulo novo (se for o caso) + conta + ligacao ao cliente, tudo ou nada
+    await session.withTransaction(async () => {
+      let titulo, tituloNovo = null;
+      if (pedido === 'NOVO') {
+        const g = await tituloDoGrupo(loja, grupo, session);
+        if (!g.ultimoTit) throw Object.assign(new Error('nenhum título no grupo ' + grupo), { status: 404 });
+        if (!g.cheio) throw Object.assign(new Error('o título ' + g.ultimoTit.codigo + ' ainda tem vaga: use ele'), { status: 409 });
+        const { _id, codigo: _c, nome: _n, criadoEm, atualizadoEm, createdAt, updatedAt, __v, ...resto } = g.ultimoTit;
+        const agora = new Date();
+        titulo = { ...resto, codigo: g.novo.codigo, nome: g.novo.nome, ativo: true, lojistaId: loja,
+                   ...(criadoEm !== undefined ? { criadoEm: agora, atualizadoEm: agora } : {}),
+                   ...(createdAt !== undefined ? { createdAt: agora, updatedAt: agora } : {}) };
+        const r = await col('_contatitulos').insertOne(titulo, { session });
+        titulo._id = r.insertedId;
+        tituloNovo = titulo.codigo + ' - ' + titulo.nome;
+      } else {
+        titulo = await col('_contatitulos').findOne({ lojistaId: loja, codigo: pedido, ativo: { $ne: false } }, { session });
+        if (!titulo) throw Object.assign(new Error('título ' + pedido + ' não encontrado'), { status: 404 });
+      }
 
-    const sub = await ContaSubTitulo.create({
-      contaTituloId: titulo._id, codigoContaTitulo: titulo.codigo, codigo, nome, descricao: '',
-      saldoInicial: 0, natureza: 'devedora', ativo: true, lojistaId: loja,
+      // proximo numero do titulo (contando as suspensas: numero nao se reaproveita)
+      const irmas = await col('_contasubtitulos')
+        .find({ lojistaId: loja, codigo: new RegExp('^' + escapar(titulo.codigo) + '\\.\\d+$') }, { session })
+        .project({ codigo: 1 }).toArray();
+      const maior = irmas.reduce((m, s) => Math.max(m, Number(s.codigo.split('.').pop()) || 0), 0);
+      if (maior >= 999) throw Object.assign(new Error('o título ' + titulo.codigo + ' já chegou ao 999'), { status: 409 });
+      const codigo = titulo.codigo + '.' + String(maior + 1).padStart(3, '0');
+
+      const [sub] = await ContaSubTitulo.create([{
+        contaTituloId: titulo._id, codigoContaTitulo: titulo.codigo, codigo, nome, descricao: '',
+        saldoInicial: 0, natureza: 'devedora', ativo: true, lojistaId: loja,
+      }], { session });
+      await col('_aux_clientes').updateOne({ _id: c._id, lojistaId: loja },
+        { $set: { ncontabil: codigo, atualizadoEm: new Date() } }, { session });
+      resposta = { ok: true, ncontabil: codigo, nomeConta: sub.nome, tituloNovo };
     });
-    await col('_aux_clientes').updateOne({ _id: c._id, lojistaId: loja }, { $set: { ncontabil: codigo, atualizadoEm: new Date() } });
-    res.status(201).json({ ok: true, ncontabil: codigo, nomeConta: sub.nome });
+    res.status(201).json(resposta);
   } catch (err) {
     console.error('[vendas/cliente/conta-nova]', err);
-    res.status(err.code === 11000 ? 409 : 500).json({ ok: false, erro: err.code === 11000 ? 'conta repetida, tente de novo' : err.message });
+    res.status(err.status || (err.code === 11000 ? 409 : 500))
+      .json({ ok: false, erro: err.code === 11000 ? 'conta repetida, tente de novo' : err.message });
+  } finally {
+    session.endSession();
   }
 });
 
@@ -423,18 +654,25 @@ async function montar(req, venda) {
     if (!p) throw new Error('produto ' + i.codigo + ' não está cadastrado');
     const qtd = Math.floor(Number(i.quantidade) || 0);
     if (qtd < 1) throw new Error('quantidade inválida no produto ' + p.codigo);
-    const preco = centavos(venda.condicao === 'PRAZO' ? (p.precoprazo || p.precovista) : p.precovista);
+    const tabela = centavos(venda.condicao === 'PRAZO' ? (p.precoprazo || p.precovista) : p.precovista);
+    const negociado = Math.round(Number(i.preco) || 0);           // o vendedor mudou o unitario
+    const preco = negociado > 0 ? negociado : tabela;
     return {
       codigo: p.codigo, codigoNota: String(p.codigoNota || ''),
       descricao: p.descricao || '', descricaoTecnica: p.descricaoTecnica || '',
       referencia: p.referencia || '', unidade: 'PC',
       ncm: String(p.ncm || ''), csosn: String(p.csosn || ''), cfop: String(p.cfop_nfe || ''),
-      quantidade: qtd, precoUnitario: preco,
+      quantidade: qtd, precoUnitario: preco, precoTabela: tabela,
       desconto: Math.min(qtd * preco, Math.max(0, Math.round(Number(i.desconto) || 0))),
       custoUnitario: centavos(p.precocusto),
       precisaInstalacao: !!i.precisaInstalacao,
     };
   });
+  // instalacao: so nota fiscal; fora dela, nenhum item e de instalar
+  if (venda.documento !== 'NFE') venda.itens.forEach(i => { i.precisaInstalacao = false; });
+  const temInstalar = venda.itens.some(i => i.precisaInstalacao);
+  venda.instalacao = temInstalar ? lerInstalacao(b.instalacao, venda.itens) : null;
+
   venda.recalcular();
   if (venda.descontoGeral > venda.totalBruto) throw new Error('desconto maior que o total');
 }
@@ -591,6 +829,24 @@ router.post('/:id/fechar', async (req, res) => {
         if (!contaCliente) throw new Error('a conta ' + v.cliente.ncontabil + ' do cliente não está no plano (ou está suspensa)');
       }
 
+      // instalacao: item marcado exige os dados da instalacao confirmados
+      const instalar = v.documento === 'NFE' && v.itens.some(i => i.precisaInstalacao);
+      if (instalar && !v.instalacao?.confirmada) {
+        throw new Error('há produto marcado para instalar: preencha a instalação antes de fechar');
+      }
+      // agenda: o horario escolhido nao pode bater com outro cliente do mesmo tecnico
+      if (instalar && v.instalacao.tecnicoConta && v.instalacao.diaPrevisto && v.instalacao.horaIni) {
+        const d = new Date(v.instalacao.diaPrevisto);
+        const diaIso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        const ag = await agendaDoTecnico(loja, v.instalacao.tecnicoConta, diaIso, String(v._id), session);
+        const a = paraMin(v.instalacao.horaIni), b = v.instalacao.horaFim ? paraMin(v.instalacao.horaFim) : a + 30;
+        const bate = ag.ocupados.find(o => {
+          const oi = paraMin(o.horaIni), of = o.horaFim ? paraMin(o.horaFim) : oi + 30;
+          return a < of && b > oi;
+        });
+        if (bate) throw new Error('o técnico já tem ' + bate.texto + ' às ' + bate.horaIni + ': escolha outro horário na instalação');
+      }
+
       const agora = new Date();
       const dataBoleta = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 12, 0, 0);
       const permitidas = v.condicao === 'PRAZO' ? FORMAS_PRAZO : FORMAS_VISTA;
@@ -738,6 +994,23 @@ router.post('/:id/fechar', async (req, res) => {
           { session });
       }
 
+      // OS de instalacao: nasce aqui, numerada por empresa
+      if (instalar) {
+        const ultima = await col('_ordens_servico').find({ lojistaId: loja }, { session })
+          .sort({ numero: -1 }).limit(1).project({ numero: 1 }).toArray();
+        const numeroOS = (ultima[0]?.numero || 0) + 1;
+        const { confirmada, ...dadosOS } = v.instalacao.toObject ? v.instalacao.toObject() : v.instalacao;
+        const r = await col('_ordens_servico').insertOne({
+          lojistaId: loja, numero: numeroOS, tipo: 'INSTALACAO', status: 'P', data: agora,
+          venda: { id: v._id, numero: v.numero },
+          cliente: { id: v.cliente.id, codigo: v.cliente.codigo, tipo: v.cliente.tipo, nome: v.cliente.nome,
+                     documento: v.cliente.documento, ncontabil: v.cliente.ncontabil },
+          ...dadosOS,
+          criadoEm: agora, atualizadoEm: agora,
+        }, { session });
+        v.os = { numero: numeroOS, id: r.insertedId };
+      }
+
       v.pagamentos = gravados;
       v.situacao = 'F';
       v.fechadaEm = agora;
@@ -844,6 +1117,13 @@ router.post('/:id/cancelar', async (req, res) => {
             await b.save({ session });
           }
         }
+      }
+
+      // a OS de instalacao da venda sai junto
+      if (v.os?.id) {
+        await col('_ordens_servico').updateOne({ _id: v.os.id, lojistaId: loja, status: { $ne: 'C' } },
+          { $set: { status: 'C', canceladaEm: agora, motivoCancelamento: 'venda ' + v.numero + ' cancelada: ' + motivo } },
+          { session });
       }
 
       v.situacao = 'C';

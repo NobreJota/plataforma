@@ -7,6 +7,15 @@
  *   convenção (débito +, crédito −). Contrapartida com valor NEGATIVO (ex.: taxa do
  *   cartão num recebimento) vai para o lado oposto, em valor positivo — como o
  *   razão já lança. Valor da boleta = total do débito = total do crédito.
+ * Alterado em 09/10/2026: a tela ABRE NO MÊS VIGENTE (dia 1 até o último dia do mês);
+ *   outro período só pelo "Aplicar". A 1ª linha é o SALDO ANTERIOR (vem da API), e o
+ *   saldo corrido parte dele.
+ * Alterado em 10/10/2026: clicar na C/PART e abrir a outra conta DESTACA a linha da mesma
+ *   boleta (fundo amarelo, texto azul em negrito) e rola a tela até ela.
+ * Alterado em 10/10/2026: título da boleta diz O QUE ela é (Venda, Recebimento de venda,
+ *   Vendas balcão, Importado do Access...) em vez de só RECEBIMENTO/PAGAMENTO; "(entrada no
+ *   banco)" / "(saída do banco)" só quando a perna única é banco/caixa (1.01.xxx), não na
+ *   venda (cliente × receita).
  */
 (() => {
   'use strict';
@@ -25,6 +34,7 @@
     titulo: null,
     subtitulos: [],
     sub: null,
+    destaque: null,      // boleta a destacar quando abre a conta pela C/PART
     de: null,
     ate: null,
   };
@@ -64,12 +74,15 @@
   }
 
   // ============================================================
-  // PERÍODO (default: ano atual completo)
+  // PERÍODO (default: mês vigente; outro período só pelo "Aplicar")
   // ============================================================
   function inicializarPeriodo() {
-    const ano = new Date().getFullYear();
-    st.de  = `${ano}-01-01`;
-    st.ate = `${ano}-12-31`;
+    const hoje = new Date();
+    const ano = hoje.getFullYear();
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const ultimo = String(new Date(ano, hoje.getMonth() + 1, 0).getDate()).padStart(2, '0');
+    st.de  = `${ano}-${mes}-01`;
+    st.ate = `${ano}-${mes}-${ultimo}`;
     $('#rz-de').value  = st.de;
     $('#rz-ate').value = st.ate;
     atualizarLabelPeriodo();
@@ -216,7 +229,22 @@
       return;
     }
     body.innerHTML = linhas.map(l => {
+      if (l.saldoAnterior) {                       // 1a linha: saldo antes do periodo
+        const s = l.saldo || 0;
+        return `<div class="rz-row" style="font-weight:600;background:#f8fafc">
+        <div><span class="rz-dash">—</span></div>
+        <div>${fmtData(l.data)}</div>
+        <div><span class="rz-dash">—</span></div>
+        <div></div>
+        <div class="rz-hist">Saldo anterior</div>
+        <div class="rz-right"><span class="rz-dash">—</span></div>
+        <div class="rz-right"><span class="rz-dash">—</span></div>
+        <div class="rz-right ${s < 0 ? 'rz-saldo-neg' : 'rz-saldo-pos'}">${(s < 0 ? '−' : '') + fmt(Math.abs(s))}</div>
+      </div>`;
+      }
       const saldoCls = (l.saldo || 0) < 0 ? 'rz-saldo-neg' : 'rz-saldo-pos';
+      const marca = st.destaque && st.sub && st.destaque.conta === st.sub.codigo
+                    && String(l.boletaId) === String(st.destaque.bid);
       const saldoTxt = ((l.saldo || 0) < 0 ? '−' : '') + fmt(Math.abs(l.saldo || 0));
       const chaveTxt = l.documento || '—';
 
@@ -229,7 +257,8 @@
         cpartHtml = `<span class="rz-cpart-link" data-cod="${codNav}">${l.cPartida}</span>`;
       }
 
-      return `<div class="rz-row">
+      return `<div class="rz-row${marca ? ' rz-destaque' : ''}"${marca
+          ? ' style="background:#fef9c3;color:#1d4ed8;font-weight:700;box-shadow:inset 4px 0 0 #1d4ed8"' : ''}>
         <div><span class="rz-chave-link" data-bid="${l.boletaId}">${chaveTxt}</span></div>
         <div>${fmtData(l.data)}</div>
         <div>${cpartHtml}</div>
@@ -241,6 +270,13 @@
       </div>`;
     }).join('');
 
+    // veio pela C/PART: rola ate a linha da boleta e esquece o destaque no proximo carregamento
+    if (st.destaque && st.sub && st.destaque.conta === st.sub.codigo) {
+      const alvo = body.querySelector('.rz-destaque');
+      if (alvo) alvo.scrollIntoView({ block: 'center' });
+      st.destaque = null;
+    }
+
     // clique na chave → abre boleta
     body.querySelectorAll('.rz-chave-link').forEach(el => {
       el.addEventListener('click', () => abrirBoleta(el.dataset.bid));
@@ -249,7 +285,7 @@
     body.querySelectorAll('.rz-cpart-link').forEach(el => {
       el.addEventListener('click', (ev) => {
         ev.stopPropagation();
-        abrirPopContrapartida(el, el.dataset.cod);
+        abrirPopContrapartida(el, el.dataset.cod, el.closest('.rz-row')?.querySelector('.rz-chave-link')?.dataset.bid);
       });
     });
   }
@@ -266,12 +302,14 @@
   // ============================================================
   let codPopAtual = null;
 
-  function abrirPopContrapartida(elemento, codigo) {
+  let bidPopAtual = null;
+  function abrirPopContrapartida(elemento, codigo, boletaId) {
     if (!codigo) return;
     const pop = $('#cp-pop');
     if (!pop) return;
 
     codPopAtual = codigo;
+    bidPopAtual = boletaId || null;
     $('#cp-cod').textContent  = codigo;
     $('#cp-nome').textContent = nomeDaConta(codigo);
 
@@ -310,8 +348,9 @@
       btnAbrir.addEventListener('click', (e) => {
         e.stopPropagation();
         const cod = codPopAtual;
+        const bid = bidPopAtual;
         fecharPopContrapartida();
-        if (cod) navegarParaConta(cod);
+        if (cod) { st.destaque = bid ? { bid, conta: cod } : null; navegarParaConta(cod); }
       });
     }
     if (btnFechar) {
@@ -356,12 +395,26 @@
   // ============================================================
   // BOLETA (modal)
   // ============================================================
+  // o que a boleta e, para o titulo da janela
+  function tipoBoleta(b) {
+    const receita = (b.contrapartidas || []).some(c => /^4\./.test(c.codigoConta || ''));
+    const banco = /^1\.01\./.test(b.bancoCodigo || '');
+    switch (b.origem) {
+      case 'VENDA':        return receita && !banco ? 'Venda' : 'Recebimento de venda';
+      case 'VENDA_BALCAO': return 'Vendas balcão';
+      case 'ACCESS':       return 'Importado do Access';
+    }
+    if (b.tipo === 'SALDO_TRANSFERIDO') return 'Saldo transferido';
+    return b.tipo === 'PAGAMENTO' ? 'Pagamento' : 'Recebimento';
+  }
+
   async function abrirBoleta(boletaId) {
     if (!boletaId) return;
     try {
       const b = await getJson(`${API_PAG}/boleta/${boletaId}`);
       const ehRec = b.tipo === 'RECEBIMENTO';
-      $('#bol-titulo').textContent = `Boleta ${b.codigo} — ${b.tipo}`;
+      $('#bol-titulo').textContent = `Boleta ${b.codigo} — ${tipoBoleta(b)}`;
+      const ehBanco = /^1\.01\./.test(b.bancoCodigo || '');      // perna unica e banco/caixa?
       // Monta os dois lados. RECEBIMENTO: banco a débito, contrapartidas a crédito.
       // PAGAMENTO: o contrário. Contrapartida negativa troca de lado (valor positivo).
       const banco = { cod: b.bancoCodigo, nome: b.bancoNome, hist: b.historico, v: b.valorTotal || 0 };
@@ -389,12 +442,12 @@
       const totD = soma(debito), totC = soma(credito);
       $('#bol-body').innerHTML = `
         <div class="bol-secao">
-          <h3>Débito${ehRec ? ' (entrada no banco)' : ''}</h3>
+          <h3>Débito${ehRec && ehBanco ? ' (entrada no banco)' : ''}</h3>
           ${tabela(debito, '')}
           <div class="bol-total">Total débito: ${fmt(totD)}</div>
         </div>
         <div class="bol-secao">
-          <h3>Crédito${ehRec ? '' : ' (saída do banco)'}</h3>
+          <h3>Crédito${!ehRec && ehBanco ? ' (saída do banco)' : ''}</h3>
           ${tabela(credito, '-')}
           <div class="bol-total">Total crédito: -${fmt(totC)}</div>
         </div>

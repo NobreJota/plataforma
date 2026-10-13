@@ -8,6 +8,13 @@
 //   pelo sinal, banco e contrapartidas pelo tipo, contrapartida negativa no lado oposto).
 //   Filtra a empresa (lojistaId; boletas antigas sem lojistaId entram junto).
 //   O SALDO TRANSFERIDO entra sempre como saldo anterior; assim, no periodo, debitos = creditos.
+// Alterado em: 09/10/2026 - /lancamentos com SALDO ANTERIOR: le as boletas ate "ate" (sem
+//   limite inicial); o que e antes de "de" vira uma linha "Saldo anterior" no topo e o saldo
+//   corrido parte dele. Debito/Credito do rodape = so o periodo; Saldo = final (com anterior).
+//   (a tela passou a abrir no mes vigente)
+// Alterado em: 10/10/2026 - a conta aparece UMA VEZ por boleta: varias contrapartidas na
+//   mesma conta (ex.: 9 parcelas do cartao num recebimento em lote) viram uma linha so,
+//   com o TOTAL e o historico "… (9 lançamentos)". O detalhe continua na boleta (clique na chave).
 //
 // RAZÃO contábil: monta os lançamentos de uma conta a partir das BOLETAS.
 // Cada boleta gera lançamentos:
@@ -35,12 +42,10 @@ router.get('/lancamentos', async (req, res) => {
     const { conta, de, ate } = req.query;
     if (!conta) return res.json({ conta: '', lancamentos: [], totalDebito: 0, totalCredito: 0, saldo: 0 });
 
-    const filtroData = {};
-    if (de)  filtroData.$gte = new Date(de + 'T00:00:00');
-    if (ate) filtroData.$lte = new Date(ate + 'T23:59:59');
-
+    // sem limite inicial: o que vem antes de "de" e o saldo anterior
+    const inicio = de ? new Date(de + 'T00:00:00') : null;
     const queryBoleta = { status: 'ATIVO' };
-    if (de || ate) queryBoleta.data = filtroData;
+    if (ate) queryBoleta.data = { $lte: new Date(ate + 'T23:59:59') };
 
     const boletas = await Boleta.find(queryBoleta).sort({ data: 1, criadoEm: 1 }).lean();
 
@@ -102,44 +107,50 @@ router.get('/lancamentos', async (req, res) => {
         });
       }
 
-      // A conta é uma das CONTRAPARTIDAS?
-      for (const c of (b.contrapartidas || [])) {
-        if (c.codigoConta === conta) {
-          // contrapartida desta perna = o BANCO da boleta
-          const cPartida     = b.bancoCodigo || '';
-          const cPartidaNome = b.bancoNome  || '';
-
-          // pagamento: despesa a débito. recebimento: receita a crédito.
-          // Valor negativo = contrapartida invertida: vai para o outro lado, positivo.
-          const v = c.valor || 0;
-          let debito  = ehPagamento ? v : 0;
-          let credito = ehPagamento ? 0 : v;
-          if (v < 0) { const d = debito; debito = -credito; credito = -d; }
-          lancamentos.push({
-            data: b.data,
-            historico: c.historico || c.nomeConta || '',
-            documento: doc,
-            boletaId: b._id,
-            cPartida,
-            cPartidaNome,
-            debito,
-            credito
-          });
-        }
+      // A conta é uma das CONTRAPARTIDAS? Uma linha por boleta, com o total.
+      const minhas = (b.contrapartidas || []).filter(c => c.codigoConta === conta);
+      if (minhas.length) {
+        // pagamento: despesa a débito. recebimento: receita a crédito.
+        // Valor negativo = contrapartida invertida: vai para o outro lado.
+        // Soma em centavos (sem erro de ponto flutuante) e fica o saldo liquido.
+        const liquidoCent = minhas.reduce((t, c) => {
+          const cent = Math.round((c.valor || 0) * 100);
+          return t + (ehPagamento ? cent : -cent);             // + debito, - credito
+        }, 0);
+        const h1 = minhas[0].historico || minhas[0].nomeConta || '';
+        lancamentos.push({
+          data: b.data,
+          historico: minhas.length > 1 ? `${h1} (${minhas.length} lançamentos)` : h1,
+          documento: doc,
+          boletaId: b._id,
+          cPartida: b.bancoCodigo || '',                       // contrapartida desta perna = o BANCO
+          cPartidaNome: b.bancoNome || '',
+          debito:  liquidoCent > 0 ?  liquidoCent / 100 : 0,
+          credito: liquidoCent < 0 ? -liquidoCent / 100 : 0
+        });
       }
     }
 
-    // ordena por data e calcula saldo acumulado
+    // ordena por data; o que e antes de "de" vira o saldo anterior
     lancamentos.sort((a, b) => new Date(a.data) - new Date(b.data));
-    let saldo = 0, totalDebito = 0, totalCredito = 0;
-    lancamentos.forEach(l => {
+    const antes = inicio ? lancamentos.filter(l => new Date(l.data) < inicio) : [];
+    const periodo = inicio ? lancamentos.filter(l => new Date(l.data) >= inicio) : lancamentos;
+    const saldoAnterior = antes.reduce((t, l) => t + l.debito - l.credito, 0);
+
+    let saldo = saldoAnterior, totalDebito = 0, totalCredito = 0;
+    periodo.forEach(l => {
       saldo += l.debito - l.credito;
       totalDebito += l.debito;
       totalCredito += l.credito;
       l.saldo = saldo;
     });
+    if (antes.length) {
+      periodo.unshift({ data: inicio, historico: 'Saldo anterior', documento: '', boletaId: null,
+                        cPartida: '', cPartidaNome: '', debito: 0, credito: 0,
+                        saldo: saldoAnterior, saldoAnterior: true });
+    }
 
-    res.json({ conta, lancamentos, totalDebito, totalCredito, saldo });
+    res.json({ conta, lancamentos: periodo, saldoAnterior, totalDebito, totalCredito, saldo });
   } catch (err) {
     console.error('❌ /razao/lancamentos:', err.message);
     res.status(500).json({ erro: err.message });

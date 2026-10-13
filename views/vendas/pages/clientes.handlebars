@@ -4,6 +4,11 @@
                busca a partir de 2 letras
   Alterado em: 02/10/2026 - mudou para vendas/pages; pagina inteira (layout:false), como
                as telas de compra; o JS agora e /js/vendas/clientes.js
+  Alterado em: 09/10/2026 - e-mail vira campo de texto (o "@" padrao da pessoa fisica nao
+               passa na validacao do navegador de type=email); modo EMBUTIDO (?embed=1):
+               so o formulario, aberto por cima da tela da venda
+  Alterado em: 10/10/2026 - topo desce 28px: os botoes Voltar/Menu cobriam o "Novo cliente"
+  Alterado em: 10/10/2026 - botoes "← Voltar" e "☰ Menu" (public/js/comum/navegacao.js) (somem no modo embutido)
 --}}
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -108,7 +113,7 @@
           <div class="cli-row">
             <label class="flex-grow">
               <span>E-mail</span>
-              <input type="email" id="f-email" tabindex="4" placeholder="exemplo@email.com" autocomplete="off">
+              <input type="text" inputmode="email" id="f-email" tabindex="4" placeholder="exemplo@email.com" autocomplete="off">
             </label>
             <label class="flex-fix" style="min-width:170px">
               <span>Telefone</span>
@@ -251,7 +256,7 @@
 
 
 <style>
-  .cli-wrapper { padding: 24px; max-width: 1280px; margin: 0 auto; }
+  .cli-wrapper { padding: 52px 24px 24px; max-width: 1280px; margin: 0 auto; }   /* em cima: espaco dos botoes Voltar/Menu */
 
   .cli-header {
     display:flex; justify-content:space-between; align-items:flex-start;
@@ -458,6 +463,13 @@
     padding:10px 12px; font-size:.9rem; color:#1e40af;
   }
 
+  /* 09/10/2026: modo embutido (dentro da venda): so o formulario */
+  body.embed { margin:0; background:transparent; }
+  body.embed .cli-wrapper { padding:0; }
+  body.embed .cli-header, body.embed .cli-toolbar, body.embed .cli-abas,
+  body.embed .cli-table-wrapper, body.embed .cli-paginas { display:none; }
+  body.embed .cli-modal { background:transparent; }
+
   /* Bloco IE/IM */
   .bloco-inscricoes { display:flex; gap:10px; }
   .campo-isento-wrap { display:flex; gap:6px; align-items:stretch; }
@@ -474,5 +486,6 @@
 </style>
 
 <script src="/js/vendas/clientes.js"></script>
+<script src="/js/comum/navegacao.js"></script>
 </body>
 </html>

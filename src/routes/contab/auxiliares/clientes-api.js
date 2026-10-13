@@ -3,6 +3,9 @@
 // Alterado em: 02/10/2026 - LISTAR paginado: com ?pagina= devolve
 //   { itens, total, pagina, paginas, contagem: { PF, PJ } } e aceita ?tipo=PF|PJ.
 //   Sem ?pagina= continua devolvendo a lista simples (quem ja usava nao quebra).
+// Alterado em: 09/10/2026 - PESSOA FISICA sem e-mail: a tela manda "@" (cliente que nao
+//   quis informar). Para PF, "@" vale como contato respondido e o e-mail grava VAZIO.
+//   No PUT o tipo vem do cadastro (o corpo nao traz tipo).
 // =============================================================================
 // src/routes/auxiliares/clientes-api.js
 const express = require('express');
@@ -56,9 +59,14 @@ function validarEndereco(e, prefixo = 'Endereço') {
   return null;
 }
 
-// 🔧 Pelo menos um contato (email OU telefone)
-function validarContato(email, telefone) {
-  const temEmail = String(email || '').trim();
+// e-mail "@" = pessoa fisica que nao quis informar: grava vazio
+const EMAIL_NAO_INFORMADO = '@';
+const emailLimpo = e => { const t = String(e || '').trim(); return t === EMAIL_NAO_INFORMADO ? '' : t; };
+
+// 🔧 Pelo menos um contato (email OU telefone). PF com "@" vale como respondido.
+function validarContato(email, telefone, tipo) {
+  if (tipo === 'PF' && String(email || '').trim() === EMAIL_NAO_INFORMADO) return null;
+  const temEmail = emailLimpo(email);
   const temTel   = String(telefone || '').trim();
   if (!temEmail && !temTel) {
     return 'Informe pelo menos um contato (e-mail ou telefone).';
@@ -168,7 +176,7 @@ router.post('/', async (req, res) => {
     }
 
     // 🔧 Validação de contato
-    const erroContato = validarContato(email, telefone);
+    const erroContato = validarContato(email, telefone, tipo);
     if (erroContato) return res.status(400).json({ erro: erroContato });
 
     const cobranca = normEndereco(enderecoCobranca);
@@ -189,7 +197,7 @@ router.post('/', async (req, res) => {
     const novo = await Cliente.create({
       lojistaId: req.lojistaId,
       codigo, tipo, nome, cpfCnpj,
-      email:       email       || '',
+      email:       emailLimpo(email),
       telefone:    telefone    || '',
       observacoes: observacoes || '',
       // 🆕 IE/IM (só relevantes para PJ, mas salva sempre)
@@ -224,14 +232,18 @@ router.put('/:id', async (req, res) => {
       return res.status(400).json({ erro: 'Nome não pode ficar vazio.' });
     }
 
+    // o tipo vem do cadastro (PF aceita "@" como e-mail nao informado)
+    const atual = await Cliente.findOne({ _id: req.params.id, lojistaId: req.lojistaId }).select('tipo').lean();
+    if (!atual) return res.status(404).json({ erro: 'Cliente não encontrado.' });
+
     // 🔧 Se enviou contato, valida que pelo menos um existe
     if (email !== undefined || telefone !== undefined) {
-      const erroContato = validarContato(email, telefone);
+      const erroContato = validarContato(email, telefone, atual.tipo);
       if (erroContato) return res.status(400).json({ erro: erroContato });
     }
 
     const patch = {
-      nome, email, telefone, observacoes, ativo,
+      nome, email: email === undefined ? undefined : emailLimpo(email), telefone, observacoes, ativo,
       inscricaoEstadual, inscricaoMunicipal
     };
 

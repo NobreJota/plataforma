@@ -1,6 +1,10 @@
 {{!-- views/contab/contabil/saldo-transferido.handlebars
       Saldo que cada conta traz do exercício anterior.
-      Só Ativo e Passivo: Despesa e Receita zeram na virada do ano. --}}
+      Só Ativo e Passivo: Despesa e Receita zeram na virada do ano.
+      Destino: C:\plataformaRota\views\contab\contabil\saldo-transferido.handlebars
+      Alterado em: 10/10/2026 - botoes "← Voltar" e "☰ Menu" (public/js/comum/navegacao.js); menu igual ao do razão: Venda abre o
+                   menu da venda (a rota /aux/clientes não existe mais) e "Relatórios" (404) vira
+                   "Balancete" --}}
 
 <div class="contab-app">
 
@@ -15,7 +19,7 @@
     <a class="cb-side-item" href="/aux/fornecedores" title="Compra">
       <i class="ti ti-shopping-cart" aria-hidden="true"></i>
     </a>
-    <a class="cb-side-item" href="/aux/clientes" title="Venda">
+    <a class="cb-side-item" href="/usuariocontab/menu?abrir=venda" title="Venda">
       <i class="ti ti-tag" aria-hidden="true"></i>
     </a>
     <a class="cb-side-item" href="/site/configuracoes" title="Site">
@@ -29,7 +33,7 @@
     <a class="cb-sub-item" href="/contab/plano">Plano de contas</a>
     <a class="cb-sub-item active" href="/contab/razao">Razão</a>
     <a class="cb-sub-item" href="/contabil/pessoal">Pessoal</a>
-    <a class="cb-sub-item" href="/contabil/relatorios">Relatórios</a>
+    <a class="cb-sub-item" href="/contab/balancete">Balancete</a>
   </aside>
 
   {{!-- ====== CONTEÚDO ====== --}}
@@ -120,7 +124,7 @@
   /* ====== TOPO ====== */
   .sd-topo {
     display: flex; align-items: center; gap: 18px;
-    padding: 14px 20px; border-bottom: 1px solid #e5e7eb;
+    padding: 14px 200px 14px 20px; border-bottom: 1px solid #e5e7eb;   /* direita: botoes Voltar/Menu */
   }
   .sd-topo h1 { margin: 0; font-size: 18px; color: #111; font-weight: 600; }
   .sd-ano { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #374151; }
@@ -232,3 +236,4 @@
 </style>
 
 <script src="/js/contab/contabil/saldo-transferido.js"></script>
+<script src="/js/comum/navegacao.js"></script>

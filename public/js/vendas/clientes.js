@@ -4,6 +4,11 @@
 //              02/10/2026 - abas PF/PJ, paginacao < > (50 por pagina) e busca so a
 //              partir de 2 letras
 //              02/10/2026 - trocar de aba limpa a caixa de busca
+//              09/10/2026 - PESSOA FISICA: e-mail nasce com "@" (cliente que nao quer
+//              informar). "@" sozinho conta como contato respondido; o servidor grava VAZIO.
+//              MODO EMBUTIDO (?embed=1&novo=PF|PJ): abre direto no Novo cliente, por cima
+//              da tela da venda; ao gravar avisa a venda (postMessage) e ela ja escolhe
+//              o cliente; Cancelar/× tambem avisa
 /* public/js/auxiliares/clientes.js
  * v8 — Pelo menos um contato + CEP com fallback manual
  *  ✓ Email OU Telefone obrigatório (não ambos, mas pelo menos um)
@@ -18,6 +23,13 @@
   console.log('%c   Sistema robusto sem logs de debug', 'color:#1d4ed8;font-weight:bold;');
 
   const API     = '/aux/api/clientes';
+  const URLP    = new URLSearchParams(location.search);
+  const EMBED   = URLP.get('embed') === '1';                 // aberto dentro da venda
+  const TIPO_NOVO = URLP.get('novo') === 'PJ' ? 'PJ' : 'PF';
+  const EMAIL_PADRAO_PF = '@';                               // PF que nao informa e-mail
+  const emailVazio = v => { const t = String(v || '').trim(); return !t || t === EMAIL_PADRAO_PF; };
+  const avisarVenda = msg => { if (EMBED && window.parent !== window) window.parent.postMessage(msg, location.origin); };
+  if (EMBED) document.body.classList.add('embed');
   const LOOKUP  = '/aux/api/lookup';
   const $       = (sel) => document.querySelector(sel);
   const $$      = (sel) => Array.from(document.querySelectorAll(sel));
@@ -169,6 +181,8 @@
   function contatoOk() {
     const email = $('#f-email').value.trim();
     const tel   = $('#f-telefone').value.trim();
+    // pessoa fisica com "@": o cliente nao quis dar e-mail — vale como respondido
+    if ($('#f-tipo').value === 'PF' && email === EMAIL_PADRAO_PF) return true;
     return !!(email || tel);
   }
 
@@ -276,7 +290,7 @@
     console.log('%c🧹 RESET acionado!', 'background:orange;color:black;padding:2px 6px;font-weight:bold;');
     $('#f-cpfCnpj').value = '';
     $('#f-nome').value = '';
-    $('#f-email').value = '';
+    $('#f-email').value = $('#f-tipo').value === 'PF' ? EMAIL_PADRAO_PF : '';
     $('#f-telefone').value = '';
     $('#f-inscricaoEstadual').value = '';
     $('#f-inscricaoMunicipal').value = '';
@@ -445,13 +459,13 @@
     const tipoSel = $('#f-tipo');
     const docInp  = $('#f-cpfCnpj');
 
-    tipoSel.value    = cliente?.tipo || 'PF';
+    tipoSel.value    = cliente?.tipo || (EMBED ? TIPO_NOVO : 'PF');
     tipoSel.disabled = !!cliente;
     docInp.value     = cliente?.cpfCnpjFormatado || '';
     docInp.disabled  = !!cliente;
 
     $('#f-nome').value        = cliente?.nome        || '';
-    $('#f-email').value       = cliente?.email       || '';
+    $('#f-email').value       = cliente?.email       || (tipoSel.value === 'PF' ? EMAIL_PADRAO_PF : '');
     $('#f-telefone').value    = cliente?.telefone    || '';
     $('#f-observacoes').value = cliente?.observacoes || '';
     $('#f-inscricaoEstadual').value  = cliente?.inscricaoEstadual  || '';
@@ -493,6 +507,7 @@
   function fecharModal() {
     $('#modal-cliente').hidden = true;
     state.editandoId = null;
+    avisarVenda({ tipo: 'cliente-cancelado' });
   }
 
   function atualizarLabelDoc() {
@@ -517,6 +532,10 @@
     // 🔧 Limpa IE/IM ao trocar tipo
     $('#f-inscricaoEstadual').value = '';
     $('#f-inscricaoMunicipal').value = '';
+    // e-mail: PF nasce com "@"; PJ nao usa o "@"
+    const em = $('#f-email');
+    if ($('#f-tipo').value === 'PF' && !em.value.trim()) em.value = EMAIL_PADRAO_PF;
+    if ($('#f-tipo').value === 'PJ' && em.value.trim() === EMAIL_PADRAO_PF) em.value = '';
     atualizarBotoesIsento();
     atualizarLabelDoc();
     atualizarPendencias();
@@ -1018,7 +1037,7 @@
     const igual = $('#entrega-igual').checked;
     const payload = {
       nome:        $('#f-nome').value.trim(),
-      email:       $('#f-email').value.trim(),
+      email:       $('#f-email').value.trim(),   // "@" vai como esta: o servidor grava vazio
       telefone:    $('#f-telefone').value.trim(),
       observacoes: $('#f-observacoes').value.trim(),
       inscricaoEstadual:  $('#f-inscricaoEstadual').value.trim(),
@@ -1037,6 +1056,12 @@
         payload.tipo    = $('#f-tipo').value;
         payload.cpfCnpj = apenasNumeros($('#f-cpfCnpj').value);
         await api('POST', '/', payload);
+      }
+      if (EMBED) {                      // dentro da venda: avisa e a venda escolhe o cliente
+        $('#modal-cliente').hidden = true;
+        avisarVenda({ tipo: 'cliente-gravado', tipoCliente: payload.tipo || $('#f-tipo').value,
+                      cpfCnpj: payload.cpfCnpj || apenasNumeros($('#f-cpfCnpj').value) });
+        return;
       }
       fecharModal();
       await recarregar();
@@ -1121,6 +1146,11 @@
     });
   });
 
-  recarregar();
+  if (EMBED) {
+    abrirModal(null);                 // dentro da venda: direto no Novo cliente
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fecharModal(); });
+  } else {
+    recarregar();
+  }
 
 })();

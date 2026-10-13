@@ -24,6 +24,16 @@
   Alterado em: 05/10/2026 - modal do plano: botoes "editar ficha" (abre a ficha do cliente com a
                conta marcada) e "incluir plano" (so entao aparece o "criar conta nova")
   Alterado em: 05/10/2026 - os dois botoes ficam em cada linha da lista do plano
+  Alterado em: 09/10/2026 - UNITARIO EDITAVEL (preco negociado; abaixo, o preco de tabela) e
+               GARANTIA: produto com garantia em violeta; so ele mostra "instalar"
+  Alterado em: 09/10/2026 - INSTALACAO (so NF): coluna "Inst." nos itens, botao "Instalação" no
+               rodape e o modal da OS (tecnico, dia previsto, periodo, endereco, servico por item)
+  Alterado em: 09/10/2026 - "+ Novo cliente" abre o CADASTRO num modal por cima da venda
+               (a tela de clientes embutida); gravou, o cliente ja fica escolhido
+  Alterado em: 10/10/2026 - botoes "← Voltar" e "☰ Menu" (public/js/comum/navegacao.js)
+  Alterado em: 10/10/2026 - INSTALACAO: sai so a caixa do PERIODO; DAS e ATE ficam. Marcada a data,
+               abre a AGENDA do tecnico numa faixa a direita (07:00 a 19:00, de 30 em 30 min):
+               ocupados com o nome do cliente; clicar num livre preenche DAS/ATE
   Alterado em: 07/10/2026 - fechamento com MAIS DE UMA FORMA de pagamento: editor da parte
                (forma, banco/cartao, parcelas, valor) + lista das partes + "Falta R$"
 
@@ -46,7 +56,7 @@
             --verde:#059669; --vermelho:#dc2626; }
     body { margin:0 auto; max-width:1480px; padding:20px 40px 110px; color:var(--texto); background:#fff;
            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
-    .topo { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; }
+    .topo { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; padding-right:190px; }   /* espaco dos botoes Voltar/Menu */
     .topo h1 { margin:0; font-size:21px; }
     .topo .sit { font-size:13px; color:var(--cinza); margin-left:10px; }
     .topo a { color:var(--roxo); font-size:13px; text-decoration:none; }
@@ -87,6 +97,13 @@
     #lista-clientes .op[data-k] { display:grid; grid-template-columns:76px minmax(0,1fr) 160px 110px 190px;
                                   gap:12px; align-items:baseline; }
     #lista-clientes .op[data-k] > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    /* 10/10/2026: busca de produto em colunas, com cabecalho */
+    #lista-produtos .op[data-k], #lista-produtos .op.cab { display:grid; grid-template-columns:64px minmax(0,1fr) 150px 70px 110px;
+                                  gap:12px; align-items:baseline; }
+    #lista-produtos .op .n { text-align:right; font-variant-numeric:tabular-nums; }
+    #lista-produtos .op .tec-l { display:block; }
+    #lista-produtos .op.cab { position:sticky; top:0; z-index:1; background:#f8fafc !important; cursor:default;
+                              font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; }
     #lista-clientes .c-cod { font-weight:700; }
     #lista-clientes .c-doc, #lista-clientes .c-cid, #lista-clientes .c-cont { font-size:12px; color:var(--cinza); }
     #lista-clientes .c-cont.sem { color:var(--vermelho); font-weight:700; }
@@ -138,6 +155,55 @@
     .cli-busca-linha { display:flex; gap:10px; align-items:center; }
     .cli-busca-linha[hidden] { display:none; }
     .cli-busca-linha .busca { flex:1; }
+    /* 09/10/2026: instalacao */
+    .c-inst { text-align:center; width:40px; }
+    .c-rem { text-align:center; width:70px; }
+    td.c-inst input { width:18px; height:18px; cursor:pointer; }
+    td.c-inst input.falta { outline:2px solid var(--vermelho); outline-offset:2px; }
+    td.c-inst input.ok { accent-color:#059669; }
+    .tag-inst { font-size:11px; color:#92400e; background:#fef3c7; border-radius:4px; padding:0 5px; margin-left:4px; }
+    .garantia, .garantia .tec { color:#7c3aed !important; font-weight:600; }   /* produto com garantia: violeta */
+    td.desc-item { cursor:pointer; }
+    td input.unit { width:96px; }
+    td input.unit.negociado { background:#fef9c3; border-color:#eab308; font-weight:700; }
+    .tabela { display:block; font-size:11px; color:var(--cinza); margin-top:2px; }
+    .btn-inst { background:#fff; color:#92400e; border:2px solid #f59e0b; border-radius:8px; padding:8px 16px;
+                font-weight:700; cursor:pointer; font-size:14px; }
+    .btn-inst.ok { background:#fef3c7; }
+    .btn-inst.falta { background:#fef2f2; border-color:var(--vermelho); color:var(--vermelho); }
+    .btn-inst[hidden] { display:none; }
+    .ins-grade { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:8px 12px; margin:10px 0; }
+    .ins-grade label { display:flex; flex-direction:column; gap:3px; }
+    .ins-grade label.l2 { grid-column:span 2; } .ins-grade label.l4 { grid-column:span 4; }
+    .ins-grade label > span { font-size:10px; font-weight:700; text-transform:uppercase; color:#374151; }
+    .ins-grade input, .ins-grade select { height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:14px; }
+    .ins-grade input:not(:placeholder-shown), .ins-grade select.ok { background:#fef9c3; }
+    .ins-itens { width:100%; border-collapse:collapse; margin-top:4px; }
+    .ins-itens th { font-size:11px; text-transform:uppercase; color:#374151; background:#f3f4f6; padding:5px 8px; text-align:left; }
+    .ins-itens td { padding:4px 8px; border-bottom:1px solid #f3f4f6; }
+    .ins-itens input { width:100%; height:30px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; }
+    .ins-sub { margin:12px 0 4px; font-size:12px; text-transform:uppercase; color:var(--roxo); font-weight:700; }
+    /* 10/10/2026: agenda do tecnico ao lado do formulario */
+    .ins-corpo { display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:18px; align-items:start; }
+    .ins-corpo.sem-agenda { grid-template-columns:minmax(0,1fr); }      /* sem data: sem faixa */
+    .ins-agenda[hidden] { display:none; }
+    #ag-corpo { max-height:calc(94vh - 300px); overflow-y:auto; }     /* rola por dentro: o Confirmar nao some */
+    .ins-agenda { border:1px solid var(--borda); border-radius:8px; position:sticky; top:56px; overflow:hidden; }
+    .ag-tit { background:#92400e; color:#fff; font-size:12px; font-weight:700; text-transform:uppercase; padding:7px 10px; }
+    .ag-vazio { padding:16px 10px; color:var(--cinza); font-size:13px; text-align:center; }
+    .ag-lin { display:grid; grid-template-columns:52px minmax(0,1fr); border-top:1px solid #f3f4f6; font-size:13px; }
+    .ag-lin .h { padding:4px 8px; font-weight:700; font-variant-numeric:tabular-nums; border-right:1px solid var(--borda); }
+    .ag-lin .c { padding:4px 8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .ag-lin.livre { cursor:pointer; } .ag-lin.livre:hover { background:#fef3c7; }
+    .ag-lin.ocupado { background:#fef2f2; color:var(--vermelho); cursor:not-allowed; }
+    .ag-lin.ocupado .c { font-weight:600; }
+    .ag-lin.escolhido { background:#dcfce7; color:#065f46; font-weight:700; }
+    .ag-sem { padding:6px 10px; font-size:12px; color:#92400e; background:#fffbeb; border-top:1px solid #fde68a; }
+    .ag-dica { padding:6px 10px; font-size:11px; color:var(--cinza); border-top:1px solid var(--borda); }
+    .nc-fundo { position:fixed; inset:0; background:rgba(15,23,42,.35); z-index:60; }
+    .nc-fundo[hidden] { display:none; }
+    .nc-fundo iframe { position:absolute; inset:0; width:100%; height:100%; border:0; background:transparent; }
+    .btn-novo-cli { border:0; cursor:pointer; }
     .btn-novo-cli { white-space:nowrap; background:#1d4ed8; color:#fff; border-radius:8px; padding:9px 14px;
                     font-size:13px; font-weight:700; text-decoration:none; }
     .cli-ficha { background:#f8fafc; border-radius:8px; padding:10px 12px; margin-top:8px; }
@@ -187,8 +253,10 @@
     .ok-fundo[hidden], .ok-caixa[hidden] { display:none; }
     .ok-caixa { position:fixed; top:22vh; left:50%; transform:translateX(-50%); z-index:41;
                 width:min(640px, calc(100vw - 32px)); background:#fff; border-radius:12px;
-                box-shadow:0 18px 50px rgba(0,0,0,.30); padding:0 24px 20px; border:1px solid var(--borda); }
+                box-shadow:0 18px 50px rgba(0,0,0,.30); padding:0 24px 20px; border:1px solid var(--borda);
+                max-height:94vh; overflow-y:auto; }      /* nunca passa do pe da tela: rola por dentro */
     .ok-caixa h3 { margin:0 -24px 10px; padding:16px 24px 10px; font-size:19px; color:var(--verde);
+                   position:sticky; top:0; background:#fff; z-index:2;     /* titulo fica a vista ao rolar */
                    cursor:move; user-select:none; border-radius:12px 12px 0 0; }
     .ok-caixa h3 small { float:right; font-size:11px; font-weight:500; color:var(--cinza); }
     .ok-caixa .ok-det { color:#374151; font-size:14px; line-height:1.5; }
@@ -204,15 +272,16 @@
                   font-weight:700; cursor:pointer; font-size:14px; }
     .btn-fechar:disabled { opacity:.5; cursor:default; }
     .rodape .botoes { display:flex; gap:10px; }
-    .fe-formas { display:flex; flex-wrap:wrap; gap:8px; margin:6px 0 12px; }
-    .fe-formas label { display:flex; align-items:center; gap:6px; border:1px solid #d1d5db; border-radius:8px;
-                       padding:8px 12px; cursor:pointer; font-weight:600; font-size:14px; }
+    /* 13/10/2026: as formas numa linha so, mesma largura (4 a vista, 2 a prazo) */
+    .fe-formas { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); gap:8px; margin:6px 0 12px; }
+    .fe-formas label { display:flex; align-items:center; justify-content:center; gap:6px; border:1px solid #d1d5db;
+                       border-radius:8px; padding:8px 6px; cursor:pointer; font-weight:600; font-size:13px; white-space:nowrap; }
     .fe-formas label.ativo { border-color:var(--roxo); background:var(--roxo-claro); color:var(--roxo); }
     .fe-formas label.off { opacity:.45; cursor:not-allowed; }
     .fe-linha { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
     .fe-linha[hidden] { display:none; }
     .fe-linha select { height:34px; min-width:220px; border:1px solid #d1d5db; border-radius:8px; padding:0 8px; font-size:14px; }
-    .fe-previa { font-size:13px; color:#374151; margin:4px 0 12px; }
+    .fe-previa { font-size:13px; color:#374151; margin:4px 0 12px; max-height:200px; overflow-y:auto; }
     .fe-previa table { border-collapse:collapse; }
     .fe-previa td { padding:2px 14px 2px 0; font-variant-numeric:tabular-nums; }
     .fe-msg { font-size:13px; color:var(--vermelho); min-height:18px; margin-bottom:8px; }
@@ -278,7 +347,7 @@
         <input type="search" id="busca-cliente" autocomplete="off" placeholder="nome (2 letras), número (17281 / F17281 / J1705) ou CPF/CNPJ — duplo clique escolhe">
         <div class="lista" id="lista-clientes" hidden></div>
       </div>
-      <a class="btn-novo-cli" href="/vendas/clientes" target="_blank" title="cadastrar em outra aba; depois volte e busque">+ Novo cliente</a>
+      <button type="button" class="btn-novo-cli" id="cli-novo" title="cadastrar sem sair da venda">+ Novo cliente</button>
     </div>
     <div class="cli-ficha" id="cli-escolhido">
       <div class="cli-topo">
@@ -314,9 +383,10 @@
     <table>
       <thead>
         <tr><th>Código</th><th>Descrição</th><th>Ref.</th><th class="num">Estoque</th>
-            <th class="num">Qtd</th><th class="num">Unitário</th><th class="num">Desconto</th><th class="num">Total</th><th></th></tr>
+            <th class="num">Qtd</th><th class="num">Unitário</th><th class="num">Desconto</th><th class="num">Total</th>
+            <th class="c-inst" title="OS: produto com garantia, marcar se vai ser instalado (só nota fiscal)">OS</th><th class="c-rem">Remover</th></tr>
       </thead>
-      <tbody id="itens"><tr><td colspan="9" class="vazio">Nenhum produto. Busque acima.</td></tr></tbody>
+      <tbody id="itens"><tr><td colspan="10" class="vazio">Nenhum produto. Busque acima.</td></tr></tbody>
     </table>
 
     <div class="totais">
@@ -346,8 +416,9 @@
   <div class="rodape">
     <div class="recado" id="recado"></div>
     <div class="botoes">
+      <button class="btn-inst" id="instalacao" type="button" hidden>🔧 Instalação</button>
       <button class="btn-fechar" id="fechar" type="button">Fechar venda</button>
-      <button class="btn-principal" id="gravar" type="button">Gravar venda (aberta)</button>
+      <button class="btn-principal" id="gravar" type="button" title="grava a venda aberta, em andamento">Andamento</button>
     </div>
   </div>
 
@@ -401,7 +472,8 @@
     <div class="cc-lista" id="cc-lista" style="margin-top:12px"><div class="vazio">Digite para procurar.</div></div>
     <div class="cc-nova" id="cc-nova" hidden>
       <h4>Não achou? Criar conta nova</h4>
-      <div class="fe-linha"><span class="rot">Título</span><select id="cc-titulos"></select></div>
+      <div class="fe-linha"><span class="rot">Conta</span><strong id="cc-proxima" style="font-size:1.05em">—</strong>
+        <input type="hidden" id="cc-titulos"></div>
       <div class="fe-linha"><span class="rot">Nome</span><input id="cc-nome" autocomplete="off"></div>
     </div>
     <div class="fe-msg" id="cc-msg"></div>
@@ -438,6 +510,53 @@
     </div>
   </div>
 
+  <div class="ok-fundo" id="ins-fundo" hidden></div>
+  <div class="ok-caixa" id="ins-caixa" hidden role="dialog" aria-labelledby="ins-titulo"
+       style="width:min(1220px, calc(100vw - 32px)); top:3vh; max-height:94vh; overflow:auto">
+    <h3 id="ins-titulo" style="color:#92400e">Instalação</h3>
+    <div class="ok-det" id="ins-det"></div>
+    <div class="ins-corpo"><div class="ins-form">
+    <div class="ins-grade">
+      <label class="l2"><span>Técnico</span><select id="ins-tecnico"></select></label>
+      <label class="l2"><span>Dia previsto</span><input type="date" id="ins-dia" placeholder=" "></label>
+      <label><span>Das</span><input type="time" id="ins-ini" placeholder=" "></label>
+      <label><span>Até</span><input type="time" id="ins-fim" placeholder=" "></label>
+    </div>
+    <div class="ins-sub">Local da instalação</div>
+    <div class="ins-grade">
+      <label class="l2"><span>Logradouro</span><input id="ins-logr" placeholder=" " autocomplete="off"></label>
+      <label><span>Número</span><input id="ins-num" placeholder=" " autocomplete="off"></label>
+      <label><span>Complemento</span><input id="ins-compl" placeholder=" " autocomplete="off"></label>
+      <label><span>Edifício</span><input id="ins-edif" placeholder=" " autocomplete="off"></label>
+      <label><span>Apto</span><input id="ins-apto" placeholder=" " autocomplete="off"></label>
+      <label><span>Bairro</span><input id="ins-bairro" placeholder=" " autocomplete="off"></label>
+      <label><span>Cidade</span><input id="ins-cidade" placeholder=" " autocomplete="off"></label>
+      <label><span>UF</span><input id="ins-uf" maxlength="2" placeholder=" " autocomplete="off"></label>
+      <label><span>CEP</span><input id="ins-cep" placeholder=" " autocomplete="off"></label>
+      <label><span>Telefone</span><input id="ins-fone" placeholder=" " autocomplete="off"></label>
+      <label><span>Celular</span><input id="ins-cel" placeholder=" " autocomplete="off"></label>
+      <label class="l4"><span>Ponto de referência</span><input id="ins-ref" placeholder=" " autocomplete="off"></label>
+    </div>
+    <div class="ins-sub">O que instalar</div>
+    <table class="ins-itens"><thead><tr><th>Código</th><th>Produto</th><th style="width:30%">Serviço</th><th style="width:26%">Observação</th></tr></thead>
+      <tbody id="ins-itens"></tbody></table>
+    <div class="ins-grade"><label class="l4"><span>Observação geral</span><input id="ins-obs" placeholder=" " autocomplete="off"></label></div>
+    </div>
+    <aside class="ins-agenda" id="ins-agenda" hidden>
+      <div class="ag-tit">Agenda do técnico</div>
+      <div id="ag-corpo"><div class="ag-vazio">Escolha o técnico e o dia.</div></div>
+    </aside>
+    </div>
+    <div class="fe-msg" id="ins-msg"></div>
+    <div class="ok-botoes">
+      <button type="button" class="prim" id="ins-confirmar">Confirmar instalação</button>
+      <button type="button" id="ins-voltar">Voltar</button>
+    </div>
+  </div>
+
+  <div class="nc-fundo" id="nc-fundo" hidden><iframe id="nc-frame" title="Novo cliente"></iframe></div>
+
   <script src="/js/vendas/venda.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
 </body>
 </html>

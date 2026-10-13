@@ -39,6 +39,41 @@
 //   - 05/10/2026: no modal do plano, "editar ficha" (ou Enter/duplo clique na conta) abre a
 //     FICHA do cliente com a conta marcada, para conferir e gravar; "incluir plano" mostra
 //     o "criar conta nova" (escondido ate la); os dois botoes ficam em cada linha
+//   - 09/10/2026: GARANTIA (arquivo_docs.garantia = 1: garantia, servico e manutencao) no
+//     lugar do "instala": produto com garantia aparece em VIOLETA na busca e na linha, e so
+//     ele mostra a caixa "Instalar" (vem marcada). Produto sem garantia: clicar na descricao
+//     pergunta "É garantia?" — OK grava garantia = 1. (so nota fiscal)
+//   - 10/10/2026: INSTALACAO com AGENDA: sai so a caixa do PERIODO; DAS e ATE ficam. Marcada a
+//     data, abre a faixa da direita 07:00-19:00 de 30 em 30 min: ocupado (vermelho, nome do
+//     cliente) nao clica; livre: 1o clique marca o inicio, 2o clique (depois) marca o fim, e
+//     isso preenche DAS/ATE (digitar em DAS/ATE tambem marca a agenda).
+//     O servidor confere de novo ao fechar a venda (dois clientes no mesmo horario: recusa)
+//   - 10/10/2026: agenda: Enter no ATE vai para "Confirmar instalação"; a lista de horarios rola
+//     dentro da faixa (o botao nao some); o horario escolhido mostra o NOME do cliente
+//   - 10/10/2026: BUSCA DE PRODUTO em colunas (código · descrição · referência · estoque ·
+//     preço) com cabeçalho; a marca só aparece quando o combo está em "todos os fornecedores"
+//   - 10/10/2026: MODAIS cabem na tela: altura maxima 94vh, rolam por dentro com o titulo
+//     fixo; o de fechamento abre a 3vh do topo (sobrava em cima, faltava embaixo)
+//   - 10/10/2026: CONTA NOVA sem lista de titulos: mostra so a CONTA que o cliente vai ganhar
+//     (ex.: 1.03.017.772, no ultimo titulo); e so confirmar
+//   - 10/10/2026: CONTA NOVA vai no ULTIMO titulo do grupo (ex.: 1.03.017), ja selecionado;
+//     titulo que chegou ao 999 aparece "(cheio)" e desabilitado. Se o ultimo encheu, aparece
+//     selecionada a opcao "TITULO NOVO 1.03.018 - ..." (o servidor cria o titulo e a conta .001)
+//   - 09/10/2026: produto COM garantia (violeta): clicar na descricao pergunta "Tirar
+//     garantia?" — OK grava garantia = 0 (desfaz clique errado; sai da instalacao)
+//   - 09/10/2026: o TOTAL DA LINHA acompanha enquanto digita (unitario, qtd, desconto);
+//     antes so mudava ao sair do campo. Resposta da API que nao e JSON mostra o
+//     endereco e o status (em vez de "Unexpected ... JSON")
+//   - 09/10/2026: UNITARIO EDITAVEL (preco negociado). Embaixo aparece o preco de tabela;
+//     apagar o campo volta para a tabela. Trocar a condicao volta todos para a tabela
+//   - 09/10/2026: INSTALACAO (so nota fiscal): coluna "Inst." em cada item; o produto que
+//     ja foi marcado uma vez vem marcado (aprende: arquivo_docs.instala) e aparece com 🔧
+//     na busca. Com item marcado aparece o botao "Instalação": modal da OS (tecnico =
+//     2.06.001.NNN, dia previsto, periodo, local, servico por item). Fechar exige a
+//     instalacao confirmada; a OS nasce no fechamento
+//   - 09/10/2026: "+ Novo cliente" abre o cadastro (tela de clientes em modo embutido)
+//     por cima da venda, ja no tipo escolhido (PF/PJ). Gravou: a venda procura pelo
+//     CPF/CNPJ e escolhe o cliente sozinha. Cancelou: so fecha
 //   - 07/10/2026: fechamento com MAIS DE UMA FORMA de pagamento (lista de partes, "Falta
 //     receber", troco no dinheiro) e cartao de CREDITO parcelado tambem na venda a vista
 //   - Produto: codigo, descricao ou referencia; Enter adiciona o primeiro achado
@@ -59,6 +94,7 @@
     documento: 'CUPOM', condicao: 'VISTA',
     cliente: null,
     loja: null,         // cabecalho da loja (para a impressao)
+    instalacao: null,   // dados da OS (so NF com item marcado)
     itens: [],          // { codigo, descricao, descricaoTecnica, referencia, estoque, precoVista, precoPrazo, quantidade, desconto }
   };
 
@@ -78,7 +114,10 @@
       body: corpo ? JSON.stringify(corpo) : undefined,
     });
     if (r.status === 401) { window.location.href = '/usuariocontab/login'; throw new Error('sessão expirada'); }
-    const j = await r.json();
+    const texto = await r.text();
+    let j;
+    try { j = JSON.parse(texto); }
+    catch (e) { throw new Error('resposta inválida de ' + metodo + ' ' + url + ' (status ' + r.status + '): ' + texto.slice(0, 80)); }
     if (!j.ok) throw new Error(j.erro || 'falha na API');
     return j;
   }
@@ -91,7 +130,8 @@
     if (tipo !== 'erro') sumir = setTimeout(() => { $('recado').textContent = ''; }, 5000);
   }
 
-  const preco = i => estado.condicao === 'PRAZO' ? (i.precoPrazo || i.precoVista) : i.precoVista;
+  const precoTabela = i => estado.condicao === 'PRAZO' ? (i.precoPrazo || i.precoVista) : i.precoVista;
+  const preco = i => (i.precoManual > 0 ? i.precoManual : precoTabela(i));   // negociado, ou o da tabela
 
   // ---- documento e condicao ----------------------------------------------------------
   function ligarSeg(id, chave, depois) {
@@ -106,7 +146,11 @@
   function marcarSeg(id, valor) {
     $(id).querySelectorAll('button').forEach(x => x.classList.toggle('ativo', x.dataset.v === valor));
   }
-  ligarSeg('seg-doc', 'documento', () => { mostrarCliente(); });
+  ligarSeg('seg-doc', 'documento', () => {
+    // nota fiscal: os itens com garantia vem marcados para instalar
+    if (estado.documento === 'NFE') estado.itens.forEach(i => { if (i.garantia) i.precisaInstalacao = true; });
+    mostrarCliente(); desenharItens();
+  });
 
   // tipo de cliente da nota: a busca procura so ele
   estado.tipoCliente = 'PF';
@@ -146,7 +190,11 @@
   // condicao: select abaixo dos totais; trocar recalcula o preco de todos os itens
   $('sel-cond').addEventListener('change', ev => {
     estado.condicao = ev.target.value === 'PRAZO' ? 'PRAZO' : 'VISTA';
+    // a tabela mudou: preco negociado volta para a tabela da nova condicao
+    const tinha = estado.itens.some(i => i.precoManual > 0);
+    estado.itens.forEach(i => { i.precoManual = null; });
     desenharItens();
+    if (tinha) recado('Condição trocada: os preços negociados voltaram para a tabela. Negocie de novo, se for o caso.', 'erro');
   });
 
   function mostrarCliente() {
@@ -169,7 +217,10 @@
     let pagina = 1, pag = null;          // pag = { total, pagina, paginas, porPagina } quando a API pagina
     const fechar = () => { lista.hidden = true; achados = []; };
     const desenhar = () => {
-      let html = achados.map((a, k) => '<div class="op' + (k === sel ? ' sel' : '') + '" data-k="' + k + '">' + montar(a) + '</div>').join('')
+      const cab = listaId === 'lista-produtos' && achados.length
+        ? '<div class="op cab"><span>Código</span><span>Descrição</span><span>Referência</span>'
+          + '<span class="n">Estoque</span><span class="n">' + (estado.condicao === 'PRAZO' ? 'A prazo' : 'À vista') + '</span></div>' : '';
+      let html = cab + achados.map((a, k) => '<div class="op' + (k === sel ? ' sel' : '') + '" data-k="' + k + '">' + montar(a) + '</div>').join('')
         || '<div class="op s">nada encontrado</div>';
       if (pag && pag.total > pag.porPagina) {
         const ini = (pag.pagina - 1) * pag.porPagina + 1, fim = ini + achados.length - 1;
@@ -287,8 +338,269 @@
   }
   $('cli-tirar').addEventListener('click', () => { estado.cliente = null; $('oc-cliente').value = ''; desenharCliente(); });
 
+  // ---- instalacao (so nota fiscal) -------------------------------------------------------
+  let tecnicos = null;
+  const marcadosInst = () => estado.documento === 'NFE' ? estado.itens.filter(i => i.precisaInstalacao) : [];
+  const faltaInstalacao = () => marcadosInst().length > 0 && !(estado.instalacao && estado.instalacao.confirmada);
+
+  // botao do rodape: aparece com item marcado; vermelho enquanto falta preencher
+  function atualizarInst() {
+    const b = $('instalacao');
+    const n = marcadosInst().length;
+    b.hidden = true;           // 13/10/2026: sem botao no rodape; a instalacao abre pela caixa OS
+    if (!n) return;
+    const ok = !faltaInstalacao();
+    b.classList.toggle('ok', ok); b.classList.toggle('falta', !ok);
+    b.textContent = '🔧 Instalação' + (ok ? ' ✓' : ' (preencher)');
+    // a caixa OS mostra se a instalacao esta preenchida (verde) ou falta (vermelha)
+    $('itens').querySelectorAll('input.inst:checked').forEach(x => {
+      x.classList.toggle('ok', ok); x.classList.toggle('falta', !ok);
+      x.title = ok ? 'instalação preenchida · clique: desmarca · Enter: fechar venda'
+                   : 'falta preencher a instalação · Enter: fechar venda';
+    });
+  }
+
+  // marcar/desmarcar "instalar" no item com garantia
+  $('itens').addEventListener('change', async ev => {
+    const el = ev.target;
+    if (!el.classList.contains('inst')) return;
+    const i = estado.itens.find(x => String(x.codigo) === el.dataset.cod);
+    if (!i) return;
+    i.precisaInstalacao = el.checked;
+    if (estado.instalacao) estado.instalacao.confirmada = false;    // mudou a lista: conferir de novo
+    atualizarInst();
+    osVolta = el.dataset.cod;
+    if (el.checked) abrirInstalacao();          // marcou OS: abre a instalacao direto
+  });
+  // Enter na caixa OS: abre o fechamento (se faltar a instalacao, ele abre a instalacao)
+  $('itens').addEventListener('keydown', ev => {
+    if (ev.key !== 'Enter' || !ev.target.classList.contains('inst')) return;
+    ev.preventDefault();
+    osVolta = ev.target.dataset.cod;
+    if (!$('fechar').disabled) abrirFechamento();
+  });
+  // ao sair da instalacao o foco volta para a caixa OS
+  let osVolta = null;
+  function focarOS() {
+    const x = osVolta && $('itens').querySelector('input.inst[data-cod="' + osVolta + '"]');
+    if (x) x.focus();
+  }
+
+  const vIns = id => $(id).value.trim();
+
+  // ---- agenda do tecnico (07:00 a 19:00, linhas de 30 em 30 min) ----
+  // DAS e ATE sao livres (qualquer minuto); a duracao NAO e automatica: o ATE e
+  // sempre informado (digitado ou 2o clique na agenda).
+  const AG_INI = 7 * 60, AG_FIM = 19 * 60, AG_PASSO = 30;
+  const hm = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+  const min = s => { const [h, m] = String(s || '').split(':').map(Number); return h * 60 + (m || 0); };
+  // fim exclusivo (minutos); fim = null enquanto o ATE nao foi informado
+  let agOcupados = [], agSemHora = [], agEscolha = { ini: null, fim: null };
+  const agFimEf = () => agEscolha.fim !== null && agEscolha.fim > agEscolha.ini ? agEscolha.fim : agEscolha.ini + 1;
+  function agLivre(a, b) {                      // [a, b) nao bate com nenhum ocupado?
+    return agOcupados.every(o => b <= o.ini || a >= o.fim);
+  }
+  const agEscolhaLivre = () => agEscolha.ini === null || agLivre(agEscolha.ini, agFimEf());
+  function agHorarioTexto() {             // a escolha da agenda vai para DAS / ATE
+    $('ins-ini').value = agEscolha.ini === null ? '' : hm(agEscolha.ini);
+    $('ins-fim').value = agEscolha.ini === null || agEscolha.fim === null ? '' : hm(agEscolha.fim);
+  }
+  function agDesenhar() {
+    const corpo = $('ag-corpo');
+    const temDia = !!$('ins-dia').value;
+    $('ins-agenda').hidden = !temDia;                   // a faixa so abre com a data marcada
+    $('ins-agenda').parentElement.classList.toggle('sem-agenda', !temDia);
+    if (!temDia) return;
+    if (!$('ins-tecnico').value) {
+      corpo.innerHTML = '<div class="ag-vazio">Escolha o técnico para ver os horários dele.</div>'; return;
+    }
+    let h = '';
+    for (let m = AG_INI; m < AG_FIM; m += AG_PASSO) {
+      const oc = agOcupados.find(o => m >= o.ini && m < o.fim);
+      const esc = agEscolha.ini !== null && m + AG_PASSO > agEscolha.ini && m < agFimEf();
+      h += '<div class="ag-lin ' + (oc ? 'ocupado' : esc ? 'escolhido livre' : 'livre') + '" data-m="' + m + '"'
+        + (oc ? ' title="' + escapar(oc.texto) + '"' : '') + '><span class="h">' + hm(m) + '</span><span class="c">'
+        + (oc ? escapar(oc.cliente) : esc ? '✓ ' + escapar((estado.cliente && estado.cliente.nome) || 'esta instalação') : '') + '</span></div>';
+    }
+    if (agSemHora.length) h += '<div class="ag-sem">sem horário marcado: ' + agSemHora.map(escapar).join(', ') + '</div>';
+    h += '<div class="ag-dica">1º clique: início · 2º clique: até o fim dessa linha. Ou digite DAS / ATÉ com qualquer minuto.</div>';
+    corpo.innerHTML = h;
+  }
+  async function agCarregar() {
+    agOcupados = []; agSemHora = [];
+    const tec = $('ins-tecnico').value, dia = $('ins-dia').value;
+    if (tec && dia) {
+      $('ag-corpo').innerHTML = '<div class="ag-vazio">Carregando…</div>';
+      try {
+        const r = await api('GET', '/agenda?tecnico=' + encodeURIComponent(tec) + '&dia=' + dia
+          + (estado.id ? '&venda=' + estado.id : ''));
+        agOcupados = r.ocupados.map(o => ({ ini: min(o.horaIni), fim: o.horaFim ? min(o.horaFim) : min(o.horaIni) + AG_PASSO,
+                                             cliente: o.cliente, texto: o.texto }));
+        agSemHora = r.semHorario;
+      } catch (e) { $('ins-msg').textContent = e.message; }
+    }
+    // a escolha que bater com um ocupado cai
+    if (!agEscolhaLivre()) $('ins-msg').textContent = 'Esse horário bate com outro cliente do técnico.';
+    agDesenhar();
+  }
+  $('ag-corpo').addEventListener('click', ev => {
+    const l = ev.target.closest('.ag-lin.livre'); if (!l) return;
+    const m = Number(l.dataset.m);
+    const ini = agEscolha.ini;
+    if (ini === null || m + AG_PASSO <= ini) agEscolha = { ini: m, fim: null };                 // inicio
+    else if (agEscolha.fim !== null && m <= ini && ini < m + AG_PASSO) agEscolha = { ini: null, fim: null }; // limpa
+    else if (agLivre(ini, m + AG_PASSO)) agEscolha.fim = m + AG_PASSO;                           // fim
+    else { $('ins-msg').textContent = 'Há outro cliente no meio desse intervalo.'; return; }
+    $('ins-msg').textContent = '';
+    agHorarioTexto(); agDesenhar();
+  });
+  $('ins-tecnico').addEventListener('change', agCarregar);
+  $('ins-dia').addEventListener('change', agCarregar);
+  // digitou DAS / ATE: a agenda acompanha. Nao reescreve o campo enquanto se digita
+  // (o navegador dispara change a cada pedaco da hora; reescrever travava o ATE).
+  function agDosCampos() {
+    const a = $('ins-ini').value, b = $('ins-fim').value;
+    agEscolha = a ? { ini: min(a), fim: b ? min(b) : null } : { ini: null, fim: null };
+  }
+  function agConferir(final) {           // final = saiu do ATE / Enter / Confirmar
+    let msg = '';
+    if (agEscolha.ini !== null && !agEscolhaLivre()) msg = 'Esse horário bate com outro cliente do técnico.';
+    else if (final && agEscolha.ini !== null && agEscolha.fim === null) msg = 'Informe o horário ATÉ.';
+    else if (final && agEscolha.ini !== null && agEscolha.fim <= agEscolha.ini) msg = 'O ATÉ tem que ser depois do DAS.';
+    else if (final && agEscolha.ini === null && $('ins-fim').value) msg = 'Informe o horário DAS.';
+    $('ins-msg').textContent = msg;
+    return !msg;
+  }
+  ['ins-ini', 'ins-fim'].forEach(id => {
+    $(id).addEventListener('input', () => { agDosCampos(); agConferir(false); agDesenhar(); });
+    $(id).addEventListener('change', () => { agDosCampos(); agConferir(false); agDesenhar(); });
+  });
+  $('ins-fim').addEventListener('blur', () => { if ($('ins-fim').value) agConferir(true); });
+
+  async function abrirInstalacao() {
+    const marcados = marcadosInst();
+    if (!marcados.length) return;
+    try {
+      if (!tecnicos) tecnicos = (await api('GET', '/tecnicos')).tecnicos;
+    } catch (e) { tecnicos = []; recado(e.message, 'erro'); }
+    const ins = estado.instalacao || {};
+    const c = estado.cliente || {};
+    const e = ins.endereco || {};
+    $('ins-titulo').innerHTML = '🔧 Instalação <small>arraste por aqui</small>';
+    $('ins-det').textContent = (c.nome ? c.codigo + ' · ' + c.nome : 'sem cliente') + ' · ' + marcados.length + ' item(ns) para instalar';
+    $('ins-tecnico').innerHTML = '<option value="">a definir</option>' + tecnicos.map(t =>
+      '<option value="' + escapar(t.conta) + '" data-nome="' + escapar(t.nome) + '" data-receita="' + escapar(t.receita) + '">'
+      + escapar(t.nome) + ' · ' + escapar(t.conta) + '</option>').join('');
+    $('ins-tecnico').value = ins.tecnicoConta || '';
+    $('ins-dia').value = ins.diaPrevisto ? String(ins.diaPrevisto).slice(0, 10) : '';
+    agEscolha = ins.horaIni ? { ini: min(ins.horaIni), fim: ins.horaFim ? min(ins.horaFim) : null }
+                            : { ini: null, fim: null };
+    agHorarioTexto();
+    // local: o que ja foi preenchido, senao o endereco do cliente
+    const ou = (a, b) => (a !== undefined && a !== null && a !== '') ? a : (b || '');
+    $('ins-logr').value = ou(e.logradouro, c.logradouro);
+    $('ins-num').value = ou(e.numero, c.numero);
+    $('ins-compl').value = ou(e.complemento, c.complemento);
+    $('ins-bairro').value = ou(e.bairro, c.bairro);
+    $('ins-cidade').value = ou(e.cidade, c.cidade);
+    $('ins-uf').value = ou(e.uf, c.uf);
+    $('ins-cep').value = ou(e.cep, c.cep);
+    $('ins-edif').value = ins.edificio || ''; $('ins-apto').value = ins.apto || '';
+    $('ins-ref').value = ins.pontoReferencia || '';
+    $('ins-fone').value = ou(ins.telefone, c.telefone); $('ins-cel').value = ins.celular || '';
+    $('ins-obs').value = ins.observacao || '';
+    const antigos = new Map((ins.itens || []).map(x => [Number(x.codigo), x]));
+    $('ins-itens').innerHTML = marcados.map(i => {
+      const a = antigos.get(Number(i.codigo)) || {};
+      return '<tr data-cod="' + i.codigo + '"><td>' + i.codigo + '</td><td>' + escapar(i.descricao) + '</td>'
+        + '<td><input class="ins-serv" value="' + escapar(a.servico || 'Instalação') + '"></td>'
+        + '<td><input class="ins-iobs" value="' + escapar(a.observacao || '') + '"></td></tr>';
+    }).join('');
+    $('ins-msg').textContent = '';
+    agCarregar();
+    const cx = $('ins-caixa');
+    cx.style.left = '50%'; cx.style.top = '3vh'; cx.style.transform = 'translateX(-50%)';
+    $('ins-fundo').hidden = false; cx.hidden = false;
+    $('ins-tecnico').focus();
+  }
+  function fecharInstalacao() { $('ins-fundo').hidden = true; $('ins-caixa').hidden = true; focarOS(); }
+
+  function confirmarInstalacao() {
+    agDosCampos();
+    if (!agConferir(true)) {
+      $(agEscolha.ini === null ? 'ins-ini' : 'ins-fim').focus(); return;
+    }
+    const opt = $('ins-tecnico').selectedOptions[0];
+    estado.instalacao = {
+      confirmada: true,
+      tecnicoConta: $('ins-tecnico').value,
+      tecnicoNome: $('ins-tecnico').value && opt ? opt.dataset.nome : '',
+      receitaConta: $('ins-tecnico').value && opt ? opt.dataset.receita : '',
+      diaPrevisto: $('ins-dia').value || null,
+      periodo: agEscolha.ini !== null ? 'FIXO' : 'NENHUM',            // com horario = FIXO (como no Access)
+      horaIni: agEscolha.ini !== null ? hm(agEscolha.ini) : '',
+      horaFim: agEscolha.ini !== null ? hm(agEscolha.fim) : '',
+      endereco: { logradouro: vIns('ins-logr'), numero: vIns('ins-num'), complemento: vIns('ins-compl'),
+                  bairro: vIns('ins-bairro'), cidade: vIns('ins-cidade'), uf: vIns('ins-uf').toUpperCase(),
+                  cep: vIns('ins-cep').replace(/\D/g, '') },
+      edificio: vIns('ins-edif'), apto: vIns('ins-apto'), pontoReferencia: vIns('ins-ref'),
+      telefone: vIns('ins-fone'), celular: vIns('ins-cel'), observacao: vIns('ins-obs'),
+      itens: [...$('ins-itens').querySelectorAll('tr[data-cod]')].map(tr => ({
+        codigo: Number(tr.dataset.cod),
+        servico: tr.querySelector('.ins-serv').value.trim() || 'Instalação',
+        observacao: tr.querySelector('.ins-iobs').value.trim(),
+      })),
+    };
+    fecharInstalacao();
+    atualizarInst();
+    recado('✓ instalação preenchida' + (estado.instalacao.tecnicoNome ? ' — técnico ' + estado.instalacao.tecnicoNome : ' — técnico a definir')
+      + '. Ela é gravada com a venda; a OS nasce quando a venda for fechada.', 'ok');
+  }
+
+  $('instalacao').addEventListener('click', abrirInstalacao);
+  $('ins-confirmar').addEventListener('click', confirmarInstalacao);
+  $('ins-voltar').addEventListener('click', fecharInstalacao);
+  $('ins-fundo').addEventListener('click', fecharInstalacao);
+  // Enter anda de campo em campo dentro do modal; no ultimo, confirma
+  $('ins-caixa').addEventListener('keydown', ev => {
+    if (ev.key !== 'Enter' || ev.target.tagName === 'BUTTON') return;
+    ev.preventDefault();
+    if (ev.target.id === 'ins-fim') {
+      agDosCampos(); agDesenhar();
+      if (agConferir(true)) $('ins-confirmar').focus();
+      return;
+    }
+    const campos = [...$('ins-caixa').querySelectorAll('input, select')].filter(x => !x.closest('[hidden]'));
+    const k = campos.indexOf(ev.target);
+    if (k >= 0 && k < campos.length - 1) campos[k + 1].focus(); else $('ins-confirmar').focus();
+  });
+
+  // ---- novo cliente sem sair da venda ----------------------------------------------------
+  function fecharNovoCliente() { $('nc-fundo').hidden = true; $('nc-frame').src = 'about:blank'; }
+  $('cli-novo').addEventListener('click', () => {
+    $('nc-frame').src = '/vendas/clientes?embed=1&novo=' + (estado.tipoCliente === 'PJ' ? 'PJ' : 'PF');
+    $('nc-fundo').hidden = false;
+  });
+  window.addEventListener('message', async ev => {
+    if (ev.origin !== location.origin || !ev.data || typeof ev.data !== 'object') return;
+    if (ev.data.tipo === 'cliente-cancelado') { fecharNovoCliente(); $('busca-cliente').focus(); return; }
+    if (ev.data.tipo !== 'cliente-gravado') return;
+    fecharNovoCliente();
+    const tipo = ev.data.tipoCliente === 'PJ' ? 'PJ' : 'PF';
+    try {
+      const r = await api('GET', '/clientes?tipo=' + tipo + '&busca=' + encodeURIComponent(ev.data.cpfCnpj || ''));
+      const c = (r.clientes || []).find(x => String(x.documento).replace(/\D/g, '') === ev.data.cpfCnpj) || (r.clientes || [])[0];
+      if (!c) { recado('Cliente gravado. Procure-o na busca.', 'ok'); $('busca-cliente').focus(); return; }
+      if (tipo !== estado.tipoCliente) { estado.tipoCliente = tipo; tipoAnterior = tipo; marcarSeg('seg-tipo', tipo); mostrarTipo(); }
+      estado.cliente = c;
+      desenharCliente();
+      recado('✓ cliente ' + c.codigo + ' ' + c.nome + ' cadastrado e escolhido', 'ok');
+      $('busca-produto').focus();
+    } catch (e) { recado(e.message, 'erro'); }
+  });
+
   // ---- conta contabil do cliente (modal) ------------------------------------------------
-  let ccAchadas = [], ccSel = 0, ccEspera = null;
+  let ccAchadas = [], ccSel = 0, ccEspera = null, ccNovoTitulo = null, ccProxima = '';
   const ccMsg = (t, ok) => { $('cc-msg').className = 'fe-msg' + (ok ? ' ok' : ''); $('cc-msg').textContent = t || ''; };
 
   async function abrirConta() {
@@ -302,8 +614,13 @@
     $('cc-nova').hidden = true; $('cc-criar').hidden = true;
     try {
       const t = await api('GET', '/titulos-cliente?tipo=' + (c.tipo || 'PF'));
-      $('cc-titulos').innerHTML = t.titulos.map(x => '<option value="' + escapar(x.codigo) + '">' + escapar(x.codigo) + ' - ' + escapar(x.nome) + '</option>').join('')
-        || '<option value="">nenhum título no grupo ' + escapar(t.grupo) + '</option>';
+      // a conta vai no ULTIMO titulo do grupo; se ele encheu, no titulo novo (criado ao gravar)
+      ccNovoTitulo = t.novoTitulo || null;
+      ccProxima = t.proximaConta || '';
+      $('cc-titulos').value = t.novoTitulo ? 'NOVO' : (t.ultimoTitulo || '');
+      $('cc-proxima').textContent = t.proximaConta
+        ? t.proximaConta + (t.novoTitulo ? '  (título novo ' + t.novoTitulo.codigo + ' - ' + t.novoTitulo.nome + ')' : '')
+        : 'nenhum título no grupo ' + t.grupo;
     } catch (e) { ccMsg(e.message); }
     const cx = $('cc-caixa');
     cx.style.left = '50%'; cx.style.top = '10vh'; cx.style.transform = 'translateX(-50%)';
@@ -332,7 +649,7 @@
   }
   function mostrarIncluir() {
     $('cc-nova').hidden = false; $('cc-criar').hidden = false;
-    $('cc-titulos').focus();
+    $('cc-nome').focus();
   }
 
   // ---- ficha do cliente (aberta pelo modal do plano) ------------------------------------
@@ -388,9 +705,13 @@
   }
   async function ccCriar() {
     const titulo = $('cc-titulos').value, nome = $('cc-nome').value.trim();
-    if (!titulo) { ccMsg('Escolha o título.'); return; }
+    if (!titulo) { ccMsg('Nenhum título de cliente no plano.'); return; }
     if (!nome) { ccMsg('Informe o nome da conta.'); $('cc-nome').focus(); return; }
-    if (!confirm('Criar no título ' + titulo + ' a conta "' + nome + '" e ligar ao cliente?')) return;
+    const pergunta = titulo === 'NOVO' && ccNovoTitulo
+      ? 'O último título encheu (999).\n\nCriar o título ' + ccNovoTitulo.codigo + ' - ' + ccNovoTitulo.nome
+        + '\ne nele a conta ' + ccNovoTitulo.codigo + '.001 "' + nome + '", ligada ao cliente?'
+      : 'Criar a conta ' + (ccProxima || 'no título ' + titulo) + ' "' + nome + '" e ligar ao cliente?';
+    if (!confirm(pergunta)) return;
     $('cc-criar').disabled = true;
     try {
       contaLigada(await api('POST', '/clientes/' + estado.cliente.id + '/conta-nova', { titulo, nome }));
@@ -400,7 +721,8 @@
     estado.cliente.ncontabil = r.ncontabil;
     desenharCliente();
     fecharConta();
-    recado('✓ conta ' + r.ncontabil + ' (' + r.nomeConta + ') ligada ao cliente ' + estado.cliente.codigo, 'ok');
+    recado((r.tituloNovo ? '✓ título novo ' + r.tituloNovo + ' · ' : '')
+      + '✓ conta ' + r.ncontabil + ' (' + r.nomeConta + ') ligada ao cliente ' + estado.cliente.codigo, 'ok');
   }
 
   $('cli-vincular').addEventListener('click', abrirConta);
@@ -444,10 +766,15 @@
   // produto
   ligarBusca('busca-produto', 'lista-produtos',
     () => '/produtos?fornecedor=' + encodeURIComponent($('filtro-fornec').value) + '&busca=',
-    p => '<strong>' + p.codigo + '</strong> ' + escapar(p.descricao)
-      + ' <span class="s">' + escapar(p.marca) + ' · ' + escapar(p.referencia) + ' · estoque <span class="' + (p.estoque <= 0 ? 'zero' : '') + '">' + p.estoque + '</span>'
-      + ' · ' + brl(estado.condicao === 'PRAZO' ? (p.precoPrazo || p.precoVista) : p.precoVista) + '</span>'
-      + (p.descricaoTecnica ? '<div class="s">' + escapar(p.descricaoTecnica) + '</div>' : ''),
+    // colunas: codigo | descricao (+ tecnica, garantia; marca so sem fornecedor no combo) | ref | estoque | preco
+    p => '<strong>' + p.codigo + '</strong>'
+      + '<span><span class="' + (p.garantia ? 'garantia' : '') + '">' + escapar(p.descricao) + '</span>'
+        + (p.garantia ? '<span class="tag-inst" title="produto com garantia: pode ser instalado">🔧 garantia</span>' : '')
+        + (!$('filtro-fornec').value && p.marca ? ' <span class="s">· ' + escapar(p.marca) + '</span>' : '')
+        + (p.descricaoTecnica ? '<span class="s tec-l">' + escapar(p.descricaoTecnica) + '</span>' : '') + '</span>'
+      + '<span class="s">' + escapar(p.referencia) + '</span>'
+      + '<span class="n' + (p.estoque <= 0 ? ' zero' : '') + '">' + p.estoque + '</span>'
+      + '<span class="n">' + brl(estado.condicao === 'PRAZO' ? (p.precoPrazo || p.precoVista) : p.precoVista) + '</span>',
     p => adicionar(p), false, () => !!$('filtro-fornec').value);
 
   // combo de fornecedor: escolheu, a lista abre com os produtos dele
@@ -467,7 +794,8 @@
   function adicionar(p) {
     const ja = estado.itens.find(i => i.codigo === p.codigo);
     if (ja) ja.quantidade += 1;
-    else estado.itens.push({ ...p, quantidade: 1, desconto: 0 });
+    else estado.itens.push({ ...p, quantidade: 1, desconto: 0, precoManual: null,
+                             precisaInstalacao: estado.documento === 'NFE' && !!p.garantia });
     desenharItens();
     // foco na quantidade do item
     const campo = document.querySelector('input.qtd[data-cod="' + p.codigo + '"]');
@@ -478,24 +806,32 @@
   function desenharItens() {
     const tb = $('itens');
     if (!estado.itens.length) {
-      tb.innerHTML = '<tr><td colspan="9" class="vazio">Nenhum produto. Busque acima.</td></tr>';
+      tb.innerHTML = '<tr><td colspan="10" class="vazio">Nenhum produto. Busque acima.</td></tr>';
     } else {
       tb.innerHTML = estado.itens.map(i => {
         const total = i.quantidade * preco(i) - i.desconto;
         return '<tr>'
           + '<td>' + i.codigo + '</td>'
-          + '<td>' + escapar(i.descricao) + (i.descricaoTecnica ? '<div class="tec">' + escapar(i.descricaoTecnica) + '</div>' : '') + '</td>'
+          + '<td class="desc-item' + (i.garantia ? ' garantia' : '') + '" data-cod="' + i.codigo + '"'
+            + (estado.documento === 'NFE' ? ' title="' + (i.garantia ? 'clique para TIRAR a garantia deste produto' : 'clique se o produto tem garantia (pode ser instalado)') + '"' : '') + '>'
+            + escapar(i.descricao) + (i.descricaoTecnica ? '<div class="tec">' + escapar(i.descricaoTecnica) + '</div>' : '') + '</td>'
           + '<td>' + escapar(i.referencia) + '</td>'
           + '<td class="num' + (i.estoque < i.quantidade ? ' zero' : '') + '">' + i.estoque + '</td>'
           + '<td class="num"><input class="qtd" data-cod="' + i.codigo + '" value="' + i.quantidade + '" inputmode="numeric"></td>'
-          + '<td class="num">' + brl(preco(i)) + '</td>'
+          + '<td class="num"><input class="unit' + (i.precoManual > 0 && i.precoManual !== precoTabela(i) ? ' negociado' : '')
+            + '" data-cod="' + i.codigo + '" value="' + brl(preco(i)) + '" inputmode="decimal" title="preço negociado (apague para voltar à tabela)">'
+            + (i.precoManual > 0 && i.precoManual !== precoTabela(i) ? '<span class="tabela">tabela ' + brl(precoTabela(i)) + '</span>' : '') + '</td>'
           + '<td class="num"><input class="desc" data-cod="' + i.codigo + '" value="' + (i.desconto ? brl(i.desconto) : '') + '" placeholder="0,00" inputmode="decimal"></td>'
-          + '<td class="num">' + brl(total) + '</td>'
-          + '<td><button type="button" class="btn-x" data-tirar="' + i.codigo + '" title="tirar">×</button></td>'
+          + '<td class="num tot-linha">' + brl(total) + '</td>'
+          + '<td class="c-inst">' + (estado.documento === 'NFE' && i.garantia
+              ? '<input type="checkbox" class="inst" data-cod="' + i.codigo + '"' + (i.precisaInstalacao ? ' checked' : '')
+                + ' title="vai ser instalado">' : '') + '</td>'
+          + '<td class="c-rem"><button type="button" class="btn-x" data-tirar="' + i.codigo + '" title="remover">×</button></td>'
           + '</tr>';
       }).join('');
     }
     totais();
+    atualizarInst();
   }
 
   function totais() {
@@ -517,17 +853,50 @@
     } else if (el.classList.contains('desc')) {
       el.value = el.value.replace(/[^\d.,]/g, '');
       i.desconto = Math.min(i.quantidade * preco(i), paraCentavos(el.value));
+    } else if (el.classList.contains('unit')) {
+      el.value = el.value.replace(/[^\d.,]/g, '');
+      const v = paraCentavos(el.value);
+      i.precoManual = v > 0 && v !== precoTabela(i) ? v : null;      // vazio ou igual: tabela
+      i.desconto = Math.min(i.desconto, i.quantidade * preco(i));
     }
+    const tot = el.closest('tr')?.querySelector('td.tot-linha');      // total da linha na hora
+    if (tot) tot.textContent = brl(i.quantidade * preco(i) - i.desconto);
     totais();
   });
   // ao sair do campo, redesenha (total da linha e formato do desconto)
-  $('itens').addEventListener('focusout', ev => { if (ev.target.matches('input.qtd, input.desc')) desenharItens(); });
+  $('itens').addEventListener('focusout', ev => { if (ev.target.matches('input.qtd, input.desc, input.unit')) desenharItens(); });
+  // Enter: quantidade -> unitario -> desconto -> proximo produto
   $('itens').addEventListener('keydown', ev => {
-    if (ev.key === 'Enter' && ev.target.matches('input.qtd, input.desc')) {
+    if (ev.key === 'Enter' && ev.target.matches('input.qtd, input.unit, input.desc')) {
       ev.preventDefault();
-      if (ev.target.classList.contains('qtd')) ev.target.closest('tr').querySelector('input.desc').focus();
+      const tr = ev.target.closest('tr');
+      if (ev.target.classList.contains('qtd')) { const u = tr.querySelector('input.unit'); u.focus(); u.select(); }
+      else if (ev.target.classList.contains('unit')) { const d = tr.querySelector('input.desc'); d.focus(); d.select(); }
       else $('busca-produto').focus();                   // proximo produto
     }
+  });
+  // clicar na descricao (so nota fiscal):
+  //   sem garantia -> "É garantia?"      OK grava garantia = 1 (violeta, vai para instalar)
+  //   com garantia -> "Tirar garantia?"  OK grava garantia = 0 (sai da instalacao)
+  $('itens').addEventListener('click', async ev => {
+    const td = ev.target.closest('td.desc-item');
+    if (!td || estado.documento !== 'NFE') return;
+    const i = estado.itens.find(x => String(x.codigo) === td.dataset.cod);
+    if (!i) return;
+    const marcar = !i.garantia;
+    const pergunta = marcar
+      ? 'É garantia?\n\n' + i.codigo + ' · ' + i.descricao
+        + '\n\nProduto com garantia, serviço e manutenção: passa a aparecer em violeta e pode ser instalado.'
+      : 'Tirar garantia?\n\n' + i.codigo + ' · ' + i.descricao
+        + '\n\nO produto deixa de ser violeta e sai da instalação desta venda.';
+    if (!confirm(pergunta)) return;
+    try {
+      await api('POST', '/produtos/' + i.codigo + '/garantia', { garantia: marcar ? 1 : 0 });
+      estado.itens.filter(x => x.codigo === i.codigo).forEach(x => { x.garantia = marcar; x.precisaInstalacao = marcar; });
+      if (estado.instalacao) estado.instalacao.confirmada = false;    // mudou a lista: conferir de novo
+      desenharItens();
+      recado('✓ ' + i.codigo + (marcar ? ' marcado como garantia.' : ' sem garantia.'), 'ok');
+    } catch (e) { recado(e.message, 'erro'); }
   });
   $('itens').addEventListener('click', ev => {
     const b = ev.target.closest('[data-tirar]');
@@ -550,7 +919,10 @@
       ocCliente: $('oc-cliente').value.trim(),
       descontoGeral: paraCentavos($('desc-geral').value),
       observacao: $('observacao').value.trim(),
-      itens: estado.itens.map(i => ({ codigo: i.codigo, quantidade: i.quantidade, desconto: i.desconto })),
+      itens: estado.itens.map(i => ({ codigo: i.codigo, quantidade: i.quantidade, desconto: i.desconto,
+                                      preco: i.precoManual > 0 ? i.precoManual : undefined,
+                                      precisaInstalacao: estado.documento === 'NFE' && !!i.precisaInstalacao })),
+      instalacao: estado.instalacao,
     };
     const r = estado.id ? await api('PUT', '/' + estado.id, corpo) : await api('POST', '/', corpo);
     const v = r.venda;
@@ -593,6 +965,11 @@
   const falta = () => (aFechar ? aFechar.totalLiquido : 0) - pagos.reduce((t, p) => t + p.valor, 0);
 
   async function abrirFechamento() {
+    if (faltaInstalacao()) {
+      recado('Há produto marcado para instalar: preencha a instalação antes de fechar.', 'erro');
+      abrirInstalacao();
+      return;
+    }
     $('fechar').disabled = true;
     try {
       const v = await salvar();
@@ -623,7 +1000,7 @@
       desenharPagos();
       escolherForma(lista[0]);
       const cx = $('fe-caixa');
-      cx.style.left = '50%'; cx.style.top = '10vh'; cx.style.transform = 'translateX(-50%)';
+      cx.style.left = '50%'; cx.style.top = '3vh'; cx.style.transform = 'translateX(-50%)';   // 3vh em cima, 3vh embaixo (max 94vh)
       $('fe-fundo').hidden = false; cx.hidden = false;
       $('fe-recebido').focus(); $('fe-recebido').select();
     } catch (e) {
@@ -730,7 +1107,7 @@
       mostrarCabecalho(v);
       somenteConsulta('fechada');
       const resumo = pagos.map(p => NOMES[p.forma].toLowerCase() + ' ' + brl(p.valor)).join(' + ');
-      recado('✓ venda nº ' + v.numero + ' fechada — ' + resumo, 'ok');
+      recado('✓ venda nº ' + v.numero + ' fechada — ' + resumo + (v.os && v.os.numero ? ' — OS nº ' + v.os.numero : ''), 'ok');
       abrirSucesso(v);
     } catch (e) {
       $('fe-msg').textContent = e.message;
@@ -795,7 +1172,7 @@
   $('ok-fundo').addEventListener('click', fecharSucesso);
 
   // arrasta o modal pelo titulo, para qualquer lado (sucesso e fechamento)
-  ['ok', 'fe', 'cc', 'cf'].forEach(pre => {
+  ['ok', 'fe', 'cc', 'cf', 'ins'].forEach(pre => {
     let ini = null;
     const cx = $(pre + '-caixa');
     $(pre + '-titulo').addEventListener('mousedown', ev => {
@@ -815,7 +1192,8 @@
   });
   document.addEventListener('keydown', ev => {
     if (ev.key !== 'Escape') return;
-    if (!$('cf-caixa').hidden) fecharFicha();
+    if (!$('ins-caixa').hidden) fecharInstalacao();
+    else if (!$('cf-caixa').hidden) fecharFicha();
     else if (!$('cc-caixa').hidden) fecharConta();
     else if (!$('fe-caixa').hidden) fecharModalFechamento();
     else if (!$('ok-caixa').hidden) fecharSucesso();
@@ -870,6 +1248,7 @@
     try {
       const v = (await api('GET', '/' + estado.id)).venda;
       estado.documento = v.documento; estado.condicao = v.condicao;
+      estado.instalacao = v.instalacao && v.instalacao.confirmada ? v.instalacao : null;
       marcarSeg('seg-doc', v.documento); $('sel-cond').value = v.condicao;
       if (v.cliente && (v.cliente.tipo === 'PF' || v.cliente.tipo === 'PJ')) {
         estado.tipoCliente = v.cliente.tipo; tipoAnterior = v.cliente.tipo; marcarSeg('seg-tipo', v.cliente.tipo); mostrarTipo();
@@ -894,6 +1273,9 @@
           estoque: p ? p.estoque : 0,
           precoVista: p ? p.precoVista : i.precoUnitario, precoPrazo: p ? p.precoPrazo : i.precoUnitario,
           quantidade: i.quantidade, desconto: i.desconto,
+          precisaInstalacao: !!i.precisaInstalacao, garantia: p ? !!p.garantia : false,
+          // negociado: o unitario gravado diferente do de tabela gravado
+          precoManual: i.precoTabela && i.precoUnitario !== i.precoTabela ? i.precoUnitario : null,
         });
       }
       desenharCliente();

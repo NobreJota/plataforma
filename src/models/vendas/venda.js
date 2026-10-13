@@ -17,6 +17,12 @@
 //         contra 4.01.001.001 (a vista) ou 4.02.001.001 (a prazo).
 //   - numeracao da NF-e: por enquanto segue da 8675 (teste). No dia D os testes
 //     sao apagados e a numeracao real continua da ultima nota do Access.
+// Alterado em: 09/10/2026 - INSTALACAO (so nota fiscal): os dados da OS ficam em
+//   venda.instalacao enquanto a venda esta aberta (tecnico = subtitulo 2.06.001.NNN,
+//   receita do servico = 4.03.002.NNN, dia previsto, periodo, endereco, servico por item).
+//   Ao FECHAR nasce a OS em _ordens_servico (status P) e venda.os guarda numero e id.
+// Alterado em: 09/10/2026 - PRECO NEGOCIADO: o vendedor pode mudar o unitario do item;
+//   precoTabela guarda o preco do cadastro (vista/prazo) para comparar depois.
 //
 // VENDA — um documento por venda, com tudo dentro: cliente, itens, pagamento,
 // a nota fiscal e a OS de instalacao. No Access isso estava espalhado em
@@ -78,7 +84,8 @@ const ItemSchema = new Schema({
   cfop:  { type: String, trim: true, default: '' },
 
   quantidade:     { type: Number, required: true, min: 1 },   // inteiro: nao ha fracionado
-  precoUnitario:  { type: Number, required: true, min: 0 },   // centavos
+  precoUnitario:  { type: Number, required: true, min: 0 },   // centavos (o cobrado; pode ser negociado)
+  precoTabela:    { type: Number, default: 0, min: 0 },       // centavos: o do cadastro na hora da venda
   desconto:       { type: Number, default: 0, min: 0 },       // centavos, do item
   total:          { type: Number, default: 0, min: 0 },       // centavos = qtd x preco - desconto
   custoUnitario:  { type: Number, default: 0, min: 0 },       // centavos, para margem e CMV
@@ -120,6 +127,39 @@ const PagamentoSchema = new Schema({
     validate: { validator: v => v.length <= 10, message: 'no maximo 10 parcelas' },
   },
 }, { _id: true });
+
+// ---------------------------------------------------------------------------
+// Instalacao (OS) — preenchida na venda; vira OS quando a venda fecha
+// periodo: como o HoraFixa do Access (f=fixo, a=manha, t=tarde, n=nenhum)
+// ---------------------------------------------------------------------------
+const InstalacaoItemSchema = new Schema({
+  codigo:     { type: Number, required: true },
+  descricao:  { type: String, trim: true, default: '' },
+  servico:    { type: String, trim: true, default: 'Instalação' },
+  observacao: { type: String, trim: true, default: '' },
+}, { _id: false });
+
+const InstalacaoSchema = new Schema({
+  confirmada:   { type: Boolean, default: false },
+  tecnicoConta: { type: String, trim: true, default: '' },   // 2.06.001.NNN
+  tecnicoNome:  { type: String, trim: true, default: '' },
+  receitaConta: { type: String, trim: true, default: '' },   // 4.03.002.NNN (mesmo final)
+  diaPrevisto:  { type: Date, default: null },
+  periodo:      { type: String, enum: ['NENHUM', 'MANHA', 'TARDE', 'FIXO'], default: 'NENHUM' },
+  horaIni:      { type: String, trim: true, default: '' },   // HH:MM (periodo FIXO)
+  horaFim:      { type: String, trim: true, default: '' },
+  endereco: {
+    logradouro: String, numero: String, complemento: String,
+    bairro: String, cidade: String, uf: String, cep: String,
+  },
+  edificio:        { type: String, trim: true, default: '' },
+  apto:            { type: String, trim: true, default: '' },
+  pontoReferencia: { type: String, trim: true, default: '' },
+  telefone:        { type: String, trim: true, default: '' },
+  celular:         { type: String, trim: true, default: '' },
+  observacao:      { type: String, trim: true, default: '' },
+  itens:           { type: [InstalacaoItemSchema], default: [] },
+}, { _id: false });
 
 // ---------------------------------------------------------------------------
 // Venda
@@ -185,6 +225,9 @@ const VendaSchema = new Schema({
     emitidaEm:  { type: Date, default: null },
     natureza:   { type: String, trim: true, default: 'Venda a vista' },
   },
+
+  // dados da instalacao (so NF); viram a OS no fechamento
+  instalacao: { type: InstalacaoSchema, default: null },
 
   // OS de instalacao aberta por esta venda
   os: {

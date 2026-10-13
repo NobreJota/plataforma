@@ -6,6 +6,10 @@
 // Le /vendas/api/venda/servicos?dia=AAAA-MM-DD e monta a grade
 // horario (07:00 a 19:00, 30 em 30 min) x tecnico. Clique no servico abre os
 // detalhes. O dia fica na URL (?dia=) para poder voltar/atualizar sem perder.
+// Alterado em: 13/10/2026 - uma coluna para CADA tecnico ativo (mesmo sem servico);
+//              aba "A agendar": OS pendente / reserva sem dia ou sem horario.
+//              Clique numa OS abre o modal da OS (os-modal.js): consignados, termino,
+//              valor final, fotos, concluir. Reserva (venda aberta) so mostra os dados.
 // =============================================================================
 
 (function () {
@@ -20,7 +24,7 @@
   const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   const SEMANA = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
 
-  let lista = [];
+  let lista = [], tecnicos = [], aAgendar = [];
 
   function diaInicial() {
     const q = new URLSearchParams(location.search).get('dia');
@@ -46,28 +50,36 @@
       let j; try { j = JSON.parse(txt); } catch (e) { throw new Error('resposta inválida do servidor (' + r.status + ')'); }
       if (!j.ok) throw new Error(j.erro || 'erro ao ler a agenda');
       lista = j.servicos || [];
+      tecnicos = j.tecnicos || [];
+      aAgendar = j.aAgendar || [];
       desenhar();
     } catch (e) {
-      lista = [];
+      lista = []; aAgendar = [];
       $('grade').innerHTML = '<div class="vazio">' + esc(e.message) + '</div>';
-      $('sem').hidden = true; $('resumo').textContent = '';
+      $('pend').innerHTML = ''; $('resumo').textContent = '';
     }
   }
 
   function nomeTec(s) { return s.tecnicoNome || (s.tecnicoConta ? s.tecnicoConta : 'a definir'); }
 
-  function cartao(s, i) {
+  const dataBr = d => d ? d.slice(8, 10) + '/' + d.slice(5, 7) + '/' + d.slice(0, 4) : '';
+  // de = 'L' (lista do dia) ou 'P' (a agendar); comDia mostra o dia previsto no canto
+  function cartao(s, i, de, comDia) {
     const e = s.endereco || {};
     const onde = [s.horaIni ? s.horaIni + (s.horaFim ? '–' + s.horaFim : '') : '', e.bairro, s.edificio]
       .filter(Boolean).join(' · ');
-    return '<div class="sv' + (s.tipo === 'RESERVA' ? ' reserva' : '') + '" data-i="' + i + '" title="clique para ver os detalhes">'
+    const dia = comDia ? '<span class="dia' + (s.diaPrevisto ? '' : ' sem') + '">'
+      + (s.diaPrevisto ? dataBr(s.diaPrevisto) : 'sem dia') + '</span>' : '';
+    return '<div class="sv' + (s.tipo === 'RESERVA' ? ' reserva' : '') + (s.status === 'E' || s.status === 'L' ? ' feita' : '') + '" data-de="' + (de || 'L') + '" data-i="' + i
+      + '" title="clique para ver os detalhes">' + dia
       + '<b>' + esc((s.cliente && s.cliente.nome) || '(sem nome)') + '</b>'
       + '<small>' + esc(onde || (s.itens || []).map(x => x.descricao).join(', ')) + '</small></div>';
   }
 
   function desenhar() {
-    // colunas: um por tecnico do dia (os sem tecnico em "a definir", no fim)
-    const tecs = [];
+    // colunas: TODOS os tecnicos ativos, mesmo sem servico no dia; tecnico que tem
+    // servico mas saiu da lista (inativo) tambem entra; "a definir" no fim, se houver
+    const tecs = tecnicos.map(t => ({ k: t.conta, nome: t.nome }));
     const tecsDia = new Set(lista.map(s => s.tecnicoConta).filter(Boolean));
     lista.filter(s => min(s.horaIni) !== null).forEach(s => { const k = s.tecnicoConta || ''; if (!tecs.some(t => t.k === k)) tecs.push({ k, nome: nomeTec(s) }); });
     tecs.sort((a, b) => (a.k ? 0 : 1) - (b.k ? 0 : 1) || a.nome.localeCompare(b.nome));
@@ -78,12 +90,9 @@
       : '';
 
     const comHora = lista.map((s, i) => ({ s, i, a: min(s.horaIni) })).filter(x => x.a !== null);
-    const semHora = lista.map((s, i) => ({ s, i })).filter(x => min(x.s.horaIni) === null);
 
-    if (!lista.length) {
-      $('grade').innerHTML = '<div class="vazio">Nenhum serviço marcado para este dia.</div>';
-    } else if (!comHora.length) {
-      $('grade').innerHTML = '<div class="vazio">Nenhum serviço com horário neste dia (veja a lista abaixo).</div>';
+    if (!tecs.length) {
+      $('grade').innerHTML = '<div class="vazio">Nenhum técnico cadastrado (contas 2.06.001).</div>';
     } else {
       // primeira e ultima linha: 07:00-19:00, abrindo se tiver servico fora da faixa
       let lo = INI, hi = FIM;
@@ -100,7 +109,7 @@
             const fim = Math.max(...aqui.map(x => min(x.s.horaFim) || x.a + PASSO));
             const span = Math.max(1, Math.ceil((fim - m) / PASSO));
             for (let k = 1; k < span; k++) usados.add(t.k + '|' + (m + k * PASSO));
-            h += '<td rowspan="' + span + '">' + aqui.map(x => cartao(x.s, x.i)).join('') + '</td>';
+            h += '<td rowspan="' + span + '">' + aqui.map(x => cartao(x.s, x.i, 'L')).join('') + '</td>';
           } else if (!usados.has(t.k + '|' + m)) {
             h += '<td></td>';
           }
@@ -110,9 +119,20 @@
       $('grade').innerHTML = h + '</tbody></table>';
     }
 
-    $('sem').hidden = !semHora.length;
-    $('sem-lista').innerHTML = semHora.map(x => cartao(x.s, x.i)).join('');
+    // aba A agendar
+    $('n-pend').textContent = aAgendar.length;
+    $('n-pend').classList.toggle('zero', !aAgendar.length);
+    $('pend').innerHTML = aAgendar.length
+      ? aAgendar.map((s, i) => cartao(s, i, 'P', true)).join('')
+      : '<div class="vazio">Nenhuma OS pendente sem horário.</div>';
   }
+
+  function aba(qual) {
+    document.querySelectorAll('.abas button').forEach(b => b.classList.toggle('ativa', b.dataset.aba === qual));
+    $('grade').hidden = qual !== 'agenda';
+    $('pend').hidden = qual !== 'pend';
+  }
+  document.querySelectorAll('.abas button').forEach(b => b.addEventListener('click', () => aba(b.dataset.aba)));
 
   function detalhes(s) {
     const e = s.endereco || {};
@@ -129,6 +149,7 @@
     $('cx-det').innerHTML =
         linha('Cliente', esc((s.cliente && s.cliente.nome) || ''))
       + linha('Técnico', esc(nomeTec(s)))
+      + (s.diaPrevisto !== undefined ? linha('Dia', esc(s.diaPrevisto ? dataBr(s.diaPrevisto) : 'sem dia')) : '')
       + linha('Horário', esc(s.horaIni ? s.horaIni + (s.horaFim ? ' às ' + s.horaFim : '') : 'sem horário'))
       + linha('Endereço', esc(end))
       + linha('Edifício/apto', esc([s.edificio, s.apto ? 'apto ' + s.apto : ''].filter(Boolean).join(' · ')))
@@ -144,7 +165,10 @@
 
   document.addEventListener('click', ev => {
     const c = ev.target.closest('.sv');
-    if (c) detalhes(lista[+c.dataset.i]);
+    if (!c) return;
+    const s = (c.dataset.de === 'P' ? aAgendar : lista)[+c.dataset.i];
+    if (s && s.tipo === 'OS' && s.id && window.OSModal) window.OSModal.abrir(s.id, carregar);
+    else detalhes(s);
   });
   $('fundo').addEventListener('click', fechar);
   $('cx-x').addEventListener('click', fechar);

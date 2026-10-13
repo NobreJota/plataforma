@@ -1,0 +1,77 @@
+{{!--
+  Destino: C:\plataformaRota\views\vendas\pages\servicos-lista.handlebars
+  Criado em: 13/10/2026
+
+  SERVICO > listas da OS. Uma aba para cada situacao:
+    Programadas    pendente, com tecnico, dia e hora
+    N/programadas  pendente, faltando tecnico, dia ou hora
+    Pendentes      todo servico ainda nao concluido
+    Concluidas     servico feito, aguardando o recebimento
+    Liquidadas     concluida e recebida
+  Clique na linha abre o modal da OS (/js/vendas/os-modal.js).
+  O JS fica em /js/vendas/servicos-lista.js   API: /vendas/api/os/lista?tipo=
+  Rota: /vendas/servicos/lista?tipo=programadas (o menu manda o tipo)
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordens de serviço</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root { --ambar:#92400e; --borda:#e5e7eb; --texto:#111827; --cinza:#6b7280; --vermelho:#dc2626; }
+    body { margin:0 auto; max-width:1500px; padding:52px 32px 40px; color:var(--texto); background:#fff;
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
+    .topo { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+    .topo h1 { margin:0 12px 0 0; font-size:21px; }
+    .topo input { height:34px; border:1px solid #d1d5db; border-radius:8px; padding:0 10px; font-size:14px; width:320px; background:#fffbeb; }
+    .topo input:not(:placeholder-shown) { background:#fff; }
+    .topo a { margin-left:auto; color:var(--ambar); font-weight:700; text-decoration:none; }
+    .abas { display:flex; gap:4px; border-bottom:2px solid var(--ambar); margin-bottom:10px; flex-wrap:wrap; }
+    .abas button { border:1px solid var(--borda); border-bottom:0; background:#f8fafc; border-radius:8px 8px 0 0;
+                   padding:8px 16px; font-weight:700; font-size:14px; cursor:pointer; color:#374151; }
+    .abas button.ativa { background:var(--ambar); border-color:var(--ambar); color:#fff; }
+    .abas .n { display:inline-block; min-width:22px; margin-left:6px; padding:1px 7px; border-radius:11px;
+               background:#d1d5db; color:#374151; font-size:12px; text-align:center; }
+    .abas button.ativa .n { background:#fff; color:var(--ambar); }
+    .lista { border:1px solid var(--borda); border-radius:10px; overflow:auto; max-height:calc(100vh - 200px); }
+    table { border-collapse:collapse; width:100%; }
+    th { position:sticky; top:0; background:#f3f4f6; font-size:11px; text-transform:uppercase; color:#374151;
+         text-align:left; padding:8px 10px; white-space:nowrap; }
+    td { padding:8px 10px; border-top:1px solid #f3f4f6; white-space:nowrap; }
+    td.quebra { white-space:normal; }
+    tbody tr:nth-child(even) { background:#fafafa; }
+    tbody tr { cursor:pointer; }
+    tbody tr:hover { background:#fef3c7; }
+    .n { text-align:right; font-variant-numeric:tabular-nums; }
+    .falta { color:var(--vermelho); font-weight:700; }
+    .atrasada td:first-child { box-shadow:inset 4px 0 0 var(--vermelho); }
+    .vazio { padding:30px; text-align:center; color:var(--cinza); }
+    .rodape { margin-top:8px; font-size:12px; color:var(--cinza); }
+  </style>
+</head>
+<body>
+
+  <div class="topo">
+    <h1>Ordens de serviço</h1>
+    <input id="filtro" placeholder="filtrar: cliente, técnico, bairro, nº da OS ou da venda" autocomplete="off">
+    <a href="/vendas/servicos">Agenda do dia →</a>
+  </div>
+
+  <div class="abas" id="abas">
+    <button type="button" data-tipo="programadas">Programadas<span class="n" id="n-programadas">0</span></button>
+    <button type="button" data-tipo="nprogramadas">N/programadas<span class="n" id="n-nprogramadas">0</span></button>
+    <button type="button" data-tipo="pendentes">Pendentes<span class="n" id="n-pendentes">0</span></button>
+    <button type="button" data-tipo="concluidas">Concluídas<span class="n" id="n-concluidas">0</span></button>
+    <button type="button" data-tipo="liquidadas">Liquidadas<span class="n" id="n-liquidadas">0</span></button>
+  </div>
+
+  <div class="lista" id="lista"><div class="vazio">Carregando…</div></div>
+  <div class="rodape" id="rodape"></div>
+
+  <script src="/js/vendas/os-modal.js"></script>
+  <script src="/js/vendas/servicos-lista.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
+</body>
+</html>

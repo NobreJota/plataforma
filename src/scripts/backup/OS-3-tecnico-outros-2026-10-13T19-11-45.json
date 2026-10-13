@@ -1,0 +1,71 @@
+[
+ {
+  "_id": {
+   "$oid": "6ace7cbcd624093361d406ab"
+  },
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "numero": {
+   "$numberInt": "9"
+  },
+  "nome": "Outros",
+  "apelido": "",
+  "cpf": "",
+  "rg": "",
+  "nascimento": "",
+  "mei": {
+   "cnpj": "",
+   "razaoSocial": "",
+   "inscricaoMunicipal": ""
+  },
+  "telefone": "",
+  "celular": "",
+  "whatsapp": "",
+  "email": "",
+  "endereco": {
+   "logradouro": "",
+   "numero": "",
+   "complemento": "",
+   "bairro": "",
+   "cidade": "",
+   "uf": "",
+   "cep": ""
+  },
+  "pix": {
+   "tipo": "",
+   "chave": ""
+  },
+  "banco": {
+   "banco": "",
+   "agencia": "",
+   "conta": ""
+  },
+  "pagamento": {
+   "percVI": {
+    "$numberInt": "0"
+   },
+   "percC": {
+    "$numberInt": "0"
+   },
+   "valorG": {
+    "$numberInt": "0"
+   }
+  },
+  "observacao": "",
+  "contaTecnico": "2.06.001.004",
+  "contaReceita": "4.03.002.004",
+  "ativo": true,
+  "origem": "ACCESS",
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791917244736"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791917244736"
+   }
+  }
+ }
+]

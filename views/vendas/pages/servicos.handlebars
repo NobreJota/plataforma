@@ -9,6 +9,11 @@
   ainda aberta com a instalacao ja marcada.
 
   O JS fica em /js/vendas/servicos.js   API: /vendas/api/venda/servicos?dia=
+
+  Alterado em: 13/10/2026 - a grade tem uma coluna para CADA tecnico ativo, mesmo sem
+               servico no dia. No topo, duas abas: "Agenda do dia" (a grade) e
+               "A agendar" (OS pendente e reserva sem dia ou sem horario, de qualquer data).
+               Clique na OS abre o modal da OS (/js/vendas/os-modal.js).
 --}}
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -44,16 +49,30 @@
           border-left:4px solid #d97706; height:calc(100% - 4px); overflow:hidden; }
     .sv:hover { background:#fde68a; }
     .sv.reserva { background:#eff6ff; border-left-color:#2563eb; }
+    .sv.feita { background:#d1fae5; border-left-color:#059669; }
     .sv b { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .sv small { color:#374151; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .vazio { padding:30px; text-align:center; color:var(--cinza); }
-    .sem { margin-top:12px; border:1px solid #fde68a; background:#fffbeb; border-radius:10px; padding:10px 14px; }
-    .sem h3 { margin:0 0 6px; font-size:12px; text-transform:uppercase; color:var(--ambar); }
-    .sem .sv { display:inline-block; height:auto; margin:3px 6px 3px 0; }
+    .abas { display:flex; gap:4px; border-bottom:2px solid var(--ambar); margin-bottom:10px; }
+    .abas button { border:1px solid var(--borda); border-bottom:0; background:#f8fafc; border-radius:8px 8px 0 0;
+                   padding:8px 18px; font-weight:700; font-size:14px; cursor:pointer; color:#374151; }
+    .abas button.ativa { background:var(--ambar); border-color:var(--ambar); color:#fff; }
+    .abas .n { display:inline-block; min-width:22px; margin-left:6px; padding:1px 7px; border-radius:11px;
+               background:var(--vermelho); color:#fff; font-size:12px; }
+    .abas .n.zero { background:#d1d5db; color:#374151; }
+    .pend { border:1px solid #fde68a; background:#fffbeb; border-radius:10px; padding:10px 14px;
+            display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:8px;
+            max-height:calc(100vh - 230px); overflow:auto; }
+    .pend .sv { height:auto; margin:0; }
+    .pend .vazio { grid-column:1 / -1; }
+    .sv .dia { float:right; font-size:11px; font-weight:700; color:var(--ambar); }
+    .sv .dia.sem { color:var(--vermelho); }
+    [hidden] { display:none !important; }
     .legenda { margin-top:10px; font-size:12px; color:var(--cinza); display:flex; gap:16px; }
     .legenda span::before { content:''; display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:5px;
                             vertical-align:-2px; background:var(--ambar-claro); border-left:4px solid #d97706; }
     .legenda span.r::before { background:#eff6ff; border-left-color:#2563eb; }
+    .legenda span.f::before { background:#d1fae5; border-left-color:#059669; }
 
     .fundo { position:fixed; inset:0; background:rgba(15,23,42,.25); z-index:40; }
     .fundo[hidden], .caixa[hidden] { display:none; }
@@ -84,9 +103,13 @@
     <span class="resumo" id="resumo"></span>
   </div>
 
+  <div class="abas">
+    <button type="button" class="ativa" data-aba="agenda">Agenda do dia</button>
+    <button type="button" data-aba="pend" title="OS pendente e reserva sem dia ou sem horário">A agendar<span class="n zero" id="n-pend">0</span></button>
+  </div>
   <div class="grade" id="grade"><div class="vazio">Carregando…</div></div>
-  <div class="sem" id="sem" hidden><h3>Sem horário marcado</h3><div id="sem-lista"></div></div>
-  <div class="legenda"><span>OS (venda fechada)</span><span class="r">reserva (venda ainda aberta)</span></div>
+  <div class="pend" id="pend" hidden></div>
+  <div class="legenda"><span>OS (venda fechada)</span><span class="r">reserva (venda ainda aberta)</span><span class="f">serviço concluído</span></div>
 
   <div class="fundo" id="fundo" hidden></div>
   <div class="caixa" id="caixa" hidden role="dialog">
@@ -94,6 +117,7 @@
     <div class="det" id="cx-det"></div>
   </div>
 
+  <script src="/js/vendas/os-modal.js"></script>
   <script src="/js/vendas/servicos.js"></script>
   <script src="/js/comum/navegacao.js"></script>
 </body>

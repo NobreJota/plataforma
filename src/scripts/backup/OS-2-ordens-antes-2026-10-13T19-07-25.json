@@ -1,0 +1,408 @@
+[
+ {
+  "_id": {
+   "$oid": "6ac94ed0934c34aafe03f18f"
+  },
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "numero": {
+   "$numberInt": "1"
+  },
+  "tipo": "VI",
+  "status": "P",
+  "data": {
+   "$date": {
+    "$numberLong": "1791577807827"
+   }
+  },
+  "venda": {
+   "id": {
+    "$oid": "6ac94ebc934c34aafe03f176"
+   },
+   "numero": {
+    "$numberInt": "18"
+   }
+  },
+  "cliente": {
+   "id": {
+    "$oid": "6abfb205216b0dccf2d63317"
+   },
+   "codigo": "F7842",
+   "tipo": "PF",
+   "nome": "Michele Moreira M.Camargo",
+   "documento": "00975727729",
+   "ncontabil": "1.03.008.367"
+  },
+  "endereco": {
+   "logradouro": "Rua João Silva de Abreu",
+   "numero": "110",
+   "complemento": "",
+   "bairro": "Mata da Praia",
+   "cidade": "Vitória",
+   "uf": "ES",
+   "cep": ""
+  },
+  "tecnicoConta": "2.06.001.014",
+  "tecnicoNome": "Marcelo",
+  "receitaConta": "4.03.002.014",
+  "diaPrevisto": {
+   "$date": {
+    "$numberLong": "1792076400000"
+   }
+  },
+  "periodo": "MANHA",
+  "horaIni": "",
+  "horaFim": "",
+  "edificio": "Vila Dela Luna",
+  "apto": "304",
+  "pontoReferencia": "",
+  "telefone": "9852-0460",
+  "celular": "",
+  "observacao": "",
+  "itens": [
+   {
+    "codigo": {
+     "$numberInt": "5987"
+    },
+    "descricao": "Aquec. GN      KO 38 D  BR   38 Prime(3590)",
+    "servico": "Instalação",
+    "observacao": ""
+   }
+  ],
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791577807827"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791577807827"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acaab4e39dc524ad1c224bb"
+  },
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "numero": {
+   "$numberInt": "2"
+  },
+  "tipo": "VI",
+  "status": "P",
+  "data": {
+   "$date": {
+    "$numberLong": "1791667021379"
+   }
+  },
+  "venda": {
+   "id": {
+    "$oid": "6acaab3f39dc524ad1c22496"
+   },
+   "numero": {
+    "$numberInt": "22"
+   }
+  },
+  "cliente": {
+   "id": {
+    "$oid": "6abfb1ff216b0dccf2d615d2"
+   },
+   "codigo": "F859",
+   "tipo": "PF",
+   "nome": "Aristides do Couto Neto",
+   "documento": "42347491768",
+   "ncontabil": "1.03.001.861"
+  },
+  "endereco": {
+   "logradouro": "Rua Almirante Soído",
+   "numero": "445",
+   "complemento": "Ed. Artemis apto 302",
+   "bairro": "Praia Santa Helena",
+   "cidade": "Vitória",
+   "uf": "ES",
+   "cep": ""
+  },
+  "tecnicoConta": "2.06.001.003",
+  "tecnicoNome": "Robson",
+  "receitaConta": "4.03.002.003",
+  "diaPrevisto": {
+   "$date": {
+    "$numberLong": "1792076400000"
+   }
+  },
+  "periodo": "FIXO",
+  "horaIni": "08:30",
+  "horaFim": "10:30",
+  "edificio": "",
+  "apto": "",
+  "pontoReferencia": "",
+  "telefone": "9.8134-1683",
+  "celular": "",
+  "observacao": "",
+  "itens": [
+   {
+    "codigo": {
+     "$numberInt": "6008"
+    },
+    "descricao": "Aquec. GN      KO 38 Di  BR   38 Prime(3591)",
+    "servico": "Instalação",
+    "observacao": ""
+   }
+  ],
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791667021379"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791667021379"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3d94a7cbbdd9233a4521"
+  },
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "numero": {
+   "$numberInt": "3"
+  },
+  "tipo": "VI",
+  "status": "P",
+  "data": {
+   "$date": {
+    "$numberLong": "1791901075404"
+   }
+  },
+  "venda": {
+   "id": {
+    "$oid": "6ace39a6249d9c5ac27223aa"
+   },
+   "numero": {
+    "$numberInt": "23"
+   }
+  },
+  "cliente": {
+   "id": {
+    "$oid": "6abfb1ff216b0dccf2d6177a"
+   },
+   "codigo": "F1291",
+   "tipo": "PF",
+   "nome": "Flávio de Jesus Julião",
+   "documento": "03146126702",
+   "ncontabil": "1.03.002.300"
+  },
+  "endereco": {
+   "logradouro": "Rua Abiail do Amaral Carneiro",
+   "numero": "191",
+   "complemento": "",
+   "bairro": "Enseada do Suá",
+   "cidade": "Vitória",
+   "uf": "ES",
+   "cep": "00000000"
+  },
+  "tecnicoConta": "2.06.001.014",
+  "tecnicoNome": "Marcelo",
+  "receitaConta": "4.03.002.014",
+  "diaPrevisto": null,
+  "periodo": "FIXO",
+  "horaIni": "08:30",
+  "horaFim": "10:00",
+  "edificio": "Arábica",
+  "apto": "502",
+  "pontoReferencia": "",
+  "telefone": "9.8112-8941",
+  "celular": "",
+  "observacao": "",
+  "itens": [
+   {
+    "codigo": {
+     "$numberInt": "5581"
+    },
+    "descricao": "Aquec. GLP/KO 15 DI Inox(1725)",
+    "servico": "Instalação",
+    "observacao": ""
+   }
+  ],
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901075404"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901075404"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3ecfa7cbbdd9233a4565"
+  },
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "numero": {
+   "$numberInt": "4"
+  },
+  "tipo": "VI",
+  "status": "P",
+  "data": {
+   "$date": {
+    "$numberLong": "1791901390009"
+   }
+  },
+  "venda": {
+   "id": {
+    "$oid": "6ace3e66a7cbbdd9233a453b"
+   },
+   "numero": {
+    "$numberInt": "24"
+   }
+  },
+  "cliente": {
+   "id": {
+    "$oid": "6abfb20f216b0dccf2d65d0a"
+   },
+   "codigo": "F16086",
+   "tipo": "PF",
+   "nome": "Aloisio Claudino",
+   "documento": "74285580772",
+   "ncontabil": "1.03.016.601"
+  },
+  "endereco": {
+   "logradouro": "Av. Antônio Gil Veloso",
+   "numero": "1580",
+   "complemento": "Ed.  apto",
+   "bairro": "Praia da Costa",
+   "cidade": "Vila Velha",
+   "uf": "ES",
+   "cep": ""
+  },
+  "tecnicoConta": "2.06.001.014",
+  "tecnicoNome": "Marcelo",
+  "receitaConta": "4.03.002.014",
+  "diaPrevisto": {
+   "$date": {
+    "$numberLong": "1792076400000"
+   }
+  },
+  "periodo": "FIXO",
+  "horaIni": "08:00",
+  "horaFim": "11:00",
+  "edificio": "Vila Del Mare",
+  "apto": "501",
+  "pontoReferencia": "",
+  "telefone": "9-9228-3008",
+  "celular": "",
+  "observacao": "",
+  "itens": [
+   {
+    "codigo": {
+     "$numberInt": "6515"
+    },
+    "descricao": "aquec.gás  35 l/GLP   E 351  FEA/Prata",
+    "servico": "Instalação",
+    "observacao": ""
+   }
+  ],
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901390009"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901390009"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace4bc97db3a3037a30cd0e"
+  },
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "numero": {
+   "$numberInt": "5"
+  },
+  "tipo": "VI",
+  "status": "P",
+  "data": {
+   "$date": {
+    "$numberLong": "1791904713097"
+   }
+  },
+  "venda": {
+   "id": {
+    "$oid": "6ace4b5e10784ff314f23c3c"
+   },
+   "numero": {
+    "$numberInt": "25"
+   }
+  },
+  "cliente": {
+   "id": {
+    "$oid": "6ac93388d46844ab297309a8"
+   },
+   "codigo": "CLI-0015",
+   "tipo": "PF",
+   "nome": "Lucas Corradi Ferreira Brandão",
+   "documento": "10120581744",
+   "ncontabil": "1.03.017.773"
+  },
+  "endereco": {
+   "logradouro": "Rua Elesbão Linhares",
+   "numero": "189",
+   "complemento": "apto 502",
+   "bairro": "Praia do Canto",
+   "cidade": "Vitória",
+   "uf": "ES",
+   "cep": "29055340"
+  },
+  "tecnicoConta": "2.06.001.014",
+  "tecnicoNome": "Marcelo",
+  "receitaConta": "4.03.002.014",
+  "diaPrevisto": {
+   "$date": {
+    "$numberLong": "1792065600000"
+   }
+  },
+  "periodo": "FIXO",
+  "horaIni": "13:00",
+  "horaFim": "15:30",
+  "edificio": "",
+  "apto": "",
+  "pontoReferencia": "",
+  "telefone": "(27) 9999-9999",
+  "celular": "",
+  "observacao": "",
+  "itens": [
+   {
+    "codigo": {
+     "$numberInt": "5588"
+    },
+    "descricao": "Aquec. GN      KO 21 Di  Inox (3556)",
+    "servico": "Instalação",
+    "observacao": ""
+   }
+  ],
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791904713097"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791904713097"
+   }
+  }
+ }
+]

@@ -2,6 +2,8 @@
 // Destino: C:\plataformaRota\src\routes\vendas\venda-api.js
 // Criado em: 02/10/2026
 // Alterado em: 02/10/2026 - /clientes devolve endereco completo, telefone e e-mail (cabecalho)
+// Alterado em: 13/10/2026 - tecnicos vem do cadastro _tecnicos (tecnicos-api.js); OS nasce com
+//              tipo VI e numero continuando o Access (_numeracao, chave OS)
 // Alterado em: 02/10/2026 - GET /loja (cabecalho do cupom)
 // Alterado em: 02/10/2026 - fornecedor e FILTRO separado (?fornecedor=marca), nao entra na busca
 //              de texto; GET /fornecedores para o combo
@@ -155,19 +157,30 @@ router.get('/produtos', async (req, res) => {
 const PREFIXO_TECNICO = '2.06.001.';
 const PREFIXO_RECEITA_SERVICO = '4.03.002.';
 
-// GET /tecnicos   os tecnicos sao os subtitulos de 2.06.001; a receita e o mesmo final em 4.03.002
+// Tecnicos ativos. 13/10/2026: vem do cadastro de tecnicos (_tecnicos, tecnicos-api.js);
+// enquanto o cadastro estiver vazio (antes do OS-2), cai no jeito antigo: subtitulos de
+// 2.06.001, receita com o mesmo final em 4.03.002.
+async function tecnicosAtivos(loja) {
+  const cad = await col('_tecnicos').find({ lojistaId: loja, ativo: { $ne: false } })
+    .project({ nome: 1, apelido: 1, contaTecnico: 1, contaReceita: 1 }).sort({ nome: 1 }).toArray();
+  if (cad.length || await col('_tecnicos').countDocuments({ lojistaId: loja })) {
+    return cad.filter(x => x.contaTecnico).map(x => ({ conta: x.contaTecnico, nome: x.apelido || x.nome, receita: x.contaReceita || '' }));
+  }
+  const subs = await col('_contasubtitulos').find({
+    lojistaId: loja, ativo: { $ne: false },
+    codigo: { $regex: '^(' + escapar(PREFIXO_TECNICO) + '|' + escapar(PREFIXO_RECEITA_SERVICO) + ')' },
+  }).project({ codigo: 1, nome: 1 }).sort({ nome: 1 }).toArray();
+  const receitas = new Map(subs.filter(s => s.codigo.startsWith(PREFIXO_RECEITA_SERVICO))
+    .map(s => [s.codigo.split('.').pop(), s.codigo]));
+  return subs.filter(s => s.codigo.startsWith(PREFIXO_TECNICO)).map(s => ({
+    conta: s.codigo, nome: s.nome, receita: receitas.get(s.codigo.split('.').pop()) || '',
+  }));
+}
+
+// GET /tecnicos   { conta, nome, receita } dos tecnicos ativos
 router.get('/tecnicos', async (req, res) => {
   try {
-    const loja = lojaDe(req);
-    const subs = await col('_contasubtitulos').find({
-      lojistaId: loja, ativo: { $ne: false },
-      codigo: { $regex: '^(' + escapar(PREFIXO_TECNICO) + '|' + escapar(PREFIXO_RECEITA_SERVICO) + ')' },
-    }).project({ codigo: 1, nome: 1 }).sort({ codigo: 1 }).toArray();
-    const receitas = new Map(subs.filter(s => s.codigo.startsWith(PREFIXO_RECEITA_SERVICO))
-      .map(s => [s.codigo.split('.').pop(), s.codigo]));
-    res.json({ ok: true, tecnicos: subs.filter(s => s.codigo.startsWith(PREFIXO_TECNICO)).map(s => ({
-      conta: s.codigo, nome: s.nome, receita: receitas.get(s.codigo.split('.').pop()) || '',
-    })) });
+    res.json({ ok: true, tecnicos: await tecnicosAtivos(lojaDe(req)) });
   } catch (err) {
     res.status(500).json({ ok: false, erro: err.message });
   }
@@ -233,6 +246,11 @@ router.get('/agenda', async (req, res) => {
 });
 
 // GET /servicos?dia=2026-10-15   tudo o que esta marcado para o dia, de todos os tecnicos
+// 13/10/2026: devolve tambem
+//   tecnicos  todos os tecnicos ativos (2.06.001.NNN): a grade tem uma coluna para cada
+//   aAgendar  OS pendente (status P) e reserva (venda aberta com instalacao) SEM dia ou
+//             SEM horario, de qualquer data: vai no topo da Agenda do dia
+//   id        da OS (para abrir o modal da OS: /vendas/api/os/:id)
 router.get('/servicos', async (req, res) => {
   try {
     const dia = String(req.query.dia || '').trim();
@@ -251,16 +269,49 @@ router.get('/servicos', async (req, res) => {
     const abertas = await col('_vendas').find({ lojistaId: loja, situacao: 'A', 'instalacao.confirmada': true,
       'instalacao.diaPrevisto': { $gte: ini, $lte: fim } }).project({ numero: 1, instalacao: 1, cliente: 1 }).toArray();
     const servicos = [
-      ...oss.map(o => ({ tipo: 'OS', numero: o.numero, status: o.status, venda: o.venda?.numero || null,
+      ...oss.map(o => ({ tipo: 'OS', id: String(o._id), numero: o.numero, status: o.status, venda: o.venda?.numero || null,
                          cliente: o.cliente || {}, ...campos(o) })),
       ...abertas.map(v => ({ tipo: 'RESERVA', numero: null, status: 'A', venda: v.numero,
                              cliente: v.cliente || {}, ...campos(v.instalacao) })),
     ].sort((a, b) => (a.horaIni || '99').localeCompare(b.horaIni || '99'));
-    res.json({ ok: true, dia, servicos });
+
+    const tecnicos = (await tecnicosAtivos(loja)).map(t => ({ conta: t.conta, nome: t.nome }));
+
+    const semHora = { $or: [{ horaIni: { $in: ['', null] } }, { horaIni: { $exists: false } },
+                            { diaPrevisto: null }, { diaPrevisto: { $exists: false } }] };
+    const semHoraVenda = { $or: [{ 'instalacao.horaIni': { $in: ['', null] } }, { 'instalacao.horaIni': { $exists: false } },
+                                 { 'instalacao.diaPrevisto': null }, { 'instalacao.diaPrevisto': { $exists: false } }] };
+    const osPend = await col('_ordens_servico').find({ lojistaId: loja, status: 'P', ...semHora }).toArray();
+    const resPend = await col('_vendas').find({ lojistaId: loja, situacao: 'A', 'instalacao.confirmada': true, ...semHoraVenda })
+      .project({ numero: 1, instalacao: 1, cliente: 1 }).toArray();
+    const diaDe = d => d ? new Date(d).toISOString().slice(0, 10) : '';
+    const aAgendar = [
+      ...osPend.map(o => ({ tipo: 'OS', id: String(o._id), numero: o.numero, status: o.status, venda: o.venda?.numero || null,
+                            cliente: o.cliente || {}, diaPrevisto: diaDe(o.diaPrevisto), ...campos(o) })),
+      ...resPend.map(v => ({ tipo: 'RESERVA', numero: null, status: 'A', venda: v.numero, cliente: v.cliente || {},
+                             diaPrevisto: diaDe(v.instalacao.diaPrevisto), ...campos(v.instalacao) })),
+    ].sort((a, b) => (a.diaPrevisto || '0').localeCompare(b.diaPrevisto || '0')
+                  || String(a.cliente.nome || '').localeCompare(String(b.cliente.nome || '')));
+
+    res.json({ ok: true, dia, servicos, tecnicos, aAgendar });
   } catch (err) {
     res.status(500).json({ ok: false, erro: err.message });
   }
 });
+
+// Numero da proxima OS. 13/10/2026: continua a numeracao do Access. O contador mora em
+// _numeracao { lojistaId, chave: 'OS', ultimo } (o OS-2 grava o ultimo NrOServico do Access);
+// nunca fica abaixo da maior OS ja gravada na plataforma.
+async function proximoNumeroOS(loja, session) {
+  const ult = await col('_ordens_servico').find({ lojistaId: loja }, { session })
+    .sort({ numero: -1 }).limit(1).project({ numero: 1 }).toArray();
+  await col('_numeracao').updateOne({ lojistaId: loja, chave: 'OS' },
+    { $max: { ultimo: ult[0]?.numero || 0 } }, { upsert: true, session });
+  const r = await col('_numeracao').findOneAndUpdate({ lojistaId: loja, chave: 'OS' },
+    { $inc: { ultimo: 1 } }, { returnDocument: 'after', session });
+  const doc = r && r.value !== undefined ? r.value : r;
+  return doc.ultimo;
+}
 
 // a instalacao que veio da tela, limpa (so os campos conhecidos)
 function lerInstalacao(b, itensVenda) {
@@ -996,12 +1047,10 @@ router.post('/:id/fechar', async (req, res) => {
 
       // OS de instalacao: nasce aqui, numerada por empresa
       if (instalar) {
-        const ultima = await col('_ordens_servico').find({ lojistaId: loja }, { session })
-          .sort({ numero: -1 }).limit(1).project({ numero: 1 }).toArray();
-        const numeroOS = (ultima[0]?.numero || 0) + 1;
+        const numeroOS = await proximoNumeroOS(loja, session);
         const { confirmada, ...dadosOS } = v.instalacao.toObject ? v.instalacao.toObject() : v.instalacao;
         const r = await col('_ordens_servico').insertOne({
-          lojistaId: loja, numero: numeroOS, tipo: 'INSTALACAO', status: 'P', data: agora,
+          lojistaId: loja, numero: numeroOS, tipo: 'VI', status: 'P', data: agora,
           venda: { id: v._id, numero: v.numero },
           cliente: { id: v.cliente.id, codigo: v.cliente.codigo, tipo: v.cliente.tipo, nome: v.cliente.nome,
                      documento: v.cliente.documento, ncontabil: v.cliente.ncontabil },

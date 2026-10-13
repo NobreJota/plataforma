@@ -7,6 +7,8 @@
   Alterado em: 10/10/2026 — Contabilidade > "Relatórios" (/contabil/relatorios, 404) vira "Balancete"
                 (/contab/balancete), igual ao menu do razão.
   Alterado em: 10/10/2026 — Serviço (abaixo de Venda) > Agenda do dia (/vendas/servicos).
+  Alterado em: 13/10/2026 — Serviço > Programadas, N/programadas, Pendentes, Liquidadas (/vendas/servicos/lista?tipo=).
+  Alterado em: 13/10/2026 — Serviço > Técnicos (/vendas/servicos/tecnicos).
   Alterado em: 10/10/2026 — /usuariocontab/menu?abrir=venda abre direto o submenu da Venda
                 (Clientes, Nova venda, Notas fiscais, Relatórios); serve para fluxo, contabil,
                 compra e site também. O ícone Venda do razão usa isso.
@@ -134,6 +136,21 @@
       <li class="coop-sub-title">Serviço</li>
       <li class="coop-sub-item" data-url="/vendas/servicos">
         <span>Agenda do dia</span>
+      </li>
+      <li class="coop-sub-item" data-url="/vendas/servicos/lista?tipo=programadas">
+        <span>Programadas</span>
+      </li>
+      <li class="coop-sub-item" data-url="/vendas/servicos/lista?tipo=nprogramadas">
+        <span>N/programadas</span>
+      </li>
+      <li class="coop-sub-item" data-url="/vendas/servicos/lista?tipo=pendentes">
+        <span>Pendentes</span>
+      </li>
+      <li class="coop-sub-item" data-url="/vendas/servicos/lista?tipo=liquidadas">
+        <span>Liquidadas</span>
+      </li>
+      <li class="coop-sub-item" data-url="/vendas/servicos/tecnicos">
+        <span>Técnicos</span>
       </li>
     </ul>
 

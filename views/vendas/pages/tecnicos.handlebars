@@ -1,0 +1,147 @@
+{{!--
+  Destino: C:\plataformaRota\views\vendas\pages\tecnicos.handlebars
+  Criado em: 13/10/2026
+
+  SERVICO > TECNICOS: cadastro dos tecnicos terceirizados (MEI).
+  Lista a esquerda (ativos primeiro), ficha a direita. Tecnico NOVO ganha as duas contas
+  (2.06.001.NNN e 4.03.002.NNN, mesmo final). Nada e apagado: Inativar / Reativar.
+  Pagamento padrao: % sobre a mao de obra da OS VI e da OS C, valor fixo por OS G.
+  O JS fica em /js/vendas/tecnicos.js   API: /vendas/api/tecnicos
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Técnicos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root { --ambar:#92400e; --roxo:#6b21a8; --roxo-claro:#f3e8ff; --borda:#e5e7eb; --texto:#111827; --cinza:#6b7280;
+            --vermelho:#dc2626; --verde:#059669; }
+    body { margin:0 auto; max-width:1500px; padding:52px 32px 40px; color:var(--texto); background:#fff;
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
+    .topo { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+    .topo h1 { margin:0; font-size:21px; flex:1; }
+    button { font:inherit; }
+    .btn { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:8px 16px; font-weight:700; cursor:pointer; }
+    .btn.roxo { background:var(--roxo); border-color:var(--roxo); color:#fff; }
+    .btn.vermelho { color:var(--vermelho); border-color:#fca5a5; }
+    .btn.verde { color:var(--verde); border-color:#6ee7b7; }
+    .btn:disabled { opacity:.5; cursor:not-allowed; }
+    .corpo { display:grid; grid-template-columns:330px minmax(0,1fr); gap:20px; align-items:start; }
+    .lista { border:1px solid var(--borda); border-radius:10px; overflow:auto; max-height:calc(100vh - 140px); }
+    .lista input { width:calc(100% - 16px); margin:8px; height:34px; border:1px solid #d1d5db; border-radius:8px; padding:0 10px; font-size:14px; }
+    .tec { padding:10px 14px; border-top:1px solid #f3f4f6; cursor:pointer; }
+    .tec:nth-child(even) { background:#fafafa; }
+    .tec:hover { background:#fef3c7; }
+    .tec.sel { background:var(--roxo-claro); box-shadow:inset 4px 0 0 var(--roxo); }
+    .tec b { display:block; }
+    .tec small { color:var(--cinza); }
+    .tec.inativo b { color:var(--cinza); text-decoration:line-through; }
+    .tec .tag { float:right; font-size:11px; font-weight:700; color:var(--vermelho); }
+    .ficha { border:1px solid var(--borda); border-radius:10px; padding:16px 20px; }
+    .ficha h2 { margin:0 0 4px; font-size:18px; display:flex; align-items:center; gap:10px; }
+    .ficha h2 .contas { font-size:13px; font-weight:600; color:var(--cinza); }
+    .sec { font-size:12px; font-weight:800; text-transform:uppercase; color:var(--roxo); margin:16px 0 6px; }
+    .g { display:grid; gap:10px 12px; }
+    .g4 { grid-template-columns:repeat(4, minmax(0,1fr)); }
+    .g3 { grid-template-columns:repeat(3, minmax(0,1fr)); }
+    .l2 { grid-column:span 2; } .l3 { grid-column:span 3; } .l4 { grid-column:span 4; }
+    label { display:flex; flex-direction:column; gap:3px; font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; }
+    label input, label select, label textarea { font:inherit; font-size:14px; font-weight:400; text-transform:none; color:var(--texto);
+             padding:7px 9px; border:1px solid #d1d5db; border-radius:8px; background:#fff; width:100%; min-width:0; }
+    label input:placeholder-shown, label textarea:placeholder-shown { background:#fffbeb; }
+    label textarea { resize:vertical; min-height:56px; }
+    .num { text-align:right; }
+    .dica { font-size:12px; color:var(--cinza); margin-top:4px; }
+    .rod { display:flex; align-items:center; gap:10px; margin-top:18px; }
+    .rod .msg { flex:1; font-weight:600; color:var(--vermelho); }
+    .rod .msg.ok { color:var(--verde); }
+    .vazio { padding:20px; color:var(--cinza); text-align:center; }
+    @media (max-width: 1000px) { .corpo { grid-template-columns:1fr; } .g4 { grid-template-columns:repeat(2, minmax(0,1fr)); } }
+  </style>
+</head>
+<body>
+
+  <div class="topo">
+    <h1>Técnicos</h1>
+    <button type="button" class="btn roxo" id="novo">+ Novo técnico</button>
+  </div>
+
+  <div class="corpo">
+    <div class="lista">
+      <input id="filtro" placeholder="filtrar" autocomplete="off">
+      <div id="tecs"><div class="vazio">Carregando…</div></div>
+    </div>
+
+    <form class="ficha" id="ficha" autocomplete="off" onsubmit="return false">
+      <h2><span id="f-tit">Novo técnico</span><span class="contas" id="f-contas"></span></h2>
+
+      <div class="sec">Identificação</div>
+      <div class="g g4">
+        <label class="l2">Nome completo<input id="nome" placeholder=" " maxlength="120"></label>
+        <label>Apelido (aparece na agenda)<input id="apelido" placeholder=" " maxlength="40"></label>
+        <label>Nascimento<input type="date" id="nascimento"></label>
+        <label>CPF<input id="cpf" placeholder=" " inputmode="numeric" maxlength="14"></label>
+        <label>RG<input id="rg" placeholder=" " maxlength="20"></label>
+      </div>
+
+      <div class="sec">MEI</div>
+      <div class="g g4">
+        <label>CNPJ<input id="cnpj" placeholder=" " inputmode="numeric" maxlength="18"></label>
+        <label class="l2">Razão social<input id="razao" placeholder=" " maxlength="120"></label>
+        <label>Inscrição municipal<input id="im" placeholder=" " maxlength="30"></label>
+      </div>
+
+      <div class="sec">Contato</div>
+      <div class="g g4">
+        <label>Telefone<input id="telefone" placeholder=" " maxlength="20"></label>
+        <label>Celular<input id="celular" placeholder=" " maxlength="20"></label>
+        <label>WhatsApp (só números, com DDD)<input id="whatsapp" placeholder=" " inputmode="numeric" maxlength="15"></label>
+        <label>E-mail<input id="email" type="email" placeholder=" " maxlength="120"></label>
+      </div>
+
+      <div class="sec">Endereço</div>
+      <div class="g g4">
+        <label class="l2">Logradouro<input id="logradouro" placeholder=" " maxlength="120"></label>
+        <label>Número<input id="enum" placeholder=" " maxlength="10"></label>
+        <label>Complemento<input id="complemento" placeholder=" " maxlength="60"></label>
+        <label>Bairro<input id="bairro" placeholder=" " maxlength="60"></label>
+        <label>Cidade<input id="cidade" placeholder=" " maxlength="60"></label>
+        <label>UF<input id="uf" placeholder=" " maxlength="2"></label>
+        <label>CEP<input id="cep" placeholder=" " inputmode="numeric" maxlength="9"></label>
+      </div>
+
+      <div class="sec">Pagamento padrão</div>
+      <div class="g g4">
+        <label>% sobre VI (venda/instalação)<input id="percVI" class="num" placeholder=" " inputmode="decimal"></label>
+        <label>% sobre C (conserto)<input id="percC" class="num" placeholder=" " inputmode="decimal"></label>
+        <label>Valor fixo por G (garantia)<input id="valorG" class="num" placeholder=" " inputmode="decimal"></label>
+      </div>
+      <div class="dica">O % incide sobre a mão de obra da OS. No recebimento da OS dá para trocar a forma (ex.: valor total para o técnico).</div>
+
+      <div class="sec">Para pagar o técnico</div>
+      <div class="g g4">
+        <label>Tipo da chave PIX<select id="pixTipo"><option value="">—</option><option>CPF</option><option>CNPJ</option>
+          <option value="CELULAR">Celular</option><option value="EMAIL">E-mail</option><option value="ALEATORIA">Aleatória</option></select></label>
+        <label class="l3">Chave PIX<input id="pixChave" placeholder=" " maxlength="120"></label>
+        <label class="l2">Banco<input id="banco" placeholder=" " maxlength="60"></label>
+        <label>Agência<input id="agencia" placeholder=" " maxlength="10"></label>
+        <label>Conta<input id="conta" placeholder=" " maxlength="20"></label>
+      </div>
+
+      <div class="sec">Observação</div>
+      <label><textarea id="observacao" placeholder=" " maxlength="2000"></textarea></label>
+
+      <div class="rod">
+        <span class="msg" id="msg"></span>
+        <button type="button" class="btn" id="ativar" hidden>Inativar</button>
+        <button type="button" class="btn roxo" id="gravar">Gravar</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="/js/vendas/tecnicos.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
+</body>
+</html>

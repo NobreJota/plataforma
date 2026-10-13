@@ -1,0 +1,491 @@
+﻿Access: C:\Armação\Dados\2026B\2026B.mdb
+Tabelas encontradas (84): Contab_Caixa_FluxoServiço · Contab_Caixa_FluxoServiço_ · Contab_Caixa_FluxoServiço_2025 · Cópia de OrdemServiço_Control_Open · OrdemServiço__Cabeçalho · OrdemServiço__Cabeçalho_ · OrdemServiço__Cabeçalho_2025 · OrdemServiço__Cabeçalho_X · OrdemServiço__Complemento · OrdemServiço__Complemento_ · OrdemServiço__Complemento_Open · OrdemServiço__Control_Open · OrdemServiço__DetalhesGarantia · OrdemServiço__DetalhesGarantia_Open · OrdemServiço__NowDevolMatConsig · OrdemServiço__NowMatConsig · OrdemServiço__NowMatConsig_ · OrdemServiço__ProdutoTrocado · OrdemServiço_AgrupandoTransfer · OrdemServiço_AparelhosGarantia · OrdemServiço_Cancelada_Cabeçalho · OrdemServiço_Cancelada_Complemento · OrdemServiço_Catálogo_Produto · OrdemServiço_Control · OrdemServiço_Control_Open · OrdemServiço_Controle_Retorno · OrdemServiço_ControlePeçaGarantia · OrdemServiço_ControleRevisão · OrdemServiço_FabricanteGarantia · OrdemServiço_FaltaComplementar · OrdemServiço_FornecedoresConserto · OrdemServiço_FornecedoresSelecionados · OrdemServiço_GarantiaProd_Usados · OrdemServiço_LinhasGarantia · OrdemServiço_ListadeServiço · OrdemServiço_ListGrupos · OrdemServiço_Material_Avulso · OrdemServiço_Material_Consignado · OrdemServiço_Material_Consignado_Del · OrdemServiço_MaterialCupom · OrdemServiço_MaterialPeças · OrdemServiço_MaterialVendDevolv · OrdemServiço_MaterialVendDevolv_Del · OrdemServiço_Orçamento · OrdemServiço_PeçaPedGarantia · OrdemServiço_PeçaPedGarantiaItens · OrdemServiço_PeçasFornecedores · OrdemServico_PecasVendidas · OrdemServiço_ProdutosGarantia · OrdemServiço_Proposta_Cabeçalho · OrdemServiço_Proposta_Complemento · OrdemServiço_PropostaItens · OrdemServiço_PropostaMãoObra · OrdemServiço_Receitas · OrdemServiço_Receitas_ · OrdemServiço_Reclamação · OrdemServiço_ServiçoAdcional · OrdemServiço_Suporte · OrdemServiço_TabelaProdução · OrdemServiço_TabelaReclamações · OrdemServiço_Técnico · OrdemServiço_TipodeConsertos · OrdemServiço_ValorMãoObraCliente · PROD_Ordem_GRUPO · ReservaTécnica_Cadastro · ReservaTécnica_Relatório · Vendas_DevoluçãoCupom · Vendas_DevoluçãoCupomItens · Vendas_Garantia_Fabricante · Vendas_Garantia_Produtos · Z_OrdemServiço__Cabeçalho_Open · Z_OrdemServiço__Complemento_velho · Z_OrdemServiço_Control_ · OrdemServiço__Cabeçalho_Open · OrdemServiço__NowDevolMaterial · OrdemServiço_Comentário · OrdemServiço_FornecConsignado · OrdemServiço_FornecedoresConserto@ · OrdemServiço_MaterialComplementar · OrdemServiço_ProdutoAvulso · OrdemServiço_Serviço · OrdemServiço_ValorMãoObraGarantia · Vendas_Garantia_Saída · Z_OrdemServiço__Complemento_Open
+
+==============================================================================
+Contab_Caixa_FluxoServiço · 77 linhas
+colunas: Data (datetime), Chave (long), Ord (integer), NrCta (text), Pos (text), NrTítulo (text), Hist (text), Vect (datetime), Deb (currency), Ordem (text), Tipo (text), Origem (text)
+  [75] Data=2026-09-14 | Chave=7436 | Ord=1 | NrCta=1.03.010.281 | Pos=5 | NrTítulo=OC:13732/0- D | Hist=Vauban Coelho | Vect=2026-09-16 | Deb=1.0000 | Ordem=0 | Tipo=C | Origem=C
+  [76] Data=2026-09-15 | Chave=7499 | Ord=1 | NrCta=1.03.017.761 | Pos=5 | NrTítulo=OC:13731/0- D | Hist=Jose James Mendes Pessoa | Vect=2026-09-17 | Deb=1.0000 | Ordem=0 | Tipo=C | Origem=C
+  [77] Data=2026-09-16 | Chave=7526 | Ord=1 | NrCta=1.03.010.235 | Pos=5 | NrTítulo=OC:13743/0- D | Hist=Lílian Claudia Martins Nogueira Soares | Vect=2026-09-18 | Deb=1.0000 | Ordem=0 | Tipo=C | Origem=C
+  Pos: 5 → 77
+
+==============================================================================
+Contab_Caixa_FluxoServiço_ · 71 linhas
+colunas: Data (datetime), Chave (long), Ord (integer), NrCta (text), Pos (text), NrTítulo (text), Hist (text), Vect (datetime), Deb (currency), Ordem (text), Tipo (text), Origem (text)
+  [69] Data=2025-12-30 | Chave=11452 | Ord=1 | NrCta=1.03.011.285 | Pos=5 | NrTítulo=OC:12905/0- D | Hist=Alcides de Marchi | Vect=2026-01-01 | Deb=300.0000 | Ordem=0 | Tipo=C | Origem=C
+  [70] Data=2025-12-30 | Chave=11454 | Ord=1 | NrCta=1.03.017.456 | Pos=5 | NrTítulo=OC:12856/0- D | Hist=João Antonio Panciere Porto | Vect=2026-01-01 | Deb=1.0000 | Ordem=0 | Tipo=C | Origem=C
+  [71] Data=2025-12-30 | Chave=11466 | Ord=1 | NrCta=1.03.017.478 | Pos=5 | NrTítulo=OC:12906/0- D | Hist=Luiz Claudio Passos | Vect=2026-01-01 | Deb=1.0000 | Ordem=0 | Tipo=C | Origem=C
+  Pos: 5 → 71
+
+==============================================================================
+Contab_Caixa_FluxoServiço_2025 · 75 linhas
+colunas: Data (datetime), Chave (long), Ord (integer), NrCta (text), Pos (text), NrTítulo (text), Hist (text), Vect (datetime), Deb (currency), Ordem (text), Tipo (text), Origem (text)
+  [73] Data=2026-01-02 | Chave=11518 | Ord=1 | NrCta=1.03.011.758 | Pos=5 | NrTítulo=OC:1694/0- D | Hist=Flavia Bravim O. Nogarol Ferreira | Vect=2026-01-04 | Deb=285.0000 | Ordem=0 | Tipo=C | Origem=C
+  [74] Data=2026-01-02 | Chave=11518 | Ord=1 | NrCta=1.03.011.758 | Pos=5 | NrTítulo=OC:12911/0- D | Hist=Flavia Bravim O. Nogarol Ferreira | Vect=2026-01-04 | Deb=250.0000 | Ordem=0 | Tipo=C | Origem=C
+  [75] Data=2026-01-02 | Chave=11521 | Ord=1 | NrCta=1.03.013.718 | Pos=5 | NrTítulo=OC:12910/0- D | Hist=Alexandre da Silva Rezende | Vect=2026-01-04 | Deb=1.0000 | Ordem=0 | Tipo=C | Origem=C
+  Pos: 5 → 75
+
+==============================================================================
+Cópia de OrdemServiço_Control_Open · 0 linhas
+colunas: Número (long), OServiço (integer), data (datetime), NrCupom (long), MatVend (float), MatConsig (float), MatGarantia (integer), MatAvulso (float), Fluxo (float), MObra (float), Tipo (text), VrMObra (currency), ValorShut (currency), TipoOS (integer)
+
+==============================================================================
+OrdemServiço__Cabeçalho · 13688 linhas
+colunas: NrOServiço (long), Data (datetime), Class (text), Risco (text), CtaCliente (text), NrCliente (integer), NrCupom (long), Cliente (text), End (text), Cep (text), Edifício (text), Apto (text), Estado (text), Cidade (text), Bairro (text), FoneRes (text), FoneComal (text), Celular (text), NrTécnico (integer), CtaTécnico (text), DiaPrevisto (datetime), HoraIni (datetime), HoraFnal (datetime), Index (text), Status (text), Tipo (text), DataLiquidação (datetime), Chave_Close (float), Derivado (float), HoraFixa (text)
+  [13686] NrOServiço=13745 | Data=2026-09-16 | Class=F | Risco=· | CtaCliente=1.03.017.764 | NrCliente=17274 | NrCupom=1103 | Cliente=Juliana S. B. K. Dalla Bernardina | End=Marilia Rezende S.Coutinho | Cep=29.050-410 | Edifício=· | Apto=· | Estado=Espírito Santo | Cidade=Vitória | Bairro=Enseada do Suá | FoneRes=0 | FoneComal=0 | Celular=9-8122-8597 | NrTécnico=12 | CtaTécnico=2.06.001.008 | DiaPrevisto=2026-09-30 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=P | Tipo=VI | DataLiquidação=1933-12-31 | Chave_Close=· | Derivado=0 | HoraFixa=·
+  [13687] NrOServiço=13746 | Data=2026-09-16 | Class=F | Risco=· | CtaCliente=1.03.017.765 | NrCliente=17275 | NrCupom=1104 | Cliente=Piort Jan Stasiewicz | End=Hugo Musso | Cep=00.000-000 | Edifício=· | Apto=· | Estado=Espírito Santo | Cidade=Vila Velha | Bairro=Praia da Costa | FoneRes=0 | FoneComal=0 | Celular=0 | NrTécnico=12 | CtaTécnico=2.06.001.008 | DiaPrevisto=2026-09-17 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=L | Tipo=VI | DataLiquidação=2026-09-17 | Chave_Close=7576 | Derivado=0 | HoraFixa=·
+  [13688] NrOServiço=13747 | Data=2026-09-17 | Class=F | Risco=· | CtaCliente=1.03.017.710 | NrCliente=17219 | NrCupom=1106 | Cliente=Marco Antonio T. Loureiro | End=Abiail do Amaral Carneiro | Cep=00.-00--00 | Edifício=· | Apto=· | Estado=Espírito Santo | Cidade=Vitória | Bairro=Enseada do Suá | FoneRes=0 | FoneComal=0 | Celular=9-9989-6758 | NrTécnico=18 | CtaTécnico=2.06.001.015 | DiaPrevisto=2026-09-18 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=L | Tipo=VI | DataLiquidação=2026-09-18 | Chave_Close=7640 | Derivado=0 | HoraFixa=·
+  Status: L → 13630 · P → 55 · C → 3
+
+==============================================================================
+OrdemServiço__Cabeçalho_ · 32098 linhas
+colunas: NrOServiço (long), Data (datetime), Class (text), Risco (text), CtaCliente (text), NrCliente (integer), NrCupom (long), Cliente (text), End (text), Cep (text), Edifício (text), Apto (text), Estado (text), Cidade (text), Bairro (text), FoneRes (text), FoneComal (text), Celular (text), NrTécnico (integer), CtaTécnico (text), DiaPrevisto (datetime), HoraIni (datetime), HoraFnal (datetime), Index (text), Status (text), Tipo (text), DataLiquidação (datetime), Chave_Close (float), Derivado (float), HoraFixa (text)
+  [32096] NrOServiço=32765 | Data=2019-04-03 | Class=F | Risco=· | CtaCliente=1.03.009.883 | NrCliente=9345 | NrCupom=109 | Cliente=Armação Comercial | End=Leitão da Silva | Cep= | Edifício=loja | Apto=0 | Estado=Espírito Santo | Cidade=Vitória | Bairro=Santa Lúcia | FoneRes=0 | FoneComal=0 | Celular=0 | NrTécnico=19 | CtaTécnico=2.06.001.013 | DiaPrevisto=2019-04-03 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=L | Tipo=C | DataLiquidação=2019-04-10 | Chave_Close=3440 | Derivado=0 | HoraFixa=n
+  [32097] NrOServiço=32766 | Data=2019-04-03 | Class=F | Risco=· | CtaCliente=1.03.012.364 | NrCliente=11822 | NrCupom=0 | Cliente=Darcy Jerônymo dos Santos | End=São Paulo | Cep= | Edifício=Renoir | Apto=901 | Estado=Espírito Santo | Cidade=Vila Velha | Bairro=Praia da Costa | FoneRes=9.9996-6113 | FoneComal=0 | Celular=9.9972-0125 | NrTécnico=18 | CtaTécnico=2.06.001.015 | DiaPrevisto=2019-04-24 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=L | Tipo=C | DataLiquidação=2019-04-23 | Chave_Close=3831 | Derivado=0 | HoraFixa=n
+  [32098] NrOServiço=32767 | Data=2019-04-03 | Class=F | Risco=· | CtaCliente=1.03.013.049 | NrCliente=12507 | NrCupom=363 | Cliente=Maria da Gloria R. de Melo | End=Desemb.Augusto Botelho | Cep= | Edifício=Bahamas | Apto=1103 S | Estado=Espírito Santo | Cidade=Vila Velha | Bairro=Praia da Costa | FoneRes=9-9982-7289 | FoneComal=0 | Celular=9.9979-1963 | NrTécnico=19 | CtaTécnico=2.06.001.013 | DiaPrevisto=2019-04-01 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=L | Tipo=C | DataLiquidação=2019-04-04 | Chave_Close=3217 | Derivado=0 | HoraFixa=n
+  Status: L → 24551 · C → 7421 · P → 116 · N → 4 · A → 3 · G → 2 · v → 1
+
+==============================================================================
+OrdemServiço__Cabeçalho_2025 · 12844 linhas
+colunas: NrOServiço (long), Data (datetime), Class (text), Risco (text), CtaCliente (text), NrCliente (integer), NrCupom (long), Cliente (text), End (text), Cep (text), Edifício (text), Apto (text), Estado (text), Cidade (text), Bairro (text), FoneRes (text), FoneComal (text), Celular (text), NrTécnico (integer), CtaTécnico (text), DiaPrevisto (datetime), HoraIni (datetime), HoraFnal (datetime), Index (text), Status (text), Tipo (text), DataLiquidação (datetime), Chave_Close (float), Derivado (float), HoraFixa (text)
+  [12842] NrOServiço=12908 | Data=2025-12-30 | Class=F | Risco=· | CtaCliente=1.03.017.480 | NrCliente=16988 | NrCupom=0 | Cliente=Diovane Alves | End=Augusto Correira Gonçalves | Cep= | Edifício=Bella Vitta | Apto=204 | Estado=Espírito Santo | Cidade=Cariacica | Bairro=Campo Grande | FoneRes=99960-6570 | FoneComal=0 | Celular=0 | NrTécnico=17 | CtaTécnico=2.06.001.014 | DiaPrevisto=2025-12-30 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=P | Tipo=C | DataLiquidação=1933-12-31 | Chave_Close=· | Derivado=0 | HoraFixa=n
+  [12843] NrOServiço=12909 | Data=2025-12-30 | Class=J | Risco=· | CtaCliente=1.04.002.703 | NrCliente=1662 | NrCupom=1689 | Cliente=Decca Construtora Ltda | End=Barcelona,10 | Cep=29.146-796 | Edifício=· | Apto=· | Estado=Espírito Santo | Cidade=Cariacica | Bairro=Sede | FoneRes=· | FoneComal=3070-8302 | Celular=0 | NrTécnico=12 | CtaTécnico=2.06.001.008 | DiaPrevisto=2025-12-30 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=L | Tipo=VI | DataLiquidação=2025-12-30 | Chave_Close=11486 | Derivado=0 | HoraFixa=·
+  [12844] NrOServiço=12910 | Data=2025-12-30 | Class=F | Risco=· | CtaCliente=1.03.013.718 | NrCliente=13185 | NrCupom=0 | Cliente=Alexandre da Silva Rezende | End=Carlos Nicoletti Madeira | Cep= | Edifício=Lugano | Apto=1302t3 | Estado=Espírito Santo | Cidade=Vitória | Bairro=Barro Vermelho | FoneRes=99252-4458 | FoneComal=0 | Celular=0 | NrTécnico=2 | CtaTécnico=2.06.001.003 | DiaPrevisto=2025-12-30 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=P | Tipo=C | DataLiquidação=1933-12-31 | Chave_Close=· | Derivado=0 | HoraFixa=n
+  Status: L → 12799 · P → 42 · C → 3
+
+==============================================================================
+OrdemServiço__Cabeçalho_X · 8004 linhas
+colunas: NrOServiço (long), Data (datetime), Class (text), Risco (text), CtaCliente (text), NrCliente (integer), NrCupom (long), Cliente (text), End (text), Cep (text), Edifício (text), Apto (text), Estado (text), Cidade (text), Bairro (text), FoneRes (text), FoneComal (text), Celular (text), NrTécnico (integer), CtaTécnico (text), DiaPrevisto (datetime), HoraIni (datetime), HoraFnal (datetime), Index (text), Status (text), Tipo (text), DataLiquidação (datetime), Chave_Close (float), Derivado (float), HoraFixa (text)
+  [8002] NrOServiço=8026 | Data=2023-01-02 | Class=F | Risco=· | CtaCliente=1.03.016.089 | NrCliente=15567 | NrCupom=10025 | Cliente=Victor Hugo Bartocci Junior | End=Maranhão | Cep=00.-00--00 | Edifício=· | Apto=· | Estado=Espírito Santo | Cidade=Vila Velha | Bairro=Praia da Costa | FoneRes=0 | FoneComal=0 | Celular=91-8131-9529 | NrTécnico=12 | CtaTécnico=2.06.001.008 | DiaPrevisto=2023-01-03 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=P | Tipo=VI | DataLiquidação=1933-12-31 | Chave_Close=· | Derivado=0 | HoraFixa=·
+  [8003] NrOServiço=8027 | Data=2022-12-30 | Class=F | Risco=· | CtaCliente=1.03.010.445 | NrCliente=9907 | NrCupom=3068 | Cliente=Wilma Selma de Oliveira | End=Diorgenes Malacarne | Cep= | Edifício=La Plage | Apto=301 1 | Estado=Espírito Santo | Cidade=Vila Velha | Bairro=Praia da Costa | FoneRes=3389-3622 | FoneComal=0 | Celular=9.9817-4550 | NrTécnico=9 | CtaTécnico=2.06.001.004 | DiaPrevisto=2023-01-03 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=P | Tipo=C | DataLiquidação=1933-12-31 | Chave_Close=· | Derivado=0 | HoraFixa=·
+  [8004] NrOServiço=8028 | Data=2022-12-30 | Class=F | Risco=· | CtaCliente=1.03.004.019 | NrCliente=2997 | NrCupom=246 | Cliente=Danikem Casotti | End=Izaltino Aarão Marques | Cep= | Edifício=Praia Meiaipe | Apto=1203 | Estado=Espírito Santo | Cidade=Vitória | Bairro=Mata da Praia | FoneRes=3314-3330 | FoneComal=9.8139-9634 | Celular=9.8139-9635 | NrTécnico=9 | CtaTécnico=2.06.001.004 | DiaPrevisto=2022-12-30 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=P | Tipo=C | DataLiquidação=1933-12-31 | Chave_Close=· | Derivado=0 | HoraFixa=·
+  Status: L → 7949 · P → 52 · C → 3
+
+==============================================================================
+OrdemServiço__Complemento · 13700 linhas
+colunas: NrOS (long), PontoRefer (text), CodProduto (long), Defeito (text), Serviço (text), Conserto (text), Observação (memo), Código (long)
+  [13698] NrOS=13751 | PontoRefer=x | CodProduto=5590 | Defeito=· | Serviço=Rinnai-1601- sem ligar | Conserto=· | Observação=chamado por Nelson | Código=13752
+  [13699] NrOS=13753 | PontoRefer=x | CodProduto=5589 | Defeito=· | Serviço=Komeco- 16D- Não liga | Conserto=· | Observação=trocou o fluxostato. Contato Daiane | Código=13753
+  [13700] NrOS=13754 | PontoRefer=x | CodProduto=3561 | Defeito=· | Serviço=KO600SE- preventiva- não está ligando | Conserto=· | Observação=apto estava fechado por 1 ano | Código=13754
+
+==============================================================================
+OrdemServiço__Complemento_ · 32034 linhas
+colunas: NrOS (long), PontoRefer (text), CodProduto (long), Defeito (text), Serviço (text), Conserto (text), Observação (memo), Código (long)
+  [32032] NrOS=32741 | PontoRefer=nenhum | CodProduto=4039 | Defeito=· | Serviço=Ko MX 37- não aquece | Conserto=· | Observação=visitas ligar antes | Código=32532
+  [32033] NrOS=32742 | PontoRefer=nenhum | CodProduto=5551 | Defeito=· | Serviço=desarmando e Vaz. de gás | Conserto=· | Observação=99620-1583 bianca | Código=32533
+  [32034] NrOS=32744 | PontoRefer=x | CodProduto=5948 | Defeito=· | Serviço=Instalação de : Aquec. GN KO 25 D BR 25 | Conserto=· | Observação=x | Código=32534
+
+==============================================================================
+OrdemServiço__Complemento_Open · 1 linhas
+colunas: NrOS (long), PontoRefer (text), CodProduto (long), Defeito (text), Serviço (text), Conserto (text), Observação (memo), Código (long)
+  [1] NrOS=380 | PontoRefer=x | CodProduto=5554 | Defeito=· | Serviço=KO43D- E1 | Conserto=· | Observação=Não quis trocar a peça- regulador | Código=380
+
+==============================================================================
+OrdemServiço__Control_Open · 0 linhas
+colunas: Número (long), OServiço (integer), data (datetime), NrCupom (long), MatVend (float), MatConsig (float), MatGarantia (integer), MatAvulso (float), Fluxo (float), MObra (float), Tipo (text), VrMObra (currency), ValorShut (currency), TipoOS (integer)
+
+==============================================================================
+OrdemServiço__DetalhesGarantia · 6311 linhas
+colunas: Código (long), NrOrdServiço (integer), DataCompraProduto (datetime), NrCupom (text), NomeLoja (text), NrFornec (integer), CtaGarantia (text), CtaEstoqueGarantia (text), CtaReceberGarantia (text), Marca (text), CódigoProd (float), ReferProduto (text), DescrProduto (text), VectGarantia (datetime), PeríodoGarantia (integer), Onus (long), Vect (datetime), Pago (datetime), Observação (text)
+  [6309] Código=6488 | NrOrdServiço=8699 | DataCompraProduto=2022-11-14 | NrCupom=9758 | NomeLoja=Armação | NrFornec=263 | CtaGarantia= | CtaEstoqueGarantia=· | CtaReceberGarantia=· | Marca=Distak | CódigoProd=5669 | ReferProduto=0 | DescrProduto=engate agua 40 cm 1/2 x 1/2 | VectGarantia=2023-11-14 | PeríodoGarantia=1 | Onus=0 | Vect=· | Pago=· | Observação=·
+  [6310] Código=6489 | NrOrdServiço=8927 | DataCompraProduto=2022-12-10 | NrCupom=9919 | NomeLoja=Armação | NrFornec=279 | CtaGarantia= | CtaEstoqueGarantia=· | CtaReceberGarantia=· | Marca=Orbis | CódigoProd=5724 | ReferProduto=0 | DescrProduto=aquecedor gás 130 lts | VectGarantia=2023-12-10 | PeríodoGarantia=1 | Onus=0 | Vect=· | Pago=· | Observação=·
+  [6311] Código=6490 | NrOrdServiço=9114 | DataCompraProduto=2022-10-24 | NrCupom=9647 | NomeLoja=Armação | NrFornec=82 | CtaGarantia= | CtaEstoqueGarantia=· | CtaReceberGarantia=· | Marca=Rinnai | CódigoProd=5496 | ReferProduto=REU 2802 FEC | DescrProduto=aquec.gás 35.5 lts/GN 2802 FEC | VectGarantia=2023-10-24 | PeríodoGarantia=1 | Onus=0 | Vect=· | Pago=· | Observação=·
+
+==============================================================================
+OrdemServiço__DetalhesGarantia_Open · 0 linhas
+colunas: Código (long), NrOrdServiço (integer), DataCompraProduto (datetime), NrCupom (text), NomeLoja (text), NrFornec (integer), CtaGarantia (text), CtaEstoqueGarantia (text), CtaReceberGarantia (text), Marca (text), CódigoProd (float), ReferProduto (text), DescrProduto (text), VectGarantia (datetime), PeríodoGarantia (integer), Onus (long), Vect (datetime), Pago (datetime), Observação (text)
+
+==============================================================================
+OrdemServiço__NowDevolMatConsig · 0 linhas
+colunas: Código (long), OrdemServiço (long), Data (datetime), Hora (datetime), QteDevolv (integer), CodMaterial (long), DescrMaterial (text), PreçoProd (currency), Imprimir (float)
+
+==============================================================================
+OrdemServiço__NowMatConsig · 0 linhas
+colunas: Código (long), OrdemServiço (long), Cupom (float), Data (datetime), Hora (datetime), QteDevolv (integer), CodMaterial (long), DescrMaterial (text), PreçoProd (currency), Imprimir (float)
+
+==============================================================================
+OrdemServiço__NowMatConsig_ · 39420 linhas
+colunas: Código (long), OrdemServiço (long), Data (datetime), Hora (datetime), QteConsig (integer), CodMaterial (long), DescrMaterial (text), PreçoProd (currency), Imprimir (float)
+  [39418] Código=39424 | OrdemServiço=1361 | Data=2019-10-10 | Hora=1899-12-30 | QteConsig=10 | CodMaterial=2405 | DescrMaterial=conector macho 22x3/4 aquatherm | PreçoProd=12.7700 | Imprimir=0
+  [39419] Código=39425 | OrdemServiço=5401 | Data=2021-10-15 | Hora=1899-12-30 | QteConsig=1 | CodMaterial=5698 | DescrMaterial=canopla sextavada 1/2 | PreçoProd=4.6800 | Imprimir=0
+  [39420] Código=39426 | OrdemServiço=5680 | Data=2021-10-25 | Hora=1899-12-30 | QteConsig=1 | CodMaterial=5698 | DescrMaterial=canopla sextavada 1/2 | PreçoProd=4.6800 | Imprimir=0
+
+==============================================================================
+OrdemServiço__ProdutoTrocado · 0 linhas
+colunas: Código (long), OrdemServiço (float), CodProd (float), PreçoCusto (currency), PreçoVenda (currency), Index (text)
+
+==============================================================================
+OrdemServiço_AgrupandoTransfer · 0 linhas
+colunas: Código (long), OrdemServiço (long), QteConsig (integer), CodMaterial (long), ReferMaterial (text), DescrMaterial (text), PreçoProd (currency)
+
+==============================================================================
+OrdemServiço_AparelhosGarantia · 1 linhas
+colunas: NrFornec (float), Número (long), DescrAparelho (text), ReferAparelho (text)
+  [1] NrFornec=67 | Número=1 | DescrAparelho=aquecedor Fluxo Balanceado | ReferAparelho=KO 1500 FB
+
+==============================================================================
+OrdemServiço_Cancelada_Cabeçalho · 122 linhas
+colunas: Número (long), NrOServiço (integer), DataCancel (datetime), HoraCancel (datetime), Class (text), CtaCliente (text), NrCliente (integer), NrCupom (long), Cliente (text), End (text), Cep (text), Edifício (text), Estado (text), Cidade (text), Bairro (text), FoneRes (text), FoneComal (text), Celular (text), NrTécnico (integer), CtaTécnico (text), DiaPrevisto (datetime), HoraIni (datetime), HoraFnal (datetime), Status (text)
+  [120] Número=126 | NrOServiço=12707 | DataCancel=2025-11-04 | HoraCancel=1899-12-30 | Class=F | CtaCliente=1.03.017.401 | NrCliente=16908 | NrCupom=1468 | Cliente=Vincenzo La Iacono | End=Alvaro Martins | Cep=29.00--000 | Edifício=· | Estado=Espírito Santo | Cidade=Vitória | Bairro=Mata da Praia | FoneRes=0 | FoneComal=0 | Celular=9-8157-2770 | NrTécnico=12 | CtaTécnico=· | DiaPrevisto=2025-11-05 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Status=P
+  [121] Número=127 | NrOServiço=12973 | DataCancel=2026-01-29 | HoraCancel=1899-12-30 | Class=F | CtaCliente=1.03.009.291 | NrCliente=8752 | NrCupom=85 | Cliente=Marilia Antunes e Coser | End=Dante Micheline | Cep=00.000-000 | Edifício=· | Estado=Espírito Santo | Cidade=Vitória | Bairro=Mata da Praia | FoneRes=3029-3031 | FoneComal=0 | Celular=9.9644-3535 | NrTécnico=12 | CtaTécnico=· | DiaPrevisto=2026-01-31 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Status=P
+  [122] Número=128 | NrOServiço=13429 | DataCancel=2026-06-29 | HoraCancel=1899-12-30 | Class=F | CtaCliente=1.03.017.646 | NrCliente=17155 | NrCupom=705 | Cliente=Larissa Bauer Gomes Coutinho | End=Antônio Almeida Filho | Cep=29.102-265 | Edifício=· | Estado=Espírito Santo | Cidade=Vila Velha | Bairro=Itaparica | FoneRes=0 | FoneComal=0 | Celular=9-9267-1087 | NrTécnico=12 | CtaTécnico=· | DiaPrevisto=2026-06-24 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Status=P
+  Status: P → 122
+
+==============================================================================
+OrdemServiço_Cancelada_Complemento · 122 linhas
+colunas: Código (long), NrOS (long), PontoRefer (text), Serviço (text), Conserto (text), Observação (memo)
+  [120] Código=126 | NrOS=12707 | PontoRefer=x | Serviço=Instalação de : Aquec. GN KO 26 D BR 26 … | Conserto=· | Observação=x
+  [121] Código=127 | NrOS=12973 | PontoRefer=x | Serviço=Instalação de : bomba smartPress 55 220 … | Conserto=· | Observação=x
+  [122] Código=128 | NrOS=13429 | PontoRefer=x | Serviço=Instalação de : Aquec. GN KO 21 D BR 21( | Conserto=· | Observação=x
+
+==============================================================================
+OrdemServiço_Catálogo_Produto · 0 linhas
+colunas: Código (long), NrFornec (float), NrAssistente (float), CodAparelho (float), TipoAparelho (text), TipoGás (text), Voltagem (text)
+
+==============================================================================
+OrdemServiço_Control · 10041 linhas
+colunas: Número (long), OServiço (integer), data (datetime), NrCupom (long), MatVend (float), MatConsig (float), MatGarantia (integer), MatAvulso (float), MatPeças (long), Fluxo (float), MObra (float), Tipo (text), VrMObra (currency), ValorShut (currency), TipoOS (integer)
+  [10039] Número=10311 | OServiço=13754 | data=2026-09-21 | NrCupom=0 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=0
+  [10040] Número=10312 | OServiço=13755 | data=2026-09-21 | NrCupom=1122 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=350.0000 | ValorShut=2739.0000 | TipoOS=0
+  [10041] Número=10313 | OServiço=13756 | data=2026-09-21 | NrCupom=1123 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=200.0000 | ValorShut=2891.0000 | TipoOS=0
+
+==============================================================================
+OrdemServiço_Control_Open · 0 linhas
+colunas: Número (long), OServiço (integer), data (datetime), NrCupom (long), MatVend (float), MatConsig (float), MatGarantia (integer), MatAvulso (float), Fluxo (float), MObra (float), Tipo (text), VrMObra (currency), ValorShut (currency), TipoOS (integer)
+
+==============================================================================
+OrdemServiço_Controle_Retorno · 1 linhas
+colunas: Código (long), Os_Master (long), Os_Filhote (long), NrTécnico (long), DatEmissão (datetime), Motivo (text), Observação (text), DataPrevista (datetime), Status (text)
+  [1] Código=1 | Os_Master=· | Os_Filhote=· | NrTécnico=10 | DatEmissão=· | Motivo=· | Observação=· | DataPrevista=· | Status=·
+  Status: · → 1
+
+==============================================================================
+OrdemServiço_ControlePeçaGarantia · 0 linhas
+colunas: OrdemNúmerica (long), DataAdd (datetime), NrOrdServiço (long), QtePeça (long), CódPeça (long), ReferPeça (text), DescrPeça (text), PreçoPeça (currency)
+
+==============================================================================
+OrdemServiço_ControleRevisão · 0 linhas
+colunas: Código (long), NrOOriginal (integer), NrOServiço (long), DiaRevisão (datetime), Técnico (text), Observações (text)
+
+==============================================================================
+OrdemServiço_FabricanteGarantia · 1 linhas
+colunas: Código (long), NrFornecedor (float), NrAssistTécnico (float), MarcaFabricante (text), CtaAtivo (text), CtaReceita (text)
+  [1] Código=1 | NrFornecedor=67 | NrAssistTécnico=242 | MarcaFabricante=Komeco | CtaAtivo=1.04.003.004 | CtaReceita=4.03.003.004
+
+==============================================================================
+OrdemServiço_FaltaComplementar · 1 linhas
+colunas: Num (long), Ordem (integer), NrOrdemServiço (float), FaltaComplemento (text)
+  [1] Num=1 | Ordem=1 | NrOrdemServiço=14362 | FaltaComplemento=falta inst.tee ventilante
+
+==============================================================================
+OrdemServiço_FornecedoresConserto · 37 linhas
+colunas: Código (long), NrFornec (long), Fornecedor (text), Ativado (long)
+  [35] Código=38 | NrFornec=296 | Fornecedor=Maqenge | Ativado=1
+  [36] Código=39 | NrFornec=282 | Fornecedor=Albacete | Ativado=1
+  [37] Código=40 | NrFornec=65 | Fornecedor=Tigre_Aquath | Ativado=1
+
+==============================================================================
+OrdemServiço_FornecedoresSelecionados · 14 linhas
+colunas: Código (long), NrFornec (long), Fornecedor (text)
+  [12] Código=12 | NrFornec=18 | Fornecedor=Fabrimar
+  [13] Código=13 | NrFornec=247 | Fornecedor=Amanco-PPR
+  [14] Código=14 | NrFornec=220 | Fornecedor=Bosch Assis.
+
+==============================================================================
+OrdemServiço_GarantiaProd_Usados · 0 linhas
+colunas: Código (long), OServiço (float), CódigoProd (float), QteProd (float), ReferProd (text), DescriçãoProd (text), PreçoProd (currency)
+
+==============================================================================
+OrdemServiço_LinhasGarantia · 10465 linhas
+colunas: Código (long), NrOrserviço (integer), NrLinha (float), Text_Linha (text), DataEmissãOS (datetime), DataLiquida (datetime)
+  [10463] Código=10480 | NrOrserviço=13516 | NrLinha=1 | Text_Linha=retorno de garantia de mão de obra, por … | DataEmissãOS=2026-07-15 | DataLiquida=·
+  [10464] Código=10481 | NrOrserviço=13516 | NrLinha=2 | Text_Linha=pagamento. Tudo certo. | DataEmissãOS=2026-07-15 | DataLiquida=·
+  [10465] Código=10482 | NrOrserviço=13542 | NrLinha=1 | Text_Linha=ducha suja | DataEmissãOS=2026-07-21 | DataLiquida=·
+
+==============================================================================
+OrdemServiço_ListadeServiço · 0 linhas
+colunas: NrServiço (long), Serviço (text)
+
+==============================================================================
+OrdemServiço_ListGrupos · 0 linhas
+colunas: NrGrupo (long), NmGrupo (text)
+
+==============================================================================
+OrdemServiço_Material_Avulso · 36 linhas
+colunas: Código (long), OrdemServiço (long), Data_Emissão_OS (datetime), QteMaterial (integer), CodMaterial (long), ReferMaterial (text), DescrMaterial (text), PreçoCusto (currency), PreçoVenda (currency), Tipo (text), Realizado (float)
+  [34] Código=40 | OrdemServiço=8650 | Data_Emissão_OS=2011-07-06 | QteMaterial=0 | CodMaterial=0 | ReferMaterial= | DescrMaterial= | PreçoCusto=0.0000 | PreçoVenda=0.0000 | Tipo=C | Realizado=14710
+  [35] Código=41 | OrdemServiço=7225 | Data_Emissão_OS=· | QteMaterial=0 | CodMaterial=0 | ReferMaterial= | DescrMaterial= | PreçoCusto=0.0000 | PreçoVenda=0.0000 | Tipo=C | Realizado=0
+  [36] Código=42 | OrdemServiço=9813 | Data_Emissão_OS=· | QteMaterial=0 | CodMaterial=0 | ReferMaterial= | DescrMaterial= | PreçoCusto=0.0000 | PreçoVenda=0.0000 | Tipo=C | Realizado=0
+
+==============================================================================
+OrdemServiço_Material_Consignado · 2927 linhas
+colunas: Código (long), EmissãoOs (datetime), OrdemServiço (long), QteConsig (integer), QteDevolv (integer), CodMaterial (long), ReferMaterial (text), DescrMaterial (text), PreçoCusto (currency), PreçoVenda (currency), Tipo (text), Realizado (float)
+  [2925] Código=2983 | EmissãoOs=2026-09-09 | OrdemServiço=13723 | QteConsig=1 | QteDevolv=0 | CodMaterial=5290 | ReferMaterial=1424 | DescrMaterial=ampliação alumínio 100 x 80 (1424) | PreçoCusto=11.7900 | PreçoVenda=42.3800 | Tipo=· | Realizado=7519
+  [2926] Código=2984 | EmissãoOs=2026-09-09 | OrdemServiço=13723 | QteConsig=1 | QteDevolv=0 | CodMaterial=5271 | ReferMaterial=1667 | DescrMaterial=aro de arremate 120 mm (1667 | PreçoCusto=11.1500 | PreçoVenda=40.8300 | Tipo=· | Realizado=7519
+  [2927] Código=2985 | EmissãoOs=2026-09-21 | OrdemServiço=13753 | QteConsig=1 | QteDevolv=0 | CodMaterial=5954 | ReferMaterial=22274 | DescrMaterial=fluxostato KO 15-16-20-21D.DI PRIME | PreçoCusto=136.9800 | PreçoVenda=470.5000 | Tipo=· | Realizado=7652
+
+==============================================================================
+OrdemServiço_Material_Consignado_Del · 1425 linhas
+colunas: Código (long), OrdemServiço (long), QteConsig (integer), QteDevolv (integer), CodMaterial (long), ReferMaterial (text), DescrMaterial (text), PreçoCusto (currency), PreçoVenda (currency), Tipo (text), Realizado (float)
+  [1423] Código=1423 | OrdemServiço=12842 | QteConsig=1 | QteDevolv=0 | CodMaterial=4707 | ReferMaterial=2182 | DescrMaterial=2182 | PreçoCusto=0.0000 | PreçoVenda=42.6000 | Tipo=· | Realizado=0
+  [1424] Código=1424 | OrdemServiço=12842 | QteConsig=1 | QteDevolv=0 | CodMaterial=3684 | ReferMaterial=1639 | DescrMaterial=1639 | PreçoCusto=0.0000 | PreçoVenda=34.4700 | Tipo=· | Realizado=0
+  [1425] Código=1425 | OrdemServiço=12842 | QteConsig=1 | QteDevolv=0 | CodMaterial=3637 | ReferMaterial=819 | DescrMaterial=819 | PreçoCusto=0.0000 | PreçoVenda=35.8000 | Tipo=· | Realizado=0
+
+==============================================================================
+OrdemServiço_MaterialCupom · 11001 linhas
+colunas: Código (long), OrdemServiço (long), NrCupom (integer), Data (datetime), CódigoProd (long), ReferProd (text), DescrProd (text), QteOriginal (integer), QteAtual (float), VrCusto (currency), VrTotalCusto (currency), VrVendaLiq (currency), VrTotalVendaLiq (currency), NrFornec (long), Confere (text)
+  [10999] Código=11029 | OrdemServiço=13756 | NrCupom=1123 | Data=2026-09-21 | CódigoProd=6323 | ReferProd=1543 | DescrProd=engate agua 1/2 x 30 cm (3578) | QteOriginal=2 | QteAtual=2 | VrCusto=16.5300 | VrTotalCusto=33.0600 | VrVendaLiq=95.0000 | VrTotalVendaLiq=190.0000 | NrFornec=6323 | Confere=·
+  [11000] Código=11030 | OrdemServiço=13756 | NrCupom=1123 | Data=2026-09-21 | CódigoProd=6164 | ReferProd=10418 | DescrProd=flexivel gás 1/2 x 30 cm (3287) | QteOriginal=1 | QteAtual=1 | VrCusto=43.5100 | VrTotalCusto=43.5100 | VrVendaLiq=120.0000 | VrTotalVendaLiq=120.0000 | NrFornec=6164 | Confere=·
+  [11001] Código=11031 | OrdemServiço=13756 | NrCupom=1123 | Data=2026-09-21 | CódigoProd=6169 | ReferProd=30067 | DescrProd=reg. gás 90 1/2 x 1/2 | QteOriginal=1 | QteAtual=1 | VrCusto=20.6500 | VrTotalCusto=20.6500 | VrVendaLiq=75.0000 | VrTotalVendaLiq=75.0000 | NrFornec=6169 | Confere=·
+
+==============================================================================
+OrdemServiço_MaterialPeças · 681 linhas
+colunas: Ordenação (long), Data (datetime), OServiço (float), CodPeça (float), QtePeça (float), ReferPeça (text), DescriçãoPeça (text), PreçoCusto (currency), PreçoVenda (currency), Tipo (text), Realizado (long)
+  [679] Ordenação=745 | Data=· | OServiço=29828 | CodPeça=4832 | QtePeça=1 | ReferPeça=SU 124600 | DescriçãoPeça=placa eletronica REU 16 FEH | PreçoCusto=358.2400 | PreçoVenda=644.4000 | Tipo=G | Realizado=1124
+  [680] Ordenação=746 | Data=· | OServiço=29898 | CodPeça=5856 | QtePeça=1 | ReferPeça=22113 | DescriçãoPeça=eletrodo ionização KO 15 D | PreçoCusto=6.1600 | PreçoVenda=45.1200 | Tipo=G | Realizado=1125
+  [681] Ordenação=747 | Data=· | OServiço=29867 | CodPeça=4956 | QtePeça=1 | ReferPeça=21893 | DescriçãoPeça=fluxostato KO 4000 SE | PreçoCusto=89.1400 | PreçoVenda=240.6800 | Tipo=G | Realizado=3265
+
+==============================================================================
+OrdemServiço_MaterialVendDevolv · 6924 linhas
+colunas: Código (long), OrdemServiço (float), Data (datetime), Hora (datetime), NrCupom (float), CodProdutoVend (float), ReferProduto (text), DescrProduto (text), QteDevolv (integer), PreçoCustProd (currency), PreçoProd (currency), Operador (text), Realizado (float)
+  [6922] Código=7279 | OrdemServiço=13429 | Data=2026-06-29 | Hora=1899-12-30 | NrCupom=705 | CodProdutoVend=6323 | ReferProduto=· | DescrProduto=· | QteDevolv=2 | PreçoCustProd=18.9100 | PreçoProd=70.0000 | Operador=· | Realizado=0
+  [6923] Código=7280 | OrdemServiço=13429 | Data=2026-06-29 | Hora=1899-12-30 | NrCupom=705 | CodProdutoVend=6164 | ReferProduto=· | DescrProduto=· | QteDevolv=1 | PreçoCustProd=43.6100 | PreçoProd=90.0000 | Operador=· | Realizado=0
+  [6924] Código=7281 | OrdemServiço=13429 | Data=2026-06-29 | Hora=1899-12-30 | NrCupom=705 | CodProdutoVend=6169 | ReferProduto=· | DescrProduto=· | QteDevolv=1 | PreçoCustProd=23.9400 | PreçoProd=55.0000 | Operador=· | Realizado=0
+
+==============================================================================
+OrdemServiço_MaterialVendDevolv_Del · 0 linhas
+colunas: Código (long), OrdemServiço (float), Data (datetime), Hora (datetime), NrCupom (float), CodProdutoVend (float), ReferProduto (text), DescrProduto (text), QteDevolv (integer), PreçoCustProd (currency), PreçoProd (currency), Operador (text), Realizado (float)
+
+==============================================================================
+OrdemServiço_Orçamento · 0 linhas
+colunas: Código (long), NrOrdem (float), NrProposta (float), Opção (float)
+
+==============================================================================
+OrdemServiço_PeçaPedGarantia · 620 linhas
+colunas: NrPedido (long), NrOrdemServiço (float), Fornec (float), DataEmissão (datetime), PrevisãoEntrega (datetime)
+  [618] NrPedido=628 | NrOrdemServiço=29828 | Fornec=82 | DataEmissão=2018-01-31 | PrevisãoEntrega=2018-02-20
+  [619] NrPedido=629 | NrOrdemServiço=29898 | Fornec=67 | DataEmissão=2018-01-31 | PrevisãoEntrega=2018-02-20
+  [620] NrPedido=630 | NrOrdemServiço=29867 | Fornec=67 | DataEmissão=2018-03-31 | PrevisãoEntrega=2018-04-20
+
+==============================================================================
+OrdemServiço_PeçaPedGarantiaItens · 678 linhas
+colunas: Código (long), NrPedido (float), CodPeça (float), ReferPeça (text), QtePeça (float), DescrPeça (text), PreçoPeça (currency)
+  [676] Código=689 | NrPedido=628 | CodPeça=4832 | ReferPeça=SU 124600 | QtePeça=1 | DescrPeça=placa eletronica REU 16 FEH | PreçoPeça=358.2400
+  [677] Código=690 | NrPedido=629 | CodPeça=5856 | ReferPeça=22113 | QtePeça=1 | DescrPeça=eletrodo ionização KO 15 D | PreçoPeça=6.1600
+  [678] Código=691 | NrPedido=630 | CodPeça=4956 | ReferPeça=21893 | QtePeça=1 | DescrPeça=fluxostato KO 4000 SE | PreçoPeça=89.1400
+
+==============================================================================
+OrdemServiço_PeçasFornecedores · 5 linhas
+colunas: Código (long), NrFornec (integer), Marca (text)
+  [3] Código=3 | NrFornec=224 | Marca=Lorenzetti
+  [4] Código=4 | NrFornec=242 | Marca=Komlog
+  [5] Código=5 | NrFornec=241 | Marca=Rinnai
+
+==============================================================================
+OrdemServico_PecasVendidas · 103 linhas
+colunas: AutoNumber (long), NrOrdem (long), NomeCliente (text), DataOrdem (datetime), Qte (long), CodPeca (long), DescricaoPeca (text), PrecoCusto (currency), PrecoVenda (currency), TecnicoNome (text), TecnicoNumber (long), TaxaComissao (text), Comissao (currency)
+  [101] AutoNumber=87 | NrOrdem=13563 | NomeCliente=Eliezer Moyses | DataOrdem=2026-07-28 | Qte=1 | CodPeca=6324 | DescricaoPeca=engate agua 1/2 x 40 cm (3579) | PrecoCusto=19.2000 | PrecoVenda=73.8000 | TecnicoNome=Robson | TecnicoNumber=2 | TaxaComissao=· | Comissao=0.0000
+  [102] AutoNumber=88 | NrOrdem=13575 | NomeCliente=Victor Baião Tavares | DataOrdem=2026-07-30 | Qte=1 | CodPeca=5788 | DescricaoPeca=regulador gás 4 M³ 506/75 GN (2002) | PrecoCusto=65.0000 | PrecoVenda=135.0000 | TecnicoNome=Maxsuel | TecnicoNumber=18 | TaxaComissao=· | Comissao=0.0000
+  [103] AutoNumber=89 | NrOrdem=13594 | NomeCliente=Caio Bastos | DataOrdem=2026-08-04 | Qte=1 | CodPeca=6169 | DescricaoPeca=reg. gás 90 1/2 x 1/2 | PrecoCusto=23.9400 | PrecoVenda=56.1000 | TecnicoNome=Maxsuel | TecnicoNumber=18 | TaxaComissao=· | Comissao=0.0000
+
+==============================================================================
+OrdemServiço_ProdutosGarantia · 0 linhas
+colunas: Código (long), NrOServiço (integer), DataCompra (datetime), NrCupom (integer), CodProd_Garantia (integer), ReferProd_Garantia (text), DescrProd_Garantia (text), Vect_Garantia (datetime), CodProdReserva (long), ReferProdReserva (text), DescrProdReserva (text)
+
+==============================================================================
+OrdemServiço_Proposta_Cabeçalho · 0 linhas
+colunas: NrProposta (long), Data (datetime), NomeCliente (text), Edifício (text), Endereço (text), Apto (text), Cidade (text), Bairro (text), FoneRes (text), FoneComal (text), FoneCelular (text), NmTécnico (text), PontoRefer (text), Index (text), DataLimite (datetime), DataLiquidada (datetime)
+
+==============================================================================
+OrdemServiço_Proposta_Complemento · 0 linhas
+colunas: Código (long), NrOServiço (float), NrProposta (float), NRServiço (integer), DescriçãoServiço (text), Observação (text), ValorServiço (currency), CondPagamento (text)
+
+==============================================================================
+OrdemServiço_PropostaItens · 0 linhas
+colunas: Código (long), NrProposta (float), Ordem (float), CodProd (float), ReferProd (text), QteProd (float), DescrProd (text), PreçoCusto (currency), PreçoProd (currency), PreçoProposto (currency), Margem (numeric)
+
+==============================================================================
+OrdemServiço_PropostaMãoObra · 0 linhas
+colunas: Código (long), NrProposta (float), NRServiço (integer), DescriçãoServiço (text), ValorServiço (currency), CondPagamento (text)
+
+==============================================================================
+OrdemServiço_Receitas · 7213 linhas
+colunas: Código (long), Dta (datetime), OrdemServiço (float), Tipo (text), ValorCobrado (currency)
+  [7211] Código=7226 | Dta=2026-09-18 | OrdemServiço=13751 | Tipo=X | ValorCobrado=0.5500
+  [7212] Código=7227 | Dta=2026-09-21 | OrdemServiço=13753 | Tipo=O | ValorCobrado=200.0000
+  [7213] Código=7228 | Dta=2026-09-21 | OrdemServiço=13754 | Tipo=X | ValorCobrado=0.5500
+
+==============================================================================
+OrdemServiço_Receitas_ · 14739 linhas
+colunas: Código (long), Dta (datetime), OrdemServiço (float), Tipo (text), ValorCobrado (currency)
+  [14737] Código=14744 | Dta=2022-12-26 | OrdemServiço=7998 | Tipo=O | ValorCobrado=1.5000
+  [14738] Código=14745 | Dta=2022-12-30 | OrdemServiço=8017 | Tipo=X | ValorCobrado=0.5500
+  [14739] Código=14746 | Dta=2022-12-30 | OrdemServiço=8018 | Tipo=X | ValorCobrado=0.5500
+
+==============================================================================
+OrdemServiço_Reclamação · 0 linhas
+colunas: NrSugestão (long), NmSugestão (text)
+
+==============================================================================
+OrdemServiço_ServiçoAdcional · 0 linhas
+colunas: Número (long), OrdemServiço (long), DataEmissão (datetime), ServiçoAdcional (text), VrMObraAdicional (currency), VrTotalComplementar (currency), VrDesconto (currency)
+
+==============================================================================
+OrdemServiço_Suporte · 0 linhas
+colunas: Código (long), OrdemServiço (long), NmTécnico (text), Ocorrência (text), HoraIni (datetime), HoraFnal (datetime)
+
+==============================================================================
+OrdemServiço_TabelaProdução · 5685 linhas
+colunas: Ordem (long), NrOrdemServiço (float), NmCliente (text), NmTécnico (text), DataConclusão (datetime), M (float), HoraIni (datetime), HoraFnal (datetime), Assist1 (text), VrHum (currency), Assist2 (text), VrDois (currency), VrPrinc (currency), Excesso (currency), Reclamação (text), Retorno (float), TipoOrdem (text)
+  [5683] Ordem=5732 | NrOrdemServiço=13749 | NmCliente=Marina Bechara Moraes | NmTécnico=Robson | DataConclusão=2026-09-18 | M=9 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Assist1=· | VrHum=0.0000 | Assist2=· | VrDois=0.0000 | VrPrinc=250.0000 | Excesso=0.0000 | Reclamação=Nenhuma | Retorno=0 | TipoOrdem=C
+  [5684] Ordem=5733 | NrOrdemServiço=13747 | NmCliente=Marco Antonio T. Loureiro | NmTécnico=Maxsuel | DataConclusão=2026-09-18 | M=9 | HoraIni=2026-09-18 | HoraFnal=2026-09-18 | Assist1=· | VrHum=0.0000 | Assist2=· | VrDois=0.0000 | VrPrinc=200.0000 | Excesso=0.0000 | Reclamação=Nenhuma | Retorno=0 | TipoOrdem=VI
+  [5685] Ordem=5734 | NrOrdemServiço=13753 | NmCliente=Rozalia Helmer Pittol | NmTécnico=Robson | DataConclusão=2026-09-21 | M=9 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Assist1=· | VrHum=0.0000 | Assist2=· | VrDois=0.0000 | VrPrinc=200.0000 | Excesso=0.0000 | Reclamação=Nenhuma | Retorno=0 | TipoOrdem=C
+
+==============================================================================
+OrdemServiço_TabelaReclamações · 5 linhas
+colunas: Ordem (long), Títulos (text)
+  [3] Ordem=3 | Títulos=falta duas duchas
+  [4] Ordem=4 | Títulos=tirar agua da tubulação de gás
+  [5] Ordem=5 | Títulos=instalar 02 duchas deca plus reta
+
+==============================================================================
+OrdemServiço_Técnico · 7 linhas
+colunas: Número (long), Técnico (text), Cta_Técnico (text), Cta_Receita (text), Pos (text)
+  [5] Número=18 | Técnico=Maxsuel | Cta_Técnico=2.06.001.015 | Cta_Receita=4.03.002.015 | Pos=N
+  [6] Número=19 | Técnico=Flavio | Cta_Técnico=2.06.001.013 | Cta_Receita=4.03.002.013 | Pos=N
+  [7] Número=20 | Técnico=Cristiane | Cta_Técnico=2.06.001.010 | Cta_Receita=4.03.002.010 | Pos=N
+  Pos: N → 7
+
+==============================================================================
+OrdemServiço_TipodeConsertos · 0 linhas
+colunas: NrConserto (long), NrGrupo (integer), NmConserto (text)
+
+==============================================================================
+OrdemServiço_ValorMãoObraCliente · 10345 linhas
+colunas: Código (long), OrdemServiço (float), Tipo (text), DataEmissão (datetime), ValorMObraCliente (currency)
+  [10343] Código=10379 | OrdemServiço=13140 | Tipo=Nr | DataEmissão=2026-09-17 | ValorMObraCliente=250.0000
+  [10344] Código=10380 | OrdemServiço=13746 | Tipo=Nr | DataEmissão=2026-09-18 | ValorMObraCliente=350.0000
+  [10345] Código=10381 | OrdemServiço=13747 | Tipo=Nr | DataEmissão=2026-09-18 | ValorMObraCliente=200.0000
+
+==============================================================================
+PROD_Ordem_GRUPO · 0 linhas
+colunas: Código (long), Nr_Fornec (float), Cod_Prod (float), Cod_Grupo (float)
+
+==============================================================================
+ReservaTécnica_Cadastro · 45 linhas
+colunas: Num (long), Nome (text), Telefone (text), Fax (text), Comissão (text), E_Mail (text), Profissão (text)
+  [43] Num=43 | Nome=Fernanda Buaiz | Telefone=9-9941-2244 | Fax=0000-0000 | Comissão=· | E_Mail=fernada@fbuaizinteriores.com.br | Profissão=dsigner interiores
+  [44] Num=44 | Nome=Gabriela Vicentine | Telefone=9-9907-3338 | Fax=0000-0000 | Comissão=· | E_Mail=0 | Profissão=Arquiteta
+  [45] Num=45 | Nome=Marli Leal Carneiro | Telefone=9-8118-0274 | Fax=0000-0000 | Comissão=· | E_Mail=marlilcarneiro@hotmail.com | Profissão=Designer Interiores
+
+==============================================================================
+ReservaTécnica_Relatório · 2 linhas
+colunas: Numero (long), Profissional (long), Data (datetime), Cliente (long), Cupom (memo), Valor (currency)
+  [1] Numero=3 | Profissional=25 | Data=2014-09-22 | Cliente=7204 | Cupom=3860 | Valor=55.2000
+  [2] Numero=4 | Profissional=38 | Data=2014-11-10 | Cliente=7401 | Cupom=4200 | Valor=31.5000
+
+==============================================================================
+Vendas_DevoluçãoCupom · 82 linhas
+colunas: NrDevolução (long), NrCupom (long), Data (datetime), VrBruto (currency), Desc (currency), VrLiquido (currency), Hora (datetime), Operador (long)
+  [80] NrDevolução=118 | NrCupom=1468 | Data=2025-11-04 | VrBruto=3013.0000 | Desc=0.0000 | VrLiquido=3013.0000 | Hora=1899-12-30 | Operador=1
+  [81] NrDevolução=119 | NrCupom=1468 | Data=2025-11-04 | VrBruto=3013.0000 | Desc=0.0000 | VrLiquido=3013.0000 | Hora=1899-12-30 | Operador=1
+  [82] NrDevolução=120 | NrCupom=1631 | Data=2025-12-16 | VrBruto=217.3700 | Desc=0.0000 | VrLiquido=217.3700 | Hora=1899-12-30 | Operador=1
+
+==============================================================================
+Vendas_DevoluçãoCupomItens · 202 linhas
+colunas: NrDevolução (long), NrCupom (float), M (float), CódigoProd (long), Descrição (text), NrFornec (integer), Qte (integer), VrCusto (currency), VrTotalCusto (currency), VrVenda (currency), VrTotalVenda (currency), Taxa (currency), VrDesc (currency), VrTotalLiq (currency), Garantia (integer)
+  [200] NrDevolução=119 | NrCupom=1468 | M=11 | CódigoProd=6169 | Descrição=reg. gás 90 1/2 x 1/2 | NrFornec=6169 | Qte=1 | VrCusto=20.6500 | VrTotalCusto=0.0000 | VrVenda=55.0000 | VrTotalVenda=55.0000 | Taxa=0.0000 | VrDesc=0.0000 | VrTotalLiq=55.0000 | Garantia=0
+  [201] NrDevolução=119 | NrCupom=1468 | M=11 | CódigoProd=6323 | Descrição=engate agua 1/2 x 30 cm (3578) | NrFornec=6323 | Qte=2 | VrCusto=17.1000 | VrTotalCusto=0.0000 | VrVenda=70.0000 | VrTotalVenda=140.0000 | Taxa=0.0000 | VrDesc=0.0000 | VrTotalLiq=140.0000 | Garantia=0
+  [202] NrDevolução=120 | NrCupom=1631 | M=12 | CódigoProd=2692 | Descrição=Flextic 3.0 mts x 100 mm (1527) | NrFornec=43 | Qte=1 | VrCusto=122.4200 | VrTotalCusto=0.0000 | VrVenda=217.3700 | VrTotalVenda=217.3700 | Taxa=0.0000 | VrDesc=0.0000 | VrTotalLiq=217.3700 | Garantia=0
+
+==============================================================================
+Vendas_Garantia_Fabricante · 58 linhas
+colunas: Código (long), FabricanteGarantia (long)
+  [56] Código=57 | FabricanteGarantia=280
+  [57] Código=58 | FabricanteGarantia=283
+  [58] Código=59 | FabricanteGarantia=282
+
+==============================================================================
+Vendas_Garantia_Produtos · 576 linhas
+colunas: Código (long), NrFornec (float), CódProduto (integer)
+  [574] Código=583 | NrFornec=82 | CódProduto=5863
+  [575] Código=584 | NrFornec=82 | CódProduto=5843
+  [576] Código=585 | NrFornec=82 | CódProduto=5893
+
+==============================================================================
+Z_OrdemServiço__Cabeçalho_Open · 0 linhas
+colunas: NrOServiço (long), Data (datetime), Class (text), Risco (text), CtaCliente (text), NrCliente (integer), NrCupom (long), Cliente (text), End (text), Cep (text), Edifício (text), Apto (text), Estado (text), Cidade (text), Bairro (text), FoneRes (text), FoneComal (text), Celular (text), NrTécnico (integer), CtaTécnico (text), DiaPrevisto (datetime), HoraIni (datetime), HoraFnal (datetime), Index (text), Status (text), Tipo (text), DataLiquidação (datetime), Chave_Close (float), Derivado (float), HoraFixa (text)
+  Status: 
+
+==============================================================================
+Z_OrdemServiço__Complemento_velho · 32096 linhas
+colunas: NrOS (long), PontoRefer (text), CodProduto (long), Defeito (text), Serviço (text), Conserto (text), Observação (memo), Código (long)
+  [32094] NrOS=79 | PontoRefer=nenhum | CodProduto=3716 | Defeito=· | Serviço=err 01 | Conserto=· | Observação=visitas ligara antes | Código=32627
+  [32095] NrOS=80 | PontoRefer=nenhum | CodProduto=3483 | Defeito=· | Serviço=mdidor comproblemas | Conserto=· | Observação=anela 99825-1149 | Código=32628
+  [32096] NrOS=82 | PontoRefer=nenhum | CodProduto=5160 | Defeito=· | Serviço=KO43D- Vistoria e verifica se prec. conv… | Conserto=· | Observação=visitas ligar antes | Código=32629
+
+==============================================================================
+Z_OrdemServiço_Control_ · 37765 linhas
+colunas: Número (long), OServiço (integer), data (datetime), NrCupom (long), MatVend (float), MatConsig (float), MatGarantia (integer), MatAvulso (float), MatPeças (long), Fluxo (float), MObra (float), Tipo (text), VrMObra (currency), ValorShut (currency), TipoOS (integer)
+  [37763] Número=38495 | OServiço=2847 | data=2022-12-30 | NrCupom=0 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=1
+  [37764] Número=38496 | OServiço=2848 | data=2022-12-30 | NrCupom=0 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=1
+  [37765] Número=38497 | OServiço=2849 | data=2022-12-30 | NrCupom=0 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=1
+
+==============================================================================
+OrdemServiço__Cabeçalho_Open · 1 linhas
+colunas: NrOServiço (long), Data (datetime), Class (text), Risco (text), CtaCliente (text), NrCliente (integer), NrCupom (long), Cliente (text), End (text), Cep (text), Edifício (text), Apto (text), Estado (text), Cidade (text), Bairro (text), FoneRes (text), FoneComal (text), Celular (text), NrTécnico (integer), CtaTécnico (text), DiaPrevisto (datetime), HoraIni (datetime), HoraFnal (datetime), Index (text), Status (text), Tipo (text), DataLiquidação (datetime), Chave_Close (float), Derivado (float), HoraFixa (text)
+  [1] NrOServiço=380 | Data=2026-09-18 | Class=F | Risco=· | CtaCliente=1.03.013.944 | NrCliente=13415 | NrCupom=0 | Cliente=Marina Bechara Moraes | End=Humberto Serrano | Cep= | Edifício=Monte Moreno | Apto=602 | Estado=Espírito Santo | Cidade=Vila Velha | Bairro=Praia da Costa | FoneRes=0 | FoneComal=0 | Celular=9-9977-1804 | NrTécnico=9 | CtaTécnico=2.06.001.004 | DiaPrevisto=2026-09-18 | HoraIni=1899-12-30 | HoraFnal=1899-12-30 | Index=A | Status=P | Tipo=C | DataLiquidação=1933-12-31 | Chave_Close=· | Derivado=0 | HoraFixa=·
+  Status: P → 1
+
+==============================================================================
+OrdemServiço__NowDevolMaterial · 0 linhas
+colunas: Código (long), OrdemServiço (long), Cupom (float), Data (datetime), Hora (datetime), QteDevolv (integer), CodMaterial (long), DescrMaterial (text), PreçoProd (currency), Imprimir (float)
+
+==============================================================================
+OrdemServiço_Comentário · 0 linhas
+colunas: Código (long), NOrdemServiço (float), Comentário (memo)
+
+==============================================================================
+OrdemServiço_FornecConsignado · 0 linhas
+colunas: Número (long), NrFornec (float), Classificação (float), MarcaFornec (text)
+
+==============================================================================
+OrdemServiço_FornecedoresConserto@ · 37 linhas
+colunas: Código (long), NrFornec (long), Fornecedor (text)
+  [35] Código=37 | NrFornec=275 | Fornecedor=Emmeti
+  [36] Código=38 | NrFornec=296 | Fornecedor=Maqenge
+  [37] Código=39 | NrFornec=282 | Fornecedor=Albacete
+
+==============================================================================
+OrdemServiço_MaterialComplementar · 133 linhas
+colunas: Código (long), OrdemServiço (long), CodMat (long), ReferMat (text), DescrMat (text), Qte (integer), VrCusto (currency), VrTotalCusto (currency), VrVenda (currency), VrTotalVenda (currency), Taxa (currency), VrDesconto (currency), VrTotLiq (currency), NrFornec (long)
+  [131] Código=131 | OrdemServiço=4411 | CodMat=2203 | ReferMat=607 | DescrMat=cotovelo 90º 15 mm- 607 | Qte=1 | VrCusto=1.5000 | VrTotalCusto=0.0000 | VrVenda=5.5900 | VrTotalVenda=0.0000 | Taxa=0.0000 | VrDesconto=0.0000 | VrTotLiq=0.0000 | NrFornec=0
+  [132] Código=132 | OrdemServiço=4411 | CodMat=4223 | ReferMat=0 | DescrMat=tubo cobre E 15 mm/02.05 mts | Qte=1 | VrCusto=43.0000 | VrTotalCusto=0.0000 | VrVenda=60.2000 | VrTotalVenda=0.0000 | Taxa=0.0000 | VrDesconto=0.0000 | VrTotLiq=0.0000 | NrFornec=77
+  [133] Código=133 | OrdemServiço=4411 | CodMat=2798 | ReferMat=611 | DescrMat=tee 15 mm - 611 | Qte=1 | VrCusto=1.7000 | VrTotalCusto=0.0000 | VrVenda=2.8900 | VrTotalVenda=0.0000 | Taxa=0.0000 | VrDesconto=0.0000 | VrTotLiq=0.0000 | NrFornec=77
+
+==============================================================================
+OrdemServiço_ProdutoAvulso · 1 linhas
+colunas: CodProduto (long), ReferProduto (text), DescrProduto (text), PCusto (currency), PVenda (currency)
+  [1] CodProduto=1 | ReferProduto=00 | DescrProduto=pilha | PCusto=15.0000 | PVenda=15.0000
+
+==============================================================================
+OrdemServiço_Serviço · 0 linhas
+colunas: NrServiço (long), Serviço (text)
+
+==============================================================================
+OrdemServiço_ValorMãoObraGarantia · 663 linhas
+colunas: Código (long), OrdemServiço (float), DataEmissão (datetime), ValorMObraGarantia (currency)
+  [661] Código=662 | OrdemServiço=30432 | DataEmissão=2018-04-28 | ValorMObraGarantia=1.4000
+  [662] Código=663 | OrdemServiço=30443 | DataEmissão=2018-05-02 | ValorMObraGarantia=1.4000
+  [663] Código=664 | OrdemServiço=30500 | DataEmissão=2018-05-07 | ValorMObraGarantia=1.4000
+
+==============================================================================
+Vendas_Garantia_Saída · 2316 linhas
+colunas: Código (long), NrCupom (integer), Data (datetime), CódProd (integer), Venct (datetime), Tipo (long), NrCliente (long), Memo (text)
+  [2314] Código=2314 | NrCupom=1117 | Data=2026-09-18 | CódProd=4858 | Venct=2026-09-18 | Tipo=1 | NrCliente=17102 | Memo=x
+  [2315] Código=2315 | NrCupom=1121 | Data=2026-09-21 | CódProd=5552 | Venct=2026-09-21 | Tipo=1 | NrCliente=17278 | Memo=x
+  [2316] Código=2316 | NrCupom=1123 | Data=2026-09-21 | CódProd=5588 | Venct=2026-09-21 | Tipo=1 | NrCliente=17281 | Memo=x
+
+==============================================================================
+Z_OrdemServiço__Complemento_Open · 0 linhas
+colunas: NrOS (long), PontoRefer (text), CodProduto (long), Defeito (text), Serviço (text), Conserto (text), Observação (memo), Código (long)

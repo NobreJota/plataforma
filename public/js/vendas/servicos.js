@@ -10,6 +10,7 @@
 //              aba "A agendar": OS pendente / reserva sem dia ou sem horario.
 //              Clique numa OS abre o modal da OS (os-modal.js): consignados, termino,
 //              valor final, fotos, concluir. Reserva (venda aberta) so mostra os dados.
+// Alterado em: 14/10/2026 - cartao mostra o servico a fazer (por item) e a observacao.
 // =============================================================================
 
 (function () {
@@ -73,7 +74,12 @@
     return '<div class="sv' + (s.tipo === 'RESERVA' ? ' reserva' : '') + (s.status === 'E' || s.status === 'L' ? ' feita' : '') + '" data-de="' + (de || 'L') + '" data-i="' + i
       + '" title="clique para ver os detalhes">' + dia
       + '<b>' + esc((s.cliente && s.cliente.nome) || '(sem nome)') + '</b>'
-      + '<small>' + esc(onde || (s.itens || []).map(x => x.descricao).join(', ')) + '</small></div>';
+      + '<small>' + esc(onde) + '</small>'
+      // 14/10/2026: o servico a fazer e as observacoes (do item e a geral)
+      + (s.itens || []).map(x => '<span class="sv-serv">' + esc((x.servico || 'Instalação') + ' — ' + x.descricao)
+          + (x.observacao ? ' <i>(' + esc(x.observacao) + ')</i>' : '') + '</span>').join('')
+      + (s.observacao ? '<span class="sv-obs">Obs.: ' + esc(s.observacao) + '</span>' : '')
+      + '</div>';
   }
 
   function desenhar() {

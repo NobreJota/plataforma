@@ -14,6 +14,11 @@
 //   - Gravar · Concluir servico (P -> E) · Reabrir (E -> P)
 // API: /vendas/api/os   Busca de produto: /vendas/api/venda/produtos?busca=
 // Dinheiro em centavos.
+// Alterado em: 14/10/2026 - AGENDAMENTO na OS: tecnico (combo), dia, das/ate e a agenda do
+//              tecnico ao lado (como na venda); horario passado nao vale. Botao "Agendar" ->
+//              PUT /:id/agenda. Termino so depois de agendada, nunca no futuro.
+//              Agenda com cabecalho (tecnico · dia) e legenda: vermelho = ocupado com OUTRO cliente.
+//              Agenda na LATERAL DIREITA do modal, como na nota fiscal (padrao).
 // =============================================================================
 
 (function () {
@@ -32,6 +37,12 @@
   const hora = d => { const x = new Date(d); return String(x.getHours()).padStart(2, '0') + ':' + String(x.getMinutes()).padStart(2, '0'); };
 
   let os = null, aoMudar = null, montado = false, buscaT = null, achados = [];
+  let tecnicos = null, agOcupados = [];
+  const TECNICOS = '/vendas/api/venda/tecnicos', AGENDA = '/vendas/api/venda/agenda';
+  const paraMin = s => { const m = /^(\d{2}):(\d{2})$/.exec(s || ''); return m ? +m[1] * 60 + +m[2] : null; };
+  const hm = n => String(Math.floor(n / 60)).padStart(2, '0') + ':' + String(n % 60).padStart(2, '0');
+  const hojeIso = () => iso(new Date());
+  const agoraMin = () => { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); };
   const q = id => document.getElementById('osm-' + id);
 
   async function api(metodo, url, corpo, tipo) {
@@ -53,7 +64,7 @@
     const css = document.createElement('style');
     css.textContent = `
       .osm-fundo { position:fixed; inset:0; background:rgba(15,23,42,.35); z-index:60; }
-      .osm-caixa { position:fixed; top:3vh; left:50%; transform:translateX(-50%); z-index:61; width:min(1180px, calc(100vw - 24px));
+      .osm-caixa { position:fixed; top:3vh; left:50%; transform:translateX(-50%); z-index:61; width:min(1440px, calc(100vw - 24px));
                    max-height:94vh; display:flex; flex-direction:column; background:#fff; border-radius:12px;
                    box-shadow:0 18px 50px rgba(0,0,0,.3); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
                    font-size:14px; color:#111827; }
@@ -63,7 +74,8 @@
       .osm-sit { font-size:12px; font-weight:700; padding:3px 10px; border-radius:12px; background:#fef3c7; color:#92400e; }
       .osm-sit.E { background:#d1fae5; color:#065f46; } .osm-sit.L { background:#e0e7ff; color:#3730a3; } .osm-sit.C { background:#fee2e2; color:#991b1b; }
       .osm-x { border:0; background:none; color:#fff; font-size:24px; cursor:pointer; line-height:1; }
-      .osm-corpo { overflow:auto; padding:14px 20px; display:grid; grid-template-columns:minmax(0, 5fr) minmax(0, 7fr); gap:18px; }
+      .osm-corpo { overflow:auto; padding:14px 20px; display:grid; grid-template-columns:minmax(0, 5fr) minmax(0, 6fr) 260px; gap:18px; align-items:start; }
+      .osm-agenda { position:sticky; top:0; }
       .osm-sec { font-size:12px; font-weight:800; text-transform:uppercase; color:#6b21a8; margin:4px 0 6px; }
       .osm-det { display:grid; grid-template-columns:100px minmax(0,1fr); gap:4px 10px; margin-bottom:10px; }
       .osm-det span { font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; padding-top:2px; }
@@ -109,7 +121,26 @@
       .osm-rod .msg.ok { color:#059669; }
       .osm-total { display:flex; justify-content:space-between; font-weight:800; font-size:15px; padding:8px 10px; background:#f5f3ff;
                    border-radius:8px; margin-top:8px; color:#4c1d95; }
-      @media (max-width: 860px) { .osm-corpo { grid-template-columns:1fr; } }
+      .osm-ag { margin-bottom:12px; }
+      .osm-linha2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+      .osm-ag-form input { width:100%; min-width:0; }
+      .osm-ag-form { display:flex; flex-direction:column; gap:8px; }
+      .osm-ag-form select { font:inherit; font-size:14px; padding:7px 9px; border:1px solid #d1d5db; border-radius:8px; background:#fff; width:100%; }
+      .osm-ag-lista { border:1px solid #e5e7eb; border-radius:8px; max-height:calc(94vh - 160px); overflow-y:auto; font-size:13px; }
+      .osm-ag-lista .vz { padding:10px; color:#6b7280; }
+      .osm-ag-cab { position:sticky; top:0; z-index:1; background:#92400e; color:#fff; font-weight:700; padding:5px 8px; font-size:12px; }
+      .osm-ag-cab small { display:block; font-weight:400; font-size:11px; color:#fde68a; }
+      .osm-ag-cab b.oc { color:#fca5a5; } .osm-ag-cab b.es { color:#86efac; }
+      .osm-ag-lin { display:grid; grid-template-columns:52px minmax(0,1fr); border-top:1px solid #f3f4f6; }
+      .osm-ag-lin span { padding:4px 6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .osm-ag-lin .h { font-weight:700; background:#f8fafc; overflow:visible; text-overflow:clip; }
+      .osm-ag-lin.livre { cursor:pointer; } .osm-ag-lin.livre:hover { background:#fef3c7; }
+      .osm-ag-lin.ocupado { background:#fef2f2; color:#dc2626; cursor:not-allowed; }
+      .osm-ag-lin.passado { color:#9ca3af; cursor:not-allowed; }
+      .osm-ag-lin.escolhido { background:#dcfce7; color:#065f46; font-weight:700; }
+      .osm-dica { font-size:11px; color:#6b7280; }
+      @media (max-width: 1100px) { .osm-corpo { grid-template-columns:minmax(0,1fr) 240px; } .osm-corpo > div:nth-child(2) { grid-column:1; } .osm-agenda { grid-row:1 / span 2; grid-column:2; } }
+      @media (max-width: 760px) { .osm-corpo { grid-template-columns:1fr; } .osm-agenda { grid-row:auto; grid-column:auto; } }
     `;
     document.head.appendChild(css);
 
@@ -121,6 +152,19 @@
           <button type="button" class="osm-x" id="osm-x" title="fechar (Esc)">×</button></div>
         <div class="osm-corpo">
           <div>
+            <div class="osm-sec">Agendamento</div>
+            <div class="osm-ag">
+              <div class="osm-ag-form">
+                <label>Técnico<select id="osm-tec"></select></label>
+                <label>Dia<input type="date" id="osm-adia"></label>
+                <div class="osm-linha2">
+                  <label>Das<input type="time" id="osm-ahi"></label>
+                  <label>Até<input type="time" id="osm-ahf"></label>
+                </div>
+                <button type="button" class="osm-btn roxo" id="osm-agendar">Agendar</button>
+                <div class="osm-dica">Agenda do técnico na lateral direita · 1º clique: início · 2º clique: até o fim dessa linha.</div>
+              </div>
+            </div>
             <div class="osm-sec">Serviço</div>
             <div class="osm-det" id="osm-det"></div>
             <div class="osm-sec">Término e valor final</div>
@@ -150,6 +194,7 @@
             <div class="osm-fotos" id="osm-fotos"></div>
             <input type="file" id="osm-arq" accept="image/*" multiple hidden>
           </div>
+          <aside class="osm-agenda"><div class="osm-ag-lista" id="osm-ag"><div class="vz">Escolha o técnico e o dia.</div></div></aside>
         </div>
         <div class="osm-rod">
           <span class="msg" id="osm-msg"></span>
@@ -203,6 +248,22 @@
       if (img) window.open(img.src, '_blank');
     });
     q('arq').addEventListener('change', enviarFotos);
+    q('tec').addEventListener('change', agCarregar);
+    q('adia').addEventListener('change', agCarregar);
+    ['ahi', 'ahf'].forEach(id => q(id).addEventListener('input', agDesenhar));
+    q('ag').addEventListener('click', ev => {
+      const l = ev.target.closest('.osm-ag-lin.livre'); if (!l) return;
+      const m = Number(l.dataset.m), ini = paraMin(q('ahi').value), fim = paraMin(q('ahf').value);
+      if (ini === null || m + 30 <= ini || (fim !== null && m < ini)) { q('ahi').value = hm(m); q('ahf').value = ''; }
+      else q('ahf').value = hm(m + 30);
+      agDesenhar();
+    });
+    q('agendar').addEventListener('click', agendar);
+    ['tec', 'adia', 'ahi', 'ahf'].forEach((id, k, ordem) => q(id).addEventListener('keydown', ev => {
+      if (ev.key !== 'Enter') return;
+      ev.preventDefault();
+      if (k < ordem.length - 1) q(ordem[k + 1]).focus(); else agendar();
+    }));
     // Enter anda de campo em campo na coluna da esquerda
     ['tdia', 'thora', 'valor'].forEach((id, k, ordem) => q(id).addEventListener('keydown', ev => {
       if (ev.key !== 'Enter') return;
@@ -228,8 +289,6 @@
           + (i.observacao ? ' <i>(' + esc(i.observacao) + ')</i>' : '') + '</li>').join('') + '</ul>' : '';
     q('det').innerHTML =
         linha('Cliente', esc((cli.codigo ? cli.codigo + ' · ' : '') + (cli.nome || '')))
-      + linha('Técnico', esc(o.tecnicoNome || 'a definir'))
-      + linha('Previsto', esc(o.diaPrevisto ? dataBr(o.diaPrevisto) + (o.horaIni ? ' · ' + o.horaIni + (o.horaFim ? ' às ' + o.horaFim : '') : ' · sem horário') : 'sem dia'))
       + linha('Local', esc(end))
       + linha('Edifício', esc([o.edificio, o.apto ? 'apto ' + o.apto : ''].filter(Boolean).join(' · ')))
       + linha('Referência', esc(o.pontoReferencia))
@@ -238,13 +297,35 @@
       + linha('Observação', esc(o.observacao))
       + linha('Venda', o.venda ? 'nº ' + esc(o.venda.numero) : '');
 
+    // agendamento
+    const agEd = o.status === 'P';
+    q('tec').innerHTML = '<option value="">a definir</option>' + (tecnicos || []).map(t =>
+      '<option value="' + esc(t.conta) + '">' + esc(t.nome) + ' · ' + esc(t.conta) + '</option>').join('')
+      + (o.tecnicoConta && !(tecnicos || []).some(t => t.conta === o.tecnicoConta)
+         ? '<option value="' + esc(o.tecnicoConta) + '">' + esc(o.tecnicoNome || o.tecnicoConta) + ' (inativo)</option>' : '');
+    q('tec').value = o.tecnicoConta || '';
+    q('adia').value = o.diaPrevisto || '';
+    q('adia').min = hojeIso();
+    // sem dia reservado: horario limpo (so vale hora com dia)
+    q('ahi').value = o.diaPrevisto ? o.horaIni || '' : ''; q('ahf').value = o.diaPrevisto ? o.horaFim || '' : '';
+    ['tec', 'adia', 'ahi', 'ahf'].forEach(id => { q(id).disabled = !agEd; });
+    q('agendar').hidden = !agEd;
+    agCarregar();
+
     q('tdia').value = o.terminoEm ? iso(o.terminoEm) : '';
+    q('tdia').max = hojeIso();
     q('thora').value = o.terminoEm ? hora(o.terminoEm) : '';
     q('valor').value = o.valorServico ? brl(o.valorServico) : '';
+    q('valor').title = o.servicoContabilizado
+      ? 'cobrado na venda ' + (o.venda ? o.venda.numero : '') + ' · técnico R$ ' + brl(o.parteTecnico) + ' · loja R$ ' + brl(o.parteLoja) : '';
     q('obs').value = o.observacaoServico || '';
 
     const ed = podeEditar();
     ['tdia', 'thora', 'valor', 'obs'].forEach(id => { q(id).disabled = !ed; });
+    if (o.servicoContabilizado) q('valor').disabled = true;     // VI: ja cobrado e lancado na venda
+    const agendada = !!(o.tecnicoConta && o.diaPrevisto);
+    if (!agendada) { q('tdia').disabled = true; q('thora').disabled = true; }
+    q('tdia').title = agendada ? '' : 'agende a OS (técnico e dia) antes de informar o término';
     q('busca-l').hidden = !ed;
     q('gravar').hidden = !ed;
     q('concluir').hidden = o.status !== 'P';
@@ -285,6 +366,7 @@
     q('fundo').hidden = false; q('caixa').hidden = false;
     q('busca').value = ''; q('res').hidden = true; q('qtd').value = '1';
     try {
+      if (!tecnicos) tecnicos = (await api('GET', TECNICOS)).tecnicos || [];
       os = (await api('GET', API + id)).os;
       msg('');
       desenhar();
@@ -319,6 +401,57 @@
   async function reabrir() {
     if (!confirm('Reabrir a OS nº ' + os.numero + '? Ela volta para pendente.')) return;
     try { mudou((await api('POST', API + os.id + '/reabrir')).os, '✓ reaberta'); } catch (e) { msg(e.message); }
+  }
+
+  // ---- agendamento (agenda do tecnico, como na venda) ----
+  async function agCarregar() {
+    agOcupados = [];
+    const tec = q('tec').value, dia = q('adia').value;
+    if (!tec) { q('ag').innerHTML = '<div class="osm-ag-cab">Agenda do técnico</div><div class="vz">Escolha o técnico para ver a agenda dele.</div>'; return; }
+    if (!dia) { q('ag').innerHTML = '<div class="osm-ag-cab">Agenda de ' + esc(((q('tec').selectedOptions[0] || {}).textContent || '').split(' · ')[0]) + '</div><div class="vz">Marque o dia para ver os horários.</div>'; return; }
+    q('ag').innerHTML = '<div class="vz">Carregando…</div>';
+    try {
+      const r = await api('GET', AGENDA + '?tecnico=' + encodeURIComponent(tec) + '&dia=' + dia + '&os=' + os.id
+        + (os.venda && os.venda.id ? '&venda=' + os.venda.id : ''));
+      agOcupados = (r.ocupados || []).map(x => ({ ini: paraMin(x.horaIni), fim: x.horaFim ? paraMin(x.horaFim) : paraMin(x.horaIni) + 30,
+                                                   cliente: x.cliente, texto: x.texto }));
+    } catch (e) { msg(e.message); }
+    agDesenhar();
+  }
+  function agDesenhar() {
+    if (!q('tec').value || !q('adia').value) return;
+    const ini = paraMin(q('ahi').value), fim = paraMin(q('ahf').value);
+    const fimEf = ini === null ? null : (fim !== null && fim > ini ? fim : ini + 1);
+    const ehHoje = q('adia').value === hojeIso(), agora = agoraMin(), nome = (os.cliente && os.cliente.nome) || 'esta OS';
+    const tecNome = (q('tec').selectedOptions[0] || {}).textContent || '';
+    let h = '<div class="osm-ag-cab">Agenda de ' + esc(tecNome.split(' · ')[0]) + ' · ' + dataBr(q('adia').value)
+      + '<small><b class="oc">■</b> ocupado com outro cliente · <b class="es">■</b> ' + esc(nome) + '</small></div>';
+    for (let m = 7 * 60; m < 19 * 60; m += 30) {
+      const oc = agOcupados.find(o => m >= o.ini && m < o.fim);
+      const es = ini !== null && m + 30 > ini && m < fimEf;
+      const passou = ehHoje && m + 30 <= agora;
+      const cls = oc ? 'ocupado' : es ? 'escolhido livre' : passou ? 'passado' : 'livre';
+      h += '<div class="osm-ag-lin ' + cls + '" data-m="' + m + '"' + (oc ? ' title="' + esc(oc.texto) + '"' : '') + '><span class="h">' + hm(m)
+        + '</span><span>' + (oc ? 'ocupado · ' + esc(oc.cliente) : es ? '✓ ' + esc(nome) : passou ? 'passou' : '') + '</span></div>';
+    }
+    q('ag').innerHTML = h;
+  }
+  async function agendar() {
+    const dia = q('adia').value, hi = q('ahi').value, hf = q('ahf').value;
+    if ((hi || hf) && !dia) { msg('Marque o dia antes do horário.'); q('adia').focus(); return; }
+    if (hi && !hf) { msg('Informe o horário ATÉ.'); q('ahf').focus(); return; }
+    if (dia && dia < hojeIso()) { msg('Esse dia já passou.'); q('adia').focus(); return; }
+    if (dia === hojeIso() && hi && paraMin(hi) < agoraMin()) { msg('Esse horário de hoje já passou (agora são ' + hm(agoraMin()) + ').'); q('ahi').focus(); return; }
+    const ini = paraMin(hi), fim = paraMin(hf);
+    if (ini !== null && agOcupados.some(o => ini < o.fim && fim > o.ini)) { msg('Esse horário bate com outro cliente do técnico.'); return; }
+    const trocou = (os.tecnicoConta || '') !== q('tec').value;
+    if (trocou && os.servicoContabilizado && os.parteTecnico > 0 && !confirm('A mão de obra desta OS já foi lançada para '
+        + (os.tecnicoNome || os.tecnicoConta) + ' (R$ ' + brl(os.parteTecnico) + ').\nTrocar de técnico passa esse valor para o novo técnico (lançamento automático). Continuar?')) return;
+    q('agendar').disabled = true;
+    try {
+      const r = await api('PUT', API + os.id + '/agenda', { tecnicoConta: q('tec').value, dia, horaIni: hi, horaFim: hf });
+      mudou(r.os, '✓ agendada' + (r.os.tecnicoNome ? ' · ' + r.os.tecnicoNome : '') + (dia ? ' · ' + dataBr(dia) : '') + (hi ? ' ' + hi + '–' + hf : ''));
+    } catch (e) { msg(e.message); } finally { q('agendar').disabled = false; }
   }
 
   // ---- consignados ----

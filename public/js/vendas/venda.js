@@ -81,6 +81,11 @@
 // O preco que vale e o do servidor: a tela so mostra.
 //
 // API: /vendas/api/venda (produtos, clientes, POST, PUT, GET /:id)
+// Alterado em: 14/10/2026 - instalacao: dia/hora que ja passou nao vale (agenda mostra "passou");
+//              Confirmar instalacao ja abre o fechamento; sem botao Andamento: ao sair com
+//              alteracao nao gravada aparece o aviso (Gravar e sair / Sair sem gravar / Continuar).
+// Alterado em: 13/10/2026 - instalacao: servico da ficha do tecnico + mao de obra (partilha na tela);
+//              a mao de obra entra no total (linha Instalação).
 // =============================================================================
 
 'use strict';
@@ -369,6 +374,7 @@
     i.precisaInstalacao = el.checked;
     if (estado.instalacao) estado.instalacao.confirmada = false;    // mudou a lista: conferir de novo
     atualizarInst();
+    totais();
     osVolta = el.dataset.cod;
     if (el.checked) abrirInstalacao();          // marcou OS: abre a instalacao direto
   });
@@ -396,6 +402,9 @@
   const min = s => { const [h, m] = String(s || '').split(':').map(Number); return h * 60 + (m || 0); };
   // fim exclusivo (minutos); fim = null enquanto o ATE nao foi informado
   let agOcupados = [], agSemHora = [], agEscolha = { ini: null, fim: null };
+  // hoje e agora (minutos) no relogio do computador
+  const hojeIso = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  const agoraMin = () => { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); };
   const agFimEf = () => agEscolha.fim !== null && agEscolha.fim > agEscolha.ini ? agEscolha.fim : agEscolha.ini + 1;
   function agLivre(a, b) {                      // [a, b) nao bate com nenhum ocupado?
     return agOcupados.every(o => b <= o.ini || a >= o.fim);
@@ -407,20 +416,29 @@
   }
   function agDesenhar() {
     const corpo = $('ag-corpo');
-    const temDia = !!$('ins-dia').value;
-    $('ins-agenda').hidden = !temDia;                   // a faixa so abre com a data marcada
-    $('ins-agenda').parentElement.classList.toggle('sem-agenda', !temDia);
-    if (!temDia) return;
-    if (!$('ins-tecnico').value) {
-      corpo.innerHTML = '<div class="ag-vazio">Escolha o técnico para ver os horários dele.</div>'; return;
-    }
+    // 14/10/2026: a agenda fica SEMPRE na lateral direita; trocou o tecnico/dia, troca a agenda
+    const temDia = !!$('ins-dia').value, tec = $('ins-tecnico').value;
+    $('ins-agenda').hidden = false;
+    $('ins-agenda').parentElement.classList.remove('sem-agenda');
+    const nomeTec = tec ? (($('ins-tecnico').selectedOptions[0] || {}).textContent || '').split(' · ')[0] : '';
+    $('ag-tit').innerHTML = 'Agenda ' + (nomeTec ? 'de ' + escapar(nomeTec) : 'do técnico')
+      + (temDia ? ' · ' + $('ins-dia').value.split('-').reverse().join('/') : '')
+      + '<small><b class="oc">■</b> ocupado com outro cliente · <b class="es">■</b> este cliente</small>';
+    if (!tec) { corpo.innerHTML = '<div class="ag-vazio">Escolha o técnico para ver a agenda dele.</div>'; return; }
+    if (!temDia) { corpo.innerHTML = '<div class="ag-vazio">Marque o dia previsto para ver os horários.</div>'; return; }
     let h = '';
+    const ehHoje = $('ins-dia').value === hojeIso(), agora = agoraMin();
     for (let m = AG_INI; m < AG_FIM; m += AG_PASSO) {
       const oc = agOcupados.find(o => m >= o.ini && m < o.fim);
       const esc = agEscolha.ini !== null && m + AG_PASSO > agEscolha.ini && m < agFimEf();
+      const passou = ehHoje && m + AG_PASSO <= agora;          // horario de hoje que ja passou
+      if (passou && !oc && !esc) {
+        h += '<div class="ag-lin passado" data-m="' + m + '"><span class="h">' + hm(m) + '</span><span class="c">passou</span></div>';
+        continue;
+      }
       h += '<div class="ag-lin ' + (oc ? 'ocupado' : esc ? 'escolhido livre' : 'livre') + '" data-m="' + m + '"'
         + (oc ? ' title="' + escapar(oc.texto) + '"' : '') + '><span class="h">' + hm(m) + '</span><span class="c">'
-        + (oc ? escapar(oc.cliente) : esc ? '✓ ' + escapar((estado.cliente && estado.cliente.nome) || 'esta instalação') : '') + '</span></div>';
+        + (oc ? 'ocupado · ' + escapar(oc.cliente) : esc ? '✓ ' + escapar((estado.cliente && estado.cliente.nome) || 'esta instalação') : '') + '</span></div>';
     }
     if (agSemHora.length) h += '<div class="ag-sem">sem horário marcado: ' + agSemHora.map(escapar).join(', ') + '</div>';
     h += '<div class="ag-dica">1º clique: início · 2º clique: até o fim dessa linha. Ou digite DAS / ATÉ com qualquer minuto.</div>';
@@ -455,6 +473,35 @@
     agHorarioTexto(); agDesenhar();
   });
   $('ins-tecnico').addEventListener('change', agCarregar);
+  $('ins-tecnico').addEventListener('change', () => { encherServicos(''); mostrarPartilha(); });
+  $('ins-servico').addEventListener('change', mostrarPartilha);
+  $('ins-mo').addEventListener('input', mostrarPartilha);
+  $('ins-mo').addEventListener('blur', () => { if ($('ins-mo').value.trim()) $('ins-mo').value = brl(paraCentavos($('ins-mo').value)); });
+
+  // servicos do tecnico escolhido (ficha: descricao + % do tecnico ou valor fixo)
+  function tecnicoEscolhido() { return (tecnicos || []).find(t => t.conta === $('ins-tecnico').value) || null; }
+  function servicoEscolhido() {
+    const t = tecnicoEscolhido();
+    return t && (t.servicos || []).find(s => s.id === $('ins-servico').value) || null;
+  }
+  function encherServicos(sel) {
+    const t = tecnicoEscolhido();
+    const lista = t ? (t.servicos || []) : [];
+    $('ins-servico').innerHTML = !t ? '<option value="">escolha o técnico</option>'
+      : !lista.length ? '<option value="">técnico sem serviços na ficha</option>'
+      : '<option value="">—</option>' + lista.map(s => '<option value="' + escapar(s.id) + '">' + escapar(s.descricao)
+          + ' · ' + (s.modo === 'FIXO' ? 'R$ ' + brl(s.valor) : String(s.valor).replace('.', ',') + '%') + '</option>').join('');
+    $('ins-servico').value = sel && lista.some(s => s.id === sel) ? sel : (lista.length === 1 ? lista[0].id : '');
+  }
+  function mostrarPartilha() {
+    const mo = paraCentavos($('ins-mo').value), sv = servicoEscolhido(), el = $('ins-partilha');
+    el.classList.remove('aviso');
+    if (!mo) { el.textContent = 'sem mão de obra cobrada'; return; }
+    if (!sv) { el.textContent = 'escolha o técnico e o serviço para ver a partilha'; el.classList.add('aviso'); return; }
+    const tec = sv.modo === 'FIXO' ? sv.valor : Math.round(mo * (Number(sv.valor) || 0) / 100);
+    if (tec > mo) { el.textContent = 'valor fixo do técnico maior que a mão de obra'; el.classList.add('aviso'); return; }
+    el.textContent = 'técnico R$ ' + brl(tec) + ' (2.06.001) · loja R$ ' + brl(mo - tec) + ' (4.05.001.001)';
+  }
   $('ins-dia').addEventListener('change', agCarregar);
   // digitou DAS / ATE: a agenda acompanha. Nao reescreve o campo enquanto se digita
   // (o navegador dispara change a cada pedaco da hora; reescrever travava o ATE).
@@ -464,7 +511,11 @@
   }
   function agConferir(final) {           // final = saiu do ATE / Enter / Confirmar
     let msg = '';
-    if (agEscolha.ini !== null && !agEscolhaLivre()) msg = 'Esse horário bate com outro cliente do técnico.';
+    const dia = $('ins-dia').value;
+    if (!dia && (agEscolha.ini !== null || $('ins-fim').value)) msg = 'Marque o dia antes do horário (ou apague o horário).';
+    else if (dia && dia < hojeIso()) msg = 'Esse dia já passou: escolha hoje ou depois.';
+    else if (dia === hojeIso() && agEscolha.ini !== null && agEscolha.ini < agoraMin()) msg = 'Esse horário de hoje já passou (agora são ' + hm(agoraMin()) + ').';
+    else if (agEscolha.ini !== null && !agEscolhaLivre()) msg = 'Esse horário bate com outro cliente do técnico.';
     else if (final && agEscolha.ini !== null && agEscolha.fim === null) msg = 'Informe o horário ATÉ.';
     else if (final && agEscolha.ini !== null && agEscolha.fim <= agEscolha.ini) msg = 'O ATÉ tem que ser depois do DAS.';
     else if (final && agEscolha.ini === null && $('ins-fim').value) msg = 'Informe o horário DAS.';
@@ -492,7 +543,11 @@
       '<option value="' + escapar(t.conta) + '" data-nome="' + escapar(t.nome) + '" data-receita="' + escapar(t.receita) + '">'
       + escapar(t.nome) + ' · ' + escapar(t.conta) + '</option>').join('');
     $('ins-tecnico').value = ins.tecnicoConta || '';
+    encherServicos(ins.servicoId || '');
+    $('ins-mo').value = ins.maoDeObra ? brl(ins.maoDeObra) : '';
+    mostrarPartilha();
     $('ins-dia').value = ins.diaPrevisto ? String(ins.diaPrevisto).slice(0, 10) : '';
+    $('ins-dia').min = hojeIso();
     agEscolha = ins.horaIni ? { ini: min(ins.horaIni), fim: ins.horaFim ? min(ins.horaFim) : null }
                             : { ini: null, fim: null };
     agHorarioTexto();
@@ -531,8 +586,14 @@
       $(agEscolha.ini === null ? 'ins-ini' : 'ins-fim').focus(); return;
     }
     const opt = $('ins-tecnico').selectedOptions[0];
+    const mo = paraCentavos($('ins-mo').value);
+    const sv = servicoEscolhido();
+    if (mo > 0 && !$('ins-tecnico').value) { $('ins-msg').textContent = 'Há mão de obra: escolha o técnico (a partilha vem da ficha dele).'; $('ins-tecnico').focus(); return; }
+    if (mo > 0 && !sv) { $('ins-msg').textContent = 'Escolha o serviço do técnico.'; $('ins-servico').focus(); return; }
+    if (sv && sv.modo === 'FIXO' && mo > 0 && sv.valor > mo) { $('ins-msg').textContent = 'O valor fixo do técnico é maior que a mão de obra.'; $('ins-mo').focus(); return; }
     estado.instalacao = {
       confirmada: true,
+      servicoId: sv ? sv.id : '', servicoDescricao: sv ? sv.descricao : '', maoDeObra: mo,
       tecnicoConta: $('ins-tecnico').value,
       tecnicoNome: $('ins-tecnico').value && opt ? opt.dataset.nome : '',
       receitaConta: $('ins-tecnico').value && opt ? opt.dataset.receita : '',
@@ -553,8 +614,11 @@
     };
     fecharInstalacao();
     atualizarInst();
+    totais();
+    sujo = true;
     recado('✓ instalação preenchida' + (estado.instalacao.tecnicoNome ? ' — técnico ' + estado.instalacao.tecnicoNome : ' — técnico a definir')
-      + '. Ela é gravada com a venda; a OS nasce quando a venda for fechada.', 'ok');
+      + '. A OS nasce quando a venda for fechada.', 'ok');
+    abrirFechamento();          // 14/10/2026: confirmou a instalacao, ja vai para o pagamento
   }
 
   $('instalacao').addEventListener('click', abrirInstalacao);
@@ -834,13 +898,21 @@
     atualizarInst();
   }
 
+  // mao de obra da instalacao: entra no total so na nota fiscal com item marcado
+  function maoDeObraAtiva() {
+    return estado.documento === 'NFE' && marcadosInst().length && estado.instalacao
+      ? Math.max(0, Number(estado.instalacao.maoDeObra) || 0) : 0;
+  }
   function totais() {
     let bruto = 0, desc = 0;
     for (const i of estado.itens) { bruto += i.quantidade * preco(i); desc += i.desconto; }
     const geral = paraCentavos($('desc-geral').value);
+    const mo = maoDeObraAtiva();
     $('t-bruto').textContent = brl(bruto);
     $('t-desc-itens').textContent = brl(desc);
-    $('t-liquido').textContent = brl(Math.max(0, bruto - desc - geral));
+    $('t-inst-l').hidden = !mo;
+    $('t-inst').textContent = brl(mo);
+    $('t-liquido').textContent = brl(Math.max(0, bruto - desc - geral) + mo);
   }
 
   $('itens').addEventListener('input', ev => {
@@ -864,7 +936,19 @@
     totais();
   });
   // ao sair do campo, redesenha (total da linha e formato do desconto)
-  $('itens').addEventListener('focusout', ev => { if (ev.target.matches('input.qtd, input.desc, input.unit')) desenharItens(); });
+  // ao sair do campo: se o foco foi para outro controle DA TABELA (caixa OS, ×, outro campo), so
+  // formata o campo no lugar — redesenhar agora troca a linha e o clique se perde (13/10/2026)
+  $('itens').addEventListener('focusout', ev => {
+    if (!ev.target.matches('input.qtd, input.desc, input.unit')) return;
+    if (ev.relatedTarget && $('itens').contains(ev.relatedTarget)) {
+      const i = estado.itens.find(x => String(x.codigo) === ev.target.dataset.cod);
+      if (i && ev.target.classList.contains('desc')) ev.target.value = i.desconto ? brl(i.desconto) : '';
+      if (i && ev.target.classList.contains('unit')) ev.target.value = brl(preco(i));
+      if (i && ev.target.classList.contains('qtd')) ev.target.value = i.quantidade;
+      return;
+    }
+    desenharItens();
+  });
   // Enter: quantidade -> unitario -> desconto -> proximo produto
   $('itens').addEventListener('keydown', ev => {
     if (ev.key === 'Enter' && ev.target.matches('input.qtd, input.unit, input.desc')) {
@@ -937,6 +1021,7 @@
     try {
       const v = await salvar();
       if (!v) return;
+      sujo = false;
       recado('✓ venda nº ' + v.numero + ' gravada (aberta) — líquido ' + brl(v.totalLiquido), 'ok');
       abrirSucesso(v);
     } catch (e) {
@@ -974,6 +1059,7 @@
     try {
       const v = await salvar();
       if (!v) return;
+      sujo = false;
       if (!formas) formas = await api('GET', '/formas');
       aFechar = v;
       pagos = [];
@@ -1301,7 +1387,53 @@
     } catch (e) { $('loja-nome').textContent = 'Loja'; }
   })();
 
+  // ---- sair sem gravar (14/10/2026: no lugar do botao Andamento) ---------------------------
+  // qualquer alteracao na tela marca "sujo"; gravar/fechar limpa. Com cliente ou produto na tela
+  // e algo nao gravado, Voltar / Menu / + nova venda perguntam antes; fechar a aba usa o aviso
+  // do proprio navegador.
+  let sujo = false;
+  const temAlgo = () => sujo && (estado.itens.length > 0 || !!estado.cliente);
+  ['input', 'change'].forEach(t => document.addEventListener(t, ev => {
+    if (ev.target.closest && ev.target.closest('.pagina, #ins-caixa')) sujo = true;
+  }, true));
+  document.addEventListener('click', ev => {     // produto/cliente entram e saem por clique tambem
+    if (ev.target.closest && ev.target.closest('#lista-produtos, #lista-clientes, [data-tirar], #cli-tirar')) sujo = true;
+  }, true);
+  document.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter' && ev.target.closest && ev.target.closest('#busca-produto, #busca-cliente')) sujo = true;
+  }, true);
+  let sairPara = null;
+  function irPara(destino) {
+    sujo = false;
+    if (destino === 'voltar') {
+      const mesmoSite = document.referrer && new URL(document.referrer).origin === location.origin;
+      if (mesmoSite && history.length > 1) history.back(); else location.href = '/usuariocontab/menu';
+    } else location.href = destino;
+  }
+  document.addEventListener('click', ev => {
+    const alvo = ev.target.closest && ev.target.closest('#nav-voltar, #nav-menu, a[href]');
+    if (!alvo || !temAlgo()) return;
+    if (alvo.tagName === 'A' && (alvo.target === '_blank' || alvo.getAttribute('href').startsWith('#'))) return;
+    ev.preventDefault(); ev.stopImmediatePropagation();
+    sairPara = alvo.id === 'nav-voltar' ? 'voltar' : alvo.id === 'nav-menu' ? '/usuariocontab/menu' : alvo.href;
+    $('sai-det').textContent = (estado.cliente ? estado.cliente.nome + ' · ' : '') + estado.itens.length + ' produto(s)'
+      + (estado.id ? ' · venda já gravada antes, com alterações novas' : ' · ainda não gravada');
+    $('sai-fundo').hidden = false; $('sai-caixa').hidden = false;
+    $('sai-gravar').focus();
+  }, true);
+  function fecharSai() { $('sai-fundo').hidden = true; $('sai-caixa').hidden = true; }
+  $('sai-gravar').addEventListener('click', async () => {
+    $('sai-gravar').disabled = true;
+    try { const v = await salvar(); if (v) { fecharSai(); irPara(sairPara); } else fecharSai(); }
+    catch (e) { fecharSai(); recado(e.message, 'erro'); }
+    finally { $('sai-gravar').disabled = false; }
+  });
+  $('sai-sair').addEventListener('click', () => { fecharSai(); irPara(sairPara); });
+  $('sai-ficar').addEventListener('click', fecharSai);
+  $('sai-fundo').addEventListener('click', fecharSai);
+  window.addEventListener('beforeunload', ev => { if (temAlgo()) { ev.preventDefault(); ev.returnValue = ''; } });
+
   desenharItens();
   desenharCliente();
-  carregar();
+  carregar().finally(() => { sujo = false; });
 })();

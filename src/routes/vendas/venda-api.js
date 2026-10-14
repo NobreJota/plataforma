@@ -4,6 +4,14 @@
 // Alterado em: 02/10/2026 - /clientes devolve endereco completo, telefone e e-mail (cabecalho)
 // Alterado em: 13/10/2026 - tecnicos vem do cadastro _tecnicos (tecnicos-api.js); OS nasce com
 //              tipo VI e numero continuando o Access (_numeracao, chave OS)
+// Alterado em: 14/10/2026 - fechar: instalacao com dia/hora que ja passou e recusada
+// Alterado em: 14/10/2026 - instalacao: horario so vale com dia marcado (sem dia, a hora e descartada)
+// Alterado em: 14/10/2026 - GET /agenda aceita &os= (a propria OS nao conta como ocupada);
+//              agendaDoTecnico exportada para o os-api (agendar a OS)
+// Alterado em: 13/10/2026 - MAO DE OBRA da instalacao (VI) entra na venda: no fechamento da NF a
+//              boleta da venda credita produtos + parte do tecnico (2.06.001.NNN) + parte da loja
+//              (4.05.001.001), historico "OS nº / tecnico". Partilha pela ficha (_tecnicos.servicos).
+//              /tecnicos devolve os servicos de cada tecnico.
 // Alterado em: 02/10/2026 - GET /loja (cabecalho do cupom)
 // Alterado em: 02/10/2026 - fornecedor e FILTRO separado (?fornecedor=marca), nao entra na busca
 //              de texto; GET /fornecedores para o combo
@@ -162,9 +170,10 @@ const PREFIXO_RECEITA_SERVICO = '4.03.002.';
 // 2.06.001, receita com o mesmo final em 4.03.002.
 async function tecnicosAtivos(loja) {
   const cad = await col('_tecnicos').find({ lojistaId: loja, ativo: { $ne: false } })
-    .project({ nome: 1, apelido: 1, contaTecnico: 1, contaReceita: 1 }).sort({ nome: 1 }).toArray();
+    .project({ nome: 1, apelido: 1, contaTecnico: 1, contaReceita: 1, servicos: 1 }).sort({ nome: 1 }).toArray();
   if (cad.length || await col('_tecnicos').countDocuments({ lojistaId: loja })) {
-    return cad.filter(x => x.contaTecnico).map(x => ({ conta: x.contaTecnico, nome: x.apelido || x.nome, receita: x.contaReceita || '' }));
+    return cad.filter(x => x.contaTecnico).map(x => ({ conta: x.contaTecnico, nome: x.apelido || x.nome, receita: x.contaReceita || '',
+      servicos: (x.servicos || []).map(s => ({ id: String(s.id), descricao: s.descricao, modo: s.modo, valor: s.valor })) }));
   }
   const subs = await col('_contasubtitulos').find({
     lojistaId: loja, ativo: { $ne: false },
@@ -208,18 +217,19 @@ router.post('/produtos/:codigo/garantia', async (req, res) => {
 //   Sem hora marcada: vai em semHorario (so o nome).
 // ---------------------------------------------------------------------------
 const paraMin = s => { const [h, m] = String(s || '').split(':').map(Number); return h * 60 + (m || 0); };
-async function agendaDoTecnico(loja, tecnicoConta, diaIso, excetoVenda, session) {
+async function agendaDoTecnico(loja, tecnicoConta, diaIso, excetoVenda, session, excetoOS) {
   const ini = new Date(diaIso + 'T00:00:00'), fim = new Date(diaIso + 'T23:59:59');
   const opt = session ? { session } : {};
   const oss = await col('_ordens_servico').find({ lojistaId: loja, tecnicoConta, status: { $ne: 'C' },
     diaPrevisto: { $gte: ini, $lte: fim } }, opt)
-    .project({ numero: 1, horaIni: 1, horaFim: 1, cliente: 1, venda: 1 }).toArray();
+    .project({ _id: 1, numero: 1, horaIni: 1, horaFim: 1, cliente: 1, venda: 1 }).toArray();
   const filtroV = { lojistaId: loja, situacao: 'A', 'instalacao.confirmada': true,
     'instalacao.tecnicoConta': tecnicoConta, 'instalacao.diaPrevisto': { $gte: ini, $lte: fim } };
   if (excetoVenda && mongoose.Types.ObjectId.isValid(excetoVenda)) filtroV._id = { $ne: new mongoose.Types.ObjectId(excetoVenda) };
   const abertas = await col('_vendas').find(filtroV, opt).project({ numero: 1, instalacao: 1, cliente: 1 }).toArray();
   const todos = [
-    ...oss.filter(o => !excetoVenda || String(o.venda?.id) !== String(excetoVenda)).map(o => ({
+    ...oss.filter(o => (!excetoVenda || String(o.venda?.id) !== String(excetoVenda))
+                    && (!excetoOS || String(o._id) !== String(excetoOS))).map(o => ({
       horaIni: o.horaIni || '', horaFim: o.horaFim || '', cliente: o.cliente?.nome || '',
       texto: 'OS ' + o.numero + ' · ' + (o.cliente?.nome || '') })),
     ...abertas.map(v => ({
@@ -239,7 +249,7 @@ router.get('/agenda', async (req, res) => {
     if (!tec.startsWith(PREFIXO_TECNICO) || !/^\d{4}-\d{2}-\d{2}$/.test(dia)) {
       return res.status(400).json({ ok: false, erro: 'técnico ou dia inválido' });
     }
-    res.json({ ok: true, ...(await agendaDoTecnico(lojaDe(req), tec, dia, req.query.venda)) });
+    res.json({ ok: true, ...(await agendaDoTecnico(lojaDe(req), tec, dia, req.query.venda, null, req.query.os)) });
   } catch (err) {
     res.status(500).json({ ok: false, erro: err.message });
   }
@@ -259,7 +269,7 @@ router.get('/servicos', async (req, res) => {
     const ini = new Date(dia + 'T00:00:00'), fim = new Date(dia + 'T23:59:59');
     const campos = i => ({
       tecnicoConta: i.tecnicoConta || '', tecnicoNome: i.tecnicoNome || '',
-      horaIni: i.horaIni || '', horaFim: i.horaFim || '',
+      horaIni: i.diaPrevisto ? i.horaIni || '' : '', horaFim: i.diaPrevisto ? i.horaFim || '' : '',   // sem dia: sem hora
       endereco: i.endereco || {}, edificio: i.edificio || '', apto: i.apto || '',
       pontoReferencia: i.pontoReferencia || '', telefone: i.telefone || '', celular: i.celular || '',
       observacao: i.observacao || '', itens: i.itens || [],
@@ -325,10 +335,14 @@ function lerInstalacao(b, itensVenda) {
     tecnicoConta: t(b.tecnicoConta).startsWith(PREFIXO_TECNICO) ? t(b.tecnicoConta) : '',
     tecnicoNome: t(b.tecnicoNome),
     receitaConta: t(b.receitaConta).startsWith(PREFIXO_RECEITA_SERVICO) ? t(b.receitaConta) : '',
+    servicoId: /^[0-9a-f]{24}$/i.test(t(b.servicoId)) ? t(b.servicoId) : '',
+    servicoDescricao: t(b.servicoDescricao).slice(0, 80),
+    maoDeObra: Math.max(0, Math.round(Number(b.maoDeObra) || 0)),
     diaPrevisto: dia,
     periodo: ['MANHA', 'TARDE', 'FIXO'].includes(b.periodo) ? b.periodo : 'NENHUM',
-    horaIni: /^\d{2}:\d{2}$/.test(t(b.horaIni)) ? t(b.horaIni) : '',
-    horaFim: /^\d{2}:\d{2}$/.test(t(b.horaFim)) ? t(b.horaFim) : '',
+    // 14/10/2026: horario so com dia marcado
+    horaIni: dia && /^\d{2}:\d{2}$/.test(t(b.horaIni)) ? t(b.horaIni) : '',
+    horaFim: dia && /^\d{2}:\d{2}$/.test(t(b.horaFim)) ? t(b.horaFim) : '',
     endereco: { logradouro: t(e.logradouro), numero: t(e.numero), complemento: t(e.complemento),
                 bairro: t(e.bairro), cidade: t(e.cidade), uf: t(e.uf).toUpperCase().slice(0, 2),
                 cep: t(e.cep).replace(/\D/g, '') },
@@ -885,6 +899,16 @@ router.post('/:id/fechar', async (req, res) => {
       if (instalar && !v.instalacao?.confirmada) {
         throw new Error('há produto marcado para instalar: preencha a instalação antes de fechar');
       }
+      // 14/10/2026: dia/hora da instalacao que ja passou nao vale (relogio do servidor)
+      if (instalar && v.instalacao.diaPrevisto) {
+        const d = new Date(v.instalacao.diaPrevisto), h = new Date();
+        const diaV = d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+        const hoje = h.getFullYear() * 10000 + (h.getMonth() + 1) * 100 + h.getDate();
+        if (diaV < hoje) throw new Error('o dia previsto da instalação já passou: escolha outro dia na instalação');
+        if (diaV === hoje && v.instalacao.horaIni && paraMin(v.instalacao.horaIni) < h.getHours() * 60 + h.getMinutes()) {
+          throw new Error('o horário da instalação (' + v.instalacao.horaIni + ') já passou: escolha outro na instalação');
+        }
+      }
       // agenda: o horario escolhido nao pode bater com outro cliente do mesmo tecnico
       if (instalar && v.instalacao.tecnicoConta && v.instalacao.diaPrevisto && v.instalacao.horaIni) {
         const d = new Date(v.instalacao.diaPrevisto);
@@ -951,6 +975,31 @@ router.post('/:id/fechar', async (req, res) => {
         prontos.push({ forma, valor, destino, parcelas });
       }
 
+      // ---- mao de obra da instalacao (VI): partilha pela ficha do tecnico ----
+      let partilha = null, numeroOS = null;
+      if (instalar) numeroOS = await proximoNumeroOS(loja, session);
+      const maoDeObra = instalar ? (v.totalServico || 0) : 0;
+      if (maoDeObra > 0) {
+        const ins = v.instalacao;
+        if (!ins.tecnicoConta) throw new Error('há mão de obra na instalação: escolha o técnico');
+        const tec = await col('_tecnicos').findOne({ lojistaId: loja, contaTecnico: ins.tecnicoConta }, { session });
+        if (!tec) throw new Error('técnico ' + ins.tecnicoConta + ' não está no cadastro de técnicos');
+        const sv = (tec.servicos || []).find(s => String(s.id) === String(ins.servicoId));
+        if (!sv) throw new Error('escolha o serviço do técnico na instalação (a partilha vem da ficha dele)');
+        const parteTecnico = sv.modo === 'FIXO' ? Math.round(sv.valor || 0) : Math.round(maoDeObra * (Number(sv.valor) || 0) / 100);
+        if (parteTecnico > maoDeObra) throw new Error('o valor fixo do técnico (' + (parteTecnico / 100).toFixed(2) + ') é maior que a mão de obra');
+        const contaTec = await subtitulo(loja, ins.tecnicoConta, session);
+        if (!contaTec) throw new Error('a conta do técnico ' + ins.tecnicoConta + ' não está no plano (ou está suspensa)');
+        const contaServ = await subtitulo(loja, CONTAS.RECEITA_SERVICO, session);
+        if (!contaServ) throw new Error('a conta ' + CONTAS.RECEITA_SERVICO + ' (receita de serviços) não está no plano');
+        partilha = { maoDeObra, parteTecnico, parteLoja: maoDeObra - parteTecnico, contaTec, contaServ,
+                     servico: { id: String(sv.id), descricao: sv.descricao, modo: sv.modo, valor: sv.valor },
+                     tecnicoNome: tec.apelido || tec.nome };
+        ins.servicoDescricao = sv.descricao;
+        ins.parteTecnico = partilha.parteTecnico;
+        ins.parteLoja = partilha.parteLoja;
+      }
+
       const receitaCod = v.documento === 'NFE' && v.condicao === 'PRAZO' ? CONTAS.RECEITA_PRAZO : CONTAS.RECEITA_VISTA;
       const receita = await subtitulo(loja, receitaCod, session);
       if (!receita) throw new Error('a conta de receita ' + receitaCod + ' não está no plano');
@@ -961,13 +1010,22 @@ router.post('/:id/fechar', async (req, res) => {
         historico, valor: valorC / 100, cliente: v.cliente?.id || null,
       });
 
-      // NFE: a venda uma vez so — cliente (debito) x receita (credito), pelo total
+      // NFE: a venda uma vez so — cliente (debito) x receita (credito), pelo total.
+      // Com mao de obra: receita dos produtos + parte do tecnico (2.06.001) + parte da loja (4.05.001.001)
       if (v.documento === 'NFE') {
+        const contras = [];
+        const produtos = total - maoDeObra;
+        if (produtos > 0) contras.push(contra(receita, produtos, 'Venda ' + v.numero + ' · NF · ' + nomeCli));
+        if (partilha) {
+          const h = 'OS nº ' + numeroOS + ' / ' + partilha.tecnicoNome + ' · ' + partilha.servico.descricao + ' · venda ' + v.numero;
+          if (partilha.parteTecnico > 0) contras.push(contra(partilha.contaTec, partilha.parteTecnico, h));
+          if (partilha.parteLoja > 0) contras.push(contra(partilha.contaServ, partilha.parteLoja, h));
+        }
         const [bv] = await Boleta.create([{
           codigo: codigoBoleta(), tipo: 'RECEBIMENTO', data: dataBoleta,
           bancoSubTitulo: contaCliente._id, bancoCodigo: contaCliente.codigo, bancoNome: contaCliente.nome,
           valorTotal: total / 100,
-          contrapartidas: [contra(receita, total, 'Venda ' + v.numero + ' · NF · ' + nomeCli)],
+          contrapartidas: contras,
           historico: 'Venda ' + v.numero + ' · ' + nomeCli, origem: 'VENDA', status: 'ATIVO', lojistaId: loja,
         }], { session });
         v.contabil = { contaCliente: contaCliente.codigo, contaReceita: receita.codigo, boletaId: bv._id, diaBalcao: null };
@@ -1047,11 +1105,12 @@ router.post('/:id/fechar', async (req, res) => {
 
       // OS de instalacao: nasce aqui, numerada por empresa
       if (instalar) {
-        const numeroOS = await proximoNumeroOS(loja, session);
         const { confirmada, ...dadosOS } = v.instalacao.toObject ? v.instalacao.toObject() : v.instalacao;
         const r = await col('_ordens_servico').insertOne({
           lojistaId: loja, numero: numeroOS, tipo: 'VI', status: 'P', data: agora,
           venda: { id: v._id, numero: v.numero },
+          // mao de obra ja cobrada e lancada na venda (fluxo normal): a OS so mostra
+          valorServico: maoDeObra, servicoContabilizado: maoDeObra > 0,
           cliente: { id: v.cliente.id, codigo: v.cliente.codigo, tipo: v.cliente.tipo, nome: v.cliente.nome,
                      documento: v.cliente.documento, ncontabil: v.cliente.ncontabil },
           ...dadosOS,
@@ -1240,3 +1299,5 @@ router.put('/:id', async (req, res) => {
 });
 
 module.exports = router;
+// usada pela OS (os-api.js) para conferir o horario do tecnico ao (re)agendar
+module.exports.agendaDoTecnico = agendaDoTecnico;

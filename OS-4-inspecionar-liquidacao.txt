@@ -1,0 +1,136 @@
+﻿Tipos entre as liquidadas: C 9168 · VI 4396 · G 66
+Banco: admin · Access: C:\Armação\Dados\2026B\2026B.mdb
+
+==========================================================================================
+OS 13753 · tipo C · status L · 2026-09-21 · cupom 0 · Rozalia Helmer Pittol (1.04.002.746)
+  técnico 2 2.06.001.003 · previsto 2026-09-16 · liquidação 2026-09-21 · Chave_Close 7652
+  Control   data=2026-09-21 | NrCupom=0 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=1 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=1
+  Receita   Dta=2026-09-21 | Tipo=O | ValorCobrado=200.0000
+  Produção  NmTécnico=Robson | DataConclusão=2026-09-21 | M=9 | VrPrinc=200.0000 | Assist1=· | VrHum=0.0000 | Assist2=· | VrDois=0.0000 | Excesso=0.0000 | Retorno=0 | TipoOrdem=C
+  Consig    QteConsig=1 | QteDevolv=0 | CodMaterial=5954 | DescrMaterial=fluxostato KO 15-16-20-21D.DI PRIME | PreçoCusto=136.9800 | PreçoVenda=470.5000 | Tipo=· | Realizado=7652
+    liquidação chave 7652 · ACC-7652 · RECEBIMENTO · 2026-09-21 · VendConsig Nº 1118
+       perna  1.04.002.746   Rozalia Helmer Pittol                470,00
+       contra 4.02.001.001   Venda a Prazo                        470,00  Venda/Consig OS: 13753
+       contra 1.04.002.746   Rozalia Helmer Pittol               -200,00  OS:13753/Robson
+       contra 4.03.002.003   Robson                               200,00  C->OS:13753/Robson
+       contra 1.02.001.001   Estoque                              136,98  Saída/Cupom Nº 7652
+       contra 3.05.001.001   Custo Mercadoria Vendida            -136,98  CPV da Cupom Nº 7652
+
+==========================================================================================
+OS 13749 · tipo C · status L · 2026-09-18 · cupom 0 · Marina Bechara Moraes (1.03.013.944)
+  técnico 2 2.06.001.003 · previsto 2026-09-16 · liquidação 2026-09-18 · Chave_Close 7623
+  Control   data=2026-09-18 | NrCupom=0 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=0
+  Receita   Dta=2026-09-18 | Tipo=X | ValorCobrado=0.5500
+  Receita   Dta=2026-09-18 | Tipo=O | ValorCobrado=250.0000
+  MObraCli  DataEmissão=2013-04-22 | Tipo=Nr | ValorMObraCliente=400.0000
+  Produção  NmTécnico=Robson | DataConclusão=2026-09-18 | M=9 | VrPrinc=250.0000 | Assist1=· | VrHum=0.0000 | Assist2=· | VrDois=0.0000 | Excesso=0.0000 | Retorno=0 | TipoOrdem=C
+  DevolVend Data=2013-04-22 | NrCupom=641 | CodProdutoVend=389 | QteDevolv=34 | PreçoCustProd=4.1800 | PreçoProd=6.0000 | Realizado=6159
+    liquidação chave 7623 · ACC-7623 · RECEBIMENTO · 2026-09-18 · OS:13749/Robson
+       perna  1.03.013.944   Marina Bechara Moraes                250,00
+       contra 4.03.002.003   Robson                               250,00  C->OS:13749/Robson
+
+==========================================================================================
+OS 13743 · tipo C · status L · 2026-09-15 · cupom 0 · Lílian Claudia Martins Nogueira Soares (1.03.010.235)
+  técnico 2 2.06.001.003 · previsto 2026-09-16 · liquidação 2026-09-15 · Chave_Close 7526
+  Control   data=2026-09-16 | NrCupom=0 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=0
+  Receita   Dta=2026-09-16 | Tipo=X | ValorCobrado=0.5500
+  Receita   Dta=2026-09-15 | Tipo=O | ValorCobrado=1.0000
+  Produção  NmTécnico=Robson | DataConclusão=2026-09-16 | M=9 | VrPrinc=1.0000 | Assist1=· | VrHum=0.0000 | Assist2=· | VrDois=0.0000 | Excesso=0.0000 | Retorno=0 | TipoOrdem=C
+  FluxoServ Data=2026-09-16 | Chave=7526 | NrCta=1.03.010.235 | Pos=5 | NrTítulo=OC:13743/0- D | Hist=Lílian Claudia Martins Nogueira Soares | Vect=2026-09-18 | Deb=1.0000 | Tipo=C | Origem=C
+    liquidação chave 7526 · ACC-7526 · RECEBIMENTO · 2026-09-16 · OS:13743/Robson
+       perna  1.03.010.235   Lílian Claudia Martins Nogueir         1,00
+       contra 4.03.002.003   Robson                                 1,00  C->OS:13743/Robson
+    fluxo serv. chave 7526 · ACC-7526 · RECEBIMENTO · 2026-09-16 · OS:13743/Robson
+       perna  1.03.010.235   Lílian Claudia Martins Nogueir         1,00
+       contra 4.03.002.003   Robson                                 1,00  C->OS:13743/Robson
+
+==========================================================================================
+OS 13742 · tipo C · status L · 2026-09-15 · cupom 0 · Lucas Casali Pimenta (1.03.015.771)
+  técnico 2 2.06.001.003 · previsto 2026-09-18 · liquidação 2026-09-18 · Chave_Close 7595
+  Control   data=2026-09-15 | NrCupom=0 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=0
+  Receita   Dta=2026-09-15 | Tipo=X | ValorCobrado=0.5500
+  Receita   Dta=2026-09-15 | Tipo=O | ValorCobrado=200.0000
+  MObraCli  DataEmissão=2013-04-02 | Tipo=Nr | ValorMObraCliente=200.0000
+  Produção  NmTécnico=Robson | DataConclusão=2026-09-18 | M=9 | VrPrinc=200.0000 | Assist1=· | VrHum=0.0000 | Assist2=· | VrDois=0.0000 | Excesso=0.0000 | Retorno=0 | TipoOrdem=C
+    liquidação chave 7595 · ACC-7595 · RECEBIMENTO · 2026-09-18 · OS:13742/Robson
+       perna  1.03.015.771   Lucas Casali Pimenta                 200,00
+       contra 4.03.002.003   Robson                               200,00  C->OS:13742/Robson
+
+==========================================================================================
+OS 13748 · tipo VI · status L · 2026-09-17 · cupom 1109 · Inri João Mandadori Junior (1.03.017.715)
+  técnico 19 2.06.001.013 · previsto 2026-09-17 · liquidação 2026-09-17 · Chave_Close 7567
+  Control   data=2026-09-17 | NrCupom=1109 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=300.0000 | ValorShut=480.0000 | TipoOS=1
+  MObraCli  DataEmissão=2013-04-04 | Tipo=Nr | ValorMObraCliente=100.0000
+  MObraCli  DataEmissão=2026-09-17 | Tipo=Nr | ValorMObraCliente=300.0000
+  Produção  NmTécnico=Flavio | DataConclusão=2026-09-17 | M=9 | VrPrinc=300.0000 | Assist1=· | VrHum=0.0000 | Assist2=· | VrDois=0.0000 | Excesso=0.0000 | Retorno=0 | TipoOrdem=VI
+    liquidação chave 7567 · ACC-7567 · RECEBIMENTO · 2026-09-17 · OS:13748/Inri João Mandadori Junior
+       perna  2.06.001.013   Flávio N. Bispo                      300,00
+       contra 4.03.002.013   Flávio_                              300,00  [observação] I->OS:13748/Inri João Manda
+
+==========================================================================================
+OS 13747 · tipo VI · status L · 2026-09-17 · cupom 1106 · Marco Antonio T. Loureiro (1.03.017.710)
+  técnico 18 2.06.001.015 · previsto 2026-09-18 · liquidação 2026-09-18 · Chave_Close 7640
+  Control   data=2026-09-17 | NrCupom=1106 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=200.0000 | ValorShut=3046.0000 | TipoOS=1
+  MObraCli  DataEmissão=2026-09-18 | Tipo=Nr | ValorMObraCliente=200.0000
+  Produção  NmTécnico=Maxsuel | DataConclusão=2026-09-18 | M=9 | VrPrinc=200.0000 | Assist1=· | VrHum=0.0000 | Assist2=· | VrDois=0.0000 | Excesso=0.0000 | Retorno=0 | TipoOrdem=VI
+    liquidação chave 7640 · ACC-7640 · RECEBIMENTO · 2026-09-18 · OS:13747/Marco Antonio T. Loureiro
+       perna  2.06.001.015   Maxsuel                              200,00
+       contra 4.03.002.015   Maxsuel                              200,00  I->OS:13747/Marco Antonio T. Loureiro
+
+==========================================================================================
+OS 13746 · tipo VI · status L · 2026-09-16 · cupom 1104 · Piort Jan Stasiewicz (1.03.017.765)
+  técnico 12 2.06.001.008 · previsto 2026-09-17 · liquidação 2026-09-17 · Chave_Close 7576
+  Control   data=2026-09-16 | NrCupom=1104 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=350.0000 | ValorShut=3150.0000 | TipoOS=1
+  MObraCli  DataEmissão=2026-09-18 | Tipo=Nr | ValorMObraCliente=350.0000
+  Produção  NmTécnico=José | DataConclusão=2026-09-18 | M=9 | VrPrinc=350.0000 | Assist1=· | VrHum=0.0000 | Assist2=· | VrDois=0.0000 | Excesso=0.0000 | Retorno=0 | TipoOrdem=VI
+    liquidação chave 7576 · ACC-7576 · RECEBIMENTO · 2026-09-18 · OS:13746/Piort Jan Stasiewicz
+       perna  2.06.001.008   José                                 350,00
+       contra 4.03.002.008   José                                 350,00  I->OS:13746/Piort Jan Stasiewicz
+
+==========================================================================================
+OS 13740 · tipo VI · status L · 2026-09-15 · cupom 1093 · Jose James Mendes Pessoa (1.03.017.761)
+  técnico 2 2.06.001.003 · previsto 2026-09-15 · liquidação 2026-09-15 · Chave_Close 7523
+  Control   data=2026-09-15 | NrCupom=1093 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=450.0000 | ValorShut=6135.0000 | TipoOS=1
+  MObraCli  DataEmissão=2026-09-16 | Tipo=Nr | ValorMObraCliente=450.0000
+  Produção  NmTécnico=Robson | DataConclusão=2026-09-16 | M=9 | VrPrinc=450.0000 | Assist1=· | VrHum=0.0000 | Assist2=· | VrDois=0.0000 | Excesso=0.0000 | Retorno=0 | TipoOrdem=VI
+    liquidação chave 7523 · ACC-7523 · RECEBIMENTO · 2026-09-16 · OS:13740/Jose James Mendes Pessoa
+       perna  2.06.001.003   Robson                               450,00
+       contra 4.03.002.003   Robson                               450,00  I->OS:13740/Jose James Mendes Pessoa
+
+==========================================================================================
+OS 9114 · tipo G · status L · 2023-08-21 · cupom 9647 · Joana de Figueiredo Bortolini (1.03.015.986)
+  técnico 18 2.06.001.015 · previsto 2023-09-22 · liquidação 2023-09-22 · Chave_Close 7880
+  Control   data=2023-09-22 | NrCupom=9647 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=0
+  Receita   Dta=2023-08-22 | Tipo=X | ValorCobrado=0.5500
+  MObraCli  DataEmissão=2023-09-22 | Tipo=· | ValorMObraCliente=1.4000
+    liquidação chave 7880: (sem boleta na plataforma)
+
+==========================================================================================
+OS 8927 · tipo G · status L · 2023-07-13 · cupom 9919 · Fabricio Otavio Gaburro Teixeira_ (1.03.016.067)
+  técnico 2 2.06.001.003 · previsto 2023-07-25 · liquidação 2023-07-25 · Chave_Close 5985
+  Control   data=2023-07-14 | NrCupom=9919 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=0
+  Receita   Dta=2023-07-13 | Tipo=X | ValorCobrado=0.5500
+  MObraCli  DataEmissão=2023-07-25 | Tipo=· | ValorMObraCliente=1.4000
+    liquidação chave 5985 · ACC-5985 · PAGAMENTO · 2026-07-24 · Carlos - obra Jorge
+       perna  1.01.002.003   CEF/Armação                        5.000,00
+       contra 2.03.001.024   Construção casa Jorge M.Obra       5.000,00  SD Reformas Carlos - obra Jorge
+
+==========================================================================================
+OS 8699 · tipo G · status L · 2023-06-05 · cupom 9758 · Leonardo de V. Sobrinho Guedes (1.03.016.001)
+  técnico 2 2.06.001.003 · previsto 2023-06-06 · liquidação 2023-06-07 · Chave_Close 4389
+  Control   data=2023-06-07 | NrCupom=9758 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=0
+  Receita   Dta=2023-06-05 | Tipo=X | ValorCobrado=0.5500
+  MObraCli  DataEmissão=2023-06-07 | Tipo=· | ValorMObraCliente=1.5000
+    liquidação chave 4389 · ACC-4389 · RECEBIMENTO · 2026-06-09 · venda balcao
+       perna  1.01.002.001   BB/Armação                           195,00
+       contra 1.01.001.001   Caixa                                195,00  venda balcao
+
+==========================================================================================
+OS 8666 · tipo G · status L · 2023-05-29 · cupom 9462 · Jaqueline Ventura Merlo (1.03.015.936)
+  técnico 17 2.06.001.014 · previsto 2023-05-30 · liquidação 2023-05-30 · Chave_Close 4174
+  Control   data=2023-05-30 | NrCupom=9462 | MatVend=0 | MatConsig=0 | MatGarantia=0 | MatAvulso=0 | MatPeças=0 | Fluxo=0 | MObra=0 | Tipo=F | VrMObra=0.0000 | ValorShut=0.0000 | TipoOS=0
+  Receita   Dta=2023-05-29 | Tipo=X | ValorCobrado=0.5500
+  MObraCli  DataEmissão=2023-05-30 | Tipo=· | ValorMObraCliente=1.4000
+    liquidação chave 4174 · ACC-4174 · PAGAMENTO · 2026-06-01 · Cristiane - uber
+       perna  1.01.002.002   Banestes/Armação                      19,70
+       contra 3.10.001.001   diversos                              19,70  Cristiane - uber

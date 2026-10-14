@@ -43,6 +43,13 @@
   Fechar (pagamento, estoque, fluxo) vem na Parte 2.
 
   O JS fica em /js/vendas/venda.js  (caminho completo, sempre)
+  Alterado em: 13/10/2026 - monitor pequeno: menu lateral mais estreito, busca de cliente com o nome
+               ocupando o espaco (cidade some abaixo de 1320 px), colunas mais justas.
+  Alterado em: 13/10/2026 - instalacao: servico (da ficha do tecnico) + mao de obra cobrada do cliente,
+               com a partilha tecnico/loja na tela; a mao de obra entra no total (Instalação).
+  Alterado em: 14/10/2026 - agenda: horario de hoje que ja passou fica cinza ("passou"); sem o botao
+               Andamento: aviso "Venda em andamento" ao sair sem gravar (sai-caixa).
+  Alterado em: 14/10/2026 - agenda do tecnico SEMPRE na lateral direita (com tecnico/dia no titulo e legenda).
 --}}
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -94,11 +101,11 @@
     .lista .op:nth-child(even) { background:#f3f4f6; }
     .lista .op:hover, .lista .op.sel { background:#ede9fe; }
     .lista .op .s { font-size:12px; color:var(--cinza); }
-    #lista-clientes .op[data-k] { display:grid; grid-template-columns:76px minmax(0,1fr) 160px 110px 190px;
+    #lista-clientes .op[data-k] { display:grid; grid-template-columns:70px minmax(0,2.6fr) minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);
                                   gap:12px; align-items:baseline; }
     #lista-clientes .op[data-k] > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     /* 10/10/2026: busca de produto em colunas, com cabecalho */
-    #lista-produtos .op[data-k], #lista-produtos .op.cab { display:grid; grid-template-columns:64px minmax(0,1fr) 150px 70px 110px;
+    #lista-produtos .op[data-k], #lista-produtos .op.cab { display:grid; grid-template-columns:64px minmax(0,1fr) minmax(0,150px) 70px 110px;
                                   gap:12px; align-items:baseline; }
     #lista-produtos .op .n { text-align:right; font-variant-numeric:tabular-nums; }
     #lista-produtos .op .tec-l { display:block; }
@@ -175,6 +182,10 @@
     .ins-grade { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:8px 12px; margin:10px 0; }
     .ins-grade label { display:flex; flex-direction:column; gap:3px; }
     .ins-grade label.l2 { grid-column:span 2; } .ins-grade label.l4 { grid-column:span 4; }
+    .ins-grade input.num { text-align:right; }
+    .ins-partilha { grid-column:span 3; align-self:end; padding:8px 12px; border-radius:8px; background:#f5f3ff; color:#4c1d95;
+                    font-size:13px; font-weight:600; min-height:36px; }
+    .ins-partilha.aviso { background:#fef2f2; color:var(--vermelho); }
     .ins-grade label > span { font-size:10px; font-weight:700; text-transform:uppercase; color:#374151; }
     .ins-grade input, .ins-grade select { height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:14px; }
     .ins-grade input:not(:placeholder-shown), .ins-grade select.ok { background:#fef9c3; }
@@ -191,6 +202,8 @@
     .ins-agenda { border:1px solid var(--borda); border-radius:8px; position:sticky; top:56px; overflow:hidden; }
     .ag-tit { background:#92400e; color:#fff; font-size:12px; font-weight:700; text-transform:uppercase; padding:7px 10px; }
     .ag-vazio { padding:16px 10px; color:var(--cinza); font-size:13px; text-align:center; }
+    .ag-tit small { display:block; font-weight:400; font-size:11px; text-transform:none; color:#fde68a; margin-top:2px; }
+    .ag-tit b.oc { color:#fca5a5; } .ag-tit b.es { color:#86efac; }
     .ag-lin { display:grid; grid-template-columns:52px minmax(0,1fr); border-top:1px solid #f3f4f6; font-size:13px; }
     .ag-lin .h { padding:4px 8px; font-weight:700; font-variant-numeric:tabular-nums; border-right:1px solid var(--borda); }
     .ag-lin .c { padding:4px 8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -198,6 +211,7 @@
     .ag-lin.ocupado { background:#fef2f2; color:var(--vermelho); cursor:not-allowed; }
     .ag-lin.ocupado .c { font-weight:600; }
     .ag-lin.escolhido { background:#dcfce7; color:#065f46; font-weight:700; }
+    .ag-lin.passado { background:#f9fafb; color:#9ca3af; cursor:not-allowed; }
     .ag-sem { padding:6px 10px; font-size:12px; color:#92400e; background:#fffbeb; border-top:1px solid #fde68a; }
     .ag-dica { padding:6px 10px; font-size:11px; color:var(--cinza); border-top:1px solid var(--borda); }
     .nc-fundo { position:fixed; inset:0; background:rgba(15,23,42,.35); z-index:60; }
@@ -307,6 +321,18 @@
     #fe-recebido { height:36px; width:180px; border:1px solid #eab308; background:#fef9c3; border-radius:8px;
                    padding:0 10px; font-size:16px; font-weight:700; text-align:right; }
     .ok-botoes button:focus { outline:2px solid var(--roxo-claro); outline-offset:1px; }
+    /* 13/10/2026: monitor pequeno (46 cm, ~1100 px de largura util) */
+    @media (max-width: 1320px) {
+      body { padding:16px 16px 110px; }
+      .pagina { grid-template-columns:150px minmax(0,1fr); gap:14px; }
+      .menu-lado button { padding-left:10px; padding-right:10px; }
+      #lista-clientes .op[data-k] { grid-template-columns:62px minmax(0,2.4fr) minmax(0,1.2fr) minmax(0,1fr); gap:8px; }
+      #lista-clientes .op[data-k] > span:nth-child(5) { display:none; }   /* cidade sai: o nome precisa do espaco */
+      #lista-produtos .op[data-k], #lista-produtos .op.cab { grid-template-columns:56px minmax(0,1fr) minmax(0,110px) 56px 96px; gap:8px; }
+      td input { width:68px; } td input.unit { width:86px; }
+      th, td { padding-left:6px; padding-right:6px; }
+      .prod-linha select { min-width:170px; }
+    }
   </style>
 </head>
 <body data-venda-id="{{vendaId}}">
@@ -393,6 +419,7 @@
       <div class="t"><span>Bruto</span><b id="t-bruto">0,00</b></div>
       <div class="t"><span>Desc. itens</span><b id="t-desc-itens">0,00</b></div>
       <div class="t"><span>Desc. geral</span><input id="desc-geral" inputmode="decimal" placeholder="0,00"></div>
+      <div class="t" id="t-inst-l" hidden><span>Instalação</span><b id="t-inst">0,00</b></div>
       <div class="t"><span>Líquido</span><b class="liq" id="t-liquido">0,00</b></div>
     </div>
 
@@ -418,7 +445,7 @@
     <div class="botoes">
       <button class="btn-inst" id="instalacao" type="button" hidden>🔧 Instalação</button>
       <button class="btn-fechar" id="fechar" type="button">Fechar venda</button>
-      <button class="btn-principal" id="gravar" type="button" title="grava a venda aberta, em andamento">Andamento</button>
+      <button class="btn-principal" id="gravar" type="button" hidden>Gravar</button>
     </div>
   </div>
 
@@ -444,6 +471,19 @@
     <div class="ok-botoes">
       <button type="button" class="prim" id="fe-confirmar">Confirmar fechamento</button>
       <button type="button" id="fe-cancelar">Voltar</button>
+    </div>
+  </div>
+
+  <!-- 14/10/2026: sair com alteracao nao gravada -->
+  <div class="ok-fundo" id="sai-fundo" hidden style="z-index:70"></div>
+  <div class="ok-caixa" id="sai-caixa" hidden role="dialog" aria-labelledby="sai-titulo" style="z-index:71; width:min(520px, calc(100vw - 32px))">
+    <h3 id="sai-titulo" style="color:#92400e">Venda em andamento</h3>
+    <div class="ok-det" id="sai-det"></div>
+    <div class="ok-obs">Há alterações que ainda não foram gravadas. O que fazer antes de sair?</div>
+    <div class="ok-botoes">
+      <button type="button" class="prim" id="sai-gravar">Gravar e sair</button>
+      <button type="button" id="sai-sair">Sair sem gravar</button>
+      <button type="button" id="sai-ficar">Continuar aqui</button>
     </div>
   </div>
 
@@ -518,6 +558,9 @@
     <div class="ins-corpo"><div class="ins-form">
     <div class="ins-grade">
       <label class="l2"><span>Técnico</span><select id="ins-tecnico"></select></label>
+      <label class="l2"><span>Serviço (da ficha do técnico)</span><select id="ins-servico"></select></label>
+      <label><span>Mão de obra (cliente)</span><input id="ins-mo" class="num" inputmode="decimal" placeholder="0,00" autocomplete="off"></label>
+      <div class="ins-partilha" id="ins-partilha"></div>
       <label class="l2"><span>Dia previsto</span><input type="date" id="ins-dia" placeholder=" "></label>
       <label><span>Das</span><input type="time" id="ins-ini" placeholder=" "></label>
       <label><span>Até</span><input type="time" id="ins-fim" placeholder=" "></label>
@@ -542,8 +585,8 @@
       <tbody id="ins-itens"></tbody></table>
     <div class="ins-grade"><label class="l4"><span>Observação geral</span><input id="ins-obs" placeholder=" " autocomplete="off"></label></div>
     </div>
-    <aside class="ins-agenda" id="ins-agenda" hidden>
-      <div class="ag-tit">Agenda do técnico</div>
+    <aside class="ins-agenda" id="ins-agenda">
+      <div class="ag-tit" id="ag-tit">Agenda do técnico</div>
       <div id="ag-corpo"><div class="ag-vazio">Escolha o técnico e o dia.</div></div>
     </aside>
     </div>

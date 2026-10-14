@@ -3,9 +3,10 @@
   Criado em: 13/10/2026
 
   SERVICO > TECNICOS: cadastro dos tecnicos terceirizados (MEI).
-  Lista a esquerda (ativos primeiro), ficha a direita. Tecnico NOVO ganha as duas contas
-  (2.06.001.NNN e 4.03.002.NNN, mesmo final). Nada e apagado: Inativar / Reativar.
-  Pagamento padrao: % sobre a mao de obra da OS VI e da OS C, valor fixo por OS G.
+  Lista a esquerda (ativos primeiro), ficha a direita. Tecnico NOVO ganha a conta
+  2.06.001.NNN (a receita da loja e uma so: 4.05.001.001). Nada e apagado: Inativar / Reativar.
+  Servicos do tecnico: descricao + repasse (% do tecnico sobre a mao de obra, ou valor fixo).
+  Alterado em: 13/10/2026 - "pagamento padrao" virou a tabela de servicos.
   O JS fica em /js/vendas/tecnicos.js   API: /vendas/api/tecnicos
 --}}
 <!DOCTYPE html>
@@ -54,6 +55,14 @@
     label textarea { resize:vertical; min-height:56px; }
     .num { text-align:right; }
     .dica { font-size:12px; color:var(--cinza); margin-top:4px; }
+    .servs { width:100%; border-collapse:collapse; margin-bottom:6px; }
+    .servs th { text-align:left; font-size:11px; text-transform:uppercase; color:#374151; background:#f3f4f6; padding:6px 8px; }
+    .servs th.num { text-align:right; }
+    .servs td { padding:4px 8px 4px 0; }
+    .servs input, .servs select { font:inherit; font-size:14px; width:100%; padding:6px 8px; border:1px solid #d1d5db; border-radius:8px; background:#fff; }
+    .servs input:placeholder-shown { background:#fffbeb; }
+    .servs .x { border:0; background:none; color:var(--vermelho); font-size:18px; cursor:pointer; }
+    .btn.mini { padding:4px 12px; font-size:13px; }
     .rod { display:flex; align-items:center; gap:10px; margin-top:18px; }
     .rod .msg { flex:1; font-weight:600; color:var(--vermelho); }
     .rod .msg.ok { color:var(--verde); }
@@ -112,13 +121,13 @@
         <label>CEP<input id="cep" placeholder=" " inputmode="numeric" maxlength="9"></label>
       </div>
 
-      <div class="sec">Pagamento padrão</div>
-      <div class="g g4">
-        <label>% sobre VI (venda/instalação)<input id="percVI" class="num" placeholder=" " inputmode="decimal"></label>
-        <label>% sobre C (conserto)<input id="percC" class="num" placeholder=" " inputmode="decimal"></label>
-        <label>Valor fixo por G (garantia)<input id="valorG" class="num" placeholder=" " inputmode="decimal"></label>
-      </div>
-      <div class="dica">O % incide sobre a mão de obra da OS. No recebimento da OS dá para trocar a forma (ex.: valor total para o técnico).</div>
+      <div class="sec">Serviços e repasse ao técnico</div>
+      <table class="servs">
+        <thead><tr><th>Serviço</th><th style="width:150px">Repasse</th><th style="width:140px" class="num">Valor</th><th style="width:40px"></th></tr></thead>
+        <tbody id="servs"></tbody>
+      </table>
+      <button type="button" class="btn mini" id="serv-mais">+ serviço</button>
+      <div class="dica">% = parte do TÉCNICO sobre a mão de obra (ex.: 80% de 200,00 → técnico 160,00, loja 40,00). Valor fixo = quanto o técnico recebe por serviço. A divisão sai daqui na venda e na OS.</div>
 
       <div class="sec">Para pagar o técnico</div>
       <div class="g g4">

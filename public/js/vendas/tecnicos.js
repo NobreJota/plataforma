@@ -1,9 +1,10 @@
 // =============================================================================
 // Destino: C:\plataformaRota\public\js\vendas\tecnicos.js
 // Criado em: 13/10/2026
+// Alterado em: 13/10/2026 - tabela de SERVICOS do tecnico (descricao + % do tecnico ou valor fixo)
 //
 // SERVICO > TECNICOS (views\vendas\pages\tecnicos.handlebars)
-// Lista + ficha. Novo cria as contas 2.06.001.NNN / 4.03.002.NNN (no servidor).
+// Lista + ficha. Novo cria a conta 2.06.001.NNN (no servidor). Receita da loja: 4.05.001.001.
 // Enter anda de campo em campo; no ultimo, vai ao Gravar.
 // Dinheiro em centavos na API; % com ate 2 casas.
 // =============================================================================
@@ -56,28 +57,51 @@
   }
 
   const CAMPOS = ['nome', 'apelido', 'nascimento', 'cpf', 'rg', 'cnpj', 'razao', 'im', 'telefone', 'celular', 'whatsapp', 'email',
-                  'logradouro', 'enum', 'complemento', 'bairro', 'cidade', 'uf', 'cep', 'percVI', 'percC', 'valorG',
+                  'logradouro', 'enum', 'complemento', 'bairro', 'cidade', 'uf', 'cep',
                   'pixTipo', 'pixChave', 'banco', 'agencia', 'conta', 'observacao'];
 
   function abrir(t) {
     atual = t || null;
-    const x = t || {}, e = x.endereco || {}, mei = x.mei || {}, pg = x.pagamento || {}, pix = x.pix || {}, bc = x.banco || {};
+    const x = t || {}, e = x.endereco || {}, mei = x.mei || {}, pix = x.pix || {}, bc = x.banco || {};
     const v = { nome: x.nome, apelido: x.apelido, nascimento: x.nascimento, cpf: fmtCpf(x.cpf), rg: x.rg,
       cnpj: fmtCnpj(mei.cnpj), razao: mei.razaoSocial, im: mei.inscricaoMunicipal,
       telefone: x.telefone, celular: x.celular, whatsapp: x.whatsapp, email: x.email,
       logradouro: e.logradouro, enum: e.numero, complemento: e.complemento, bairro: e.bairro, cidade: e.cidade, uf: e.uf, cep: fmtCep(e.cep),
-      percVI: pct(pg.percVI), percC: pct(pg.percC), valorG: pg.valorG ? brl(pg.valorG) : '',
       pixTipo: pix.tipo, pixChave: pix.chave, banco: bc.banco, agencia: bc.agencia, conta: bc.conta, observacao: x.observacao };
     CAMPOS.forEach(id => { $(id).value = v[id] || ''; });
+    $('servs').innerHTML = '';
+    const lista = x.servicos && x.servicos.length ? x.servicos
+      : (t ? [] : [{ descricao: 'Instalação (VI)', modo: 'PERC' }, { descricao: 'Conserto (C)', modo: 'PERC' }, { descricao: 'Garantia (G)', modo: 'FIXO' }]);
+    lista.forEach(linhaServico);
     $('f-tit').textContent = t ? (t.apelido || t.nome) + (t.ativo === false ? ' (inativo)' : '') : 'Novo técnico';
-    $('f-contas').textContent = t ? [t.contaTecnico, t.contaReceita].filter(Boolean).join(' · ')
-                                  : 'as contas 2.06.001 e 4.03.002 são criadas ao gravar';
+    $('f-contas').textContent = t ? (t.contaTecnico || 'sem conta') : 'a conta 2.06.001 é criada ao gravar';
     $('ativar').hidden = !t;
     $('ativar').textContent = t && t.ativo === false ? 'Reativar' : 'Inativar';
     $('ativar').className = 'btn ' + (t && t.ativo === false ? 'verde' : 'vermelho');
     msg('');
     desenharLista();
     $('nome').focus();
+  }
+
+  // ---- servicos do tecnico (descricao + repasse) ----
+  function linhaServico(sv) {
+    const tr = document.createElement('tr');
+    const modo = sv.modo === 'FIXO' ? 'FIXO' : 'PERC';
+    const val = sv.valor ? (modo === 'PERC' ? pct(sv.valor) : brl(sv.valor)) : '';
+    tr.dataset.id = sv.id || '';
+    tr.innerHTML = '<td><input class="s-desc" placeholder="ex.: Instalação aquecedor" maxlength="80" value="' + esc(sv.descricao || '') + '"></td>'
+      + '<td><select class="s-modo"><option value="PERC"' + (modo === 'PERC' ? ' selected' : '') + '>% do técnico</option>'
+      + '<option value="FIXO"' + (modo === 'FIXO' ? ' selected' : '') + '>valor fixo</option></select></td>'
+      + '<td><input class="s-valor num" inputmode="decimal" placeholder="' + (modo === 'PERC' ? '% do técnico' : 'R$ ao técnico') + '" value="' + esc(val) + '"></td>'
+      + '<td><button type="button" class="x" title="tirar este serviço">×</button></td>';
+    $('servs').appendChild(tr);
+  }
+  function lerServicos() {
+    return [...$('servs').querySelectorAll('tr')].map(tr => {
+      const modo = tr.querySelector('.s-modo').value, v = tr.querySelector('.s-valor').value;
+      return { id: tr.dataset.id || undefined, descricao: tr.querySelector('.s-desc').value.trim(), modo,
+               valor: modo === 'PERC' ? v : lerBrl(v) };
+    }).filter(x => x.descricao);
   }
 
   function corpo() {
@@ -87,7 +111,7 @@
       telefone: $('telefone').value, celular: $('celular').value, whatsapp: $('whatsapp').value, email: $('email').value,
       endereco: { logradouro: $('logradouro').value, numero: $('enum').value, complemento: $('complemento').value,
                   bairro: $('bairro').value, cidade: $('cidade').value, uf: $('uf').value, cep: $('cep').value },
-      pagamento: { percVI: $('percVI').value, percC: $('percC').value, valorG: lerBrl($('valorG').value) },
+      servicos: lerServicos(),
       pix: { tipo: $('pixTipo').value, chave: $('pixChave').value },
       banco: { banco: $('banco').value, agencia: $('agencia').value, conta: $('conta').value },
       observacao: $('observacao').value,
@@ -96,17 +120,21 @@
 
   async function gravar() {
     if (!$('nome').value.trim()) { msg('Informe o nome do técnico.'); $('nome').focus(); return; }
-    for (const id of ['percVI', 'percC']) {
-      const n = Number($(id).value.replace(',', '.') || 0);
-      if (!Number.isFinite(n) || n < 0 || n > 100) { msg('Percentual entre 0 e 100.'); $(id).focus(); return; }
+    for (const tr of $('servs').querySelectorAll('tr')) {
+      const desc = tr.querySelector('.s-desc').value.trim();
+      if (!desc) continue;
+      if (tr.querySelector('.s-modo').value === 'PERC') {
+        const n = Number(tr.querySelector('.s-valor').value.replace(',', '.') || 0);
+        if (!Number.isFinite(n) || n < 0 || n > 100) { msg('Percentual entre 0 e 100 (' + desc + ').'); tr.querySelector('.s-valor').focus(); return; }
+      }
     }
-    if (!atual && !confirm('Cadastrar ' + $('nome').value.trim() + '?\nSerão criadas as contas do técnico (2.06.001) e da receita (4.03.002).')) return;
+    if (!atual && !confirm('Cadastrar ' + $('nome').value.trim() + '?\nSerá criada a conta do técnico (2.06.001).')) return;
     $('gravar').disabled = true;
     const eraNovo = !atual;
     try {
       const r = eraNovo ? await api('POST', API, corpo()) : await api('PUT', API + atual.id, corpo());
       await carregar(r.tecnico.id);
-      msg('✓ gravado' + (eraNovo ? ' · contas ' + r.tecnico.contaTecnico + ' e ' + r.tecnico.contaReceita : ''), true);
+      msg('✓ gravado' + (eraNovo ? ' · conta ' + r.tecnico.contaTecnico : ''), true);
     } catch (e) { msg(e.message); } finally { $('gravar').disabled = false; }
   }
 
@@ -130,11 +158,28 @@
   $('cnpj').addEventListener('blur', () => { $('cnpj').value = fmtCnpj($('cnpj').value); });
   $('cep').addEventListener('blur', () => { $('cep').value = fmtCep($('cep').value); });
   $('uf').addEventListener('input', () => { $('uf').value = $('uf').value.toUpperCase(); });
-  $('valorG').addEventListener('blur', () => { if ($('valorG').value.trim()) $('valorG').value = brl(lerBrl($('valorG').value)); });
+  $('serv-mais').addEventListener('click', () => { linhaServico({}); $('servs').lastElementChild.querySelector('.s-desc').focus(); });
+  $('servs').addEventListener('click', ev => { const x = ev.target.closest('.x'); if (x) x.closest('tr').remove(); });
+  $('servs').addEventListener('change', ev => {
+    if (!ev.target.classList.contains('s-modo')) return;
+    const v = ev.target.closest('tr').querySelector('.s-valor');
+    v.value = ''; v.placeholder = ev.target.value === 'PERC' ? '% do técnico' : 'R$ ao técnico';
+  });
+  $('servs').addEventListener('focusout', ev => {
+    if (!ev.target.classList.contains('s-valor')) return;
+    const tr = ev.target.closest('tr');
+    if (tr.querySelector('.s-modo').value === 'FIXO' && ev.target.value.trim()) ev.target.value = brl(lerBrl(ev.target.value));
+  });
   // Enter anda de campo em campo; no ultimo vai ao Gravar
   $('ficha').addEventListener('keydown', ev => {
     if (ev.key !== 'Enter' || ev.target.tagName === 'TEXTAREA' || ev.target.tagName === 'BUTTON') return;
     ev.preventDefault();
+    if (ev.target.closest('#servs')) {           // na tabela de servicos: proximo campo dela
+      const cs = [...$('servs').querySelectorAll('input, select')];
+      const j = cs.indexOf(ev.target);
+      if (j >= 0 && j < cs.length - 1) cs[j + 1].focus(); else $('pixTipo').focus();
+      return;
+    }
     const k = CAMPOS.indexOf(ev.target.id);
     if (k >= 0 && k < CAMPOS.length - 1) $(CAMPOS[k + 1]).focus(); else $('gravar').focus();
   });

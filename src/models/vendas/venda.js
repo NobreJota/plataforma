@@ -23,6 +23,9 @@
 //   Ao FECHAR nasce a OS em _ordens_servico (status P) e venda.os guarda numero e id.
 // Alterado em: 09/10/2026 - PRECO NEGOCIADO: o vendedor pode mudar o unitario do item;
 //   precoTabela guarda o preco do cadastro (vista/prazo) para comparar depois.
+// Alterado em: 13/10/2026 - MAO DE OBRA da instalacao (VI): instalacao.maoDeObra entra no total
+//   (totalServico). No fechamento a partilha sai da ficha do tecnico: parte dele na 2.06.001.NNN,
+//   parte da loja na 4.05.001.001 (RECEITA_SERVICO). Tudo no fluxo normal da venda.
 //
 // VENDA — um documento por venda, com tudo dentro: cliente, itens, pagamento,
 // a nota fiscal e a OS de instalacao. No Access isso estava espalhado em
@@ -62,6 +65,7 @@ const DOCUMENTOS = ['CUPOM', 'NFE'];
 const CONTAS = {
   RECEITA_VISTA: '4.01.001.001',   // Vendas Balcao (a vista; tambem o lancamento diario do cupom)
   RECEITA_PRAZO: '4.02.001.001',   // Venda a Prazo
+  RECEITA_SERVICO: '4.05.001.001', // Receita de Servicos - OS (a parte da LOJA na mao de obra)
 };
 const HISTORICO_BALCAO = 'Vendas balcão';
 const FORMAS = ['DINHEIRO', 'PIX', 'DEBITO', 'CREDITO', 'TITULO'];
@@ -143,7 +147,14 @@ const InstalacaoSchema = new Schema({
   confirmada:   { type: Boolean, default: false },
   tecnicoConta: { type: String, trim: true, default: '' },   // 2.06.001.NNN
   tecnicoNome:  { type: String, trim: true, default: '' },
-  receitaConta: { type: String, trim: true, default: '' },   // 4.03.002.NNN (mesmo final)
+  receitaConta: { type: String, trim: true, default: '' },   // (antigo: 4.03.002.NNN; nao e mais usado)
+  // MAO DE OBRA cobrada do cliente (13/10/2026). O servico vem da ficha do tecnico
+  // (_tecnicos.servicos); a partilha tecnico x loja e calculada no FECHAMENTO pela ficha.
+  servicoId:        { type: String, trim: true, default: '' },
+  servicoDescricao: { type: String, trim: true, default: '' },
+  maoDeObra:        { type: Number, default: 0, min: 0 },     // centavos (entra no total da venda)
+  parteTecnico:     { type: Number, default: 0, min: 0 },     // centavos -> 2.06.001.NNN (no fechamento)
+  parteLoja:        { type: Number, default: 0, min: 0 },     // centavos -> 4.05.001.001 (no fechamento)
   diaPrevisto:  { type: Date, default: null },
   periodo:      { type: String, enum: ['NENHUM', 'MANHA', 'TARDE', 'FIXO'], default: 'NENHUM' },
   horaIni:      { type: String, trim: true, default: '' },   // HH:MM (periodo FIXO)
@@ -201,7 +212,8 @@ const VendaSchema = new Schema({
   totalBruto:    { type: Number, default: 0 },   // centavos: soma de qtd x preco
   totalDesconto: { type: Number, default: 0 },   // centavos: descontos dos itens + o geral
   descontoGeral: { type: Number, default: 0 },   // centavos: desconto no total
-  totalLiquido:  { type: Number, default: 0 },   // centavos
+  totalServico:  { type: Number, default: 0 },   // centavos: mao de obra da instalacao (NF com item marcado)
+  totalLiquido:  { type: Number, default: 0 },   // centavos = produtos - descontos + totalServico
 
   pagamentos: { type: [PagamentoSchema], default: [] },
 
@@ -274,7 +286,10 @@ VendaSchema.methods.recalcular = function () {
   }
   this.totalBruto = bruto;
   this.totalDesconto = descItens + (this.descontoGeral || 0);
-  this.totalLiquido = Math.max(0, bruto - this.totalDesconto);
+  // mao de obra da instalacao: so nota fiscal com item marcado para instalar
+  const instala = this.documento === 'NFE' && (this.itens || []).some(i => i.precisaInstalacao);
+  this.totalServico = instala && this.instalacao ? Math.max(0, Math.round(this.instalacao.maoDeObra || 0)) : 0;
+  this.totalLiquido = Math.max(0, bruto - this.totalDesconto) + this.totalServico;
   return this.totalLiquido;
 };
 
@@ -285,7 +300,8 @@ VendaSchema.methods.diferencaPagamento = function () {
 };
 
 VendaSchema.pre('save', function (next) {
-  if (this.isModified('itens') || this.isModified('descontoGeral')) this.recalcular();
+  if (this.isModified('itens') || this.isModified('descontoGeral') || this.isModified('instalacao')
+      || this.isModified('documento')) this.recalcular();
   next();
 });
 

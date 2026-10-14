@@ -12,7 +12,10 @@
   'use strict';
 
   const API = '/vendas/api/os/lista?tipo=';
-  const TIPOS = ['programadas', 'nprogramadas', 'pendentes', 'concluidas', 'liquidadas'];
+  const TIPOS = ['geral', 'programadas', 'nprogramadas', 'pendentes', 'concluidas', 'liquidadas'];
+  // situacao na lista geral
+  const situacao = o => o.status === 'E' ? '<span class="sit e">concluída · a receber</span>'
+    : o.programada ? '<span class="sit p">programada</span>' : '<span class="sit n">não programada</span>';
   const $ = id => document.getElementById(id);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const brl = c => (Number(c || 0) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -57,6 +60,7 @@
       $('rodape').textContent = '';
       return;
     }
+    if (tipo === 'geral') { desenharGeral(vis); return; }
     let h = '<table><thead><tr><th>OS</th><th>Cliente</th><th>Técnico</th><th>Dia previsto</th><th>Horário</th><th>Bairro</th><th>Venda</th>'
       + (feita ? '<th>Término</th><th class="n">Serviço</th><th class="n">Consignado</th><th class="n">Total</th>'
                : '<th class="n">Consignado</th>')
@@ -82,6 +86,30 @@
     });
     $('lista').innerHTML = h + '</tbody></table>';
     $('rodape').textContent = vis.length + ' OS' + (feita ? ' · total R$ ' + brl(soma) : '');
+  }
+
+  // LISTA GERAL (14/10/2026): todas as OS em aberto, A-Z pelo cliente, com dia e hora marcados
+  function desenharGeral(vis) {
+    let h = '<table><thead><tr><th>Cliente</th><th>Dia</th><th>Horário</th><th>Técnico</th><th>Situação</th>'
+      + '<th>Serviço</th><th>Bairro</th><th>OS</th><th>Venda</th></tr></thead><tbody>';
+    const n = { p: 0, n: 0, e: 0 };
+    vis.forEach(o => {
+      const i = lista.indexOf(o);
+      const atrasada = o.status === 'P' && o.diaPrevisto && o.diaPrevisto < hojeIso;
+      n[o.status === 'E' ? 'e' : o.programada ? 'p' : 'n']++;
+      h += '<tr data-i="' + i + '"' + (atrasada ? ' class="atrasada" title="dia previsto já passou"' : '') + '>'
+        + '<td class="quebra"><b>' + esc(o.cliente && o.cliente.nome) + '</b></td>'
+        + '<td>' + (o.diaPrevisto ? dataBr(o.diaPrevisto) : sem('sem dia')) + '</td>'
+        + '<td>' + (o.horaIni ? esc(o.horaIni + (o.horaFim ? '–' + o.horaFim : '')) : sem('sem hora')) + '</td>'
+        + '<td>' + (o.tecnicoNome ? esc(o.tecnicoNome) : sem('a definir')) + '</td>'
+        + '<td>' + situacao(o) + '</td>'
+        + '<td class="quebra">' + esc((o.itens || []).map(x => x.descricao).join(', ')) + '</td>'
+        + '<td>' + esc((o.endereco || {}).bairro) + '</td>'
+        + '<td>' + esc(o.numero) + '</td>'
+        + '<td>' + esc(o.venda ? o.venda.numero : '') + '</td></tr>';
+    });
+    $('lista').innerHTML = h + '</tbody></table>';
+    $('rodape').textContent = vis.length + ' OS em aberto · ' + n.p + ' programada(s) · ' + n.n + ' não programada(s) · ' + n.e + ' concluída(s) a receber';
   }
 
   $('abas').addEventListener('click', ev => {

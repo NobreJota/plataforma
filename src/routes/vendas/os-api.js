@@ -25,7 +25,7 @@
 // Foto removida nao e apagada: ganha removida = true.
 //
 // Rotas:
-//   GET  /lista?tipo=programadas|nprogramadas|pendentes|concluidas|liquidadas
+//   GET  /lista?tipo=programadas|nprogramadas|pendentes|concluidas|liquidadas|geral
 //   GET  /:id
 //   PUT  /:id                         { terminoDia, terminoHora, valorServico, observacaoServico }
 //   POST /:id/consignados             { codigo, quantidade }          baixa o estoque
@@ -80,6 +80,7 @@ const FILTROS = {
   pendentes:    { status: 'P' },
   concluidas:   { status: 'E' },
   liquidadas:   { status: 'L' },
+  geral:        { status: { $in: ['P', 'E'] } },     // 14/10/2026: lista geral (em aberto), A-Z pelo cliente
 };
 
 const diaIso = d => (d ? new Date(d).toISOString().slice(0, 10) : '');
@@ -104,6 +105,7 @@ function resumo(o) {
     servicoDescricao: o.servicoDescricao || '', parteTecnico: o.parteTecnico || 0, parteLoja: o.parteLoja || 0,
     totalConsignado: cons.reduce((t, c) => t + c.total, 0),
     programada: !!(o.tecnicoConta && o.diaPrevisto && o.horaIni),
+    itens: (o.itens || []).map(i => ({ codigo: i.codigo, descricao: i.descricao || '', servico: i.servico || '' })),
   };
 }
 
@@ -113,7 +115,8 @@ function resumo(o) {
 router.get('/lista', responder(async (req, res) => {
   const loja = lojaDe(req);
   const tipo = FILTROS[req.query.tipo] ? req.query.tipo : 'pendentes';
-  const ordem = tipo === 'liquidadas' ? { liquidadaEm: -1, numero: -1 }
+  const ordem = tipo === 'geral' ? { 'cliente.nome': 1, diaPrevisto: 1, horaIni: 1 }
+              : tipo === 'liquidadas' ? { liquidadaEm: -1, numero: -1 }
               : tipo === 'concluidas' ? { concluidaEm: -1, numero: -1 } : { diaPrevisto: 1, horaIni: 1, numero: 1 };
   const docs = await col('_ordens_servico').find({ lojistaId: loja, ...FILTROS[tipo] })
     .sort(ordem).limit(1000).toArray();

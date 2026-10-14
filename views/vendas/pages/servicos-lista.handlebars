@@ -9,6 +9,8 @@
     Concluidas     servico feito, aguardando o recebimento
     Liquidadas     concluida e recebida
   Clique na linha abre o modal da OS (/js/vendas/os-modal.js).
+  Alterado em: 14/10/2026 - aba LISTA GERAL: todas as OS em aberto (pendentes e concluidas a
+               receber), A-Z pelo cliente, com dia/hora marcados e a situacao.
   O JS fica em /js/vendas/servicos-lista.js   API: /vendas/api/os/lista?tipo=
   Rota: /vendas/servicos/lista?tipo=programadas (o menu manda o tipo)
 --}}
@@ -48,6 +50,8 @@
     .falta { color:var(--vermelho); font-weight:700; }
     .atrasada td:first-child { box-shadow:inset 4px 0 0 var(--vermelho); }
     .vazio { padding:30px; text-align:center; color:var(--cinza); }
+    .sit { font-size:12px; font-weight:700; padding:2px 8px; border-radius:10px; }
+    .sit.p { background:#dcfce7; color:#065f46; } .sit.n { background:#fee2e2; color:#991b1b; } .sit.e { background:#e0e7ff; color:#3730a3; }
     .rodape { margin-top:8px; font-size:12px; color:var(--cinza); }
   </style>
 </head>
@@ -60,6 +64,7 @@
   </div>
 
   <div class="abas" id="abas">
+    <button type="button" data-tipo="geral" title="todas as OS em aberto, em ordem alfabética">Lista geral<span class="n" id="n-geral">0</span></button>
     <button type="button" data-tipo="programadas">Programadas<span class="n" id="n-programadas">0</span></button>
     <button type="button" data-tipo="nprogramadas">N/programadas<span class="n" id="n-nprogramadas">0</span></button>
     <button type="button" data-tipo="pendentes">Pendentes<span class="n" id="n-pendentes">0</span></button>

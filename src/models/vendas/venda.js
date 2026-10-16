@@ -26,6 +26,9 @@
 // Alterado em: 13/10/2026 - MAO DE OBRA da instalacao (VI): instalacao.maoDeObra entra no total
 //   (totalServico). No fechamento a partilha sai da ficha do tecnico: parte dele na 2.06.001.NNN,
 //   parte da loja na 4.05.001.001 (RECEITA_SERVICO). Tudo no fluxo normal da venda.
+// Alterado em: 15/10/2026 - a partilha NAO vem mais da ficha do tecnico: no fechamento a mao de
+//   obra inteira e receita da empresa (4.05.001.001); na FICHA DE FECHAMENTO da OS informa-se a
+//   parte da empresa e o resto sai para a conta do tecnico. O servico escolhido e so descricao.
 //
 // VENDA — um documento por venda, com tudo dentro: cliente, itens, pagamento,
 // a nota fiscal e a OS de instalacao. No Access isso estava espalhado em
@@ -148,8 +151,9 @@ const InstalacaoSchema = new Schema({
   tecnicoConta: { type: String, trim: true, default: '' },   // 2.06.001.NNN
   tecnicoNome:  { type: String, trim: true, default: '' },
   receitaConta: { type: String, trim: true, default: '' },   // (antigo: 4.03.002.NNN; nao e mais usado)
-  // MAO DE OBRA cobrada do cliente (13/10/2026). O servico vem da ficha do tecnico
-  // (_tecnicos.servicos); a partilha tecnico x loja e calculada no FECHAMENTO pela ficha.
+  // MAO DE OBRA cobrada do cliente (13/10/2026). 15/10/2026: o servico (lista da ficha do
+  // tecnico) e so descricao; a partilha tecnico x loja e feita na CONCLUSAO DA OS.
+  // parteTecnico/parteLoja ficam 0 na venda (o que ja foi gravado antes de 15/10 fica).
   servicoId:        { type: String, trim: true, default: '' },
   servicoDescricao: { type: String, trim: true, default: '' },
   maoDeObra:        { type: Number, default: 0, min: 0 },     // centavos (entra no total da venda)

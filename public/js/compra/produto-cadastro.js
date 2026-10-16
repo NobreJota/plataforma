@@ -12,6 +12,9 @@
 //   - 01/10/2026: estoque so numeros, precos so moeda, taxa antes dos precos e
 //     calculada (ficha-produto-campos.js); sem o botao limpar ficha
 //   - 01/10/2026: duas taxas (prazo e vista), cada uma com o seu preco
+//   - 14/10/2026: CODIGO DE BARRAS (ean) logo abaixo do codigo. Escolheu o fornecedor,
+//     o cursor vai para ele: bipa o produto, o leitor manda Enter e o cursor desce
+//     para a descricao. Codigo de barras ja usado em outro produto: a API recusa.
 //
 // API: GET /compra/api/produto/loja   GET /compra/api/produto/novo
 //      POST /compra/api/produto/gravar  (com ficha.novo = true)
@@ -24,6 +27,7 @@
   const CAMPOS = [
     { grupo: 'O produto' },
     { id: 'codigo',        rot: 'código',        leitura: true },
+    { id: 'ean',           rot: 'código de barras (EAN)' },
     { id: 'marcaproduto',  rot: 'marcaproduto',  leitura: true },
     { id: 'descricao',     rot: 'descrição',     largo: true, obrigatorio: true },
     { id: 'descricaoTecnica', rot: 'descrição técnica (fornecedor)', largo: true },
@@ -127,13 +131,21 @@
   $('fornecedor').addEventListener('change', () => {
     estado.escolhido = estado.fornecedores.find(f => f.fornecId === $('fornecedor').value) || null;
     aplicarFornecedor();
-    if (estado.escolhido) campo('descricao')?.focus();
+    if (estado.escolhido) campo('ean')?.focus();      // bipa; o Enter do leitor desce para a descricao
   });
 
   // ---- gravar --------------------------------------------------------------------
   async function gravar() {
     if (!estado.escolhido) { recado('Escolha o fornecedor.', 'erro'); $('fornecedor').focus(); return; }
     if (!(campo('descricao')?.value || '').trim()) { recado('Preencha a descrição.', 'erro'); campo('descricao').focus(); return; }
+    // codigo de barras: tamanho errado nao grava; digito que nao confere pergunta
+    const probEan = FichaProduto.eanProblema(campo('ean')?.value);
+    if (probEan === 'tamanho') {
+      recado('Código de barras deve ter de 8 a 14 dígitos.', 'erro'); campo('ean').focus(); return;
+    }
+    if (probEan === 'digito' && !confirm('O último dígito do código de barras não confere.\n\nFoi digitado à mão? Confira o número.\n\nGravar assim mesmo?')) {
+      campo('ean').focus(); return;
+    }
 
     const ficha = {
       novo: true,
@@ -157,7 +169,10 @@
       });
       if (r.status === 401) { window.location.href = '/usuariocontab/login'; return; }
       const j = await r.json();
-      if (!j.ok) throw new Error(j.erro || 'falha ao gravar');
+      if (!j.ok) {
+        if (j.campo) campo(j.campo)?.focus();
+        throw new Error(j.erro || 'falha ao gravar');
+      }
 
       alert('Produto ' + j.codigo + ' cadastrado.\n\n' + j.descricao);
       window.location.href = '/compra/produto/' + j.codigo;   // confere na pagina do produto

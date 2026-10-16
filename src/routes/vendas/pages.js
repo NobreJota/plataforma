@@ -9,6 +9,8 @@
 //                           da OS (/vendas/api/os, os-api.js)
 // Alterado em: 13/10/2026 - Servico > Tecnicos (/vendas/servicos/tecnicos) e a API
 //                           (/vendas/api/tecnicos, tecnicos-api.js)
+// Alterado em: 15/10/2026 - Servico > Ficha de fechamento da OS (/vendas/servicos/fechamento/:id)
+// Alterado em: 16/10/2026 - Servico > Fluxo de servico (/vendas/servicos/fluxo)
 //
 // Telas do modulo de vendas. Montado em /vendas no server.js, protegido por
 // ensureContab (que expoe req.lojistaId).
@@ -54,6 +56,16 @@ router.get('/servicos/lista', (req, res) => {
 // servico: cadastro de tecnicos (MEI)
 router.get('/servicos/tecnicos', (req, res) => {
   res.render('vendas/pages/tecnicos', { layout: false, activeMenu: 'servico' });
+});
+
+// servico: ficha de fechamento da OS (abre pelo "Concluir serviço" do modal da OS)
+router.get('/servicos/fechamento/:id', (req, res) => {
+  res.render('vendas/pages/servicos-fechamento', { layout: false, activeMenu: 'servico', osId: req.params.id });
+});
+
+// servico: fluxo de servico (o a receber das OS; recebe com o codigo do fluxo de caixa)
+router.get('/servicos/fluxo', (req, res) => {
+  res.render('vendas/pages/servicos-fluxo', { layout: false, activeMenu: 'servico' });
 });
 
 /* ===== APIs ===== */

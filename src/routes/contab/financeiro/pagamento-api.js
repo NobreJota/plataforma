@@ -33,6 +33,9 @@
 //  05/10/2026: GET /cartao?...&historico=...&cliente=1 traz as parcelas em aberto do
 //      cartao de TODAS as vendas do mesmo cliente daquela venda (venda -> cliente.id ->
 //      vendas dele). Venda de balcao (sem cliente): as vendas de balcao daquele cartao.
+//  16/10/2026: /janela do Fluxo de Caixa NAO traz as linhas do FLUXO DE SERVICO (origem 'OS',
+//      a receber das OS): elas sao recebidas pela tela Servico > Fluxo de servico, que usa
+//      este mesmo POST /quitar.
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -122,7 +125,8 @@ router.get('/janela', async (req, res) => {
     const itens = await FluxoProjetado.find({
       status: 'ATIVO',
       vencimento: { $gte: ini, $lte: fim },
-      pos: { $in: posFiltro }
+      pos: { $in: posFiltro },
+      origem: { $ne: 'OS' },              // 16/10/2026: o a receber das OS fica no fluxo de servico
     }).sort({ vencimento: 1 }).lean();
 
     const titulos = itens.map(it => ({

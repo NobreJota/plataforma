@@ -2,6 +2,8 @@
 // Destino: C:\plataformaRota\public\js\vendas\tecnicos.js
 // Criado em: 13/10/2026
 // Alterado em: 13/10/2026 - tabela de SERVICOS do tecnico (descricao + % do tecnico ou valor fixo)
+// Alterado em: 15/10/2026 - SERVICOS so com descricao (sairam % e valor fixo): a divisao empresa x
+//              tecnico e feita na conclusao da OS; a lista serve de historico para a OS
 //
 // SERVICO > TECNICOS (views\vendas\pages\tecnicos.handlebars)
 // Lista + ficha. Novo cria a conta 2.06.001.NNN (no servidor). Receita da loja: 4.05.001.001.
@@ -71,7 +73,7 @@
     CAMPOS.forEach(id => { $(id).value = v[id] || ''; });
     $('servs').innerHTML = '';
     const lista = x.servicos && x.servicos.length ? x.servicos
-      : (t ? [] : [{ descricao: 'Instalação (VI)', modo: 'PERC' }, { descricao: 'Conserto (C)', modo: 'PERC' }, { descricao: 'Garantia (G)', modo: 'FIXO' }]);
+      : (t ? [] : [{ descricao: 'Instalação (VI)' }, { descricao: 'Conserto (C)' }, { descricao: 'Garantia (G)' }]);
     lista.forEach(linhaServico);
     $('f-tit').textContent = t ? (t.apelido || t.nome) + (t.ativo === false ? ' (inativo)' : '') : 'Novo técnico';
     $('f-contas').textContent = t ? (t.contaTecnico || 'sem conta') : 'a conta 2.06.001 é criada ao gravar';
@@ -83,25 +85,18 @@
     $('nome').focus();
   }
 
-  // ---- servicos do tecnico (descricao + repasse) ----
+  // ---- servicos do tecnico (so descricao) ----
   function linhaServico(sv) {
     const tr = document.createElement('tr');
-    const modo = sv.modo === 'FIXO' ? 'FIXO' : 'PERC';
-    const val = sv.valor ? (modo === 'PERC' ? pct(sv.valor) : brl(sv.valor)) : '';
     tr.dataset.id = sv.id || '';
     tr.innerHTML = '<td><input class="s-desc" placeholder="ex.: Instalação aquecedor" maxlength="80" value="' + esc(sv.descricao || '') + '"></td>'
-      + '<td><select class="s-modo"><option value="PERC"' + (modo === 'PERC' ? ' selected' : '') + '>% do técnico</option>'
-      + '<option value="FIXO"' + (modo === 'FIXO' ? ' selected' : '') + '>valor fixo</option></select></td>'
-      + '<td><input class="s-valor num" inputmode="decimal" placeholder="' + (modo === 'PERC' ? '% do técnico' : 'R$ ao técnico') + '" value="' + esc(val) + '"></td>'
       + '<td><button type="button" class="x" title="tirar este serviço">×</button></td>';
     $('servs').appendChild(tr);
   }
   function lerServicos() {
-    return [...$('servs').querySelectorAll('tr')].map(tr => {
-      const modo = tr.querySelector('.s-modo').value, v = tr.querySelector('.s-valor').value;
-      return { id: tr.dataset.id || undefined, descricao: tr.querySelector('.s-desc').value.trim(), modo,
-               valor: modo === 'PERC' ? v : lerBrl(v) };
-    }).filter(x => x.descricao);
+    return [...$('servs').querySelectorAll('tr')]
+      .map(tr => ({ id: tr.dataset.id || undefined, descricao: tr.querySelector('.s-desc').value.trim() }))
+      .filter(x => x.descricao);
   }
 
   function corpo() {
@@ -120,14 +115,6 @@
 
   async function gravar() {
     if (!$('nome').value.trim()) { msg('Informe o nome do técnico.'); $('nome').focus(); return; }
-    for (const tr of $('servs').querySelectorAll('tr')) {
-      const desc = tr.querySelector('.s-desc').value.trim();
-      if (!desc) continue;
-      if (tr.querySelector('.s-modo').value === 'PERC') {
-        const n = Number(tr.querySelector('.s-valor').value.replace(',', '.') || 0);
-        if (!Number.isFinite(n) || n < 0 || n > 100) { msg('Percentual entre 0 e 100 (' + desc + ').'); tr.querySelector('.s-valor').focus(); return; }
-      }
-    }
     if (!atual && !confirm('Cadastrar ' + $('nome').value.trim() + '?\nSerá criada a conta do técnico (2.06.001).')) return;
     $('gravar').disabled = true;
     const eraNovo = !atual;
@@ -160,16 +147,6 @@
   $('uf').addEventListener('input', () => { $('uf').value = $('uf').value.toUpperCase(); });
   $('serv-mais').addEventListener('click', () => { linhaServico({}); $('servs').lastElementChild.querySelector('.s-desc').focus(); });
   $('servs').addEventListener('click', ev => { const x = ev.target.closest('.x'); if (x) x.closest('tr').remove(); });
-  $('servs').addEventListener('change', ev => {
-    if (!ev.target.classList.contains('s-modo')) return;
-    const v = ev.target.closest('tr').querySelector('.s-valor');
-    v.value = ''; v.placeholder = ev.target.value === 'PERC' ? '% do técnico' : 'R$ ao técnico';
-  });
-  $('servs').addEventListener('focusout', ev => {
-    if (!ev.target.classList.contains('s-valor')) return;
-    const tr = ev.target.closest('tr');
-    if (tr.querySelector('.s-modo').value === 'FIXO' && ev.target.value.trim()) ev.target.value = brl(lerBrl(ev.target.value));
-  });
   // Enter anda de campo em campo; no ultimo vai ao Gravar
   $('ficha').addEventListener('keydown', ev => {
     if (ev.key !== 'Enter' || ev.target.tagName === 'TEXTAREA' || ev.target.tagName === 'BUTTON') return;

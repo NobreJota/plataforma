@@ -23,6 +23,9 @@
 //              ficha.novo: recusa codigo ja usado; grava fornecId; marca origemPlataforma
 // Alterado em: 02/10/2026 - grava descricaoTecnica (descricao do fornecedor)
 // Alterado em: 01/10/2026 - grava taxaprazo (taxa do preco a prazo; `taxa` e a do a vista)
+// Alterado em: 14/10/2026 - CODIGO DE BARRAS: /gravar grava `ean` (so digitos, 8 a 14, ou
+//              vazio) e recusa EAN ja usado em outro produto da loja (diz qual);
+//              /item devolve eanNota (o EAN da nota de entrada, _produto_origem.ean)
 //
 // CADASTRO DE PRODUTOS, pela area de Compra.
 //
@@ -218,7 +221,7 @@ const CAMPOS_TEXTO = [
   'marcaloja', 'cidade', 'bairro', 'marcaproduto', 'descricao', 'descricaoTecnica', 'descricaoNorm',
   'complete', 'referencia', 'referencia2', 'codEcf', 'fornecedor', 'ncontabil', 'similares',
   'localloja', 'artigo', 'pageposicao', 'pageurls', 'figure_mini',
-  'figure_media', 'csosn', 'ncm', 'cfop_ecf', 'cfop_nfe',
+  'figure_media', 'csosn', 'ncm', 'cfop_ecf', 'cfop_nfe', 'ean',
 ];
 
 const CAMPOS_NUMERO = [
@@ -243,6 +246,22 @@ router.post('/gravar', express.json(), async (req, res) => {
 
     for (const c of CAMPOS_TEXTO) {
       if (ficha[c] !== undefined) doc[c] = String(ficha[c] ?? '').trim();
+    }
+    // codigo de barras: texto so de digitos (zero a esquerda conta), 8 a 14, ou vazio
+    if (doc.ean !== undefined) {
+      doc.ean = doc.ean.replace(/\D/g, '');
+      if (doc.ean && (doc.ean.length < 8 || doc.ean.length > 14)) {
+        return res.status(400).json({ ok: false, campo: 'ean', erro: 'código de barras deve ter de 8 a 14 dígitos' });
+      }
+      if (doc.ean) {
+        const outro = await col('arquivo_docs').findOne(
+          { loja_id: lojistaId, ean: doc.ean, codigo: { $ne: codigo } },
+          { projection: { codigo: 1, descricao: 1 } });
+        if (outro) {
+          return res.status(409).json({ ok: false, campo: 'ean',
+            erro: 'o código de barras ' + doc.ean + ' já está no produto ' + outro.codigo + ' — ' + (outro.descricao || '') });
+        }
+      }
     }
     for (const c of CAMPOS_NUMERO) {
       if (ficha[c] !== undefined && ficha[c] !== '') {
@@ -503,7 +522,10 @@ router.get('/item/:codigo', async (req, res) => {
 
     const { consumo, aCaminho, custo } = await resumoProduto(lojistaId, codigo);
     delete produto._id;
-    res.json({ ok: true, produto, consumo, aCaminho, custo });
+    // o EAN que veio da nota de entrada (a conferencia grava em _produto_origem)
+    const o = await col('_produto_origem').findOne({ lojistaId, codigoProd: codigo }, { projection: { ean: 1 } });
+    const eanNota = String(o?.ean || '').replace(/\D/g, '');
+    res.json({ ok: true, produto, consumo, aCaminho, custo, eanNota: /^\d{8,14}$/.test(eanNota) ? eanNota : '' });
   } catch (err) {
     console.error('[compra/produto/item]', err);
     res.status(500).json({ ok: false, erro: err.message });

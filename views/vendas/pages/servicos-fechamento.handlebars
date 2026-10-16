@@ -1,0 +1,111 @@
+{{!--
+  Destino: C:\plataformaRota\views\vendas\pages\servicos-fechamento.handlebars
+  Criado em: 15/10/2026
+
+  FICHA DE FECHAMENTO DA OS (croqui do Jorge). Abre pelo "Concluir serviço" do modal da OS.
+    linha 1: material vendido · devolução de material vendido · valor adicional (técnico/cliente)
+    linha 2: material consignado (usado: cobrar ou não) · devolução de consignado · término e mão de obra
+  "Gravar ordem de serviço" conclui a OS (os lançamentos são feitos no servidor).
+  OS já fechada: a ficha abre só para consulta (com "Reabrir", que desfaz o fechamento).
+  O JS fica em /js/vendas/servicos-fechamento.js   API: /vendas/api/os/:id/fechamento
+  Rota: /vendas/servicos/fechamento/:id?volta=<pagina de onde veio>
+  Alterado em: 16/10/2026 - caixas em par com o mesmo numero de linhas (rola) e faixa de saldo
+               embaixo das caixas (.cel / .faixa / .caixa.par).
+  Alterado em: 16/10/2026 - sem a etiqueta "Pendente": no lugar, os botoes "← Voltar" e "☰ Menu"
+               dentro da faixa marrom (sem o navegacao.js, que punha os botoes por cima).
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fechamento da OS</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root { --ambar:#92400e; --roxo:#6b21a8; --verde:#059669; --vermelho:#dc2626; --borda:#e5e7eb; --cinza:#6b7280; --texto:#111827; }
+    body { margin:0 auto; max-width:1500px; padding:16px 24px 40px; color:var(--texto); background:#f8fafc;
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
+    .topo { background:var(--ambar); color:#fff; border-radius:12px; padding:14px 18px; margin-bottom:14px;
+            display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+    .topo h1 { margin:0; font-size:20px; }
+    .topo .sub { font-size:13px; opacity:.9; }
+    .topo .nav { margin-left:auto; display:flex; gap:8px; }
+    .topo .nav button { border:1px solid #e5e7eb; background:#fff; color:#111827; border-radius:8px; padding:7px 14px; font-weight:700; font-size:14px; cursor:pointer; }
+    .topo .nav button:hover { background:#fef3c7; }
+    .grade { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px; }
+    /* monitor pequeno: 2 colunas, em pares (vendido | devolucao; consignado | devolucao; adicional | termino) */
+    @media (max-width: 1250px) { .grade { grid-template-columns:repeat(2, minmax(0,1fr)); }
+                                 .cx-ad { order:5; } .cx-term { order:6; } .cx-cons { order:3; } .cx-dcons { order:4; } }
+    @media (max-width: 720px)  { .grade { grid-template-columns:1fr; } body { padding:12px 12px 30px; } }
+    .caixa { background:#fff; border:1px solid var(--borda); border-radius:12px; padding:12px 14px; display:flex; flex-direction:column; min-height:220px; }
+    .caixa h2 { margin:0 0 8px; font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--roxo); }
+    .caixa .corpo { flex:1; overflow:auto; max-height:300px; }
+    /* 16/10/2026: celula = caixa + faixa de saldo embaixo; caixas em par com o mesmo n. de linhas */
+    .cel { display:flex; flex-direction:column; gap:6px; min-width:0; }
+    .cel > .caixa { flex:1; }
+    .caixa.par .corpo { flex:none; height:212px; max-height:none; }
+    .caixa.par th { position:sticky; top:0; z-index:1; }
+    .caixa.par td { height:38px; padding-top:0; padding-bottom:0; }
+    .caixa.par td.d { white-space:nowrap; text-overflow:ellipsis; }
+    .caixa.par input.q { height:28px; padding:2px 6px; }
+    .faixa { background:#fff; border:1px solid var(--borda); border-radius:10px; padding:5px 14px; min-height:44px;
+             display:flex; justify-content:flex-end; align-items:center; gap:8px; font-size:13px; }
+    .faixa b { font-size:15px; font-variant-numeric:tabular-nums; }
+    .faixa b.roxo { color:var(--roxo); }
+    .faixa select { padding:4px 6px; }
+    .faixa.vazia { visibility:hidden; }
+    .caixa .pe { display:flex; justify-content:flex-end; align-items:center; gap:8px; margin-top:8px; padding-top:8px;
+                 border-top:1px solid var(--borda); font-size:13px; }
+    .caixa .pe b { font-size:15px; font-variant-numeric:tabular-nums; }
+    table { width:100%; border-collapse:collapse; font-size:13px; table-layout:fixed; }
+    th { text-align:left; font-size:11px; text-transform:uppercase; color:#374151; background:#f3f4f6; padding:5px 4px; white-space:nowrap; overflow:hidden; }
+    td { padding:5px 4px; border-top:1px solid #f3f4f6; vertical-align:middle; overflow:hidden; }
+    td.d { overflow-wrap:anywhere; }
+    .n { text-align:right; font-variant-numeric:tabular-nums; }
+    input, select, textarea { font:inherit; font-size:14px; padding:5px 7px; border:1px solid #d1d5db; border-radius:7px; background:#fff; color:var(--texto); min-width:0; }
+    input:disabled, select:disabled, textarea:disabled { background:#f3f4f6; color:#374151; }
+    input.q { width:100%; text-align:right; }
+    td select { width:100%; padding:4px 3px; font-size:13px; }
+    .vazio { color:var(--cinza); padding:10px 2px; }
+    .campos { display:grid; grid-template-columns:1fr 1fr; gap:8px 10px; }
+    .campos label { display:flex; flex-direction:column; gap:3px; font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; }
+    .campos label.l2 { grid-column:span 2; }
+    .campos input { text-align:left; width:100%; }
+    .campos input.num { text-align:right; }
+    .dica { font-size:12px; color:var(--cinza); margin-top:6px; }
+    .ad { display:grid; grid-template-columns:112px 90px minmax(0,1fr) 26px; gap:6px; margin-bottom:6px; align-items:center; }
+    .ad input.num { text-align:right; }
+    .x { border:0; background:none; color:var(--vermelho); font-size:18px; cursor:pointer; }
+    .btn { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:8px 14px; font-weight:700; cursor:pointer; font-size:14px; }
+    .btn.mini { padding:4px 10px; font-size:12px; }
+    .btn.roxo { background:var(--roxo); border-color:var(--roxo); color:#fff; }
+    .btn.preto { background:#111827; border-color:#111827; color:#fff; padding:12px 26px; font-size:15px; }
+    .btn:disabled { opacity:.5; cursor:not-allowed; }
+    .resumo { margin-top:14px; background:#fff; border:1px solid var(--borda); border-radius:12px; padding:12px 14px;
+              display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:end; }
+    .resumo label { display:flex; flex-direction:column; gap:3px; font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; }
+    .resumo textarea { min-height:52px; resize:vertical; text-transform:none; font-weight:400; }
+    .totais { font-size:13px; line-height:1.7; text-align:right; }
+    .totais b { font-size:16px; font-variant-numeric:tabular-nums; }
+    .totais .areceber b { color:var(--roxo); font-size:18px; }
+    .acoes { display:flex; gap:10px; justify-content:flex-end; align-items:center; margin-top:12px; }
+    .msg { flex:1; font-weight:600; color:var(--vermelho); }
+    .msg.ok { color:var(--verde); }
+    .tag { display:inline-block; font-size:11px; font-weight:700; padding:1px 7px; border-radius:9px; background:#e0e7ff; color:#3730a3; }
+    .tag.c { background:#dcfce7; color:#065f46; } .tag.n { background:#fee2e2; color:#991b1b; }
+    .carregando { padding:40px; text-align:center; color:var(--cinza); }
+  </style>
+</head>
+<body data-os="{{osId}}">
+
+  <div class="topo">
+    <div><h1 id="tit">Fechamento da OS</h1><div class="sub" id="sub"></div></div>
+    <div class="nav"><button type="button" id="nav-voltar" title="voltar (Alt+←)">← Voltar</button>
+      <button type="button" id="nav-menu">☰ Menu</button></div>
+  </div>
+
+  <div id="ficha"><div class="carregando">Carregando…</div></div>
+
+  <script src="/js/vendas/servicos-fechamento.js"></script>
+</body>
+</html>

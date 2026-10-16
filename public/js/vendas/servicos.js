@@ -11,6 +11,8 @@
 //              Clique numa OS abre o modal da OS (os-modal.js): consignados, termino,
 //              valor final, fotos, concluir. Reserva (venda aberta) so mostra os dados.
 // Alterado em: 14/10/2026 - cartao mostra o servico a fazer (por item) e a observacao.
+// Alterado em: 15/10/2026 - volta da ficha de fechamento sem gravar: o modal reabre (?os=) e a
+//              lista recarrega quando ele grava algo (evento os-mudou)
 // =============================================================================
 
 (function () {
@@ -186,5 +188,6 @@
   $('imprimir').addEventListener('click', () => window.print());
 
   $('dia').value = diaInicial();
+  window.addEventListener('os-mudou', carregar);     // modal reaberto na volta da ficha de fechamento
   carregar();
 })();

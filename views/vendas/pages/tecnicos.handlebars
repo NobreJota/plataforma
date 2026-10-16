@@ -7,6 +7,8 @@
   2.06.001.NNN (a receita da loja e uma so: 4.05.001.001). Nada e apagado: Inativar / Reativar.
   Servicos do tecnico: descricao + repasse (% do tecnico sobre a mao de obra, ou valor fixo).
   Alterado em: 13/10/2026 - "pagamento padrao" virou a tabela de servicos.
+  Alterado em: 15/10/2026 - servicos so com descricao (sairam repasse % e valor fixo); a divisao
+               empresa x tecnico e feita na conclusao da OS.
   O JS fica em /js/vendas/tecnicos.js   API: /vendas/api/tecnicos
 --}}
 <!DOCTYPE html>
@@ -121,13 +123,13 @@
         <label>CEP<input id="cep" placeholder=" " inputmode="numeric" maxlength="9"></label>
       </div>
 
-      <div class="sec">Serviços e repasse ao técnico</div>
+      <div class="sec">Serviços que o técnico faz</div>
       <table class="servs">
-        <thead><tr><th>Serviço</th><th style="width:150px">Repasse</th><th style="width:140px" class="num">Valor</th><th style="width:40px"></th></tr></thead>
+        <thead><tr><th>Serviço</th><th style="width:40px"></th></tr></thead>
         <tbody id="servs"></tbody>
       </table>
       <button type="button" class="btn mini" id="serv-mais">+ serviço</button>
-      <div class="dica">% = parte do TÉCNICO sobre a mão de obra (ex.: 80% de 200,00 → técnico 160,00, loja 40,00). Valor fixo = quanto o técnico recebe por serviço. A divisão sai daqui na venda e na OS.</div>
+      <div class="dica">Lista de descrições para escolher na venda e na OS. A divisão da mão de obra (empresa × técnico) é feita na conclusão de cada OS.</div>
 
       <div class="sec">Para pagar o técnico</div>
       <div class="g g4">

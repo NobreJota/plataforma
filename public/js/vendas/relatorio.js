@@ -16,6 +16,11 @@
 // Alterado em 08/10/2026: espelho so como modal (sem "Abrir na tela da venda"). Secao COBRANCA:
 //   para cada parte, como foi cobrada — dinheiro/PIX: "recebido, entrou em <conta>" com a
 //   boleta; cartao/titulo: a conta e as parcelas no fluxo com a situacao de cada uma.
+// Alterado em 14/10/2026: secao INSTALACAO no espelho da NF. Tem OS: numero, situacao, tecnico,
+//   dia e o botao "Abrir a OS" (modal da OS, /js/vendas/os-modal.js). NF fechada sem OS:
+//   "+ Incluir instalação" — marca os itens, tecnico e servico (opcionais) e abre a OS
+//   (POST /:id/instalacao); a OS abre em seguida para agendar. Sem mao de obra: a venda
+//   ja foi cobrada.
 // =============================================================================
 
 'use strict';
@@ -136,9 +141,11 @@
 
   // ---- espelho da venda (modal) -------------------------------------------------
   const BASE = '/vendas/api/venda/';
-  const FORMA = { DINHEIRO: 'dinheiro', PIX: 'PIX / transferência', DEBITO: 'cartão de débito', CREDITO: 'cartão de crédito', TITULO: 'título em banco' };
+  const FORMA = { DINHEIRO: 'dinheiro', PIX: 'PIX / transferência', DEBITO: 'cartão de débito', CREDITO: 'cartão de crédito', TITULO: 'título em banco',
+                  RECEBER: 'a receber (paga depois)' };     // 16/10/2026
   const ST = { ATIVO: 'a receber', QUITADO: 'recebida', CANCELADO: 'cancelada' };
-  let espId = null;
+  let espId = null, espVenda = null, tecnicos = null;
+  const SIT_OS = { P: 'pendente', E: 'concluída · a receber', L: 'liquidada', C: 'cancelada' };
 
   async function abrirEspelho(id) {
     espId = id;
@@ -152,11 +159,12 @@
       if (r.status === 401) { window.location.href = '/usuariocontab/login'; return; }
       const d = await r.json();
       if (!d.ok) throw new Error(d.erro || 'falha na API');
-      desenharEspelho(d.venda, d.parcelas || [], d.boletas || {}, d.contas || {});
+      espVenda = d.venda;
+      desenharEspelho(d.venda, d.parcelas || [], d.boletas || {}, d.contas || {}, d.os || null);
     } catch (e) { $('esp-conteudo').textContent = 'Erro: ' + e.message; }
   }
 
-  function desenharEspelho(v, parcelas, boletas, contas) {
+  function desenharEspelho(v, parcelas, boletas, contas, os) {
     const c = v.cliente || {};
     const pags = v.pagamentos || [];
     const p = pags[0] || {};
@@ -187,7 +195,9 @@
       const bol = x.boletaId && boletas[String(x.boletaId)];
       let corpo;
       if (x.parcelas && x.parcelas.length) {
-        const onde = x.forma === 'TITULO' ? 'título em cobrança no ' + conta + ' — a receber do cliente' : 'a receber do cartão ' + conta;
+        const onde = x.forma === 'TITULO' ? 'título em cobrança no ' + conta + ' — a receber do cliente'
+          : x.forma === 'RECEBER' ? 'a receber do cliente (conta ' + conta + ') — paga na loja, pelo fluxo de caixa'
+          : 'a receber do cartão ' + conta;
         corpo = '<div class="cob-txt">' + onde + ':</div><table><thead><tr><th>Parcela</th><th>Vencimento</th>'
           + '<th class="n">Valor</th><th>Situação</th></tr></thead><tbody>'
           + x.parcelas.map(pp => {
@@ -219,7 +229,8 @@
     const cancelada = v.situacao === 'C'
       ? '<div class="esp-cancelada">Cancelada em ' + dia(v.canceladaEm) + ' ' + hora(v.canceladaEm)
         + ' — motivo: ' + escapar(v.motivoCancelamento || '') + '</div>' : '';
-    $('esp-conteudo').innerHTML = cab + '<h4>Itens</h4>' + itens + '<h4>Cobrança</h4>' + cobranca + cancelada;
+    $('esp-conteudo').innerHTML = cab + '<h4>Itens</h4>' + itens + secaoInstalacao(v, os)
+      + '<h4>Cobrança</h4>' + cobranca + cancelada;
     const podeCancelar = v.situacao === 'F';
     $('esp-cancelar').hidden = !podeCancelar;
     const recebida = parcelas.some(x => x.status === 'QUITADO');
@@ -227,6 +238,97 @@
       $('esp-msg').textContent = 'Há parcela já recebida: o cancelamento só será aceito depois de estornar o recebimento no fluxo.';
     }
   }
+
+  // ---- instalacao (OS) ------------------------------------------------------------
+  function secaoInstalacao(v, os) {
+    if (v.documento !== 'NFE') return '';
+    if (os && os.status !== 'C') {
+      const quando = os.diaPrevisto ? dia(os.diaPrevisto) + (os.horaIni ? ' ' + escapar(os.horaIni) + (os.horaFim ? '–' + escapar(os.horaFim) : '') : '')
+        : '<span class="sem">a agendar</span>';
+      return '<h4>Instalação</h4><div class="ins-os"><div><b>OS nº ' + os.numero + '</b> · ' + escapar(SIT_OS[os.status] || os.status)
+        + ' · ' + (os.tecnicoNome ? escapar(os.tecnicoNome) : '<span class="sem">sem técnico</span>') + ' · ' + quando
+        + (os.servicoDescricao ? ' · ' + escapar(os.servicoDescricao) : '') + '</div>'
+        + '<button type="button" class="ins-btn" data-abrir-os="' + escapar(os._id) + '">Abrir a OS</button></div>';
+    }
+    if (v.situacao !== 'F') return '';
+    return '<h4>Instalação</h4><div class="ins-os"><div class="cinza">Sem instalação nesta venda.</div>'
+      + '<button type="button" class="ins-btn roxo" id="ins-incluir">+ Incluir instalação</button></div>'
+      + '<div class="ins-form" id="ins-form" hidden></div>';
+  }
+
+  async function abrirIncluir() {
+    const f = $('ins-form');
+    if (!f.hidden) { f.hidden = true; return; }
+    f.hidden = false;
+    f.innerHTML = 'Carregando técnicos…';
+    try {
+      if (!tecnicos) {
+        const r = await fetch(BASE + 'tecnicos', { credentials: 'same-origin' });
+        const d = await r.json();
+        if (!d.ok) throw new Error(d.erro || 'falha na API');
+        tecnicos = d.tecnicos || [];
+      }
+    } catch (e) { f.textContent = 'Erro: ' + e.message; return; }
+    const v = espVenda;
+    f.innerHTML = '<div class="ins-tit">Itens a instalar</div>'
+      + (v.itens || []).map(i => '<label class="ins-item"><input type="checkbox" value="' + i.codigo + '"> '
+        + i.codigo + ' — ' + escapar(i.descricao) + '</label>').join('')
+      + '<div class="ins-linha"><label>Técnico<select id="ins-tec"><option value="">— escolher depois —</option>'
+      + tecnicos.map(t => '<option value="' + escapar(t.conta) + '">' + escapar(t.nome) + '</option>').join('') + '</select></label>'
+      + '<label>Serviço<select id="ins-serv"><option value="">—</option></select></label></div>'
+      + '<label class="ins-obs">Observação<textarea id="ins-obs" placeholder="ex.: cliente pediu instalação depois da compra"></textarea></label>'
+      + '<div class="ins-aviso">A venda já foi cobrada: a OS nasce <b>sem mão de obra</b> (o total e as parcelas não mudam). '
+      + 'Depois de gravar, a OS abre para marcar o dia e o horário.</div>'
+      + '<div class="ins-botoes"><button type="button" class="ins-btn" id="ins-cancela">Cancelar</button>'
+      + '<button type="button" class="ins-btn roxo" id="ins-grava">Abrir a OS</button></div>';
+    // um item so: ja vem marcado
+    const caixas = f.querySelectorAll('.ins-item input');
+    if (caixas.length === 1) caixas[0].checked = true;
+  }
+
+  function servicosDoTecnico() {
+    const t = (tecnicos || []).find(x => x.conta === $('ins-tec').value);
+    $('ins-serv').innerHTML = '<option value="">—</option>'
+      + ((t && t.servicos) || []).map(s => '<option value="' + escapar(s.id) + '">' + escapar(s.descricao) + '</option>').join('');
+  }
+
+  async function gravarInstalacao() {
+    const itens = [...$('ins-form').querySelectorAll('.ins-item input:checked')].map(c => Number(c.value));
+    if (!itens.length) { $('esp-msg').textContent = 'Marque o item a instalar.'; return; }
+    $('esp-msg').textContent = '';
+    $('ins-grava').disabled = true;
+    try {
+      const r = await fetch(BASE + espId + '/instalacao', {
+        method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itens, tecnicoConta: $('ins-tec').value, servicoId: $('ins-serv').value, observacao: $('ins-obs').value }),
+      });
+      if (r.status === 401) { window.location.href = '/usuariocontab/login'; return; }
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.erro || 'falha na API');
+      const id = espId;
+      await abrirEspelho(id);                       // mostra a OS na secao
+      abrirOS(String(d.os.id));                     // e abre a OS para agendar
+    } catch (e) {
+      $('esp-msg').textContent = e.message;
+      if ($('ins-grava')) $('ins-grava').disabled = false;
+    }
+  }
+
+  function abrirOS(id) {
+    if (!window.OSModal) { $('esp-msg').textContent = 'modal da OS não carregou (os-modal.js)'; return; }
+    const venda = espId;
+    window.OSModal.abrir(id, () => { if (venda && espId === venda) abrirEspelho(venda); });
+  }
+
+  $('esp-conteudo').addEventListener('click', ev => {
+    const b = ev.target.closest('button');
+    if (!b) return;
+    if (b.id === 'ins-incluir') abrirIncluir();
+    else if (b.id === 'ins-cancela') $('ins-form').hidden = true;
+    else if (b.id === 'ins-grava') gravarInstalacao();
+    else if (b.dataset.abrirOs) abrirOS(b.dataset.abrirOs);
+  });
+  $('esp-conteudo').addEventListener('change', ev => { if (ev.target.id === 'ins-tec') servicosDoTecnico(); });
 
   function fecharEspelho() { $('esp-fundo').hidden = true; $('esp-caixa').hidden = true; espId = null; }
 
@@ -256,7 +358,12 @@
   $('esp-fechar').addEventListener('click', fecharEspelho);
   $('esp-x').addEventListener('click', fecharEspelho);
   $('esp-fundo').addEventListener('click', fecharEspelho);
-  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('esp-caixa').hidden) fecharEspelho(); });
+  document.addEventListener('keydown', ev => {
+    if (ev.key !== 'Escape' || $('esp-caixa').hidden) return;
+    const osm = document.getElementById('osm-caixa');     // o modal da OS por cima: o Esc e dele
+    if (osm && !osm.hidden) return;
+    fecharEspelho();
+  });
   (function arrastar() {
     let ini = null; const cx = $('esp-caixa');
     $('esp-topo').addEventListener('mousedown', ev => {

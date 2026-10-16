@@ -11,6 +11,10 @@
 // Alterado em: 01/10/2026 — estoque so numeros, precos so moeda, taxa antes dos
 //              precos e calculada (ficha-produto-campos.js)
 // Alterado em: 01/10/2026 — duas taxas (prazo e vista); a que falta e calculada ao abrir
+// Alterado em: 14/10/2026 — CODIGO DE BARRAS (ean) logo abaixo do codigo: clica e bipa.
+//              Produto sem EAN na ficha mas com EAN vindo da nota de entrada
+//              (_produto_origem): o campo ja vem com ele, marcado "da nota" — grave
+//              para confirmar. Codigo de barras ja usado em outro produto: a API recusa.
 // =============================================================================
 
 'use strict';
@@ -22,6 +26,7 @@
   const CAMPOS = [
     { grupo: 'O produto' },
     { id: 'codigo',        rot: 'código',        leitura: true },
+    { id: 'ean',           rot: 'código de barras (EAN)' },
     { id: 'marcaproduto',  rot: 'marcaproduto' },
     { id: 'descricao',     rot: 'descrição',     largo: true },
     { id: 'descricaoTecnica', rot: 'descrição técnica (fornecedor)', largo: true },
@@ -146,6 +151,15 @@
   });
 
   async function gravar() {
+    // codigo de barras: tamanho errado nao grava; digito que nao confere pergunta
+    const probEan = FichaProduto.eanProblema(campo('ean')?.value);
+    if (probEan === 'tamanho') {
+      recado('Código de barras deve ter de 8 a 14 dígitos.', 'erro'); campo('ean').focus(); return;
+    }
+    if (probEan === 'digito' && !confirm('O último dígito do código de barras não confere.\n\nFoi digitado à mão? Confira o número.\n\nGravar assim mesmo?')) {
+      campo('ean').focus(); return;
+    }
+
     const ficha = {
       marcaloja: doc.marcaloja || '', cidade: doc.cidade || '', bairro: doc.bairro || '',
       nrFornec: doc.nrFornec || null,
@@ -167,7 +181,10 @@
       });
       if (r.status === 401) { window.location.href = '/usuariocontab/login'; return; }
       const j = await r.json();
-      if (!j.ok) throw new Error(j.erro || 'falha ao gravar');
+      if (!j.ok) {
+        if (j.campo) campo(j.campo)?.focus();
+        throw new Error(j.erro || 'falha ao gravar');
+      }
       recado('✓ alterações gravadas: ' + j.codigo + ' — ' + j.descricao, 'ok');
       await carregar();
     } catch (e) {
@@ -203,6 +220,13 @@
       desenharConsumo(d.consumo);
       desenharFicha();
       FichaProduto.completar(campo);   // ex.: taxa prazo dos produtos vindos do Access
+
+      // sem EAN na ficha: traz o da nota de entrada, para conferir e gravar
+      if (!doc.ean && d.eanNota) {
+        campo('ean').value = d.eanNota;
+        const rot = document.querySelector('label[for="f_ean"]');
+        if (rot) rot.textContent = 'código de barras (EAN) · da nota, grave para confirmar';
+      }
       $('gravar').disabled = false;
     } catch (e) {
       $('titulo').textContent = 'Não foi possível abrir';

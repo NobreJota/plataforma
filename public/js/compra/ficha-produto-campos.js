@@ -4,6 +4,9 @@
 // Alterado em: 01/10/2026 - estoque so inteiro (nao existe quantidade fracionada)
 // Alterado em: 01/10/2026 - DUAS taxas: taxaprazo <-> precoprazo e taxa (vista) <->
 //              precovista; completar() preenche a taxa que falta ao abrir a ficha
+// Alterado em: 14/10/2026 - CODIGO DE BARRAS (ean): so digitos; o leitor bipa e manda
+//              Enter (a pagina passa ao proximo campo). eanProblema() confere 8-14
+//              digitos e o digito verificador (GTIN, modulo 10)
 //
 // Regras dos campos da ficha de produto, usadas pelas DUAS fichas:
 //   Novo produto (produto-cadastro.js) e pagina do produto (produto.js).
@@ -15,6 +18,7 @@
 //              - digitou a taxa e o preco dela esta vazio -> calcula o preco
 //                (custo x (1 + taxa/100))
 //              - digitou o preco e a taxa dele esta vazia -> calcula a taxa
+//   ean      codigo de barras: so digitos, 8 a 14
 //
 // Carregar ANTES do JS da pagina:
 //   <script src="/js/compra/ficha-produto-campos.js"></script>
@@ -32,6 +36,7 @@ window.FichaProduto = (function () {
     if (ESTOQUE.includes(id)) return 'num';
     if (MOEDA.includes(id)) return 'moeda';
     if (id in PARES) return 'taxa';
+    if (id === 'ean') return 'ean';
     return null;
   }
 
@@ -58,9 +63,24 @@ window.FichaProduto = (function () {
   function paraApi(id, texto) {
     const t = tipo(id);
     if (!t) return texto;
+    if (t === 'ean') return String(texto ?? '').replace(/\D/g, '');
     const n = numero(texto);
     if (n === null) return '';
     return String(t === 'num' ? Math.trunc(n) : n);
+  }
+
+  // codigo de barras: '' = ok (ou vazio); 'tamanho' = nao tem 8 a 14 digitos;
+  // 'digito' = o ultimo digito nao confere (erro de digitacao; o leitor ja confere)
+  function eanProblema(texto) {
+    const s = String(texto ?? '').replace(/\D/g, '');
+    if (s === '') return '';
+    if (s.length < 8 || s.length > 14) return 'tamanho';
+    if (![8, 12, 13, 14].includes(s.length)) return '';      // codigo interno: so o tamanho
+    const d = s.split('').map(Number);
+    const dv = d.pop();
+    let soma = 0;
+    d.reverse().forEach((n, i) => { soma += n * (i % 2 === 0 ? 3 : 1); });
+    return (10 - (soma % 10)) % 10 === dv ? '' : 'digito';
   }
 
   // um par taxa/preco: o que estiver vazio sai do outro
@@ -95,8 +115,8 @@ window.FichaProduto = (function () {
       if (el.tagName !== 'INPUT' || el.readOnly) return;
       const t = tipo(el.id.replace(/^f_/, ''));
       if (!t) return;
-      // estoque: so digitos (inteiro); precos/taxa: digitos, ponto e virgula
-      const limpo = el.value.replace(t === 'num' ? /\D/g : /[^\d.,]/g, '');
+      // estoque e codigo de barras: so digitos; precos/taxa: digitos, ponto e virgula
+      const limpo = el.value.replace(t === 'num' || t === 'ean' ? /\D/g : /[^\d.,]/g, '');
       if (limpo !== el.value) el.value = limpo;
     });
 
@@ -106,6 +126,13 @@ window.FichaProduto = (function () {
       const id = el.id.replace(/^f_/, '');
       const t = tipo(id);
       if (!t) return;
+      if (t === 'ean') {                       // vermelho se o codigo nao fecha
+        const ruim = eanProblema(el.value) !== '';
+        el.style.borderColor = ruim ? '#dc2626' : '';
+        el.style.background = ruim ? '#fef2f2' : '';
+        el.title = ruim ? 'código de barras: confira (8 a 14 dígitos, último dígito)' : '';
+        return;
+      }
       if (t !== 'num' && el.value.trim() !== '') {
         const n = numero(el.value);
         el.value = n === null ? '' : fmt(n);
@@ -114,5 +141,5 @@ window.FichaProduto = (function () {
     });
   }
 
-  return { tipo, numero, exibir, paraApi, ligar, completar };
+  return { tipo, numero, exibir, paraApi, ligar, completar, eanProblema };
 })();

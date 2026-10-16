@@ -1,0 +1,23 @@
+Banco: admin · 15/10/2026, 15:36:44
+
+== CONTAS QUE A CONCLUSAO DA OS VAI USAR ==
+  OK     3.06.006.004  Serv. Mat Complemen  (devedora)
+  OK     4.05.001.001  Receita de Serviços - OS  (credora)
+  OK     1.02.001.001  Estoque  (devedora)
+  OK     3.05.001.001  Custo Mercadoria Vendida  (devedora)
+  OK     4.02.001.001  Venda a Prazo  (credora)
+
+== 3.06 (subgrupo, titulos e subtitulos) ==
+  subgrupo  3.06  Vendas
+  titulo    3.06.001  Vendas
+  titulo    3.06.006  Serviços
+  subtitulo 3.06.006.001  Reserva Técnicas  (devedora)
+  subtitulo 3.06.006.004  Serv. Mat Complemen  (devedora)
+
+== 2.06 (onde ficaria a conta de ESPERA da mao de obra) ==
+  subgrupo  2.06  Serviços
+  titulo    2.06.001  Serviços Técnicos
+  subtitulos 2.06.001.*: 6 (tecnicos)
+
+== 2.07 a 2.09 (titulos, para comparar) ==
+  titulo    2.09.001  Extras

@@ -81,9 +81,22 @@
 // O preco que vale e o do servidor: a tela so mostra.
 //
 // API: /vendas/api/venda (produtos, clientes, POST, PUT, GET /:id)
+// Alterado em: 14/10/2026 - LEITOR DE CODIGO DE BARRAS: Enter com texto novo busca na hora e pega o 1o
+//              (o EAN acha um produto so); a API acha pelo EAN.
 // Alterado em: 14/10/2026 - instalacao: dia/hora que ja passou nao vale (agenda mostra "passou");
 //              Confirmar instalacao ja abre o fechamento; sem botao Andamento: ao sair com
 //              alteracao nao gravada aparece o aviso (Gravar e sair / Sair sem gravar / Continuar).
+// Alterado em: 16/10/2026 - fechamento A PRAZO: forma "A receber (paga depois)" — fecha a NF sem
+//              receber; parcelas no fluxo de caixa a partir do 1o vencimento (NF com cliente).
+// Alterado em: 16/10/2026 - instalacao: escolheu o TECNICO, o cursor vai para a MAO DE OBRA e so sai
+//              dela (para outro campo) depois de confirmar o valor com Enter (0,00 se nao houver).
+//              Tecnico e servico continuam livres; os botoes tambem.
+// Alterado em: 16/10/2026 - CONDICAO comeca A PRAZO (a maioria compra a prazo). Preco NEGOCIADO fica
+//              fixo ao trocar a condicao (combinado com o cliente, vale a vista ou a prazo) e aparece
+//              sempre destacado.
+// Alterado em: 15/10/2026 - instalacao: o servico da ficha do tecnico e so DESCRICAO (sem % nem valor
+//              fixo) e a partilha saiu da tela: a mao de obra entra na receita de servicos
+//              (4.05.001.001) e a parte do tecnico e definida na ficha de fechamento da OS
 // Alterado em: 13/10/2026 - instalacao: servico da ficha do tecnico + mao de obra (partilha na tela);
 //              a mao de obra entra no total (linha Instalação).
 // =============================================================================
@@ -96,7 +109,7 @@
 
   const estado = {
     id: document.body.dataset.vendaId || '',
-    documento: 'CUPOM', condicao: 'VISTA',
+    documento: 'CUPOM', condicao: 'PRAZO',      // 16/10/2026: comeca a prazo
     cliente: null,
     loja: null,         // cabecalho da loja (para a impressao)
     instalacao: null,   // dados da OS (so NF com item marcado)
@@ -192,14 +205,13 @@
     }
     $('busca-cliente').focus();
   });
-  // condicao: select abaixo dos totais; trocar recalcula o preco de todos os itens
+  // condicao: select abaixo dos totais; trocar recalcula o preco de tabela dos itens.
+  // 16/10/2026: o preco NEGOCIADO fica (foi combinado com o cliente, vale nas duas condicoes)
   $('sel-cond').addEventListener('change', ev => {
     estado.condicao = ev.target.value === 'PRAZO' ? 'PRAZO' : 'VISTA';
-    // a tabela mudou: preco negociado volta para a tabela da nova condicao
     const tinha = estado.itens.some(i => i.precoManual > 0);
-    estado.itens.forEach(i => { i.precoManual = null; });
     desenharItens();
-    if (tinha) recado('Condição trocada: os preços negociados voltaram para a tabela. Negocie de novo, se for o caso.', 'erro');
+    if (tinha) recado('Condição trocada: os preços negociados (em amarelo) ficaram como estavam.', 'ok');
   });
 
   function mostrarCliente() {
@@ -220,7 +232,7 @@
     const input = $(inputId), lista = $(listaId);
     let espera = null, achados = [], sel = 0;
     let pagina = 1, pag = null;          // pag = { total, pagina, paginas, porPagina } quando a API pagina
-    const fechar = () => { lista.hidden = true; achados = []; };
+    const fechar = () => { lista.hidden = true; achados = []; ultimaBusca = null; };
     const desenhar = () => {
       const cab = listaId === 'lista-produtos' && achados.length
         ? '<div class="op cab"><span>Código</span><span>Descrição</span><span>Referência</span>'
@@ -237,8 +249,10 @@
       lista.hidden = false;
     };
     // busca (ou troca de pagina) — o texto digitado fica o mesmo
+    let ultimaBusca = null;
     const buscar = async () => {
       const q = input.value.trim();
+      ultimaBusca = q;
       const base = typeof url === 'function' ? url() : url;
       const r = await api('GET', base + encodeURIComponent(q) + '&pagina=' + pagina);
       achados = r[listaId === 'lista-produtos' ? 'produtos' : 'clientes'];
@@ -267,7 +281,19 @@
     input.addEventListener('keydown', ev => {
       if (ev.key === 'ArrowDown' && achados.length) { ev.preventDefault(); sel = Math.min(sel + 1, achados.length - 1); desenhar(); }
       else if (ev.key === 'ArrowUp' && achados.length) { ev.preventDefault(); sel = Math.max(sel - 1, 0); desenhar(); }
-      else if (ev.key === 'Enter') { ev.preventDefault(); if (achados[sel]) { escolher(achados[sel]); input.value = ''; fechar(); } }
+      else if (ev.key === 'Enter') {
+        ev.preventDefault();
+        // 14/10/2026: o leitor de codigo de barras digita e da Enter na hora, antes da busca
+        // terminar: com texto novo, busca agora e pega o primeiro (EAN acha um produto so)
+        const q = input.value.trim();
+        if (q && q !== ultimaBusca) {
+          clearTimeout(espera); pagina = 1;
+          buscar().then(() => { if (achados[0]) { escolher(achados[0]); input.value = ''; fechar(); } })
+            .catch(e => recado(e.message, 'erro'));
+          return;
+        }
+        if (achados[sel]) { escolher(achados[sel]); input.value = ''; fechar(); }
+      }
       else if (ev.key === 'Escape') fechar();
       else if (ev.key === 'PageDown' && pag) { ev.preventDefault(); irPagina(1); }
       else if (ev.key === 'PageUp' && pag) { ev.preventDefault(); irPagina(-1); }
@@ -472,13 +498,54 @@
     $('ins-msg').textContent = '';
     agHorarioTexto(); agDesenhar();
   });
+  // 14/10/2026: trocou tecnico ou dia -> o horario NAO vai junto (volta so o ja confirmado, se for o mesmo)
+  function reporHorarioIns() {
+    const ins = estado.instalacao || {};
+    const dIns = ins.diaPrevisto ? String(ins.diaPrevisto).slice(0, 10) : '';
+    const mesmo = $('ins-tecnico').value === (ins.tecnicoConta || '') && $('ins-dia').value === dIns && ins.horaIni;
+    agEscolha = mesmo ? { ini: min(ins.horaIni), fim: ins.horaFim ? min(ins.horaFim) : null } : { ini: null, fim: null };
+    agHorarioTexto();
+  }
+  $('ins-tecnico').addEventListener('change', reporHorarioIns);
   $('ins-tecnico').addEventListener('change', agCarregar);
   $('ins-tecnico').addEventListener('change', () => { encherServicos(''); mostrarPartilha(); });
   $('ins-servico').addEventListener('change', mostrarPartilha);
   $('ins-mo').addEventListener('input', mostrarPartilha);
   $('ins-mo').addEventListener('blur', () => { if ($('ins-mo').value.trim()) $('ins-mo').value = brl(paraCentavos($('ins-mo').value)); });
+  // 16/10/2026: tecnico escolhido -> mao de obra, confirmada com Enter antes de ir a outro campo
+  let moTravado = false;
+  $('ins-tecnico').addEventListener('change', () => {
+    if (!$('ins-tecnico').value) { moTravado = false; return; }
+    moTravado = true;
+    $('ins-msg').textContent = 'Informe a mão de obra e confirme com Enter (0,00 se não houver).';
+    setTimeout(() => { $('ins-mo').focus(); $('ins-mo').select(); }, 0);
+  });
+  $('ins-mo').addEventListener('keydown', ev => {
+    if (ev.key !== 'Enter') return;
+    moTravado = false;                               // o Enter do modal leva ao proximo campo
+    $('ins-mo').value = brl(paraCentavos($('ins-mo').value));
+    mostrarPartilha();
+    $('ins-msg').textContent = '';
+  });
+  $('ins-mo').addEventListener('focusout', ev => {
+    const para = ev.relatedTarget;
+    if (!moTravado || !para || $('ins-caixa').hidden) return;
+    if (para.tagName === 'BUTTON' || para.id === 'ins-tecnico' || para.id === 'ins-servico') return;   // livres
+    $('ins-msg').textContent = 'Confirme a mão de obra com Enter (0,00 se não houver).';
+    setTimeout(() => { $('ins-mo').focus(); $('ins-mo').select(); }, 0);
+  });
+  // clique em outro campo ou na grade da agenda tambem espera a mao de obra
+  const bloqueiaClique = ev => {
+    if (!moTravado || $('ins-caixa').hidden || ev.target.closest('button, #ins-tecnico, #ins-servico, #ins-mo')) return;
+    if (!ev.target.closest('input, select, textarea, .ag-lin, [data-m]')) return;
+    ev.preventDefault(); ev.stopPropagation();
+    $('ins-msg').textContent = 'Confirme a mão de obra com Enter (0,00 se não houver).';
+    $('ins-mo').focus(); $('ins-mo').select();
+  };
+  document.addEventListener('mousedown', bloqueiaClique, true);
+  document.addEventListener('click', bloqueiaClique, true);
 
-  // servicos do tecnico escolhido (ficha: descricao + % do tecnico ou valor fixo)
+  // servicos do tecnico escolhido (ficha: so a descricao, 15/10/2026)
   function tecnicoEscolhido() { return (tecnicos || []).find(t => t.conta === $('ins-tecnico').value) || null; }
   function servicoEscolhido() {
     const t = tecnicoEscolhido();
@@ -489,19 +556,16 @@
     const lista = t ? (t.servicos || []) : [];
     $('ins-servico').innerHTML = !t ? '<option value="">escolha o técnico</option>'
       : !lista.length ? '<option value="">técnico sem serviços na ficha</option>'
-      : '<option value="">—</option>' + lista.map(s => '<option value="' + escapar(s.id) + '">' + escapar(s.descricao)
-          + ' · ' + (s.modo === 'FIXO' ? 'R$ ' + brl(s.valor) : String(s.valor).replace('.', ',') + '%') + '</option>').join('');
+      : '<option value="">—</option>' + lista.map(s => '<option value="' + escapar(s.id) + '">' + escapar(s.descricao) + '</option>').join('');
     $('ins-servico').value = sel && lista.some(s => s.id === sel) ? sel : (lista.length === 1 ? lista[0].id : '');
   }
   function mostrarPartilha() {
-    const mo = paraCentavos($('ins-mo').value), sv = servicoEscolhido(), el = $('ins-partilha');
+    const mo = paraCentavos($('ins-mo').value), el = $('ins-partilha');
     el.classList.remove('aviso');
     if (!mo) { el.textContent = 'sem mão de obra cobrada'; return; }
-    if (!sv) { el.textContent = 'escolha o técnico e o serviço para ver a partilha'; el.classList.add('aviso'); return; }
-    const tec = sv.modo === 'FIXO' ? sv.valor : Math.round(mo * (Number(sv.valor) || 0) / 100);
-    if (tec > mo) { el.textContent = 'valor fixo do técnico maior que a mão de obra'; el.classList.add('aviso'); return; }
-    el.textContent = 'técnico R$ ' + brl(tec) + ' (2.06.001) · loja R$ ' + brl(mo - tec) + ' (4.05.001.001)';
+    el.textContent = 'R$ ' + brl(mo) + ' entra na receita de serviços (4.05.001.001); a parte do técnico é definida na ficha de fechamento da OS';
   }
+  $('ins-dia').addEventListener('change', reporHorarioIns);
   $('ins-dia').addEventListener('change', agCarregar);
   // digitou DAS / ATE: a agenda acompanha. Nao reescreve o campo enquanto se digita
   // (o navegador dispara change a cada pedaco da hora; reescrever travava o ATE).
@@ -576,6 +640,7 @@
     const cx = $('ins-caixa');
     cx.style.left = '50%'; cx.style.top = '3vh'; cx.style.transform = 'translateX(-50%)';
     $('ins-fundo').hidden = false; cx.hidden = false;
+    moTravado = false;
     $('ins-tecnico').focus();
   }
   function fecharInstalacao() { $('ins-fundo').hidden = true; $('ins-caixa').hidden = true; focarOS(); }
@@ -588,9 +653,6 @@
     const opt = $('ins-tecnico').selectedOptions[0];
     const mo = paraCentavos($('ins-mo').value);
     const sv = servicoEscolhido();
-    if (mo > 0 && !$('ins-tecnico').value) { $('ins-msg').textContent = 'Há mão de obra: escolha o técnico (a partilha vem da ficha dele).'; $('ins-tecnico').focus(); return; }
-    if (mo > 0 && !sv) { $('ins-msg').textContent = 'Escolha o serviço do técnico.'; $('ins-servico').focus(); return; }
-    if (sv && sv.modo === 'FIXO' && mo > 0 && sv.valor > mo) { $('ins-msg').textContent = 'O valor fixo do técnico é maior que a mão de obra.'; $('ins-mo').focus(); return; }
     estado.instalacao = {
       confirmada: true,
       servicoId: sv ? sv.id : '', servicoDescricao: sv ? sv.descricao : '', maoDeObra: mo,
@@ -882,9 +944,9 @@
           + '<td>' + escapar(i.referencia) + '</td>'
           + '<td class="num' + (i.estoque < i.quantidade ? ' zero' : '') + '">' + i.estoque + '</td>'
           + '<td class="num"><input class="qtd" data-cod="' + i.codigo + '" value="' + i.quantidade + '" inputmode="numeric"></td>'
-          + '<td class="num"><input class="unit' + (i.precoManual > 0 && i.precoManual !== precoTabela(i) ? ' negociado' : '')
+          + '<td class="num"><input class="unit' + (i.precoManual > 0 ? ' negociado' : '')
             + '" data-cod="' + i.codigo + '" value="' + brl(preco(i)) + '" inputmode="decimal" title="preço negociado (apague para voltar à tabela)">'
-            + (i.precoManual > 0 && i.precoManual !== precoTabela(i) ? '<span class="tabela">tabela ' + brl(precoTabela(i)) + '</span>' : '') + '</td>'
+            + (i.precoManual > 0 ? '<span class="tabela">negociado · tabela ' + brl(precoTabela(i)) + '</span>' : '') + '</td>'
           + '<td class="num"><input class="desc" data-cod="' + i.codigo + '" value="' + (i.desconto ? brl(i.desconto) : '') + '" placeholder="0,00" inputmode="decimal"></td>'
           + '<td class="num tot-linha">' + brl(total) + '</td>'
           + '<td class="c-inst">' + (estado.documento === 'NFE' && i.garantia
@@ -928,7 +990,7 @@
     } else if (el.classList.contains('unit')) {
       el.value = el.value.replace(/[^\d.,]/g, '');
       const v = paraCentavos(el.value);
-      i.precoManual = v > 0 && v !== precoTabela(i) ? v : null;      // vazio ou igual: tabela
+      i.precoManual = v > 0 && v !== precoTabela(i) ? v : (v > 0 && i.precoManual > 0 ? v : null);   // vazio: tabela; igual a tabela: so se ja era negociado
       i.desconto = Math.min(i.desconto, i.quantidade * preco(i));
     }
     const tot = el.closest('tr')?.querySelector('td.tot-linha');      // total da linha na hora
@@ -1037,7 +1099,7 @@
   // (forma, banco/cartao, parcelas, valor) e Enter inclui na lista; "Falta receber" mostra o
   // que sobra. Dinheiro acima do que falta vira troco. Confirmar so com falta = 0.
   const NOMES = { DINHEIRO: 'Dinheiro', PIX: 'PIX / transferência', DEBITO: 'Cartão de débito',
-                  CREDITO: 'Cartão de crédito', TITULO: 'Título em banco' };
+                  CREDITO: 'Cartão de crédito', TITULO: 'Título em banco', RECEBER: 'A receber (paga depois)' };
   let formas = null;            // caixa, bancos e cartoes (GET /formas)
   let aFechar = null;           // a venda salva que vai ser fechada
   let formaEscolhida = '';
@@ -1069,12 +1131,13 @@
         + ' · ' + (v.condicao === 'PRAZO' ? 'a prazo' : 'à vista') + ' · ' + v.itens.length + ' item(ns)';
       $('fe-liq').textContent = 'R$ ' + brl(v.totalLiquido);
 
-      const lista = v.condicao === 'PRAZO' ? ['CREDITO', 'TITULO'] : ['DINHEIRO', 'PIX', 'DEBITO', 'CREDITO'];
+      const lista = v.condicao === 'PRAZO' ? ['CREDITO', 'TITULO', 'RECEBER'] : ['DINHEIRO', 'PIX', 'DEBITO', 'CREDITO'];
       const podeTitulo = v.documento === 'NFE' && v.cliente && v.cliente.tipo === 'PJ';
+      const podeReceber = v.documento === 'NFE' && v.cliente && v.cliente.id;
       $('fe-aviso').hidden = !(v.condicao === 'PRAZO' && !podeTitulo);
       $('fe-formas').innerHTML = lista.map(f => {
-        const off = f === 'TITULO' && !podeTitulo;
-        return '<label data-f="' + f + '"' + (off ? ' class="off" title="só pessoa jurídica com nota fiscal"' : '') + '>'
+        const off = (f === 'TITULO' && !podeTitulo) || (f === 'RECEBER' && !podeReceber);
+        return '<label data-f="' + f + '"' + (off ? ' class="off" title="' + (f === 'TITULO' ? 'só pessoa jurídica com nota fiscal' : 'só nota fiscal com cliente') + '"' : '') + '>'
           + '<input type="radio" name="fe-forma" value="' + f + '"' + (off ? ' disabled' : '') + '> ' + NOMES[f] + '</label>';
       }).join('');
       $('fe-banco').innerHTML = formas.bancos.map(b => '<option value="' + escapar(b.id) + '">' + escapar(b.apelido) + ' · ' + escapar(b.codigo) + '</option>').join('')
@@ -1105,8 +1168,13 @@
     });
     $('fe-l-banco').hidden = f !== 'PIX';
     $('fe-l-cartao').hidden = !(f === 'DEBITO' || f === 'CREDITO');
-    $('fe-l-parc').hidden = !(f === 'CREDITO' || f === 'TITULO');
-    if (!(f === 'CREDITO' || f === 'TITULO')) $('fe-parcelas').value = '1';
+    $('fe-l-parc').hidden = !(f === 'CREDITO' || f === 'TITULO' || f === 'RECEBER');
+    if (!(f === 'CREDITO' || f === 'TITULO' || f === 'RECEBER')) $('fe-parcelas').value = '1';
+    $('fe-l-venc').hidden = f !== 'RECEBER';
+    if (f === 'RECEBER' && !$('fe-venc').value) {          // 1o vencimento: daqui a 30 dias
+      const d = new Date(Date.now() + 30 * 86400000);
+      $('fe-venc').value = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
     $('fe-rot-valor').textContent = f === 'DINHEIRO' ? 'Valor recebido' : 'Valor';
     $('fe-recebido').value = brl(Math.max(0, falta()));
     $('fe-msg').textContent = ''; $('fe-msg').className = 'fe-msg';
@@ -1122,13 +1190,16 @@
     const n = f === 'DEBITO' ? 1 : Number($('fe-parcelas').value) || 1;
     const base = Math.floor(valor / n);
     const hoje = new Date(); hoje.setHours(12, 0, 0, 0);
-    let html = '<div>A receber no fluxo (pos 5)' + (f === 'TITULO' ? ', na conta do cliente' : ', na conta do cartão') + ':</div><table>';
+    let html = '<div>A receber no fluxo (pos 5)' + (f === 'TITULO' || f === 'RECEBER' ? ', na conta do cliente' : ', na conta do cartão') + ':</div><table>';
+    const v1 = f === 'RECEBER' && $('fe-venc').value ? new Date($('fe-venc').value + 'T12:00:00') : null;
     for (let i = 0; i < n; i++) {
-      const venc = new Date(hoje.getTime() + (f === 'DEBITO' ? 1 : (i + 1) * 30) * 86400000);
+      const venc = v1 ? (i === 0 ? v1 : new Date(v1.getFullYear(), v1.getMonth() + i, Math.min(v1.getDate(), 28), 12))
+        : new Date(hoje.getTime() + (f === 'DEBITO' ? 1 : (i + 1) * 30) * 86400000);
       html += '<tr><td>' + (i + 1) + '/' + n + '</td><td>' + venc.toLocaleDateString('pt-BR') + '</td><td>R$ '
         + brl(base + (i === 0 ? valor - base * n : 0)) + '</td></tr>';
     }
-    $('fe-previa').innerHTML = html + '</table>' + (f === 'TITULO' ? '<div>Cobrança no <b>Banestes/Armação</b>.</div>' : '');
+    $('fe-previa').innerHTML = html + '</table>' + (f === 'TITULO' ? '<div>Cobrança no <b>Banestes/Armação</b>.</div>'
+      : f === 'RECEBER' ? '<div>O cliente paga depois (na loja): o recebimento é feito pelo <b>fluxo de caixa</b>.</div>' : '');
   }
 
   // inclui a parte em edicao na lista
@@ -1152,7 +1223,12 @@
       if (!$('fe-cartao').value) { msg.textContent = 'Escolha o cartão.'; return false; }
       p.cartao = $('fe-cartao').value; p.destino = $('fe-cartao').selectedOptions[0].textContent;
     }
-    if (f === 'CREDITO' || f === 'TITULO') p.parcelas = Number($('fe-parcelas').value) || 1;
+    if (f === 'CREDITO' || f === 'TITULO' || f === 'RECEBER') p.parcelas = Number($('fe-parcelas').value) || 1;
+    if (f === 'RECEBER') {
+      if (!$('fe-venc').value) { msg.textContent = 'Informe o 1º vencimento.'; $('fe-venc').focus(); return false; }
+      p.primeiroVencimento = $('fe-venc').value;
+      p.destino = '1º venc. ' + $('fe-venc').value.split('-').reverse().join('/');
+    }
     pagos.push(p);
     desenharPagos();
     $('fe-recebido').value = brl(Math.max(0, falta()));
@@ -1183,7 +1259,7 @@
   async function confirmarFechamento() {
     if (falta() !== 0) { $('fe-recebido').focus(); return; }
     const corpo = { pagamentos: pagos.map(p => ({ forma: p.forma, valor: p.valor, contaBancaria: p.contaBancaria,
-                                                   cartao: p.cartao, parcelas: p.parcelas })) };
+                                                   cartao: p.cartao, parcelas: p.parcelas, primeiroVencimento: p.primeiroVencimento })) };
     $('fe-confirmar').disabled = true;
     $('fe-msg').className = 'fe-msg'; $('fe-msg').textContent = '';
     try {
@@ -1205,6 +1281,7 @@
   $('fechar').addEventListener('click', abrirFechamento);
   $('fe-formas').addEventListener('change', ev => { if (ev.target.name === 'fe-forma') escolherForma(ev.target.value); });
   $('fe-parcelas').addEventListener('change', previa);
+  $('fe-venc').addEventListener('change', previa);
   $('fe-recebido').addEventListener('input', previa);
   $('fe-recebido').addEventListener('keydown', ev => {
     if (ev.key === 'Enter') { ev.preventDefault(); adicionarPagamento(); }

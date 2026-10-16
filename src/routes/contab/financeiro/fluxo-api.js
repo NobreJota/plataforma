@@ -1,11 +1,16 @@
 // src/routes/contab/financeiro/fluxo-api.js
 // API da Tela do Fluxo de Caixa: lista lançamentos (projetados + futuros)
 // com saldo acumulado, filtrável por mês e ano.
+// Alterado em: 16/10/2026 - fica de fora o FLUXO DE SERVICO (origem 'OS': o a receber das OS),
+//              que tem tela propria (Servico > Fluxo de servico).
 
 const express = require('express');
 const FluxoProjetado = require('../../../models/contab/financeiro/fluxoProjetado');
 
 const router = express.Router();
+
+// 16/10/2026: o a receber das OS (origem 'OS') e do fluxo de servico, nao do fluxo de caixa
+const FORA_SERVICO = { origem: { $ne: 'OS' } };
 
 // Significado de cada pos (para cor e rótulo)
 const POS_INFO = {
@@ -26,7 +31,7 @@ router.get('/:ano', async (req, res) => {
     const ano = parseInt(req.params.ano, 10);
     const mes = req.query.mes ? parseInt(req.query.mes, 10) : null;
 
-    const filter = { ano, status: 'ATIVO' };
+    const filter = { ano, status: 'ATIVO', ...FORA_SERVICO };
     if (mes) filter.mes = mes;
 
     const itens = await FluxoProjetado.find(filter)
@@ -40,7 +45,7 @@ router.get('/:ano', async (req, res) => {
     let saldoAnterior = 0;
     if (mes) {
       const anteriores = await FluxoProjetado.find({
-        ano, status: 'ATIVO', mes: { $lt: mes }
+        ano, status: 'ATIVO', mes: { $lt: mes }, ...FORA_SERVICO
       }).select('pos valor').lean();
 
       for (const it of anteriores) {
@@ -104,7 +109,7 @@ router.get('/:ano', async (req, res) => {
 router.get('/:ano/resumo-mensal', async (req, res) => {
   try {
     const ano = parseInt(req.params.ano, 10);
-    const itens = await FluxoProjetado.find({ ano, status: 'ATIVO' }).lean();
+    const itens = await FluxoProjetado.find({ ano, status: 'ATIVO', ...FORA_SERVICO }).lean();
 
     const meses = Array.from({ length: 12 }, () => ({ receber: 0, pagar: 0 }));
     itens.forEach(it => {

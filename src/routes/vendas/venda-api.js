@@ -6,6 +6,23 @@
 //              tipo VI e numero continuando o Access (_numeracao, chave OS)
 // Alterado em: 14/10/2026 - fechar: instalacao com dia/hora que ja passou e recusada
 // Alterado em: 14/10/2026 - instalacao: horario so vale com dia marcado (sem dia, a hora e descartada)
+// Alterado em: 14/10/2026 - /produtos acha pelo CODIGO DE BARRAS (EAN 8-14 digitos, _produto_origem.ean)
+// Alterado em: 14/10/2026 - /produtos: o EAN tambem e procurado na FICHA do produto (arquivo_docs.ean)
+// Alterado em: 14/10/2026 - FORNECEDORES DO CONSIGNADO: /fornecedores devolve `consignado` (marcado
+//              pela loja em _os_config.fornecedoresConsignado); PUT /fornecedores/consignado grava a
+//              escolha. Por loja: o cadastro de fornecedores e compartilhado com o site.
+// Alterado em: 14/10/2026 - POST /:id/instalacao: INSTALACAO ESQUECIDA numa NF ja fechada (abre a
+//              OS sem mao de obra; a venda ja foi cobrada). /:id/espelho devolve a OS (numero,
+//              situacao, tecnico, dia) para o relatorio.
+// Alterado em: 16/10/2026 - A PRAZO: forma RECEBER ("a receber, paga depois"): fecha a NF sem receber
+//              na hora; fica na conta do cliente e vai para o FLUXO DE CAIXA (pos 5) em 1 a 10
+//              parcelas mensais a partir do 1o vencimento escolhido. So NF com cliente (PF ou PJ).
+//              O recebimento e o do fluxo de caixa.
+// Alterado em: 15/10/2026 - MAO DE OBRA (VI): nao divide mais pela ficha do tecnico. Decisao do Jorge:
+//              nada provisorio — no fechamento da NF a mao de obra inteira e receita da EMPRESA
+//              (4.05.001.001); na FICHA DE FECHAMENTO da OS informa-se a parte da empresa e o resto
+//              sai da 4.05.001.001 para a conta do tecnico (2.06.001.NNN). Tecnico e servico nao sao
+//              mais obrigatorios para cobrar mao de obra. A OS guarda maoDeObraVenda.
 // Alterado em: 14/10/2026 - GET /agenda aceita &os= (a propria OS nao conta como ocupada);
 //              agendaDoTecnico exportada para o os-api (agendar a OS)
 // Alterado em: 13/10/2026 - MAO DE OBRA da instalacao (VI) entra na venda: no fechamento da NF a
@@ -138,20 +155,37 @@ router.get('/produtos', async (req, res) => {
       filtro.$or = [{ descricao: rx }, { referencia: rx }, { referencia2: rx }, { descricaoTecnica: rx }];
       if (/^\d+$/.test(busca)) filtro.$or.unshift({ codigo: Number(busca) });
     }
+    // 14/10/2026: CODIGO DE BARRAS (EAN, 8 a 14 digitos, do leitor): o EAN de cada produto
+    // vem da ficha do produto (arquivo_docs.ean) e das notas de entrada (_produto_origem.ean,
+    // gravado pela conferencia)
+    let porEan = [];
+    if (/^\d{8,14}$/.test(busca)) {
+      const daFicha = (await col('arquivo_docs').find({ loja_id: loja, ean: busca })
+        .project({ codigo: 1 }).toArray()).map(p => Number(p.codigo));
+      const daNota = (await col('_produto_origem').find({ lojistaId: loja, ean: busca })
+        .project({ codigoProd: 1 }).toArray()).map(p => Number(p.codigoProd));
+      porEan = [...new Set([...daFicha, ...daNota])].filter(Boolean);
+      if (porEan.length) {
+        filtro.$or.unshift({ codigo: { $in: porEan } });
+        delete filtro.nrFornec;          // bipou: acha o produto mesmo com outro fornecedor no combo
+      }
+    }
 
     const docs = await col('arquivo_docs').find(filtro)
       .project({ codigo: 1, descricao: 1, descricaoTecnica: 1, referencia: 1, marcaproduto: 1,
                  fornecedor: 1, qte: 1, precovista: 1, precoprazo: 1, garantia: 1, instala: 1 })
       .sort({ descricao: 1 }).limit(fornecedor && !busca ? 300 : 30).toArray();
 
-    // codigo digitado exato vem primeiro
-    docs.sort((a, b) => (b.codigo === Number(busca)) - (a.codigo === Number(busca)));
+    // codigo digitado exato (ou o do EAN) vem primeiro
+    const exato = c => c === Number(busca) || porEan.includes(c);
+    docs.sort((a, b) => exato(b.codigo) - exato(a.codigo));
 
     res.json({ ok: true, produtos: docs.map(p => ({
       codigo: p.codigo, descricao: p.descricao || '', descricaoTecnica: p.descricaoTecnica || '',
       referencia: p.referencia || '', marca: p.marcaproduto || p.fornecedor || '', estoque: Number(p.qte) || 0,
       precoVista: centavos(p.precovista), precoPrazo: centavos(p.precoprazo),
       garantia: Number(p.garantia) === 1 || p.instala === true,   // instala: marcacao antiga
+      porEan: porEan.includes(p.codigo),                            // achado pelo codigo de barras
     })) });
   } catch (err) {
     console.error('[vendas/produtos]', err);
@@ -173,7 +207,7 @@ async function tecnicosAtivos(loja) {
     .project({ nome: 1, apelido: 1, contaTecnico: 1, contaReceita: 1, servicos: 1 }).sort({ nome: 1 }).toArray();
   if (cad.length || await col('_tecnicos').countDocuments({ lojistaId: loja })) {
     return cad.filter(x => x.contaTecnico).map(x => ({ conta: x.contaTecnico, nome: x.apelido || x.nome, receita: x.contaReceita || '',
-      servicos: (x.servicos || []).map(s => ({ id: String(s.id), descricao: s.descricao, modo: s.modo, valor: s.valor })) }));
+      servicos: (x.servicos || []).map(s => ({ id: String(s.id), descricao: s.descricao })) }));
   }
   const subs = await col('_contasubtitulos').find({
     lojistaId: loja, ativo: { $ne: false },
@@ -358,10 +392,13 @@ function lerInstalacao(b, itensVenda) {
 
 // ---------------------------------------------------------------------------
 // GET /fornecedores   para o combo: fornecedores ATIVOS no Access (_fornec_access)
-// que tem produto nesta empresa. Devolve { nr, marca }; o combo mostra a marca.
+// que tem produto nesta empresa. Devolve { nr, marca, consignado }; o combo mostra a marca.
+// consignado = a loja marcou como fornecedor de produto de instalacao (combo da OS)
 // ---------------------------------------------------------------------------
 router.get('/fornecedores', async (req, res) => {
   try {
+    const cfg = await col('_os_config').findOne({ lojistaId: lojaDe(req) });
+    const marcados = new Set((cfg?.fornecedoresConsignado || []).map(Number));
     const comProduto = new Set((await col('arquivo_docs').distinct('nrFornec',
       { loja_id: lojaDe(req), ativo: { $ne: false } })).map(Number));
     const ativos = await col('_fornec_access').find({ ativo: { $ne: false } })
@@ -369,9 +406,31 @@ router.get('/fornecedores', async (req, res) => {
     const lista = ativos
       .map(f => ({ nr: Number(f.nrFornec), marca: String(f.marca ?? '').trim() }))
       .filter(f => f.nr && f.marca && comProduto.has(f.nr))
-      .sort((a, b) => a.marca.localeCompare(b.marca, 'pt-BR'));
+      .sort((a, b) => a.marca.localeCompare(b.marca, 'pt-BR'))
+      .map(f => ({ ...f, consignado: marcados.has(f.nr) }));
     res.json({ ok: true, fornecedores: lista });
   } catch (err) {
+    res.status(500).json({ ok: false, erro: err.message });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// PUT /fornecedores/consignado   { nrs: [67, 120, ...] }
+// Os fornecedores que aparecem no combo do consignado (modal da OS). Lista vazia =
+// o combo volta a mostrar todos.
+// ---------------------------------------------------------------------------
+router.put('/fornecedores/consignado', express.json(), async (req, res) => {
+  try {
+    const nrs = [...new Set((Array.isArray(req.body?.nrs) ? req.body.nrs : [])
+      .map(Number).filter(n => Number.isInteger(n) && n > 0))];
+    await col('_os_config').updateOne(
+      { lojistaId: lojaDe(req) },
+      { $set: { fornecedoresConsignado: nrs, atualizadoEm: new Date() } },
+      { upsert: true },
+    );
+    res.json({ ok: true, total: nrs.length });
+  } catch (err) {
+    console.error('[vendas/fornecedores/consignado]', err);
     res.status(500).json({ ok: false, erro: err.message });
   }
 });
@@ -810,8 +869,9 @@ const BANCO_TITULO = '1.01.002.002';   // Banestes/Armacao: banco de cobranca do
 const PREFIXO_CARTAO = '1.01.005.';
 const DIA = 24 * 60 * 60 * 1000;
 const FORMAS_VISTA = ['DINHEIRO', 'PIX', 'DEBITO', 'CREDITO'];   // credito a vista: preco a vista, parcelado
-const FORMAS_PRAZO = ['CREDITO', 'TITULO'];
-const NOME_FORMA = { DINHEIRO: 'dinheiro', PIX: 'PIX/transferência', DEBITO: 'débito', CREDITO: 'crédito', TITULO: 'título' };
+const FORMAS_PRAZO = ['CREDITO', 'TITULO', 'RECEBER'];
+const NOME_FORMA = { DINHEIRO: 'dinheiro', PIX: 'PIX/transferência', DEBITO: 'débito', CREDITO: 'crédito', TITULO: 'título',
+                     RECEBER: 'a receber' };
 
 const subtitulo = (loja, codigo, session) => col('_contasubtitulos')
   .findOne({ lojistaId: loja, codigo, ativo: { $ne: false } }, { session });
@@ -939,6 +999,9 @@ router.post('/:id/fechar', async (req, res) => {
         if (forma === 'TITULO' && (v.documento !== 'NFE' || v.cliente?.tipo !== 'PJ')) {
           throw new Error('título em banco só para pessoa jurídica com nota fiscal');
         }
+        if (forma === 'RECEBER' && (v.documento !== 'NFE' || !v.cliente?.id)) {
+          throw new Error('a receber (paga depois) só em nota fiscal com cliente');
+        }
         let destino = null;
         if (forma === 'DINHEIRO') {
           destino = await subtitulo(loja, CAIXA, session);
@@ -956,6 +1019,8 @@ router.post('/:id/fechar', async (req, res) => {
           if (!cod.startsWith(PREFIXO_CARTAO)) throw new Error('escolha o cartão');
           destino = await subtitulo(loja, cod, session);
           if (!destino) throw new Error('o cartão ' + cod + ' não está no plano');
+        } else if (forma === 'RECEBER') {
+          destino = contaCliente;          // 16/10/2026: fica a receber do cliente (paga depois, na loja)
         } else if (forma === 'TITULO') {
           destino = contaCliente;          // fica a receber do proprio cliente
           if (!(await subtitulo(loja, BANCO_TITULO, session))) {
@@ -972,32 +1037,36 @@ router.post('/:id/fechar', async (req, res) => {
             numero: i + 1, vencimento: new Date(dataBoleta.getTime() + (i + 1) * 30 * DIA), valor: x,
           }));
         }
+        if (forma === 'RECEBER') {
+          // 16/10/2026: 1o vencimento escolhido (hoje ate 1 ano); as demais de mes em mes
+          const n = Math.floor(Number(p.parcelas) || 1);
+          if (n < 1 || n > 10) throw new Error('de 1 a 10 parcelas');
+          const pv = String(p.primeiroVencimento || '');
+          const v1 = /^\d{4}-\d{2}-\d{2}$/.test(pv) ? new Date(pv + 'T12:00:00') : new Date(dataBoleta.getTime() + 30 * DIA);
+          if (v1 < dataBoleta || v1 > new Date(dataBoleta.getTime() + 366 * DIA)) throw new Error('1º vencimento: de hoje até 1 ano');
+          parcelas = dividir(valor, n).map((x, i) => ({
+            numero: i + 1, vencimento: new Date(v1.getFullYear(), v1.getMonth() + i, Math.min(v1.getDate(), 28), 12, 0, 0), valor: x,
+          }));
+          if (n === 1) parcelas[0].vencimento = v1;
+        }
         prontos.push({ forma, valor, destino, parcelas });
       }
 
-      // ---- mao de obra da instalacao (VI): partilha pela ficha do tecnico ----
-      let partilha = null, numeroOS = null;
+      // ---- mao de obra da instalacao (VI) ----
+      // 15/10/2026: vai inteira para a receita da empresa (4.05.001.001); a parte do tecnico sai
+      // dela na ficha de fechamento da OS
+      let espera = null, numeroOS = null;
       if (instalar) numeroOS = await proximoNumeroOS(loja, session);
       const maoDeObra = instalar ? (v.totalServico || 0) : 0;
       if (maoDeObra > 0) {
         const ins = v.instalacao;
-        if (!ins.tecnicoConta) throw new Error('há mão de obra na instalação: escolha o técnico');
-        const tec = await col('_tecnicos').findOne({ lojistaId: loja, contaTecnico: ins.tecnicoConta }, { session });
-        if (!tec) throw new Error('técnico ' + ins.tecnicoConta + ' não está no cadastro de técnicos');
-        const sv = (tec.servicos || []).find(s => String(s.id) === String(ins.servicoId));
-        if (!sv) throw new Error('escolha o serviço do técnico na instalação (a partilha vem da ficha dele)');
-        const parteTecnico = sv.modo === 'FIXO' ? Math.round(sv.valor || 0) : Math.round(maoDeObra * (Number(sv.valor) || 0) / 100);
-        if (parteTecnico > maoDeObra) throw new Error('o valor fixo do técnico (' + (parteTecnico / 100).toFixed(2) + ') é maior que a mão de obra');
-        const contaTec = await subtitulo(loja, ins.tecnicoConta, session);
-        if (!contaTec) throw new Error('a conta do técnico ' + ins.tecnicoConta + ' não está no plano (ou está suspensa)');
         const contaServ = await subtitulo(loja, CONTAS.RECEITA_SERVICO, session);
         if (!contaServ) throw new Error('a conta ' + CONTAS.RECEITA_SERVICO + ' (receita de serviços) não está no plano');
-        partilha = { maoDeObra, parteTecnico, parteLoja: maoDeObra - parteTecnico, contaTec, contaServ,
-                     servico: { id: String(sv.id), descricao: sv.descricao, modo: sv.modo, valor: sv.valor },
-                     tecnicoNome: tec.apelido || tec.nome };
-        ins.servicoDescricao = sv.descricao;
-        ins.parteTecnico = partilha.parteTecnico;
-        ins.parteLoja = partilha.parteLoja;
+        espera = { conta: contaServ,
+          historico: 'OS nº ' + numeroOS + (ins.tecnicoNome ? ' / ' + ins.tecnicoNome : '')
+            + (ins.servicoDescricao ? ' · ' + ins.servicoDescricao : '') + ' · venda ' + v.numero + ' · mão de obra' };
+        ins.parteTecnico = 0;
+        ins.parteLoja = 0;
       }
 
       const receitaCod = v.documento === 'NFE' && v.condicao === 'PRAZO' ? CONTAS.RECEITA_PRAZO : CONTAS.RECEITA_VISTA;
@@ -1011,16 +1080,12 @@ router.post('/:id/fechar', async (req, res) => {
       });
 
       // NFE: a venda uma vez so — cliente (debito) x receita (credito), pelo total.
-      // Com mao de obra: receita dos produtos + parte do tecnico (2.06.001) + parte da loja (4.05.001.001)
+      // Com mao de obra: receita dos produtos + mao de obra na receita de servicos (4.05.001.001)
       if (v.documento === 'NFE') {
         const contras = [];
         const produtos = total - maoDeObra;
         if (produtos > 0) contras.push(contra(receita, produtos, 'Venda ' + v.numero + ' · NF · ' + nomeCli));
-        if (partilha) {
-          const h = 'OS nº ' + numeroOS + ' / ' + partilha.tecnicoNome + ' · ' + partilha.servico.descricao + ' · venda ' + v.numero;
-          if (partilha.parteTecnico > 0) contras.push(contra(partilha.contaTec, partilha.parteTecnico, h));
-          if (partilha.parteLoja > 0) contras.push(contra(partilha.contaServ, partilha.parteLoja, h));
-        }
+        if (espera) contras.push(contra(espera.conta, maoDeObra, espera.historico));
         const [bv] = await Boleta.create([{
           codigo: codigoBoleta(), tipo: 'RECEBIMENTO', data: dataBoleta,
           bancoSubTitulo: contaCliente._id, bancoCodigo: contaCliente.codigo, bancoNome: contaCliente.nome,
@@ -1039,8 +1104,8 @@ router.post('/:id/fechar', async (req, res) => {
         if (p.forma === 'DEBITO' || p.forma === 'CREDITO') { pag.operadora = p.destino.nome; pag.contaOperadora = p.destino.codigo; }
 
         if (v.documento === 'NFE') {
-          // o recebimento: destino (debito) x cliente (credito) — titulo fica a receber
-          if (p.forma !== 'TITULO') {
+          // o recebimento: destino (debito) x cliente (credito) — titulo e "a receber" ficam a receber
+          if (p.forma !== 'TITULO' && p.forma !== 'RECEBER') {
             const [br] = await Boleta.create([{
               codigo: codigoBoleta(), tipo: 'RECEBIMENTO', data: dataBoleta,
               bancoSubTitulo: p.destino._id, bancoCodigo: p.destino.codigo, bancoNome: p.destino.nome,
@@ -1109,8 +1174,9 @@ router.post('/:id/fechar', async (req, res) => {
         const r = await col('_ordens_servico').insertOne({
           lojistaId: loja, numero: numeroOS, tipo: 'VI', status: 'P', data: agora,
           venda: { id: v._id, numero: v.numero },
-          // mao de obra ja cobrada e lancada na venda (fluxo normal): a OS so mostra
-          valorServico: maoDeObra, servicoContabilizado: maoDeObra > 0,
+          // mao de obra ja cobrada na venda (fluxo normal), toda na 4.05.001.001; a parte do
+          // tecnico sai de la na ficha de fechamento da OS
+          valorServico: maoDeObra, servicoContabilizado: maoDeObra > 0, maoDeObraVenda: maoDeObra,
           cliente: { id: v.cliente.id, codigo: v.cliente.codigo, tipo: v.cliente.tipo, nome: v.cliente.nome,
                      documento: v.cliente.documento, ncontabil: v.cliente.ncontabil },
           ...dadosOS,
@@ -1135,6 +1201,95 @@ router.post('/:id/fechar', async (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// POST /:id/instalacao   { itens: [codigo], tecnicoConta, servicoId, observacao }
+// 14/10/2026: INSTALACAO ESQUECIDA. Venda (NF) ja fechada sem instalacao: abre a OS agora.
+//   - so NF fechada, e sem OS em aberto
+//   - marca os itens escolhidos (precisaInstalacao) e grava venda.instalacao e venda.os
+//   - a OS nasce pendente (P), sem dia: vai para "A agendar"; agenda-se no modal da OS
+//   - SEM mao de obra: a venda ja foi cobrada (total e parcelas nao mudam). Se houver
+//     cobranca do servico, sera pela OS (fluxo de servico, etapa 2b)
+//   - endereco e telefones: os do cliente (o modal da OS mostra)
+// Grava direto na colecao (sem o save do modelo, que recalcularia os totais da venda).
+// ---------------------------------------------------------------------------
+router.post('/:id/instalacao', async (req, res) => {
+  const session = await mongoose.startSession();
+  try {
+    const loja = lojaDe(req);
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ ok: false, erro: 'id inválido' });
+    const b = req.body || {};
+    const t = x => String(x ?? '').trim();
+    let resposta = null;
+
+    await session.withTransaction(async () => {
+      const v = await col('_vendas').findOne({ _id: new mongoose.Types.ObjectId(req.params.id), lojistaId: loja }, { session });
+      if (!v) throw Object.assign(new Error('venda não encontrada'), { status: 404 });
+      if (v.situacao !== 'F') throw new Error('só venda fechada (a venda aberta tem a instalação na própria tela)');
+      if (v.documento !== 'NFE') throw new Error('instalação só em nota fiscal');
+      if (!v.cliente?.id) throw new Error('a venda não tem cliente');
+      if (v.os?.id) {
+        const ja = await col('_ordens_servico').findOne({ _id: v.os.id, lojistaId: loja }, { session, projection: { numero: 1, status: 1 } });
+        if (ja && ja.status !== 'C') throw new Error('esta venda já tem a OS nº ' + ja.numero);
+      }
+
+      const codigos = new Set((Array.isArray(b.itens) ? b.itens : []).map(Number));
+      const itens = (v.itens || []).filter(i => codigos.has(Number(i.codigo)));
+      if (!itens.length) throw new Error('marque o item a instalar');
+
+      // tecnico e servico (opcionais aqui: da para escolher depois no modal da OS)
+      let tec = null, sv = null;
+      if (t(b.tecnicoConta)) {
+        tec = await col('_tecnicos').findOne({ lojistaId: loja, contaTecnico: t(b.tecnicoConta), ativo: { $ne: false } }, { session });
+        if (!tec) throw new Error('técnico ' + t(b.tecnicoConta) + ' não está no cadastro de técnicos');
+        sv = (tec.servicos || []).find(s => String(s.id) === t(b.servicoId)) || null;
+      }
+
+      const cli = await clienteDaLoja(loja, String(v.cliente.id));
+      const e = v.cliente.endereco || cli?.enderecoCobranca || {};
+      const agora = new Date();
+      const ins = {
+        tecnicoConta: tec ? tec.contaTecnico : '', tecnicoNome: tec ? (tec.apelido || tec.nome) : '',
+        receitaConta: '', servicoId: sv ? String(sv.id) : '', servicoDescricao: sv ? sv.descricao : '',
+        maoDeObra: 0, parteTecnico: 0, parteLoja: 0,
+        diaPrevisto: null, periodo: 'NENHUM', horaIni: '', horaFim: '',
+        endereco: { logradouro: t(e.logradouro), numero: t(e.numero), complemento: t(e.complemento),
+                    bairro: t(e.bairro), cidade: t(e.cidade), uf: t(e.uf).toUpperCase().slice(0, 2),
+                    cep: t(e.cep).replace(/\D/g, '') },
+        edificio: '', apto: '', pontoReferencia: '',
+        telefone: t(cli?.telefone), celular: '',
+        observacao: t(b.observacao).slice(0, 2000),
+        itens: itens.map(i => ({ codigo: Number(i.codigo), descricao: i.descricao,
+                                 servico: sv ? sv.descricao : 'Instalação', observacao: '' })),
+      };
+
+      const numero = await proximoNumeroOS(loja, session);
+      const r = await col('_ordens_servico').insertOne({
+        lojistaId: loja, numero, tipo: 'VI', status: 'P', data: agora,
+        venda: { id: v._id, numero: v.numero },
+        valorServico: 0, servicoContabilizado: false,
+        incluidaDepois: true,                         // instalacao esquecida, aberta apos o fechamento
+        cliente: { id: v.cliente.id, codigo: v.cliente.codigo, tipo: v.cliente.tipo, nome: v.cliente.nome,
+                   documento: v.cliente.documento, ncontabil: v.cliente.ncontabil },
+        ...ins,
+        criadoEm: agora, atualizadoEm: agora,
+      }, { session });
+
+      await col('_vendas').updateOne({ _id: v._id, lojistaId: loja }, {
+        $set: { instalacao: { confirmada: true, ...ins }, os: { numero, id: r.insertedId },
+                'itens.$[i].precisaInstalacao': true, instalacaoIncluidaEm: agora },
+      }, { session, arrayFilters: [{ 'i.codigo': { $in: [...codigos] } }] });
+
+      resposta = { id: r.insertedId, numero };
+    });
+    res.json({ ok: true, os: resposta });
+  } catch (err) {
+    console.error('[vendas/instalacao-depois]', err.message);
+    res.status(err.status || 400).json({ ok: false, erro: err.message });
+  } finally {
+    session.endSession();
+  }
+});
+
+// ---------------------------------------------------------------------------
 // GET /:id/espelho   a venda + as parcelas no fluxo, com a situacao de cada uma
 // ---------------------------------------------------------------------------
 router.get('/:id/espelho', async (req, res) => {
@@ -1152,7 +1307,10 @@ router.get('/:id/espelho', async (req, res) => {
     const cods = [...new Set((v.pagamentos || []).map(p => p.contaDestino).filter(Boolean))];
     const contas = Object.fromEntries((await col('_contasubtitulos').find({ lojistaId: loja, codigo: { $in: cods } })
       .project({ codigo: 1, nome: 1 }).toArray()).map(c => [c.codigo, c.nome]));
-    res.json({ ok: true, venda: v, contas,
+    // a OS de instalacao da venda (relatorio: mostrar / incluir a esquecida)
+    const os = v.os?.id ? await col('_ordens_servico').findOne({ _id: v.os.id, lojistaId: loja },
+      { projection: { numero: 1, status: 1, tecnicoNome: 1, diaPrevisto: 1, horaIni: 1, horaFim: 1, servicoDescricao: 1 } }) : null;
+    res.json({ ok: true, venda: v, contas, os,
       boletas: Object.fromEntries(bolDocs.map(b => [String(b._id), { codigo: b.codigo, data: b.data, status: b.status }])),
       parcelas: linhas.map(l => ({
       _id: l._id,

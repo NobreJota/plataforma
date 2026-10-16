@@ -1,0 +1,90 @@
+{{!--
+  Destino: C:\plataformaRota\views\vendas\pages\servicos-fluxo.handlebars
+  Criado em: 16/10/2026
+
+  SERVICO > FLUXO DE SERVICO: o que os clientes tem a pagar das OS (fechadas na ficha de
+  fechamento), separado do fluxo de caixa normal. Abas "A receber" e "Recebidos".
+  Marca as linhas, escolhe banco/caixa e a data: o recebimento usa o MESMO codigo do fluxo
+  de caixa (POST /financeiro/api/pagamento/quitar). Recebida, a OS fica liquidada.
+  Abre tambem pela ficha de fechamento ("Receber agora"): ?os=<id> ja marca a OS.
+  O JS fica em /js/vendas/servicos-fluxo.js   API: /vendas/api/os/fluxo
+  Rota: /vendas/servicos/fluxo
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluxo de serviço</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root { --ambar:#92400e; --roxo:#6b21a8; --verde:#059669; --vermelho:#dc2626; --borda:#e5e7eb; --cinza:#6b7280; --texto:#111827; }
+    body { margin:0 auto; max-width:1400px; padding:52px 24px 40px; color:var(--texto); background:#fff;
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
+    .topo { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+    .topo h1 { margin:0 12px 0 0; font-size:21px; }
+    .topo input { height:34px; border:1px solid #d1d5db; border-radius:8px; padding:0 10px; font-size:14px; width:300px; }
+    .abas { display:flex; gap:4px; border-bottom:2px solid var(--ambar); margin-bottom:10px; }
+    .abas button { border:1px solid var(--borda); border-bottom:0; background:#f8fafc; border-radius:8px 8px 0 0;
+                   padding:8px 16px; font-weight:700; font-size:14px; cursor:pointer; color:#374151; }
+    .abas button.ativa { background:var(--ambar); border-color:var(--ambar); color:#fff; }
+    .grade { display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:14px; align-items:start; }
+    @media (max-width: 900px) { .grade { grid-template-columns:1fr; } body { padding:52px 12px 30px; } }
+    .lista { border:1px solid var(--borda); border-radius:10px; overflow:auto; max-height:calc(100vh - 210px); }
+    table { border-collapse:collapse; width:100%; }
+    th { position:sticky; top:0; background:#f3f4f6; font-size:11px; text-transform:uppercase; color:#374151; text-align:left; padding:8px 10px; white-space:nowrap; }
+    td { padding:7px 10px; border-top:1px solid #f3f4f6; }
+    tbody tr:nth-child(even) { background:#fafafa; }
+    tbody tr.marcada { background:#ede9fe; }
+    tbody tr.vencida td:nth-child(2) { color:var(--vermelho); font-weight:700; }
+    .n { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .vazio { padding:30px; text-align:center; color:var(--cinza); }
+    .painel { border:1px solid #c4b5fd; background:#faf5ff; border-radius:12px; padding:14px; position:sticky; top:60px; }
+    .painel h2 { margin:0 0 10px; font-size:14px; text-transform:uppercase; color:var(--roxo); }
+    .painel label { display:flex; flex-direction:column; gap:3px; font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; margin-bottom:10px; }
+    .painel input, .painel select { font:inherit; font-size:14px; padding:7px 9px; border:1px solid #d1d5db; border-radius:8px; background:#fff;
+                                    text-transform:none; font-weight:400; color:var(--texto); width:100%; }
+    .total { display:flex; justify-content:space-between; font-size:18px; font-weight:800; color:#4c1d95; margin:4px 0 12px; }
+    .btn { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:9px 14px; font-weight:700; cursor:pointer; font-size:14px; }
+    .btn.verde { background:var(--verde); border-color:var(--verde); color:#fff; width:100%; }
+    .btn:disabled { opacity:.5; cursor:not-allowed; }
+    .msg { margin-top:10px; font-weight:600; color:var(--vermelho); min-height:18px; }
+    .msg.ok { color:var(--verde); }
+    .rodape { margin-top:8px; font-size:12px; color:var(--cinza); }
+    .dica { font-size:12px; color:var(--cinza); }
+  </style>
+</head>
+<body>
+
+  <div class="topo">
+    <h1>Fluxo de serviço</h1>
+    <input id="filtro" placeholder="filtrar: cliente, nº da OS, técnico" autocomplete="off">
+    <button type="button" class="btn" id="voltar" hidden>← Voltar para a OS</button>
+  </div>
+
+  <div class="abas" id="abas">
+    <button type="button" data-sit="aberto" class="ativa">A receber</button>
+    <button type="button" data-sit="recebido">Recebidos</button>
+  </div>
+
+  <div class="grade">
+    <div>
+      <div class="lista" id="lista"><div class="vazio">Carregando…</div></div>
+      <div class="rodape" id="rodape"></div>
+    </div>
+    <aside class="painel" id="painel">
+      <h2>Receber</h2>
+      <div class="dica" id="p-sel">Marque as OS a receber na lista.</div>
+      <div class="total"><span>Total</span><span id="p-total">R$ 0,00</span></div>
+      <label>Data do movimento<input type="date" id="p-data"></label>
+      <label>Recebido em (caixa / banco)<select id="p-banco"><option value="">carregando…</option></select></label>
+      <label>Histórico<input id="p-hist" maxlength="160" placeholder="Recebimento de serviço"></label>
+      <button type="button" class="btn verde" id="p-receber" disabled>Receber</button>
+      <div class="msg" id="msg"></div>
+    </aside>
+  </div>
+
+  <script src="/js/vendas/servicos-fluxo.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
+</body>
+</html>

@@ -3,6 +3,9 @@
 // Criado em: 13/10/2026
 // Alterado em: 13/10/2026 - tecnico novo so ganha 2.06.001.NNN (receita da loja = 4.05.001.001)
 // Alterado em: 13/10/2026 - "pagamento" (percVI/percC/valorG) virou a lista SERVICOS do tecnico
+// Alterado em: 15/10/2026 - SERVICOS so com descricao: sairam o percentual e o valor fixo (muita
+//              negociacao com cliente e tecnico). A divisao empresa x tecnico e feita na
+//              CONCLUSAO DA OS. A lista serve de historico/descricao para a OS.
 //
 // CADASTRO DE TECNICOS (terceirizados, MEI). Montado em /vendas/api/tecnicos
 // (src\routes\vendas\pages.js). Colecao _tecnicos (o OS-2 traz os do Access).
@@ -14,12 +17,8 @@
 // titulos, para nunca repetir um final antigo.
 // Tecnico ja existente: a conta nao muda pela tela.
 //
-// SERVICOS DO TECNICO (13/10/2026, decisao do Jorge): a partilha e definida ANTES, na ficha.
-// Cada linha: { id, descricao (texto livre, ex. "Instalação aquecedor"), modo, valor }
-//   modo PERC  valor = % do TECNICO sobre a mao de obra (ex. 80 -> de 200,00 ele fica com 160,00)
-//   modo FIXO  valor = quanto o tecnico recebe por servico, em centavos (ex. garantia)
-// Na venda/OS escolhe-se a linha; a divisao tecnico x loja sai daqui. Mudou a regra:
-// muda na ficha (nao na hora de fechar a venda).
+// SERVICOS DO TECNICO: { id, descricao (texto livre, ex. "Instalação aquecedor") }.
+// 15/10/2026: so descricao. Ao gravar a ficha, o modo/valor antigos saem do documento.
 //
 // Nada e apagado: inativar (ativo = false). Tecnico inativo some dos combos.
 //
@@ -55,17 +54,13 @@ const responder = fn => async (req, res) => {
 
 const t = v => String(v ?? '').trim();
 const so = v => t(v).replace(/\D/g, '');
-const MODOS = ['PERC', 'FIXO'];
-const perc = v => { const n = Number(String(v ?? '').replace(',', '.')); return Number.isFinite(n) && n >= 0 && n <= 100 ? Math.round(n * 100) / 100 : 0; };
 
 // o que vem da tela, limpo (so os campos conhecidos)
 function lerCadastro(b) {
   const e = b.endereco || {}, pix = b.pix || {}, bc = b.banco || {};
-  const servicos = (Array.isArray(b.servicos) ? b.servicos : []).map(x => {
-    const modo = MODOS.includes(x.modo) ? x.modo : 'PERC';
-    return { id: oid(x.id) || new mongoose.Types.ObjectId(), descricao: t(x.descricao).slice(0, 80), modo,
-             valor: modo === 'PERC' ? perc(x.valor) : Math.max(0, Math.round(Number(x.valor) || 0)) };
-  }).filter(x => x.descricao);
+  const servicos = (Array.isArray(b.servicos) ? b.servicos : [])
+    .map(x => ({ id: oid(x.id) || new mongoose.Types.ObjectId(), descricao: t(x.descricao).slice(0, 80) }))
+    .filter(x => x.descricao);
   const d = {
     nome: t(b.nome), apelido: t(b.apelido),
     cpf: so(b.cpf), rg: t(b.rg), nascimento: /^\d{4}-\d{2}-\d{2}$/.test(t(b.nascimento)) ? t(b.nascimento) : '',

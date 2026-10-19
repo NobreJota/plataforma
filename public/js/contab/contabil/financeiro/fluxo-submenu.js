@@ -11,6 +11,8 @@
 //   Cartões - recebimento    (em breve)
 //   Mostrar no fluxo: Orçamento proj. (pos 8) · Compras proj. (pos 3) · Pedidos feitos (pos 7) — caixinhas;
 //                            escondido sai da grade e do saldo (fica guardado neste computador)
+//   19/10/2026 (Jorge): SAIU o "Mostrar no fluxo" — TODOS os lancamentos (0, 2, 3, 5, 7, 8...) aparecem
+//   sempre no fluxo; para resumir um tipo, clique no numero do pos na grade (janela do pos, fluxo.js).
 // API: /financeiro/api/pagamento (GET /dda?ate=, GET /bancos, POST /quitar)
 // Depois de pagar, a grade do fluxo recarrega (window.FluxoCaixa.recarregar, do fluxo.js).
 // =============================================================================
@@ -107,26 +109,12 @@
     + '<button type="button" class="sm-it" data-r="dda-confere" title="importar o CSV do DDA do banco e conferir com o fluxo">DDA - confere</button>'
     + '<button type="button" class="sm-it" data-r="dda-paga">DDA - paga</button>'
     + '<button type="button" class="sm-it" data-r="vendas-receber" title="títulos de clientes em aberto: receber com juros ou desconto">Vendas - receber</button>'
-    + '<button type="button" class="sm-it" disabled>Cartões - recebimento <small>em breve</small></button>'
-    // 18/10/2026: mostrar/esconder no fluxo (o saldo e refeito sem o que estiver escondido)
-    + '<div class="sm-sep">Mostrar no fluxo</div>'
-    + '<button type="button" class="sm-it sm-tg" data-pos="8"><span><input type="checkbox" tabindex="-1">Orçamento proj.</span></button>'
-    + '<button type="button" class="sm-it sm-tg" data-pos="3"><span><input type="checkbox" tabindex="-1">Compras proj.</span></button>'
-    + '<button type="button" class="sm-it sm-tg" data-pos="7"><span><input type="checkbox" tabindex="-1">Pedidos feitos</span></button>';
+    + '<button type="button" class="sm-it" disabled>Cartões - recebimento <small>em breve</small></button>';
   document.body.appendChild(menu);
   try { const p = JSON.parse(localStorage.getItem('fluxo-submenu-pos') || 'null'); if (p) { menu.style.left = p.l; menu.style.top = p.t; } } catch (e) { /* sem storage */ }
   arrastavel(menu, menu.querySelector('.sm-cab'), 'fluxo-submenu-pos');
   menu.querySelector('[data-x]').addEventListener('click', () => { menu.hidden = true; });
-  const marcarTg = () => menu.querySelectorAll('[data-pos]').forEach(b => {
-    b.querySelector('input').checked = !window.FluxoCaixa || !window.FluxoCaixa.mostrando || window.FluxoCaixa.mostrando(Number(b.dataset.pos));
-  });
-  marcarTg();
   menu.addEventListener('click', ev => {
-    const t = ev.target.closest('[data-pos]');
-    if (t && window.FluxoCaixa && window.FluxoCaixa.mostrar) {
-      const pos = Number(t.dataset.pos);
-      window.FluxoCaixa.mostrar(pos, !window.FluxoCaixa.mostrando(pos)); marcarTg(); return;
-    }
     const b = ev.target.closest('[data-r]'); if (!b) return;
     if (b.dataset.r === 'dda-paga') abrirDdaPaga();
     if (b.dataset.r === 'dda-confere') abrirDdaConfere();

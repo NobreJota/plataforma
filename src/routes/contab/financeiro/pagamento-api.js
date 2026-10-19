@@ -36,8 +36,14 @@
 //  18/10/2026: GET /receber — VENDAS - RECEBER (a receber de cliente, sem cartao e sem OS); POST /quitar
 //      aceita juros e desconto (contas pelas chaves receber-juros / receber-desconto, botao ★).
 //  18/10/2026: PUT /titulo/:id/vencimento — DDA - confere: acertar o vencimento do nosso fluxo pelo do banco.
+//  19/10/2026: VENDAS - RECEBER: EXCLUIR DO FLUXO com observacao (titulos que ja foram recebidos e
+//      ficaram no fluxo na virada do ano — o saldo transferido ja os baixou na contabilidade):
+//      POST /titulos/excluir { ids, motivo } -> status CANCELADO (fica na memoria, sai da tela), sem
+//      boleta. GET /saldo-conta?codigo= : o saldo da conta no balancete, para a tela conferir antes.
 //  18/10/2026: GET /dda-confere?de=&ate= — DDA - CONFERE: titulos de fornecedor do fluxo (pos 2 e 7) com o
 //      CNPJ, e os CNPJs dos fornecedores; a tela compara com o CSV do banco.
+//  19/10/2026: /dda-confere traz TODO o a pagar do fluxo (pos 0, 2, 3, 7, 8), nao so fornecedor: o arquivo
+//      real do banco (BB "Agenda de boletos DDA") traz seguro, contador, DNIT etc.
 //  18/10/2026: GET /dda?ate= — DDA - PAGA (sub-menu do Fluxo de Caixa): os titulos a pagar (pos 2)
 //      vencendo ate o dia, vencidos inclusive; paga pelo POST /quitar.
 //  16/10/2026: /janela do Fluxo de Caixa NAO traz as linhas do FLUXO DE SERVICO (origem 'OS',
@@ -207,7 +213,9 @@ router.get('/dda-confere', async (req, res) => {
       if (conta) porConta.set(conta, { cnpj, razao, marca: String(f.marca || '').trim() });
       if (cnpj) fornecedores.push({ cnpj, razao, marca: String(f.marca || '').trim(), conta });
     }
-    const itens = await FluxoProjetado.find({ status: 'ATIVO', pos: { $in: [2, 3, 7] }, codigoConta: /^2\.01\.001\./,
+    // 19/10/2026: TUDO o que e a pagar (0 avulso, 2, 3, 7, 8), nao so fornecedor: o DDA traz tambem
+    // seguro, contador, DNIT... (a tela mostra so os de fornecedor que nao vieram, se quiser)
+    const itens = await FluxoProjetado.find({ status: 'ATIVO', pos: { $in: [0, 2, 3, 7, 8] },
       vencimento: { $gte: de, $lte: ate }, origem: { $ne: 'OS' } }).sort({ vencimento: 1 }).lean();
     const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     res.json({ de: ymd(de), ate: ymd(ate), fornecedores,
@@ -240,6 +248,54 @@ router.put('/titulo/:id/vencimento', async (req, res) => {
     res.json({ ok: true, vencimento: conf?.vencimento || null });
   } catch (err) {
     console.error('❌ /pagamento/titulo/vencimento:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* 19/10/2026 (Jorge): EXCLUIR DO FLUXO, com observacao. POST /financeiro/api/pagamento/titulos/excluir
+   { ids: [...], motivo }. So a receber de cliente (pos 1/5) EM ABERTO. Nao gera boleta: o titulo ja foi
+   recebido (ex.: antes da virada do ano, entrou em 2026 pelo saldo transferido). Vira CANCELADO, com
+   motivo, data e o registro em `ajustes` — nao some do banco, so do fluxo. Tudo ou nada. */
+router.post('/titulos/excluir', async (req, res) => {
+  try {
+    const motivo = String(req.body?.motivo || '').trim().slice(0, 300);
+    if (motivo.length < 5) return res.status(400).json({ erro: 'Escreva a observação (o motivo da exclusão).' });
+    const ids = (Array.isArray(req.body?.ids) ? req.body.ids : []).filter(x => mongoose.isValidObjectId(x)).map(x => new mongoose.Types.ObjectId(String(x)));
+    if (!ids.length) return res.status(400).json({ erro: 'Marque os títulos.' });
+    const filtro = { _id: { $in: ids }, status: 'ATIVO', pos: { $in: [1, 5] } };
+    const achados = await FluxoProjetado.collection.countDocuments(filtro);
+    if (achados !== ids.length) return res.status(409).json({ erro: 'Algum título já foi baixado ou não é a receber (' + achados + ' de ' + ids.length + '). Abra de novo.' });
+    const agora = new Date();
+    const r = await FluxoProjetado.collection.updateMany(filtro, {
+      $set: { status: 'CANCELADO', canceladoEm: agora, motivoCancelamento: motivo },
+      $push: { ajustes: { campo: 'status', de: 'ATIVO', para: 'CANCELADO', motivo, em: agora } },
+    });
+    res.json({ ok: true, excluidos: r.modifiedCount });
+  } catch (err) {
+    console.error('❌ /pagamento/titulos/excluir:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* 19/10/2026: GET /financeiro/api/pagamento/saldo-conta?codigo=1.03.017.476
+   Saldo da conta no balancete (boletas ATIVAS; debito +, credito -), como o razao le:
+   perna unica: RECEBIMENTO/SALDO a debito, PAGAMENTO a credito; contrapartida: o lado oposto. */
+router.get('/saldo-conta', async (req, res) => {
+  try {
+    const codigo = String(req.query.codigo || '').trim();
+    if (!/^\d\.\d{2}\.\d{3}\.\d{3}$/.test(codigo)) return res.status(400).json({ erro: 'código de conta inválido' });
+    const loja = lojaDe(req);
+    const daLoja = loja ? { $or: [{ lojistaId: loja }, { lojistaId: null }, { lojistaId: { $exists: false } }] } : {};
+    const B = Boleta.collection;
+    const [p] = await B.aggregate([{ $match: { ...daLoja, status: 'ATIVO', bancoCodigo: codigo } },
+      { $group: { _id: null, v: { $sum: { $cond: [{ $eq: ['$tipo', 'PAGAMENTO'] }, { $multiply: ['$valorTotal', -1] }, '$valorTotal'] } } } }]).toArray();
+    const [c] = await B.aggregate([{ $match: { ...daLoja, status: 'ATIVO', 'contrapartidas.codigoConta': codigo } },
+      { $unwind: '$contrapartidas' }, { $match: { 'contrapartidas.codigoConta': codigo } },
+      { $group: { _id: null, v: { $sum: { $cond: [{ $eq: ['$tipo', 'PAGAMENTO'] }, '$contrapartidas.valor', { $multiply: ['$contrapartidas.valor', -1] }] } } } }]).toArray();
+    const saldo = Math.round(((p?.v || 0) + (c?.v || 0)) * 100) / 100;
+    res.json({ ok: true, codigo, saldo });
+  } catch (err) {
+    console.error('❌ /pagamento/saldo-conta:', err.message);
     res.status(500).json({ erro: err.message });
   }
 });

@@ -1,0 +1,24 @@
+{
+ "base": "rotaes_ensaio",
+ "boletas": [],
+ "vendas": [],
+ "os": [],
+ "fluxo": [],
+ "numeracaoOS": {
+  "_id": {
+   "$oid": "6ace7cbd216b0dccf26e0a54"
+  },
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "chave": "OS",
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792405618169"
+   }
+  },
+  "ultimo": {
+   "$numberInt": "13853"
+  }
+ }
+}

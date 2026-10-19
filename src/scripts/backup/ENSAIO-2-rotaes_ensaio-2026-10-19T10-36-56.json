@@ -1,0 +1,745 @@
+{
+ "base": "rotaes_ensaio",
+ "boletas": [],
+ "vendas": [],
+ "os": [],
+ "fluxo": [
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def72047d"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "1"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1768014000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def72047e"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "2"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1770692400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def72047f"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "3"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1773111600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "3"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def720480"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "4"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1775790000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "4"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def720481"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "5"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1778382000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "5"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def720482"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "6"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1781060400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "6"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def720483"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "7"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1783652400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "7"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043156"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def720484"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "8"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1786330800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "8"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043157"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043157"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def720485"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "9"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1789009200000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "9"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043157"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043157"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def720486"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "10"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1791601200000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "10"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043157"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043157"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def720487"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "11"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1794279600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "11"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043157"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043157"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0df9325bc9b7def720488"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "12"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a10554ae04820a3fec89e9d"
+   },
+   "codigoConta": "3.01.001.007",
+   "nomeConta": "Outros",
+   "historico": "Outros",
+   "valor": {
+    "$numberInt": "1500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1796871600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "12"
+   },
+   "totalParcelas": {
+    "$numberInt": "12"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6ac0df9325bc9b7def72047b"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791025043157"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791025043157"
+    }
+   }
+  }
+ ],
+ "numeracaoOS": {
+  "_id": {
+   "$oid": "6ace7cbd216b0dccf26e0a54"
+  },
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "chave": "OS",
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792405645005"
+   }
+  },
+  "ultimo": {
+   "$numberInt": "13853"
+  }
+ }
+}

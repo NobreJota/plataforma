@@ -31,9 +31,17 @@ O servidor (database\index.js) e todos os scripts usam **MONGO_URI** (DB_CONNECT
     **DECISÃO (19/10, Jorge): não corrigir pequenas diferenças do passado; o sistema novo é que não as permite.**
     → no dia D rodar com **`--conta-diferenca 4.04.001.002`** (o script cria "Diferenças da importação (Access)"):
     os 14 entram inteiros (banco e cliente iguais ao Access), só a sobra fica nessa conta.
-9. FLUXO-1-importar-fluxo-access — fluxo de caixa (pos 0, 2, 3, 5; fora 7 e 8)
+    2ª simulação (19/10) com --conta-diferenca: 6.993 boletas, 14 com diferença, **0 de fora**.
+    Conferidor (antes do --aplicar): D = 0, resto = 0 → "✓ a importação está fiel ao Access".
+8b. **ENSAIO-2-limpar-testes** (NOVO) — ANTES do FLUXO-1. Apaga, com backup: boletas que não vieram do Access,
+    vendas da plataforma, OS dessas vendas, fluxo VENDA/OS e TODO o fluxo ACCESS (o FLUXO-1 traz de novo);
+    acerta a numeração da OS para a maior do Access. Para gravar exige `--base <nome da base>`.
+    Venda com NF-e autorizada não é apagada (só com --com-nfe). Vizzo R$ 18.002 de 16/10 = teste (Jorge).
+8b'. Rodar o ENSAIO-2 com **--orcamentos** (os ORCAMENTO da plataforma eram teste — Jorge, 19/10).
+9. FLUXO-1-importar-fluxo-access **--com-orcamento** — fluxo de caixa do Access: pos 0, 2, 3 (programação de
+    compras), 5 e 8 (orçamento projetado). Fora só o 7 (pedidos vêm do COMPRA-9, PEDIDO_IMPORTADO).
 10. OS: numeração e OS abertas (OS-2 ...) — a definir
-11. Apagar vendas/NF/OS/boletas de teste (causa C do conferidor); numeração real da NF-e segue a última do Access
+11. (feito no 8b) numeração real da NF-e segue a última do Access
 
 ## Passo 2 — conferência
 `ENSAIO-1-conferir-balancete.js --mdb "..." --mes 10` (`--grupo 2` só Passivo; `--detalhe` tabela longa).
@@ -46,6 +54,21 @@ Meta: D = 0 e "resto" = 0 → "✓ a importação está fiel ao Access".
 1º ensaio (19/10): 63 contas diferentes; as do saldo anterior batem com os 14 docs de fora (ex. 1.01.002.001
 −56.211,51 = soma exata dos 7 recebimentos); as de outubro em 4.01/4.02/1.01.005/1.03.xxx = testes da plataforma.
 
+Causa E (só data): Chaves 10 e 11 (cartão, 7.962,00 e 4.856,00) estão no Access em M=12, mas o Rotor é de janeiro;
+a plataforma usa a data do Rotor. Saldo igual a partir de dezembro. Não corrigir (decisão de 19/10).
+
+## ✓ RESULTADO DO 1º ENSAIO COMPLETO (19/10/2026, 07:46)
+Sequência rodada: PLANO-8 --conta-diferenca 4.04.001.002 --aplicar (6.993 boletas) → ENSAIO-2 --aplicar --base
+rotaes_ensaio --orcamentos --sem-loja (81 boletas, 43 vendas, 16 OS, 396 linhas de fluxo de teste; OS → 13853)
+→ FLUXO-1 --com-orcamento --aplicar (261 linhas: pos0 59, pos2 85, pos3 20, pos5 25, pos8 72) → ENSAIO-1 --mes 10.
+**Veredito: "✓ a importação está fiel ao Access"** — B 0 · C 0 · D 0 · resto 0. Bancos, clientes, fornecedores,
+estoque, despesas e receitas de venda: iguais ao Access. Só as diferenças ESPERADAS:
+- 3.08.001.001 Perda de estoque 833.821,78 e 4.04.001.001 Sobra −130.264,91 (ajuste de estoque de uma perna no Access)
+- 4.03.002.013 −8.000,00 (receita de OS sem conta no Access, 18 docs) · 4.04.001.002 −1.383,36 (14 docs que não fechavam)
+- E (só data): Chaves 10 e 11 em M=12 no Access, Rotor em janeiro.
+Atenção no dia D: o PowerShell não aceita `node -e` com `$` dentro de aspas duplas.
+A receber vencido desde 12/2025 (Ville 22.185,84, Luzineth, Gustavo Silva…) entra em aberto: rever depois.
+
 ## Passo 3 — testes reais na base de ensaio
 Recebimentos (Vendas - receber), CSV do DDA (DDA - confere), DDA - paga, vendas e OS.
 
@@ -55,10 +78,18 @@ Recebimentos (Vendas - receber), CSV do DDA (DDA - confere), DDA - paga, vendas 
   `receber-juros` e `receber-desconto` ANTES do dia D (hoje estão vazias).
 - Lote de cartão: a tela Cartões - recebimento (a fazer) deve fechar a diferença numa conta configurada.
 
+## Novidades do ensaio (19/10)
+- Vendas - receber: botão **Excluir do fluxo…** (título já recebido, sem lançamento, observação obrigatória,
+  mostra o saldo da conta antes) e botão **Razão** (razão do cliente no ano, numa janela por cima).
+- Títulos de 2025 que ficaram no fluxo na virada do ano (ex.: Alessandro 1683/1 e 1686/0, Luzineth, Ville, Gustavo):
+  **excluir também no fluxo do Access** — no dia D o FLUXO-1 traz o fluxo do Access de novo e o que foi
+  excluído só na base de ensaio voltaria.
+
 ## Pendências anotadas
 - Komeco (NrFornec 67) "ajustar" no cadastro de fornecedores: completar (CNPJ) antes do dia D.
 - Lançar no Access os itens das notas 288318, 293549, 320597, 188087 (opcional).
 - Limpeza de preços no Access (VENDA-9) — confirmar se já feita.
 - OS 13768 e 13769 (vendas 35/36): cortesia não aplicada.
-- Contas de juros e desconto (★ Vendas - receber) a configurar.
+- Contas de juros e desconto (★ Vendas - receber): escolhidas 19/10 — juros 4.03.001.002 Diversos, desconto 3.06.001.007
+  Desconto sobre venda. Gravadas na base de ENSAIO: **repetir na base de verdade no dia D**.
 - Trocar as senhas do usuário galinho (linhas do .env).

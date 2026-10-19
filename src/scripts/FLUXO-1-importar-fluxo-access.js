@@ -8,7 +8,8 @@
 // Colunas do Access: Data, Chave, Ord, NrCta, Pos, NrTitulo, Hist, Vect, Deb, Cre, Titular
 //   - conta: NrCta; fornecedor 2.02.xxx.xxx do Access vira 2.01.xxx.xxx (o plano novo)
 //   - valor: Deb (a receber) ou Cre (a pagar), sempre positivo (o fluxo grava reais positivos)
-//   - vencimento: Vect · pos: Pos (0 avulso, 2 a pagar, 5 a receber, 7 pedido, 8 orcamento)
+//   - vencimento: Vect · pos: Pos (0 avulso, 2 a pagar, 3 programacao de compras, 5 a receber, 7 pedido, 8 orcamento)
+// Alterado em: 19/10/2026 - nome da pos 3 (programacao de compras futuras; a tela ainda vai ser feita).
 //   - historico: Hist + NrTitulo (quando tem) · nomeConta e contaSubTitulo: do plano
 //   - origem 'ACCESS' + chaveImport (Chave|Ord|NrCta|NrTitulo|Vect|valor) para rodar de novo
 // POS 8 (orcamento) e POS 7 (pedido) ficam de fora: a plataforma ja tem o orcamento e os pedidos
@@ -46,7 +47,7 @@ const txt = v => (v === null || v === undefined ? '' : String(v).trim());
 const num = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
 const brl = v => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const dia = d => d.toISOString().slice(0, 10);
-const POS = { 0: 'avulso', 2: 'a pagar', 5: 'a receber', 7: 'pedido', 8: 'orçamento' };
+const POS = { 0: 'avulso', 2: 'a pagar', 3: 'programação de compras', 5: 'a receber', 7: 'pedido', 8: 'orçamento' };
 
 (async () => {
   await mongoose.connect(process.env.MONGO_URI);

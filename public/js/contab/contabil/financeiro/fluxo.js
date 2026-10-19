@@ -33,6 +33,12 @@
  *    cartao) do lado do banco, em valor positivo; cada lado com o seu total
  * Alterado em 18/10/2026: window.FluxoCaixa.recarregar() para o sub-menu (fluxo-submenu.js)
  * Alterado em 18/10/2026: FluxoCaixa.mostrar(pos, sim): o sub-menu esconde orcamento/compras proj./pedidos
+ * Alterado em 19/10/2026 (Jorge, como no Access): clique no NUMERO do pos (a bolinha) abre uma janela com
+ *    TODOS os registros daquele pos no mes escolhido (ou no ano, em "todos"): vencimento, nome, conta,
+ *    valor e a situacao (vencido ha Nd / vence hoje / em Nd); ordena por Venc., Nome e Valor; totais
+ *    do mes, vencidos e a vencer. Vale para todos os pos (5 a receber, 2 a pagar, 7 pedidos, 3 compras...).
+ *    Usa as linhas que a grade ja carregou (sem ir ao servidor). Arrastavel; Esc fecha.
+ *    E TODOS os pos aparecem sempre na grade: saiu o esconder do sub-menu (ocultos fica vazio).
  */
 (() => {
   'use strict';
@@ -93,9 +99,93 @@
     $('#flx-ano').innerHTML = anos.map(a => `<option value="${a}" ${a===state.ano?'selected':''}>${a}</option>`).join('');
   }
 
-  // 18/10/2026: pos escondidos pelo sub-menu (8 orcamento, 3 compras proj., 7 pedidos); fica neste computador
-  let ocultos = new Set();
-  try { ocultos = new Set(JSON.parse(localStorage.getItem('fluxo-ocultar') || '[]')); } catch (_) { /* sem storage */ }
+  // 19/10/2026 (Jorge): TODOS os pos aparecem sempre (o "Mostrar no fluxo" do sub-menu saiu). O que um
+  // computador tinha escondido antes e apagado aqui. Para resumir um pos: clique no numero dele.
+  const ocultos = new Set();
+  try { localStorage.removeItem('fluxo-ocultar'); } catch (_) { /* sem storage */ }
+
+  /* ===== 19/10/2026: janela "todos os registros do pos" (clique na bolinha do pos) ===== */
+  const POS_NOME = { 0: 'Avulso', 1: 'Cartão - receber', 2: 'A pagar', 3: 'Compras programadas', 5: 'A receber',
+                     7: 'Pedidos feitos', 8: 'Orçamento projetado' };
+  let ultimasLinhas = [], jp = null, jpOrdem = { k: 'venc', asc: true };
+  (function estiloPos() {
+    const st = document.createElement('style');
+    st.textContent = `
+    .c-pos-badge { cursor:pointer; } .c-pos-badge:hover { outline:2px solid #6d28d9; }
+    .jp-jan { position:fixed; left:50%; top:5vh; transform:translateX(-50%); z-index:90; width:min(920px, calc(100vw - 24px)); max-height:88vh;
+              display:flex; flex-direction:column; background:#fff; border-radius:12px; box-shadow:0 18px 50px rgba(0,0,0,.3);
+              font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; font-size:14px; color:#111827; }
+    .jp-cab { display:flex; align-items:center; gap:10px; padding:10px 14px; background:#6d28d9; color:#fff; border-radius:12px 12px 0 0;
+              font-weight:800; font-size:15px; cursor:move; user-select:none; }
+    .jp-cab span { flex:1; } .jp-cab button { border:0; background:none; color:#fff; font-size:20px; cursor:pointer; }
+    .jp-ctl { padding:8px 14px; border-bottom:1px solid #e5e7eb; }
+    .jp-ctl input { height:30px; width:280px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:14px; }
+    .jp-corpo { flex:1; min-height:0; overflow:auto; }
+    .jp-tab { width:100%; border-collapse:collapse; font-size:13px; }
+    .jp-tab th { position:sticky; top:0; background:#f3f4f6; color:#374151; font-size:11px; text-transform:uppercase; text-align:left; padding:6px 8px; }
+    .jp-tab th.ord { cursor:pointer; user-select:none; } .jp-tab th.ord:hover { color:#6d28d9; }
+    .jp-tab td { padding:5px 8px; border-top:1px solid #f3f4f6; } .jp-tab .n { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .jp-tab .cn { color:#6b7280; font-size:12px; }
+    .jp-atr { font-size:11px; font-weight:800; border-radius:8px; padding:1px 6px; white-space:nowrap; }
+    .jp-atr.v { background:#fee2e2; color:#991b1b; } .jp-atr.h { background:#fef9c3; color:#854d0e; } .jp-atr.f { background:#dcfce7; color:#166534; }
+    .jp-pe { display:flex; gap:16px; align-items:center; padding:10px 14px; border-top:1px solid #e5e7eb; flex-wrap:wrap; font-weight:700; }
+    .jp-pe .tot { flex:1; } .jp-pe b { font-size:16px; }
+    .jp-pe button { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:7px 14px; font-weight:700; cursor:pointer; }`;
+    document.head.appendChild(st);
+  })();
+  function abrirPos(pos) {
+    if (jp) jp.remove();
+    const doPos = ultimasLinhas.filter(l => Number(l.pos) === Number(pos));
+    const quando = state.mes ? MESES[state.mes - 1] + '/' + state.ano : 'ano ' + state.ano + ' (todos os meses)';
+    jp = document.createElement('div'); jp.className = 'jp-jan';
+    jp.innerHTML = '<div class="jp-cab"><span>pos ' + pos + ' · ' + escAttr(POS_NOME[pos] || '') + ' · ' + quando + '</span><button type="button" data-x title="fechar (Esc)">×</button></div>'
+      + '<div class="jp-ctl"><input data-busca placeholder="procurar nome, histórico ou conta" autocomplete="off"></div>'
+      + '<div class="jp-corpo" data-lista></div>'
+      + '<div class="jp-pe"><span class="tot" data-tot></span><button type="button" data-x>Fechar</button></div>';
+    document.body.appendChild(jp);
+    const cab = jp.querySelector('.jp-cab');
+    cab.addEventListener('mousedown', ev => {
+      if (ev.button !== 0 || ev.target.closest('button')) return;
+      ev.preventDefault();
+      const r = jp.getBoundingClientRect(), dx = ev.clientX - r.left, dy = ev.clientY - r.top;
+      jp.style.transform = 'none'; jp.style.left = r.left + 'px'; jp.style.top = r.top + 'px';
+      const m = e => { jp.style.left = Math.min(Math.max(0, e.clientX - dx), innerWidth - 80) + 'px'; jp.style.top = Math.min(Math.max(0, e.clientY - dy), innerHeight - 40) + 'px'; };
+      const u = () => { document.removeEventListener('mousemove', m); document.removeEventListener('mouseup', u); };
+      document.addEventListener('mousemove', m); document.addEventListener('mouseup', u);
+    });
+    jp.querySelectorAll('[data-x]').forEach(b => b.addEventListener('click', () => { jp.remove(); jp = null; }));
+    const hoje = new Date(); hoje.setHours(12, 0, 0, 0);
+    const atraso = l => { const v = new Date(l.vencimento); v.setHours(12, 0, 0, 0); return Math.round((hoje - v) / 86400000); };
+    const valor = l => Math.abs(Number(l.aReceber || 0) || Number(l.aPagar || 0));
+    const nome = l => l.nomeConta || l.historico || '';
+    const desenhar = () => {
+      const b = jp.querySelector('[data-busca]').value.trim().toLowerCase();
+      const vis = doPos.filter(l => !b || (nome(l) + ' ' + l.historico + ' ' + l.codigoConta).toLowerCase().includes(b));
+      const f = jpOrdem.k === 'nome' ? (l => nome(l).toLowerCase()) : jpOrdem.k === 'valor' ? valor : (l => String(l.vencimento || ''));
+      vis.sort((x, y) => { const a = f(x), c = f(y); return (a < c ? -1 : a > c ? 1 : 0) * (jpOrdem.asc ? 1 : -1); });
+      const seta = k => jpOrdem.k === k ? (jpOrdem.asc ? ' ▲' : ' ▼') : ' ⇅';
+      const sit = l => { const a = atraso(l); return a > 0 ? '<span class="jp-atr v">vencido há ' + a + 'd</span>' : a === 0 ? '<span class="jp-atr h">vence hoje</span>' : '<span class="jp-atr f">em ' + (-a) + 'd</span>'; };
+      jp.querySelector('[data-lista]').innerHTML = vis.length ? '<table class="jp-tab"><thead><tr><th style="width:34px">#</th>'
+        + '<th class="ord" data-ord="venc">Venc.' + seta('venc') + '</th><th class="ord" data-ord="nome">Nome / histórico' + seta('nome') + '</th>'
+        + '<th class="ord n" data-ord="valor">Valor' + seta('valor') + '</th><th>Situação</th></tr></thead><tbody>'
+        + vis.map((l, k) => '<tr><td class="cn">' + (k + 1) + '</td><td>' + fmtData(l.vencimento) + '</td><td><b>' + escAttr(nome(l)) + '</b>'
+          + '<br><span class="cn">' + escAttr(l.historico) + ' · ' + escAttr(l.codigoConta) + (l.chave ? ' · ' + escAttr(l.chave) : '') + '</span></td>'
+          + '<td class="n">' + fmt(valor(l)) + '</td><td>' + sit(l) + '</td></tr>').join('') + '</tbody></table>'
+        : '<div class="flx-empty" style="padding:24px;text-align:center;color:#6b7280">Nenhum registro.</div>';
+      const tot = vis.reduce((t, l) => t + valor(l), 0), venc = vis.filter(l => atraso(l) > 0).reduce((t, l) => t + valor(l), 0);
+      jp.querySelector('[data-tot]').innerHTML = vis.length + ' registro(s) · Total <b>R$ ' + (fmt(tot) || '0,00') + '</b>'
+        + ' &nbsp;·&nbsp; <span style="color:#991b1b">vencidos R$ ' + (fmt(venc) || '0,00') + '</span>'
+        + ' &nbsp;·&nbsp; <span style="color:#166534">a vencer R$ ' + (fmt(tot - venc) || '0,00') + '</span>';
+    };
+    jp.querySelector('[data-busca]').addEventListener('input', desenhar);
+    jp.addEventListener('click', ev => {
+      const th = ev.target.closest('th[data-ord]'); if (!th) return;
+      jpOrdem = jpOrdem.k === th.dataset.ord ? { k: jpOrdem.k, asc: !jpOrdem.asc } : { k: th.dataset.ord, asc: true };
+      desenhar();
+    });
+    desenhar();
+  }
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && jp) { jp.remove(); jp = null; } });
 
   /* ===== Grid ===== */
   async function carregar() {
@@ -105,6 +195,7 @@
       const oc = [...ocultos].join(',');                 // 18/10/2026: o que o sub-menu escondeu
       const q = '/' + state.ano + '?' + (state.mes ? `mes=${state.mes}&` : '') + (oc ? `ocultar=${oc}` : '');
       const data = await api(q);
+      ultimasLinhas = data.linhas || [];                   // 19/10/2026: para a janela do pos
 
       if (!data.linhas || data.linhas.length === 0) {
         tbody.innerHTML = '<tr><td colspan="9" class="flx-empty">Nenhum lançamento no período. Lance projeções no Orçamento para vê-las aqui.</td></tr>';
@@ -149,6 +240,12 @@
           <td class="c-saldo"><span class="${l.saldo>=0?'val-saldo-pos':'val-saldo-neg'}">${fmt(l.saldo)}</span></td>
         </tr>`;
       }).join('');
+
+      // 19/10/2026: clique na bolinha do pos -> todos os registros daquele pos (nao abre a acao da linha)
+      $$('#flx-body .c-pos-badge').forEach(b => {
+        b.title = 'ver todos os registros deste pos no período';
+        b.addEventListener('click', ev => { ev.stopPropagation(); abrirPos(b.textContent.trim()); });
+      });
 
       // Clique na linha → ação conforme o pos
       $$('#flx-body tr.flx-pagavel').forEach(tr => {
@@ -564,12 +661,7 @@
   window.FluxoCaixa = {
     recarregar: () => { conferirVersao(); },
     // 18/10/2026: mostrar / esconder orcamento (8), compras projetadas (3) e pedidos (7)
-    mostrando: pos => !ocultos.has(pos),
-    mostrar: (pos, sim) => {
-      if (sim) ocultos.delete(pos); else ocultos.add(pos);
-      try { localStorage.setItem('fluxo-ocultar', JSON.stringify([...ocultos])); } catch (_) { /* sem storage */ }
-      carregar();
-    },
+    mostrando: () => true,                          // 19/10/2026: tudo aparece sempre
   };
   document.addEventListener('visibilitychange', () => { if (!document.hidden) conferirVersao(); });
   window.addEventListener('focus', conferirVersao);

@@ -1,0 +1,1551 @@
+{
+ "base": "rotaes_ensaio",
+ "boletas": [],
+ "vendas": [],
+ "os": [],
+ "fluxo": [
+  {
+   "_id": {
+    "$oid": "6a12f5096c1858f832fc2535"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "1"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105504e04820a3fec89e89"
+   },
+   "codigoConta": "3.01.001.003",
+   "nomeConta": "Papelaria",
+   "historico": "Papelaria",
+   "valor": {
+    "$numberInt": "320"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1768014000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "5"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f1f4cd1f20b0ed982f0b"
+   },
+   "status": "REALIZADA",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627273638"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779997784510"
+    }
+   },
+   "documento": "",
+   "realizadaEm": {
+    "$date": {
+     "$numberLong": "1779997784510"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12f5096c1858f832fc2536"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "2"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105504e04820a3fec89e89"
+   },
+   "codigoConta": "3.01.001.003",
+   "nomeConta": "Papelaria",
+   "historico": "Papelaria",
+   "valor": {
+    "$numberInt": "320"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1770692400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "5"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f1f4cd1f20b0ed982f0b"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627273639"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779627273639"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12f5096c1858f832fc2537"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "3"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105504e04820a3fec89e89"
+   },
+   "codigoConta": "3.01.001.003",
+   "nomeConta": "Papelaria",
+   "historico": "Papelaria",
+   "valor": {
+    "$numberInt": "320"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1773111600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "3"
+   },
+   "totalParcelas": {
+    "$numberInt": "5"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f1f4cd1f20b0ed982f0b"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627273639"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779627273639"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12f5096c1858f832fc2538"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "4"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105504e04820a3fec89e89"
+   },
+   "codigoConta": "3.01.001.003",
+   "nomeConta": "Papelaria",
+   "historico": "Papelaria",
+   "valor": {
+    "$numberInt": "320"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1775790000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "4"
+   },
+   "totalParcelas": {
+    "$numberInt": "5"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f1f4cd1f20b0ed982f0b"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627273639"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779627273639"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12f5096c1858f832fc2539"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "5"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105504e04820a3fec89e89"
+   },
+   "codigoConta": "3.01.001.003",
+   "nomeConta": "Papelaria",
+   "historico": "Papelaria",
+   "valor": {
+    "$numberInt": "320"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1778382000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "5"
+   },
+   "totalParcelas": {
+    "$numberInt": "5"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f1f4cd1f20b0ed982f0b"
+   },
+   "status": "REALIZADA",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627273639"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779823926015"
+    }
+   },
+   "documento": "",
+   "realizadaEm": {
+    "$date": {
+     "$numberLong": "1779823926015"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12f5386c1858f832fc266e"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "6"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105429e04820a3fec89e84"
+   },
+   "codigoConta": "3.01.001.002",
+   "nomeConta": "Despesas Contabeis",
+   "historico": "Despesas Contabeis",
+   "valor": {
+    "$numberInt": "500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1781060400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f0eacd1f20b0ed982ecc"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12f5386c1858f832fc266f"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "7"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105429e04820a3fec89e84"
+   },
+   "codigoConta": "3.01.001.002",
+   "nomeConta": "Despesas Contabeis",
+   "historico": "Despesas Contabeis",
+   "valor": {
+    "$numberInt": "500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1783652400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f0eacd1f20b0ed982ecc"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12f5386c1858f832fc2670"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "8"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105429e04820a3fec89e84"
+   },
+   "codigoConta": "3.01.001.002",
+   "nomeConta": "Despesas Contabeis",
+   "historico": "Despesas Contabeis",
+   "valor": {
+    "$numberInt": "500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1786330800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "3"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f0eacd1f20b0ed982ecc"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12f5386c1858f832fc2671"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "9"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105429e04820a3fec89e84"
+   },
+   "codigoConta": "3.01.001.002",
+   "nomeConta": "Despesas Contabeis",
+   "historico": "Despesas Contabeis",
+   "valor": {
+    "$numberInt": "500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1789009200000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "4"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f0eacd1f20b0ed982ecc"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12f5386c1858f832fc2672"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "10"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105429e04820a3fec89e84"
+   },
+   "codigoConta": "3.01.001.002",
+   "nomeConta": "Despesas Contabeis",
+   "historico": "Despesas Contabeis",
+   "valor": {
+    "$numberInt": "500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1791601200000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "5"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f0eacd1f20b0ed982ecc"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12f5386c1858f832fc2673"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "11"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105429e04820a3fec89e84"
+   },
+   "codigoConta": "3.01.001.002",
+   "nomeConta": "Despesas Contabeis",
+   "historico": "Despesas Contabeis",
+   "valor": {
+    "$numberInt": "500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1794279600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "6"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f0eacd1f20b0ed982ecc"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12f5386c1858f832fc2674"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "12"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105429e04820a3fec89e84"
+   },
+   "codigoConta": "3.01.001.002",
+   "nomeConta": "Despesas Contabeis",
+   "historico": "Despesas Contabeis",
+   "valor": {
+    "$numberInt": "500"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1796871600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "7"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12f0eacd1f20b0ed982ecc"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779627320837"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fb7910eb5ae8f0ba0359"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "6"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105526e04820a3fec89e93"
+   },
+   "codigoConta": "3.01.001.005",
+   "nomeConta": "Informática",
+   "historico": "Informática",
+   "valor": {
+    "$numberInt": "960"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1782356400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fb7910eb5ae8f0ba0357"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fb7910eb5ae8f0ba035a"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "7"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105526e04820a3fec89e93"
+   },
+   "codigoConta": "3.01.001.005",
+   "nomeConta": "Informática",
+   "historico": "Informática",
+   "valor": {
+    "$numberInt": "960"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1784948400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fb7910eb5ae8f0ba0357"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fb7910eb5ae8f0ba035b"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "8"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105526e04820a3fec89e93"
+   },
+   "codigoConta": "3.01.001.005",
+   "nomeConta": "Informática",
+   "historico": "Informática",
+   "valor": {
+    "$numberInt": "960"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1787626800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "3"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fb7910eb5ae8f0ba0357"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fb7910eb5ae8f0ba035c"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "9"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105526e04820a3fec89e93"
+   },
+   "codigoConta": "3.01.001.005",
+   "nomeConta": "Informática",
+   "historico": "Informática",
+   "valor": {
+    "$numberInt": "960"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1790305200000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "4"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fb7910eb5ae8f0ba0357"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fb7910eb5ae8f0ba035d"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "10"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105526e04820a3fec89e93"
+   },
+   "codigoConta": "3.01.001.005",
+   "nomeConta": "Informática",
+   "historico": "Informática",
+   "valor": {
+    "$numberInt": "960"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1792897200000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "5"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fb7910eb5ae8f0ba0357"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fb7910eb5ae8f0ba035e"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "11"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105526e04820a3fec89e93"
+   },
+   "codigoConta": "3.01.001.005",
+   "nomeConta": "Informática",
+   "historico": "Informática",
+   "valor": {
+    "$numberInt": "960"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1795575600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "6"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fb7910eb5ae8f0ba0357"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fb7910eb5ae8f0ba035f"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "12"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a105526e04820a3fec89e93"
+   },
+   "codigoConta": "3.01.001.005",
+   "nomeConta": "Informática",
+   "historico": "Informática",
+   "valor": {
+    "$numberInt": "960"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1798167600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "7"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fb7910eb5ae8f0ba0357"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779628921283"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fbe010eb5ae8f0ba0396"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "1"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a12fbb510eb5ae8f0ba036f"
+   },
+   "codigoConta": "3.07.001.001",
+   "nomeConta": "Uber",
+   "historico": "Uber",
+   "valor": {
+    "$numberInt": "250"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1768878000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fbe010eb5ae8f0ba0394"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fbe010eb5ae8f0ba0397"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "2"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a12fbb510eb5ae8f0ba036f"
+   },
+   "codigoConta": "3.07.001.001",
+   "nomeConta": "Uber",
+   "historico": "Uber",
+   "valor": {
+    "$numberInt": "250"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1771556400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fbe010eb5ae8f0ba0394"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fbe010eb5ae8f0ba0398"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "3"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a12fbb510eb5ae8f0ba036f"
+   },
+   "codigoConta": "3.07.001.001",
+   "nomeConta": "Uber",
+   "historico": "Uber",
+   "valor": {
+    "$numberInt": "250"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1773975600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "3"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fbe010eb5ae8f0ba0394"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fbe010eb5ae8f0ba0399"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "4"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a12fbb510eb5ae8f0ba036f"
+   },
+   "codigoConta": "3.07.001.001",
+   "nomeConta": "Uber",
+   "historico": "Uber",
+   "valor": {
+    "$numberInt": "250"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1776654000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "4"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fbe010eb5ae8f0ba0394"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fbe010eb5ae8f0ba039a"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "5"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a12fbb510eb5ae8f0ba036f"
+   },
+   "codigoConta": "3.07.001.001",
+   "nomeConta": "Uber",
+   "historico": "Uber",
+   "valor": {
+    "$numberInt": "250"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1779246000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "5"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fbe010eb5ae8f0ba0394"
+   },
+   "status": "REALIZADA",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779824123228"
+    }
+   },
+   "documento": "",
+   "realizadaEm": {
+    "$date": {
+     "$numberLong": "1779824123228"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fbe010eb5ae8f0ba039b"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "6"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a12fbb510eb5ae8f0ba036f"
+   },
+   "codigoConta": "3.07.001.001",
+   "nomeConta": "Uber",
+   "historico": "Uber",
+   "valor": {
+    "$numberInt": "250"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1781924400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "6"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fbe010eb5ae8f0ba0394"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6a12fbe010eb5ae8f0ba039c"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "7"
+   },
+   "pos": {
+    "$numberInt": "8"
+   },
+   "contaSubTitulo": {
+    "$oid": "6a12fbb510eb5ae8f0ba036f"
+   },
+   "codigoConta": "3.07.001.001",
+   "nomeConta": "Uber",
+   "historico": "Uber",
+   "valor": {
+    "$numberInt": "250"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1784516400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "7"
+   },
+   "totalParcelas": {
+    "$numberInt": "7"
+   },
+   "origem": "ORCAMENTO",
+   "orcamentoAno": {
+    "$numberInt": "2026"
+   },
+   "lancamentoId": {
+    "$oid": "6a12fbe010eb5ae8f0ba0394"
+   },
+   "status": "ATIVO",
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1779629024802"
+    }
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   }
+  }
+ ],
+ "numeracaoOS": {
+  "_id": {
+   "$oid": "6ace7cbd216b0dccf26e0a54"
+  },
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "chave": "OS",
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792405425006"
+   }
+  },
+  "ultimo": {
+   "$numberInt": "13853"
+  }
+ }
+}

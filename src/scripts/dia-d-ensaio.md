@@ -22,6 +22,13 @@ O servidor (database\index.js) e todos os scripts usam **MONGO_URI** (DB_CONNECT
 5b. ✓ **COMPRA-23-conferir-pedidos** (só lê) + **COMPRA-24-fechar-pedidos --cancelar <teste>** (NOVOS):
     o Access apaga pedido liquidado; 7 pedidos antigos (7146…7160) ficavam pendentes aqui com a pos 7 no
     fluxo = R$ 90.400,23 em dobro. Fechados (L), 7161 de teste cancelado (C), 15 linhas do fluxo canceladas.
+5d. (19/10) **Pos do PED_PedidoFornecedor: 0 pendente · 1 SALDO pendente · 3 cancelado** (o Access apaga o liquidado).
+    O COMPRA-9 passou a importar a Pos 1 (7113 Saldo/Orbis R$ 3.903,56); o FLUXO-1 pula a linha cuja Chave = coluna
+    Fluxo do pedido. Programação de Compras (próxima tela): grade = soma NFE_Cabeçalho.VrNota por NrFornec × mês
+    (DataEntr), 5.150 notas desde 2015; programados = fluxo pos 7 do Access.
+5c. **FLUXO-3-pedidos-para-pos3** (NOVO 19/10) — POS COMO NO ACCESS: **3 = pedido feito** ao fabricante,
+    **7 = compra projetada** (previsão / programação de compras). A plataforma tinha os pedidos na 7: passa as
+    parcelas de pedido (PEDIDO_IMPORTADO / PEDIDO_COMPRA) para a 3. COMPRA-9 e a tela de pedidos já gravam 3.
 6. ✓ CLIENTE-2-importar — 32 novos, 16.996 atualizados, 28 contas criadas (backup)
 7. ✓ PLANO-2-espelho-access e VENDA-1-espelho-access — Rotor 7.629, Ativo 11.510, Passivo 2.812,
     Despesas 2.713, Receitas 1.907; cupons 1.215, itens 3.517, títulos NF 10.577, OS 13.783/13.796
@@ -38,7 +45,9 @@ O servidor (database\index.js) e todos os scripts usam **MONGO_URI** (DB_CONNECT
     acerta a numeração da OS para a maior do Access. Para gravar exige `--base <nome da base>`.
     Venda com NF-e autorizada não é apagada (só com --com-nfe). Vizzo R$ 18.002 de 16/10 = teste (Jorge).
 8b'. Rodar o ENSAIO-2 com **--orcamentos** (os ORCAMENTO da plataforma eram teste — Jorge, 19/10).
-9. FLUXO-1-importar-fluxo-access **--com-orcamento** — fluxo de caixa do Access: pos 0, 2, 3 (programação de
+9. FLUXO-1-importar-fluxo-access **--com-orcamento** (19/10: traz a pos 7 = previsões; da pos 3 do Access só o que
+    NÃO é pedido da plataforma, ex. "Saldo / PedidoOrbis" — as parcelas de pedido vêm do COMPRA-9, sem repetir)
+   (antes:) — fluxo de caixa do Access: pos 0, 2, 3 (programação de
     compras), 5 e 8 (orçamento projetado). Fora só o 7 (pedidos vêm do COMPRA-9, PEDIDO_IMPORTADO).
 10. OS: numeração e OS abertas (OS-2 ...) — a definir
 11. (feito no 8b) numeração real da NF-e segue a última do Access

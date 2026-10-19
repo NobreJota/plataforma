@@ -42,7 +42,7 @@
 //      boleta. GET /saldo-conta?codigo= : o saldo da conta no balancete, para a tela conferir antes.
 //  18/10/2026: GET /dda-confere?de=&ate= — DDA - CONFERE: titulos de fornecedor do fluxo (pos 2 e 7) com o
 //      CNPJ, e os CNPJs dos fornecedores; a tela compara com o CSV do banco.
-//  19/10/2026: /dda-confere traz TODO o a pagar do fluxo (pos 0, 2, 3, 7, 8), nao so fornecedor: o arquivo
+//  19/10/2026: /dda-confere traz o a pagar do fluxo (pos 0 e 2; sem pedido/projecao/orcamento), nao so fornecedor: o arquivo
 //      real do banco (BB "Agenda de boletos DDA") traz seguro, contador, DNIT etc.
 //  18/10/2026: GET /dda?ate= — DDA - PAGA (sub-menu do Fluxo de Caixa): os titulos a pagar (pos 2)
 //      vencendo ate o dia, vencidos inclusive; paga pelo POST /quitar.
@@ -192,7 +192,7 @@ router.get('/dda', async (req, res) => {
 
 /* 18/10/2026 (Jorge): DDA - CONFERE. GET /financeiro/api/pagamento/dda-confere?de=&ate=
    O lado do FLUXO para comparar com o arquivo do DDA do banco (a comparacao e na tela):
-   - titulos de fornecedor (conta 2.01.001.xxx) a pagar (pos 2), compra programada (pos 3) e pedido (pos 7),
+   - titulos de fornecedor (conta 2.01.001.xxx) a pagar (pos 2), pedido feito (pos 3) e compra projetada (pos 7) — 19/10/2026, como no Access,
      em aberto, vencendo de/ate (padrao: hoje-7 ate hoje+90), com o CNPJ do fornecedor
    - fornecedores: os CNPJs conhecidos (cadastro fornecs -> vinculo da loja -> conta), para
      apontar no arquivo do banco o CNPJ que NAO e nosso fornecedor (principal sinal de fraude) */
@@ -213,9 +213,10 @@ router.get('/dda-confere', async (req, res) => {
       if (conta) porConta.set(conta, { cnpj, razao, marca: String(f.marca || '').trim() });
       if (cnpj) fornecedores.push({ cnpj, razao, marca: String(f.marca || '').trim(), conta });
     }
-    // 19/10/2026: TUDO o que e a pagar (0 avulso, 2, 3, 7, 8), nao so fornecedor: o DDA traz tambem
-    // seguro, contador, DNIT... (a tela mostra so os de fornecedor que nao vieram, se quiser)
-    const itens = await FluxoProjetado.find({ status: 'ATIVO', pos: { $in: [0, 2, 3, 7, 8] },
+    // 19/10/2026: o que e a pagar DE VERDADE (0 avulso e 2 a pagar), nao so fornecedor: o DDA traz tambem
+    // seguro, contador, DNIT... SEM pedido (3), compra projetada (7) e orcamento (8): pedido que nao chegou
+    // nao tem boleto no banco (Jorge) — comparar com eles so cria par errado (ex.: Rinnai 7160 x NF 622412).
+    const itens = await FluxoProjetado.find({ status: 'ATIVO', pos: { $in: [0, 2] },
       vencimento: { $gte: de, $lte: ate }, origem: { $ne: 'OS' } }).sort({ vencimento: 1 }).lean();
     const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     res.json({ de: ymd(de), ate: ymd(ate), fornecedores,

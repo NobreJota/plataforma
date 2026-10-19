@@ -36,6 +36,7 @@
 //     "só fornecedores" esconde os "só no fluxo" que nao sao fornecedor (salario, imposto...);
 //   - SAIU o "🧪 Simular arquivo do banco".
 //   O formato em colunas (CSV com CNPJ, de outros bancos) continua funcionando como antes.
+//   pos como no Access: 3 = pedido feito, 7 = compra projetada.
 // Carregado pelo sub-menu (fluxo-submenu.js): window.DdaConfere.abrir()
 // API: GET /financeiro/api/pagamento/dda-confere?de=&ate=
 // =============================================================================
@@ -449,7 +450,7 @@
       + '</th><th data-ord="valor" class="ord n">Valor' + seta('valor') + '</th><th></th></tr></thead>';
     q('dc-esq').innerHTML = fv.length ? '<table class="dc-tab">' + cab('Fornecedor · histórico') + '<tbody>'
       + fv.map((t, k) => '<tr data-par="' + t.par + '"><td class="cn">' + (k + 1) + '</td><td>' + esc(t.marca || t.razao) + ' <span class="cn">' + esc(cnpjFmt(t.cnpj) || 'sem CNPJ no cadastro') + '</span><br><span class="cn">'
-        + esc(t.historico) + (t.parcela ? ' · ' + t.parcela + '/' + t.totalParcelas : '') + ' · ' + ({ 0: 'avulso', 3: 'compra programada', 7: 'pedido', 8: 'orçamento' }[t.pos] || 'a pagar') + '</span>'
+        + esc(t.historico) + (t.parcela ? ' · ' + t.parcela + '/' + t.totalParcelas : '') + ' · ' + ({ 0: 'avulso', 3: 'pedido feito', 7: 'compra projetada', 8: 'orçamento' }[t.pos] || 'a pagar') + '</span>'
         + (t.dif ? '<br><span class="dc-dif">' + esc(t.dif) + '</span>' : '')
         + (() => { const b = t.par && banco.find(x => x.par === t.par);
             return b && b.venc !== t.venc ? '<br><button type="button" class="dc-aj" data-aj="' + esc(t._id) + '" data-venc="' + b.venc + '">✎ ajustar o vencimento do fluxo</button>' : ''; })()

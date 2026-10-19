@@ -39,6 +39,10 @@
  *    do mes, vencidos e a vencer. Vale para todos os pos (5 a receber, 2 a pagar, 7 pedidos, 3 compras...).
  *    Usa as linhas que a grade ja carregou (sem ir ao servidor). Arrastavel; Esc fecha.
  *    E TODOS os pos aparecem sempre na grade: saiu o esconder do sub-menu (ocultos fica vazio).
+ *    19/10/2026: a janela do pos AGRUPA por documento (pedido, nota, cliente): uma linha com o total; clique no
+ *    numero abre a aba com os vencimentos (de todos os meses: API GET /financeiro/api/fluxo/pos/:pos).
+ *    "só os que vencem em <mes>" (marcado) mostra so os documentos com parcela no mes da grade.
+ *    POS como no Access: 3 = Pedidos feitos, 7 = Compras projetadas.
  */
 (() => {
   'use strict';
@@ -105,8 +109,9 @@
   try { localStorage.removeItem('fluxo-ocultar'); } catch (_) { /* sem storage */ }
 
   /* ===== 19/10/2026: janela "todos os registros do pos" (clique na bolinha do pos) ===== */
-  const POS_NOME = { 0: 'Avulso', 1: 'Cartão - receber', 2: 'A pagar', 3: 'Compras programadas', 5: 'A receber',
-                     7: 'Pedidos feitos', 8: 'Orçamento projetado' };
+  // 19/10/2026: como no Access — 3 = pedido feito ao fabricante, 7 = compra projetada (previsao)
+  const POS_NOME = { 0: 'Avulso', 1: 'Cartão - receber', 2: 'A pagar', 3: 'Pedidos feitos', 5: 'A receber',
+                     7: 'Compras projetadas', 8: 'Orçamento projetado' };
   let ultimasLinhas = [], jp = null, jpOrdem = { k: 'venc', asc: true };
   (function estiloPos() {
     const st = document.createElement('style');
@@ -130,17 +135,36 @@
     .jp-atr.v { background:#fee2e2; color:#991b1b; } .jp-atr.h { background:#fef9c3; color:#854d0e; } .jp-atr.f { background:#dcfce7; color:#166534; }
     .jp-pe { display:flex; gap:16px; align-items:center; padding:10px 14px; border-top:1px solid #e5e7eb; flex-wrap:wrap; font-weight:700; }
     .jp-pe .tot { flex:1; } .jp-pe b { font-size:16px; }
+    .jp-num { border:1px solid #c4b5fd; background:#faf5ff; color:#6d28d9; border-radius:6px; padding:2px 8px; font-weight:800; cursor:pointer; font-size:13px; white-space:nowrap; }
+    .jp-num:hover { background:#ede9fe; }
+    .jp-tab tr.jp-aba > td { background:#faf5ff; border-top:0; }
+    .jp-sub { border-collapse:collapse; font-size:13px; margin:2px 0 8px; min-width:380px; }
+    .jp-sub th { position:static; background:#ede9fe; font-size:10px; padding:4px 10px; }
+    .jp-sub td { padding:3px 10px; border-top:1px solid #ede9fe; } .jp-sub tr.mes td { font-weight:800; }
     .jp-pe button { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:7px 14px; font-weight:700; cursor:pointer; }`;
     document.head.appendChild(st);
   })();
-  function abrirPos(pos) {
+  // 19/10/2026 (Jorge): a janela AGRUPA por documento — o pedido (ou a nota, ou o cliente) aparece UMA vez,
+  // com o total; clique no numero e abre a "aba" com os vencimentos dele. Le TODAS as linhas em aberto
+  // do pos (todos os meses: as parcelas de um pedido passam de um mes para o outro).
+  function docDe(l) {
+    const h = String(l.historico || '');
+    let m = /pedido\D{0,60}?(\d{4,})/i.exec(h);
+    if (m) return { k: 'P' + m[1], rot: 'nº ' + m[1] };
+    m = /\bNF\s*N?[ºo°.]*\s*(\d+)/i.exec(h);
+    if (m) return { k: 'N' + l.codigoConta + '|' + Number(m[1]), rot: 'NF ' + Number(m[1]) };
+    if (Number(l.pos) === 5 || Number(l.pos) === 1) return { k: 'C' + l.codigoConta, rot: '' };      // a receber: por cliente
+    const base = h.replace(/[\s\-·:]*\d+\s*\/\s*\d+\s*[a-z]?\s*$/i, '').trim().toLowerCase();       // tira o "5/6" do fim
+    return { k: 'H' + l.codigoConta + '|' + base, rot: '' };
+  }
+  async function abrirPos(pos) {
     if (jp) jp.remove();
-    const doPos = ultimasLinhas.filter(l => Number(l.pos) === Number(pos));
-    const quando = state.mes ? MESES[state.mes - 1] + '/' + state.ano : 'ano ' + state.ano + ' (todos os meses)';
+    const quando = state.mes ? MESES[state.mes - 1] + '/' + state.ano : '';
     jp = document.createElement('div'); jp.className = 'jp-jan';
-    jp.innerHTML = '<div class="jp-cab"><span>pos ' + pos + ' · ' + escAttr(POS_NOME[pos] || '') + ' · ' + quando + '</span><button type="button" data-x title="fechar (Esc)">×</button></div>'
-      + '<div class="jp-ctl"><input data-busca placeholder="procurar nome, histórico ou conta" autocomplete="off"></div>'
-      + '<div class="jp-corpo" data-lista></div>'
+    jp.innerHTML = '<div class="jp-cab"><span>pos ' + pos + ' · ' + escAttr(POS_NOME[pos] || '') + '</span><button type="button" data-x title="fechar (Esc)">×</button></div>'
+      + '<div class="jp-ctl" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><input data-busca placeholder="procurar nome, histórico ou conta" autocomplete="off">'
+      + (quando ? '<label style="font-size:13px;display:flex;gap:5px;align-items:center"><input type="checkbox" data-mes checked style="height:auto;width:auto"> só os que vencem em ' + quando + '</label>' : '')
+      + '</div><div class="jp-corpo" data-lista><div style="padding:24px;text-align:center;color:#6b7280">Carregando…</div></div>'
       + '<div class="jp-pe"><span class="tot" data-tot></span><button type="button" data-x>Fechar</button></div>';
     document.body.appendChild(jp);
     const cab = jp.querySelector('.jp-cab');
@@ -153,32 +177,70 @@
       const u = () => { document.removeEventListener('mousemove', m); document.removeEventListener('mouseup', u); };
       document.addEventListener('mousemove', m); document.addEventListener('mouseup', u);
     });
-    jp.querySelectorAll('[data-x]').forEach(b => b.addEventListener('click', () => { jp.remove(); jp = null; }));
+    const meu = jp;
+    jp.querySelectorAll('[data-x]').forEach(b => b.addEventListener('click', () => { meu.remove(); if (jp === meu) jp = null; }));
+
+    let linhas = [];
+    try { linhas = (await api('/pos/' + pos)).linhas || []; }
+    catch (e) { meu.querySelector('[data-lista]').innerHTML = '<div style="padding:24px;color:#b91c1c">' + escAttr(e.message) + '</div>'; return; }
+
     const hoje = new Date(); hoje.setHours(12, 0, 0, 0);
-    const atraso = l => { const v = new Date(l.vencimento); v.setHours(12, 0, 0, 0); return Math.round((hoje - v) / 86400000); };
-    const valor = l => Math.abs(Number(l.aReceber || 0) || Number(l.aPagar || 0));
-    const nome = l => l.nomeConta || l.historico || '';
+    const atraso = d => { const v = new Date(d); v.setHours(12, 0, 0, 0); return Math.round((hoje - v) / 86400000); };
+    const noMes = l => { const d = new Date(l.vencimento); return state.mes && d.getFullYear() === state.ano && d.getMonth() + 1 === state.mes; };
+    const sit = d => { const a = atraso(d); return a > 0 ? '<span class="jp-atr v">vencido há ' + a + 'd</span>' : a === 0 ? '<span class="jp-atr h">vence hoje</span>' : '<span class="jp-atr f">em ' + (-a) + 'd</span>'; };
+    // agrupa
+    const grupos = new Map();
+    for (const l of linhas) {
+      const d = docDe(l);
+      if (!grupos.has(d.k)) grupos.set(d.k, { k: d.k, rot: d.rot, nome: l.nomeConta || l.historico, hist: l.historico, conta: l.codigoConta, parc: [] });
+      grupos.get(d.k).parc.push(l);
+    }
+    const docs = [...grupos.values()].map(g => {
+      g.parc.sort((a, b) => String(a.vencimento).localeCompare(String(b.vencimento)));
+      g.total = g.parc.reduce((t, l) => t + Math.round(l.valor * 100), 0) / 100;
+      g.mes = g.parc.filter(noMes).reduce((t, l) => t + Math.round(l.valor * 100), 0) / 100;
+      g.temMes = g.parc.some(noMes);
+      g.prox = g.parc[0].vencimento;
+      g.venc = g.parc.filter(l => atraso(l.vencimento) > 0).reduce((t, l) => t + Math.round(l.valor * 100), 0) / 100;
+      return g;
+    });
+    const abertos = new Set();
     const desenhar = () => {
-      const b = jp.querySelector('[data-busca]').value.trim().toLowerCase();
-      const vis = doPos.filter(l => !b || (nome(l) + ' ' + l.historico + ' ' + l.codigoConta).toLowerCase().includes(b));
-      const f = jpOrdem.k === 'nome' ? (l => nome(l).toLowerCase()) : jpOrdem.k === 'valor' ? valor : (l => String(l.vencimento || ''));
+      const b = meu.querySelector('[data-busca]').value.trim().toLowerCase();
+      const soMes = !!(meu.querySelector('[data-mes]') && meu.querySelector('[data-mes]').checked);
+      const vis = docs.filter(g => (!soMes || g.temMes) && (!b || (g.rot + ' ' + g.nome + ' ' + g.hist + ' ' + g.conta).toLowerCase().includes(b)));
+      const f = jpOrdem.k === 'nome' ? (g => String(g.nome).toLowerCase()) : jpOrdem.k === 'valor' ? (g => g.total) : (g => String(g.prox || ''));
       vis.sort((x, y) => { const a = f(x), c = f(y); return (a < c ? -1 : a > c ? 1 : 0) * (jpOrdem.asc ? 1 : -1); });
       const seta = k => jpOrdem.k === k ? (jpOrdem.asc ? ' ▲' : ' ▼') : ' ⇅';
-      const sit = l => { const a = atraso(l); return a > 0 ? '<span class="jp-atr v">vencido há ' + a + 'd</span>' : a === 0 ? '<span class="jp-atr h">vence hoje</span>' : '<span class="jp-atr f">em ' + (-a) + 'd</span>'; };
-      jp.querySelector('[data-lista]').innerHTML = vis.length ? '<table class="jp-tab"><thead><tr><th style="width:34px">#</th>'
-        + '<th class="ord" data-ord="venc">Venc.' + seta('venc') + '</th><th class="ord" data-ord="nome">Nome / histórico' + seta('nome') + '</th>'
+      meu.querySelector('[data-lista]').innerHTML = vis.length ? '<table class="jp-tab"><thead><tr><th style="width:34px">#</th><th>Número</th>'
+        + '<th class="ord" data-ord="nome">Nome / histórico' + seta('nome') + '</th><th class="ord" data-ord="venc">Próx. venc.' + seta('venc') + '</th>'
         + '<th class="ord n" data-ord="valor">Valor' + seta('valor') + '</th><th>Situação</th></tr></thead><tbody>'
-        + vis.map((l, k) => '<tr><td class="cn">' + (k + 1) + '</td><td>' + fmtData(l.vencimento) + '</td><td><b>' + escAttr(nome(l)) + '</b>'
-          + '<br><span class="cn">' + escAttr(l.historico) + ' · ' + escAttr(l.codigoConta) + (l.chave ? ' · ' + escAttr(l.chave) : '') + '</span></td>'
-          + '<td class="n">' + fmt(valor(l)) + '</td><td>' + sit(l) + '</td></tr>').join('') + '</tbody></table>'
-        : '<div class="flx-empty" style="padding:24px;text-align:center;color:#6b7280">Nenhum registro.</div>';
-      const tot = vis.reduce((t, l) => t + valor(l), 0), venc = vis.filter(l => atraso(l) > 0).reduce((t, l) => t + valor(l), 0);
-      jp.querySelector('[data-tot]').innerHTML = vis.length + ' registro(s) · Total <b>R$ ' + (fmt(tot) || '0,00') + '</b>'
-        + ' &nbsp;·&nbsp; <span style="color:#991b1b">vencidos R$ ' + (fmt(venc) || '0,00') + '</span>'
-        + ' &nbsp;·&nbsp; <span style="color:#166534">a vencer R$ ' + (fmt(tot - venc) || '0,00') + '</span>';
+        + vis.map((g, k) => {
+          const aberto = abertos.has(g.k);
+          const linha = '<tr><td class="cn">' + (k + 1) + '</td>'
+            + '<td><button type="button" class="jp-num" data-doc="' + escAttr(g.k) + '" title="ver os vencimentos">' + (aberto ? '▾ ' : '▸ ') + escAttr(g.rot || 'ver') + '</button>'
+            + '<br><span class="cn">' + g.parc.length + ' parcela(s)</span></td>'
+            + '<td><b>' + escAttr(g.nome) + '</b><br><span class="cn">' + escAttr(g.hist) + ' · ' + escAttr(g.conta) + '</span></td>'
+            + '<td>' + fmtData(g.prox) + '</td><td class="n"><b>' + fmt(g.total) + '</b>' + (soMes && g.mes !== g.total ? '<br><span class="cn">no mês ' + fmt(g.mes) + '</span>' : '') + '</td>'
+            + '<td>' + sit(g.prox) + '</td></tr>';
+          const aba = !aberto ? '' : '<tr class="jp-aba"><td></td><td colspan="5"><table class="jp-sub"><tr><th>Venc.</th><th>Parcela</th><th class="n">Valor</th><th>Situação</th></tr>'
+            + g.parc.map(l => '<tr' + (noMes(l) ? ' class="mes"' : '') + '><td>' + fmtData(l.vencimento) + '</td><td class="cn">' + (l.parcela ? l.parcela + '/' + (l.totalParcelas || '') : '') + '</td>'
+              + '<td class="n">' + fmt(l.valor) + '</td><td>' + sit(l.vencimento) + '</td></tr>').join('')
+            + '<tr><td colspan="2"><button type="button" class="jp-num" data-doc="' + escAttr(g.k) + '">fecha aba</button></td><td class="n"><b>' + fmt(g.total) + '</b></td><td></td></tr></table></td></tr>';
+          return linha + aba;
+        }).join('') + '</tbody></table>'
+        : '<div style="padding:24px;text-align:center;color:#6b7280">Nenhum registro.</div>';
+      const tot = vis.reduce((t, g) => t + Math.round(g.total * 100), 0) / 100, mes = vis.reduce((t, g) => t + Math.round(g.mes * 100), 0) / 100;
+      const venc = vis.reduce((t, g) => t + Math.round(g.venc * 100), 0) / 100;
+      meu.querySelector('[data-tot]').innerHTML = vis.length + ' documento(s) · em aberto <b>R$ ' + (fmt(tot) || '0,00') + '</b>'
+        + (soMes ? ' &nbsp;·&nbsp; no mês R$ ' + (fmt(mes) || '0,00') : '')
+        + ' &nbsp;·&nbsp; <span style="color:#991b1b">vencidos R$ ' + (fmt(venc) || '0,00') + '</span>';
     };
-    jp.querySelector('[data-busca]').addEventListener('input', desenhar);
-    jp.addEventListener('click', ev => {
+    meu.querySelector('[data-busca]').addEventListener('input', desenhar);
+    const cx = meu.querySelector('[data-mes]'); if (cx) cx.addEventListener('change', desenhar);
+    meu.addEventListener('click', ev => {
+      const n = ev.target.closest('[data-doc]');
+      if (n) { const k = n.dataset.doc; if (abertos.has(k)) abertos.delete(k); else abertos.add(k); desenhar(); return; }
       const th = ev.target.closest('th[data-ord]'); if (!th) return;
       jpOrdem = jpOrdem.k === th.dataset.ord ? { k: jpOrdem.k, asc: !jpOrdem.asc } : { k: th.dataset.ord, asc: true };
       desenhar();

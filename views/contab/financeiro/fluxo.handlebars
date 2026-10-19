@@ -1,5 +1,6 @@
 {{!--
   Destino: C:\plataformaRota\views\contab\financeiro\fluxo.handlebars
+  Alterado em: 19/10/2026 - cabecalho da grade FIXO (a grade rola dentro da caixa, na altura da tela)
   Alterado em: 03/10/2026 - antecipacao de cartao e valor liquido no modal de recebimento
   Alterado em: 05/10/2026 - cabecalho com o caminho de destino
   Alterado em: 18/10/2026 - "● sub-menu" na legenda: janela flutuante (DDA confere/paga, vendas a receber,
@@ -195,9 +196,10 @@
   .flx-leg.vermelho { color:#dc2626; }
   .flx-leg.preto    { color:#374151; }
 
-  .flx-grid-wrap { overflow-x:auto; border:1px solid #d1d5db; border-radius:8px; background:#fff; }
+  /* 19/10/2026: CABECALHO FIXO — a grade rola dentro da caixa (altura da tela) e o titulo das colunas fica parado */
+  .flx-grid-wrap { overflow:auto; max-height:calc(100vh - 230px); border:1px solid #d1d5db; border-radius:8px; background:#fff; }
   .flx-grid { width:100%; border-collapse:collapse; font-size:.82rem; }
-  .flx-grid th { background:#6d28d9; color:#fff; padding:8px 10px; text-align:right; font-size:.72rem; letter-spacing:.4px; white-space:nowrap; position:sticky; top:0; }
+  .flx-grid th { background:#6d28d9; color:#fff; padding:8px 10px; text-align:right; font-size:.72rem; letter-spacing:.4px; white-space:nowrap; position:sticky; top:0; z-index:2; }
   .flx-grid th.c-item, .flx-grid th.c-chave, .flx-grid th.c-pos { text-align:center; }
   .flx-grid th.c-hist, .flx-grid th.c-conta { text-align:left; }
   .flx-grid td { padding:6px 10px; border-bottom:1px solid #f0f0f0; text-align:right; white-space:nowrap; }

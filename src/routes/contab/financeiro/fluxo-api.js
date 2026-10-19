@@ -4,6 +4,9 @@
 // Alterado em: 16/10/2026 - fica de fora o FLUXO DE SERVICO (origem 'OS': o a receber das OS),
 //              que tem tela propria (Servico > Fluxo de servico).
 // Alterado em: 18/10/2026 - ?ocultar=8,3,7 (sub-menu: mostrar ou nao orcamento, compras proj., pedidos).
+// Alterado em: 19/10/2026 - pos como no Access: 3 = Pedido feito, 7 = Compra projetada (rotulos trocados).
+//              GET /pos/:pos — TODAS as linhas em aberto daquele pos (todos os anos), para a janela do pos
+//              agrupar por pedido/nota e mostrar os vencimentos de cada um.
 
 const express = require('express');
 const FluxoProjetado = require('../../../models/contab/financeiro/fluxoProjetado');
@@ -18,11 +21,29 @@ const POS_INFO = {
   0: { rotulo: 'Avulso',       cor: 'preto'    },
   1: { rotulo: 'Cartão receber', cor: 'vermelho' },
   2: { rotulo: 'Compra pagar', cor: 'preto'    },
-  3: { rotulo: 'Compra futura', cor: 'preto'   },
+  3: { rotulo: 'Pedido feito', cor: 'preto'    },     // 19/10/2026: como no Access
   5: { rotulo: 'Título receber', cor: 'vermelho' },
-  7: { rotulo: 'Proj. compra', cor: 'preto'    },
+  7: { rotulo: 'Compra projetada', cor: 'preto' },   // 19/10/2026: previsao (programacao de compras)
   8: { rotulo: 'Orçamento',    cor: 'verde'    }
 };
+
+/* 19/10/2026: GET /financeiro/api/fluxo/pos/:pos — todas as linhas EM ABERTO do pos (sem limite de data),
+   para a janela do pos: agrupa por pedido / nota e abre os vencimentos de cada um. */
+router.get('/pos/:pos', async (req, res) => {
+  try {
+    const pos = parseInt(req.params.pos, 10);
+    if (!Number.isFinite(pos)) return res.status(400).json({ erro: 'pos inválido' });
+    const itens = await FluxoProjetado.find({ pos, status: 'ATIVO', ...FORA_SERVICO }).sort({ vencimento: 1, _id: 1 }).lean();
+    res.json({ pos, linhas: itens.map(it => ({
+      _id: it._id, pos: it.pos, historico: it.historico || it.nomeConta || '', nomeConta: it.nomeConta || '',
+      codigoConta: it.codigoConta || '', vencimento: it.vencimento, valor: Math.abs(it.valor || 0),
+      parcela: it.parcela || null, totalParcelas: it.totalParcelas || null, origem: it.origem || '',
+    })) });
+  } catch (err) {
+    console.error('❌ /fluxo/pos:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
 
 /* GET /financeiro/api/fluxo/:ano?mes=N
    Lista o fluxo do ano (e mês opcional) com saldo acumulado.

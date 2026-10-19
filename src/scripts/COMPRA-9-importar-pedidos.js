@@ -1,6 +1,11 @@
 // =============================================================================
 // Destino: C:\plataformaRota\src\scripts\COMPRA-9-importar-pedidos.js
 // Criado em:   27/09/2026
+// Alterado em: 19/10/2026 — Pos 1 = SALDO DE PEDIDO (entrega parcial), AINDA PENDENTE: a "Lista de Pedidos
+//              Pendente" do Access mostra Pos 0 E Pos 1 (7113 Saldo/Orbis R$ 3.903,56). O Access APAGA o
+//              pedido liquidado, entao o que tem Pos 1 e ainda esta na tabela e saldo a chegar. Entra marcado.
+// Alterado em: 19/10/2026 — as parcelas do pedido vao para a POS 3 (pedido feito, como no Access; antes 7).
+//              A pos 7 e a compra PROJETADA (previsao), que vem do Access pelo FLUXO-1.
 // Alterado em: 27/09/2026 — nomes reais das colunas do Access:
 //              cabecalho DataEmisPedido / itens NossoCódigo, Qte, VCusto, Saldo
 // Alterado em: 03/10/2026 — FIM DO DE/PARA: fornecedor direto por _fornec_access
@@ -19,7 +24,7 @@
 // Os pedidos emitidos na plataforma continuam contando do 1.
 //
 // O QUE E PENDENTE
-// Coluna Pos do cabecalho: 0 pendente · 1 liquidado · 3 cancelado. So entra o 0.
+// Coluna Pos do cabecalho: 0 pendente · 1 SALDO pendente (19/10/2026) · 3 cancelado. Entram o 0 e o 1.
 // A data de Entrega NAO e criterio (ha liquidados com 01/01/1933).
 //
 // FORNECEDOR
@@ -44,7 +49,7 @@
 //   node src\scripts\COMPRA-9-importar-pedidos.js --mdb "..." --aplicar
 //   node src\scripts\COMPRA-9-importar-pedidos.js --mdb "..." --aplicar --com-fluxo
 //
-// --com-fluxo gera as previsoes pos 7. Sem ele o fluxo nao e tocado — bom
+// --com-fluxo gera as parcelas pos 3 (19/10/2026; antes 7). Sem ele o fluxo nao e tocado — bom
 // para conferir os pedidos antes de mexer no caixa.
 // =============================================================================
 
@@ -274,17 +279,18 @@ function montar(a) {
     const n = Number(l[C.numero]);
     if (!Number.isFinite(n) || !n) continue;
 
-    // Pos: 0 pendente · 1 liquidado · 3 cancelado. So o 0 entra.
+    // Pos: 0 pendente · 1 saldo pendente (19/10/2026) · 3 cancelado. Entram o 0 e o 1.
     const pos = Number(l[C.pos]);
-    if (pos === 1) { entregues++; continue; }
+    if (pos === 1) entregues++;                       // conta os saldos (e entra)
     if (pos === 3) { cancelados++; continue; }
-    if (pos !== 0) { outraPos++; continue; }
+    if (pos !== 0 && pos !== 1) { outraPos++; continue; }
 
     const itens = itensPorPedido.get(n) || [];
     if (!itens.length) { semItens++; continue; }
 
     pendentes.push({
       numero: n,
+      saldo: pos === 1,                                // 19/10/2026: saldo de pedido (entrega parcial)
       nrFornec: Number(l[C.fornec]) || 0,
       dataEmissao: dataValida(l[C.emissao]) ? l[C.emissao] : null,
       previsao: (C.previsao && dataValida(l[C.previsao])) ? l[C.previsao] : null,
@@ -318,7 +324,7 @@ async function principal() {
   console.log('Importar pedidos pendentes   '
     + (APLICAR ? '>>> APLICANDO <<<' : '(simulacao)'));
   console.log('MDB ......... ' + MDB);
-  console.log('Fluxo ....... ' + (COM_FLUXO ? 'gera previsoes pos 7' : 'NAO toca no fluxo'));
+  console.log('Fluxo ....... ' + (COM_FLUXO ? 'gera as parcelas pos 3' : 'NAO toca no fluxo'));
   console.log('='.repeat(74));
 
   const doAccess = lerDoAccess();
@@ -327,7 +333,7 @@ async function principal() {
 
   const m = montar(doAccess);
   console.log('\nPedidos no Access .......... ' + doAccess.linhasCab.length);
-  console.log('    liquidados (Pos 1) ..... ' + m.entregues);
+  console.log('    saldos (Pos 1, entram) . ' + m.entregues);
   console.log('    cancelados (Pos 3) ..... ' + m.cancelados);
   if (m.outraPos) console.log('    Pos desconhecida ....... ' + m.outraPos + '   (nao entram; me avise)');
   console.log('    sem itens .............. ' + m.semItens);
@@ -378,7 +384,7 @@ async function principal() {
   console.log('    com cadastro ........... ' + (prontos.length - semFornecedor.length));
   console.log('    SEM cadastro ........... ' + semFornecedor.length
     + '   (entram assim mesmo, marcados)');
-  console.log('    com conta (geram pos 7)  ' + prontos.filter(p => p.conta).length);
+  console.log('    com conta (geram pos 3)  ' + prontos.filter(p => p.conta).length);
   console.log('Ja existem na plataforma ... ' + repetidos.length);
 
   if (semFornecedor.length) {
@@ -474,7 +480,7 @@ async function principal() {
       dataEntregaPrevista: entrega,
       condicaoPagamento: p.condicao,
       itens,
-      observacao: 'Importado do sistema antigo (pedido ' + p.numero + ')',
+      observacao: 'Importado do sistema antigo (pedido ' + p.numero + ')' + (p.saldo ? ' · SALDO de pedido (Pos 1 no Access)' : ''),
     });
 
     // Sem conta contabil nao ha onde lancar.
@@ -485,7 +491,7 @@ async function principal() {
           lojistaId,
           ano: x.vencimento.getFullYear(),
           mes: x.vencimento.getMonth() + 1,
-          pos: 7,
+          pos: 3,                              // 19/10/2026: pedido feito (antes 7)
           codigoConta: conta,
           nomeConta: razao,
           historico: 'Pedido ' + pedido.numero + ' ' + p.fornecedorNome,

@@ -12,7 +12,14 @@
 // Alterado em: 19/10/2026 - nome da pos 3 (programacao de compras futuras; a tela ainda vai ser feita).
 //   - historico: Hist + NrTitulo (quando tem) · nomeConta e contaSubTitulo: do plano
 //   - origem 'ACCESS' + chaveImport (Chave|Ord|NrCta|NrTitulo|Vect|valor) para rodar de novo
-// POS 8 (orcamento) e POS 7 (pedido) ficam de fora: a plataforma ja tem o orcamento e os pedidos
+// Alterado em: 19/10/2026 - O POS DO ACCESS (confirmado com o Jorge): 3 = PEDIDO FEITO ao fabricante (aguardando
+//   mercadoria), 7 = COMPRA PROJETADA (previsao: "previsaoRinnai"...). Antes eu tinha os dois trocados: a pos 7
+//   (90 linhas de previsao) ficava de fora e a pos 3 (os pedidos) entrava EM DOBRO com os do COMPRA-9.
+//   Agora: entra a pos 7 (previsao) e, da pos 3, so o que NAO e pedido da plataforma ("Saldo / PedidoOrbis");
+//   a parcela de pedido que o COMPRA-9 ja trouxe (o numero do pedido no NrTitulo "7119/0") fica de fora.
+//   E tambem a linha cuja Chave e a coluna Fluxo do pedido no PED_PedidoFornecedor (o saldo 7113 Orbis,
+//   que no historico nao tem o numero). Pos 1 do pedido = SALDO pendente (o COMPRA-9 agora importa).
+// (antes) POS 8 (orcamento) e POS 7 (pedido) ficam de fora: a plataforma ja tem o orcamento e os pedidos
 // dela (seriam linhas repetidas). Use --com-orcamento / --com-pedidos para trazer tambem.
 //
 // Rodar de novo: as linhas ACCESS ainda em aberto (ATIVO) sao trocadas pelas atuais do Access;
@@ -47,7 +54,7 @@ const txt = v => (v === null || v === undefined ? '' : String(v).trim());
 const num = v => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
 const brl = v => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const dia = d => d.toISOString().slice(0, 10);
-const POS = { 0: 'avulso', 2: 'a pagar', 3: 'programação de compras', 5: 'a receber', 7: 'pedido', 8: 'orçamento' };
+const POS = { 0: 'avulso', 2: 'a pagar', 3: 'pedido feito (não é pedido da plataforma)', 5: 'a receber', 7: 'compra projetada', 8: 'orçamento' };
 
 (async () => {
   await mongoose.connect(process.env.MONGO_URI);
@@ -76,6 +83,15 @@ const POS = { 0: 'avulso', 2: 'a pagar', 3: 'programação de compras', 5: 'a re
   const linhas = tab.getData();
   console.log('Access:', nome, '·', linhas.length, 'linhas');
 
+  // 19/10/2026: os numeros dos pedidos que a plataforma ja tem (as parcelas deles vem do COMPRA-9)
+  const pedidosPlat = new Set((await db.collection('_compra_pedidos').find({ lojistaId: { $in: [ARMACAO, String(ARMACAO)] } })
+    .project({ numero: 1 }).toArray()).map(p => Number(p.numero)));
+  // e a Chave do fluxo de cada pedido (coluna Fluxo do PED_PedidoFornecedor): pega a parcela que nao tem o
+  // numero no historico (ex.: "Saldo / PedidoOrbis" do pedido 7113)
+  const chavesPed = new Set();
+  const tPed = reader.getTableNames().find(n => limpo(n) === 'ped_pedidofornecedor');
+  if (tPed) for (const p of reader.getTable(tPed).getData()) if (pedidosPlat.has(Number(p.NrPedido)) && num(p.Fluxo)) chavesPed.add(num(p.Fluxo));
+
   // plano: codigo -> subtitulo
   const subs = new Map((await db.collection('_contasubtitulos').find({ lojistaId: ARMACAO }).project({ codigo: 1, nome: 1 }).toArray())
     .map(s => [s.codigo, s]));
@@ -84,7 +100,11 @@ const POS = { 0: 'avulso', 2: 'a pagar', 3: 'programação de compras', 5: 'a re
   for (const l of linhas) {
     const pos = Number(txt(l[C.pos])) || 0;
     if (pos === 8 && !COM_ORC) { fora.orcamento++; continue; }
-    if (pos === 7 && !COM_PED) { fora.pedidos++; continue; }
+    // 19/10/2026: pos 3 = pedido feito; o que e pedido da plataforma (COMPRA-9, ligado ao pedido) nao entra de novo
+    if (pos === 3 && !COM_PED) {
+      const nped = (/^\s*(\d{4,})\s*\//.exec(txt(l[C.tit])) || /pedido\D{0,60}?(\d{4,})/i.exec(txt(l[C.hist])) || [])[1];
+      if ((nped && pedidosPlat.has(Number(nped))) || chavesPed.has(num(l[C.chave]))) { fora.pedidos++; continue; }
+    }
     const vect = l[C.vect] instanceof Date ? l[C.vect] : null;
     if (!vect || vect.getUTCFullYear() < 1990) { fora.semVenc++; continue; }
     const deb = num(l[C.deb]), cre = num(l[C.cre]);
@@ -116,7 +136,7 @@ const POS = { 0: 'avulso', 2: 'a pagar', 3: 'programação de compras', 5: 'a re
   const abertosAntes = await FLX.countDocuments({ origem: 'ACCESS', status: 'ATIVO' });
 
   // ---- relatorio ----
-  console.log('\nVão entrar:', entram.length, 'linhas  (fora: orçamento', fora.orcamento, '· pedidos', fora.pedidos, '· sem vencimento', fora.semVenc,
+  console.log('\nVão entrar:', entram.length, 'linhas  (fora: orçamento', fora.orcamento, '· parcelas de pedido da plataforma', fora.pedidos, '· sem vencimento', fora.semVenc,
     '· sem valor', fora.semValor, '· já baixadas na plataforma', docs.length - entram.length, ')');
   const porPos = {};
   for (const d of entram) { const k = d.pos; porPos[k] = porPos[k] || { n: 0, v: 0 }; porPos[k].n++; porPos[k].v += d.valor; }

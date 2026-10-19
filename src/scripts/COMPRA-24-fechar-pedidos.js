@@ -1,5 +1,6 @@
 // =============================================================================
 // Destino: C:\plataformaRota\src\scripts\COMPRA-24-fechar-pedidos.js
+// Alterado em: 19/10/2026 - parcelas do pedido: pos 3 (como no Access); aceita as antigas pos 7.
 // Criado em: 19/10/2026 (ensaio do dia "D")
 //
 // FECHA os pedidos que o COMPRA-23 aponta com "! FECHAR": pendentes na plataforma mas
@@ -57,13 +58,13 @@ const brl = v => Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits:
   const fechar = [], cancelar = [];
   for (const p of peds) {
     const a = acc.get(Number(p.numero)), doAccess = /importado do sistema antigo/i.test(String(p.observacao || ''));
-    if ((a !== undefined && a !== 0) || (a === undefined && doAccess)) fechar.push(p);
+    if ((a !== undefined && a !== 0 && a !== 1) || (a === undefined && doAccess)) fechar.push(p);   // 19/10/2026: Pos 1 = saldo pendente
     else if (a === undefined && CANCELAR.has(Number(p.numero))) cancelar.push(p);
   }
   for (const n of CANCELAR) if (!cancelar.some(p => Number(p.numero) === n)) console.log('  (--cancelar ' + n + ': não é pedido pendente só da plataforma; ignorado)');
 
   const todos = [...fechar, ...cancelar];
-  const flx = await db.collection('_fluxo_projetado').find({ pos: 7, status: 'ATIVO', lancamentoId: { $in: todos.map(p => p._id) } }).toArray();
+  const flx = await db.collection('_fluxo_projetado').find({ pos: { $in: [3, 7] }, status: 'ATIVO', lancamentoId: { $in: todos.map(p => p._id) } }).toArray();
   const soma = id => flx.filter(f => String(f.lancamentoId) === String(id)).reduce((s, f) => s + (Number(f.valor) || 0), 0);
   const qtd = id => flx.filter(f => String(f.lancamentoId) === String(id)).length;
 

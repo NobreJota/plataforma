@@ -1,5 +1,6 @@
 // =============================================================================
 // Destino: C:\plataformaRota\src\scripts\COMPRA-23-conferir-pedidos.js
+// Alterado em: 19/10/2026 - parcelas do pedido: pos 3 (como no Access); aceita as antigas pos 7.
 // Criado em: 19/10/2026 (ensaio do dia "D")
 //
 // SO LE (nao grava nada). Confere os PEDIDOS da plataforma (_compra_pedidos) com o Access
@@ -28,7 +29,7 @@ const ARMACAO = new mongoose.Types.ObjectId('6892706a86509313e632f717');
 const limpo = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const brl = v => Number(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 const SIT = { P: 'pendente', L: 'liquidado', C: 'cancelado' };
-const POS = { 0: 'pendente', 1: 'liquidado', 3: 'cancelado' };
+const POS = { 0: 'pendente', 1: 'saldo pendente', 3: 'cancelado' };   // 19/10/2026: Pos 1 = saldo, ainda pendente
 
 (async () => {
   if (!fs.existsSync(MDB)) throw new Error('Access não encontrado: ' + MDB);
@@ -42,7 +43,7 @@ const POS = { 0: 'pendente', 1: 'liquidado', 3: 'cancelado' };
   const db = mongoose.connection.db;
   console.log('Base:', db.databaseName, '· pedidos no Access:', acc.size);
   const peds = await db.collection('_compra_pedidos').find({ lojistaId: { $in: [ARMACAO, String(ARMACAO)] } }).sort({ numero: 1 }).toArray();
-  const flx = await db.collection('_fluxo_projetado').find({ pos: 7, status: 'ATIVO', lancamentoId: { $in: peds.map(p => p._id) } })
+  const flx = await db.collection('_fluxo_projetado').find({ pos: { $in: [3, 7] }, status: 'ATIVO', lancamentoId: { $in: peds.map(p => p._id) } })
     .project({ lancamentoId: 1, valor: 1 }).toArray();
   const porPed = new Map();
   for (const f of flx) { const k = String(f.lancamentoId); const x = porPed.get(k) || { n: 0, v: 0 }; x.n++; x.v += Number(f.valor) || 0; porPed.set(k, x); }
@@ -55,8 +56,8 @@ const POS = { 0: 'pendente', 1: 'liquidado', 3: 'cancelado' };
     const doAccess = /importado do sistema antigo/i.test(String(p.observacao || ''));
     if (a === undefined && doAccess && p.situacao === 'P') { marca = '! FECHAR: veio do Access e não está mais lá (liquidado/apagado)'; conta.fechar++; }
     else if (a === undefined) { marca = '? só na plataforma' + (doAccess ? ' (veio do Access)' : ' (teste ou emitido aqui)'); conta.teste++; }
-    else if (p.situacao === 'P' && a !== 0) { marca = '! FECHAR: ' + (POS[a] || 'Pos ' + a) + ' no Access'; conta.fechar++; }
-    else if (p.situacao === 'P' && a === 0) { marca = '✓ pendente nos dois'; conta.ok++; }
+    else if (p.situacao === 'P' && a !== 0 && a !== 1) { marca = '! FECHAR: ' + (POS[a] || 'Pos ' + a) + ' no Access'; conta.fechar++; }
+    else if (p.situacao === 'P' && (a === 0 || a === 1)) { marca = '✓ pendente nos dois' + (a === 1 ? ' (saldo)' : ''); conta.ok++; }
     else { marca = '· ' + (SIT[p.situacao] || p.situacao) + ' na plataforma / ' + (POS[a] || 'Pos ' + a) + ' no Access'; conta.outros++; }
     console.log('  nº ' + String(p.numero).padEnd(6) + String(p.fornecedorNome || '').padEnd(28).slice(0, 28) + ' ' + String(SIT[p.situacao] || p.situacao).padEnd(10)
       + (f ? ' fluxo: ' + f.n + ' parcela(s) R$ ' + brl(f.v) : ' fluxo: —').padEnd(36) + marca);

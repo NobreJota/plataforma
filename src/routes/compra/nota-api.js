@@ -995,7 +995,7 @@ function novoMedio(estoqueAntes, medioAntes, entra, custoNota) {
 //   1. estoque sobe em _produto_origem (pela quantidade CONFERIDA)
 //   2. custo medio movel e ultimo custo, em campos da PLATAFORMA
 //   3. cada duplicata vira um titulo pos 2 no fluxo
-//   4. a previsao pos 7 do pedido e baixada na proporcao entregue
+//   4. a previsao do pedido (pos 3; as antigas pos 7) e baixada na proporcao entregue
 //   5. o pedido vai para L ou S, e o saldo vira pedido novo ou pre-pedido
 //   6. a nota vira EFETIVADA
 //
@@ -1159,10 +1159,10 @@ router.post('/:id/efetivar', express.json(), async (req, res) => {
           const fracao = pedido.percentualAtendido;   // 0 a 1, por valor
           const temSaldo = pedido.temSaldo;
 
-          // a previsao pos 7 que ainda esta de pe
+          // a previsao do pedido que ainda esta de pe (19/10/2026: pos 3 como no Access; aceita as antigas pos 7)
           const pos7 = await FluxoProjetado.find({
             _id: { $in: pedido.lancamentosFluxo || [] },
-            pos: 7,
+            pos: { $in: [3, 7] },
             status: 'ATIVO',
           }).session(sessao);
 

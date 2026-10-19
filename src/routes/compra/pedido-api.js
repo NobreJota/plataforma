@@ -1,5 +1,7 @@
 // =============================================================================
 // Destino: C:\plataformaRota\src\routes\compra\pedido-api.js
+// Alterado em: 19/10/2026 (Jorge): POS como no Access: 3 = PEDIDO FEITO ao fabricante (aguardando mercadoria), 7 = COMPRA PROJETADA (previsao, programacao de compras).
+//   O pedido emitido passa a lancar pos 3 (antes 7).
 // Alterado em: 24/09/2026  (combo filtra por cadastro vigente, via mapa de contas)
 // Alterado em: 30/09/2026  (sem de/para: a ponte NrFornec -> fornecedor e _fornec_access)
 // Alterado em: 01/10/2026  (GET /fornecedores devolve a MARCA; o combo mostra so ela)
@@ -37,11 +39,11 @@
 // linhas. O fornecedor sai sempre de _produto_origem, nunca da venda.
 //
 // Ao gravar: pedido em _compra_pedidos (situacao P) + um lancamento por
-// titulo em _fluxo_projetado com pos 7 e valor NEGATIVO.
+// titulo em _fluxo_projetado com pos 3 (19/10/2026; antes 7).
 //
-// Dicionario do pos no fluxo:
-//   3 = compra programada (sugerida, ainda nao pedida)
-//   7 = pedido emitido, aguardando mercadoria   <-- este
+// Dicionario do pos no fluxo (19/10/2026: o mesmo do Access):
+//   3 = pedido emitido ao fabricante, aguardando mercadoria   <-- este
+//   7 = compra projetada (previsao / programacao de compras, ainda nao pedida)
 //   8 = orcamento anual (despesa administrativa)
 //   2 = obrigacao a pagar (nasce quando a nota entra)
 //
@@ -59,7 +61,7 @@ const FluxoProjetado = require('../../models/contab/financeiro/fluxoProjetado');
 
 const JANELAS = [15, 30, 60, 90];
 const DIA = 86400000;
-const POS_PEDIDO = 7;
+const POS_PEDIDO = 3;                    // 19/10/2026: pedido feito = pos 3 (como no Access)
 
 function col(nome) {
   return mongoose.connection.collection(nome);
@@ -558,7 +560,7 @@ router.post('/gravar', async (req, res) => {
       observacao: b.frete === 'FOB' ? 'Frete FOB' : 'Frete CIF',
     }], { session: sessao });
 
-    // ---- lancar no fluxo projetado (pos 7, valor negativo) ------------------
+    // ---- lancar no fluxo projetado (pos 3, pedido feito) ------------------
     linhas = titulos.map((t, i) => {
       const venc = t.vencimento || new Date(entrega.getTime() + t.dias * DIA);
       return {

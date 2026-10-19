@@ -6,6 +6,7 @@
                no fluxo e o botao "Cancelar venda" (pede o motivo)
   Alterado em: 08/10/2026 - espelho so como modal (saiu "Abrir na tela da venda"); secao COBRANCA
                diz como cada parte foi cobrada (onde entrou, ou as parcelas no fluxo)
+  Alterado em: 17/10/2026 - espelho: parcelas rolam (.rolar) e o rodape com "Cancelar venda" fica sempre a vista.
   Alterado em: 10/10/2026 - botoes "← Voltar" e "☰ Menu" (public/js/comum/navegacao.js)
   Alterado em: 14/10/2026 - espelho da NF com a secao INSTALACAO: "Abrir a OS" ou
                "+ Incluir instalação" (a esquecida); carrega /js/vendas/os-modal.js
@@ -104,6 +105,15 @@
     .cob-cab b { font-variant-numeric:tabular-nums; }
     .cob-txt { padding:8px 12px; font-size:13px; color:#374151; }
     .cob table { margin:0; }
+    /* 17/10/2026: parcelas rolam (muitas parcelas nao empurram o botao Cancelar para fora) */
+    .rolar { max-height:190px; overflow:auto; border-top:1px solid var(--borda); }
+    .rolar thead th { position:sticky; top:0; z-index:1; }
+    /* 17/10/2026: o rodape (mensagem + botoes) fica sempre a vista; so o corpo rola */
+    .esp-caixa { display:flex; flex-direction:column; overflow:hidden !important; }
+    .esp-caixa[hidden] { display:none; }
+    .esp-caixa .esp-corpo { flex:1; min-height:0; overflow:auto; }
+    .esp-rodape { padding:6px 20px 14px; border-top:1px solid var(--borda); background:#fff; border-radius:0 0 12px 12px; }
+    .esp-rodape .esp-botoes { margin-top:6px; }
     /* 14/10/2026: instalacao no espelho */
     .ins-os { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 12px;
               border:1px solid #e5e7eb; border-radius:8px; }
@@ -174,6 +184,8 @@
         <b>Cancelar esta venda</b> — devolve o estoque, tira as parcelas do fluxo e desfaz os lançamentos.
         <div style="margin-top:6px"><textarea id="esp-motivo" placeholder="motivo do cancelamento (obrigatório)"></textarea></div>
       </div>
+    </div>
+    <div class="esp-rodape">
       <div class="esp-msg" id="esp-msg"></div>
       <div class="esp-botoes">
         <button type="button" id="esp-cancelar" class="perigo">Cancelar venda</button>

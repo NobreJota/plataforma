@@ -37,11 +37,18 @@
 //     Ordens de Servico (proximo passo): R$ 1,00 marca OS que nao e nossa, passada ao tecnico.
 //   - "Receb." com juros/centavos, cartao com diferenca e conta "0" (Robson) ficam FORA
 //     por enquanto (listados); entram depois com --conta-diferenca, quando houver a conta.
+// Alterado em: 19/10/2026 - ensaio do dia D (decisao do usuario: nao corrigir os pequenos
+//   valores do passado, so deixar o sistema robusto daqui para frente):
+//   - --conta-diferenca CRIA a conta se ela nao existir (o titulo tem que existir), com o nome
+//     de --nome-diferenca (padrao "Diferenças da importação (Access)"). Assim os 14 documentos
+//     que o Access deixou sem fechar entram INTEIROS: o banco e o cliente ficam iguais ao
+//     Access, e so a sobra (R$ 1.383,36 no ensaio) fica nessa conta, uma linha por documento.
+//     Conta usada no dia D: 4.04.001.002 (ao lado da 4.04.001.001 Sobra de estoque).
 //
 // Uso (um comando por vez):
 //   node src\scripts\PLANO-8-importar-lancamentos.js                      simulacao
 //   node src\scripts\PLANO-8-importar-lancamentos.js --aplicar
-//   opcoes: --conta-diferenca 9.99.999.999   --mdb "C:\Armação\Dados\2026B\2026B.mdb"
+//   opcoes: --conta-diferenca 4.04.001.002 [--nome-diferenca "..."]   --mdb "C:\Armação\Dados\2026B\2026B.mdb"
 // =============================================================================
 
 'use strict';
@@ -59,6 +66,7 @@ const args = process.argv.slice(2);
 const opcao = (f, p) => { const i = args.indexOf(f); return i >= 0 && args[i + 1] ? args[i + 1] : p; };
 const APLICAR = args.includes('--aplicar');
 const CONTA_DIF = opcao('--conta-diferenca', '');
+const NOME_DIF = opcao('--nome-diferenca', 'Diferenças da importação (Access)');
 const MDB = opcao('--mdb', 'C:\\Armação\\Dados\\2026B\\2026B.mdb');
 
 const ARMACAO = new mongoose.Types.ObjectId('6892706a86509313e632f717');
@@ -96,6 +104,18 @@ const meioDia = d => { const x = new Date(d); return new Date(x.getUTCFullYear()
     const titulo = await db.collection('_contatitulos').findOne({ lojistaId: ARMACAO, codigo: tituloCod });
     if (!titulo) throw new Error('o título ' + tituloCod + ' não existe no plano: crie o título (e o subgrupo, se faltar) antes');
     criar.push({ ...nova, titulo });
+  }
+  // conta das diferencas (documentos que o Access deixou sem fechar)
+  if (CONTA_DIF) {
+    if (!/^\d\.\d{2}\.\d{3}\.\d{3}$/.test(CONTA_DIF)) throw new Error('--conta-diferenca: use o código completo, ex. 4.04.001.002');
+    if (plano.has(CONTA_DIF)) console.log('conta de diferença:', CONTA_DIF, plano.get(CONTA_DIF).nome, '(já existe)');
+    else {
+      const tituloCod = CONTA_DIF.split('.').slice(0, 3).join('.');
+      const titulo = await db.collection('_contatitulos').findOne({ lojistaId: ARMACAO, codigo: tituloCod });
+      if (!titulo) throw new Error('o título ' + tituloCod + ' não existe no plano: escolha outra --conta-diferenca');
+      criar.push({ codigo: CONTA_DIF, nome: NOME_DIF, titulo });
+      console.log('conta de diferença:', CONTA_DIF, NOME_DIF, '(será criada no título ' + titulo.codigo + ' ' + titulo.nome + ')');
+    }
   }
 
   // ---------------- datas: Rotor e, na falta, o empacotamento ----------------
@@ -176,7 +196,7 @@ const meioDia = d => { const x = new Date(d); return new Date(x.getUTCFullYear()
       if (CONTA_DIF && sub(CONTA_DIF)) {
         // a diferenca e as linhas sem conta vao para a conta de diferencas
         ls = ls.map(l => sub(l.cta) ? l : { ...l, cta: CONTA_DIF, hist: '[sem conta ' + (l.cta || 'vazia') + '] ' + l.hist });
-        if (soma !== 0) ls.push({ tab: '?', cta: CONTA_DIF, hist: 'Diferença da importação', c: -soma });
+        if (soma !== 0) ls.push({ tab: '?', cta: CONTA_DIF, hist: 'Diferença do Access (doc. ' + k + ' não fechava)', c: -soma });
         cont.comDiferenca++;
       } else {
         fora.push({ k, motivo: semConta.length ? 'conta fora do plano: ' + semConta.map(l => l.cta || '(vazia)').join(', ')

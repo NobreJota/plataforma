@@ -11,6 +11,7 @@
 //                           (/vendas/api/tecnicos, tecnicos-api.js)
 // Alterado em: 15/10/2026 - Servico > Ficha de fechamento da OS (/vendas/servicos/fechamento/:id)
 // Alterado em: 16/10/2026 - Servico > Fluxo de servico (/vendas/servicos/fluxo)
+// Alterado em: 17/10/2026 - Venda > Kits (/vendas/kits): produto principal + itens que vao junto
 //
 // Telas do modulo de vendas. Montado em /vendas no server.js, protegido por
 // ensureContab (que expoe req.lojistaId).
@@ -36,6 +37,11 @@ router.get('/venda', (req, res) => {
 });
 router.get('/venda/:id', (req, res) => {
   res.render('vendas/pages/venda', { layout: false, activeMenu: 'vendas', vendaId: req.params.id });
+});
+
+// kits de venda (17/10/2026)
+router.get('/kits', (req, res) => {
+  res.render('vendas/pages/kits', { layout: false, activeMenu: 'vendas' });
 });
 
 // relatorio de vendas, mes a mes (como o fluxo)

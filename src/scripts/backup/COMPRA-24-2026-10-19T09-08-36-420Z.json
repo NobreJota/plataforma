@@ -1,0 +1,2305 @@
+{
+ "pedidos": [
+  {
+   "_id": {
+    "$oid": "6ac0fd6a4e9c97c32666bd34"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7146"
+   },
+   "situacao": "P",
+   "fornecedor": null,
+   "fornecedorNome": "Rowa",
+   "nrFornecOrigem": {
+    "$numberInt": "255"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1787788800000"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1788998400000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "28/56 dias",
+    "dias": [
+     {
+      "$numberInt": "28"
+     },
+     {
+      "$numberInt": "56"
+     }
+    ]
+   },
+   "itens": [
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5187"
+     },
+     "referencia": "",
+     "descricao": "pressurizador Rowa  MaxPress 30 E 220",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "449557"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6a4e9c97c32666bd35"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6527"
+     },
+     "referencia": "00050618",
+     "descricao": "pressurizador Rowa  MaxPress 20 E 220",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "223018"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6a4e9c97c32666bd36"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "1345150"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ac0fd6a4e9c97c32666bd38"
+    },
+    {
+     "$oid": "6ac0fd6a4e9c97c32666bd39"
+    }
+   ],
+   "observacao": "Importado do sistema antigo (pedido 7146)",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032682375"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032682640"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6a4e9c97c32666bd3c"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7149"
+   },
+   "situacao": "P",
+   "fornecedor": {
+    "$oid": "6abad2d354867cfe394632ed"
+   },
+   "fornecedorNome": "Sictell",
+   "nrFornecOrigem": {
+    "$numberInt": "267"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1788134400000"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1788480000000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "28 dias",
+    "dias": [
+     {
+      "$numberInt": "28"
+     }
+    ]
+   },
+   "itens": [
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5556"
+     },
+     "referencia": "322",
+     "descricao": "exaustor AR-KIT 11  completo(3231)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "10873"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6a4e9c97c32666bd3d"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5666"
+     },
+     "referencia": "103",
+     "descricao": "exaustor sonora 10 22-17 watts (1873)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "11571"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6a4e9c97c32666bd3e"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5864"
+     },
+     "referencia": "104",
+     "descricao": "exaustor sonora 11 21-26 watts (2380)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "13208"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6a4e9c97c32666bd3f"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6528"
+     },
+     "referencia": "635",
+     "descricao": "regulador de vazão de ar RVA100",
+     "quantidade": {
+      "$numberInt": "5"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "2972"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6a4e9c97c32666bd40"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6529"
+     },
+     "referencia": "391",
+     "descricao": "renovador trocador ar MAXX100",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "28000"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6a4e9c97c32666bd41"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6530"
+     },
+     "referencia": "392",
+     "descricao": "grade redonda veneziana S100",
+     "quantidade": {
+      "$numberInt": "1"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "927"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6a4e9c97c32666bd42"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "206743"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ac0fd6a4e9c97c32666bd44"
+    }
+   ],
+   "observacao": "Importado do sistema antigo (pedido 7149)",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032682801"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032683066"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6b4e9c97c32666bd47"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7151"
+   },
+   "situacao": "P",
+   "fornecedor": {
+    "$oid": "68e005b40f338c9f1358b5b7"
+   },
+   "fornecedorNome": "Haenke",
+   "nrFornecOrigem": {
+    "$numberInt": "262"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1788220800000"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1788998400000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "28/56 dias",
+    "dias": [
+     {
+      "$numberInt": "28"
+     },
+     {
+      "$numberInt": "56"
+     }
+    ]
+   },
+   "itens": [
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6531"
+     },
+     "referencia": "",
+     "descricao": "bucha red. 1 M x 1/2 F metal",
+     "quantidade": {
+      "$numberInt": "30"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1534"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6b4e9c97c32666bd48"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6488"
+     },
+     "referencia": "",
+     "descricao": "bucha red. F 1/2 x M 3/4",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "693"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6b4e9c97c32666bd49"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5186"
+     },
+     "referencia": "",
+     "descricao": "engate agua 30 cm 3/4 F x 1/2 M (3530)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "4005"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6b4e9c97c32666bd4a"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6310"
+     },
+     "referencia": "",
+     "descricao": "engate flex 30 cm gás 1/2 M x 3/4 F(3531)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "4759"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6b4e9c97c32666bd4b"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6381"
+     },
+     "referencia": "",
+     "descricao": "engate flex 40 cm gás 1/2 M x 1/2 F",
+     "quantidade": {
+      "$numberInt": "10"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "5077"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6b4e9c97c32666bd4c"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6348"
+     },
+     "referencia": "00749",
+     "descricao": "prolongador 40 mm 1/2 x 1/2 MF",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1408"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6b4e9c97c32666bd4d"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "314090"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ac0fd6b4e9c97c32666bd4f"
+    },
+    {
+     "$oid": "6ac0fd6b4e9c97c32666bd50"
+    }
+   ],
+   "observacao": "Importado do sistema antigo (pedido 7151)",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032683206"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032683470"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6b4e9c97c32666bd53"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7157"
+   },
+   "situacao": "P",
+   "fornecedor": {
+    "$oid": "68936e90198046c40856a443"
+   },
+   "fornecedorNome": "Komlog",
+   "nrFornecOrigem": {
+    "$numberInt": "242"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1789430400000"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1789516800000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "28 dias",
+    "dias": [
+     {
+      "$numberInt": "28"
+     }
+    ]
+   },
+   "itens": [
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5954"
+     },
+     "referencia": "22274",
+     "descricao": "fluxostato KO 15-16-20-21D.DI PRIME",
+     "quantidade": {
+      "$numberInt": "10"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "13698"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6b4e9c97c32666bd54"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "136980"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ac0fd6b4e9c97c32666bd56"
+    }
+   ],
+   "observacao": "Importado do sistema antigo (pedido 7157)",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032683602"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032683889"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6c4e9c97c32666bd59"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7158"
+   },
+   "situacao": "P",
+   "fornecedor": null,
+   "fornecedorNome": "Rinnai -Assi",
+   "nrFornecOrigem": {
+    "$numberInt": "241"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1789430400000"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1789516800000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "28 dias",
+    "dias": [
+     {
+      "$numberInt": "28"
+     }
+    ]
+   },
+   "itens": [
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6485"
+     },
+     "referencia": "M8HBE",
+     "descricao": "sensor de vazão todos",
+     "quantidade": {
+      "$numberInt": "6"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "14045"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd5a"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "84270"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ac0fd6c4e9c97c32666bd5c"
+    }
+   ],
+   "observacao": "Importado do sistema antigo (pedido 7158)",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032684022"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032684286"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6c4e9c97c32666bd5f"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7159"
+   },
+   "situacao": "P",
+   "fornecedor": null,
+   "fornecedorNome": "Komeco",
+   "nrFornecOrigem": {
+    "$numberInt": "67"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1789516800000"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1789603200000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "84/112 dias",
+    "dias": [
+     {
+      "$numberInt": "84"
+     },
+     {
+      "$numberInt": "112"
+     }
+    ]
+   },
+   "itens": [
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5553"
+     },
+     "referencia": "KO 16 D",
+     "descricao": "Aquec. GLP/KO 16 D  BR   16 lts(3575)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "134418"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd60"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5550"
+     },
+     "referencia": "KO 21 D",
+     "descricao": "Aquec. GLP/KO 21 D  BR   19,5(2679)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "186024"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd61"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5554"
+     },
+     "referencia": "KO 16 D",
+     "descricao": "Aquec. GN      KO 16 D  BR   16lts(3552)",
+     "quantidade": {
+      "$numberInt": "5"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "141249"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd62"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5589"
+     },
+     "referencia": "KO 16 DI",
+     "descricao": "Aquec. GN      KO 16 Di  Inox   16 (2800)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "156241"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd63"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5551"
+     },
+     "referencia": "KO 21 D",
+     "descricao": "Aquec. GN      KO 21 D    BR   21(3553)",
+     "quantidade": {
+      "$numberInt": "4"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "151352"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd64"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6080"
+     },
+     "referencia": "KO 33Prime",
+     "descricao": "Aquec. GN      KO 33 D  BR   33 Prime(3096)",
+     "quantidade": {
+      "$numberInt": "1"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "284485"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd65"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5987"
+     },
+     "referencia": "KO 38 D",
+     "descricao": "Aquec. GN      KO 38 D  BR   38 Prime(3590)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "352588"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd66"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6008"
+     },
+     "referencia": "KO 38 Di",
+     "descricao": "Aquec. GN      KO 38 Di  BR   38 Prime(3591)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "361403"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd67"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6171"
+     },
+     "referencia": "SP 200",
+     "descricao": "bomba silent press SP 200 bivolt (3273)",
+     "quantidade": {
+      "$numberInt": "1"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "84431"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd68"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5926"
+     },
+     "referencia": "",
+     "descricao": "mini-bomba TP 80  220 V Bronze (3354)",
+     "quantidade": {
+      "$numberInt": "1"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "61034"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd69"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "4122951"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ac0fd6c4e9c97c32666bd6b"
+    },
+    {
+     "$oid": "6ac0fd6c4e9c97c32666bd6c"
+    }
+   ],
+   "observacao": "Importado do sistema antigo (pedido 7159)",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032684421"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032684684"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6c4e9c97c32666bd6f"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7160"
+   },
+   "situacao": "P",
+   "fornecedor": {
+    "$oid": "68e002af6374d722404d456f"
+   },
+   "fornecedorNome": "Rinnai",
+   "nrFornecOrigem": {
+    "$numberInt": "82"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1789689600000"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1789948800000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "56/70/84 dias",
+    "dias": [
+     {
+      "$numberInt": "56"
+     },
+     {
+      "$numberInt": "70"
+     },
+     {
+      "$numberInt": "84"
+     }
+    ]
+   },
+   "itens": [
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "4858"
+     },
+     "referencia": "REUM200CFHBLE",
+     "descricao": "aquec.gás  20 l/glp   M 200 (3011)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "170466"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd70"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "4978"
+     },
+     "referencia": "200CFHB",
+     "descricao": "aquec.gás  20 l/gn    M 200 (1697)",
+     "quantidade": {
+      "$numberInt": "1"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "168214"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd71"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5824"
+     },
+     "referencia": "REUE211FEHBN3",
+     "descricao": "aquec.gás  21 l/glp   E 211 (3094) BR",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "205194"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd72"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5838"
+     },
+     "referencia": "E211FEH",
+     "descricao": "aquec.gás  21 l/gn    E 211 (2584)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "215155"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd73"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6023"
+     },
+     "referencia": "REUE271FEHBL3",
+     "descricao": "aquec.gás  27 l/glp  E 271(1832)(1696)",
+     "quantidade": {
+      "$numberInt": "1"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "292322"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd74"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6047"
+     },
+     "referencia": "REUE331FEHBN3",
+     "descricao": "aquec.gás  33 l/gn   E 331 (2962)",
+     "quantidade": {
+      "$numberInt": "1"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "371625"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd75"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6418"
+     },
+     "referencia": "REUE351FEABL3",
+     "descricao": "aquec.gás  35 l/glp   E 351  FEA",
+     "quantidade": {
+      "$numberInt": "1"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "400514"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd76"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6440"
+     },
+     "referencia": "REUE351FEABN3",
+     "descricao": "aquec.gás  35 l/GN   E 351  FEA",
+     "quantidade": {
+      "$numberInt": "1"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "415534"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac0fd6c4e9c97c32666bd77"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "2829839"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ac0fd6c4e9c97c32666bd79"
+    },
+    {
+     "$oid": "6ac0fd6c4e9c97c32666bd7a"
+    },
+    {
+     "$oid": "6ac0fd6c4e9c97c32666bd7b"
+    }
+   ],
+   "observacao": "Importado do sistema antigo (pedido 7160)",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032684820"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032685086"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac10327ccf268f34bf40b45"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7161"
+   },
+   "situacao": "P",
+   "fornecedor": {
+    "$oid": "68dfd90a0f338c9f1358b516"
+   },
+   "nrFornecOrigem": {
+    "$numberInt": "43"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1791034151297"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1795564800000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "30/60/90 dias",
+    "dias": [
+     {
+      "$numberInt": "30"
+     },
+     {
+      "$numberInt": "60"
+     },
+     {
+      "$numberInt": "90"
+     }
+    ]
+   },
+   "representante": "",
+   "itens": [
+    {
+     "codigoOrigem": {
+      "$numberInt": "5278"
+     },
+     "referencia": "1053",
+     "descricao": "kit Chaminé  1.5  x  80  [ 370 mm ] (2355)",
+     "quantidade": {
+      "$numberInt": "6"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "9222"
+     },
+     "baseCalculo": {
+      "janelaDias": {
+       "$numberInt": "30"
+      },
+      "saidaNoPeriodo": {
+       "$numberInt": "7"
+      },
+      "estoqueNaData": {
+       "$numberInt": "1"
+      },
+      "aCaminhoNaData": {
+       "$numberInt": "0"
+      },
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac10327ccf268f34bf40b46"
+     }
+    },
+    {
+     "codigoOrigem": {
+      "$numberInt": "5296"
+     },
+     "referencia": "70",
+     "descricao": "braçadeira    150 mm (2870)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1492"
+     },
+     "baseCalculo": {
+      "janelaDias": {
+       "$numberInt": "30"
+      },
+      "saidaNoPeriodo": {
+       "$numberInt": "2"
+      },
+      "estoqueNaData": {
+       "$numberInt": "0"
+      },
+      "aCaminhoNaData": {
+       "$numberInt": "0"
+      },
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ac10327ccf268f34bf40b47"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "58316"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ac10327ccf268f34bf40b49"
+    },
+    {
+     "$oid": "6ac10327ccf268f34bf40b4a"
+    },
+    {
+     "$oid": "6ac10327ccf268f34bf40b4b"
+    }
+   ],
+   "observacao": "Frete CIF",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791034151308"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791034151580"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   },
+   "alteracoesEntrega": [
+    {
+     "de": {
+      "$date": {
+       "$numberLong": "1793577600000"
+      }
+     },
+     "para": {
+      "$date": {
+       "$numberLong": "1795564800000"
+      }
+     },
+     "em": {
+      "$date": {
+       "$numberLong": "1791035136674"
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "fluxo": [
+  {
+   "_id": {
+    "$oid": "6ac0fd6a4e9c97c32666bd38"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "10"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.173",
+   "nomeConta": "Rowa do Brasil Ltda",
+   "historico": "Pedido 7146 Rowa",
+   "valor": {
+    "$numberDouble": "6725.75"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1791417600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6a4e9c97c32666bd34"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032682508"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032682508"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6a4e9c97c32666bd39"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "11"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.173",
+   "nomeConta": "Rowa do Brasil Ltda",
+   "historico": "Pedido 7146 Rowa",
+   "valor": {
+    "$numberDouble": "6725.75"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1793836800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6a4e9c97c32666bd34"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032682508"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032682508"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6a4e9c97c32666bd44"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "10"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.190",
+   "nomeConta": "Sicflux Ind. Com. Prod. Elet. Met. Ltda",
+   "historico": "Pedido 7149 Sictell",
+   "valor": {
+    "$numberDouble": "2067.43"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1790899200000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "1"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6a4e9c97c32666bd3c"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032682933"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032682933"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6b4e9c97c32666bd4f"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "10"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.182",
+   "nomeConta": "Haenke Tubos Flexiveis Ltda",
+   "historico": "Pedido 7151 Haenke",
+   "valor": {
+    "$numberDouble": "1570.45"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1791417600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6b4e9c97c32666bd47"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032683338"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032683338"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6b4e9c97c32666bd50"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "11"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.182",
+   "nomeConta": "Haenke Tubos Flexiveis Ltda",
+   "historico": "Pedido 7151 Haenke",
+   "valor": {
+    "$numberDouble": "1570.45"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1793836800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6b4e9c97c32666bd47"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032683338"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032683338"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6b4e9c97c32666bd56"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "10"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.160",
+   "nomeConta": "Komlog Importação Ltda",
+   "historico": "Pedido 7157 Komlog",
+   "valor": {
+    "$numberDouble": "1369.8"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1792162800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "1"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6b4e9c97c32666bd53"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032683746"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792356591167"
+    }
+   },
+   "ajustes": [
+    {
+     "campo": "vencimento",
+     "de": {
+      "$date": {
+       "$numberLong": "1791936000000"
+      }
+     },
+     "para": {
+      "$date": {
+       "$numberLong": "1792162800000"
+      }
+     },
+     "motivo": "DDA - confere: vencimento do banco 16/10/26",
+     "em": {
+      "$date": {
+       "$numberLong": "1792356591166"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6c4e9c97c32666bd5c"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "10"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.159",
+   "nomeConta": "Rinnai - Assist. Técnica",
+   "historico": "Pedido 7158 Rinnai -Assi",
+   "valor": {
+    "$numberDouble": "842.7"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1791936000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "1"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6c4e9c97c32666bd59"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032684154"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032684154"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6c4e9c97c32666bd6b"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "12"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.056",
+   "nomeConta": "Asia Import.& Com.Ext.Ltda",
+   "historico": "Pedido 7159 Komeco",
+   "valor": {
+    "$numberDouble": "20614.75"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1796860800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6c4e9c97c32666bd5f"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032684554"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032684554"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6c4e9c97c32666bd6c"
+   },
+   "ano": {
+    "$numberInt": "2027"
+   },
+   "mes": {
+    "$numberInt": "1"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.056",
+   "nomeConta": "Asia Import.& Com.Ext.Ltda",
+   "historico": "Pedido 7159 Komeco",
+   "valor": {
+    "$numberDouble": "20614.76"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1799280000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6c4e9c97c32666bd5f"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032684554"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032684554"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6c4e9c97c32666bd79"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "11"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.074",
+   "nomeConta": "Rinnai - Equip. NGK-Rinnai Ltda",
+   "historico": "Pedido 7160 Rinnai",
+   "valor": {
+    "$numberDouble": "9432.79"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1794787200000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6c4e9c97c32666bd6f"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032684955"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032684955"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6c4e9c97c32666bd7a"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "11"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.074",
+   "nomeConta": "Rinnai - Equip. NGK-Rinnai Ltda",
+   "historico": "Pedido 7160 Rinnai",
+   "valor": {
+    "$numberDouble": "9432.79"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1795996800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6c4e9c97c32666bd6f"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032684955"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032684955"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac0fd6c4e9c97c32666bd7b"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "12"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.074",
+   "nomeConta": "Rinnai - Equip. NGK-Rinnai Ltda",
+   "historico": "Pedido 7160 Rinnai",
+   "valor": {
+    "$numberDouble": "9432.81"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1797206400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "3"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac0fd6c4e9c97c32666bd6f"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791032684955"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791032684955"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac10327ccf268f34bf40b49"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "12"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.030",
+   "nomeConta": "WESTAFLEX TUBOS FLEXIVEIS LTDA",
+   "historico": "Pedido 7161 Westaflex",
+   "valor": {
+    "$numberDouble": "194.38"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1798156800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_COMPRA",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac10327ccf268f34bf40b45"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791034151445"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791034151445"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac10327ccf268f34bf40b4a"
+   },
+   "ano": {
+    "$numberInt": "2027"
+   },
+   "mes": {
+    "$numberInt": "1"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.030",
+   "nomeConta": "WESTAFLEX TUBOS FLEXIVEIS LTDA",
+   "historico": "Pedido 7161 Westaflex",
+   "valor": {
+    "$numberDouble": "194.38"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1800748800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_COMPRA",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac10327ccf268f34bf40b45"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791034151446"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791034151446"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ac10327ccf268f34bf40b4b"
+   },
+   "ano": {
+    "$numberInt": "2027"
+   },
+   "mes": {
+    "$numberInt": "2"
+   },
+   "pos": {
+    "$numberInt": "7"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.030",
+   "nomeConta": "WESTAFLEX TUBOS FLEXIVEIS LTDA",
+   "historico": "Pedido 7161 Westaflex",
+   "valor": {
+    "$numberDouble": "194.4"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1803340800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "3"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_COMPRA",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ac10327ccf268f34bf40b45"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1791034151446"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1791034151446"
+    }
+   }
+  }
+ ]
+}

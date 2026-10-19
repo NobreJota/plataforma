@@ -23,6 +23,7 @@
 //   Ao FECHAR nasce a OS em _ordens_servico (status P) e venda.os guarda numero e id.
 // Alterado em: 09/10/2026 - PRECO NEGOCIADO: o vendedor pode mudar o unitario do item;
 //   precoTabela guarda o preco do cadastro (vista/prazo) para comparar depois.
+// Alterado em: 18/10/2026 - instalacao.cortesia (motivo): instalacao sem mao de obra = visita de cortesia.
 // Alterado em: 13/10/2026 - MAO DE OBRA da instalacao (VI): instalacao.maoDeObra entra no total
 //   (totalServico). No fechamento a partilha sai da ficha do tecnico: parte dele na 2.06.001.NNN,
 //   parte da loja na 4.05.001.001 (RECEITA_SERVICO). Tudo no fluxo normal da venda.
@@ -159,6 +160,8 @@ const InstalacaoSchema = new Schema({
   maoDeObra:        { type: Number, default: 0, min: 0 },     // centavos (entra no total da venda)
   parteTecnico:     { type: Number, default: 0, min: 0 },     // centavos -> 2.06.001.NNN (no fechamento)
   parteLoja:        { type: Number, default: 0, min: 0 },     // centavos -> 4.05.001.001 (no fechamento)
+  // 18/10/2026 (Jorge): instalacao SEM mao de obra so como CORTESIA, com o motivo (antes: OS de R$ 1,00)
+  cortesia:         { type: String, trim: true, default: '' },
   diaPrevisto:  { type: Date, default: null },
   periodo:      { type: String, enum: ['NENHUM', 'MANHA', 'TARDE', 'FIXO'], default: 'NENHUM' },
   horaIni:      { type: String, trim: true, default: '' },   // HH:MM (periodo FIXO)

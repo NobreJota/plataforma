@@ -3,7 +3,9 @@
 // Criado em: 13/10/2026
 //
 // SERVICO > listas da OS (views\vendas\pages\servicos-lista.handlebars)
-// Abas: programadas · nprogramadas · pendentes · concluidas · liquidadas
+// Abas: programadas · nprogramadas · pendentes · liquidadas
+// Alterado em: 17/10/2026 - saiu a aba CONCLUIDAS: a OS concluida ja e "liquidada" (o a receber fica
+//              no fluxo de servico). Na aba Liquidadas, a que ainda nao foi recebida leva "a receber".
 // O tipo fica na URL (?tipo=). Clique na linha abre o modal da OS (os-modal.js).
 // Pendente com dia previsto ja passado fica marcada em vermelho (atrasada).
 // Alterado em: 15/10/2026 - volta da ficha de fechamento sem gravar: o modal reabre (?os=) e a
@@ -18,7 +20,7 @@
   'use strict';
 
   const API = '/vendas/api/os/lista?tipo=';
-  const TIPOS = ['geral', 'programadas', 'nprogramadas', 'pendentes', 'concluidas', 'liquidadas'];
+  const TIPOS = ['geral', 'programadas', 'nprogramadas', 'pendentes', 'liquidadas'];
   // situacao na lista geral
   const situacao = o => o.status === 'E' ? '<span class="sit e">concluída · a receber</span>'
     : o.programada ? '<span class="sit p">programada</span>' : '<span class="sit n">não programada</span>';
@@ -57,6 +59,7 @@
     + rot + (ord.campo === campo ? (ord.dir > 0 ? ' ▲' : ' ▼') : ' ↕') + '</th>';
 
   let tipo = new URLSearchParams(location.search).get('tipo');
+  if (tipo === 'concluidas') tipo = 'liquidadas';     // 17/10/2026: aba Concluidas saiu (link antigo)
   if (!TIPOS.includes(tipo)) tipo = 'pendentes';
   let lista = [];
 
@@ -104,7 +107,7 @@
       const total = (o.valorServico || 0) + (o.totalConsignado || 0);
       soma += total;
       h += '<tr data-i="' + i + '"' + (atrasada ? ' class="atrasada vencida" title="hora vencida: o horário marcado já passou"' : '') + '>'
-        + '<td><b>' + esc(o.numero) + '</b>' + (atrasada ? ' ' + tagVencida : '') + '</td>'
+        + '<td><b>' + esc(o.numero) + '</b>' + (atrasada ? ' ' + tagVencida : '') + (o.status === 'E' ? ' <span class="sit e">a receber</span>' : '') + '</td>'
         + '<td class="quebra">' + esc(o.cliente && o.cliente.nome) + '</td>'
         + '<td>' + (o.tecnicoNome ? esc(o.tecnicoNome) : sem('a definir')) + '</td>'
         + '<td>' + (o.diaPrevisto ? dataBr(o.diaPrevisto) : sem('sem dia')) + '</td>'

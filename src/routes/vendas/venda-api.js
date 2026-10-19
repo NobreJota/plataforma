@@ -23,6 +23,20 @@
 //              (4.05.001.001); na FICHA DE FECHAMENTO da OS informa-se a parte da empresa e o resto
 //              sai da 4.05.001.001 para a conta do tecnico (2.06.001.NNN). Tecnico e servico nao sao
 //              mais obrigatorios para cobrar mao de obra. A OS guarda maoDeObraVenda.
+// Alterado em: 17/10/2026 - FORNECEDORES PRINCIPAIS do combo da venda (_os_config.fornecedoresVenda,
+//              PUT /fornecedores/venda); /fornecedores devolve `principal`. KIT: produto principal
+//              com o material que vai junto (_kits; GET /kits, GET/PUT /kits/:codigo).
+// Alterado em: 17/10/2026 - NUMERO do kit: varios produtos principais com o mesmo kit (numerarKits).
+// Alterado em: 17/10/2026 - CUPOM nao aceita aquecedor com kit (montar): so nota fiscal.
+// Alterado em: 18/10/2026 - instalacao SEM mao de obra so como CORTESIA (instalacao.cortesia = motivo); vai para a OS.
+// Alterado em: 18/10/2026 - ENDERECOS DE INSTALACAO do cliente: GET/POST /clientes/:id/enderecos.
+// Alterado em: 17/10/2026 - MAO DE OBRA A APROPRIAR (Jorge): a divisao e feita NA VENDA (modal da
+//              instalacao: "parte do tecnico" em R$). Na NF: parte da EMPRESA -> receita 4.05.001.001
+//              ('venda-mo-receita'); parte do TECNICO -> 2.06.002.NNN, a conta "a apropriar" dele
+//              (titulo 'venda-mo-apropriar' + final da conta 2.06.001.NNN). A OS guarda `apropriar`
+//              { conta, valor, tecnicoConta }; no fechamento da OS sai de la para a 2.06.001.NNN.
+//              Assim a receita do mes nao fica inflada com a mao de obra das OS ainda nao instaladas.
+//              Parte do tecnico 0: como antes (tudo na receita; divide na ficha).
 // Alterado em: 14/10/2026 - GET /agenda aceita &os= (a propria OS nao conta como ocupada);
 //              agendaDoTecnico exportada para o os-api (agendar a OS)
 // Alterado em: 13/10/2026 - MAO DE OBRA da instalacao (VI) entra na venda: no fechamento da NF a
@@ -120,6 +134,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Venda = require('../../models/vendas/venda');
 const Boleta = require('../../models/contab/financeiro/boleta');
+const cfg = require('../../models/contab/config-contas');      // 17/10/2026: contas por chave
 const FluxoProjetado = require('../../models/contab/financeiro/fluxoProjetado');
 const { CONTAS, HISTORICO_BALCAO } = Venda;
 const ContaSubTitulo = require('../../models/contab/financeiro/contaSubTitulo');
@@ -139,6 +154,16 @@ const escapar = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 // ---------------------------------------------------------------------------
 // GET /produtos?busca=   codigo exato, ou 2+ letras na descricao/referencia
 // ---------------------------------------------------------------------------
+// o produto como a tela da venda usa (17/10/2026: tambem para o KIT)
+const CAMPOS_PRODUTO = { codigo: 1, descricao: 1, descricaoTecnica: 1, referencia: 1, marcaproduto: 1,
+                         fornecedor: 1, qte: 1, precovista: 1, precoprazo: 1, garantia: 1, instala: 1, nrFornec: 1 };
+const produtoSaida = p => ({
+  codigo: p.codigo, descricao: p.descricao || '', descricaoTecnica: p.descricaoTecnica || '',
+  referencia: p.referencia || '', marca: p.marcaproduto || p.fornecedor || '', estoque: Number(p.qte) || 0,
+  precoVista: centavos(p.precovista), precoPrazo: centavos(p.precoprazo),
+  garantia: Number(p.garantia) === 1 || p.instala === true,     // instala: marcacao antiga
+});
+
 router.get('/produtos', async (req, res) => {
   try {
     const loja = lojaDe(req);
@@ -172,25 +197,112 @@ router.get('/produtos', async (req, res) => {
     }
 
     const docs = await col('arquivo_docs').find(filtro)
-      .project({ codigo: 1, descricao: 1, descricaoTecnica: 1, referencia: 1, marcaproduto: 1,
-                 fornecedor: 1, qte: 1, precovista: 1, precoprazo: 1, garantia: 1, instala: 1 })
+      .project(CAMPOS_PRODUTO)
       .sort({ descricao: 1 }).limit(fornecedor && !busca ? 300 : 30).toArray();
 
     // codigo digitado exato (ou o do EAN) vem primeiro
     const exato = c => c === Number(busca) || porEan.includes(c);
     docs.sort((a, b) => exato(b.codigo) - exato(a.codigo));
 
-    res.json({ ok: true, produtos: docs.map(p => ({
-      codigo: p.codigo, descricao: p.descricao || '', descricaoTecnica: p.descricaoTecnica || '',
-      referencia: p.referencia || '', marca: p.marcaproduto || p.fornecedor || '', estoque: Number(p.qte) || 0,
-      precoVista: centavos(p.precovista), precoPrazo: centavos(p.precoprazo),
-      garantia: Number(p.garantia) === 1 || p.instala === true,   // instala: marcacao antiga
+    res.json({ ok: true, produtos: docs.map(p => ({ ...produtoSaida(p),
       porEan: porEan.includes(p.codigo),                            // achado pelo codigo de barras
     })) });
   } catch (err) {
     console.error('[vendas/produtos]', err);
     res.status(500).json({ ok: false, erro: err.message });
   }
+});
+
+// ---------------------------------------------------------------------------
+// KIT (17/10/2026, ideia do Jorge): um produto principal (ex.: aquecedor Rinnai 15 L GLP) com o
+// material que sempre vai junto (engates, registro, kit chamine...). Na venda, ao escolher o
+// principal, os itens do kit entram juntos (dá para tirar). Colecao _kits:
+//   { lojistaId, codigo (principal), itens: [{ codigo, quantidade }], atualizadoEm }
+//   GET /kits            todos (para a pagina de kits)
+//   GET /kits/:codigo    o kit de um produto, com os itens no formato da venda (kit: null se nao tem)
+//   PUT /kits/:codigo    { itens: [{ codigo, quantidade }], numero } grava; lista vazia tira o produto do kit
+//   17/10/2026: `numero` do kit (varios principais com o mesmo kit); ver numerarKits
+// ---------------------------------------------------------------------------
+async function produtosPorCodigo(loja, cods) {
+  if (!cods.length) return new Map();
+  const docs = await col('arquivo_docs').find({ loja_id: loja, codigo: { $in: cods } }).project(CAMPOS_PRODUTO).toArray();
+  return new Map(docs.map(p => [Number(p.codigo), p]));
+}
+// 17/10/2026 (Jorge): NUMERO DO KIT. Varios produtos principais podem usar o MESMO kit (ex.: tres
+//   aquecedores Komeco 46 L com o mesmo material). Cada documento de _kits ganha `numero`; os que tem
+//   o mesmo numero tem os mesmos itens (gravar um muda todos). Kits antigos sem numero recebem um aqui
+//   (os de itens iguais ficam com o mesmo numero).
+async function numerarKits(loja, kits) {
+  const chave = k => JSON.stringify((k.itens || []).map(i => [Number(i.codigo), Number(i.quantidade)]).sort((a, b) => a[0] - b[0]));
+  const porItens = new Map(kits.filter(k => k.numero).map(k => [chave(k), k.numero]));
+  let max = kits.reduce((m, k) => Math.max(m, Number(k.numero) || 0), 0);
+  for (const k of kits.filter(k => !k.numero)) {
+    let n = porItens.get(chave(k));
+    if (!n) { n = ++max; porItens.set(chave(k), n); }
+    k.numero = n;
+    await col('_kits').updateOne({ lojistaId: loja, codigo: k.codigo }, { $set: { numero: n } });
+  }
+  return kits;
+}
+router.get('/kits', async (req, res) => {
+  try {
+    const loja = lojaDe(req);
+    const kits = await numerarKits(loja, await col('_kits').find({ lojistaId: loja }).toArray());
+    const prods = await produtosPorCodigo(loja, [...new Set(kits.flatMap(k => [k.codigo, ...(k.itens || []).map(i => i.codigo)]))]);
+    const nome = c => (prods.get(Number(c)) || {}).descricao || '(produto não encontrado)';
+    // fornecedor do produto principal (o combo da venda e da pagina de kits)
+    const nrs = [...new Set([...prods.values()].map(p => Number(p.nrFornec)).filter(Boolean))];
+    const marcas = new Map((nrs.length ? await col('_fornec_access').find({ nrFornec: { $in: nrs.concat(nrs.map(String)) } })
+      .project({ nrFornec: 1, marca: 1 }).toArray() : []).map(f => [Number(f.nrFornec), String(f.marca ?? '').trim()]));
+    res.json({ ok: true, kits: kits.map(k => { const pr = prods.get(Number(k.codigo)) || {}; return { codigo: k.codigo, numero: k.numero, descricao: nome(k.codigo), atualizadoEm: k.atualizadoEm,
+      nrFornec: Number(pr.nrFornec) || 0, fornecedor: marcas.get(Number(pr.nrFornec)) || pr.marcaproduto || pr.fornecedor || '',
+      itens: (k.itens || []).map(i => { const pi = prods.get(Number(i.codigo)) || {};
+        return { codigo: i.codigo, quantidade: i.quantidade, descricao: nome(i.codigo),
+                 marca: marcas.get(Number(pi.nrFornec)) || pi.marcaproduto || pi.fornecedor || '' }; }) }; })
+      .sort((a, b) => a.descricao.localeCompare(b.descricao, 'pt-BR')) });
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
+});
+router.get('/kits/:codigo', async (req, res) => {
+  try {
+    const loja = lojaDe(req), codigo = Number(req.params.codigo);
+    const k = await col('_kits').findOne({ lojistaId: loja, codigo });
+    if (!k || !(k.itens || []).length) return res.json({ ok: true, kit: null });
+    const prods = await produtosPorCodigo(loja, [codigo, ...k.itens.map(i => Number(i.codigo))]);
+    res.json({ ok: true, kit: { codigo, descricao: (prods.get(codigo) || {}).descricao || '',
+      principal: prods.has(codigo) ? produtoSaida(prods.get(codigo)) : null,
+      itens: k.itens.filter(i => prods.has(Number(i.codigo)))
+        .map(i => ({ ...produtoSaida(prods.get(Number(i.codigo))), quantidade: i.quantidade })) } });
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
+});
+router.put('/kits/:codigo', express.json(), async (req, res) => {
+  try {
+    const loja = lojaDe(req), codigo = Number(req.params.codigo);
+    if (!Number.isInteger(codigo) || codigo <= 0) throw new Error('produto principal inválido');
+    const itens = (Array.isArray(req.body?.itens) ? req.body.itens : [])
+      .map(i => ({ codigo: Number(i.codigo), quantidade: Number(i.quantidade) }))
+      .filter(i => Number.isInteger(i.codigo) && i.codigo > 0 && i.codigo !== codigo);
+    for (const i of itens) if (!Number.isInteger(i.quantidade) || i.quantidade < 1 || i.quantidade > 99) throw new Error('quantidade inválida no item ' + i.codigo);
+    const prods = await produtosPorCodigo(loja, [codigo, ...itens.map(i => i.codigo)]);
+    if (!prods.has(codigo)) throw new Error('produto ' + codigo + ' não encontrado');
+    const falta = itens.find(i => !prods.has(i.codigo));
+    if (falta) throw new Error('produto ' + falta.codigo + ' não encontrado');
+    // o mesmo item duas vezes: soma
+    const junto = new Map(); for (const i of itens) junto.set(i.codigo, (junto.get(i.codigo) || 0) + i.quantidade);
+    const lista = [...junto].map(([c, q]) => ({ codigo: c, quantidade: q }));
+    // lista vazia: so este produto sai do kit (os outros do mesmo numero continuam)
+    if (!lista.length) { await col('_kits').deleteOne({ lojistaId: loja, codigo }); return res.json({ ok: true, apagado: true }); }
+    // numero: um numero = entra/fica nesse kit; 'novo' = kit novo so dele; sem numero = fica no que ja tem
+    const atual = await col('_kits').findOne({ lojistaId: loja, codigo });
+    let numero = Number(req.body?.numero);
+    if (Number.isInteger(numero) && numero > 0) {
+      if (!(atual && atual.numero === numero) && !(await col('_kits').findOne({ lojistaId: loja, numero }))) throw new Error('kit nº ' + numero + ' não existe');
+    } else if (req.body?.numero !== 'novo' && atual && atual.numero) numero = atual.numero;
+    else numero = (await col('_kits').find({ lojistaId: loja }).toArray()).reduce((m, k) => Math.max(m, Number(k.numero) || 0), 0) + 1;
+    await col('_kits').updateOne({ lojistaId: loja, codigo },
+      { $set: { numero, itens: lista, atualizadoEm: new Date() }, $setOnInsert: { lojistaId: loja, codigo, criadoEm: new Date() } }, { upsert: true });
+    const outros = await col('_kits').updateMany({ lojistaId: loja, numero, codigo: { $ne: codigo } }, { $set: { itens: lista, atualizadoEm: new Date() } });
+    res.json({ ok: true, numero, itens: lista.length, outros: outros.modifiedCount || 0 });
+  } catch (err) { res.status(400).json({ ok: false, erro: err.message }); }
 });
 
 // ---------------------------------------------------------------------------
@@ -372,6 +484,10 @@ function lerInstalacao(b, itensVenda) {
     servicoId: /^[0-9a-f]{24}$/i.test(t(b.servicoId)) ? t(b.servicoId) : '',
     servicoDescricao: t(b.servicoDescricao).slice(0, 80),
     maoDeObra: Math.max(0, Math.round(Number(b.maoDeObra) || 0)),
+    // 17/10/2026: parte do tecnico definida na venda (centavos); a empresa fica com o resto
+    parteTecnico: Math.max(0, Math.round(Number(b.parteTecnico) || 0)),
+    // 18/10/2026: sem mao de obra = CORTESIA com motivo (com mao de obra, nao vale)
+    cortesia: Math.round(Number(b.maoDeObra) || 0) > 0 ? '' : t(b.cortesia).slice(0, 120),
     diaPrevisto: dia,
     periodo: ['MANHA', 'TARDE', 'FIXO'].includes(b.periodo) ? b.periodo : 'NENHUM',
     // 14/10/2026: horario so com dia marcado
@@ -399,6 +515,7 @@ router.get('/fornecedores', async (req, res) => {
   try {
     const cfg = await col('_os_config').findOne({ lojistaId: lojaDe(req) });
     const marcados = new Set((cfg?.fornecedoresConsignado || []).map(Number));
+    const principais = new Set((cfg?.fornecedoresVenda || []).map(Number));    // 17/10/2026: combo da venda
     const comProduto = new Set((await col('arquivo_docs').distinct('nrFornec',
       { loja_id: lojaDe(req), ativo: { $ne: false } })).map(Number));
     const ativos = await col('_fornec_access').find({ ativo: { $ne: false } })
@@ -407,7 +524,7 @@ router.get('/fornecedores', async (req, res) => {
       .map(f => ({ nr: Number(f.nrFornec), marca: String(f.marca ?? '').trim() }))
       .filter(f => f.nr && f.marca && comProduto.has(f.nr))
       .sort((a, b) => a.marca.localeCompare(b.marca, 'pt-BR'))
-      .map(f => ({ ...f, consignado: marcados.has(f.nr) }));
+      .map(f => ({ ...f, consignado: marcados.has(f.nr), principal: principais.has(f.nr) }));
     res.json({ ok: true, fornecedores: lista });
   } catch (err) {
     res.status(500).json({ ok: false, erro: err.message });
@@ -433,6 +550,20 @@ router.put('/fornecedores/consignado', express.json(), async (req, res) => {
     console.error('[vendas/fornecedores/consignado]', err);
     res.status(500).json({ ok: false, erro: err.message });
   }
+});
+
+// ---------------------------------------------------------------------------
+// PUT /fornecedores/venda   { nrs: [...] }  (17/10/2026) os PRINCIPAIS do combo da venda (os que
+// fazem a maior parte das vendas). Os outros aparecem em "+ outros fornecedores". Vazio = todos.
+// ---------------------------------------------------------------------------
+router.put('/fornecedores/venda', express.json(), async (req, res) => {
+  try {
+    const nrs = [...new Set((Array.isArray(req.body?.nrs) ? req.body.nrs : [])
+      .map(Number).filter(n => Number.isInteger(n) && n > 0))];
+    await col('_os_config').updateOne({ lojistaId: lojaDe(req) },
+      { $set: { fornecedoresVenda: nrs, atualizadoEm: new Date() } }, { upsert: true });
+    res.json({ ok: true, total: nrs.length });
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
 });
 
 // ---------------------------------------------------------------------------
@@ -510,6 +641,50 @@ router.get('/clientes', async (req, res) => {
 // ---------------------------------------------------------------------------
 const clienteDaLoja = async (loja, id) => mongoose.Types.ObjectId.isValid(id)
   ? col('_aux_clientes').findOne({ _id: new mongoose.Types.ObjectId(id), lojistaId: loja }) : null;
+
+// ---------------------------------------------------------------------------
+// ENDERECOS DE INSTALACAO DO CLIENTE (18/10/2026, Jorge): o mesmo cliente pode ter varios lugares
+// (ex.: aptos para alugar). _aux_clientes.enderecosInstalacao: [{ logradouro, numero, complemento,
+// edificio, apto, bairro, cidade, uf, cep, pontoReferencia, criadoEm }]
+//   GET  /clientes/:id/enderecos            cobranca + entrega + os de instalacao (sem repetidos)
+//   POST /clientes/:id/enderecos { endereco } guarda um novo (repetido nao entra)
+// (public/js/comum/endereco-instalacao.js)
+// ---------------------------------------------------------------------------
+const CAMPOS_END = ['logradouro', 'numero', 'complemento', 'edificio', 'apto', 'bairro', 'cidade', 'uf', 'cep', 'pontoReferencia'];
+function limparEnd(e) {
+  const o = {}; for (const k of CAMPOS_END) o[k] = String(e?.[k] ?? '').trim().slice(0, 120);
+  o.uf = o.uf.toUpperCase().slice(0, 2); o.cep = o.cep.replace(/\D/g, '').slice(0, 8);
+  return o;
+}
+const chaveEnd = e => [e.logradouro, e.numero, e.complemento, e.apto].map(x => String(x || '').toLowerCase().replace(/\s+/g, ' ').trim()).join('|');
+function enderecosDo(c) {
+  const lista = [], vistos = new Set();
+  const por = (id, rotulo, e) => { if (!e) return; const x = limparEnd(e); if (!x.logradouro || vistos.has(chaveEnd(x))) return;
+    vistos.add(chaveEnd(x)); lista.push({ id, rotulo, ...x }); };
+  por('cob', 'cobrança', c.enderecoCobranca);
+  por('ent', 'entrega', c.enderecoEntrega);
+  (c.enderecosInstalacao || []).forEach((e, i) => por('i' + i, 'instalação', e));
+  return lista;
+}
+router.get('/clientes/:id/enderecos', async (req, res) => {
+  try {
+    const c = await clienteDaLoja(lojaDe(req), req.params.id);
+    if (!c) return res.status(404).json({ ok: false, erro: 'cliente não encontrado' });
+    res.json({ ok: true, enderecos: enderecosDo(c) });
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
+});
+router.post('/clientes/:id/enderecos', express.json(), async (req, res) => {
+  try {
+    const loja = lojaDe(req), c = await clienteDaLoja(loja, req.params.id);
+    if (!c) return res.status(404).json({ ok: false, erro: 'cliente não encontrado' });
+    const e = limparEnd(req.body?.endereco);
+    if (!e.logradouro) return res.status(400).json({ ok: false, erro: 'informe o logradouro' });
+    if (enderecosDo(c).some(x => chaveEnd(x) === chaveEnd(e))) return res.json({ ok: true, ja: true });
+    await col('_aux_clientes').updateOne({ _id: c._id, lojistaId: loja },
+      { $push: { enderecosInstalacao: { ...e, criadoEm: new Date() } }, $set: { atualizadoEm: new Date() } });
+    res.json({ ok: true, guardado: true });
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
+});
 
 // GET /contas-cliente?tipo=PF&busca=texto   (nome ou codigo da conta)
 router.get('/contas-cliente', async (req, res) => {
@@ -792,6 +967,11 @@ async function montar(req, venda) {
       precisaInstalacao: !!i.precisaInstalacao,
     };
   });
+  // 17/10/2026 (Jorge): CUPOM nao aceita aquecedor com kit (cabeca de kit): so nota fiscal
+  if (venda.documento !== 'NFE' && codigos.length) {
+    const aq = await col('_kits').findOne({ lojistaId: loja, codigo: { $in: codigos } });
+    if (aq) throw new Error('o produto ' + aq.codigo + ' é aquecedor com kit: cupom não aceita, só nota fiscal');
+  }
   // instalacao: so nota fiscal; fora dela, nenhum item e de instalar
   if (venda.documento !== 'NFE') venda.itens.forEach(i => { i.precisaInstalacao = false; });
   const temInstalar = venda.itens.some(i => i.precisaInstalacao);
@@ -1053,20 +1233,34 @@ router.post('/:id/fechar', async (req, res) => {
       }
 
       // ---- mao de obra da instalacao (VI) ----
-      // 15/10/2026: vai inteira para a receita da empresa (4.05.001.001); a parte do tecnico sai
-      // dela na ficha de fechamento da OS
-      let espera = null, numeroOS = null;
+      // 17/10/2026: dividida NA VENDA: empresa -> receita ('venda-mo-receita'); tecnico -> a conta
+      // "a apropriar" dele (2.06.002.NNN) ate a OS ser fechada. Sem parte do tecnico: tudo na receita.
+      let espera = null, apropriar = null, numeroOS = null;
       if (instalar) numeroOS = await proximoNumeroOS(loja, session);
       const maoDeObra = instalar ? (v.totalServico || 0) : 0;
+      // 18/10/2026: instalacao sem mao de obra so como cortesia (com o motivo)
+      if (instalar && maoDeObra === 0 && !(v.instalacao && v.instalacao.cortesia)) {
+        throw new Error('instalação sem mão de obra: informe o valor ou marque como cortesia (com o motivo) na instalação');
+      }
       if (maoDeObra > 0) {
         const ins = v.instalacao;
-        const contaServ = await subtitulo(loja, CONTAS.RECEITA_SERVICO, session);
-        if (!contaServ) throw new Error('a conta ' + CONTAS.RECEITA_SERVICO + ' (receita de serviços) não está no plano');
-        espera = { conta: contaServ,
-          historico: 'OS nº ' + numeroOS + (ins.tecnicoNome ? ' / ' + ins.tecnicoNome : '')
-            + (ins.servicoDescricao ? ' · ' + ins.servicoDescricao : '') + ' · venda ' + v.numero + ' · mão de obra' };
-        ins.parteTecnico = 0;
-        ins.parteLoja = 0;
+        const parteTec = Math.min(ins.parteTecnico || 0, maoDeObra);
+        if ((ins.parteTecnico || 0) > maoDeObra) throw new Error('a parte do técnico é maior que a mão de obra');
+        const histBase = 'OS nº ' + numeroOS + (ins.tecnicoNome ? ' / ' + ins.tecnicoNome : '')
+          + (ins.servicoDescricao ? ' · ' + ins.servicoDescricao : '') + ' · venda ' + v.numero;
+        if (maoDeObra - parteTec > 0) {
+          const contaServ = await cfg.contaDe(loja, 'venda-mo-receita', session);
+          espera = { conta: contaServ, valor: maoDeObra - parteTec,
+                     historico: histBase + (parteTec ? ' · mão de obra · parte da empresa' : ' · mão de obra') };
+        }
+        if (parteTec > 0) {
+          if (!ins.tecnicoConta) throw new Error('mão de obra com parte do técnico: escolha o técnico na instalação');
+          const contaApr = await cfg.contaDoTecnico(loja, 'venda-mo-apropriar', ins.tecnicoConta, session);
+          apropriar = { conta: contaApr, valor: parteTec,
+                        historico: histBase + ' · mão de obra · parte do técnico (a apropriar)' };
+        }
+        ins.parteTecnico = parteTec;
+        ins.parteLoja = maoDeObra - parteTec;
       }
 
       const receitaCod = v.documento === 'NFE' && v.condicao === 'PRAZO' ? CONTAS.RECEITA_PRAZO : CONTAS.RECEITA_VISTA;
@@ -1085,7 +1279,8 @@ router.post('/:id/fechar', async (req, res) => {
         const contras = [];
         const produtos = total - maoDeObra;
         if (produtos > 0) contras.push(contra(receita, produtos, 'Venda ' + v.numero + ' · NF · ' + nomeCli));
-        if (espera) contras.push(contra(espera.conta, maoDeObra, espera.historico));
+        if (espera) contras.push(contra(espera.conta, espera.valor, espera.historico));
+        if (apropriar) contras.push(contra(apropriar.conta, apropriar.valor, apropriar.historico));
         const [bv] = await Boleta.create([{
           codigo: codigoBoleta(), tipo: 'RECEBIMENTO', data: dataBoleta,
           bancoSubTitulo: contaCliente._id, bancoCodigo: contaCliente.codigo, bancoNome: contaCliente.nome,
@@ -1177,9 +1372,13 @@ router.post('/:id/fechar', async (req, res) => {
           // mao de obra ja cobrada na venda (fluxo normal), toda na 4.05.001.001; a parte do
           // tecnico sai de la na ficha de fechamento da OS
           valorServico: maoDeObra, servicoContabilizado: maoDeObra > 0, maoDeObraVenda: maoDeObra,
+          // 17/10/2026: parte do tecnico "a apropriar" (sai para a conta dele no fechamento da OS)
+          apropriar: apropriar ? { conta: apropriar.conta.codigo, valor: apropriar.valor,
+                                   tecnicoConta: v.instalacao.tecnicoConta, tecnicoNome: v.instalacao.tecnicoNome } : null,
           cliente: { id: v.cliente.id, codigo: v.cliente.codigo, tipo: v.cliente.tipo, nome: v.cliente.nome,
                      documento: v.cliente.documento, ncontabil: v.cliente.ncontabil },
           ...dadosOS,
+          parteTecnico: 0, parteLoja: 0,          // 17/10/2026: a partilha so vale depois do fechamento da OS
           criadoEm: agora, atualizadoEm: agora,
         }, { session });
         v.os = { numero: numeroOS, id: r.insertedId };

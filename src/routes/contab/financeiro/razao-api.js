@@ -12,6 +12,8 @@
 //   limite inicial); o que e antes de "de" vira uma linha "Saldo anterior" no topo e o saldo
 //   corrido parte dele. Debito/Credito do rodape = so o periodo; Saldo = final (com anterior).
 //   (a tela passou a abrir no mes vigente)
+// Alterado em: 18/10/2026 - /lancamentos le SO as boletas da conta (antes lia todas: lento). Indices: PLANO-11.
+// Alterado em: 18/10/2026 - boleta do DDA com mais de um titulo: o nome da C/PART e "Diversos DDA".
 // Alterado em: 10/10/2026 - a conta aparece UMA VEZ por boleta: varias contrapartidas na
 //   mesma conta (ex.: 9 parcelas do cartao num recebimento em lote) viram uma linha so,
 //   com o TOTAL e o historico "… (9 lançamentos)". O detalhe continua na boleta (clique na chave).
@@ -44,10 +46,14 @@ router.get('/lancamentos', async (req, res) => {
 
     // sem limite inicial: o que vem antes de "de" e o saldo anterior
     const inicio = de ? new Date(de + 'T00:00:00') : null;
-    const queryBoleta = { status: 'ATIVO' };
+    // 18/10/2026: so as boletas QUE TOCAM a conta (perna ou contrapartida). Antes lia TODAS as boletas
+    // da base a cada consulta (lento depois da importacao do Access). Com os indices do PLANO-11 e rapido.
+    const queryBoleta = { status: 'ATIVO', $or: [{ bancoCodigo: conta }, { 'contrapartidas.codigoConta': conta }] };
     if (ate) queryBoleta.data = { $lte: new Date(ate + 'T23:59:59') };
 
-    const boletas = await Boleta.find(queryBoleta).sort({ data: 1, criadoEm: 1 }).lean();
+    const boletas = await Boleta.find(queryBoleta)
+      .select('codigo tipo data criadoEm historico valorTotal bancoCodigo bancoNome contrapartidas.codigoConta contrapartidas.nomeConta contrapartidas.historico contrapartidas.valor')
+      .sort({ data: 1, criadoEm: 1 }).lean();
 
     const lancamentos = [];
     for (const b of boletas) {
@@ -90,8 +96,10 @@ router.get('/lancamentos', async (req, res) => {
         // "Papelaria" ao lado resolve na hora. Com várias contrapartidas,
         // mostra a da primeira e avisa que há outras.
         const primeira = (b.contrapartidas || []).find(c => c.codigoConta === codsContras[0]);
+        // 18/10/2026 (Jorge): pagamento do DDA com mais de um titulo = "Diversos DDA" (nao o 1o fornecedor)
+        const ehDda = /^(diversos )?dda\b/i.test(String(b.historico || ''));
         const cPartidaNome = primeira
-          ? (codsContras.length > 1 ? `${primeira.nomeConta} e outras` : (primeira.nomeConta || ''))
+          ? (codsContras.length > 1 ? (ehDda ? 'Diversos DDA' : `${primeira.nomeConta} e outras`) : (primeira.nomeConta || ''))
           : '';
 
         // pagamento: banco a crédito (saiu). recebimento: banco a débito (entrou)

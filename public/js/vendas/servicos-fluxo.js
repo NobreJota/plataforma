@@ -8,6 +8,7 @@
 // POST /vendas/api/os/fluxo/sincronizar: a OS recebida fica liquidada.
 // ?os=<id> (vindo da ficha de fechamento): ja marca as linhas daquela OS. ?volta= : botao Voltar.
 // Valores da API do fluxo de servico em centavos.
+// Alterado em: 16/10/2026 - coluna Vencimento (Recebido em) ao lado esquerdo do Valor.
 // =============================================================================
 
 (function () {
@@ -57,16 +58,17 @@
     const vis = linhas.filter(l => !f || [l.os.cliente, l.os.numero, l.os.tecnico, l.historico].join(' ').toLowerCase().includes(f));
     const hoje = iso(new Date());
     const aberto = sit === 'aberto';
+    // 16/10/2026: vencimento (ou recebido em) ao lado esquerdo do valor
     $('lista').innerHTML = vis.length ? '<table><thead><tr>' + (aberto ? '<th></th>' : '')
-      + '<th>' + (aberto ? 'Vencimento' : 'Recebido em') + '</th><th>OS</th><th>Cliente</th><th>Técnico</th><th>Histórico</th>'
-      + (aberto ? '' : '<th>Boleta</th>') + '<th class="n">Valor</th></tr></thead><tbody>'
+      + '<th>OS</th><th>Cliente</th><th>Técnico</th><th>Histórico</th>'
+      + (aberto ? '' : '<th>Boleta</th>') + '<th>' + (aberto ? 'Vencimento' : 'Recebido em') + '</th><th class="n">Valor</th></tr></thead><tbody>'
       + vis.map(l => {
           const id = String(l._id), mk = marcadas.has(id);
           return '<tr data-id="' + id + '" class="' + (mk ? 'marcada ' : '') + (aberto && iso(l.vencimento) < hoje ? 'vencida' : '') + '">'
             + (aberto ? '<td><input type="checkbox" data-mk="' + id + '"' + (mk ? ' checked' : '') + '></td>' : '')
-            + '<td>' + dataBr(aberto ? l.vencimento : l.quitadoEm) + '</td>'
             + '<td><b>' + esc(l.os.numero) + '</b> ' + esc(l.os.tipo) + '</td><td>' + esc(l.os.cliente) + '</td><td>' + esc(l.os.tecnico) + '</td>'
             + '<td>' + esc(l.historico) + '</td>' + (aberto ? '' : '<td>' + esc(l.boleta) + '</td>')
+            + '<td class="venc">' + dataBr(aberto ? l.vencimento : l.quitadoEm) + '</td>'
             + '<td class="n"><b>' + brl(l.valor) + '</b></td></tr>';
         }).join('') + '</tbody></table>'
       : '<div class="vazio">' + (aberto ? 'Nada a receber de serviço.' : 'Nenhum recebimento.') + '</div>';

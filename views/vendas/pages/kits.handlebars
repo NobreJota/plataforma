@@ -1,0 +1,143 @@
+{{!--
+  Destino: C:\plataformaRota\views\vendas\pages\kits.handlebars
+  Criado em: 17/10/2026
+
+  VENDA > KITS (ideia do Jorge): um produto PRINCIPAL (ex.: aquecedor Rinnai 15 L GLP) com o
+  material que sempre vai junto (2 engates de agua, 1 engate de gas, 1 registro, 1 kit chamine...).
+  Na venda, ao escolher o principal, os itens do kit entram juntos (da para tirar ou mudar).
+  Alterado em: 17/10/2026 - do jeito do Jorge:
+    ESQUERDA: escolhe o FORNECEDOR e clica no produto que vai ser a cabeca do kit (o que ja tem kit
+              aparece com 📦 e abre o kit dele: nao ha kit duplo). Sem fornecedor: a lista dos kits.
+    DIREITA:  o kit aberto; para formar, escolhe o fornecedor e vai clicando nos produtos (cada
+              clique soma 1). Concluido, Gravar.
+  Alterado em: 17/10/2026 - coluna Marca nos itens; botao "recolher lista".
+  Alterado em: 17/10/2026 - ESQUERDA em duas caixas (desenho do Jorge): em cima a LISTA DE KITS
+    (Cod. | Descricao | Marca | Itens), embaixo MONTAR UM KIT (fornecedor -> produtos); o produto
+    que ja tem kit sai da lista de baixo e fica so na de cima.
+  Alterado em: 17/10/2026 - NUMERO DO KIT (Jorge): varios produtos com o mesmo kit; coluna "Kit nº" e,
+    no produto principal, o combo do numero (usar um kit que ja existe ou kit novo).
+  Alterado em: 17/10/2026 - bolha com os itens do kit ao passar o mouse (.bolha-kit).
+  O JS fica em /js/vendas/kits.js   API: /vendas/api/venda/kits, /produtos, /fornecedores
+  Rota: /vendas/kits
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kits de venda</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root { --ambar:#92400e; --roxo:#6b21a8; --verde:#059669; --vermelho:#dc2626; --borda:#e5e7eb; --cinza:#6b7280; --texto:#111827; }
+    body { margin:0 auto; max-width:1400px; padding:52px 24px 40px; color:var(--texto); background:#f8fafc;
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
+    h1 { margin:0 0 4px; font-size:21px; }
+    .sub { color:var(--cinza); font-size:13px; margin-bottom:14px; }
+    .grade { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:14px; align-items:start; }
+    @media (max-width: 900px) { .grade { grid-template-columns:1fr; } body { padding:52px 12px 30px; } }
+    .caixa { background:#fff; border:1px solid var(--borda); border-radius:12px; padding:12px 14px; }
+    .caixa h2 { margin:0 0 8px; font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--roxo); }
+    .passo { font-size:12px; color:var(--cinza); margin:2px 0 6px; }
+    .passo b { color:var(--roxo); }
+    input, select { font:inherit; font-size:14px; padding:7px 9px; border:1px solid #d1d5db; border-radius:8px; background:#fff; color:var(--texto); width:100%; }
+    .filtros { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:8px; }
+    .lista { max-height:calc(100vh - 280px); min-height:120px; overflow:auto; margin-top:8px; border:1px solid var(--borda); border-radius:8px; }
+    .lin { display:flex; gap:8px; align-items:center; padding:7px 10px; border-top:1px solid #f3f4f6; cursor:pointer; }
+    .lin:first-child { border-top:0; }
+    .lin:hover { background:#faf5ff; } .lin.ativo { background:#ede9fe; }
+    .lin .c { width:56px; color:var(--cinza); font-variant-numeric:tabular-nums; }
+    .lin .d { flex:1; min-width:0; }
+    .lin .d small { display:block; color:var(--cinza); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .lin .e { color:var(--cinza); font-size:12px; white-space:nowrap; }
+    .tem-kit { font-size:11px; font-weight:800; color:var(--roxo); background:#ede9fe; border-radius:8px; padding:1px 7px; white-space:nowrap; }
+    .no-kit { font-size:11px; font-weight:800; color:var(--verde); background:#dcfce7; border-radius:8px; padding:1px 7px; white-space:nowrap; }
+    .principal { display:flex; gap:10px; align-items:center; padding:10px; border:1px dashed #c4b5fd; border-radius:10px; background:#faf5ff; margin-bottom:10px; }
+    .principal b { font-size:15px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { text-align:left; font-size:11px; text-transform:uppercase; color:#374151; background:#f3f4f6; padding:6px; }
+    td { padding:5px 6px; border-top:1px solid #f3f4f6; vertical-align:middle; }
+    td.n, th.n { text-align:right; } td input.q { width:60px; text-align:right; padding:4px 6px; }
+    .x { border:0; background:none; color:var(--vermelho); font-size:18px; cursor:pointer; }
+    .btn { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:8px 14px; font-weight:700; cursor:pointer; font-size:14px; width:auto; }
+    .btn.roxo { background:var(--roxo); border-color:var(--roxo); color:#fff; }
+    .btn.verm { color:var(--vermelho); border-color:#fecaca; }
+    .btn:disabled { opacity:.5; cursor:not-allowed; }
+    .acoes { display:flex; gap:8px; justify-content:flex-end; align-items:center; margin-top:12px; }
+    .msg { flex:1; font-weight:600; color:var(--vermelho); } .msg.ok { color:var(--verde); }
+    .vazio { color:var(--cinza); padding:14px 10px; }
+    .rot { font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; margin:12px 0 4px; }
+    .lista.itens { max-height:300px; }
+    td.m { color:var(--cinza); font-size:12px; }
+    .coluna { display:flex; flex-direction:column; gap:14px; min-width:0; }
+    .cab { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+    .cab h2 { margin:0; flex:1; }
+    .cab input { width:190px; padding:5px 8px; font-size:13px; }
+    .lin .mk { width:80px; color:var(--cinza); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .lin .nk { width:52px; text-align:center; font-weight:800; color:var(--roxo); font-variant-numeric:tabular-nums; }
+    .lin.tit .nk { color:#374151; font-weight:700; }
+    .lin.mesmo { background:#faf5ff; }
+    .principal .num { margin-left:auto; width:auto; min-width:150px; max-width:220px; font-weight:700; }
+    .outros { font-size:12px; color:var(--roxo); margin:-4px 0 8px; }
+    .lin .qk { width:48px; text-align:right; }
+    .lista.kits .qk .tem-kit { cursor:help; }
+    .lin.tit { cursor:default; background:#f3f4f6; border-radius:8px 8px 0 0; font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; padding:5px 10px; }
+    .lin.tit:hover { background:#f3f4f6; } .lin.tit .c, .lin.tit .mk { color:#374151; font-size:11px; }
+    .lista.kits { max-height:188px; min-height:60px; margin-top:0; border-radius:0 0 8px 8px; }
+    .lista.kits .d { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .bolha-kit { position:fixed; z-index:50; background:#fff; border:1px solid #c4b5fd; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.15);
+                 padding:8px 10px; max-width:520px; pointer-events:none; font-size:13px; }
+    .bolha-kit .bt { font-weight:800; color:var(--roxo); font-size:12px; margin-bottom:4px; }
+    .bolha-kit table { font-size:13px; } .bolha-kit td { padding:3px 6px; border-top:1px solid #f3f4f6; white-space:nowrap; }
+    .bolha-kit .bc { color:var(--cinza); font-variant-numeric:tabular-nums; } .bolha-kit .bm { color:var(--cinza); font-size:12px; }
+    .bolha-kit .bq { text-align:right; font-weight:700; } .bolha-kit .bq::after { content:' un'; font-weight:400; color:var(--cinza); font-size:11px; }
+    #lista { max-height:calc(100vh - 520px); min-height:150px; }
+  </style>
+</head>
+<body>
+  <h1>Kits de venda</h1>
+  <div class="sub">Produto principal com o material que vai junto. Na venda, escolhendo o principal, os itens do kit entram juntos.</div>
+
+  <div class="grade">
+    <div class="coluna">
+    <section class="caixa">
+      <div class="cab"><h2>Lista de kits</h2><input id="filtro-k" placeholder="filtrar kits" autocomplete="off"></div>
+      <div class="lin tit"><span class="c">Cód.</span><span class="d">Descrição</span><span class="nk">Kit nº</span><span class="mk">Marca</span><span class="qk">Itens</span></div>
+      <div class="lista kits" id="lista-k"><div class="vazio">Carregando…</div></div>
+    </section>
+
+    <section class="caixa">
+      <h2>Montar um kit</h2>
+      <div class="passo">Escolha o <b>fornecedor</b> e clique no produto que vai ser a <b>cabeça do kit</b>. Os produtos que já têm kit saem desta lista e ficam na <b>Lista de kits</b> acima.</div>
+      <div class="filtros">
+        <select id="forn"><option value="">escolha o fornecedor</option></select>
+        <input id="filtro" placeholder="filtrar: descrição ou código" autocomplete="off">
+      </div>
+      <div class="lista" id="lista"><div class="vazio">Escolha o fornecedor.</div></div>
+    </section>
+    </div>
+
+    <section class="caixa">
+      <h2>2 · Kit</h2>
+      <div id="ed-vazio" class="vazio">Escolha o produto principal à esquerda.</div>
+      <div id="ed" hidden>
+        <div id="ed-principal"></div>
+        <div class="rot">Itens que vão junto</div>
+        <table><thead><tr><th style="width:64px">Cód.</th><th>Descrição</th><th style="width:130px">Marca</th><th class="n" style="width:76px">Qtd</th><th style="width:30px"></th></tr></thead>
+          <tbody id="itens"></tbody></table>
+        <div class="rot">Adicionar itens · escolha o fornecedor e clique nos produtos (cada clique soma 1)</div>
+        <div class="filtros">
+          <select id="forn-i"><option value="">escolha o fornecedor</option></select>
+          <input id="filtro-i" placeholder="ou procure: código ou descrição" autocomplete="off">
+        </div>
+        <div class="lista itens" id="lista-i"><div class="vazio">Escolha o fornecedor ou procure.</div></div>
+        <div class="acoes"><button type="button" class="btn" id="recolher" title="fecha a lista de produtos">▲ recolher lista</button><span class="msg" id="msg"></span>
+          <button type="button" class="btn verm" id="excluir">Excluir kit</button>
+          <button type="button" class="btn roxo" id="gravar">Gravar kit</button></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="/js/vendas/kits.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
+</body>
+</html>

@@ -16,6 +16,7 @@
 // Alterado em 08/10/2026: espelho so como modal (sem "Abrir na tela da venda"). Secao COBRANCA:
 //   para cada parte, como foi cobrada — dinheiro/PIX: "recebido, entrou em <conta>" com a
 //   boleta; cartao/titulo: a conta e as parcelas no fluxo com a situacao de cada uma.
+// Alterado em 17/10/2026: parcelas da cobranca rolam (div.rolar); o botao Cancelar venda fica no rodape fixo.
 // Alterado em 14/10/2026: secao INSTALACAO no espelho da NF. Tem OS: numero, situacao, tecnico,
 //   dia e o botao "Abrir a OS" (modal da OS, /js/vendas/os-modal.js). NF fechada sem OS:
 //   "+ Incluir instalação" — marca os itens, tecnico e servico (opcionais) e abre a OS
@@ -198,7 +199,7 @@
         const onde = x.forma === 'TITULO' ? 'título em cobrança no ' + conta + ' — a receber do cliente'
           : x.forma === 'RECEBER' ? 'a receber do cliente (conta ' + conta + ') — paga na loja, pelo fluxo de caixa'
           : 'a receber do cartão ' + conta;
-        corpo = '<div class="cob-txt">' + onde + ':</div><table><thead><tr><th>Parcela</th><th>Vencimento</th>'
+        corpo = '<div class="cob-txt">' + onde + ':</div><div class="rolar"><table><thead><tr><th>Parcela</th><th>Vencimento</th>'
           + '<th class="n">Valor</th><th>Situação</th></tr></thead><tbody>'
           + x.parcelas.map(pp => {
               const f = porId.get(String(pp.fluxoId)) || {};
@@ -207,7 +208,7 @@
                 + brl(pp.valor) + '</td><td><span class="st ' + escapar(st) + '">' + (ST[st] || escapar(st)) + '</span>'
                 + (f.boleta ? ' <span class="cinza">' + escapar(f.boleta) + '</span>' : '') + '</td></tr>';
             }).join('')
-          + '</tbody></table>';
+          + '</tbody></table></div>';
       } else {
         corpo = '<div class="cob-txt">Recebido no ato — entrou em <b>' + conta + '</b>'
           + (bol ? ' · lançamento ' + escapar(bol.codigo) + (v.documento === 'NFE' ? '' : ' (Vendas balcão do dia)') : '')

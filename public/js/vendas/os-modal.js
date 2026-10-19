@@ -56,7 +56,12 @@
 // Alterado em: 16/10/2026 - DEVOLVER limitado ao que esta com o tecnico (aviso: levar mais e no "+ levar")
 // Alterado em: 16/10/2026 - USADO editavel na linha (OS pendente): digita a quantidade certa e Enter
 //              (ou sai do campo); o estoque acompanha. PUT /:id/consignados/:cid { usado }
+// Alterado em: 17/10/2026 - OS concluida/liquidada: "Ver fechamento" virou "Ver espelho" e sai o
+//              botao "Fechar" (fecha pelo X).
 //              PUT /vendas/api/venda/fornecedores/consignado
+// Alterado em: 18/10/2026 - "✎ mudar local" (OS pendente): enderecos do cliente, ou + outro endereco (CEP
+//              ou digitar); grava na hora (PUT /:id { local }) e pode guardar no cadastro do cliente.
+//              (/js/comum/endereco-instalacao.js, carregado quando precisa)
 // =============================================================================
 
 (function () {
@@ -183,6 +188,11 @@
       .osm-dev { display:flex; gap:4px; justify-content:flex-end; }
       .osm-dev input { width:40px; padding:3px 4px; text-align:right; }
       .osm-usado { width:46px; padding:3px 4px; text-align:right; font-weight:800; border:1px solid #c4b5fd; border-radius:6px; background:#faf5ff; }
+      .osm-endx { border:1px solid #c4b5fd; background:#fdfcff; border-radius:10px; padding:10px 12px; margin:0 0 10px; }
+      .osm-endx[hidden] { display:none; }
+      .osm-endx-cab { font-weight:800; color:#6b21a8; font-size:13px; margin-bottom:6px; }
+      .osm-endx-bt { display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
+      .osm-mudar { border:1px solid #c4b5fd; background:#faf5ff; color:#6b21a8; border-radius:6px; padding:0 8px; font-size:12px; font-weight:700; cursor:pointer; margin-left:6px; }
       .osm-btn { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:7px 12px; font-weight:700; cursor:pointer; font-size:13px; }
       .osm-btn.mini { padding:3px 8px; font-size:12px; }
       .osm-btn.roxo { background:#6b21a8; border-color:#6b21a8; color:#fff; }
@@ -255,6 +265,12 @@
             </div>
             <div class="osm-sec">Serviço</div>
             <div class="osm-det" id="osm-det"></div>
+            <div class="osm-endx" id="osm-endx" hidden>
+              <div class="osm-endx-cab">Mudar o local da instalação</div>
+              <div id="osm-endf"></div>
+              <div class="osm-endx-bt"><button type="button" class="osm-btn" id="osm-end-canc">Cancelar</button>
+                <button type="button" class="osm-btn roxo" id="osm-end-ok">Usar este endereço</button></div>
+            </div>
             <label>Observação do serviço<textarea id="osm-obs" placeholder=" " maxlength="2000"></textarea></label>
           </div>
           <div>
@@ -301,7 +317,7 @@
         <div class="osm-rod">
           <button type="button" class="osm-btn" id="osm-razao" title="conta do cliente: ver se a venda já foi recebida">Razão</button>
           <span class="msg" id="osm-msg"></span>
-          <button type="button" class="osm-btn" id="osm-reabrir">Ver fechamento</button>
+          <button type="button" class="osm-btn" id="osm-reabrir">Ver espelho</button>
           <button type="button" class="osm-btn verde" id="osm-concluir">Concluir serviço</button>
           <button type="button" class="osm-btn roxo" id="osm-gravar">Gravar</button>
           <button type="button" class="osm-btn" id="osm-fechar">Fechar</button>
@@ -325,6 +341,10 @@
     document.body.appendChild(d);
 
     q('x').addEventListener('click', () => fechar());
+    // 18/10/2026: mudar o local (enderecos do cliente, + outro: CEP ou digitar)
+    q('det').addEventListener('click', ev => { if (ev.target.id === 'osm-mudar') abrirLocal(); });
+    q('end-canc').addEventListener('click', () => { q('endx').hidden = true; });
+    q('end-ok').addEventListener('click', gravarLocal);
     q('fechar').addEventListener('click', () => fechar());
     q('sair-cont').addEventListener('click', () => { q('sair').hidden = true; });
     q('razao').addEventListener('click', abrirRazao);
@@ -484,11 +504,12 @@
           + (i.observacao ? ' <i>(' + esc(i.observacao) + ')</i>' : '') + '</li>').join('') + '</ul>' : '';
     q('det').innerHTML =
         linha('Cliente', esc((cli.codigo ? cli.codigo + ' · ' : '') + (cli.nome || '')))
-      + linha('Local', esc(end))
+      + linha('Local', esc(end) + (podeEditar() ? ' <button type="button" class="osm-mudar" id="osm-mudar" title="outro endereço do cliente, ou CEP / digitar">✎ mudar local</button>' : ''))
       + linha('Edifício', esc([o.edificio, o.apto ? 'apto ' + o.apto : ''].filter(Boolean).join(' · ')))
       + linha('Referência', esc(o.pontoReferencia))
       + linha('Telefones', esc([o.telefone, o.celular].filter(Boolean).join(' · ')))
       + linha('Instalar', itens)
+      + (o.cortesia ? linha('Cortesia', '<b style="color:#b45309">sem mão de obra · ' + esc(o.cortesia) + '</b>') : '')
       + linha('Observação', esc(o.observacao))
       + linha('Venda', o.venda ? 'nº ' + esc(o.venda.numero) : '');
 
@@ -519,6 +540,7 @@
     q('gravar').hidden = !ed;
     q('concluir').hidden = o.status !== 'P';
     q('reabrir').hidden = !(o.status === 'E' || o.status === 'L');
+    q('fechar').hidden = o.status !== 'P';                 // 17/10/2026: concluida fecha pelo X
 
     // 15/10/2026: so o que ainda esta com o tecnico (devolvido todo sai da lista)
     const comTec = (o.consignados || []).filter(c => c.quantidade - c.devolvido > 0);
@@ -677,6 +699,34 @@
     fechar(true);
   }
   function mudou(novo, texto) { os = novo; desenhar(); msg(texto, true); if (aoMudar) aoMudar(); }
+
+  // ---- 18/10/2026: LOCAL da instalacao ----
+  let endOS = null;
+  function carregarEI() {
+    if (window.EnderecoInst) return Promise.resolve();
+    return new Promise((ok, falha) => { const sc = document.createElement('script'); sc.src = '/js/comum/endereco-instalacao.js';
+      sc.onload = ok; sc.onerror = () => falha(new Error('não carregou o endereco-instalacao.js')); document.head.appendChild(sc); });
+  }
+  async function abrirLocal() {
+    try { await carregarEI(); } catch (e) { msg(e.message); return; }
+    if (!endOS) endOS = window.EnderecoInst.form(q('endf'), 'osm-ei-');
+    const e = os.endereco || {};
+    endOS.preencher({ ...e, edificio: os.edificio, apto: os.apto, pontoReferencia: os.pontoReferencia });
+    await endOS.carregar(os.cliente && os.cliente.id);
+    q('endx').hidden = false;
+    document.getElementById('osm-ei-combo').focus();
+  }
+  async function gravarLocal() {
+    const e = endOS.ler();
+    if (!e.logradouro) { msg('Informe o logradouro (ou o CEP).'); return; }
+    try {
+      const r = await api('PUT', API + os.id, { local: e });
+      let guardou = false;
+      try { guardou = await endOS.guardarSeNovo(); } catch (x) { /* o local da OS ja mudou */ }
+      q('endx').hidden = true;
+      mudou(r.os, '✓ local mudado' + (guardou ? ' e guardado no cadastro do cliente' : ''));
+    } catch (x) { msg(x.message); }
+  }
 
   async function gravar(avisar) {
     if (!podeEditar()) return true;

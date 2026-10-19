@@ -31,6 +31,8 @@
  *    marcadas. Erro de "ja baixada" ao gravar tambem recarrega na hora.
  * Alterado em 05/10/2026: janela da boleta mostra a contrapartida NEGATIVA (taxa do
  *    cartao) do lado do banco, em valor positivo; cada lado com o seu total
+ * Alterado em 18/10/2026: window.FluxoCaixa.recarregar() para o sub-menu (fluxo-submenu.js)
+ * Alterado em 18/10/2026: FluxoCaixa.mostrar(pos, sim): o sub-menu esconde orcamento/compras proj./pedidos
  */
 (() => {
   'use strict';
@@ -91,12 +93,17 @@
     $('#flx-ano').innerHTML = anos.map(a => `<option value="${a}" ${a===state.ano?'selected':''}>${a}</option>`).join('');
   }
 
+  // 18/10/2026: pos escondidos pelo sub-menu (8 orcamento, 3 compras proj., 7 pedidos); fica neste computador
+  let ocultos = new Set();
+  try { ocultos = new Set(JSON.parse(localStorage.getItem('fluxo-ocultar') || '[]')); } catch (_) { /* sem storage */ }
+
   /* ===== Grid ===== */
   async function carregar() {
     const tbody = $('#flx-body');
     tbody.innerHTML = '<tr><td colspan="9" class="flx-empty">Carregando...</td></tr>';
     try {
-      const q = '/' + state.ano + (state.mes ? `?mes=${state.mes}` : '');
+      const oc = [...ocultos].join(',');                 // 18/10/2026: o que o sub-menu escondeu
+      const q = '/' + state.ano + '?' + (state.mes ? `mes=${state.mes}&` : '') + (oc ? `ocultar=${oc}` : '');
       const data = await api(q);
 
       if (!data.linhas || data.linhas.length === 0) {
@@ -553,6 +560,17 @@
     conferindo = false;
   }
   setInterval(conferirVersao, 15000);
+  // 18/10/2026: o sub-menu (fluxo-submenu.js) pede para recarregar depois de pagar
+  window.FluxoCaixa = {
+    recarregar: () => { conferirVersao(); },
+    // 18/10/2026: mostrar / esconder orcamento (8), compras projetadas (3) e pedidos (7)
+    mostrando: pos => !ocultos.has(pos),
+    mostrar: (pos, sim) => {
+      if (sim) ocultos.delete(pos); else ocultos.add(pos);
+      try { localStorage.setItem('fluxo-ocultar', JSON.stringify([...ocultos])); } catch (_) { /* sem storage */ }
+      carregar();
+    },
+  };
   document.addEventListener('visibilitychange', () => { if (!document.hidden) conferirVersao(); });
   window.addEventListener('focus', conferirVersao);
   conferirVersao();

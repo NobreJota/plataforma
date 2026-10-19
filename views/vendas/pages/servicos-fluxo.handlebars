@@ -9,6 +9,7 @@
   Abre tambem pela ficha de fechamento ("Receber agora"): ?os=<id> ja marca a OS.
   O JS fica em /js/vendas/servicos-fluxo.js   API: /vendas/api/os/fluxo
   Rota: /vendas/servicos/fluxo
+  Alterado em: 16/10/2026 - vencimento ao lado do valor (td.venc).
 --}}
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -36,7 +37,8 @@
     td { padding:7px 10px; border-top:1px solid #f3f4f6; }
     tbody tr:nth-child(even) { background:#fafafa; }
     tbody tr.marcada { background:#ede9fe; }
-    tbody tr.vencida td:nth-child(2) { color:var(--vermelho); font-weight:700; }
+    tbody tr.vencida td.venc { color:var(--vermelho); font-weight:700; }
+    td.venc { white-space:nowrap; }
     .n { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
     .vazio { padding:30px; text-align:center; color:var(--cinza); }
     .painel { border:1px solid #c4b5fd; background:#faf5ff; border-radius:12px; padding:14px; position:sticky; top:60px; }

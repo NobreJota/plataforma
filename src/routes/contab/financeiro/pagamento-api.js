@@ -33,6 +33,13 @@
 //  05/10/2026: GET /cartao?...&historico=...&cliente=1 traz as parcelas em aberto do
 //      cartao de TODAS as vendas do mesmo cliente daquela venda (venda -> cliente.id ->
 //      vendas dele). Venda de balcao (sem cliente): as vendas de balcao daquele cartao.
+//  18/10/2026: GET /receber — VENDAS - RECEBER (a receber de cliente, sem cartao e sem OS); POST /quitar
+//      aceita juros e desconto (contas pelas chaves receber-juros / receber-desconto, botao ★).
+//  18/10/2026: PUT /titulo/:id/vencimento — DDA - confere: acertar o vencimento do nosso fluxo pelo do banco.
+//  18/10/2026: GET /dda-confere?de=&ate= — DDA - CONFERE: titulos de fornecedor do fluxo (pos 2 e 7) com o
+//      CNPJ, e os CNPJs dos fornecedores; a tela compara com o CSV do banco.
+//  18/10/2026: GET /dda?ate= — DDA - PAGA (sub-menu do Fluxo de Caixa): os titulos a pagar (pos 2)
+//      vencendo ate o dia, vencidos inclusive; paga pelo POST /quitar.
 //  16/10/2026: /janela do Fluxo de Caixa NAO traz as linhas do FLUXO DE SERVICO (origem 'OS',
 //      a receber das OS): elas sao recebidas pela tela Servico > Fluxo de servico, que usa
 //      este mesmo POST /quitar.
@@ -43,6 +50,7 @@ const FluxoProjetado = require('../../../models/contab/financeiro/fluxoProjetado
 const Boleta = require('../../../models/contab/financeiro/boleta');
 const ContaBancaria = require('../../../models/contab/auxiliares/contaBancaria');
 const HistoricoConta = require('../../../models/contab/financeiro/historicoConta');
+const cfg = require('../../../models/contab/config-contas');      // 18/10/2026: juros/desconto do receber
 
 const router = express.Router();
 
@@ -153,6 +161,106 @@ router.get('/janela', async (req, res) => {
   }
 });
 
+/* 18/10/2026 (Jorge): DDA - PAGA. GET /financeiro/api/pagamento/dda?ate=YYYY-MM-DD
+   Titulos a PAGAR realizados (pos 2) vencendo ate o dia (default hoje) — os vencidos tambem
+   (ex.: na segunda, os de sabado e domingo). A tela marca, escolhe o banco e paga pelo
+   POST /quitar (tipo pagar). fornecedor = conta 2.01.001.xxx */
+router.get('/dda', async (req, res) => {
+  try {
+    const ate = /^\d{4}-\d{2}-\d{2}$/.test(String(req.query.ate || '')) ? new Date(req.query.ate + 'T23:59:59.999') : (() => { const d = new Date(); d.setHours(23, 59, 59, 999); return d; })();
+    // como o /janela (a tela de pagar do fluxo): sem filtro de loja
+    const filtro = { status: 'ATIVO', pos: 2, vencimento: { $lte: ate }, origem: { $ne: 'OS' } };
+    const itens = await FluxoProjetado.find(filtro).sort({ vencimento: 1, historico: 1 }).lean();
+    const hoje = new Date(); hoje.setHours(12, 0, 0, 0);
+    const titulos = itens.map(it => {
+      const v = new Date(it.vencimento); v.setHours(12, 0, 0, 0);
+      return { ...tituloParaTela(it, null), atraso: Math.round((hoje - v) / 86400000),
+               fornecedor: String(it.codigoConta || '').startsWith('2.01.001.') };
+    });
+    res.json({ ate: ate.getFullYear() + '-' + String(ate.getMonth() + 1).padStart(2, '0') + '-' + String(ate.getDate()).padStart(2, '0'), titulos });
+  } catch (err) {
+    console.error('❌ /pagamento/dda:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* 18/10/2026 (Jorge): DDA - CONFERE. GET /financeiro/api/pagamento/dda-confere?de=&ate=
+   O lado do FLUXO para comparar com o arquivo do DDA do banco (a comparacao e na tela):
+   - titulos de fornecedor (conta 2.01.001.xxx) a pagar (pos 2), compra programada (pos 3) e pedido (pos 7),
+     em aberto, vencendo de/ate (padrao: hoje-7 ate hoje+90), com o CNPJ do fornecedor
+   - fornecedores: os CNPJs conhecidos (cadastro fornecs -> vinculo da loja -> conta), para
+     apontar no arquivo do banco o CNPJ que NAO e nosso fornecedor (principal sinal de fraude) */
+router.get('/dda-confere', async (req, res) => {
+  try {
+    const loja = lojaDe(req);
+    const dia = (txt, soma, fim) => { const d = /^\d{4}-\d{2}-\d{2}$/.test(String(txt || '')) ? new Date(txt + 'T12:00:00') : (() => { const x = new Date(); x.setDate(x.getDate() + soma); return x; })();
+      fim ? d.setHours(23, 59, 59, 999) : d.setHours(0, 0, 0, 0); return d; };
+    const de = dia(req.query.de, -7, false), ate = dia(req.query.ate, 90, true);
+    const soDig = v => String(v || '').replace(/\D/g, '');
+    // fornecedores: conta 2.01.001.xxx -> { cnpj, razao, marca }
+    const porConta = new Map(), fornecedores = [];
+    for (const f of await col('fornecs').find({}).project({ cnpj: 1, razao: 1, razaoSocial: 1, marca: 1, nome: 1, vinculos: 1 }).toArray()) {
+      const v = (f.vinculos || []).find(x => x.ativo !== false && (!loja || String(x.lojistaId) === String(loja)));
+      const conta = String(v?.ncontabil || '').trim();
+      const razao = String(f.razao || f.razaoSocial || f.nome || '').trim();
+      const cnpj = soDig(f.cnpj);
+      if (conta) porConta.set(conta, { cnpj, razao, marca: String(f.marca || '').trim() });
+      if (cnpj) fornecedores.push({ cnpj, razao, marca: String(f.marca || '').trim(), conta });
+    }
+    const itens = await FluxoProjetado.find({ status: 'ATIVO', pos: { $in: [2, 3, 7] }, codigoConta: /^2\.01\.001\./,
+      vencimento: { $gte: de, $lte: ate }, origem: { $ne: 'OS' } }).sort({ vencimento: 1 }).lean();
+    const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    res.json({ de: ymd(de), ate: ymd(ate), fornecedores,
+      titulos: itens.map(it => { const f = porConta.get(it.codigoConta) || {};
+        return { ...tituloParaTela(it, null), cnpj: f.cnpj || '', razao: f.razao || it.nomeConta || '', marca: f.marca || '' }; }) });
+  } catch (err) {
+    console.error('❌ /pagamento/dda-confere:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* 18/10/2026 (Jorge): DDA - CONFERE: AJUSTAR O VENCIMENTO do titulo no nosso fluxo (o do banco
+   estava certo). PUT /financeiro/api/pagamento/titulo/:id/vencimento { vencimento: 'YYYY-MM-DD', motivo }
+   So titulo em aberto (ATIVO). Guarda o historico em `ajustes` (de, para, motivo, em). */
+router.put('/titulo/:id/vencimento', async (req, res) => {
+  try {
+    const txt = String(req.body?.vencimento || '');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(txt)) return res.status(400).json({ erro: 'Informe o vencimento (AAAA-MM-DD).' });
+    const novo = new Date(txt + 'T12:00:00');
+    if (isNaN(novo)) return res.status(400).json({ erro: 'Vencimento inválido.' });
+    const t = await FluxoProjetado.findOne({ _id: req.params.id, status: 'ATIVO' }).lean();
+    if (!t) return res.status(404).json({ erro: 'Título não encontrado ou já baixado.' });
+    // direto na colecao (o schema do fluxo nao tem `ajustes`; assim nada e descartado nem recusado)
+    const r = await FluxoProjetado.collection.updateOne({ _id: t._id, status: 'ATIVO' }, {
+      $set: { vencimento: novo, ano: novo.getFullYear(), mes: novo.getMonth() + 1 },
+      $push: { ajustes: { campo: 'vencimento', de: t.vencimento, para: novo, motivo: String(req.body?.motivo || 'DDA - confere').slice(0, 200), em: new Date() } },
+    });
+    if (!r.modifiedCount) return res.status(409).json({ erro: 'O título não foi alterado (já baixado?). Abra de novo.' });
+    const conf = await FluxoProjetado.findById(t._id).select('vencimento').lean();
+    res.json({ ok: true, vencimento: conf?.vencimento || null });
+  } catch (err) {
+    console.error('❌ /pagamento/titulo/vencimento:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* 18/10/2026 (Jorge): VENDAS - RECEBER. GET /financeiro/api/pagamento/receber
+   Tudo o que ha a receber de cliente (pos 5, em aberto), sem os cartoes (1.01.005: tem rotina
+   propria) e sem o fluxo de servico (OS). A tela agrupa pelo cliente (codigoConta) e recebe
+   pelo POST /quitar (tipo receber) com juros/desconto. */
+router.get('/receber', async (req, res) => {
+  try {
+    const itens = await FluxoProjetado.find({ status: 'ATIVO', pos: 5, origem: { $ne: 'OS' },
+      codigoConta: { $not: /^1\.01\.005\./ } }).sort({ vencimento: 1 }).lean();
+    const hoje = new Date(); hoje.setHours(12, 0, 0, 0);
+    res.json({ titulos: itens.map(it => { const v = new Date(it.vencimento); v.setHours(12, 0, 0, 0);
+      return { ...tituloParaTela(it, null), atraso: Math.round((hoje - v) / 86400000) }; }) });
+  } catch (err) {
+    console.error('❌ /pagamento/receber:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
+
 /* GET /financeiro/api/pagamento/bancos  (lista contas bancárias para o dropdown) */
 router.get('/bancos', async (req, res) => {
   try {
@@ -168,7 +276,8 @@ router.get('/bancos', async (req, res) => {
       numero: c.numero,
       subTituloId: c.contaSubTitulo?._id || null,
       subCodigo: c.contaSubTitulo?.codigo || '',
-      subNome: c.contaSubTitulo?.nome || ''
+      subNome: c.contaSubTitulo?.nome || '',
+      recebeVenda: c.recebeVenda === true          // 18/10/2026: so as da Armacao (VENDA-3)
     })));
   } catch (err) {
     res.status(500).json({ erro: err.message });
@@ -244,7 +353,7 @@ router.get('/cartao', async (req, res) => {
    Grava a Boleta e remove os títulos do Fluxo. */
 router.post('/quitar', async (req, res) => {
   try {
-    const { tipo = 'pagar', data, contaBancariaId, titulosIds, historico, historicos, valorLiquido } = req.body;
+    const { tipo = 'pagar', data, contaBancariaId, titulosIds, historico, historicos, valorLiquido, juros, desconto } = req.body;
     const erroData = erroDataMovimento(data);
     if (erroData) return res.status(400).json({ erro: erroData });
     const loja = lojaDe(req);
@@ -306,8 +415,30 @@ router.post('/quitar', async (req, res) => {
       }
     }
 
+    // 18/10/2026: JUROS e DESCONTO no recebimento (Vendas - receber). Juros: contrapartida a credito
+    // (receita), o banco recebe a mais. Desconto: contrapartida NEGATIVA (debito na despesa), o banco
+    // recebe a menos; o titulo baixa inteiro. Contas pela configuracao (chaves receber-juros/-desconto).
+    const jurosC = Math.max(0, emCentavos(juros)), descC = Math.max(0, emCentavos(desconto));
+    let extra = 0;
+    if (jurosC || descC) {
+      if (!ehRec) return res.status(400).json({ erro: 'Juros e desconto só no recebimento.' });
+      if (temLiquido) return res.status(400).json({ erro: 'Juros/desconto não se misturam com o valor líquido do cartão.' });
+      if (descC >= emCentavos(valorTotal) + jurosC) return res.status(400).json({ erro: 'O desconto não pode ser maior que o total.' });
+      if (jurosC) {
+        const c = await cfg.contaDe(loja, 'receber-juros');
+        contrapartidas.push({ contaSubTitulo: c._id, codigoConta: c.codigo, nomeConta: c.nome,
+          historico: 'Juros/multa recebidos (' + titulos.length + ' título(s))', valor: jurosC / 100, fluxoLancamentoId: null, pos: null });
+      }
+      if (descC) {
+        const c = await cfg.contaDe(loja, 'receber-desconto');
+        contrapartidas.push({ contaSubTitulo: c._id, codigoConta: c.codigo, nomeConta: c.nome,
+          historico: 'Desconto concedido (' + titulos.length + ' título(s))', valor: -descC / 100, fluxoLancamentoId: null, pos: null });
+      }
+      extra = jurosC - descC;
+    }
+
     // taxa do cartao: entra na MESMA boleta, como contrapartida negativa (debito na despesa)
-    let valorBoleta = valorTotal;
+    let valorBoleta = (emCentavos(valorTotal) + extra) / 100;
     if (taxa) {
       const v = taxa.centavos / 100;
       const pct = (taxa.centavos / emCentavos(valorTotal) * 100).toFixed(2).replace('.', ',');

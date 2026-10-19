@@ -6,13 +6,13 @@
     Programadas    pendente, com tecnico, dia e hora
     N/programadas  pendente, faltando tecnico, dia ou hora
     Pendentes      todo servico ainda nao concluido
-    Concluidas     servico feito, aguardando o recebimento
-    Liquidadas     concluida e recebida
+    Liquidadas     servico concluido (a receber no fluxo de servico, ou ja recebido)
   Clique na linha abre o modal da OS (/js/vendas/os-modal.js).
   Alterado em: 14/10/2026 - aba LISTA GERAL: todas as OS em aberto (pendentes e concluidas a
                receber), A-Z pelo cliente, com dia/hora marcados e a situacao.
   Alterado em: 16/10/2026 - HORA VENCIDA: cliente em amarelo e etiqueta "hora vencida".
   Alterado em: 16/10/2026 - clique no titulo Cliente, Dia ou Tecnico ordena a lista.
+  Alterado em: 17/10/2026 - saiu a aba "Concluidas" (equivale a Liquidadas).
   O JS fica em /js/vendas/servicos-lista.js   API: /vendas/api/os/lista?tipo=
   Rota: /vendas/servicos/lista?tipo=programadas (o menu manda o tipo)
 --}}
@@ -73,7 +73,6 @@
     <button type="button" data-tipo="programadas">Programadas<span class="n" id="n-programadas">0</span></button>
     <button type="button" data-tipo="nprogramadas">N/programadas<span class="n" id="n-nprogramadas">0</span></button>
     <button type="button" data-tipo="pendentes">Pendentes<span class="n" id="n-pendentes">0</span></button>
-    <button type="button" data-tipo="concluidas">Concluídas<span class="n" id="n-concluidas">0</span></button>
     <button type="button" data-tipo="liquidadas">Liquidadas<span class="n" id="n-liquidadas">0</span></button>
   </div>
 

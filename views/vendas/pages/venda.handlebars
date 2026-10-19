@@ -54,6 +54,13 @@
   Alterado em: 14/10/2026 - agenda: horario de hoje que ja passou fica cinza ("passou"); sem o botao
                Andamento: aviso "Venda em andamento" ao sair sem gravar (sai-caixa).
   Alterado em: 14/10/2026 - agenda do tecnico SEMPRE na lateral direita (com tecnico/dia no titulo e legenda).
+  Alterado em: 17/10/2026 - botao "📦 Kits aquecedores" (Produtos): janela fornecedor -> kits.
+  Alterado em: 18/10/2026 - instalacao sem mao de obra: faixa .ins-semmo (digitar o valor ou cortesia com motivo).
+  Alterado em: 18/10/2026 - instalacao: combo de ENDERECOS do cliente (+ outro endereco: CEP ou digitar), CEP
+    primeiro; guardar no cadastro (/js/comum/endereco-instalacao.js).
+  Alterado em: 17/10/2026 - cupom: botao de kits apagado (.kits-btn.apagado); janela dos kits arrasta pelo titulo.
+  Alterado em: 17/10/2026 - instalacao: campo PARTE DO TECNICO (ins-ptec) e botao ★ (configuracao de
+               contas da mao de obra; /js/comum/config-contas.js).
 --}}
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -187,9 +194,30 @@
     .ins-grade label { display:flex; flex-direction:column; gap:3px; }
     .ins-grade label.l2 { grid-column:span 2; } .ins-grade label.l4 { grid-column:span 4; }
     .ins-grade input.num { text-align:right; }
-    .ins-partilha { grid-column:span 3; align-self:end; padding:8px 12px; border-radius:8px; background:#f5f3ff; color:#4c1d95;
+    .ins-partilha { grid-column:span 2; align-self:end; padding:8px 12px; border-radius:8px; background:#f5f3ff; color:#4c1d95;
                     font-size:13px; font-weight:600; min-height:36px; }
     .ins-partilha.aviso { background:#fef2f2; color:var(--vermelho); }
+    /* 17/10/2026: ★ configuracao de contas da mao de obra (no titulo do modal da instalacao) */
+    /* 17/10/2026: botao e janela dos kits */
+    .kits-btn { margin-left:12px; border:1px solid #c4b5fd; background:#faf5ff; color:#6b21a8; border-radius:8px; padding:3px 12px;
+                font-size:13px; font-weight:700; cursor:pointer; text-transform:none; letter-spacing:0; vertical-align:middle; }
+    .kits-btn:hover { background:#ede9fe; }
+    .kits-btn.apagado { opacity:.45; filter:grayscale(1); cursor:not-allowed; }
+    .kits-cab { cursor:move; user-select:none; }
+    .kits-fundo { position:fixed; inset:0; background:rgba(17,24,39,.45); z-index:300; display:flex; align-items:flex-start; justify-content:center; padding:70px 16px; }
+    .kits-cx { background:#fff; border-radius:12px; width:min(900px,100%); max-height:calc(100vh - 140px); display:flex; flex-direction:column; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+    .kits-cab { padding:12px 16px; border-bottom:1px solid #e5e7eb; font-weight:800; color:#92400e; display:flex; justify-content:space-between; align-items:center; }
+    .kits-cab button { border:0; background:none; color:#dc2626; font-size:20px; cursor:pointer; }
+    .kits-corpo { display:grid; grid-template-columns:200px minmax(0,1fr); min-height:300px; overflow:hidden; }
+    .kits-forn { border-right:1px solid #e5e7eb; overflow:auto; padding:6px; }
+    .kits-forn div { padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:600; display:flex; justify-content:space-between; }
+    .kits-forn div:hover { background:#faf5ff; } .kits-forn div.ativo { background:#6b21a8; color:#fff; }
+    .kits-lista { overflow:auto; padding:6px 10px; }
+    .kits-lista .k { padding:8px 10px; border:1px solid #e5e7eb; border-radius:8px; margin-bottom:6px; cursor:pointer; }
+    .kits-lista .k:hover { background:#ede9fe; border-color:#c4b5fd; }
+    .kits-lista .k b { display:block; } .kits-lista .k small { color:#6b7280; }
+    .ins-cfg { float:right; border:1px solid #e5e7eb; background:#fff; color:#92400e; border-radius:8px; padding:2px 10px; font-size:16px; cursor:pointer; }
+    .ins-cfg:hover { background:#fef3c7; }
     .ins-grade label > span { font-size:10px; font-weight:700; text-transform:uppercase; color:#374151; }
     .ins-grade input, .ins-grade select { height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:14px; }
     .ins-grade input:not(:placeholder-shown), .ins-grade select.ok { background:#fef9c3; }
@@ -197,6 +225,18 @@
     .ins-itens th { font-size:11px; text-transform:uppercase; color:#374151; background:#f3f4f6; padding:5px 8px; text-align:left; }
     .ins-itens td { padding:4px 8px; border-bottom:1px solid #f3f4f6; }
     .ins-itens input { width:100%; height:30px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; }
+    .ins-semmo { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:10px 0 0; padding:10px 12px; border:1px solid #fcd34d;
+                 background:#fffbeb; border-radius:10px; font-size:14px; }
+    .ins-semmo[hidden] { display:none; }
+    .ins-semmo b { color:#92400e; } .ins-semmo .ou { color:#6b7280; font-size:13px; }
+    .ins-semmo button { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:6px 12px; font-weight:700; cursor:pointer; }
+    .ins-semmo button.prim { background:#b45309; border-color:#b45309; color:#fff; } .ins-semmo button:disabled { opacity:.5; cursor:not-allowed; }
+    .ins-semmo select, .ins-semmo input { height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:14px; }
+    .ins-semmo input { min-width:220px; }
+    .ins-end { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin:4px 0 2px; }
+    .ins-end select { flex:1; min-width:280px; height:32px; border:1px solid #c4b5fd; border-radius:6px; padding:0 8px; font-size:14px; font-weight:600; background:#faf5ff; }
+    .ins-end label { font-size:13px; display:flex; gap:5px; align-items:center; }
+    .ins-end-av { font-size:13px; color:var(--roxo); font-weight:600; }
     .ins-sub { margin:12px 0 4px; font-size:12px; text-transform:uppercase; color:var(--roxo); font-weight:700; }
     /* 10/10/2026: agenda do tecnico ao lado do formulario */
     .ins-corpo { display:grid; grid-template-columns:minmax(0,1fr) 270px; gap:18px; align-items:start; }
@@ -402,7 +442,7 @@
   </div>
 
   <div class="bloco">
-    <h2>Produtos</h2>
+    <h2>Produtos <button type="button" class="kits-btn" id="kits-btn" title="escolher um kit: fornecedor e depois o kit (o aquecedor com o material que vai junto)">📦 Kits aquecedores</button></h2>
     <div class="prod-linha">
       <select id="filtro-fornec" title="filtrar pelo fornecedor"><option value="">todos os fornecedores</option></select>
       <div class="busca">
@@ -565,22 +605,27 @@
       <label class="l2"><span>Técnico</span><select id="ins-tecnico"></select></label>
       <label class="l2"><span>Serviço (lista do técnico)</span><select id="ins-servico"></select></label>
       <label><span>Mão de obra (cliente)</span><input id="ins-mo" class="num" inputmode="decimal" placeholder="0,00" autocomplete="off"></label>
+      <label><span>Parte do técnico</span><input id="ins-ptec" class="num" inputmode="decimal" placeholder="0,00" autocomplete="off" title="o que é do técnico: fica a apropriar até a OS ser fechada"></label>
       <div class="ins-partilha" id="ins-partilha"></div>
       <label class="l2"><span>Dia previsto</span><input type="date" id="ins-dia" placeholder=" "></label>
       <label><span>Das</span><input type="time" id="ins-ini" placeholder=" "></label>
       <label><span>Até</span><input type="time" id="ins-fim" placeholder=" "></label>
     </div>
     <div class="ins-sub">Local da instalação</div>
+    <div class="ins-end"><select id="ins-end" title="endereços do cliente · ＋ outro endereço: CEP ou digitar"></select>
+      <label id="ins-guardar-l" hidden><input type="checkbox" id="ins-guardar" checked> guardar no cadastro do cliente</label>
+      <span class="ins-end-av" id="ins-end-av"></span></div>
     <div class="ins-grade">
+      <label><span>CEP</span><input id="ins-cep" placeholder=" " autocomplete="off" inputmode="numeric"></label>
       <label class="l2"><span>Logradouro</span><input id="ins-logr" placeholder=" " autocomplete="off"></label>
       <label><span>Número</span><input id="ins-num" placeholder=" " autocomplete="off"></label>
       <label><span>Complemento</span><input id="ins-compl" placeholder=" " autocomplete="off"></label>
       <label><span>Edifício</span><input id="ins-edif" placeholder=" " autocomplete="off"></label>
       <label><span>Apto</span><input id="ins-apto" placeholder=" " autocomplete="off"></label>
       <label><span>Bairro</span><input id="ins-bairro" placeholder=" " autocomplete="off"></label>
-      <label><span>Cidade</span><input id="ins-cidade" placeholder=" " autocomplete="off"></label>
+      <label class="l2"><span>Cidade</span><input id="ins-cidade" placeholder=" " autocomplete="off"></label>
       <label><span>UF</span><input id="ins-uf" maxlength="2" placeholder=" " autocomplete="off"></label>
-      <label><span>CEP</span><input id="ins-cep" placeholder=" " autocomplete="off"></label>
+      <span></span>
       <label><span>Telefone</span><input id="ins-fone" placeholder=" " autocomplete="off"></label>
       <label><span>Celular</span><input id="ins-cel" placeholder=" " autocomplete="off"></label>
       <label class="l4"><span>Ponto de referência</span><input id="ins-ref" placeholder=" " autocomplete="off"></label>
@@ -604,6 +649,8 @@
 
   <div class="nc-fundo" id="nc-fundo" hidden><iframe id="nc-frame" title="Novo cliente"></iframe></div>
 
+  <script src="/js/comum/config-contas.js"></script>
+  <script src="/js/comum/endereco-instalacao.js"></script>
   <script src="/js/vendas/venda.js"></script>
   <script src="/js/comum/navegacao.js"></script>
 </body>

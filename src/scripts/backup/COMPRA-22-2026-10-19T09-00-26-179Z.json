@@ -1,0 +1,5966 @@
+[
+ {
+  "_id": {
+   "$oid": "6abd774f216b0dccf2991a21"
+  },
+  "codigo": {
+   "$numberInt": "5550"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GLP/KO 21 D  BR   19,5(2679)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1860.24"
+  },
+  "precoprazo": {
+   "$numberDouble": "2636.7"
+  },
+  "precovista": {
+   "$numberDouble": "2504.87"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bdd"
+  },
+  "codigo": {
+   "$numberInt": "1432"
+  },
+  "ativo": true,
+  "descricao": "compact F + 150 mm  x  5.0 mts (205)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "259.89"
+  },
+  "precoprazo": {
+   "$numberDouble": "427.27"
+  },
+  "precovista": {
+   "$numberDouble": "405.91"
+  },
+  "qte": {
+   "$numberInt": "6"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bdf"
+  },
+  "codigo": {
+   "$numberInt": "2692"
+  },
+  "ativo": true,
+  "descricao": "Flextic  3.0 mts x 100 mm (1527)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "115.27"
+  },
+  "precoprazo": {
+   "$numberDouble": "217.38"
+  },
+  "precovista": {
+   "$numberDouble": "206.51"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be3"
+  },
+  "codigo": {
+   "$numberInt": "2892"
+  },
+  "ativo": true,
+  "descricao": "veneziana alto fechante 150 D (1131)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "34.35"
+  },
+  "precoprazo": {
+   "$numberDouble": "87.22"
+  },
+  "precovista": {
+   "$numberDouble": "82.86"
+  },
+  "qte": {
+   "$numberInt": "5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be4"
+  },
+  "codigo": {
+   "$numberInt": "2897"
+  },
+  "ativo": true,
+  "descricao": "compact F + 120 mm  x  5.0 mts (1640)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "210.69"
+  },
+  "precoprazo": {
+   "$numberDouble": "333.48"
+  },
+  "precovista": {
+   "$numberDouble": "316.81"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be5"
+  },
+  "codigo": {
+   "$numberInt": "3210"
+  },
+  "ativo": true,
+  "descricao": "Flextic  1.5 mts x 120 mm [ 370 mm ] (1052)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "73.23"
+  },
+  "precoprazo": {
+   "$numberDouble": "132.42"
+  },
+  "precovista": {
+   "$numberDouble": "125.8"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be6"
+  },
+  "codigo": {
+   "$numberInt": "3212"
+  },
+  "ativo": true,
+  "descricao": "Flextic  3.0 mts x   80 mm  [ 740mm ] (1049)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "96.35"
+  },
+  "precoprazo": {
+   "$numberDouble": "189.63"
+  },
+  "precovista": {
+   "$numberDouble": "180.15"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be7"
+  },
+  "codigo": {
+   "$numberInt": "3213"
+  },
+  "ativo": true,
+  "descricao": "compact F + 100 mm  x  5.0 mts (1663)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "178.61"
+  },
+  "precoprazo": {
+   "$numberDouble": "300.32"
+  },
+  "precovista": {
+   "$numberDouble": "285.3"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994be8"
+  },
+  "codigo": {
+   "$numberInt": "3326"
+  },
+  "ativo": true,
+  "descricao": "luva galv. 100 x 100 (1664)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "14.57"
+  },
+  "precoprazo": {
+   "$numberDouble": "43.96"
+  },
+  "precovista": {
+   "$numberDouble": "41.76"
+  },
+  "qte": {
+   "$numberInt": "7"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bea"
+  },
+  "codigo": {
+   "$numberInt": "3420"
+  },
+  "ativo": true,
+  "descricao": "veneziana alto fechante 100 D (1324)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "30.62"
+  },
+  "precoprazo": {
+   "$numberDouble": "77.75"
+  },
+  "precovista": {
+   "$numberDouble": "73.86"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bee"
+  },
+  "codigo": {
+   "$numberInt": "3531"
+  },
+  "ativo": true,
+  "descricao": "Flextic  1.5 mts x 100  [ 370 mm ] (1050)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "60.24"
+  },
+  "precoprazo": {
+   "$numberDouble": "121.65"
+  },
+  "precovista": {
+   "$numberDouble": "115.57"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bef"
+  },
+  "codigo": {
+   "$numberInt": "3536"
+  },
+  "ativo": true,
+  "descricao": "luva galv. 120 x 120 (1665)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "15.38"
+  },
+  "precoprazo": {
+   "$numberDouble": "49.14"
+  },
+  "precovista": {
+   "$numberDouble": "46.68"
+  },
+  "qte": {
+   "$numberInt": "7"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bf0"
+  },
+  "codigo": {
+   "$numberInt": "3543"
+  },
+  "ativo": true,
+  "descricao": "Fita adesiva poliester Aluminizada (334)",
+  "e_max": {
+   "$numberInt": "1"
+  },
+  "e_min": {
+   "$numberInt": "1"
+  },
+  "precocusto": {
+   "$numberDouble": "29.96"
+  },
+  "precoprazo": {
+   "$numberDouble": "54.39"
+  },
+  "precovista": {
+   "$numberDouble": "51.67"
+  },
+  "qte": {
+   "$numberInt": "18"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bf7"
+  },
+  "codigo": {
+   "$numberInt": "3636"
+  },
+  "ativo": true,
+  "descricao": "chapéu tee     80 mm (2120)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "26.46"
+  },
+  "precoprazo": {
+   "$numberDouble": "66.49"
+  },
+  "precovista": {
+   "$numberDouble": "63.17"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bf8"
+  },
+  "codigo": {
+   "$numberInt": "3637"
+  },
+  "ativo": true,
+  "descricao": "braçadeira      80 mm (1874)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "13.06"
+  },
+  "precoprazo": {
+   "$numberDouble": "35.8"
+  },
+  "precovista": {
+   "$numberDouble": "34.01"
+  },
+  "qte": {
+   "$numberInt": "16"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bf9"
+  },
+  "codigo": {
+   "$numberInt": "3681"
+  },
+  "ativo": true,
+  "descricao": "Flextic  1.5 mts x   80mm  [ 370 mm ] (1048)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "49.55"
+  },
+  "precoprazo": {
+   "$numberDouble": "122.18"
+  },
+  "precovista": {
+   "$numberDouble": "116.07"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bfa"
+  },
+  "codigo": {
+   "$numberInt": "3684"
+  },
+  "ativo": true,
+  "descricao": "aro de arremate   80 mm (1639)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "10.28"
+  },
+  "precoprazo": {
+   "$numberDouble": "34.47"
+  },
+  "precovista": {
+   "$numberDouble": "32.75"
+  },
+  "qte": {
+   "$numberInt": "16"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994bfd"
+  },
+  "codigo": {
+   "$numberInt": "3805"
+  },
+  "ativo": true,
+  "descricao": "luva galv. 150 x 150 (1666)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "17.07"
+  },
+  "precoprazo": {
+   "$numberInt": "55"
+  },
+  "precovista": {
+   "$numberDouble": "52.25"
+  },
+  "qte": {
+   "$numberInt": "9"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c03"
+  },
+  "codigo": {
+   "$numberInt": "4004"
+  },
+  "ativo": true,
+  "descricao": "chapéu tee     76 mm",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "12.63"
+  },
+  "precoprazo": {
+   "$numberDouble": "56.69"
+  },
+  "precovista": {
+   "$numberDouble": "53.86"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c04"
+  },
+  "codigo": {
+   "$numberInt": "4213"
+  },
+  "ativo": true,
+  "descricao": "Flextic  1.5 mts x   76  [ 370 mm ]",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "49.67"
+  },
+  "precoprazo": {
+   "$numberDouble": "64.73"
+  },
+  "precovista": {
+   "$numberDouble": "61.49"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c06"
+  },
+  "codigo": {
+   "$numberInt": "4707"
+  },
+  "ativo": true,
+  "descricao": "ampliação D.60/80mm _Westa (1047)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "12.04"
+  },
+  "precoprazo": {
+   "$numberDouble": "42.6"
+  },
+  "precovista": {
+   "$numberDouble": "40.47"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c0c"
+  },
+  "codigo": {
+   "$numberInt": "5264"
+  },
+  "ativo": true,
+  "descricao": "aro de arremate  100 mm (1413)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "10.21"
+  },
+  "precoprazo": {
+   "$numberDouble": "40.79"
+  },
+  "precovista": {
+   "$numberDouble": "38.75"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c0e"
+  },
+  "codigo": {
+   "$numberInt": "5270"
+  },
+  "ativo": true,
+  "descricao": "braçadeira    120 mm (1876)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "15.22"
+  },
+  "precoprazo": {
+   "$numberDouble": "44.14"
+  },
+  "precovista": {
+   "$numberDouble": "41.93"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c0f"
+  },
+  "codigo": {
+   "$numberInt": "5271"
+  },
+  "ativo": true,
+  "descricao": "aro de arremate  120 mm (1667",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "11.15"
+  },
+  "precoprazo": {
+   "$numberDouble": "40.83"
+  },
+  "precovista": {
+   "$numberDouble": "38.79"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c10"
+  },
+  "codigo": {
+   "$numberInt": "5272"
+  },
+  "ativo": true,
+  "descricao": "chapeu tee   100 mm - longo (2656)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "49.51"
+  },
+  "precoprazo": {
+   "$numberDouble": "122.97"
+  },
+  "precovista": {
+   "$numberDouble": "116.82"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c1b"
+  },
+  "codigo": {
+   "$numberInt": "5278"
+  },
+  "ativo": true,
+  "descricao": "kit Chaminé  1.5  x  80  [ 370 mm ] (2355)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "92.22"
+  },
+  "precoprazo": {
+   "$numberDouble": "187.98"
+  },
+  "precovista": {
+   "$numberDouble": "178.58"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c1e"
+  },
+  "codigo": {
+   "$numberInt": "5282"
+  },
+  "ativo": true,
+  "descricao": "kit Chaminé  3.0  x  80 (2255)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "126.71"
+  },
+  "precoprazo": {
+   "$numberDouble": "274.43"
+  },
+  "precovista": {
+   "$numberDouble": "260.71"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c20"
+  },
+  "codigo": {
+   "$numberInt": "5283"
+  },
+  "ativo": true,
+  "descricao": "kit Chaminé  3.0  x 100 [ 740 mm ] (1056)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "145.56"
+  },
+  "precoprazo": {
+   "$numberDouble": "331.54"
+  },
+  "precovista": {
+   "$numberDouble": "314.96"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c23"
+  },
+  "codigo": {
+   "$numberInt": "5290"
+  },
+  "ativo": true,
+  "descricao": "ampliação alumínio   100 x  80 (1424)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "11.79"
+  },
+  "precoprazo": {
+   "$numberDouble": "42.38"
+  },
+  "precovista": {
+   "$numberDouble": "40.26"
+  },
+  "qte": {
+   "$numberInt": "19"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c24"
+  },
+  "codigo": {
+   "$numberInt": "5293"
+  },
+  "ativo": true,
+  "descricao": "braçadeira    100 mm (1875)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "11.74"
+  },
+  "precoprazo": {
+   "$numberDouble": "42.58"
+  },
+  "precovista": {
+   "$numberDouble": "40.45"
+  },
+  "qte": {
+   "$numberInt": "10"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c26"
+  },
+  "codigo": {
+   "$numberInt": "5296"
+  },
+  "ativo": true,
+  "descricao": "braçadeira    150 mm (2870)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "14.92"
+  },
+  "precoprazo": {
+   "$numberDouble": "52.38"
+  },
+  "precovista": {
+   "$numberDouble": "49.76"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c27"
+  },
+  "codigo": {
+   "$numberInt": "5300"
+  },
+  "ativo": true,
+  "descricao": "Compact F +   80 mm  x  5.0 mts (2519)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "130.74"
+  },
+  "precoprazo": {
+   "$numberDouble": "260.79"
+  },
+  "precovista": {
+   "$numberDouble": "247.75"
+  },
+  "qte": {
+   "$numberInt": "5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c29"
+  },
+  "codigo": {
+   "$numberInt": "5625"
+  },
+  "ativo": true,
+  "descricao": "WestaFix   [ braçadeira ]  100 mm (3499)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "6.86"
+  },
+  "precoprazo": {
+   "$numberDouble": "45.71"
+  },
+  "precovista": {
+   "$numberDouble": "43.42"
+  },
+  "qte": {
+   "$numberInt": "14"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c30"
+  },
+  "codigo": {
+   "$numberInt": "6055"
+  },
+  "ativo": true,
+  "descricao": "luva galv.   80 x 80 (3012)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "14.05"
+  },
+  "precoprazo": {
+   "$numberDouble": "41.5"
+  },
+  "precovista": {
+   "$numberDouble": "39.43"
+  },
+  "qte": {
+   "$numberInt": "6"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c32"
+  },
+  "codigo": {
+   "$numberInt": "6156"
+  },
+  "ativo": true,
+  "descricao": "Flextic  1.5 mts x 150 mm  [ 340mm ]",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "85.46"
+  },
+  "precoprazo": {
+   "$numberDouble": "165.93"
+  },
+  "precovista": {
+   "$numberDouble": "157.63"
+  },
+  "qte": {
+   "$numberInt": "6"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c39"
+  },
+  "codigo": {
+   "$numberInt": "6375"
+  },
+  "ativo": true,
+  "descricao": "ventokit  150 new classic bivolt",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "208.74"
+  },
+  "precoprazo": {
+   "$numberDouble": "374.38"
+  },
+  "precovista": {
+   "$numberDouble": "355.66"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c3e"
+  },
+  "codigo": {
+   "$numberInt": "6470"
+  },
+  "ativo": true,
+  "descricao": "aro de arremate  110 mm",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "9.82"
+  },
+  "precoprazo": {
+   "$numberDouble": "40.79"
+  },
+  "precovista": {
+   "$numberDouble": "38.75"
+  },
+  "qte": {
+   "$numberInt": "34"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c41"
+  },
+  "codigo": {
+   "$numberInt": "389"
+  },
+  "ativo": true,
+  "descricao": "união 22 mm aquatherm (10) (709)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "11.23"
+  },
+  "precoprazo": {
+   "$numberDouble": "19.14"
+  },
+  "precovista": {
+   "$numberDouble": "18.18"
+  },
+  "qte": {
+   "$numberInt": "10"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c42"
+  },
+  "codigo": {
+   "$numberInt": "390"
+  },
+  "ativo": true,
+  "descricao": "tee 90 x 22 mm aquath (40) (3115)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "3.65"
+  },
+  "precoprazo": {
+   "$numberDouble": "5.71"
+  },
+  "precovista": {
+   "$numberDouble": "5.42"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c43"
+  },
+  "codigo": {
+   "$numberInt": "391"
+  },
+  "ativo": true,
+  "descricao": "luva 22 mm  aquatherm (40) (3122)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1.74"
+  },
+  "precoprazo": {
+   "$numberDouble": "2.65"
+  },
+  "precovista": {
+   "$numberDouble": "2.52"
+  },
+  "qte": {
+   "$numberInt": "57"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c44"
+  },
+  "codigo": {
+   "$numberInt": "396"
+  },
+  "ativo": true,
+  "descricao": "bucha red.28 x 22 (20) (3120)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "2.41"
+  },
+  "precoprazo": {
+   "$numberDouble": "7.68"
+  },
+  "precovista": {
+   "$numberDouble": "7.3"
+  },
+  "qte": {
+   "$numberInt": "21"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c47"
+  },
+  "codigo": {
+   "$numberInt": "403"
+  },
+  "ativo": true,
+  "descricao": "joelho 90 x 22 mm aquath (40) (379)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "3.3"
+  },
+  "precoprazo": {
+   "$numberDouble": "6.08"
+  },
+  "precovista": {
+   "$numberDouble": "5.78"
+  },
+  "qte": {
+   "$numberInt": "54"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c48"
+  },
+  "codigo": {
+   "$numberInt": "404"
+  },
+  "ativo": true,
+  "descricao": "tubo 22 mm aq. 03 mts (20) (669)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "30.65"
+  },
+  "precoprazo": {
+   "$numberDouble": "70.01"
+  },
+  "precovista": {
+   "$numberDouble": "66.51"
+  },
+  "qte": {
+   "$numberInt": "15"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c52"
+  },
+  "codigo": {
+   "$numberInt": "471"
+  },
+  "ativo": true,
+  "descricao": "joelho 45 x 22 mm aquath (20) (372)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "4.28"
+  },
+  "precoprazo": {
+   "$numberDouble": "8.78"
+  },
+  "precovista": {
+   "$numberDouble": "8.34"
+  },
+  "qte": {
+   "$numberInt": "45"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c55"
+  },
+  "codigo": {
+   "$numberInt": "480"
+  },
+  "ativo": true,
+  "descricao": "joelho 90 x 28 mm aquath (10) (380)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "6.59"
+  },
+  "precoprazo": {
+   "$numberInt": "12"
+  },
+  "precovista": {
+   "$numberDouble": "11.4"
+  },
+  "qte": {
+   "$numberInt": "13"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c5c"
+  },
+  "codigo": {
+   "$numberInt": "488"
+  },
+  "ativo": true,
+  "descricao": "tee 90 x 28 mm aquath (10) (2589)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "7.23"
+  },
+  "precoprazo": {
+   "$numberDouble": "12.59"
+  },
+  "precovista": {
+   "$numberDouble": "11.96"
+  },
+  "qte": {
+   "$numberInt": "10"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c60"
+  },
+  "codigo": {
+   "$numberInt": "505"
+  },
+  "ativo": true,
+  "descricao": "joelho trans.90  22 x 1/2 (20) (395)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "10.62"
+  },
+  "precoprazo": {
+   "$numberDouble": "17.14"
+  },
+  "precovista": {
+   "$numberDouble": "16.28"
+  },
+  "qte": {
+   "$numberInt": "7"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c63"
+  },
+  "codigo": {
+   "$numberInt": "2405"
+  },
+  "ativo": true,
+  "descricao": "conector macho 22x3/4 (10) (2587)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "15.72"
+  },
+  "precoprazo": {
+   "$numberDouble": "24.83"
+  },
+  "precovista": {
+   "$numberDouble": "23.59"
+  },
+  "qte": {
+   "$numberInt": "45"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c69"
+  },
+  "codigo": {
+   "$numberInt": "3837"
+  },
+  "ativo": true,
+  "descricao": "conector macho 22 x 1/2 (10) (3024)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "17.02"
+  },
+  "precoprazo": {
+   "$numberDouble": "33.53"
+  },
+  "precovista": {
+   "$numberDouble": "31.85"
+  },
+  "qte": {
+   "$numberInt": "21"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c6b"
+  },
+  "codigo": {
+   "$numberInt": "4888"
+  },
+  "ativo": true,
+  "descricao": "luva transição 22 x 1/2 (20) (1084)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "7.42"
+  },
+  "precoprazo": {
+   "$numberDouble": "14.32"
+  },
+  "precovista": {
+   "$numberDouble": "13.6"
+  },
+  "qte": {
+   "$numberInt": "49"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c72"
+  },
+  "codigo": {
+   "$numberInt": "5243"
+  },
+  "ativo": true,
+  "descricao": "adesivo 175 grs aquath (8) (1109)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "46.16"
+  },
+  "precoprazo": {
+   "$numberDouble": "78.47"
+  },
+  "precovista": {
+   "$numberDouble": "74.55"
+  },
+  "qte": {
+   "$numberInt": "5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c74"
+  },
+  "codigo": {
+   "$numberInt": "5455"
+  },
+  "ativo": true,
+  "descricao": "luva trans.sold.22 x 25 (20) (1204)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1.63"
+  },
+  "precoprazo": {
+   "$numberDouble": "2.72"
+  },
+  "precovista": {
+   "$numberDouble": "2.58"
+  },
+  "qte": {
+   "$numberInt": "25"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c79"
+  },
+  "codigo": {
+   "$numberInt": "6083"
+  },
+  "ativo": true,
+  "descricao": "fita veda rosca 18 x 50 mts (28)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "11.98"
+  },
+  "precoprazo": {
+   "$numberDouble": "19.87"
+  },
+  "precovista": {
+   "$numberDouble": "18.88"
+  },
+  "qte": {
+   "$numberInt": "20"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c7a"
+  },
+  "codigo": {
+   "$numberInt": "6163"
+  },
+  "ativo": true,
+  "descricao": "luva transição 28 x 1 (10) (2609)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "17.16"
+  },
+  "precoprazo": {
+   "$numberDouble": "31.52"
+  },
+  "precovista": {
+   "$numberDouble": "29.94"
+  },
+  "qte": {
+   "$numberInt": "5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c7e"
+  },
+  "codigo": {
+   "$numberInt": "6519"
+  },
+  "ativo": true,
+  "descricao": "\u001fbucha red. 35 x 28",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "19.96"
+  },
+  "precoprazo": {
+   "$numberDouble": "29.93"
+  },
+  "precovista": {
+   "$numberDouble": "28.43"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c80"
+  },
+  "codigo": {
+   "$numberInt": "3143"
+  },
+  "ativo": true,
+  "descricao": "pressur. agua TP 820  /12 mts m.c.a (2269)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "932.25"
+  },
+  "precoprazo": {
+   "$numberDouble": "1500.74"
+  },
+  "precovista": {
+   "$numberDouble": "1425.7"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c81"
+  },
+  "codigo": {
+   "$numberInt": "3608"
+  },
+  "ativo": true,
+  "descricao": "mini-bomba TP 40  110 V - Bronze (2603)(2523)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "409.92"
+  },
+  "precoprazo": {
+   "$numberDouble": "816.9"
+  },
+  "precovista": {
+   "$numberDouble": "776.06"
+  },
+  "qte": {
+   "$numberInt": "7"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c82"
+  },
+  "codigo": {
+   "$numberInt": "3655"
+  },
+  "ativo": true,
+  "descricao": "pressur. TQC 400 - 110 V (1115)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1099.51"
+  },
+  "precoprazo": {
+   "$numberDouble": "1849.16"
+  },
+  "precovista": {
+   "$numberDouble": "1756.7"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c83"
+  },
+  "codigo": {
+   "$numberInt": "3801"
+  },
+  "ativo": true,
+  "descricao": "mini-bomba TP 40  220 V - Bronze (3110)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "409.92"
+  },
+  "precoprazo": {
+   "$numberDouble": "580.08"
+  },
+  "precovista": {
+   "$numberDouble": "551.08"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c85"
+  },
+  "codigo": {
+   "$numberInt": "5144"
+  },
+  "ativo": true,
+  "descricao": "mini-bomba TP 80  110 V - Bronze (3326)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "610.34"
+  },
+  "precoprazo": {
+   "$numberDouble": "982.67"
+  },
+  "precovista": {
+   "$numberDouble": "933.54"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c88"
+  },
+  "codigo": {
+   "$numberInt": "5551"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GN      KO 21 D    BR   21(3553)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1513.52"
+  },
+  "precoprazo": {
+   "$numberDouble": "2670.48"
+  },
+  "precovista": {
+   "$numberDouble": "2536.96"
+  },
+  "qte": {
+   "$numberInt": "8"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c89"
+  },
+  "codigo": {
+   "$numberInt": "5552"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GLP/KO 21 Di  Inox   21 lts(2973)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1860.59"
+  },
+  "precoprazo": {
+   "$numberDouble": "2684.42"
+  },
+  "precovista": {
+   "$numberDouble": "2550.2"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c8a"
+  },
+  "codigo": {
+   "$numberInt": "5553"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GLP/KO 16 D  BR   16 lts(3575)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1344.18"
+  },
+  "precoprazo": {
+   "$numberDouble": "2004.36"
+  },
+  "precovista": {
+   "$numberDouble": "1904.14"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c8d"
+  },
+  "codigo": {
+   "$numberInt": "5554"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GN      KO 16 D  BR   16lts(3552)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1412.49"
+  },
+  "precoprazo": {
+   "$numberDouble": "2106.16"
+  },
+  "precovista": {
+   "$numberDouble": "2000.85"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c8e"
+  },
+  "codigo": {
+   "$numberInt": "5581"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GLP/KO 15 DI Inox(1725)",
+  "e_max": {
+   "$numberInt": "5"
+  },
+  "e_min": {
+   "$numberInt": "1"
+  },
+  "precocusto": {
+   "$numberDouble": "1262.05"
+  },
+  "precoprazo": {
+   "$numberDouble": "2030.41"
+  },
+  "precovista": {
+   "$numberDouble": "1928.89"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c8f"
+  },
+  "codigo": {
+   "$numberInt": "5588"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GN      KO 21 Di  Inox (3556)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1673.59"
+  },
+  "precoprazo": {
+   "$numberDouble": "2482.11"
+  },
+  "precovista": {
+   "$numberInt": "2358"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c90"
+  },
+  "codigo": {
+   "$numberInt": "5589"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GN      KO 16 Di  Inox   16 (2800)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1562.41"
+  },
+  "precoprazo": {
+   "$numberInt": "2208"
+  },
+  "precovista": {
+   "$numberDouble": "2097.6"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c91"
+  },
+  "codigo": {
+   "$numberInt": "5926"
+  },
+  "ativo": true,
+  "descricao": "mini-bomba TP 80  220 V Bronze (3354)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "610.34"
+  },
+  "precoprazo": {
+   "$numberDouble": "924.91"
+  },
+  "precovista": {
+   "$numberDouble": "878.66"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c97"
+  },
+  "codigo": {
+   "$numberInt": "5987"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GN      KO 38 D  BR   38 Prime(3590)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "3525.88"
+  },
+  "precoprazo": {
+   "$numberDouble": "5175.33"
+  },
+  "precovista": {
+   "$numberDouble": "4916.56"
+  },
+  "qte": {
+   "$numberInt": "-2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c99"
+  },
+  "codigo": {
+   "$numberInt": "5990"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GLP/KO 38 D  BR   38 Prime(3245)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "3525.88"
+  },
+  "precoprazo": {
+   "$numberDouble": "4926.36"
+  },
+  "precovista": {
+   "$numberDouble": "4680.04"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994c9b"
+  },
+  "codigo": {
+   "$numberInt": "6008"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GN      KO 38 Di  BR   38 Prime(3591)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "3614.03"
+  },
+  "precoprazo": {
+   "$numberDouble": "5791.48"
+  },
+  "precovista": {
+   "$numberDouble": "5501.91"
+  },
+  "qte": {
+   "$numberInt": "-2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca0"
+  },
+  "codigo": {
+   "$numberInt": "6080"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GN      KO 33 D  BR   33 Prime(3096)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "2844.85"
+  },
+  "precoprazo": {
+   "$numberDouble": "4996.64"
+  },
+  "precovista": {
+   "$numberDouble": "4746.81"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca4"
+  },
+  "codigo": {
+   "$numberInt": "6147"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GN      KO 46 D  BR  46 Prime(3394)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "4944.77"
+  },
+  "precoprazo": {
+   "$numberDouble": "7356.83"
+  },
+  "precovista": {
+   "$numberDouble": "6988.99"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ca6"
+  },
+  "codigo": {
+   "$numberInt": "6171"
+  },
+  "ativo": true,
+  "descricao": "bomba silent press SP 200 bivolt (3273)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "844.31"
+  },
+  "precoprazo": {
+   "$numberDouble": "2626.29"
+  },
+  "precovista": {
+   "$numberDouble": "2494.98"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cab"
+  },
+  "codigo": {
+   "$numberInt": "6217"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GLP/KO 46 Di  BR  46 Prime(3304)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "5039.22"
+  },
+  "precoprazo": {
+   "$numberDouble": "7872.27"
+  },
+  "precovista": {
+   "$numberDouble": "7478.66"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cac"
+  },
+  "codigo": {
+   "$numberInt": "6270"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GLP/KO 46 D  BR  46 Prime(3443)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "4944.77"
+  },
+  "precoprazo": {
+   "$numberDouble": "8057.6"
+  },
+  "precovista": {
+   "$numberDouble": "7654.72"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cae"
+  },
+  "codigo": {
+   "$numberInt": "6340"
+  },
+  "ativo": true,
+  "descricao": "Aquec. GLP/KO 16 DI Inox (3580)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1561.32"
+  },
+  "precoprazo": {
+   "$numberDouble": "2019.28"
+  },
+  "precovista": {
+   "$numberDouble": "1918.32"
+  },
+  "qte": {
+   "$numberInt": "-2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cb0"
+  },
+  "codigo": {
+   "$numberInt": "6361"
+  },
+  "ativo": true,
+  "descricao": "valv.ret.vertical 3/4 metal",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "30.69"
+  },
+  "precoprazo": {
+   "$numberDouble": "117.07"
+  },
+  "precovista": {
+   "$numberDouble": "111.22"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994cb2"
+  },
+  "codigo": {
+   "$numberInt": "6384"
+  },
+  "ativo": true,
+  "descricao": "bomba smartPress 37  220 V",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1766.82"
+  },
+  "precoprazo": {
+   "$numberDouble": "2556.83"
+  },
+  "precovista": {
+   "$numberDouble": "2428.99"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994d99"
+  },
+  "codigo": {
+   "$numberInt": "1405"
+  },
+  "ativo": true,
+  "descricao": "cotovelo  90 º  22 x 1/2 - bolsa x f  - 707-3",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "22"
+  },
+  "precoprazo": {
+   "$numberDouble": "30.8"
+  },
+  "precovista": {
+   "$numberDouble": "29.26"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dbb"
+  },
+  "codigo": {
+   "$numberInt": "2665"
+  },
+  "ativo": true,
+  "descricao": "conector  22 x 3/4  - bolsa x macho - 604",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "19"
+  },
+  "precoprazo": {
+   "$numberDouble": "26.74"
+  },
+  "precovista": {
+   "$numberDouble": "25.4"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dc0"
+  },
+  "codigo": {
+   "$numberInt": "2761"
+  },
+  "ativo": true,
+  "descricao": "luva   22 mm -  600",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "8"
+  },
+  "precoprazo": {
+   "$numberDouble": "8.96"
+  },
+  "precovista": {
+   "$numberDouble": "8.51"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dda"
+  },
+  "codigo": {
+   "$numberInt": "4858"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  20 l/glp   M 200 (3011)",
+  "e_max": {
+   "$numberInt": "1"
+  },
+  "e_min": {
+   "$numberInt": "1"
+  },
+  "precocusto": {
+   "$numberDouble": "1704.66"
+  },
+  "precoprazo": {
+   "$numberDouble": "2691.49"
+  },
+  "precovista": {
+   "$numberDouble": "2556.92"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ddc"
+  },
+  "codigo": {
+   "$numberInt": "4978"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  20 l/gn    M 200 (1697)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1682.14"
+  },
+  "precoprazo": {
+   "$numberDouble": "2342.74"
+  },
+  "precovista": {
+   "$numberDouble": "2225.6"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de0"
+  },
+  "codigo": {
+   "$numberInt": "5452"
+  },
+  "ativo": true,
+  "descricao": "Smart Start  RSC7 BR",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1565.84"
+  },
+  "precoprazo": {
+   "$numberDouble": "2640.13"
+  },
+  "precovista": {
+   "$numberDouble": "2508.12"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de2"
+  },
+  "codigo": {
+   "$numberInt": "5824"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  21 l/glp   E 211 (3094) BR",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "2051.94"
+  },
+  "precoprazo": {
+   "$numberDouble": "3283.1"
+  },
+  "precovista": {
+   "$numberDouble": "3118.95"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de3"
+  },
+  "codigo": {
+   "$numberInt": "5838"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  21 l/gn    E 211 (2584)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "2151.55"
+  },
+  "precoprazo": {
+   "$numberDouble": "2848.54"
+  },
+  "precovista": {
+   "$numberDouble": "2706.11"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994de9"
+  },
+  "codigo": {
+   "$numberInt": "6003"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  15 l/gn    E 15 (3293)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1445.28"
+  },
+  "precoprazo": {
+   "$numberDouble": "2180.35"
+  },
+  "precovista": {
+   "$numberDouble": "2071.33"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dea"
+  },
+  "codigo": {
+   "$numberInt": "6021"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  27 l/gn   E 271(1346)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "3169.37"
+  },
+  "precoprazo": {
+   "$numberDouble": "3991.66"
+  },
+  "precovista": {
+   "$numberDouble": "3792.08"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994deb"
+  },
+  "codigo": {
+   "$numberInt": "6023"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  27 l/glp  E 271(1832)(1696)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "2923.22"
+  },
+  "precoprazo": {
+   "$numberDouble": "4273.75"
+  },
+  "precovista": {
+   "$numberDouble": "4060.06"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dec"
+  },
+  "codigo": {
+   "$numberInt": "6046"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  33 l/glp  E 331",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "3687.68"
+  },
+  "precoprazo": {
+   "$numberDouble": "4063.38"
+  },
+  "precovista": {
+   "$numberDouble": "3860.21"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994ded"
+  },
+  "codigo": {
+   "$numberInt": "6047"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  33 l/gn   E 331 (2962)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "3716.25"
+  },
+  "precoprazo": {
+   "$numberDouble": "5564.34"
+  },
+  "precovista": {
+   "$numberDouble": "5286.12"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994def"
+  },
+  "codigo": {
+   "$numberInt": "6094"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  15 l/glp   E 15 (3106)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1367.05"
+  },
+  "precoprazo": {
+   "$numberDouble": "1846.88"
+  },
+  "precovista": {
+   "$numberDouble": "1754.54"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994df9"
+  },
+  "codigo": {
+   "$numberInt": "6418"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  35 l/glp   E 351  FEA",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "4005.14"
+  },
+  "precoprazo": {
+   "$numberDouble": "6057.14"
+  },
+  "precovista": {
+   "$numberDouble": "5754.28"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994dfb"
+  },
+  "codigo": {
+   "$numberInt": "6440"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  35 l/GN   E 351  FEA",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "4155.34"
+  },
+  "precoprazo": {
+   "$numberDouble": "5761.66"
+  },
+  "precovista": {
+   "$numberDouble": "5473.58"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e02"
+  },
+  "codigo": {
+   "$numberInt": "6509"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  35 l/GN   E 351  FEA/Prata",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "4185.65"
+  },
+  "precoprazo": {
+   "$numberDouble": "6407.39"
+  },
+  "precovista": {
+   "$numberDouble": "6087.02"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e04"
+  },
+  "codigo": {
+   "$numberInt": "6515"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  35 l/GLP   E 351  FEA/Prata",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "3760.21"
+  },
+  "precoprazo": {
+   "$numberDouble": "6016.34"
+  },
+  "precovista": {
+   "$numberDouble": "5715.52"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e08"
+  },
+  "codigo": {
+   "$numberInt": "6533"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  27 l/glp  E 271 Prata",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "2923.22"
+  },
+  "precoprazo": {
+   "$numberDouble": "4677.15"
+  },
+  "precovista": {
+   "$numberDouble": "4443.29"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e09"
+  },
+  "codigo": {
+   "$numberInt": "1856"
+  },
+  "ativo": true,
+  "descricao": "Flange p/tubo cobre 3/8   5/8\"TC 3/8\"(20)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "4.37"
+  },
+  "precoprazo": {
+   "$numberDouble": "10.22"
+  },
+  "precovista": {
+   "$numberDouble": "9.71"
+  },
+  "qte": {
+   "$numberInt": "25"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e0a"
+  },
+  "codigo": {
+   "$numberInt": "1857"
+  },
+  "ativo": true,
+  "descricao": "união red. 1/2 (E) x 3/8 (E)10)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "10.85"
+  },
+  "precoprazo": {
+   "$numberDouble": "18.43"
+  },
+  "precovista": {
+   "$numberDouble": "17.51"
+  },
+  "qte": {
+   "$numberInt": "38"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e0c"
+  },
+  "codigo": {
+   "$numberInt": "2991"
+  },
+  "ativo": true,
+  "descricao": "conj. 2 P-13   reg. 5 kgs",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "114.3"
+  },
+  "precoprazo": {
+   "$numberDouble": "380.27"
+  },
+  "precovista": {
+   "$numberDouble": "361.26"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e0d"
+  },
+  "codigo": {
+   "$numberInt": "4830"
+  },
+  "ativo": true,
+  "descricao": "união 3/4 bsp(i)tc 3/8 (e)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "25"
+  },
+  "precoprazo": {
+   "$numberDouble": "46.07"
+  },
+  "precovista": {
+   "$numberDouble": "43.77"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e22"
+  },
+  "codigo": {
+   "$numberInt": "3874"
+  },
+  "ativo": true,
+  "descricao": "regulador gás 5 kg 506/18 BT",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "70"
+  },
+  "precoprazo": {
+   "$numberInt": "135"
+  },
+  "precovista": {
+   "$numberDouble": "128.25"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e23"
+  },
+  "codigo": {
+   "$numberInt": "3875"
+  },
+  "ativo": true,
+  "descricao": "registro bico c/rosca 1/2\"",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "35"
+  },
+  "precoprazo": {
+   "$numberDouble": "69.7"
+  },
+  "precovista": {
+   "$numberDouble": "66.22"
+  },
+  "qte": {
+   "$numberInt": "-5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e25"
+  },
+  "codigo": {
+   "$numberInt": "4331"
+  },
+  "ativo": true,
+  "descricao": "registro 3/8\"x 3/8 SAE 76517/8 BT (2058)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "20"
+  },
+  "precoprazo": {
+   "$numberDouble": "36.96"
+  },
+  "precovista": {
+   "$numberDouble": "35.11"
+  },
+  "qte": {
+   "$numberInt": "10"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e28"
+  },
+  "codigo": {
+   "$numberInt": "5090"
+  },
+  "ativo": true,
+  "descricao": "borboleta de zamac 76514/13  P 13 (1099)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "15"
+  },
+  "precoprazo": {
+   "$numberDouble": "26.57"
+  },
+  "precovista": {
+   "$numberDouble": "25.24"
+  },
+  "qte": {
+   "$numberInt": "7"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e2b"
+  },
+  "codigo": {
+   "$numberInt": "5788"
+  },
+  "ativo": true,
+  "descricao": "regulador gás 4 M³  506/75 GN (2002)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "65"
+  },
+  "precoprazo": {
+   "$numberInt": "135"
+  },
+  "precovista": {
+   "$numberDouble": "128.25"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e3d"
+  },
+  "codigo": {
+   "$numberInt": "3577"
+  },
+  "ativo": true,
+  "descricao": "medidor gás G 1.6 (2076)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "380"
+  },
+  "precoprazo": {
+   "$numberInt": "520"
+  },
+  "precovista": {
+   "$numberInt": "494"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e6b"
+  },
+  "codigo": {
+   "$numberInt": "3849"
+  },
+  "ativo": true,
+  "descricao": "conj.bomba + pressostato 1.0 CV x 110 V",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "638.57"
+  },
+  "precoprazo": {
+   "$numberInt": "1594"
+  },
+  "precovista": {
+   "$numberDouble": "1514.3"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994e70"
+  },
+  "codigo": {
+   "$numberInt": "5979"
+  },
+  "ativo": true,
+  "descricao": "pressostato eletronico 110 V",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "299"
+  },
+  "precoprazo": {
+   "$numberDouble": "780.4"
+  },
+  "precovista": {
+   "$numberDouble": "741.38"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f27"
+  },
+  "codigo": {
+   "$numberInt": "5126"
+  },
+  "ativo": true,
+  "descricao": "diafragma nitrilica",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "24.45"
+  },
+  "precoprazo": {
+   "$numberInt": "80"
+  },
+  "precovista": {
+   "$numberInt": "76"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f4b"
+  },
+  "codigo": {
+   "$numberInt": "6485"
+  },
+  "ativo": true,
+  "descricao": "sensor de vazão todos",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "140.45"
+  },
+  "precoprazo": {
+   "$numberDouble": "365.96"
+  },
+  "precovista": {
+   "$numberDouble": "347.66"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f4c"
+  },
+  "codigo": {
+   "$numberInt": "6486"
+  },
+  "ativo": true,
+  "descricao": "placa eletronica E15",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "267.96"
+  },
+  "precoprazo": {
+   "$numberDouble": "658.05"
+  },
+  "precovista": {
+   "$numberDouble": "625.15"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f5e"
+  },
+  "codigo": {
+   "$numberInt": "4426"
+  },
+  "ativo": true,
+  "descricao": "fluxostato KO 2200 SE",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "58.39"
+  },
+  "precoprazo": {
+   "$numberDouble": "370.85"
+  },
+  "precovista": {
+   "$numberDouble": "352.31"
+  },
+  "qte": {
+   "$numberInt": "10"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f6e"
+  },
+  "codigo": {
+   "$numberInt": "5115"
+  },
+  "ativo": true,
+  "descricao": "placa contr eletr. KO 4000 SE",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "397.96"
+  },
+  "precoprazo": {
+   "$numberInt": "1143"
+  },
+  "precovista": {
+   "$numberDouble": "1085.85"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f6f"
+  },
+  "codigo": {
+   "$numberInt": "5195"
+  },
+  "ativo": true,
+  "descricao": "chave pressão TP 820g1",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "105.65"
+  },
+  "precoprazo": {
+   "$numberInt": "271"
+  },
+  "precovista": {
+   "$numberDouble": "257.45"
+  },
+  "qte": {
+   "$numberInt": "7"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f84"
+  },
+  "codigo": {
+   "$numberInt": "5645"
+  },
+  "ativo": true,
+  "descricao": "painel digital ko 15 D/Di",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "62.42"
+  },
+  "precoprazo": {
+   "$numberInt": "250"
+  },
+  "precovista": {
+   "$numberDouble": "237.5"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f85"
+  },
+  "codigo": {
+   "$numberInt": "5688"
+  },
+  "ativo": true,
+  "descricao": "diafragma agua 600S/1200S/1800S",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1.91"
+  },
+  "precoprazo": {
+   "$numberInt": "82"
+  },
+  "precovista": {
+   "$numberDouble": "77.9"
+  },
+  "qte": {
+   "$numberInt": "6"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7906216b0dccf2994f91"
+  },
+  "codigo": {
+   "$numberInt": "5954"
+  },
+  "ativo": true,
+  "descricao": "fluxostato KO 15-16-20-21D.DI PRIME",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "136.98"
+  },
+  "precoprazo": {
+   "$numberDouble": "470.5"
+  },
+  "precovista": {
+   "$numberDouble": "446.98"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995165"
+  },
+  "codigo": {
+   "$numberInt": "5187"
+  },
+  "ativo": true,
+  "descricao": "pressurizador Rowa  MaxPress 30 E 220",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "4495.57"
+  },
+  "precoprazo": {
+   "$numberDouble": "6670.2"
+  },
+  "precovista": {
+   "$numberDouble": "6336.69"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995172"
+  },
+  "codigo": {
+   "$numberInt": "6527"
+  },
+  "ativo": true,
+  "descricao": "pressurizador Rowa  MaxPress 20 E 220",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "2230.18"
+  },
+  "precoprazo": {
+   "$numberDouble": "3345.27"
+  },
+  "precovista": {
+   "$numberDouble": "3178.01"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951b5"
+  },
+  "codigo": {
+   "$numberInt": "5184"
+  },
+  "ativo": true,
+  "descricao": "engate agua 30 cm 1/2 x 1/2 (3581)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "32.37"
+  },
+  "precoprazo": {
+   "$numberDouble": "63.4"
+  },
+  "precovista": {
+   "$numberDouble": "60.23"
+  },
+  "qte": {
+   "$numberInt": "11"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951b6"
+  },
+  "codigo": {
+   "$numberInt": "5185"
+  },
+  "ativo": true,
+  "descricao": "engate agua 40 cm 1/2 x 1/2 (3582)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "35.31"
+  },
+  "precoprazo": {
+   "$numberDouble": "68.04"
+  },
+  "precovista": {
+   "$numberDouble": "64.64"
+  },
+  "qte": {
+   "$numberInt": "17"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951b7"
+  },
+  "codigo": {
+   "$numberInt": "5186"
+  },
+  "ativo": true,
+  "descricao": "engate agua 30 cm 3/4 F x 1/2 M (3530)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "40.05"
+  },
+  "precoprazo": {
+   "$numberDouble": "79.53"
+  },
+  "precovista": {
+   "$numberDouble": "75.55"
+  },
+  "qte": {
+   "$numberInt": "13"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ba"
+  },
+  "codigo": {
+   "$numberInt": "5217"
+  },
+  "ativo": true,
+  "descricao": "engate agua 40 cm 3/4 F x 1/2 M (3537)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "44.53"
+  },
+  "precoprazo": {
+   "$numberDouble": "99.41"
+  },
+  "precovista": {
+   "$numberDouble": "94.44"
+  },
+  "qte": {
+   "$numberInt": "10"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951bb"
+  },
+  "codigo": {
+   "$numberInt": "5444"
+  },
+  "ativo": true,
+  "descricao": "engate agua 40 cm  3/4 x 3/4",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "43.79"
+  },
+  "precoprazo": {
+   "$numberDouble": "83.67"
+  },
+  "precovista": {
+   "$numberDouble": "79.49"
+  },
+  "qte": {
+   "$numberInt": "5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951bc"
+  },
+  "codigo": {
+   "$numberInt": "6310"
+  },
+  "ativo": true,
+  "descricao": "engate flex 30 cm gás 1/2 M x 3/4 F(3531)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "47.59"
+  },
+  "precoprazo": {
+   "$numberDouble": "113.55"
+  },
+  "precovista": {
+   "$numberDouble": "107.87"
+  },
+  "qte": {
+   "$numberInt": "-5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951bd"
+  },
+  "codigo": {
+   "$numberInt": "6311"
+  },
+  "ativo": true,
+  "descricao": "engate flex 40 cm gás 1/2 M x 3/4 F(3538)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "52.87"
+  },
+  "precoprazo": {
+   "$numberDouble": "115.1"
+  },
+  "precovista": {
+   "$numberDouble": "109.35"
+  },
+  "qte": {
+   "$numberInt": "9"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951bf"
+  },
+  "codigo": {
+   "$numberInt": "6348"
+  },
+  "ativo": true,
+  "descricao": "prolongador 40 mm 1/2 x 1/2 MF",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "14.08"
+  },
+  "precoprazo": {
+   "$numberDouble": "31.6"
+  },
+  "precovista": {
+   "$numberDouble": "30.02"
+  },
+  "qte": {
+   "$numberInt": "9"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c0"
+  },
+  "codigo": {
+   "$numberInt": "6380"
+  },
+  "ativo": true,
+  "descricao": "engate flex 30 cm gás 1/2 M x 1/2 F",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "45.51"
+  },
+  "precoprazo": {
+   "$numberDouble": "100.8"
+  },
+  "precovista": {
+   "$numberDouble": "95.76"
+  },
+  "qte": {
+   "$numberInt": "21"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c1"
+  },
+  "codigo": {
+   "$numberInt": "6381"
+  },
+  "ativo": true,
+  "descricao": "engate flex 40 cm gás 1/2 M x 1/2 F",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "50.77"
+  },
+  "precoprazo": {
+   "$numberDouble": "109.54"
+  },
+  "precovista": {
+   "$numberDouble": "104.06"
+  },
+  "qte": {
+   "$numberInt": "20"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c3"
+  },
+  "codigo": {
+   "$numberInt": "6432"
+  },
+  "ativo": true,
+  "descricao": "engate agua 30 cm  macho 3/4 x femea 1/2",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "40.06"
+  },
+  "precoprazo": {
+   "$numberDouble": "85.68"
+  },
+  "precovista": {
+   "$numberDouble": "81.4"
+  },
+  "qte": {
+   "$numberInt": "9"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c7"
+  },
+  "codigo": {
+   "$numberInt": "6488"
+  },
+  "ativo": true,
+  "descricao": "bucha red. F 1/2 x M 3/4",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "6.93"
+  },
+  "precoprazo": {
+   "$numberDouble": "17.79"
+  },
+  "precovista": {
+   "$numberDouble": "16.9"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c8"
+  },
+  "codigo": {
+   "$numberInt": "6531"
+  },
+  "ativo": true,
+  "descricao": "bucha red. 1 M x 1/2 F metal",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "15.34"
+  },
+  "precoprazo": {
+   "$numberDouble": "15.34"
+  },
+  "precovista": {
+   "$numberDouble": "14.57"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951c9"
+  },
+  "codigo": {
+   "$numberInt": "5698"
+  },
+  "ativo": true,
+  "descricao": "canopla sextavada 1/2",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1.44"
+  },
+  "precoprazo": {
+   "$numberInt": "10"
+  },
+  "precovista": {
+   "$numberDouble": "9.5"
+  },
+  "qte": {
+   "$numberInt": "99"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ca"
+  },
+  "codigo": {
+   "$numberInt": "5699"
+  },
+  "ativo": true,
+  "descricao": "adaptador latão M 1/2 x F 3/4 (1618)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "13.56"
+  },
+  "precoprazo": {
+   "$numberDouble": "25.91"
+  },
+  "precovista": {
+   "$numberDouble": "24.61"
+  },
+  "qte": {
+   "$numberInt": "38"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951cb"
+  },
+  "codigo": {
+   "$numberInt": "5720"
+  },
+  "ativo": true,
+  "descricao": "engate agua 30 cm 3/4 x 3/4 (3080)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "39.26"
+  },
+  "precoprazo": {
+   "$numberDouble": "87.34"
+  },
+  "precovista": {
+   "$numberDouble": "82.97"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951cc"
+  },
+  "codigo": {
+   "$numberInt": "6004"
+  },
+  "ativo": true,
+  "descricao": "ampliação 60 x 80 (2866)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "12.05"
+  },
+  "precoprazo": {
+   "$numberDouble": "26.25"
+  },
+  "precovista": {
+   "$numberDouble": "24.94"
+  },
+  "qte": {
+   "$numberInt": "49"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951cf"
+  },
+  "codigo": {
+   "$numberInt": "6005"
+  },
+  "ativo": true,
+  "descricao": "ampliação 60 x 100 (2865)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "12.97"
+  },
+  "precoprazo": {
+   "$numberDouble": "31.14"
+  },
+  "precovista": {
+   "$numberDouble": "29.58"
+  },
+  "qte": {
+   "$numberInt": "50"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d0"
+  },
+  "codigo": {
+   "$numberInt": "6006"
+  },
+  "ativo": true,
+  "descricao": "ampliação 80 x 100 - Distak (2867)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "12.78"
+  },
+  "precoprazo": {
+   "$numberDouble": "25.69"
+  },
+  "precovista": {
+   "$numberDouble": "24.41"
+  },
+  "qte": {
+   "$numberInt": "42"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d1"
+  },
+  "codigo": {
+   "$numberInt": "6027"
+  },
+  "ativo": true,
+  "descricao": "ampliação 100 x 130 (3349)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "8.83"
+  },
+  "precoprazo": {
+   "$numberDouble": "28.89"
+  },
+  "precovista": {
+   "$numberDouble": "27.45"
+  },
+  "qte": {
+   "$numberInt": "32"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d2"
+  },
+  "codigo": {
+   "$numberInt": "6028"
+  },
+  "ativo": true,
+  "descricao": "ampliação 80 x 130 - Distak",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "14.86"
+  },
+  "precoprazo": {
+   "$numberDouble": "32.74"
+  },
+  "precovista": {
+   "$numberDouble": "31.1"
+  },
+  "qte": {
+   "$numberInt": "16"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d3"
+  },
+  "codigo": {
+   "$numberInt": "6151"
+  },
+  "ativo": true,
+  "descricao": "chapeu ant retorno 300 x 100",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "110.52"
+  },
+  "precoprazo": {
+   "$numberDouble": "229.88"
+  },
+  "precovista": {
+   "$numberDouble": "218.39"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d4"
+  },
+  "codigo": {
+   "$numberInt": "6152"
+  },
+  "ativo": true,
+  "descricao": "junção Y 100",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "122.58"
+  },
+  "precoprazo": {
+   "$numberDouble": "245.16"
+  },
+  "precovista": {
+   "$numberDouble": "232.9"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d8"
+  },
+  "codigo": {
+   "$numberInt": "6496"
+  },
+  "ativo": true,
+  "descricao": "engate agua 40 cm 3/4 x 3/4 inox",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "42.17"
+  },
+  "precoprazo": {
+   "$numberDouble": "96.99"
+  },
+  "precovista": {
+   "$numberDouble": "92.14"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951d9"
+  },
+  "codigo": {
+   "$numberInt": "6512"
+  },
+  "ativo": true,
+  "descricao": "engate agua 30 cm 3/4 x 3/4 inox",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "40.54"
+  },
+  "precoprazo": {
+   "$numberDouble": "81.08"
+  },
+  "precovista": {
+   "$numberDouble": "77.03"
+  },
+  "qte": {
+   "$numberInt": "5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ec"
+  },
+  "codigo": {
+   "$numberInt": "5514"
+  },
+  "ativo": true,
+  "descricao": "tubo flexivel   80 x 1.5 (1261)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "20.91"
+  },
+  "precoprazo": {
+   "$numberDouble": "116.5"
+  },
+  "precovista": {
+   "$numberDouble": "110.68"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ed"
+  },
+  "codigo": {
+   "$numberInt": "5515"
+  },
+  "ativo": true,
+  "descricao": "tubo flexivel   80 x 3.0 mts (3020)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "41.97"
+  },
+  "precoprazo": {
+   "$numberDouble": "189.63"
+  },
+  "precovista": {
+   "$numberDouble": "180.15"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ef"
+  },
+  "codigo": {
+   "$numberInt": "5516"
+  },
+  "ativo": true,
+  "descricao": "tubo flexivel 100 x  1.5 (1263)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "26.48"
+  },
+  "precoprazo": {
+   "$numberDouble": "121.65"
+  },
+  "precovista": {
+   "$numberDouble": "115.57"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f0"
+  },
+  "codigo": {
+   "$numberInt": "5517"
+  },
+  "ativo": true,
+  "descricao": "tubo flexivel 100 x  3.0 (1264)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "52.92"
+  },
+  "precoprazo": {
+   "$numberDouble": "217.37"
+  },
+  "precovista": {
+   "$numberDouble": "206.5"
+  },
+  "qte": {
+   "$numberInt": "5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f1"
+  },
+  "codigo": {
+   "$numberInt": "5518"
+  },
+  "ativo": true,
+  "descricao": "tubo flexivel 100 x  5.0  (1265)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "86.6"
+  },
+  "precoprazo": {
+   "$numberDouble": "289.28"
+  },
+  "precovista": {
+   "$numberDouble": "274.82"
+  },
+  "qte": {
+   "$numberInt": "6"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f3"
+  },
+  "codigo": {
+   "$numberInt": "5520"
+  },
+  "ativo": true,
+  "descricao": "tubo flexivel 126 x 3.0 (1260)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "63.9"
+  },
+  "precoprazo": {
+   "$numberDouble": "214.35"
+  },
+  "precovista": {
+   "$numberDouble": "203.63"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f7"
+  },
+  "codigo": {
+   "$numberInt": "5521"
+  },
+  "ativo": true,
+  "descricao": "tubo flexivel 126 x 5.0 (888)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "104.65"
+  },
+  "precoprazo": {
+   "$numberDouble": "335.95"
+  },
+  "precovista": {
+   "$numberDouble": "319.15"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951f9"
+  },
+  "codigo": {
+   "$numberInt": "5523"
+  },
+  "ativo": true,
+  "descricao": "tubo flexivel 130 x 3.0 (3053)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "67.5"
+  },
+  "precoprazo": {
+   "$numberDouble": "327.07"
+  },
+  "precovista": {
+   "$numberDouble": "310.72"
+  },
+  "qte": {
+   "$numberInt": "5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951fd"
+  },
+  "codigo": {
+   "$numberInt": "5526"
+  },
+  "ativo": true,
+  "descricao": "tubo flexivel 150 x 3.0 (1273)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "76.11"
+  },
+  "precoprazo": {
+   "$numberDouble": "353.32"
+  },
+  "precovista": {
+   "$numberDouble": "335.65"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951fe"
+  },
+  "codigo": {
+   "$numberInt": "5527"
+  },
+  "ativo": true,
+  "descricao": "tubo flexivel 150 x 5.0 (1270)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "124.05"
+  },
+  "precoprazo": {
+   "$numberDouble": "427.27"
+  },
+  "precovista": {
+   "$numberDouble": "405.91"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29951ff"
+  },
+  "codigo": {
+   "$numberInt": "5528"
+  },
+  "ativo": true,
+  "descricao": "fita aluminizada rolo 50 mts (1259)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "11.04"
+  },
+  "precoprazo": {
+   "$numberDouble": "54.39"
+  },
+  "precovista": {
+   "$numberDouble": "51.67"
+  },
+  "qte": {
+   "$numberInt": "13"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995206"
+  },
+  "codigo": {
+   "$numberInt": "5556"
+  },
+  "ativo": true,
+  "descricao": "exaustor AR-KIT 11  completo(3231)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "108.73"
+  },
+  "precoprazo": {
+   "$numberDouble": "160.06"
+  },
+  "precovista": {
+   "$numberDouble": "152.06"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995208"
+  },
+  "codigo": {
+   "$numberInt": "5557"
+  },
+  "ativo": true,
+  "descricao": "exaustor AR-KIT 16  compl.(3370)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "92"
+  },
+  "precoprazo": {
+   "$numberDouble": "183.8"
+  },
+  "precovista": {
+   "$numberDouble": "174.61"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995214"
+  },
+  "codigo": {
+   "$numberInt": "5567"
+  },
+  "ativo": true,
+  "descricao": "grade de encaixe redonda 150 (1869)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "14.96"
+  },
+  "precoprazo": {
+   "$numberInt": "53"
+  },
+  "precovista": {
+   "$numberDouble": "50.35"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995216"
+  },
+  "codigo": {
+   "$numberInt": "5569"
+  },
+  "ativo": true,
+  "descricao": "grade auto fechante 125",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "19.24"
+  },
+  "precoprazo": {
+   "$numberDouble": "55.8"
+  },
+  "precovista": {
+   "$numberDouble": "53.01"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995217"
+  },
+  "codigo": {
+   "$numberInt": "5570"
+  },
+  "ativo": true,
+  "descricao": "grade auto fechante 150 (1871)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "15.76"
+  },
+  "precoprazo": {
+   "$numberDouble": "66.6"
+  },
+  "precovista": {
+   "$numberDouble": "63.27"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299521f"
+  },
+  "codigo": {
+   "$numberInt": "5576"
+  },
+  "ativo": true,
+  "descricao": "adaptador de tubo 150 p/125mm (1718)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "16.23"
+  },
+  "precoprazo": {
+   "$numberDouble": "40.28"
+  },
+  "precovista": {
+   "$numberDouble": "38.27"
+  },
+  "qte": {
+   "$numberInt": "18"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995222"
+  },
+  "codigo": {
+   "$numberInt": "5610"
+  },
+  "ativo": true,
+  "descricao": "grade de superficie - S 2525 (3410)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "11.2"
+  },
+  "precoprazo": {
+   "$numberDouble": "89.03"
+  },
+  "precovista": {
+   "$numberDouble": "84.58"
+  },
+  "qte": {
+   "$numberInt": "14"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995223"
+  },
+  "codigo": {
+   "$numberInt": "5666"
+  },
+  "ativo": true,
+  "descricao": "exaustor sonora 10 22-17 watts (1873)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "115.71"
+  },
+  "precoprazo": {
+   "$numberDouble": "233.2"
+  },
+  "precovista": {
+   "$numberDouble": "221.54"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995225"
+  },
+  "codigo": {
+   "$numberInt": "5864"
+  },
+  "ativo": true,
+  "descricao": "exaustor sonora 11 21-26 watts (2380)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "132.08"
+  },
+  "precoprazo": {
+   "$numberInt": "244"
+  },
+  "precovista": {
+   "$numberDouble": "231.8"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299522d"
+  },
+  "codigo": {
+   "$numberInt": "6138"
+  },
+  "ativo": true,
+  "descricao": "grade fixa enc.quadrada c/tela S1714",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "16.61"
+  },
+  "precoprazo": {
+   "$numberDouble": "35.61"
+  },
+  "precovista": {
+   "$numberDouble": "33.83"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995231"
+  },
+  "codigo": {
+   "$numberInt": "6139"
+  },
+  "ativo": true,
+  "descricao": "grade fixa enc.quadrada c/tela S1919",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "16.25"
+  },
+  "precoprazo": {
+   "$numberDouble": "36.48"
+  },
+  "precovista": {
+   "$numberDouble": "34.66"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995236"
+  },
+  "codigo": {
+   "$numberInt": "6395"
+  },
+  "ativo": true,
+  "descricao": "aro arremate 100",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "9.56"
+  },
+  "precoprazo": {
+   "$numberDouble": "26.74"
+  },
+  "precovista": {
+   "$numberDouble": "25.4"
+  },
+  "qte": {
+   "$numberInt": "15"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995237"
+  },
+  "codigo": {
+   "$numberInt": "6396"
+  },
+  "ativo": true,
+  "descricao": "aro arremate 126",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "10.56"
+  },
+  "precoprazo": {
+   "$numberDouble": "33.58"
+  },
+  "precovista": {
+   "$numberDouble": "31.9"
+  },
+  "qte": {
+   "$numberInt": "10"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995277"
+  },
+  "codigo": {
+   "$numberInt": "5898"
+  },
+  "ativo": true,
+  "descricao": "filtro Y c/tela inox 1/2",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "68.33"
+  },
+  "precoprazo": {
+   "$numberDouble": "89.1"
+  },
+  "precovista": {
+   "$numberDouble": "84.65"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995278"
+  },
+  "codigo": {
+   "$numberInt": "5899"
+  },
+  "ativo": true,
+  "descricao": "filtro Y c/tela inox 3/4",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "20.78"
+  },
+  "precoprazo": {
+   "$numberDouble": "89.1"
+  },
+  "precovista": {
+   "$numberDouble": "84.65"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299527a"
+  },
+  "codigo": {
+   "$numberInt": "6024"
+  },
+  "ativo": true,
+  "descricao": "reg. gás  LL1517 (2975)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "18.39"
+  },
+  "precoprazo": {
+   "$numberDouble": "56.1"
+  },
+  "precovista": {
+   "$numberDouble": "53.3"
+  },
+  "qte": {
+   "$numberInt": "12"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299527b"
+  },
+  "codigo": {
+   "$numberInt": "6034"
+  },
+  "ativo": true,
+  "descricao": "engate jumbo agua 1/2 x 1.0 cm",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "21.1"
+  },
+  "precoprazo": {
+   "$numberDouble": "88.76"
+  },
+  "precovista": {
+   "$numberDouble": "84.32"
+  },
+  "qte": {
+   "$numberInt": "9"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299527f"
+  },
+  "codigo": {
+   "$numberInt": "6039"
+  },
+  "ativo": true,
+  "descricao": "bucha red. 3/4 M x 1/2 F metal",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "6.36"
+  },
+  "precoprazo": {
+   "$numberDouble": "31.66"
+  },
+  "precovista": {
+   "$numberDouble": "30.08"
+  },
+  "qte": {
+   "$numberInt": "47"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995280"
+  },
+  "codigo": {
+   "$numberInt": "6095"
+  },
+  "ativo": true,
+  "descricao": "valv.ret.vertical 3/4 metal",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "28.61"
+  },
+  "precoprazo": {
+   "$numberDouble": "114.85"
+  },
+  "precovista": {
+   "$numberDouble": "109.11"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995283"
+  },
+  "codigo": {
+   "$numberInt": "6096"
+  },
+  "ativo": true,
+  "descricao": "niple metal 1/2 x 1/2",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "5.7"
+  },
+  "precoprazo": {
+   "$numberDouble": "13.67"
+  },
+  "precovista": {
+   "$numberDouble": "12.99"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995284"
+  },
+  "codigo": {
+   "$numberInt": "6097"
+  },
+  "ativo": true,
+  "descricao": "niple metal 3/4 x 3/4",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "8.71"
+  },
+  "precoprazo": {
+   "$numberDouble": "20.28"
+  },
+  "precovista": {
+   "$numberDouble": "19.27"
+  },
+  "qte": {
+   "$numberInt": "7"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995285"
+  },
+  "codigo": {
+   "$numberInt": "6098"
+  },
+  "ativo": true,
+  "descricao": "niple metal 1 x 1",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "15.9"
+  },
+  "precoprazo": {
+   "$numberDouble": "28.41"
+  },
+  "precovista": {
+   "$numberDouble": "26.99"
+  },
+  "qte": {
+   "$numberInt": "4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995286"
+  },
+  "codigo": {
+   "$numberInt": "6161"
+  },
+  "ativo": true,
+  "descricao": "canopla redonsa 1/2",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1.28"
+  },
+  "precoprazo": {
+   "$numberDouble": "7.21"
+  },
+  "precovista": {
+   "$numberDouble": "6.85"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995289"
+  },
+  "codigo": {
+   "$numberInt": "6325"
+  },
+  "ativo": true,
+  "descricao": "prolongador médio 1/2 x 1/2",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "11.62"
+  },
+  "precoprazo": {
+   "$numberDouble": "31.6"
+  },
+  "precovista": {
+   "$numberDouble": "30.02"
+  },
+  "qte": {
+   "$numberInt": "13"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299528b"
+  },
+  "codigo": {
+   "$numberInt": "6409"
+  },
+  "ativo": true,
+  "descricao": "luva metal 1/2",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "8.35"
+  },
+  "precoprazo": {
+   "$numberDouble": "16.33"
+  },
+  "precovista": {
+   "$numberDouble": "15.51"
+  },
+  "qte": {
+   "$numberInt": "5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299528c"
+  },
+  "codigo": {
+   "$numberInt": "6410"
+  },
+  "ativo": true,
+  "descricao": "luva metal 3/4",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "12.33"
+  },
+  "precoprazo": {
+   "$numberDouble": "28.45"
+  },
+  "precovista": {
+   "$numberDouble": "27.03"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299528d"
+  },
+  "codigo": {
+   "$numberInt": "6495"
+  },
+  "ativo": true,
+  "descricao": "bucha red. 1 M x 1/2 F metal",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "13.59"
+  },
+  "precoprazo": {
+   "$numberDouble": "23.1"
+  },
+  "precovista": {
+   "$numberDouble": "21.95"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952bf"
+  },
+  "codigo": {
+   "$numberInt": "6267"
+  },
+  "ativo": true,
+  "descricao": "aquec.eletrico/solar 100 litros vertical aço 304",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "2913.99"
+  },
+  "precoprazo": {
+   "$numberDouble": "5174.1"
+  },
+  "precovista": {
+   "$numberDouble": "4915.4"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c0"
+  },
+  "codigo": {
+   "$numberInt": "6319"
+  },
+  "ativo": true,
+  "descricao": "aquec.eletrico/solar 150 litros Horizontal aço 304",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "3483.19"
+  },
+  "precoprazo": {
+   "$numberDouble": "6321.43"
+  },
+  "precovista": {
+   "$numberDouble": "6005.36"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c3"
+  },
+  "codigo": {
+   "$numberInt": "6372"
+  },
+  "ativo": true,
+  "descricao": "resist. 2 kw 110/220 V 2 elet.rosca 1.1/4",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "153.43"
+  },
+  "precoprazo": {
+   "$numberDouble": "369.75"
+  },
+  "precovista": {
+   "$numberDouble": "351.26"
+  },
+  "qte": {
+   "$numberInt": "2"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c6"
+  },
+  "codigo": {
+   "$numberInt": "5783"
+  },
+  "ativo": true,
+  "descricao": "piloto multigás completo c/termopar",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "74.72"
+  },
+  "precoprazo": {
+   "$numberDouble": "223.26"
+  },
+  "precovista": {
+   "$numberDouble": "212.1"
+  },
+  "qte": {
+   "$numberInt": "5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952c7"
+  },
+  "codigo": {
+   "$numberInt": "5784"
+  },
+  "ativo": true,
+  "descricao": "piezo eletrico",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "74.26"
+  },
+  "precoprazo": {
+   "$numberDouble": "131.26"
+  },
+  "precovista": {
+   "$numberDouble": "124.7"
+  },
+  "qte": {
+   "$numberInt": "10"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952cb"
+  },
+  "codigo": {
+   "$numberInt": "5881"
+  },
+  "ativo": true,
+  "descricao": "termostato eitar 80/130/160 lts",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "392.99"
+  },
+  "precoprazo": {
+   "$numberDouble": "712.88"
+  },
+  "precovista": {
+   "$numberDouble": "677.24"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952db"
+  },
+  "codigo": {
+   "$numberInt": "6317"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  20  lts/GLP - Rheem",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1675.5"
+  },
+  "precoprazo": {
+   "$numberDouble": "2680.8"
+  },
+  "precovista": {
+   "$numberDouble": "2546.76"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f1"
+  },
+  "codigo": {
+   "$numberInt": "6164"
+  },
+  "ativo": true,
+  "descricao": "flexivel gás 1/2  x  30 cm (3287)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "43.61"
+  },
+  "precoprazo": {
+   "$numberDouble": "90.79"
+  },
+  "precovista": {
+   "$numberDouble": "86.25"
+  },
+  "qte": {
+   "$numberInt": "16"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f2"
+  },
+  "codigo": {
+   "$numberInt": "6165"
+  },
+  "ativo": true,
+  "descricao": "flexivel gás 1/2  x  40 cm (3288)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "42.77"
+  },
+  "precoprazo": {
+   "$numberDouble": "106.62"
+  },
+  "precovista": {
+   "$numberDouble": "101.29"
+  },
+  "qte": {
+   "$numberInt": "6"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f3"
+  },
+  "codigo": {
+   "$numberInt": "6166"
+  },
+  "ativo": true,
+  "descricao": "flexivel gás 1/2  x    80 cm(3289)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "59.23"
+  },
+  "precoprazo": {
+   "$numberDouble": "107.27"
+  },
+  "precovista": {
+   "$numberDouble": "101.91"
+  },
+  "qte": {
+   "$numberInt": "5"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f4"
+  },
+  "codigo": {
+   "$numberInt": "6167"
+  },
+  "ativo": true,
+  "descricao": "flexivel gás 1/2  x  100 cm(3290)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "69.67"
+  },
+  "precoprazo": {
+   "$numberDouble": "125.82"
+  },
+  "precovista": {
+   "$numberDouble": "119.53"
+  },
+  "qte": {
+   "$numberInt": "3"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f5"
+  },
+  "codigo": {
+   "$numberInt": "6168"
+  },
+  "ativo": true,
+  "descricao": "flexivel gás 1/2  x  1200 cm(3291)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "69.49"
+  },
+  "precoprazo": {
+   "$numberDouble": "145.87"
+  },
+  "precovista": {
+   "$numberDouble": "138.58"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952f6"
+  },
+  "codigo": {
+   "$numberInt": "6169"
+  },
+  "ativo": true,
+  "descricao": "reg. gás 90 1/2 x 1/2",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "20.65"
+  },
+  "precoprazo": {
+   "$numberDouble": "56.1"
+  },
+  "precovista": {
+   "$numberDouble": "53.3"
+  },
+  "qte": {
+   "$numberInt": "-4"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952fc"
+  },
+  "codigo": {
+   "$numberInt": "6256"
+  },
+  "ativo": true,
+  "descricao": "adaptador 1/2\"bsp x a.rápido (3420)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "8.56"
+  },
+  "precoprazo": {
+   "$numberDouble": "19.98"
+  },
+  "precovista": {
+   "$numberDouble": "18.98"
+  },
+  "qte": {
+   "$numberInt": "6"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952fd"
+  },
+  "codigo": {
+   "$numberInt": "6271"
+  },
+  "ativo": true,
+  "descricao": "Conex.lat sext 9/16 X 19 R.1/4NPT(E) X R.1/Ali",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "5.24"
+  },
+  "precoprazo": {
+   "$numberInt": "12"
+  },
+  "precovista": {
+   "$numberDouble": "11.4"
+  },
+  "qte": {
+   "$numberInt": "11"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf29952fe"
+  },
+  "codigo": {
+   "$numberInt": "6323"
+  },
+  "ativo": true,
+  "descricao": "engate agua 1/2 x 30 cm (3578)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "15.62"
+  },
+  "precoprazo": {
+   "$numberDouble": "70.57"
+  },
+  "precovista": {
+   "$numberDouble": "67.04"
+  },
+  "qte": {
+   "$numberInt": "31"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995301"
+  },
+  "codigo": {
+   "$numberInt": "6324"
+  },
+  "ativo": true,
+  "descricao": "engate agua 1/2 x 40 cm (3579)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "17.04"
+  },
+  "precoprazo": {
+   "$numberDouble": "73.8"
+  },
+  "precovista": {
+   "$numberDouble": "70.11"
+  },
+  "qte": {
+   "$numberInt": "14"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995302"
+  },
+  "codigo": {
+   "$numberInt": "6332"
+  },
+  "ativo": true,
+  "descricao": "engate agua 1/2 x 60 cm(3292)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "35.65"
+  },
+  "precoprazo": {
+   "$numberDouble": "82.92"
+  },
+  "precovista": {
+   "$numberDouble": "78.77"
+  },
+  "qte": {
+   "$numberInt": "1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995303"
+  },
+  "codigo": {
+   "$numberInt": "6359"
+  },
+  "ativo": true,
+  "descricao": "flexivel gás 1/2  x    60 cm",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "52.59"
+  },
+  "precoprazo": {
+   "$numberDouble": "94.96"
+  },
+  "precovista": {
+   "$numberDouble": "90.21"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995304"
+  },
+  "codigo": {
+   "$numberInt": "6362"
+  },
+  "ativo": true,
+  "descricao": "engate agua 1/2 x  3/4  30 cm",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "23.16"
+  },
+  "precoprazo": {
+   "$numberDouble": "77.25"
+  },
+  "precovista": {
+   "$numberDouble": "73.39"
+  },
+  "qte": {
+   "$numberInt": "30"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995305"
+  },
+  "codigo": {
+   "$numberInt": "6363"
+  },
+  "ativo": true,
+  "descricao": "engate agua 1/2 x  3/4  40 cm",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "23.54"
+  },
+  "precoprazo": {
+   "$numberDouble": "83.43"
+  },
+  "precovista": {
+   "$numberDouble": "79.26"
+  },
+  "qte": {
+   "$numberInt": "32"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995308"
+  },
+  "codigo": {
+   "$numberInt": "6472"
+  },
+  "ativo": true,
+  "descricao": "flexivel gás  30 cm 1/2 M x  3/4 F",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "53.74"
+  },
+  "precoprazo": {
+   "$numberDouble": "96.82"
+  },
+  "precovista": {
+   "$numberDouble": "91.98"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995309"
+  },
+  "codigo": {
+   "$numberInt": "6473"
+  },
+  "ativo": true,
+  "descricao": "flexivel gás  40 cm 1/2 M x  3/4 F",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "59.45"
+  },
+  "precoprazo": {
+   "$numberDouble": "107.12"
+  },
+  "precovista": {
+   "$numberDouble": "101.76"
+  },
+  "qte": {
+   "$numberInt": "-1"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf299530f"
+  },
+  "codigo": {
+   "$numberInt": "6220"
+  },
+  "ativo": true,
+  "descricao": "TAMPA DO GABINETE KIT-POUPE (3391)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "135"
+  },
+  "precoprazo": {
+   "$numberDouble": "335.81"
+  },
+  "precovista": {
+   "$numberDouble": "319.02"
+  },
+  "qte": {
+   "$numberInt": "17"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995310"
+  },
+  "codigo": {
+   "$numberInt": "6221"
+  },
+  "ativo": true,
+  "descricao": "CAIXA DO GABINETE KIT-POUPE (3390)",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "106.47"
+  },
+  "precoprazo": {
+   "$numberDouble": "159.2"
+  },
+  "precovista": {
+   "$numberDouble": "151.24"
+  },
+  "qte": {
+   "$numberInt": "16"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995313"
+  },
+  "codigo": {
+   "$numberInt": "6524"
+  },
+  "ativo": true,
+  "descricao": "tampa do gabinete  kit poupe",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "137.75"
+  },
+  "precoprazo": {
+   "$numberDouble": "413.25"
+  },
+  "precovista": {
+   "$numberDouble": "392.59"
+  },
+  "qte": {
+   "$numberInt": "10"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995318"
+  },
+  "codigo": {
+   "$numberInt": "6451"
+  },
+  "ativo": true,
+  "descricao": "Placa timer bomba 03",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "111.3"
+  },
+  "precoprazo": {
+   "$numberDouble": "491.84"
+  },
+  "precovista": {
+   "$numberDouble": "467.25"
+  },
+  "qte": {
+   "$numberInt": "46"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6abd7907216b0dccf2995319"
+  },
+  "codigo": {
+   "$numberInt": "6465"
+  },
+  "ativo": true,
+  "descricao": "caixa metalica 225 mm x 370 mm Poupe",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberInt": "125"
+  },
+  "precoprazo": {
+   "$numberDouble": "404.25"
+  },
+  "precovista": {
+   "$numberDouble": "384.04"
+  },
+  "qte": {
+   "$numberInt": "41"
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad5da97216b0dccf237e028"
+  },
+  "codigo": {
+   "$numberInt": "6534"
+  },
+  "ativo": true,
+  "descricao": "aquec.gás  10l/gn    E 10",
+  "e_max": {
+   "$numberInt": "0"
+  },
+  "e_min": {
+   "$numberInt": "0"
+  },
+  "precocusto": {
+   "$numberDouble": "1349.39"
+  },
+  "precoprazo": {
+   "$numberInt": "2058"
+  },
+  "precovista": {
+   "$numberDouble": "2057.95"
+  },
+  "qte": {
+   "$numberInt": "0"
+  }
+ }
+]

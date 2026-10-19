@@ -9,6 +9,20 @@
   OS já fechada: a ficha abre só para consulta (com "Reabrir", que desfaz o fechamento).
   O JS fica em /js/vendas/servicos-fechamento.js   API: /vendas/api/os/:id/fechamento
   Rota: /vendas/servicos/fechamento/:id?volta=<pagina de onde veio>
+  Alterado em: 16/10/2026 - configuracao: botao do plano de contas em cada linha (.cfg-plano / .cfg-busca).
+  Alterado em: 17/10/2026 - espelho: modal APURACAO (.apu) no lugar da faixa do resultado.
+  Alterado em: 17/10/2026 - carrega /js/comum/config-contas.js (janela da ★).
+  Alterado em: 17/10/2026 - espelho: botoes lado a lado (.acoes.lado.tres).
+  Alterado em: 16/10/2026 - blocos venda de consignado / despesa complementar (.res-bloco / .res-lin).
+  Alterado em: 16/10/2026 - balao do "?" de ajuda (.bolha).
+  Alterado em: 16/10/2026 - botoes ao lado da observacao (.rodape-ficha / .acoes.lado).
+  Alterado em: 16/10/2026 - sem a caixa "Valor adicional": o termino (.cx-term) ocupa a 3a coluna.
+  Alterado em: 16/10/2026 - configuracao: linha .trava (conta com movimento, cadeado).
+  Alterado em: 16/10/2026 - configuracao: .cfg-cod, linha .alvo, botoes de grupo (.cfg-grupos) e trilha.
+  Alterado em: 16/10/2026 - botao ★ (configuracao de contas da pagina), mao de obra adicional
+               (.mo-ad), observacao com 2/3 da largura.
+  Alterado em: 16/10/2026 - "?" de ajuda nos titulos (.ajuda), "a receber" na caixa do termino,
+               observacao menor (.resumo.so-obs).
   Alterado em: 16/10/2026 - caixas em par com o mesmo numero de linhas (rola) e faixa de saldo
                embaixo das caixas (.cel / .faixa / .caixa.par).
   Alterado em: 16/10/2026 - sem a etiqueta "Pendente": no lugar, os botoes "← Voltar" e "☰ Menu"
@@ -72,6 +86,7 @@
     .campos label.l2 { grid-column:span 2; }
     .campos input { text-align:left; width:100%; }
     .campos input.num { text-align:right; }
+    .campos select { width:100%; }
     .dica { font-size:12px; color:var(--cinza); margin-top:6px; }
     .ad { display:grid; grid-template-columns:112px 90px minmax(0,1fr) 26px; gap:6px; margin-bottom:6px; align-items:center; }
     .ad input.num { text-align:right; }
@@ -93,6 +108,106 @@
     .msg.ok { color:var(--verde); }
     .tag { display:inline-block; font-size:11px; font-weight:700; padding:1px 7px; border-radius:9px; background:#e0e7ff; color:#3730a3; }
     .tag.c { background:#dcfce7; color:#065f46; } .tag.n { background:#fee2e2; color:#991b1b; }
+    /* 16/10/2026: "?" de ajuda no titulo; a receber dentro da caixa do termino; observacao menor */
+    .ajuda { display:inline-flex; align-items:center; justify-content:center; width:17px; height:17px; border-radius:50%;
+             background:#ede9fe; color:var(--roxo); font-size:11px; font-weight:800; cursor:help; margin-left:4px; vertical-align:1px; text-transform:none; }
+    .cx-term .totais { margin-top:auto; padding-top:10px; border-top:1px solid var(--borda); }
+    .cx-term .corpo { display:flex; flex-direction:column; gap:8px; }
+    .resumo.so-obs { grid-template-columns:1fr; }
+    .resumo.so-obs textarea { min-height:38px; height:38px; }
+    /* 16/10/2026: mao de obra adicional (abaixo da linha: o que tem a cobrar) */
+    .mo-ad { border-top:2px solid #374151; padding-top:8px; margin-top:4px; }
+    .mo-ad-tit { font-size:12px; font-weight:800; text-transform:uppercase; color:#374151; margin-bottom:5px; }
+    .mo-ad-lin { display:grid; grid-template-columns:110px minmax(0,1fr); gap:8px; }
+    .mo-ad-lin input { text-align:right; width:100%; }
+    .mo-ad-lin select { width:100%; }
+    .resumo.so-obs { max-width:66.6%; }
+    @media (max-width: 1250px) { .resumo.so-obs { max-width:none; } }
+    /* ★ configuracao de contas */
+    .topo .nav button.estrela { font-size:18px; padding:4px 12px; color:#92400e; }
+    .cfg-fundo { position:fixed; inset:0; background:rgba(17,24,39,.45); display:flex; align-items:flex-start; justify-content:center; padding:70px 16px; z-index:50; }
+    .cfg { background:#fff; border-radius:12px; width:min(860px,100%); max-height:calc(100vh - 140px); display:flex; flex-direction:column; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+    .cfg-cab { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid var(--borda); color:var(--ambar); font-size:15px; }
+    .cfg-corpo { padding:10px 16px; overflow:auto; }
+    .cfg-corpo td { padding:6px 4px; }
+    .cfg-corpo input { width:100%; }
+    .cfg-corpo .ruim { color:var(--vermelho); font-weight:700; }
+    .cfg-pe { display:flex; gap:8px; justify-content:flex-end; align-items:center; padding:10px 16px; border-top:1px solid var(--borda); }
+    /* consulta ao plano de contas (botao da linha na configuracao) */
+    .cfg-plano { border:1px solid #c4b5fd; background:#faf5ff; color:var(--roxo); border-radius:7px; width:34px; height:30px;
+                 display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
+    .cfg-plano:hover { background:#ede9fe; }
+    .cfg-busca { margin-top:10px; border:1px solid #c4b5fd; border-radius:10px; background:#faf5ff; padding:8px 10px; }
+    .cfg-busca-cab { display:flex; justify-content:space-between; align-items:center; font-weight:700; color:var(--roxo); margin-bottom:6px; }
+    .cfg-busca input { width:100%; }
+    .cfg-res { max-height:220px; overflow:auto; margin-top:6px; background:#fff; border:1px solid var(--borda); border-radius:8px; }
+    .cfg-res tr { cursor:pointer; } .cfg-res tr:hover { background:#ede9fe; }
+    /* 16/10/2026: botao junto do codigo; linha em configuracao destacada; navegar pelos grupos */
+    .cfg-cod { display:flex; gap:6px; align-items:center; }
+    .cfg-cod input { flex:1; min-width:0; }
+    .cfg-corpo tr.alvo td { background:#fef3c7; }
+    .cfg-corpo tr.alvo td.op { font-weight:700; color:var(--ambar); }
+    .cfg-grupos { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:8px; }
+    .cfg-grupos button { border:1px solid #c4b5fd; background:#fff; color:var(--roxo); border-radius:8px; padding:7px 6px; font-weight:700; font-size:14px; cursor:pointer; }
+    .cfg-grupos button:hover { background:#ede9fe; }
+    .cfg-grupos button.ativo { background:var(--roxo); border-color:var(--roxo); color:#fff; }
+    .cfg-trilha { font-size:12px; color:var(--cinza); margin-top:6px; min-height:16px; }
+    .cfg-trilha a { color:var(--roxo); cursor:pointer; text-decoration:underline; }
+    .cfg-res .seta { color:var(--roxo); font-weight:800; }
+    .cfg-corpo tr.trava td { color:#6b7280; }
+    .cfg-corpo tr.trava .cfg-plano { opacity:.45; cursor:not-allowed; }
+    .cadeado { font-size:12px; cursor:help; }
+    /* 16/10/2026: sem a caixa "Valor adicional": o termino ocupa a 3a coluna nas duas linhas */
+    .grade > .cx-term { grid-column:3; grid-row:1 / span 2; }
+    .cx-term .caixa .corpo { max-height:none; }
+    @media (max-width: 1250px) { .grade > .cx-term { grid-column:auto; grid-row:auto; } }
+    /* 16/10/2026: observacao (2/3) + botoes do mesmo tamanho ao lado, alinhados embaixo */
+    .rodape-ficha { display:grid; grid-template-columns:minmax(0,2fr) minmax(0,1fr); gap:14px; align-items:end; margin-top:14px; }
+    .rodape-ficha .resumo.so-obs { margin-top:0; max-width:none; }
+    .acoes.lado { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:0; }
+    .acoes.lado .msg { grid-column:1 / -1; text-align:right; }
+    .acoes.lado.tres { grid-auto-flow:column; grid-template-columns:none; grid-auto-columns:1fr; }
+    .acoes.lado.tres .msg { grid-row:1; }
+    .acoes.lado.tres .btn { grid-row:2; }
+    .acoes.lado .btn { height:48px; padding:0 10px; font-size:15px; }
+    @media (max-width: 1250px) { .rodape-ficha { grid-template-columns:1fr; } }
+    .bolha { position:fixed; z-index:100; max-width:300px; background:#1f2937; color:#fff; font-size:12.5px; line-height:1.45;
+             padding:8px 11px; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.25); pointer-events:none; text-transform:none; font-weight:400; letter-spacing:0; }
+    .ajuda:focus { outline:2px solid var(--roxo); outline-offset:1px; }
+    /* 16/10/2026: blocos do saldo a compensar na caixa do termino */
+    .res-bloco { border-top:2px solid #374151; padding-top:8px; margin-top:4px; }
+    .res-bloco.forte { border-top:3px solid #111827; margin-top:10px; }
+    .res-lin span { color:var(--cinza); font-size:12px; }
+    .res-lin span.rot { color:var(--texto); font-size:13px; }
+    .res-lin { display:flex; align-items:baseline; justify-content:flex-end; gap:6px; }
+    .res-lin .esq { margin-right:auto; color:var(--texto); font-size:13px; padding-right:10px; border-right:1px solid var(--borda); }
+    .res-lin .esq b { font-size:15px; color:var(--roxo); }
+    .res-lin .aviso { color:#b45309; font-weight:700; margin-right:6px; }
+    select.pede { border:2px solid #f59e0b; background:#fffbeb; }
+    .res-lin { border:1px solid var(--borda); border-radius:8px; padding:6px 10px; text-align:right; font-size:13px; }
+    .res-lin b { font-size:18px; font-variant-numeric:tabular-nums; }
+    .res-lin b.roxo { color:var(--roxo); }
+    /* 17/10/2026: resultado da OS (espelho) */
+    .resultado { margin-top:14px; background:#fff; border:1px solid var(--borda); border-radius:12px; padding:12px 14px; }
+    .resultado h2 { margin:0 0 8px; font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--roxo); }
+    .res-grade { display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:8px; }
+    .res-it { border:1px solid var(--borda); border-radius:8px; padding:6px 10px; display:flex; flex-direction:column; gap:2px; }
+    .res-it span { font-size:11px; color:var(--cinza); text-transform:uppercase; font-weight:700; }
+    .res-it b { font-size:15px; font-variant-numeric:tabular-nums; }
+    .res-it b.neg { color:var(--vermelho); }
+    .res-it.total { background:#f5f3ff; border-color:#c4b5fd; }
+    .res-it.total b { font-size:19px; } .res-it.total b.pos { color:var(--verde); }
+    .res-it small { font-size:11px; color:var(--cinza); }
+    /* 17/10/2026: apuracao da OS (modal pequeno, canto de baixo a direita) */
+    .apu { position:fixed; right:20px; bottom:20px; width:330px; z-index:60; background:#fff; border:1px solid #c4b5fd; border-radius:12px;
+           box-shadow:0 14px 40px rgba(0,0,0,.22); padding:10px 14px 12px; }
+    .apu-cab { display:flex; justify-content:space-between; align-items:center; color:var(--roxo); margin-bottom:6px; }
+    .apu table { table-layout:auto; font-size:13.5px; }
+    .apu td { border:0; padding:3px 2px; }
+    .apu tr.sub td { border-top:1px solid #9ca3af; font-weight:800; }
+    .apu tr.esp td { padding:4px 0; }
+    .apu tr.fim td { border-top:2px solid #111827; font-weight:800; font-size:16px; color:var(--verde); padding-top:6px; }
+    .apu .dica { margin-top:6px; }
     .carregando { padding:40px; text-align:center; color:var(--cinza); }
   </style>
 </head>
@@ -100,12 +215,14 @@
 
   <div class="topo">
     <div><h1 id="tit">Fechamento da OS</h1><div class="sub" id="sub"></div></div>
-    <div class="nav"><button type="button" id="nav-voltar" title="voltar (Alt+←)">← Voltar</button>
+    <div class="nav"><button type="button" id="nav-config" class="estrela" title="configuração de contas desta página">★</button>
+      <button type="button" id="nav-voltar" title="voltar (Alt+←)">← Voltar</button>
       <button type="button" id="nav-menu">☰ Menu</button></div>
   </div>
 
   <div id="ficha"><div class="carregando">Carregando…</div></div>
 
+  <script src="/js/comum/config-contas.js"></script>
   <script src="/js/vendas/servicos-fechamento.js"></script>
 </body>
 </html>

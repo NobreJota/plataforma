@@ -3,6 +3,8 @@
 // Criado em: 13/10/2026
 // Alterado em: 13/10/2026 - tecnico novo so ganha 2.06.001.NNN (receita da loja = 4.05.001.001)
 // Alterado em: 13/10/2026 - "pagamento" (percVI/percC/valorG) virou a lista SERVICOS do tecnico
+// Alterado em: 17/10/2026 - tecnico novo ganha tambem a conta "MAO DE OBRA A APROPRIAR" com o mesmo
+//              final (titulo da configuracao 'venda-mo-apropriar', padrao 2.06.002), se o titulo existir.
 // Alterado em: 15/10/2026 - SERVICOS so com descricao: sairam o percentual e o valor fixo (muita
 //              negociacao com cliente e tecnico). A divisao empresa x tecnico e feita na
 //              CONCLUSAO DA OS. A lista serve de historico/descricao para a OS.
@@ -34,6 +36,7 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
+const cfg = require('../../models/contab/config-contas');      // 17/10/2026: titulo "a apropriar"
 
 const router = express.Router();
 router.use(express.json());
@@ -128,6 +131,16 @@ router.post('/', responder(async (req, res) => {
         contaTituloId: titulo._id, codigoContaTitulo: TIT_TECNICO, codigo: contaTecnico, nome: d.nome, descricao: 'técnico',
         saldoInicial: 0, natureza: 'credora', ativo: true, criadoEm: agora, atualizadoEm: agora, __v: 0, lojistaId: loja,
       }, { session });
+      // 17/10/2026: a conta "a apropriar" do tecnico (mesmo final) no titulo da configuracao (2.06.002)
+      const titAprCod = await cfg.codigoDe(loja, 'venda-mo-apropriar', session).catch(() => '');
+      const titApr = titAprCod ? await col('_contatitulos').findOne({ codigo: titAprCod,
+        $or: [{ lojistaId: loja }, { lojistaId: { $exists: false } }, { lojistaId: null }] }, { session }) : null;
+      if (titApr && !await col('_contasubtitulos').findOne({ lojistaId: loja, codigo: titAprCod + '.' + final }, { session })) {
+        await col('_contasubtitulos').insertOne({
+          contaTituloId: titApr._id, codigoContaTitulo: titAprCod, codigo: titAprCod + '.' + final, nome: d.nome, descricao: 'técnico · mão de obra a apropriar',
+          saldoInicial: 0, natureza: 'credora', ativo: true, criadoEm: agora, atualizadoEm: agora, __v: 0, lojistaId: loja,
+        }, { session });
+      }
       const ult = await col('_tecnicos').find({ lojistaId: loja }, { session }).sort({ numero: -1 }).limit(1).project({ numero: 1 }).toArray();
       const doc = { lojistaId: loja, numero: (ult[0]?.numero || 0) + 1, ...d,
                     contaTecnico,

@@ -26,6 +26,7 @@
 //
 // Rotas:
 //   GET  /lista?tipo=programadas|nprogramadas|pendentes|concluidas|liquidadas|geral
+//        17/10/2026: "liquidadas" = concluidas (E, a receber no fluxo de servico) + recebidas (L)
 //   GET  /:id
 //   PUT  /:id                         { terminoDia, terminoHora, valorServico, observacaoServico }
 //   POST /:id/consignados             { codigo, quantidade }          baixa o estoque
@@ -83,6 +84,24 @@
 //   estoque acompanha a diferenca; cada acerto fica em consignados.saidas (positivo ou negativo).
 // Alterado em: 16/10/2026 - TERMINO no fechamento: de quando a OS foi aberta ate agora (o servico pode
 //   ser feito antes do dia previsto). OS fechada mostra o termino gravado. completa() devolve `aberta`.
+// Alterado em: 16/10/2026 - CONFIGURACAO DE CONTAS POR CHAVE (src\models\contab\config-contas.js):
+//   o fechamento nao tem mais conta escrita; usa as chaves 'os-...' (botao ★ da ficha).
+//   GET  /config-contas?pagina=os-fechamento   a lista da pagina (chave, conta, nome)
+//   GET  /config-contas/conta/:codigo          nome da conta (a tela confere o codigo)
+//   PUT  /config-contas/:chave { codigo }      troca a conta (vale para os lancamentos novos)
+//   GET  /config-contas/busca?q=               consulta ao plano (codigo ou nome), ate 60 contas
+//   Termino: hora de 30 em 30 minutos na ficha; aceita ate meia hora depois de agora.
+//   17/10/2026: mao de obra APROPRIAR (dividida na venda, OS.apropriar): no fechamento a parte do
+//   tecnico sai da 2.06.002.NNN (D) para a 2.06.001.NNN do tecnico da OS (C); empresa/tecnico nao
+//   se digitam na ficha.
+//   GET  /config-contas/plano/:codigo          navegar: 3 -> subgrupos, 3.06 -> titulos, 3.06.006 -> contas
+//   Fechamento ganha:
+//   - MAO DE OBRA ADICIONAL { valor, paga: CLIENTE | EMPRESA }: vai para a conta do TECNICO (C);
+//       CLIENTE: entra no a receber do cliente (D) · EMPRESA (cortesia): 'os-mo-adicional-cortesia' (D)
+//   - DEVOLUCAO DE VENDIDO sem troca (saldo a compensar [1]): estoque (D) x 'os-devolucao-vendido' (C),
+//       a preco de custo (padrao: estorna o CPV)
+// Alterado em: 18/10/2026 - PUT /:id aceita `local` (logradouro... cep, edificio, apto, pontoReferencia): mudar o
+//              local da OS pendente pelo modal (outro endereco do cliente).
 // =============================================================================
 
 'use strict';
@@ -94,9 +113,9 @@ const path = require('path');
 
 const router = express.Router();
 const Boleta = require('../../models/contab/financeiro/boleta');
+const cfg = require('../../models/contab/config-contas');      // 16/10/2026: contas por chave
 // a agenda do tecnico (mesma conta da venda): require tardio, o venda-api tambem e montado no pages.js
 const agendaDoTecnico = (...a) => require('./venda-api').agendaDoTecnico(...a);
-const RECEITA_SERVICO = '4.05.001.001';
 const paraMin = s => { const m = /^(\d{2}):(\d{2})$/.exec(s || ''); return m ? +m[1] * 60 + +m[2] : null; };
 const subtitulo = (loja, codigo, session) =>
   col('_contasubtitulos').findOne({ lojistaId: loja, codigo, ativo: { $ne: false } }, session ? { session } : {});
@@ -122,8 +141,8 @@ const FILTROS = {
                   horaIni: { $regex: '^\\d{2}:\\d{2}$' } },
   nprogramadas: { status: 'P', $or: [...SEM('tecnicoConta'), ...SEM('diaPrevisto'), ...SEM('horaIni')] },
   pendentes:    { status: 'P' },
-  concluidas:   { status: 'E' },
-  liquidadas:   { status: 'L' },
+  concluidas:   { status: 'E' },                      // (sem aba desde 17/10/2026: entra em Liquidadas)
+  liquidadas:   { status: { $in: ['E', 'L'] } },     // 17/10/2026: concluida (a receber) + recebida
   geral:        { status: { $in: ['P', 'E'] } },     // 14/10/2026: lista geral (em aberto), A-Z pelo cliente
 };
 
@@ -163,7 +182,7 @@ router.get('/lista', responder(async (req, res) => {
   const loja = lojaDe(req);
   const tipo = FILTROS[req.query.tipo] ? req.query.tipo : 'pendentes';
   const ordem = tipo === 'geral' ? { 'cliente.nome': 1, diaPrevisto: 1, horaIni: 1 }
-              : tipo === 'liquidadas' ? { liquidadaEm: -1, numero: -1 }
+              : tipo === 'liquidadas' ? { concluidaEm: -1, numero: -1 }
               : tipo === 'concluidas' ? { concluidaEm: -1, numero: -1 } : { diaPrevisto: 1, horaIni: 1, numero: 1 };
   const docs = await col('_ordens_servico').find({ lojistaId: loja, ...FILTROS[tipo] })
     .sort(ordem).limit(1000).toArray();
@@ -186,6 +205,7 @@ function completa(o) {
   return {
     ...resumo(o),
     pontoReferencia: o.pontoReferencia || '', telefone: o.telefone || '', celular: o.celular || '',
+    cortesia: o.cortesia || '',                    // 18/10/2026: visita/instalacao de cortesia (motivo)
     observacao: o.observacao || '', observacaoServico: o.observacaoServico || '',
     aReceber: o.aReceber || 0, fechadaEm: o.fechamento?.em || null, aberta: o.data || o.criadoEm || null,
     itens: o.itens || [],
@@ -245,6 +265,24 @@ router.post('/fluxo/sincronizar', responder(async (req, res) => {
   res.json({ ok: true, mudaram: await sincronizarRecebidas(lojaDe(req)) });
 }));
 
+// ---- CONFIGURACAO DE CONTAS (16/10/2026): antes de /:id ----
+router.get('/config-contas', responder(async (req, res) => {
+  res.json({ ok: true, contas: await cfg.listar(lojaDe(req), String(req.query.pagina || 'os-fechamento')) });
+}));
+router.get('/config-contas/busca', responder(async (req, res) => {
+  res.json({ ok: true, contas: await cfg.buscar(lojaDe(req), req.query.q, req.query.tipo) });
+}));
+router.get('/config-contas/plano/:codigo', responder(async (req, res) => {
+  res.json({ ok: true, ...(await cfg.navegar(lojaDe(req), req.params.codigo)) });
+}));
+router.get('/config-contas/conta/:codigo', responder(async (req, res) => {
+  res.json({ ok: true, nome: await cfg.nomeConta(lojaDe(req), req.params.codigo, req.query.tipo) });
+}));
+router.put('/config-contas/:chave', express.json(), responder(async (req, res) => {
+  const r = await cfg.gravar(lojaDe(req), req.params.chave, (req.body || {}).codigo);
+  res.json({ ok: true, ...r });
+}));
+
 router.get('/:id', responder(async (req, res) => {
   res.json({ ok: true, os: completa(await lerOS(req)) });
 }));
@@ -255,7 +293,7 @@ const editavel = o => {
 };
 
 // ---------------------------------------------------------------------------
-// PUT /:id   termino, valor final do servico, observacao do servico
+// PUT /:id   termino, valor final do servico, observacao do servico; 18/10/2026: local { ... }
 // ---------------------------------------------------------------------------
 router.put('/:id', express.json(), responder(async (req, res) => {
   const o = await lerOS(req);
@@ -278,6 +316,14 @@ router.put('/:id', express.json(), responder(async (req, res) => {
     set.valorServico = v;
   }
   if ('observacaoServico' in b) set.observacaoServico = String(b.observacaoServico || '').trim().slice(0, 2000);
+  // 18/10/2026: LOCAL da instalacao (outro endereco do cliente, CEP...)
+  if (b.local && typeof b.local === 'object') {
+    const t = (k, n) => String(b.local[k] ?? '').trim().slice(0, n || 120);
+    if (!t('logradouro')) throw erro(400, 'informe o logradouro do local');
+    set.endereco = { logradouro: t('logradouro'), numero: t('numero', 20), complemento: t('complemento'), bairro: t('bairro'),
+                     cidade: t('cidade'), uf: t('uf', 2).toUpperCase(), cep: t('cep', 9).replace(/\D/g, '') };
+    set.edificio = t('edificio'); set.apto = t('apto', 20); set.pontoReferencia = t('pontoReferencia', 200);
+  }
   await col('_ordens_servico').updateOne({ _id: o._id, lojistaId: o.lojistaId }, { $set: set });
   res.json({ ok: true, os: completa(await lerOS(req)) });
 }));
@@ -458,8 +504,9 @@ router.put('/:id/agenda', express.json(), responder(async (req, res) => {
         const mo = o.valorServico || 0, antiga = o.parteTecnico, nova = antiga;
         const cVelha = await subtitulo(loja, o.tecnicoConta, session);
         const cNova = await subtitulo(loja, tecConta, session);
-        const cServ = await subtitulo(loja, RECEITA_SERVICO, session);
-        if (!cVelha || !cNova || !cServ) throw erro(404, 'conta não encontrada no plano: ' + [!cVelha && o.tecnicoConta, !cNova && tecConta, !cServ && RECEITA_SERVICO].filter(Boolean).join(', '));
+        const codServ = await cfg.codigoDe(loja, 'os-receita-servico', session);
+        const cServ = await subtitulo(loja, codServ, session);
+        if (!cVelha || !cNova || !cServ) throw erro(404, 'conta não encontrada no plano: ' + [!cVelha && o.tecnicoConta, !cNova && tecConta, !cServ && codServ].filter(Boolean).join(', '));
         const hist = 'OS nº ' + o.numero + ' troca de técnico: ' + (o.tecnicoNome || o.tecnicoConta) + ' → ' + (tec.apelido || tec.nome);
         const contra = (c, v) => ({ contaSubTitulo: c._id, codigoConta: c.codigo, nomeConta: c.nome, historico: hist, valor: v / 100 });
         const contras = [contra(cNova, nova)];
@@ -538,14 +585,17 @@ router.post('/:id/reabrir', responder(async (req, res) => {
 // ---------------------------------------------------------------------------
 // FICHA DE FECHAMENTO (15/10/2026)
 // ---------------------------------------------------------------------------
-const CONTA = {
-  RECEITA_SERVICO: '4.05.001.001', RECEITA_MATERIAL: '4.02.001.001',
-  ESTOQUE: '1.02.001.001', CPV: '3.05.001.001', MAT_COMPLEMENTAR: '3.06.006.004',
-};
+// 16/10/2026: as contas vem da configuracao por chave (cfg.contaDe); antes ficavam aqui.
 
 // como e a mao de obra desta OS
 const ehVI = o => o.tipo === 'VI' || o.tipo === 'INSTALACAO';
 function modoMaoDeObra(o) {
+  // 17/10/2026: dividida na venda; a parte do tecnico esta "a apropriar" (2.06.002.NNN)
+  if (o.apropriar && (o.apropriar.valor || 0) > 0) {
+    const valor = o.maoDeObraVenda || o.valorServico || 0;
+    return { modo: 'APROPRIAR', valor, empresa: valor - o.apropriar.valor, tecnico: o.apropriar.valor,
+             conta: o.apropriar.conta, tecnicoVenda: o.apropriar.tecnicoNome || o.apropriar.tecnicoConta || '' };
+  }
   if (o.servicoContabilizado && (o.parteTecnico || 0) > 0) return { modo: 'JA_PARTILHADA', valor: o.valorServico || 0 };
   if (o.servicoContabilizado) return { modo: 'VENDA', valor: o.maoDeObraVenda || o.valorServico || 0 };
   if (ehVI(o)) return { modo: 'VENDA', valor: 0 };        // VI sem mao de obra na venda: nada a dividir
@@ -596,10 +646,12 @@ router.post('/:id/fechamento', express.json(), responder(async (req, res) => {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) throw erro(400, 'informe o dia do término');
       if (h && !/^\d{2}:\d{2}$/.test(h)) throw erro(400, 'hora do término inválida');
       const terminoEm = new Date(d + 'T' + (h || '12:00') + ':00');
-      if (terminoEm > agora) throw erro(400, 'o término não pode ser no futuro');
+      // 16/10/2026: hora de 30 em 30 min (18:15 -> 18:30): aceita ate a meia hora seguinte a agora
+      if (terminoEm > new Date(agora.getTime() + 30 * 60000)) throw erro(400, 'o término não pode ser no futuro');
       const aberta = o.data || o.criadoEm;
       if (aberta && terminoEm < new Date(new Date(aberta).setHours(0, 0, 0, 0))) throw erro(400, 'o término é antes da abertura da OS (' + new Date(aberta).toLocaleDateString('pt-BR') + ')');
 
+      const cc = chave => cfg.contaDe(loja, chave, session);     // conta pela chave da configuracao
       const conta = async cod => {
         const c = await subtitulo(loja, cod, session);
         if (!c) throw erro(404, 'a conta ' + cod + ' não está no plano (ou está suspensa)');
@@ -625,7 +677,7 @@ router.post('/:id/fechamento', express.json(), responder(async (req, res) => {
       // ---- consignado: devolucao + usado (destino: venda adicional, complementar ou troca) ----
       const pedCons = new Map((Array.isArray(b.consignados) ? b.consignados : []).map(x => [String(x.id), x]));
       const prods = new Map((await col('arquivo_docs').find({ loja_id: loja,
-        codigo: { $in: [...new Set((o.consignados || []).map(c => c.codigo))] } }, { session })
+        codigo: { $in: [...new Set((o.consignados || []).map(c => c.codigo).concat((Array.isArray(b.vendidos) ? b.vendidos : []).map(x => Number(x.codigo))))] } }, { session })
         .project({ codigo: 1, precocusto: 1 }).toArray()).map(p => [p.codigo, p]));
       const devolucoesConsignado = [], consResumo = [];
       let consCobrado = 0, consCobradoCusto = 0, consNaoCobradoCusto = 0;
@@ -666,8 +718,9 @@ router.post('/:id/fechamento', express.json(), responder(async (req, res) => {
           if (!Number.isFinite(dev) || dev > it.quantidade) throw erro(400, it.codigo + ': devolução maior que o vendido (' + it.quantidade + ')');
           const precoUnit = Math.round((it.quantidade * (it.precoUnitario || 0) - (it.desconto || 0)) / it.quantidade);
           const tratamento = ['ESTORNO', 'TROCA'].includes(x.tratamento) ? x.tratamento : 'RECEITA_EXTRA';
+          const custoUnit = centavos(prods.get(it.codigo)?.precocusto);
           devolucoesVendido.push({ codigo: it.codigo, descricao: it.descricao || '', quantidade: dev, precoUnit,
-                                   valor: dev * precoUnit, tratamento });
+                                   valor: dev * precoUnit, tratamento, custoUnit });
           if (tratamento === 'ESTORNO') estornoPendente += dev * precoUnit;
           await col('arquivo_docs').updateOne({ loja_id: loja, codigo: it.codigo }, { $inc: { qte: dev }, $set: { atualizadoEm: agora } }, { session });
         }
@@ -686,7 +739,8 @@ router.post('/:id/fechamento', express.json(), responder(async (req, res) => {
         mo.valor = val;
       }
       let empresa = 0, tecnico = 0;
-      if (mo.modo !== 'JA_PARTILHADA' && mo.valor > 0) {
+      if (mo.modo === 'APROPRIAR') { empresa = mo.empresa; tecnico = mo.tecnico; }      // ja dividida na venda
+      else if (mo.modo !== 'JA_PARTILHADA' && mo.valor > 0) {
         empresa = inteiro(b.empresa);
         if (!Number.isFinite(empresa) || empresa > mo.valor) throw erro(400, 'a parte da empresa tem que ser de 0 até a mão de obra (' + (mo.valor / 100).toFixed(2).replace('.', ',') + ')');
         tecnico = mo.valor - empresa;
@@ -700,45 +754,69 @@ router.post('/:id/fechamento', express.json(), responder(async (req, res) => {
         if (!Number.isFinite(a.valor)) throw erro(400, 'valor adicional inválido');
         if (!a.motivo) throw erro(400, 'informe o motivo do valor adicional');
       }
+      // ---- mao de obra adicional (16/10/2026): vai para o tecnico; paga o cliente ou a empresa ----
+      const ma = b.maoAdicional || {};
+      const maValor = ma.valor === undefined || ma.valor === '' ? 0 : inteiro(ma.valor);
+      if (!Number.isFinite(maValor)) throw erro(400, 'mão de obra adicional inválida');
+      const maoAdicional = maValor > 0 ? { valor: maValor, paga: ma.paga } : null;
+      if (maoAdicional && !['CLIENTE', 'EMPRESA'].includes(ma.paga)) throw erro(400, 'mão de obra adicional: escolha quem paga (cliente ou empresa)');
       const adCliente = adicionais.filter(a => a.quem === 'CLIENTE');
       const adTecnico = adicionais.filter(a => a.quem === 'TECNICO');
 
       // ---- lancamentos ----
-      const precisaTec = tecnico > 0 || adTecnico.length;
+      const precisaTec = tecnico > 0 || adTecnico.length || maoAdicional;
       const cTec = precisaTec ? await conta(o.tecnicoConta) : null;
       const tecNome = o.tecnicoNome || o.tecnicoConta;
       // VI: a parte do tecnico sai da receita de servicos
       if (mo.modo === 'VENDA' && tecnico > 0) {
-        await lancar(await conta(CONTA.RECEITA_SERVICO), [contra(cTec, tecnico, hist('mão de obra · parte de ' + tecNome))],
+        await lancar(await cc('os-receita-servico'), [contra(cTec, tecnico, hist('mão de obra · parte de ' + tecNome))],
           hist('mão de obra (venda ' + (o.venda?.numero || '') + ') · parte do técnico ' + tecNome));
+      }
+      // 17/10/2026: VI dividida na venda: a parte do tecnico sai da conta "a apropriar" (2.06.002.NNN)
+      // para a conta do tecnico que fez o servico (2.06.001.NNN)
+      if (mo.modo === 'APROPRIAR' && tecnico > 0) {
+        await lancar(await conta(mo.conta), [contra(cTec, tecnico, hist('mão de obra · parte de ' + tecNome))],
+          hist('mão de obra apropriada (venda ' + (o.venda?.numero || '') + ') · técnico ' + tecNome));
       }
       // adicional cobrado do tecnico
       if (adTecnico.length) {
-        const cServ = await conta(CONTA.RECEITA_SERVICO);
+        const cServ = await cc('os-receita-servico');
         await lancar(cTec, adTecnico.map(a => contra(cServ, a.valor, hist('cobrado do técnico ' + tecNome + ': ' + a.motivo))),
           hist('cobrado do técnico ' + tecNome));
       }
       // consignado nao cobrado: despesa a custo
       if (consNaoCobradoCusto > 0) {
-        await lancar(await conta(CONTA.MAT_COMPLEMENTAR), [contra(await conta(CONTA.ESTOQUE), consNaoCobradoCusto, hist('consignado usado, não cobrado (custo)'))],
+        await lancar(await cc('os-material-complementar'), [contra(await cc('os-estoque'), consNaoCobradoCusto, hist('consignado usado, não cobrado (custo)'))],
           hist('material complementar (consignado não cobrado)'));
       }
       // consignado cobrado: custo da mercadoria
       if (consCobradoCusto > 0) {
-        await lancar(await conta(CONTA.CPV), [contra(await conta(CONTA.ESTOQUE), consCobradoCusto, hist('consignado cobrado (custo)'))],
+        await lancar(await cc('os-cpv'), [contra(await cc('os-estoque'), consCobradoCusto, hist('consignado cobrado (custo)'))],
           hist('CPV do consignado cobrado'));
+      }
+      // mao de obra adicional paga pela EMPRESA (cortesia): despesa (D) x tecnico (C)
+      if (maoAdicional && maoAdicional.paga === 'EMPRESA') {
+        await lancar(await cc('os-mo-adicional-cortesia'), [contra(cTec, maoAdicional.valor, hist('mão de obra adicional (cortesia da empresa) · ' + tecNome))],
+          hist('mão de obra adicional · cortesia da empresa'));
+      }
+      // devolucao de vendido sem troca [1]: o material volta ao estoque, a custo
+      const devCusto = devolucoesVendido.filter(x => x.tratamento === 'RECEITA_EXTRA').reduce((s, x) => s + x.quantidade * x.custoUnit, 0);
+      if (devCusto > 0) {
+        await lancar(await cc('os-estoque'), [contra(await cc('os-devolucao-vendido'), devCusto, hist('material vendido devolvido (custo)'))],
+          hist('devolução de material vendido'));
       }
       // o que e do cliente: um lancamento, fica a receber
       const contrasCli = [];
-      if (consCobrado > 0) contrasCli.push(contra(await conta(CONTA.RECEITA_MATERIAL), consCobrado, hist('material (consignado usado)')));
+      if (consCobrado > 0) contrasCli.push(contra(await cc('os-receita-material'), consCobrado, hist('material (consignado usado)')));
       if (mo.modo === 'OS' && mo.valor > 0) {
-        if (empresa > 0) contrasCli.push(contra(await conta(CONTA.RECEITA_SERVICO), empresa, hist('mão de obra · empresa')));
+        if (empresa > 0) contrasCli.push(contra(await cc('os-receita-servico'), empresa, hist('mão de obra · empresa')));
         if (tecnico > 0) contrasCli.push(contra(cTec, tecnico, hist('mão de obra · parte de ' + tecNome)));
       }
       if (adCliente.length) {
-        const cServ = await conta(CONTA.RECEITA_SERVICO);
+        const cServ = await cc('os-receita-servico');
         for (const a of adCliente) contrasCli.push(contra(cServ, a.valor, hist('adicional: ' + a.motivo)));
       }
+      if (maoAdicional && maoAdicional.paga === 'CLIENTE') contrasCli.push(contra(cTec, maoAdicional.valor, hist('mão de obra adicional · ' + tecNome)));
       const aReceber = contrasCli.reduce((s, x) => s + Math.round(x.valor * 100), 0);
       let fluxoId = null;
       if (aReceber > 0) {
@@ -762,7 +840,7 @@ router.post('/:id/fechamento', express.json(), responder(async (req, res) => {
       const fechamento = {
         em: agora, terminoEm, maoDeObra: { modo: mo.modo, valor: mo.valor, empresa, tecnico },
         consignados: consResumo, devolucoesConsignado, devolucoesVendido, estornoPendente,
-        adicionais, aReceber, semReceber, boletas, fluxoId,
+        adicionais, maoAdicional, aReceber, semReceber, boletas, fluxoId,
       };
       const set = {
         status: semReceber ? 'L' : 'E', fechamento, aReceber, terminoEm, terminoHora: h,

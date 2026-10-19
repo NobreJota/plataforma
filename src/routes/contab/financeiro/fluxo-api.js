@@ -3,6 +3,7 @@
 // com saldo acumulado, filtrável por mês e ano.
 // Alterado em: 16/10/2026 - fica de fora o FLUXO DE SERVICO (origem 'OS': o a receber das OS),
 //              que tem tela propria (Servico > Fluxo de servico).
+// Alterado em: 18/10/2026 - ?ocultar=8,3,7 (sub-menu: mostrar ou nao orcamento, compras proj., pedidos).
 
 const express = require('express');
 const FluxoProjetado = require('../../../models/contab/financeiro/fluxoProjetado');
@@ -31,7 +32,11 @@ router.get('/:ano', async (req, res) => {
     const ano = parseInt(req.params.ano, 10);
     const mes = req.query.mes ? parseInt(req.query.mes, 10) : null;
 
-    const filter = { ano, status: 'ATIVO', ...FORA_SERVICO };
+    // 18/10/2026: ?ocultar=8,3,7 — o sub-menu esconde orcamento / compras projetadas / pedidos
+    // (o saldo e calculado sem eles)
+    const ocultar = String(req.query.ocultar || '').split(',').map(Number).filter(n => [3, 7, 8].includes(n));
+    const SEM = ocultar.length ? { pos: { $nin: ocultar } } : {};
+    const filter = { ano, status: 'ATIVO', ...FORA_SERVICO, ...SEM };
     if (mes) filter.mes = mes;
 
     const itens = await FluxoProjetado.find(filter)
@@ -45,7 +50,7 @@ router.get('/:ano', async (req, res) => {
     let saldoAnterior = 0;
     if (mes) {
       const anteriores = await FluxoProjetado.find({
-        ano, status: 'ATIVO', mes: { $lt: mes }, ...FORA_SERVICO
+        ano, status: 'ATIVO', mes: { $lt: mes }, ...FORA_SERVICO, ...SEM
       }).select('pos valor').lean();
 
       for (const it of anteriores) {

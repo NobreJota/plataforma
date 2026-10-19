@@ -1,0 +1,76 @@
+[
+  {
+    "_id": {
+      "$oid": "6abeba11216b0dccf2bbd959"
+    },
+    "codigo": {
+      "$numberInt": "6534"
+    },
+    "loja_id": {
+      "$oid": "6892706a86509313e632f717"
+    },
+    "artigo": "",
+    "ativo": true,
+    "atualizadoEm": {
+      "$date": {
+        "$numberLong": "1791636578639"
+      }
+    },
+    "bairro": "Gurigica",
+    "cfop_ecf": "",
+    "cfop_nfe": "",
+    "cidade": "Vitória",
+    "codEcf": "",
+    "complete": "test2",
+    "criadoEm": {
+      "$date": {
+        "$numberLong": "1790884368989"
+      }
+    },
+    "csosn": "",
+    "descricao": "Teste",
+    "descricaoNorm": "de",
+    "e_max": {
+      "$numberInt": "5"
+    },
+    "e_min": {
+      "$numberInt": "1"
+    },
+    "figure_media": "",
+    "figure_mini": "",
+    "fornecId": {
+      "$oid": "68936e90198046c40856a443"
+    },
+    "fornecedor": "Komlog",
+    "localloja": [],
+    "marcaloja": "Armação",
+    "marcaproduto": "Komlog",
+    "ncm": "",
+    "ncontabil": "2.01.001.160",
+    "nrFornec": {
+      "$numberInt": "242"
+    },
+    "origemPlataforma": true,
+    "pageok": false,
+    "pageposicao": "",
+    "pageurls": "",
+    "precocusto": {
+      "$numberInt": "12"
+    },
+    "precoprazo": {
+      "$numberInt": "23"
+    },
+    "precovista": {
+      "$numberDouble": "21.85"
+    },
+    "qte": {
+      "$numberInt": "1"
+    },
+    "referencia": "543",
+    "referencia2": "654",
+    "similares": "",
+    "taxa": {
+      "$numberInt": "30"
+    }
+  }
+]

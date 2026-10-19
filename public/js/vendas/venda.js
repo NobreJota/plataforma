@@ -91,6 +91,26 @@
 // Alterado em: 16/10/2026 - instalacao: escolheu o TECNICO, o cursor vai para a MAO DE OBRA e so sai
 //              dela (para outro campo) depois de confirmar o valor com Enter (0,00 se nao houver).
 //              Tecnico e servico continuam livres; os botoes tambem.
+// Alterado em: 17/10/2026 - botao "📦 Kits aquecedores": janela fornecedor -> kits; o kit escolhido entra
+//              inteiro (principal + itens).
+// Alterado em: 17/10/2026 - combo de FORNECEDOR so com os principais (+ outros / ✎ escolher). KIT: o
+//              produto principal traz o material que vai junto (GET /kits/:codigo).
+// Alterado em: 17/10/2026 - instalacao: PARTE DO TECNICO (R$) na venda; a NF lanca a parte da empresa na
+//              receita e a do tecnico na conta "a apropriar" dele (2.06.002.NNN). Botao ★ no titulo
+//              do modal: configuracao de contas da mao de obra (/js/comum/config-contas.js).
+// Alterado em: 17/10/2026 - CUPOM NAO ACEITA KIT AQUECEDOR (Jorge): produto que e cabeca de kit so entra
+//              em Nota fiscal; no cupom o botao "Kits aquecedores" fica apagado e nao da para trocar
+//              para cupom com aquecedor na lista. Janela dos kits pode ser ARRASTADA pelo titulo.
+//              Aquecedor de kit entra com GARANTIA e INSTALA marcados (todo kit tem mao de obra).
+//              Na Nota fiscal, o primeiro aquecedor de kit grava garantia = 1 no cadastro dele.
+// Alterado em: 18/10/2026 - instalacao SEM MAO DE OBRA: "⚠ Instalação sem mão de obra?" -> digitar o valor ou
+//              CORTESIA com motivo (orientar o cliente no uso, verificar suposto vazamento, ... ou outro).
+// Alterado em: 18/10/2026 - instalacao: LOCAL com combo dos enderecos do cliente e "＋ outro endereço" (CEP busca
+//              a rua); endereco novo pode ser guardado no cadastro (/js/comum/endereco-instalacao.js).
+// Alterado em: 18/10/2026 - instalacao: Enter na MAO DE OBRA vai para PARTE DO TECNICO; Enter nela vai ao
+//              DIA PREVISTO com o calendario aberto.
+// Alterado em: 18/10/2026 - o aquecedor que trouxe o kit fica sempre violeta e com OS marcada (antes falhava
+//              se o kit fosse criado depois de abrir a tela da venda).
 // Alterado em: 16/10/2026 - CONDICAO comeca A PRAZO (a maioria compra a prazo). Preco NEGOCIADO fica
 //              fixo ao trocar a condicao (combinado com o cliente, vale a vista ou a prazo) e aparece
 //              sempre destacado.
@@ -164,7 +184,23 @@
   function marcarSeg(id, valor) {
     $(id).querySelectorAll('button').forEach(x => x.classList.toggle('ativo', x.dataset.v === valor));
   }
+  // 17/10/2026: produtos que sao cabeca de kit (aquecedor): so em Nota fiscal
+  let principaisKit = new Set();
+  api('GET', '/kits').then(r => { principaisKit = new Set((r.kits || []).map(k => Number(k.codigo))); }).catch(() => {});
+  const ehAquecedorKit = cod => principaisKit.has(Number(cod));
+  function botaoKits() {
+    const cupom = estado.documento !== 'NFE';
+    $('kits-btn').classList.toggle('apagado', cupom);
+    $('kits-btn').title = cupom ? 'cupom não aceita kit aquecedor: mude para Nota fiscal'
+      : 'escolher um kit: fornecedor e depois o kit (o aquecedor com o material que vai junto)';
+  }
+  botaoKits();
   ligarSeg('seg-doc', 'documento', () => {
+    // 17/10/2026: aquecedor com kit na lista nao deixa voltar para cupom
+    const aq = estado.documento !== 'NFE' && estado.itens.find(i => ehAquecedorKit(i.codigo));
+    if (aq) { estado.documento = 'NFE'; marcarSeg('seg-doc', 'NFE');
+      recado(aq.codigo + ' ' + aq.descricao + ' é aquecedor com kit: só em Nota fiscal. Tire-o da lista para vender em cupom.', 'erro'); }
+    botaoKits();
     // nota fiscal: os itens com garantia vem marcados para instalar
     if (estado.documento === 'NFE') estado.itens.forEach(i => { if (i.garantia) i.precisaInstalacao = true; });
     mostrarCliente(); desenharItens();
@@ -511,6 +547,18 @@
   $('ins-tecnico').addEventListener('change', () => { encherServicos(''); mostrarPartilha(); });
   $('ins-servico').addEventListener('change', mostrarPartilha);
   $('ins-mo').addEventListener('input', mostrarPartilha);
+  // 17/10/2026: parte do tecnico (R$) definida na venda
+  $('ins-ptec').addEventListener('input', mostrarPartilha);
+  $('ins-ptec').addEventListener('blur', () => { if ($('ins-ptec').value.trim()) $('ins-ptec').value = brl(paraCentavos($('ins-ptec').value)); mostrarPartilha(); });
+  // 18/10/2026: Enter na parte do tecnico -> dia previsto, com o calendario aberto
+  $('ins-ptec').addEventListener('keydown', ev => {
+    if (ev.key !== 'Enter') return;
+    ev.preventDefault(); ev.stopPropagation();
+    if ($('ins-ptec').value.trim()) $('ins-ptec').value = brl(paraCentavos($('ins-ptec').value));
+    mostrarPartilha();
+    const d = $('ins-dia'); d.focus();
+    try { d.showPicker(); } catch (e) { /* navegador sem showPicker: fica so o foco */ }
+  });
   $('ins-mo').addEventListener('blur', () => { if ($('ins-mo').value.trim()) $('ins-mo').value = brl(paraCentavos($('ins-mo').value)); });
   // 16/10/2026: tecnico escolhido -> mao de obra, confirmada com Enter antes de ir a outro campo
   let moTravado = false;
@@ -522,10 +570,13 @@
   });
   $('ins-mo').addEventListener('keydown', ev => {
     if (ev.key !== 'Enter') return;
-    moTravado = false;                               // o Enter do modal leva ao proximo campo
+    moTravado = false;
     $('ins-mo').value = brl(paraCentavos($('ins-mo').value));
     mostrarPartilha();
     $('ins-msg').textContent = '';
+    // 18/10/2026: Enter na mao de obra -> parte do tecnico
+    ev.preventDefault(); ev.stopPropagation();
+    $('ins-ptec').focus(); $('ins-ptec').select();
   });
   $('ins-mo').addEventListener('focusout', ev => {
     const para = ev.relatedTarget;
@@ -559,11 +610,17 @@
       : '<option value="">—</option>' + lista.map(s => '<option value="' + escapar(s.id) + '">' + escapar(s.descricao) + '</option>').join('');
     $('ins-servico').value = sel && lista.some(s => s.id === sel) ? sel : (lista.length === 1 ? lista[0].id : '');
   }
+  // 17/10/2026: divisao na venda: empresa -> receita; tecnico -> "a apropriar" ate fechar a OS
   function mostrarPartilha() {
-    const mo = paraCentavos($('ins-mo').value), el = $('ins-partilha');
+    const mo = paraCentavos($('ins-mo').value), pt = paraCentavos($('ins-ptec').value), el = $('ins-partilha');
     el.classList.remove('aviso');
+    $('ins-ptec').disabled = !mo;
     if (!mo) { el.textContent = 'sem mão de obra cobrada'; return; }
-    el.textContent = 'R$ ' + brl(mo) + ' entra na receita de serviços (4.05.001.001); a parte do técnico é definida na ficha de fechamento da OS';
+    if (pt > mo) { el.classList.add('aviso'); el.textContent = 'a parte do técnico é maior que a mão de obra'; return; }
+    if (pt && !$('ins-tecnico').value) { el.classList.add('aviso'); el.textContent = 'parte do técnico: escolha o técnico'; return; }
+    if (!pt) { el.textContent = 'R$ ' + brl(mo) + ' na receita de serviços; sem parte do técnico (dá para dividir na ficha de fechamento da OS)'; return; }
+    const fim = $('ins-tecnico').value.split('.').pop();
+    el.textContent = 'empresa R$ ' + brl(mo - pt) + ' → receita · técnico R$ ' + brl(pt) + ' → a apropriar (…' + fim + ') até fechar a OS';
   }
   $('ins-dia').addEventListener('change', reporHorarioIns);
   $('ins-dia').addEventListener('change', agCarregar);
@@ -592,6 +649,12 @@
   });
   $('ins-fim').addEventListener('blur', () => { if ($('ins-fim').value) agConferir(true); });
 
+  // 18/10/2026: enderecos do cliente no local da instalacao (+ outro: CEP ou digitar)
+  const CAMPOS_INS = { cep: 'ins-cep', logradouro: 'ins-logr', numero: 'ins-num', complemento: 'ins-compl', edificio: 'ins-edif',
+                       apto: 'ins-apto', bairro: 'ins-bairro', cidade: 'ins-cidade', uf: 'ins-uf', pontoReferencia: 'ins-ref' };
+  const endIns = window.EnderecoInst ? window.EnderecoInst.ligar({ combo: $('ins-end'), campo: n => $(CAMPOS_INS[n]),
+    guardar: $('ins-guardar'), guardarRot: $('ins-guardar-l'), aviso: $('ins-end-av') }) : null;
+
   async function abrirInstalacao() {
     const marcados = marcadosInst();
     if (!marcados.length) return;
@@ -609,7 +672,12 @@
     $('ins-tecnico').value = ins.tecnicoConta || '';
     encherServicos(ins.servicoId || '');
     $('ins-mo').value = ins.maoDeObra ? brl(ins.maoDeObra) : '';
+    $('ins-ptec').value = ins.parteTecnico ? brl(ins.parteTecnico) : '';
+    cortesiaIns = ins.cortesia || ''; $('ins-semmo').hidden = true;     // 18/10/2026
     mostrarPartilha();
+    $('ins-titulo').insertAdjacentHTML('beforeend', '<button type="button" class="ins-cfg" id="ins-cfg" title="configuração de contas da mão de obra">★</button>');
+    $('ins-cfg').addEventListener('mousedown', ev => ev.stopPropagation());     // nao arrasta o modal
+    $('ins-cfg').addEventListener('click', ev => { ev.stopPropagation(); window.ConfigContas.abrir({ pagina: 'venda', titulo: 'venda · mão de obra' }); });
     $('ins-dia').value = ins.diaPrevisto ? String(ins.diaPrevisto).slice(0, 10) : '';
     $('ins-dia').min = hojeIso();
     agEscolha = ins.horaIni ? { ini: min(ins.horaIni), fim: ins.horaFim ? min(ins.horaFim) : null }
@@ -628,6 +696,8 @@
     $('ins-ref').value = ins.pontoReferencia || '';
     $('ins-fone').value = ou(ins.telefone, c.telefone); $('ins-cel').value = ins.celular || '';
     $('ins-obs').value = ins.observacao || '';
+    $('ins-end-av').textContent = '';
+    if (endIns) endIns.carregar(c.id);
     const antigos = new Map((ins.itens || []).map(x => [Number(x.codigo), x]));
     $('ins-itens').innerHTML = marcados.map(i => {
       const a = antigos.get(Number(i.codigo)) || {};
@@ -645,6 +715,45 @@
   }
   function fecharInstalacao() { $('ins-fundo').hidden = true; $('ins-caixa').hidden = true; focarOS(); }
 
+  // 18/10/2026 (Jorge): INSTALACAO SEM MAO DE OBRA? digitar o valor ou marcar CORTESIA com o motivo
+  // (antes se fazia a OS de R$ 1,00 para marcar). O motivo vai para a OS.
+  const MOTIVOS_CORTESIA = ['Orientar o cliente no uso', 'Verificar suposto vazamento', 'Regulagem / ajuste', 'Troca em garantia'];
+  let cortesiaIns = '';
+  $('ins-msg').insertAdjacentHTML('beforebegin', '<div class="ins-semmo" id="ins-semmo" hidden>'
+    + '<b>⚠ Instalação sem mão de obra?</b>'
+    + '<button type="button" id="sm-digitar">Digitar a mão de obra</button>'
+    + '<span class="ou">ou é cortesia:</span>'
+    + '<select id="sm-motivo"><option value="">motivo da cortesia…</option>'
+    + MOTIVOS_CORTESIA.map(m => '<option>' + escapar(m) + '</option>').join('') + '<option value="*">outro (escrever)</option></select>'
+    + '<input id="sm-outro" placeholder="escreva o motivo" maxlength="120" hidden>'
+    + '<button type="button" class="prim" id="sm-ok" disabled>Confirmar cortesia</button></div>');
+  const motivoEscolhido = () => $('sm-motivo').value === '*' ? $('sm-outro').value.trim() : $('sm-motivo').value;
+  function semMaoDeObra() {
+    $('ins-semmo').hidden = false;
+    $('sm-motivo').value = MOTIVOS_CORTESIA.includes(cortesiaIns) ? cortesiaIns : (cortesiaIns ? '*' : '');
+    $('sm-outro').hidden = $('sm-motivo').value !== '*'; $('sm-outro').value = $('sm-motivo').value === '*' ? cortesiaIns : '';
+    $('sm-ok').disabled = !motivoEscolhido();
+    $('sm-digitar').focus();
+  }
+  $('sm-digitar').addEventListener('click', () => { $('ins-semmo').hidden = true; cortesiaIns = ''; $('ins-mo').focus(); $('ins-mo').select(); });
+  $('sm-motivo').addEventListener('change', () => {
+    $('sm-outro').hidden = $('sm-motivo').value !== '*';
+    if (!$('sm-outro').hidden) $('sm-outro').focus();
+    $('sm-ok').disabled = !motivoEscolhido();
+  });
+  $('sm-outro').addEventListener('input', () => { $('sm-ok').disabled = !motivoEscolhido(); });
+  $('ins-semmo').addEventListener('keydown', ev => {                     // Enter aqui nao anda o modal
+    if (ev.key !== 'Enter') return;
+    ev.stopPropagation();
+    if (ev.target.id === 'sm-outro' || ev.target.id === 'sm-motivo') { ev.preventDefault(); if (!$('sm-ok').disabled) $('sm-ok').click(); }
+  });
+  $('sm-ok').addEventListener('click', () => {
+    cortesiaIns = motivoEscolhido(); if (!cortesiaIns) return;
+    $('ins-semmo').hidden = true;
+    confirmarInstalacao();
+  });
+  $('ins-mo').addEventListener('input', () => { if (paraCentavos($('ins-mo').value) > 0) { $('ins-semmo').hidden = true; cortesiaIns = ''; } });
+
   function confirmarInstalacao() {
     agDosCampos();
     if (!agConferir(true)) {
@@ -652,10 +761,15 @@
     }
     const opt = $('ins-tecnico').selectedOptions[0];
     const mo = paraCentavos($('ins-mo').value);
+    if (!mo && !cortesiaIns) { semMaoDeObra(); return; }              // 18/10/2026
+    const ptec = mo ? paraCentavos($('ins-ptec').value) : 0;
+    if (ptec > mo) { $('ins-msg').textContent = 'A parte do técnico é maior que a mão de obra.'; $('ins-ptec').focus(); return; }
+    if (ptec && !$('ins-tecnico').value) { $('ins-msg').textContent = 'Parte do técnico: escolha o técnico.'; $('ins-tecnico').focus(); return; }
     const sv = servicoEscolhido();
     estado.instalacao = {
       confirmada: true,
-      servicoId: sv ? sv.id : '', servicoDescricao: sv ? sv.descricao : '', maoDeObra: mo,
+      servicoId: sv ? sv.id : '', servicoDescricao: sv ? sv.descricao : '', maoDeObra: mo, parteTecnico: ptec,
+      cortesia: mo ? '' : cortesiaIns,                                   // 18/10/2026: sem mao de obra = cortesia
       tecnicoConta: $('ins-tecnico').value,
       tecnicoNome: $('ins-tecnico').value && opt ? opt.dataset.nome : '',
       receitaConta: $('ins-tecnico').value && opt ? opt.dataset.receita : '',
@@ -674,11 +788,14 @@
         observacao: tr.querySelector('.ins-iobs').value.trim(),
       })),
     };
+    // 18/10/2026: endereco novo -> guarda no cadastro do cliente (se a caixinha estiver marcada)
+    if (endIns) endIns.guardarSeNovo().then(g => { if (g) recado('✓ endereço guardado no cadastro do cliente', 'ok'); })
+      .catch(e => recado('Endereço não guardado: ' + e.message, 'erro'));
     fecharInstalacao();
     atualizarInst();
     totais();
     sujo = true;
-    recado('✓ instalação preenchida' + (estado.instalacao.tecnicoNome ? ' — técnico ' + estado.instalacao.tecnicoNome : ' — técnico a definir')
+    recado('✓ instalação preenchida' + (estado.instalacao.cortesia ? ' (CORTESIA: ' + estado.instalacao.cortesia + ')' : '') + (estado.instalacao.tecnicoNome ? ' — técnico ' + estado.instalacao.tecnicoNome : ' — técnico a definir')
       + '. A OS nasce quando a venda for fechada.', 'ok');
     abrirFechamento();          // 14/10/2026: confirmou a instalacao, ja vai para o pagamento
   }
@@ -904,29 +1021,162 @@
     p => adicionar(p), false, () => !!$('filtro-fornec').value);
 
   // combo de fornecedor: escolheu, a lista abre com os produtos dele
+  // 17/10/2026: o combo mostra so os PRINCIPAIS (a maior parte das vendas); "+ outros fornecedores"
+  // mostra todos; "✎ escolher os principais" marca quais sao (_os_config.fornecedoresVenda)
+  let fornTodos = [], fornVerTodos = false, fornAnterior = '';
+  function encherFornVenda() {
+    const sel = $('filtro-fornec'), atual = fornAnterior;
+    const princ = fornTodos.filter(f => f.principal);
+    const mostra = fornVerTodos || !princ.length ? fornTodos : princ;
+    sel.innerHTML = '<option value="">todos os fornecedores</option>'
+      + mostra.map(m => '<option value="' + escapar(m.nr) + '">' + escapar(m.marca) + '</option>').join('')
+      + (princ.length ? (fornVerTodos ? '<option value="__princ">— só os principais —</option>'
+                                      : '<option value="__todos">＋ outros fornecedores…</option>') : '')
+      + '<option value="__editar">✎ escolher os principais…</option>';
+    sel.value = mostra.some(m => String(m.nr) === atual) ? atual : '';
+  }
   $('filtro-fornec').addEventListener('change', () => {
+    const sel = $('filtro-fornec'), v = sel.value;
+    if (v === '__todos' || v === '__princ') {
+      fornVerTodos = v === '__todos'; encherFornVenda(); sel.focus();
+      if (fornVerTodos) { try { sel.showPicker(); } catch (e) { /* navegador sem showPicker */ } }
+      return;
+    }
+    if (v === '__editar') { sel.value = fornAnterior; escolherPrincipais(); return; }
+    fornAnterior = v;
     const b = $('busca-produto');
     b.focus();
     b.dispatchEvent(new Event('input'));
   });
   (async function () {
     try {
-      const f = (await api('GET', '/fornecedores')).fornecedores;
-      $('filtro-fornec').innerHTML = '<option value="">todos os fornecedores</option>'
-        + f.map(m => '<option value="' + escapar(m.nr) + '">' + escapar(m.marca) + '</option>').join('');
+      fornTodos = (await api('GET', '/fornecedores')).fornecedores;
+      encherFornVenda();
     } catch (e) { recado('Fornecedores do combo: ' + e.message, 'erro'); }   // a busca segue em todos
   })();
+  // janela para marcar os fornecedores principais
+  function escolherPrincipais() {
+    const f = document.createElement('div');
+    f.style.cssText = 'position:fixed;inset:0;background:rgba(17,24,39,.45);z-index:300;display:flex;align-items:flex-start;justify-content:center;padding:70px 16px';
+    f.innerHTML = '<div style="background:#fff;border-radius:12px;width:min(760px,100%);max-height:calc(100vh - 140px);display:flex;flex-direction:column;box-shadow:0 20px 50px rgba(0,0,0,.25)">'
+      + '<div style="padding:12px 16px;border-bottom:1px solid #e5e7eb;font-weight:800;color:#92400e">Fornecedores principais do combo da venda</div>'
+      + '<div style="padding:8px 16px;font-size:12px;color:#6b7280">Marque os que fazem a maior parte das vendas. Os outros ficam em “＋ outros fornecedores”. Nenhum marcado: o combo mostra todos.</div>'
+      + '<div id="fp-grade" style="padding:6px 16px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:4px 10px">'
+      + fornTodos.map(m => '<label style="display:flex;gap:6px;align-items:center;padding:4px 6px;border-radius:6px;cursor:pointer' + (m.principal ? ';background:#ede9fe' : '') + '">'
+          + '<input type="checkbox" value="' + escapar(m.nr) + '"' + (m.principal ? ' checked' : '') + '>' + escapar(m.marca) + '</label>').join('') + '</div>'
+      + '<div style="display:flex;gap:8px;justify-content:flex-end;align-items:center;padding:10px 16px;border-top:1px solid #e5e7eb">'
+      + '<span id="fp-cont" style="flex:1;font-size:12px;color:#6b7280"></span>'
+      + '<button type="button" id="fp-cancela" style="border:1px solid #d1d5db;background:#fff;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer">Cancelar</button>'
+      + '<button type="button" id="fp-grava" style="border:1px solid #6b21a8;background:#6b21a8;color:#fff;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer">Gravar</button></div></div>';
+    document.body.appendChild(f);
+    const conta = () => { const n = f.querySelectorAll('#fp-grade input:checked').length; f.querySelector('#fp-cont').textContent = n ? n + ' marcado(s)' : 'nenhum marcado: o combo mostra todos'; };
+    conta();
+    f.addEventListener('change', ev => { if (ev.target.type === 'checkbox') { ev.target.parentNode.style.background = ev.target.checked ? '#ede9fe' : ''; conta(); } });
+    f.querySelector('#fp-cancela').addEventListener('click', () => f.remove());
+    f.querySelector('#fp-grava').addEventListener('click', async () => {
+      const nrs = [...f.querySelectorAll('#fp-grade input:checked')].map(c => Number(c.value));
+      try {
+        await api('PUT', '/fornecedores/venda', { nrs });
+        const set = new Set(nrs); fornTodos.forEach(m => { m.principal = set.has(m.nr); });
+        fornVerTodos = false; encherFornVenda(); f.remove();
+        recado('✓ fornecedores principais gravados');
+      } catch (e) { recado(e.message, 'erro'); }
+    });
+  }
 
-  function adicionar(p) {
+  function adicionar(p, semKit) {
+    if (estado.documento !== 'NFE' && ehAquecedorKit(p.codigo)) {      // 17/10/2026
+      recado(p.codigo + ' ' + p.descricao + ' é aquecedor com kit: cupom não aceita. Mude o documento para Nota fiscal.', 'erro'); return;
+    }
     const ja = estado.itens.find(i => i.codigo === p.codigo);
+    const kitAq = ehAquecedorKit(p.codigo);                 // 17/10/2026: aquecedor de kit sempre tem instalacao
     if (ja) ja.quantidade += 1;
-    else estado.itens.push({ ...p, quantidade: 1, desconto: 0, precoManual: null,
-                             precisaInstalacao: estado.documento === 'NFE' && !!p.garantia });
+    else estado.itens.push({ ...p, garantia: !!p.garantia || kitAq, quantidade: 1, desconto: 0, precoManual: null,
+                             precisaInstalacao: estado.documento === 'NFE' && (!!p.garantia || kitAq) });
     desenharItens();
     // foco na quantidade do item
     const campo = document.querySelector('input.qtd[data-cod="' + p.codigo + '"]');
     if (campo) { campo.focus(); campo.select(); }
+    if (!ja && !semKit) trazerKit(p);
   }
+  // 17/10/2026: aquecedor de kit sem garantia no cadastro: grava garantia = 1 (uma vez so)
+  async function garantiaKit(p) {
+    if (p.garantia) return;
+    try { await api('POST', '/produtos/' + p.codigo + '/garantia', { garantia: 1 }); p.garantia = true; } catch (e) { /* fica so nesta venda */ }
+  }
+  // 17/10/2026: KIT: o produto principal (ex.: aquecedor) traz o material que vai junto
+  async function trazerKit(p, pronto) {
+    let k = pronto;
+    if (!k) { try { k = (await api('GET', '/kits/' + encodeURIComponent(p.codigo))).kit; } catch (e) { return; } }
+    if (!k || !k.itens.length) return;
+    // 18/10/2026: o aquecedor do kit fica VIOLETA (garantia) e com a caixa OS marcada, mesmo que o
+    // kit tenha sido criado depois que esta tela abriu
+    principaisKit.add(Number(p.codigo));
+    const cab = estado.itens.find(x => x.codigo === p.codigo);
+    if (cab) { cab.garantia = true; if (estado.documento === 'NFE') cab.precisaInstalacao = true; }
+    garantiaKit(p);
+    k.itens.forEach(i => {
+      const ja = estado.itens.find(x => x.codigo === i.codigo);
+      if (ja) ja.quantidade += i.quantidade;
+      else estado.itens.push({ ...i, quantidade: i.quantidade, desconto: 0, precoManual: null,
+                               precisaInstalacao: estado.documento === 'NFE' && !!i.garantia });
+    });
+    desenharItens();
+    const campo = document.querySelector('input.qtd[data-cod="' + p.codigo + '"]');
+    if (campo) { campo.focus(); campo.select(); }
+    recado('Kit de ' + p.descricao + ': +' + k.itens.length + ' item(ns) junto (dá para tirar ou mudar a quantidade)');
+  }
+  // 17/10/2026: botao "📦 Kits aquecedores": fornecedor -> kits; clicou, entra o principal + o kit
+  $('kits-btn').addEventListener('click', async () => {
+    if (estado.documento !== 'NFE') { recado('Cupom não aceita kit aquecedor: mude o documento para Nota fiscal.', 'erro'); return; }
+    let kits;
+    try { kits = (await api('GET', '/kits')).kits || []; } catch (e) { recado(e.message, 'erro'); return; }
+    if (!kits.length) { recado('Nenhum kit cadastrado (Venda › Kits).', 'erro'); return; }
+    principaisKit = new Set(kits.map(k => Number(k.codigo)));        // 18/10/2026: lista em dia
+    const forns = [...new Map(kits.map(k => [k.nrFornec, k.fornecedor || 'sem fornecedor'])).entries()]
+      .sort((a, b) => a[1].localeCompare(b[1], 'pt-BR'));
+    const f = document.createElement('div');
+    f.className = 'kits-fundo';
+    f.innerHTML = '<div class="kits-cx"><div class="kits-cab"><span>📦 Kits aquecedores · escolha o fornecedor e o kit</span><button type="button" data-fecha title="fechar">×</button></div>'
+      + '<div class="kits-corpo"><div class="kits-forn">' + forns.map(([nr, nome]) => '<div data-nr="' + escapar(nr) + '"><span>' + escapar(nome) + '</span><span>'
+        + kits.filter(k => k.nrFornec === nr).length + '</span></div>').join('') + '</div><div class="kits-lista" id="kits-l"></div></div></div>';
+    document.body.appendChild(f);
+    // 17/10/2026: arrastar a janela pelo titulo (para os lados, para cima e para baixo)
+    const cx = f.querySelector('.kits-cx'), cabK = f.querySelector('.kits-cab');
+    cabK.addEventListener('mousedown', ev => {
+      if (ev.button !== 0 || ev.target.closest('button')) return;
+      ev.preventDefault();
+      const r0 = cx.getBoundingClientRect(), dx = ev.clientX - r0.left, dy = ev.clientY - r0.top;
+      cx.style.position = 'fixed'; cx.style.margin = '0'; cx.style.left = r0.left + 'px'; cx.style.top = r0.top + 'px'; cx.style.width = r0.width + 'px';
+      const mexe = e => {
+        cx.style.left = Math.min(Math.max(0, e.clientX - dx), innerWidth - 80) + 'px';
+        cx.style.top = Math.min(Math.max(0, e.clientY - dy), innerHeight - 40) + 'px';
+      };
+      const solta = () => { document.removeEventListener('mousemove', mexe); document.removeEventListener('mouseup', solta); };
+      document.addEventListener('mousemove', mexe); document.addEventListener('mouseup', solta);
+    });
+    const mostra = nr => {
+      f.querySelectorAll('[data-nr]').forEach(d => d.classList.toggle('ativo', d.dataset.nr === String(nr)));
+      f.querySelector('#kits-l').innerHTML = kits.filter(k => String(k.nrFornec) === String(nr)).map(k => '<div class="k" data-k="' + k.codigo + '"><b>'
+        + escapar(k.codigo) + ' · ' + escapar(k.descricao) + '</b><small>' + escapar(k.itens.map(i => i.quantidade + ' ' + i.descricao).join(' · ')) + '</small></div>').join('');
+    };
+    mostra(forns[0][0]);
+    const fechar = () => { f.remove(); document.removeEventListener('keydown', esc); };
+    const esc = ev => { if (ev.key === 'Escape') fechar(); };
+    document.addEventListener('keydown', esc);
+    f.addEventListener('click', async ev => {
+      if (ev.target === f || ev.target.closest('[data-fecha]')) { fechar(); return; }
+      const n = ev.target.closest('[data-nr]'); if (n) { mostra(n.dataset.nr); return; }
+      const k = ev.target.closest('[data-k]'); if (!k) return;
+      let kit;
+      try { kit = (await api('GET', '/kits/' + encodeURIComponent(k.dataset.k))).kit; } catch (e) { recado(e.message, 'erro'); return; }
+      if (!kit || !kit.principal) { recado('Kit sem o produto principal.', 'erro'); return; }
+      fechar();
+      const jaTinha = estado.itens.some(i => i.codigo === kit.principal.codigo);
+      adicionar(kit.principal, true);
+      if (!jaTinha) trazerKit(kit.principal, kit);
+    });
+  });
 
   // ---- itens e totais -------------------------------------------------------------------
   function desenharItens() {
@@ -1412,7 +1662,7 @@
       const v = (await api('GET', '/' + estado.id)).venda;
       estado.documento = v.documento; estado.condicao = v.condicao;
       estado.instalacao = v.instalacao && v.instalacao.confirmada ? v.instalacao : null;
-      marcarSeg('seg-doc', v.documento); $('sel-cond').value = v.condicao;
+      marcarSeg('seg-doc', v.documento); botaoKits(); $('sel-cond').value = v.condicao;
       if (v.cliente && (v.cliente.tipo === 'PF' || v.cliente.tipo === 'PJ')) {
         estado.tipoCliente = v.cliente.tipo; tipoAnterior = v.cliente.tipo; marcarSeg('seg-tipo', v.cliente.tipo); mostrarTipo();
       }

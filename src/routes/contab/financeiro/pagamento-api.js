@@ -221,7 +221,8 @@ router.get('/dda-confere', async (req, res) => {
     const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     res.json({ de: ymd(de), ate: ymd(ate), fornecedores,
       titulos: itens.map(it => { const f = porConta.get(it.codigoConta) || {};
-        return { ...tituloParaTela(it, null), cnpj: f.cnpj || '', razao: f.razao || it.nomeConta || '', marca: f.marca || '' }; }) });
+        return { ...tituloParaTela(it, null), cnpj: f.cnpj || '', razao: f.razao || it.nomeConta || '', marca: f.marca || '',
+          ajustes: (it.ajustes || []).slice(-3) }; }) });   // 19/10/2026: para o "desfazer o ajuste"
   } catch (err) {
     console.error('❌ /pagamento/dda-confere:', err.message);
     res.status(500).json({ erro: err.message });

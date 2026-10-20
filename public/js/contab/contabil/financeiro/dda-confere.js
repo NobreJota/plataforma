@@ -37,6 +37,16 @@
 //   - SAIU o "🧪 Simular arquivo do banco".
 //   O formato em colunas (CSV com CNPJ, de outros bancos) continua funcionando como antes.
 //   pos como no Access: 3 = pedido feito, 7 = compra projetada.
+// 19/10/2026 (2): par do MAIS CERTO para o menos certo (todos os boletos juntos); "✎ ajustar" so com VALOR IGUAL
+//   (com valor diferente o par pode estar errado: mostra o aviso, sem ajuste); "↶ desfazer o ajuste" volta o
+//   vencimento de antes (vem de `ajustes` do titulo); "Procurar" nos dois lados. O ajuste NUNCA muda o valor.
+// 19/10/2026 (3): a NOTA e procurada DENTRO do documento do boleto (Tigre 0208804501 = NF 2088045, Rinnai 0620819 01 =
+//   NF 620819); achou a nota, o par so pode ser titulo DESSA nota (antes caia no nome e pegava outra nota da Rinnai).
+// 19/10/2026 (4): "📒 razão" em cada titulo do fluxo: razao da conta + titulos em aberto e a conferencia do saldo
+//   (public/js/comum/razao-conta.js).
+// 19/10/2026 (5): "📒 razão" tambem no BOLETO (lado do banco), pela conta do fornecedor (do par, do fluxo pelo nome ou do
+//   cadastro): a janela acende a nota e o valor do boleto no razao ("ja foi pago e estao cobrando de novo?").
+//   Trocar de grupo (chip) limpa a busca; com tudo vazio aparece "mostrar todos". O arquivo nunca se perde.
 // Carregado pelo sub-menu (fluxo-submenu.js): window.DdaConfere.abrir()
 // API: GET /financeiro/api/pagamento/dda-confere?de=&ate=
 // =============================================================================
@@ -112,6 +122,11 @@
   const limpo = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
   const numeros = s => (String(s || '').match(/\d{4,}/g) || []).map(n => n.replace(/^0+/, '')).filter(Boolean);
   const nfDe = doc => numeros(doc).sort((a, b) => b.length - a.length)[0] || '';
+  // 19/10/2026: a NOTA dentro do documento do boleto: "0617763 01" -> 61776301 contem 617763; Tigre "0208804501" -> NF
+  // 2088045 + parcela 01; Sfera "0003127931" -> NF 312793 + 1; Formetal "102175431" -> NF 217543. Nota com 5+ digitos:
+  // "contem"; com 4 (Orbis "1086 3/3", RR "NFe7991B"): o documento comeca com ela.
+  const digitosDoc = s => String(s || '').replace(/\D/g, '').replace(/^0+/, '');
+  const casaNf = (doc, nf) => { const d = digitosDoc(doc); return !!nf && (nf.length >= 5 ? d.includes(nf) : d.startsWith(nf) && d.length - nf.length <= 3); };
   const GENERICAS = new Set(('LTDA SA ME EPP EIRELI IND INDUS INDUSTRIA COM COMERCIAL COMERCIO IMP IMPORT IMPORTACAO DOS DAS CIA '
     + 'BRASIL FORNECEDORA METALURGICA TRANSPORTADORA TUBOS FLEXIVEIS TECNOLOGIA AQUECIMENTO CONST MATE SOL CREDITO '
     + 'SEG GER DEPARTAMENTO NACIONAL ORGANIZACOES CONTABEIS FERRAMENTAS SEGURANA SEGURANCA METAIS').split(' '));
@@ -206,6 +221,7 @@
     jan.innerHTML = '<div class="dc-cab"><span>DDA - confere · nosso fluxo × arquivo do banco</span><button type="button" id="dc-x" title="fechar (Esc)">×</button></div>'
       + '<div class="dc-ctl"><label>Vencimento de<input type="date" id="dc-de"></label><label>até<input type="date" id="dc-ate"></label>'
       + '<button type="button" class="dc-arq" id="dc-bt">📂 Importar o arquivo do DDA (CSV)</button><input type="file" id="dc-file" accept=".csv,.txt,text/csv" hidden>'
+      + '<label>Procurar<input id="dc-busca" placeholder="fornecedor, beneficiário, nota ou nº" autocomplete="off" style="height:30px;width:230px;border:1px solid #d1d5db;border-radius:6px;padding:0 8px"></label>'
       + '<label style="flex-direction:row;align-items:center;gap:5px;font-size:12px;text-transform:none;align-self:center"><input type="checkbox" id="dc-forn" checked> só fornecedores no "só no fluxo"</label>'
       + '<button type="button" class="dc-chip" id="dc-cols" hidden title="qual coluna do arquivo é o CNPJ, o vencimento, o valor">⚙ colunas do arquivo</button>'
       + '<span class="dc-nome" id="dc-nome">exporte o DDA no site do banco (CSV) e escolha o arquivo</span></div>'
@@ -220,6 +236,7 @@
     q('dc-bt').addEventListener('click', () => q('dc-file').click());
     q('dc-file').addEventListener('change', importar);
     q('dc-forn').addEventListener('change', desenhar);
+    q('dc-busca').addEventListener('input', desenhar);           // 19/10/2026: procurar nos dois lados
     q('dc-cols').addEventListener('click', () => desenharMapa(true));
     // 18/10/2026: ordenar clicando no titulo da coluna (Fornecedor, Venc., Valor): os dois lados juntos
     jan.addEventListener('click', ev => {
@@ -228,12 +245,24 @@
       desenhar();
     });
     q('dc-de').addEventListener('change', carregarFluxo); q('dc-ate').addEventListener('change', carregarFluxo);
-    q('dc-res').addEventListener('click', ev => { const c = ev.target.closest('[data-f]'); if (!c) return; filtro = filtro === c.dataset.f ? '' : c.dataset.f; desenhar(); });
+    // 19/10/2026: trocar de grupo (chip) limpa a busca — com a busca de antes o grupo novo vinha vazio e parecia que
+    // a tela tinha perdido tudo. O arquivo importado continua (nada se perde ao trocar de grupo).
+    q('dc-res').addEventListener('click', ev => { const c = ev.target.closest('[data-f]'); if (!c) return; filtro = filtro === c.dataset.f ? '' : c.dataset.f; q('dc-busca').value = ''; desenhar(); });
+    jan.addEventListener('click', ev => { if (ev.target.closest('[data-limpa]')) { q('dc-busca').value = ''; filtro = ''; desenhar(); } });
     // 18/10/2026: "✎ ajustar o vencimento do fluxo" (o do banco estava certo)
     jan.addEventListener('click', ev => {
       const b = ev.target.closest('[data-aj]'); if (!b) return;
       ev.stopPropagation();
-      ajustarVenc(fluxo.find(t => t._id === b.dataset.aj), b.dataset.venc);
+      ajustarVenc(fluxo.find(t => t._id === b.dataset.aj), b.dataset.venc, !!b.dataset.desfaz);
+    }, true);
+    // 19/10/2026: "📒 razão" — razao da conta + titulos em aberto, conferindo o saldo (comum/razao-conta.js)
+    jan.addEventListener('click', ev => {
+      const b = ev.target.closest('[data-raz]'); if (!b) return;
+      ev.stopPropagation();
+      const ir = () => window.RazaoConta.abrir(b.dataset.raz, b.dataset.nome, { destaque: b.dataset.nf || '', valor: Number(b.dataset.valor) || 0 });
+      if (window.RazaoConta) { ir(); return; }
+      const sc = document.createElement('script'); sc.src = '/js/comum/razao-conta.js'; sc.onload = ir;
+      sc.onerror = () => alert('Não carregou o razao-conta.js'); document.head.appendChild(sc);
     }, true);
     // clicar numa linha: acende o par do outro lado
     jan.addEventListener('click', ev => {
@@ -264,12 +293,16 @@
   }
 
   // ---- 18/10/2026: ajustar o vencimento no nosso fluxo ----
-  function ajustarVenc(t, vencBanco) {
+  function ajustarVenc(t, vencBanco, desfaz) {
     if (!t) return;
+    const bp = t.par && banco.find(x => x.par === t.par);
     const f = document.createElement('div'); f.className = 'dc-mfundo';
-    f.innerHTML = '<div class="dc-mcx"><h4>Ajustar o vencimento no nosso fluxo</h4><div class="co">'
+    f.innerHTML = '<div class="dc-mcx"><h4>' + (desfaz ? 'Desfazer o ajuste do vencimento' : 'Ajustar o vencimento no nosso fluxo') + '</h4><div class="co">'
       + '<b>' + esc(t.marca || t.razao) + '</b><br>' + esc(t.historico) + ' · R$ ' + brl(t.valor)
-      + '<br>No fluxo: <b>' + br(t.venc) + '</b> · no banco: <b>' + br(vencBanco) + '</b>'
+      + (desfaz ? '<br>Hoje no fluxo: <b>' + br(t.venc) + '</b> · volta para: <b>' + br(vencBanco) + '</b> (o vencimento de antes do ajuste)'
+        : '<br>No fluxo: <b>' + br(t.venc) + '</b> · no banco: <b>' + br(vencBanco) + '</b>'
+          + (bp ? '<br>Boleto: ' + esc(bp.nome) + (bp.doc ? ' nº ' + esc(bp.doc) : '') + ' · R$ ' + brl(bp.valor) : '')
+          + '<br><small>Só o VENCIMENTO muda; o valor do título não é alterado.</small>')
       + '<label>Novo vencimento<input type="date" id="dc-nv" value="' + vencBanco + '"></label>'
       + '<div class="er" id="dc-er"></div></div>'
       + '<div class="bt"><button type="button" data-c>Cancelar</button><button type="button" class="ok" data-g>Gravar no fluxo</button></div></div>';
@@ -292,7 +325,7 @@
       try {
         const r = await fetch(API + '/titulo/' + encodeURIComponent(t._id) + '/vencimento', { method: 'PUT',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ vencimento: v, motivo: 'DDA - confere: vencimento do banco ' + br(vencBanco) }) });
+          body: JSON.stringify({ vencimento: v, motivo: desfaz ? 'DDA - confere: ajuste desfeito' : 'DDA - confere: vencimento do banco ' + br(vencBanco) }) });
         const j = await r.json().catch(() => ({}));
         if (!r.ok) throw new Error(j.erro || 'erro ' + r.status);
         fechar();
@@ -377,55 +410,69 @@
     comparar();
   }
 
+  // 19/10/2026: a conta do fornecedor de um boleto (para o razao): a do par; senao a de um titulo do fluxo com o nome;
+  // senao a do cadastro com o nome. E a nota do documento (para destacar no razao).
+  function contaDoBoleto(b) {
+    const t = b.par && fluxo.find(x => x.par === b.par);
+    let conta = t ? t.codigoConta : (b.forn && b.forn.conta) || '';
+    let nome = t ? (t.marca || t.razao || '') : (b.forn ? b.forn.marca || b.forn.razao : '');
+    if (!conta && b.chave) { const x = fluxo.find(y => y.codigoConta && temPalavra(y.texto, b.chave)); if (x) { conta = x.codigoConta; nome = x.marca || x.razao || x.nomeConta || ''; } }
+    if (!conta && b.chave) { const f = forn.find(y => y.conta && temPalavra(y.razao + ' ' + y.marca, b.chave)); if (f) { conta = f.conta; nome = f.marca || f.razao; } }
+    const nf = (numeros(b.doc).sort((x, y) => y.length - x.length)[0] || '');
+    return conta ? { conta, nome: nome || b.nome, nf } : null;
+  }
+
   // ---- comparar ----
+  // 19/10/2026: o par e escolhido do MAIS CERTO para o menos certo, olhando TODOS os boletos de uma vez:
+  //   1o mesmo valor e mesmo dia · 2o mesmo valor ate 5 dias · 3o mesmo dia (valor diferente) · 4o o mais perto.
+  //   Antes ia boleto por boleto na ordem do arquivo e o primeiro pegava o titulo de outro (Formetal: o boleto de
+  //   442,00 levou o titulo de 440,00, que era do boleto seguinte).
   function comparar() {
-    fluxo.forEach(t => { t.st = 'soFluxo'; t.par = ''; });
+    fluxo.forEach(t => { t.st = 'soFluxo'; t.par = ''; t.dif = ''; });
     const cnpjs = new Map(forn.map(f => [f.cnpj, f]));
     const raizes = new Map(forn.filter(f => f.cnpj.length === 14).map(f => [f.cnpj.slice(0, 8), f]));
-    let n = 0;
     const conhecido = chave => !!chave && (fluxo.some(t => temPalavra(t.texto, chave)) || forn.some(f => temPalavra(f.razao + ' ' + f.marca, chave)));
+    // titulo cuja nota esta em algum boleto do arquivo: e daquele boleto (nao entra na busca pelo nome)
+    fluxo.forEach(t => { t.reservado = banco.some(b => !b.cnpj && t.nfs.some(nf => casaNf(b.doc, nf))); });
+    // quem pode ser par de cada boleto
     for (const b of banco) {
-      b.par = ''; b.dif = '';
-      if (!b.cnpj) {                                           // 19/10/2026: sem CNPJ (Agenda do BB): pela NOTA, depois pelo NOME
-        const nf = nfDe(b.doc), chave = chaveNome(b.nome), livres = fluxo.filter(t => t.st === 'soFluxo');
-        let cand = nf ? livres.filter(t => t.nfs.includes(nf)) : [];
-        const porNf = cand.length > 0;
-        if (!porNf && chave) cand = livres.filter(t => temPalavra(t.texto, chave));
-        const mesmoV = t => cent(t.valor) === cent(b.valor), dd = t => Math.abs(diasEntre(t.venc, b.venc));
-        let t = cand.find(x => mesmoV(x) && dd(x) === 0), st = 'ok';
-        if (!t) { t = cand.filter(x => mesmoV(x) && dd(x) <= 5).sort((x, y) => dd(x) - dd(y))[0]; st = 'venc'; }
-        if (!t) { t = cand.find(x => dd(x) === 0); st = 'valor'; }
-        if (!t) { t = cand.filter(x => dd(x) <= (porNf ? 40 : 5)).sort((x, y) => dd(x) - dd(y))[0]; st = 'ambos'; }
-        if (!t) { b.st = conhecido(chave) ? 'soBanco' : 'desconhecido'; continue; }
-        const outro = porNf && chave && !temPalavra(t.texto, chave);
-        if (outro && st === 'ok') st = 'outroBenef';
-        n++; b.par = t.par = String(n); b.st = t.st = st;
-        const d = [];
-        if (cent(t.valor) !== cent(b.valor)) d.push('fluxo R$ ' + brl(t.valor) + ' × banco R$ ' + brl(b.valor));
-        if (t.venc !== b.venc) d.push('venc. fluxo ' + br(t.venc) + ' × banco ' + br(b.venc));
-        if (outro) d.push('quem cobra no banco: ' + b.nome);
-        b.dif = t.dif = d.join(' · ');
-        continue;
+      b.par = ''; b.dif = ''; b.st = ''; b.porNf = false; b.chave = ''; b.raiz = null; b.forn = null; b.cand = () => false;
+      if (b.cnpj) {
+        const f = cnpjs.get(b.cnpj) || null, raiz = !f && b.cnpj.length === 14 ? raizes.get(b.cnpj.slice(0, 8)) : null;
+        b.forn = f || raiz; b.raiz = raiz;
+        if (!b.forn) { b.st = 'desconhecido'; continue; }
+        const alvo = b.forn.cnpj.slice(0, f ? 14 : 8);
+        b.cand = t => !!t.cnpj && t.cnpj.slice(0, alvo.length) === alvo;
+      } else {                                                 // sem CNPJ (Agenda do BB): pela NOTA, depois pelo NOME
+        b.chave = chaveNome(b.nome);
+        b.porNf = fluxo.some(t => t.nfs.some(nf => casaNf(b.doc, nf)));
+        // 19/10/2026: achou a nota -> SO titulo dessa nota (nunca outra nota do mesmo fornecedor); pelo nome so
+        // titulo que nao e de nota de outro boleto do arquivo
+        b.cand = b.porNf ? (t => t.nfs.some(nf => casaNf(b.doc, nf)))
+          : b.chave ? (t => !t.reservado && temPalavra(t.texto, b.chave)) : (() => false);
       }
-      const f = cnpjs.get(b.cnpj) || null, raiz = !f && b.cnpj.length === 14 ? raizes.get(b.cnpj.slice(0, 8)) : null;
-      b.forn = f || raiz;
-      if (!f && !raiz) { b.st = 'desconhecido'; continue; }
-      const alvo = (f || raiz).cnpj.slice(0, f ? 14 : 8);
-      const cand = fluxo.filter(t => t.st === 'soFluxo' && t.cnpj && t.cnpj.slice(0, alvo.length) === alvo);
-      const mesmoV = t => cent(t.valor) === cent(b.valor), dd = t => Math.abs(diasEntre(t.venc, b.venc));
-      let t = cand.find(x => mesmoV(x) && dd(x) === 0), st = 'ok';
-      if (!t) { t = cand.filter(x => mesmoV(x) && dd(x) <= 5).sort((x, y) => dd(x) - dd(y))[0]; st = 'venc'; }
-      if (!t) { t = cand.find(x => dd(x) === 0); st = 'valor'; }
-      if (!t) { t = cand.filter(x => dd(x) <= 5).sort((x, y) => dd(x) - dd(y))[0]; st = 'ambos'; }
-      if (!t) { b.st = 'soBanco'; continue; }
-      if (raiz && st === 'ok') st = 'filial';
+    }
+    const mesmoV = (t, b) => cent(t.valor) === cent(b.valor), dd = (t, b) => Math.abs(diasEntre(t.venc, b.venc));
+    const PASSOS = [['ok', (t, b) => mesmoV(t, b) && dd(t, b) === 0], ['venc', (t, b) => mesmoV(t, b) && dd(t, b) <= 5],
+                    ['valor', (t, b) => dd(t, b) === 0], ['ambos', (t, b) => dd(t, b) <= (b.porNf ? 40 : 5)]];
+    let n = 0;
+    for (const [st0, serve] of PASSOS) for (const b of banco) {
+      if (b.st) continue;
+      const t = fluxo.filter(x => x.st === 'soFluxo' && b.cand(x) && serve(x, b)).sort((x, y) => dd(x, b) - dd(y, b))[0];
+      if (!t) continue;
+      let st = st0;
+      const outro = !b.cnpj && b.porNf && b.chave && !temPalavra(t.texto, b.chave);
+      if (outro && st === 'ok') st = 'outroBenef';
+      if (b.raiz && st === 'ok') st = 'filial';
       n++; b.par = t.par = String(n); b.st = t.st = st;
       const d = [];
       if (cent(t.valor) !== cent(b.valor)) d.push('fluxo R$ ' + brl(t.valor) + ' × banco R$ ' + brl(b.valor));
       if (t.venc !== b.venc) d.push('venc. fluxo ' + br(t.venc) + ' × banco ' + br(b.venc));
-      if (raiz) d.push('CNPJ do banco ' + cnpjFmt(b.cnpj) + ' (cadastro ' + cnpjFmt(raiz.cnpj) + ')');
+      if (outro) d.push('quem cobra no banco: ' + b.nome);
+      if (b.raiz) d.push('CNPJ do banco ' + cnpjFmt(b.cnpj) + ' (cadastro ' + cnpjFmt(b.raiz.cnpj) + ')');
       b.dif = t.dif = d.join(' · ');
     }
+    for (const b of banco) if (!b.st) b.st = b.cnpj ? 'soBanco' : (conhecido(b.chave) ? 'soBanco' : 'desconhecido');
     desenhar();
   }
   function desenhar() {
@@ -435,7 +482,13 @@
         + (filtro ? ' <span class="dc-chip" data-f="' + filtro + '">mostrar todos</span>' : '');
     const passa = x => !filtro || x.st === filtro || (filtro !== 'soFluxo' && x.par && banco.some(b => b.par === x.par && b.st === filtro));
     const soForn = q('dc-forn').checked;                        // 19/10/2026: esconde "so no fluxo" que nao e fornecedor
-    const fv = fluxo.filter(t => passa(t) && !(soForn && t.st === 'soFluxo' && !/^2\.01\.001\./.test(t.codigoConta || ''))), bv = banco.filter(b => !filtro || b.st === filtro);
+    const bus = limpo(q('dc-busca').value.trim());               // 19/10/2026: procura nos dois lados (e mostra o par)
+    const achaT = t => !bus || limpo([t.marca, t.razao, t.historico, t.codigoConta].join(' ')).includes(bus);
+    const achaB = b => !bus || limpo([b.nome, b.doc, b.forn ? b.forn.marca + ' ' + b.forn.razao : ''].join(' ')).includes(bus);
+    const parT = t => !bus || achaT(t) || (t.par && banco.some(b => b.par === t.par && achaB(b)));
+    const parB = b => !bus || achaB(b) || (b.par && fluxo.some(t => t.par === b.par && achaT(t)));
+    const fv = fluxo.filter(t => passa(t) && parT(t) && !(soForn && !bus && t.st === 'soFluxo' && !/^2\.01\.001\./.test(t.codigoConta || ''))),
+          bv = banco.filter(b => (!filtro || b.st === filtro) && parB(b));
     const tot = l => 'R$ ' + brl(l.reduce((s, x) => s + cent(x.valor), 0) / 100);
     q('dc-t1').textContent = '· ' + fluxo.length + ' título(s) · ' + tot(fluxo);
     q('dc-t2').textContent = banco.length ? '· ' + banco.length + ' título(s) · ' + tot(banco) : '';
@@ -453,16 +506,25 @@
         + esc(t.historico) + (t.parcela ? ' · ' + t.parcela + '/' + t.totalParcelas : '') + ' · ' + ({ 0: 'avulso', 3: 'pedido feito', 7: 'compra projetada', 8: 'orçamento' }[t.pos] || 'a pagar') + '</span>'
         + (t.dif ? '<br><span class="dc-dif">' + esc(t.dif) + '</span>' : '')
         + (() => { const b = t.par && banco.find(x => x.par === t.par);
-            return b && b.venc !== t.venc ? '<br><button type="button" class="dc-aj" data-aj="' + esc(t._id) + '" data-venc="' + b.venc + '">✎ ajustar o vencimento do fluxo</button>' : ''; })()
+            // 19/10/2026: so oferece ajustar quando o VALOR E IGUAL (par seguro); com valor diferente pode nao ser este titulo
+            if (b && b.venc !== t.venc && cent(b.valor) === cent(t.valor)) return '<br><button type="button" class="dc-aj" data-aj="' + esc(t._id) + '" data-venc="' + b.venc + '">✎ ajustar o vencimento do fluxo</button>';
+            if (b && cent(b.valor) !== cent(t.valor)) return '<br><span class="dc-dif" style="color:#991b1b">valor diferente: pode não ser este título — confira (sem ajuste automático)</span>';
+            return ''; })()
+        + (() => { const a = (t.ajustes || []).filter(x => x.campo === 'vencimento').slice(-1)[0];       // 19/10/2026: desfazer
+            return a && a.de && !/desfeito/i.test(a.motivo || '') ? '<br><button type="button" class="dc-aj" data-aj="' + esc(t._id) + '" data-venc="' + String(a.de).slice(0, 10) + '" data-desfaz="1">↶ desfazer o ajuste: voltar para ' + br(String(a.de).slice(0, 10)) + '</button>' : ''; })()
+        + (t.codigoConta ? ' <button type="button" class="dc-aj" data-raz="' + esc(t.codigoConta) + '" data-nome="' + esc(t.marca || t.razao || t.nomeConta || '') + '" title="razão da conta e títulos em aberto">📒 razão</button>' : '')
         + '</td><td>' + br(t.venc) + '</td><td class="n">' + brl(t.valor) + '</td><td>' + stt(t) + '</td></tr>').join('') + '</tbody></table>'
-      : '<div class="dc-vz">' + (fluxo.length ? 'Nada com esse filtro.' : 'Nenhum título de fornecedor no fluxo nesse período.') + '</div>';
+      : '<div class="dc-vz">' + (fluxo.length ? 'Nada com esse filtro' + (q('dc-busca').value ? ' e a busca "' + esc(q('dc-busca').value) + '"' : '') + '. <button type="button" class="dc-chip" data-limpa>mostrar todos</button>' : 'Nenhum título de fornecedor no fluxo nesse período.') + '</div>';
     q('dc-dir').innerHTML = bv.length ? '<table class="dc-tab">' + cab('Beneficiário') + '<tbody>'
       + bv.map((b, k) => '<tr data-par="' + b.par + '" class="l-' + b.st + '"><td class="cn">' + (k + 1) + '</td><td>' + esc(b.nome) + ' <span class="cn">' + esc(cnpjFmt(b.cnpj)) + '</span>'
         + (b.forn ? '<br><span class="cn">cadastro: ' + esc(b.forn.marca || b.forn.razao) + '</span>' : '')
         + (b.doc ? '<br><span class="cn">nº ' + esc(b.doc) + '</span>' : '')
         + (b.st === 'desconhecido' ? '<br><b style="color:#991b1b;font-size:12px">' + (b.cnpj ? 'NÃO é fornecedor cadastrado' : 'nem a nota nem o nome batem com o fluxo ou o cadastro') + ': confira antes de pagar</b>' : '')
-        + (b.dif ? '<br><span class="dc-dif">' + esc(b.dif) + '</span>' : '') + '</td><td>' + br(b.venc) + '</td><td class="n">' + brl(b.valor) + '</td><td>' + stt(b) + '</td></tr>').join('') + '</tbody></table>'
-      : '<div class="dc-vz">' + (temArq ? (formato === 'colunas' && !mapaBom(mapa) ? 'Escolha acima as colunas do arquivo.' : 'Nada com esse filtro.') : 'Importe o arquivo do DDA (no BB: Agenda de boletos DDA → salvar CSV).') + '</div>';
+        + (b.dif ? '<br><span class="dc-dif">' + esc(b.dif) + '</span>' : '')
+        + (() => { const c = contaDoBoleto(b);                 // 19/10/2026: razao do fornecedor do boleto (ja foi pago?)
+            return c ? '<br><button type="button" class="dc-aj" data-raz="' + esc(c.conta) + '" data-nome="' + esc(c.nome) + '" data-nf="' + esc(c.nf) + '" data-valor="' + b.valor + '" title="razão e títulos em aberto: veja se esta nota já foi paga">📒 razão ' + esc(c.conta) + (c.nf ? ' · procura NF ' + esc(c.nf) : '') + '</button>' : ''; })()
+        + '</td><td>' + br(b.venc) + '</td><td class="n">' + brl(b.valor) + '</td><td>' + stt(b) + '</td></tr>').join('') + '</tbody></table>'
+      : '<div class="dc-vz">' + (temArq ? (formato === 'colunas' && !mapaBom(mapa) ? 'Escolha acima as colunas do arquivo.' : 'Nada com esse filtro' + (q('dc-busca').value ? ' e a busca "' + esc(q('dc-busca').value) + '"' : '') + '. <button type="button" class="dc-chip" data-limpa>mostrar todos</button>') : 'Importe o arquivo do DDA (no BB: Agenda de boletos DDA → salvar CSV).') + '</div>';
   }
 
   window.DdaConfere = { abrir };

@@ -17,6 +17,8 @@
 // 19/10/2026: botao "Razão" na janela do cliente: abre (por cima, arrastavel) o razao da conta do cliente no
 //   ano — data, historico, contrapartida, debito, credito e saldo — para conferir na hora antes de receber
 //   ou excluir. Usa a mesma API da tela do Razao (/financeiro/api/razao/lancamentos).
+// 19/10/2026: o botao "Razão" usa a janela comum (public/js/comum/razao-conta.js): razao + titulos em aberto +
+//   conferencia do saldo. A janela antiga (abrirRazao) fica de reserva se o arquivo comum nao carregar.
 // Carregado pelo sub-menu (fluxo-submenu.js): window.VendasReceber.abrir()
 // API razao: /financeiro/api/razao/lancamentos?conta=
 // API: /financeiro/api/pagamento (GET /receber, GET /bancos, POST /quitar, POST /titulos/excluir, GET /saldo-conta)
@@ -173,7 +175,13 @@
     const fechar = () => { cli.remove(); cli = null; };
     q('vc-x').addEventListener('click', fechar); q('vc-canc').addEventListener('click', fechar);
     q('vc-cfg').addEventListener('click', abrirConfig);
-    q('vc-raz').addEventListener('click', () => abrirRazao(t0.codigoConta, nomeDe(t0)));
+    // 19/10/2026: o razao da conta + os titulos em aberto e a conferencia do saldo (comum/razao-conta.js)
+    q('vc-raz').addEventListener('click', () => {
+      const ir = () => window.RazaoConta.abrir(t0.codigoConta, nomeDe(t0));
+      if (window.RazaoConta) { ir(); return; }
+      const sc = document.createElement('script'); sc.src = '/js/comum/razao-conta.js'; sc.onload = ir;
+      sc.onerror = () => abrirRazao(t0.codigoConta, nomeDe(t0)); document.head.appendChild(sc);
+    });
     if (!bancos) { try { const b = await api('GET', '/bancos'); bancos = Array.isArray(b) ? b : []; } catch (e) { bancos = []; } }
     const rec = bancos.filter(b => b.recebeVenda), lista = rec.length ? rec : bancos;
     q('vc-banco').insertAdjacentHTML('beforeend', lista.map(b => '<option value="' + esc(b._id) + '">' + esc(b.apelido) + '</option>').join(''));

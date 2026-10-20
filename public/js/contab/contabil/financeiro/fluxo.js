@@ -43,6 +43,11 @@
  *    numero abre a aba com os vencimentos (de todos os meses: API GET /financeiro/api/fluxo/pos/:pos).
  *    "só os que vencem em <mes>" (marcado) mostra so os documentos com parcela no mes da grade.
  *    POS como no Access: 3 = Pedidos feitos, 7 = Compras projetadas.
+ *    19/10/2026: linha pos 7 (compra projetada) leva a etiqueta "previsão" antes do historico e fica em italico.
+ * Alterado em 20/10/2026: com um pos escolhido no Sintetizar, a coluna Saldo e o rodape sao SO daquele pos.
+ * Alterado em 20/10/2026: Sintetizar SO do mes escolhido (sem o saldo dos meses anteriores — Jorge).
+ * Alterado em 20/10/2026: "● Sintetizar" na legenda: total de cada pos no periodo e total do mes; clicou num pos, a
+ *    grade mostra so ele ("mostrar todos" ou clicar num mes volta ao normal).
  */
 (() => {
   'use strict';
@@ -90,6 +95,7 @@
     $$('#flx-meses .flx-mes-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         state.mes = btn.dataset.mes ? parseInt(btn.dataset.mes, 10) : null;
+        filtroPos = null;                                   // 20/10/2026: clicou no mes, volta ao normal (todos)
         renderMeses();
         carregar();
       });
@@ -117,6 +123,8 @@
     const st = document.createElement('style');
     st.textContent = `
     .c-pos-badge { cursor:pointer; } .c-pos-badge:hover { outline:2px solid #6d28d9; }
+    .tag-prev { font-size:.68rem; font-weight:800; color:#92400e; background:#fef3c7; border:1px solid #fde68a; border-radius:6px; padding:0 5px; }
+    tr.pos-7 td.c-hist { font-style:italic; }
     .jp-jan { position:fixed; left:50%; top:5vh; transform:translateX(-50%); z-index:90; width:min(920px, calc(100vw - 24px)); max-height:88vh;
               display:flex; flex-direction:column; background:#fff; border-radius:12px; box-shadow:0 18px 50px rgba(0,0,0,.3);
               font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; font-size:14px; color:#111827; }
@@ -258,6 +266,7 @@
       const q = '/' + state.ano + '?' + (state.mes ? `mes=${state.mes}&` : '') + (oc ? `ocultar=${oc}` : '');
       const data = await api(q);
       ultimasLinhas = data.linhas || [];                   // 19/10/2026: para a janela do pos
+      ultimoResumo = data.resumo || null;                  // 20/10/2026: saldo anterior para o Sintetizar
 
       if (!data.linhas || data.linhas.length === 0) {
         tbody.innerHTML = '<tr><td colspan="9" class="flx-empty">Nenhum lançamento no período. Lance projeções no Orçamento para vê-las aqui.</td></tr>';
@@ -290,10 +299,10 @@
         const isoData = l.vencimento ? new Date(l.vencimento).toISOString().slice(0,10) : '';
         const clicavel = acao ? 'flx-pagavel' : '';
         return separador + `
-        <tr class="cor-${l.cor} ${clicavel}" data-acao="${acao}" data-data="${isoData}" data-conta="${escAttr(l.codigoConta)}" data-hist="${escAttr(l.historico)}">
+        <tr class="cor-${l.cor} ${clicavel} pos-${l.pos}" data-v="${Math.round(((Number(l.aReceber) || 0) + (Number(l.aPagar) || 0)) * 100)}" data-acao="${acao}" data-data="${isoData}" data-conta="${escAttr(l.codigoConta)}" data-hist="${escAttr(l.historico)}">
           <td class="c-item">${l.item}</td>
           <td class="c-chave">${l.chave}</td>
-          <td class="c-hist">${l.historico}</td>
+          <td class="c-hist">${Number(l.pos) === 7 && !/^\s*previs/i.test(l.historico || '') ? '<span class="tag-prev">previsão</span> ' : ''}${l.historico}</td>
           <td class="c-conta">${l.codigoConta}</td>
           <td class="c-pos"><span class="c-pos-badge">${l.pos}</span></td>
           <td class="c-vect">${fmtData(l.vencimento)}</td>
@@ -331,6 +340,9 @@
         <div class="flx-resumo-item"><span class="lbl">Saldo do período</span><span class="val ${r.saldoFinal>=0?'val-saldo-pos':'val-saldo-neg'}">${fmt(r.saldoFinal)}</span></div>
         <div class="flx-resumo-item"><span class="lbl">Lançamentos</span><span class="val">${r.quantidade}</span></div>
       `;
+      resumoNormal = $('#flx-resumo').innerHTML;
+      aplicarFiltroPos();                                   // 20/10/2026: "Sintetizar" escolheu um pos
+      if (sint && !sint.hidden) desenharSintese();
     } catch (err) {
       tbody.innerHTML = `<tr><td colspan="9" class="flx-empty">Erro: ${err.message}</td></tr>`;
     }
@@ -970,6 +982,102 @@
   $('#flx-ano').addEventListener('change', (e) => { state.ano = parseInt(e.target.value, 10); carregar(); });
 
   /* ===== Init ===== */
+  /* ===== 20/10/2026 (Jorge): "● Sintetizar" na legenda =====
+     Janela pequena com o TOTAL de cada pos no periodo da grade (0 avulso, 2 a pagar, 5 a receber, 3 pedidos,
+     7 previsao de compras, 8 orcamento) e o total do mes. Clicou num item: a grade mostra SO aquele pos.
+     "todos" (ou clicar num mes) volta ao normal. Usa as linhas que a grade ja carregou. */
+  let filtroPos = null, sint = null, ultimoResumo = null, resumoNormal = '';
+  const SINT = [[0, 'avulso'], [2, 'contas a pagar'], [5, 'contas a receber'], [1, 'cartões a receber'], [3, 'pedidos'], [7, 'previsão compras'], [8, 'orçamento']];
+  (function estiloSint() {
+    const st = document.createElement('style');
+    st.textContent = `
+    .flx-leg.sint-leg { color:#0284c7; font-weight:800; cursor:pointer; } .flx-leg.sint-leg:hover { text-decoration:underline; }
+    .sint-cx { position:fixed; z-index:62; width:300px; background:#fff; border:1px solid #0284c7; border-radius:10px;
+               box-shadow:0 12px 30px rgba(0,0,0,.2); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; font-size:13px; }
+    .sint-cx[hidden] { display:none; }
+    .sint-cab { display:flex; align-items:center; padding:7px 10px; background:#0284c7; color:#fff; border-radius:10px 10px 0 0; font-weight:800; cursor:move; user-select:none; }
+    .sint-cab span { flex:1; } .sint-cab button { border:0; background:none; color:#fff; font-size:18px; cursor:pointer; }
+    .sint-it { display:flex; gap:8px; align-items:baseline; width:100%; border:0; border-bottom:1px solid #f1f5f9; background:#fff; padding:6px 10px; cursor:pointer; font-size:13px; text-align:left; }
+    .sint-it:hover { background:#f0f9ff; } .sint-it.on { background:#e0f2fe; font-weight:800; }
+    .sint-it b { width:18px; color:#6d28d9; } .sint-it span { flex:1; } .sint-it em { font-style:normal; font-variant-numeric:tabular-nums; }
+    .sint-it .neg { color:#b91c1c; } .sint-it .pos { color:#059669; }
+    .sint-tot { display:flex; padding:8px 10px; font-weight:800; border-top:2px solid #cbd5e1; } .sint-tot span { flex:1; }
+    .sint-aviso { margin:0 0 6px; padding:5px 10px; background:#e0f2fe; color:#075985; border-radius:8px; font-size:.8rem; font-weight:700; display:inline-block; }`;
+    document.head.appendChild(st);
+  })();
+  function aplicarFiltroPos() {
+    // 20/10/2026 (Jorge): com um pos escolhido, o SALDO e o rodape sao SO daquele pos (soma e saldo dos avulsos...)
+    let corre = 0, rec = 0, pag = 0, n = 0;
+    $$('#flx-body tr').forEach(tr => {
+      if (tr.classList.contains('flx-sep')) { tr.hidden = filtroPos !== null; return; }
+      const vis = filtroPos === null || tr.classList.contains('pos-' + filtroPos);
+      tr.hidden = !vis;
+      const cel = tr.querySelector('td.c-saldo span'); if (!cel) return;
+      if (cel.dataset.orig === undefined) { cel.dataset.orig = cel.textContent; cel.dataset.cls = cel.className; }
+      if (filtroPos === null) { cel.textContent = cel.dataset.orig; cel.className = cel.dataset.cls; return; }
+      if (!vis) return;
+      const v = Number(tr.dataset.v) || 0; corre += v; n++; if (v > 0) rec += v; else pag += v;
+      cel.textContent = fmt(corre / 100) || '0,00'; cel.className = corre >= 0 ? 'val-saldo-pos' : 'val-saldo-neg';
+    });
+    const res = $('#flx-resumo');
+    if (res) res.innerHTML = filtroPos === null ? resumoNormal : `
+        <div class="flx-resumo-item"><span class="lbl">A receber (pos ${filtroPos})</span><span class="val val-receber">${fmt(rec / 100) || '0,00'}</span></div>
+        <div class="flx-resumo-item"><span class="lbl">A pagar (pos ${filtroPos})</span><span class="val val-pagar">${fmt(pag / 100) || '0,00'}</span></div>
+        <div class="flx-resumo-item"><span class="lbl">Saldo (pos ${filtroPos})</span><span class="val ${corre >= 0 ? 'val-saldo-pos' : 'val-saldo-neg'}">${fmt(corre / 100) || '0,00'}</span></div>
+        <div class="flx-resumo-item"><span class="lbl">Lançamentos</span><span class="val">${n}</span></div>`;
+    let av = $('#flx-sint-aviso');
+    if (filtroPos === null) { if (av) av.remove(); return; }
+    if (!av) { av = document.createElement('div'); av.id = 'flx-sint-aviso'; const leg = $('.flx-legenda'); if (leg) leg.insertAdjacentElement('afterend', av); }
+    av.className = 'sint-aviso';
+    av.innerHTML = 'Mostrando só: pos ' + filtroPos + ' · ' + (SINT.find(x => x[0] === filtroPos) || [0, ''])[1] + ' &nbsp; <a href="#" data-sint-todos>mostrar todos</a>';
+    av.querySelector('[data-sint-todos]').addEventListener('click', ev => { ev.preventDefault(); filtroPos = null; aplicarFiltroPos(); if (sint && !sint.hidden) desenharSintese(); });
+  }
+  function desenharSintese() {
+    const tot = new Map();
+    for (const l of ultimasLinhas) tot.set(Number(l.pos), (tot.get(Number(l.pos)) || 0) + Math.round(((Number(l.aReceber) || 0) + (Number(l.aPagar) || 0)) * 100));
+    const quando = state.mes ? MESES[state.mes - 1] + '/' + state.ano : 'ano ' + state.ano;
+    const v = c => '<em class="' + (c < 0 ? 'neg' : c > 0 ? 'pos' : '') + '">' + (c / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</em>';
+    const total = [...tot.values()].reduce((a, b) => a + b, 0);
+    sint.querySelector('[data-t]').textContent = 'Sintetizar · ' + quando;
+    sint.querySelector('[data-c]').innerHTML = '<button type="button" class="sint-it' + (filtroPos === null ? ' on' : '') + '" data-p=""><b></b><span>todos</span></button>'
+      + SINT.filter(([p]) => p !== 1 || tot.has(1)).map(([p, n]) => '<button type="button" class="sint-it' + (filtroPos === p ? ' on' : '') + '" data-p="' + p + '"><b>' + p + '</b><span>' + n + '</span>' + v(tot.get(p) || 0) + '</button>').join('')
+      + '<div class="sint-tot"><span>total ' + (state.mes ? 'do mês' : 'do ano') + ':</span>' + v(total) + '</div>'
+      ;   // 20/10/2026 (Jorge): SEM saldo anterior aqui — so o que vence no mes escolhido
+  }
+  function abrirSintese(ancora) {
+    if (!sint) {
+      sint = document.createElement('div'); sint.className = 'sint-cx'; sint.hidden = true;
+      sint.innerHTML = '<div class="sint-cab"><span data-t>Sintetizar</span><button type="button" data-x title="fechar">×</button></div><div data-c></div>';
+      document.body.appendChild(sint);
+      sint.querySelector('[data-x]').addEventListener('click', () => { sint.hidden = true; });
+      sint.addEventListener('click', ev => {
+        const b = ev.target.closest('[data-p]'); if (!b) return;
+        filtroPos = b.dataset.p === '' ? null : Number(b.dataset.p);
+        aplicarFiltroPos(); desenharSintese();
+      });
+      const cab = sint.querySelector('.sint-cab');
+      cab.addEventListener('mousedown', ev => {
+        if (ev.button !== 0 || ev.target.closest('button')) return;
+        ev.preventDefault();
+        const r = sint.getBoundingClientRect(), dx = ev.clientX - r.left, dy = ev.clientY - r.top;
+        const m = e => { sint.style.left = Math.max(0, e.clientX - dx) + 'px'; sint.style.top = Math.max(0, e.clientY - dy) + 'px'; };
+        const u = () => { document.removeEventListener('mousemove', m); document.removeEventListener('mouseup', u); };
+        document.addEventListener('mousemove', m); document.addEventListener('mouseup', u);
+      });
+    }
+    if (!sint.hidden) { sint.hidden = true; return; }
+    const r = ancora.getBoundingClientRect();
+    sint.style.left = Math.min(r.left, innerWidth - 320) + 'px'; sint.style.top = (r.bottom + 6) + 'px';
+    desenharSintese(); sint.hidden = false;
+  }
+  (function legendaSintese() {
+    const leg = $('.flx-legenda'); if (!leg) return;
+    const s = document.createElement('span');
+    s.className = 'flx-leg sint-leg'; s.textContent = '● Sintetizar'; s.title = 'total de cada tipo (pos) no período; clique num tipo para ver só ele';
+    s.addEventListener('click', () => abrirSintese(s));
+    leg.appendChild(s);
+  })();
+
   (function init() {
     renderAnos();
     renderMeses();

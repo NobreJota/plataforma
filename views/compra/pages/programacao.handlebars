@@ -1,0 +1,99 @@
+{{!--
+  Destino: C:\plataformaRota\views\compra\pages\programacao.handlebars
+  Criado em: 20/10/2026
+
+  PROGRAMACAO DE COMPRAS (como no Access, para o administrador):
+    Grade do ano       fornecedor x mes: o que se comprou (notas que entraram), com o ano em cima
+    Realização do mês  as notas que entraram no mes (entrada, nota, fornecedor, valor, saldo)
+    Pedidos            esquerda: pedidos feitos aguardando chegar (pos 3) · direita: compras projetadas (pos 7)
+  O JS fica em /js/compra/programacao.js  ·  API: /compra/programacao/api (src/routes/compra/programacao.js)
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programação de compras</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root { --roxo:#6b21a8; --roxo-claro:#f3e8ff; --borda:#e5e7eb; --texto:#1f2937; --cinza:#6b7280; --verde:#059669; --vermelho:#dc2626; }
+    body { margin:0; padding:16px 20px; background:#fff; color:var(--texto); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; font-size:13px; }
+    h1 { font-size:22px; margin:0 0 12px; font-weight:700; display:flex; align-items:baseline; gap:12px; }
+    h1 small { font-size:13px; font-weight:400; color:var(--cinza); }
+    .abas { display:flex; gap:6px; margin-bottom:10px; border-bottom:2px solid var(--roxo-claro); }
+    .abas button { border:0; background:none; padding:8px 14px; font-weight:700; font-size:14px; color:var(--cinza); cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; }
+    .abas button.on { color:var(--roxo); border-bottom-color:var(--roxo); }
+    .ctl { display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-bottom:8px; }
+    .ctl select, .ctl input[type=text] { height:30px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:13px; }
+    .ctl label { display:flex; gap:5px; align-items:center; }
+    .meses { display:flex; gap:4px; flex-wrap:wrap; }
+    .meses button { border:1px solid #d1d5db; background:#fff; border-radius:6px; padding:5px 10px; font-weight:700; cursor:pointer; }
+    .meses button.on { background:var(--roxo); color:#fff; border-color:var(--roxo); }
+    .caixa { border:1px solid var(--borda); border-radius:8px; overflow:auto; max-height:calc(100vh - 200px); }
+    table { width:100%; border-collapse:collapse; }
+    th { position:sticky; top:0; z-index:2; background:var(--roxo); color:#fff; font-size:11px; padding:7px 8px; text-align:right; white-space:nowrap; }
+    th.e, td.e { text-align:left; }
+    th.ord { cursor:pointer; } th.ord:hover { text-decoration:underline; }
+    td { padding:5px 8px; border-top:1px solid #f3f4f6; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    td.zero { color:#d1d5db; }
+    td.cel { cursor:pointer; } td.cel:hover { outline:2px solid var(--roxo); }
+    td.tot, tr.tot td { font-weight:800; background:#faf5ff; }
+    tfoot td { position:sticky; bottom:0; background:#f3e8ff; font-weight:800; border-top:2px solid #d8b4fe; }
+    tr:hover td { background:#faf5ff; }
+    tr.inativo td.e { color:var(--cinza); font-style:italic; }
+    .duas { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .duas h3 { margin:0 0 6px; font-size:14px; color:var(--roxo); }
+    .duas h3 small { color:var(--cinza); font-weight:600; }
+    .vz { padding:24px; text-align:center; color:var(--cinza); }
+    .nota { color:var(--cinza); font-size:12px; margin-top:6px; }
+    @media (max-width: 900px) { .duas { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <h1>Programação de compras <small>o que se comprou, o que foi pedido e o que está previsto</small></h1>
+
+  <div class="abas">
+    <button type="button" data-aba="grade" class="on">Grade do ano</button>
+    <button type="button" data-aba="real">Realização do mês</button>
+    <button type="button" data-aba="ped">Pedidos e previsões</button>
+  </div>
+
+  <section id="aba-grade">
+    <div class="ctl">
+      <label>Ano <select id="g-ano"></select></label>
+      <label><input type="checkbox" id="g-so" checked> só fornecedores com compra no ano</label>
+      <input type="text" id="g-busca" placeholder="procurar fornecedor" autocomplete="off">
+      <span class="nota">clique num valor para ver as notas daquele mês</span>
+    </div>
+    <div class="caixa"><table><thead id="g-cab"></thead><tbody id="g-corpo"><tr><td class="vz" colspan="15">Carregando…</td></tr></tbody><tfoot id="g-pe"></tfoot></table></div>
+  </section>
+
+  <section id="aba-real" hidden>
+    <div class="ctl">
+      <div class="meses" id="r-meses"></div>
+      <label>Ano <select id="r-ano"></select></label>
+      <label>Ordem
+        <select id="r-ord"><option value="data">Data</option><option value="nota">Nota fiscal</option><option value="forn">Fornecedor</option><option value="valor">Valor</option></select></label>
+      <input type="text" id="r-busca" placeholder="procurar fornecedor ou nota" autocomplete="off">
+    </div>
+    <div class="caixa"><table>
+      <thead><tr><th>Ordem</th><th class="e">Entrada</th><th class="e">Nota fiscal</th><th class="e">Pedido</th><th class="e">Fornecedor</th><th>Valor</th><th>Saldo</th></tr></thead>
+      <tbody id="r-corpo"></tbody><tfoot id="r-pe"></tfoot></table></div>
+  </section>
+
+  <section id="aba-ped" hidden>
+    <div class="duas">
+      <div><h3>Pedidos feitos aguardando chegar <small>(pos 3)</small></h3>
+        <div class="caixa"><table><thead><tr><th>Itens</th><th class="e">Pedido</th><th class="e">Fornecedor</th><th class="e">Previsão</th><th>Valor</th><th>Acumulado</th></tr></thead>
+          <tbody id="p-esq"></tbody></table></div></div>
+      <div><h3>Compras projetadas <small>(pos 7 · previsão)</small></h3>
+        <div class="caixa"><table><thead><tr><th>Itens</th><th class="e">Nº</th><th class="e">Fornecedor</th><th class="e">Previsão</th><th>Valor</th><th>Acumulado</th></tr></thead>
+          <tbody id="p-dir"></tbody></table></div></div>
+    </div>
+    <p class="nota">Valores do fluxo de caixa, em aberto. Passe o mouse num pedido para ver as parcelas.</p>
+  </section>
+
+  <script src="/js/compra/programacao.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
+</body>
+</html>

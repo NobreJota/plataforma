@@ -437,6 +437,7 @@ app.use('/contab',ensureContab, contabil);
 app.use('/aux',ensureContab, auxiliares);
 app.use('/financeiro',ensureContab,financeiro);
 app.use('/compra',ensureContab,compra);
+app.use('/compra/programacao', ensureContab, require('./src/routes/compra/programacao'));
 app.use('/vendas',ensureContab,vendas);
 app.use('/loja', loja);
 app.use('/produto', produto);

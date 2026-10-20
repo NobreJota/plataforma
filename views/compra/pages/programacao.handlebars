@@ -1,6 +1,8 @@
 {{!--
   Destino: C:\plataformaRota\views\compra\pages\programacao.handlebars
   Criado em: 20/10/2026
+  Alterado em: 20/10/2026 - aba "Sugestão de compra" (a regra do Jorge, lado a lado com o previsto)
+  Alterado em: 20/10/2026 - nota: o que ja entrou no mes corrente e a janelinha
 
   PROGRAMACAO DE COMPRAS (como no Access, para o administrador):
     Grade do ano       fornecedor x mes: o que se comprou (notas que entraram), com o ano em cima
@@ -56,6 +58,7 @@
     <button type="button" data-aba="grade" class="on">Grade do ano</button>
     <button type="button" data-aba="real">Realização do mês</button>
     <button type="button" data-aba="ped">Pedidos e previsões</button>
+    <button type="button" data-aba="sug">Sugestão de compra</button>
   </div>
 
   <section id="aba-grade">
@@ -91,6 +94,19 @@
           <tbody id="p-dir"></tbody></table></div></div>
     </div>
     <p class="nota">Valores do fluxo de caixa, em aberto. Passe o mouse num pedido para ver as parcelas.</p>
+  </section>
+
+  <section id="aba-sug" hidden>
+    <div class="ctl">
+      <input type="text" id="s-busca" placeholder="procurar fornecedor" autocomplete="off">
+      <label><input type="checkbox" id="s-dif"> só onde a sugestão difere do previsto</label>
+      <span class="nota" id="s-regra"></span>
+    </div>
+    <div class="caixa"><table><thead id="s-cab"></thead><tbody id="s-corpo"><tr><td class="vz">Carregando…</td></tr></tbody><tfoot id="s-pe"></tfoot></table></div>
+    <p class="nota">Só uma sugestão para você decidir: nada é gravado. <b>Base</b> = média ou maior valor dos 3 últimos meses;
+      <b>Frequência</b> = mensal (média acima de R$ 6.000) ou a cada 2/3 meses; a compra sugerida = base × meses do intervalo,
+      contada a partir da última compra. Em cada mês: <b>sugerido</b> · previsto (Ped_Previsão) · pedidos feitos;
+      no mês corrente também o que <span style="color:#059669">já entrou</span> (notas). Passe o mouse num valor para ver o detalhe.</p>
   </section>
 
   <script src="/js/compra/programacao.js"></script>

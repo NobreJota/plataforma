@@ -138,7 +138,8 @@ router.get('/api/pedidos', async (req, res) => {
         return { numero: String(p.NrPedido), fornecedor: f.razao || f.marca || ('fornecedor ' + p.NrFornec), marca: f.marca || '',
           previsao: p['Previsão'] || p.Previsao || null, valor: Math.round((Number(p.VTotal) || 0) * 100) / 100,
           parcelas: parc.get(Number(p.Fluxo)) || [] };
-      }).filter(p => p.previsao).sort((a, b) => new Date(a.previsao) - new Date(b.previsao) || Number(a.numero) - Number(b.numero));
+      // 20/10/2026: so previsao de 2025 em diante (o Access tem sobra antiga: nº 300, fornecedor 17, 02/02/2009)
+      }).filter(p => p.previsao && new Date(p.previsao).getUTCFullYear() >= 2025).sort((a, b) => new Date(a.previsao) - new Date(b.previsao) || Number(a.numero) - Number(b.numero));
       let ac = 0, mesAnt = '';
       previsoes = lista.map(g => { const d = new Date(g.previsao), mk = d.getUTCFullYear() + '-' + d.getUTCMonth();
         if (mk !== mesAnt) { ac = 0; mesAnt = mk; }
@@ -189,6 +190,86 @@ router.get('/api/fornecedor', async (req, res) => {
       abertos: abertos.map(l => ({ pos: l.pos, venc: l.vencimento, valor: Math.abs(l.valor || 0), historico: l.historico || '' })) });
   } catch (err) {
     console.error('❌ /compra/programacao/api/fornecedor:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* 20/10/2026 (Jorge): SUGESTAO DE COMPRA — os numeros para a regra do Jorge (a conta e feita na tela, nada e gravado):
+   GET /compra/programacao/api/sugestao  ->  por fornecedor:
+     compras dos 3 ULTIMOS MESES fechados (notas que entraram), o mes da ultima compra,
+     e nos 3 PROXIMOS MESES: o que ja esta previsto (Ped_Previsão, pos 7) e os pedidos feitos (pos 3).
+   Alterado em: 20/10/2026 - os 3 meses comecam no mes corrente; pedido atrasado conta no mes corrente; nº dos pedidos.
+   Alterado em: 20/10/2026 - o que ja entrou no mes corrente (entrouMes / notasMes) e a ultima compra antes dele (ultimaAntes).
+   Alterado em: 20/10/2026 - detalhe para a janelinha (prevDet/pedDet) e o que fica fora (fora.semFornecedor / fora.depois). */
+router.get('/api/sugestao', async (req, res) => {
+  try {
+    const hoje = new Date(), am = (a, m) => { const d = new Date(Date.UTC(a, m - 1, 1)); return { ano: d.getUTCFullYear(), mes: d.getUTCMonth() + 1 }; };
+    const A = hoje.getFullYear(), M = hoje.getMonth() + 1;
+    // 20/10/2026 (correcao): os 3 meses da sugestao comecam no MES CORRENTE (antes pulava o mes de hoje e os pedidos
+    //   com entrega neste mes ou atrasada sumiam — so aparecia o da Eplax)
+    const ultimos = [am(A, M - 3), am(A, M - 2), am(A, M - 1)], futuros = [am(A, M), am(A, M + 1), am(A, M + 2)];
+    const ini = new Date(Date.UTC(A, M - 1, 1));
+    const chave = d => { const x = new Date(d); return x.getUTCFullYear() + '-' + (x.getUTCMonth() + 1); };
+    const iU = new Map(ultimos.map((u, i) => [u.ano + '-' + u.mes, i])), iF = new Map(futuros.map((u, i) => [u.ano + '-' + u.mes, i]));
+    const forn = await fornecedores();
+    const valor = { $convert: { input: '$VrNota', to: 'double', onError: 0, onNull: 0 } };
+    const L = new Map(), linha = nr => { if (!L.has(nr)) { const f = forn.get(nr) || {};
+      L.set(nr, { nr, marca: f.marca || ('fornecedor ' + nr), razao: f.razao || '', ativo: f.ativo !== false, compras: [0, 0, 0], ultimaCompra: null, previsto: [0, 0, 0], pedidos: [0, 0, 0], pedNums: [[], [], []], atrasado: 0, comprou12: 0,
+        prevDet: [[], [], []], pedDet: [[], [], []], ultimaAntes: null, entrouMes: 0, notasMes: [] }); }
+      return L.get(nr); };
+    // compras: os 3 ultimos meses fechados e o total dos ultimos 12 (para saber quem e fornecedor ativo de verdade)
+    const desde12 = new Date(Date.UTC(A, M - 13, 1)), fimU = new Date(Date.UTC(A, M - 1, 1));
+    const ag = await col('_access_nfe_cabecalho').aggregate([{ $match: { DataEntr: { $gte: desde12, $lt: fimU } } },
+      { $group: { _id: { f: '$NrFornec', a: { $year: '$DataEntr' }, m: { $month: '$DataEntr' } }, v: { $sum: valor } } }]).toArray();
+    for (const g of ag) { const l = linha(Number(g._id.f)), k = g._id.a + '-' + g._id.m, v = Math.round(g.v * 100) / 100;
+      l.comprou12 += v; if (iU.has(k)) l.compras[iU.get(k)] += v; }
+    const ult = await col('_access_nfe_cabecalho').aggregate([{ $group: { _id: '$NrFornec', d: { $max: '$DataEntr' } } }]).toArray();
+    for (const u of ult) if (L.has(Number(u._id))) L.get(Number(u._id)).ultimaCompra = u.d;
+    // 20/10/2026 (Jorge: "quanto ja entrou em outubro da Komeco?"): as notas que JA ENTRARAM no mes corrente,
+    //   e a ultima compra ANTES do mes corrente (e dela que conta o intervalo da sugestao do mes corrente)
+    for (const n of await col('_access_nfe_cabecalho').find({ DataEntr: { $gte: ini } }).project({ NrFornec: 1, NrNota: 1, DataEntr: 1, VrNota: 1 }).sort({ DataEntr: 1 }).toArray()) {
+      const x = linha(Number(n.NrFornec)), v = Math.round((Number(n.VrNota) || 0) * 100) / 100;
+      x.entrouMes = Math.round((x.entrouMes + v) * 100) / 100; x.notasMes.push({ nota: n.NrNota, data: n.DataEntr, valor: v });
+    }
+    const ua = await col('_access_nfe_cabecalho').aggregate([{ $match: { DataEntr: { $lt: ini } } }, { $group: { _id: '$NrFornec', d: { $max: '$DataEntr' } } }]).toArray();
+    for (const u of ua) if (L.has(Number(u._id))) L.get(Number(u._id)).ultimaAntes = u.d;
+    // previsto (Ped_Previsão em aberto) nos 3 proximos meses
+    for (const p of await col('_access_ped_previsao').find({}).toArray()) {
+      if (Number(p.Pos) || !p['Previsão']) continue;
+      const k = chave(p['Previsão']); if (!iF.has(k)) continue;
+      const x = linha(Number(p.NrFornec)), i = iF.get(k), v = Math.round((Number(p.VTotal) || 0) * 100) / 100;
+      x.previsto[i] += v; x.prevDet[i].push({ num: String(p.NrPedido), data: p['Previsão'], valor: v });
+    }
+    // pedidos feitos (pos 3), pela entrega prevista do pedido, ligados ao fornecedor pela conta (NrContabil 2.02 -> 2.01)
+    const porConta = new Map(); for (const [nr, f] of forn) { let c = String(f.conta || ''); if (c.startsWith('2.02.')) c = '2.01.' + c.slice(5); if (c) porConta.set(c, nr); }
+    const peds = new Map((await col('_compra_pedidos').find({ situacao: 'P' }).project({ numero: 1, dataEntregaPrevista: 1 }).toArray()).map(p => [String(p.numero), p.dataEntregaPrevista]));
+    // 20/10/2026: o que fica FORA da sugestao (para o total bater com os pedidos pendentes): sem fornecedor / depois
+    const fora = { semFornecedor: [], depois: [] }, poe = (lst, num, l, v) => { let g = lst.find(z => z.num === num);
+      if (!g) lst.push(g = { num, conta: l.codigoConta || '', historico: l.historico || '', valor: 0, parcelas: 0 }); g.valor = Math.round((g.valor + v) * 100) / 100; g.parcelas++; };
+    let totalPed = 0;
+    for (const l of await col('_fluxo_projetado').find({ status: 'ATIVO', pos: 3 }).toArray()) {
+      const mm = /pedido\D{0,60}?(\d{4,})/i.exec(l.historico || '') || /^(\d{4,})\//.exec(l.nrTitulo || ''), vv = Math.round(Math.abs(l.valor || 0) * 100) / 100;
+      totalPed += vv;
+      const nr = porConta.get(l.codigoConta); if (!nr) { poe(fora.semFornecedor, mm ? mm[1] : (l.nrTitulo || '?'), l, vv); continue; }
+      const m = /pedido\D{0,60}?(\d{4,})/i.exec(l.historico || '') || /^(\d{4,})\//.exec(l.nrTitulo || '');
+      const d = new Date((m && peds.get(m[1])) || l.vencimento), v = Math.round(Math.abs(l.valor || 0) * 100) / 100;
+      // pedido com entrega ja passada e que nao chegou (atrasado): conta no mes corrente — vai chegar a qualquer hora
+      const num = m ? m[1] : (l.nrTitulo || '?');
+      const i = d < ini ? 0 : iF.get(chave(d)); if (i === undefined) { poe(fora.depois, num, l, v); continue; }
+      const x = linha(nr); x.pedidos[i] += v; if (d < ini) x.atrasado += v;
+      if (!x.pedNums[i].includes(num)) x.pedNums[i].push(num);
+      // detalhe por pedido: a entrega prevista (do pedido; sem ela, o vencimento), as parcelas e se esta atrasado
+      let g = x.pedDet[i].find(z => z.num === num);
+      if (!g) x.pedDet[i].push(g = { num, entrega: d, temEntrega: !!(m && peds.get(m[1])), atrasado: d < ini, valor: 0, parcelas: [] });
+      g.valor = Math.round((g.valor + v) * 100) / 100; g.parcelas.push({ venc: l.vencimento, valor: v });
+    }
+    const linhas = [...L.values()].filter(l => l.comprou12 || l.entrouMes || l.previsto.some(Boolean) || l.pedidos.some(Boolean))
+      .map(l => ({ ...l, compras: l.compras.map(v => Math.round(v * 100) / 100), previsto: l.previsto.map(v => Math.round(v * 100) / 100),
+        pedidos: l.pedidos.map(v => Math.round(v * 100) / 100), atrasado: Math.round(l.atrasado * 100) / 100, comprou12: Math.round(l.comprou12 * 100) / 100 }))
+      .sort((a, b) => b.comprou12 - a.comprou12);
+    res.json({ ultimos, futuros, linhas, fora, totalPedidos: Math.round(totalPed * 100) / 100 });
+  } catch (err) {
+    console.error('❌ /compra/programacao/api/sugestao:', err.message);
     res.status(500).json({ erro: err.message });
   }
 });

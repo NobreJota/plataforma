@@ -8,6 +8,8 @@
   Lê arquivo_docs (o cadastro), não o espelho do Access. Só consulta.
 
   O JS fica em /js/compra/produtos-relacao.js  (caminho completo, sempre)
+  Alterado em: 22/10/2026 - coluna Cód. barras; ordenar clicando no cabecalho; botao "lista geral" (o fornecedor
+               escolhido fica ate clicar nele, inclusive ao voltar do produto)
   Alterado em: 10/10/2026 - botoes "← Voltar" e "☰ Menu" (public/js/comum/navegacao.js)
 --}}
 <!DOCTYPE html>
@@ -61,6 +63,12 @@
       border: 1px solid var(--borda); border-radius: 10px;
     }
     table { width: 100%; border-collapse: collapse; }
+    thead th.ord { cursor: pointer; user-select: none; }
+    thead th.ord:hover { text-decoration: underline; }
+    thead th .seta { margin-left: 3px; opacity: .45; } thead th.on .seta { opacity: 1; }
+    td.ean { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: #374151; }
+    .btn-geral { height: 34px; border: 1px solid #d1d5db; background: #fff; border-radius: 8px; padding: 0 12px; cursor: pointer; font-weight: 600; }
+    .btn-geral:hover { background: #f3f4f6; }
     thead th {
       position: sticky; top: 0; z-index: 1;
       background: #f8fafc; border-bottom: 1px solid var(--borda);
@@ -91,6 +99,7 @@
   <div class="barra">
     <label class="rot" for="fornecedor">Fornecedor</label>
     <select id="fornecedor"><option value="">Carregando…</option></select>
+    <button type="button" class="btn-geral" id="listaGeral" title="tira o fornecedor escolhido">✕ lista geral</button>
     <input type="search" id="busca" placeholder="Buscar por descrição, referência, marca ou código…" autocomplete="off">
     <label class="chk"><input type="checkbox" id="comEstoque"> só com estoque</label>
     <span class="conta" id="conta"></span>
@@ -100,24 +109,25 @@
     <table>
       <thead>
         <tr>
-          <th>Código</th>
-          <th>Descrição</th>
-          <th>Referência</th>
-          <th>Marca</th>
-          <th class="num">Estoque</th>
-          <th class="num">Custo</th>
-          <th class="num">À vista</th>
-          <th class="num">A prazo</th>
-          <th class="num">Taxa %</th>
-          <th class="num">Estoque a custo</th>
+          <th class="ord" data-ord="codigo">Código<span class="seta"></span></th>
+          <th class="ord" data-ord="descricao">Descrição<span class="seta"></span></th>
+          <th class="ord" data-ord="ean">Cód. barras<span class="seta"></span></th>
+          <th class="ord" data-ord="referencia">Referência<span class="seta"></span></th>
+          <th class="ord" data-ord="marca">Marca<span class="seta"></span></th>
+          <th class="num ord" data-ord="qte">Estoque<span class="seta"></span></th>
+          <th class="num ord" data-ord="custo">Custo<span class="seta"></span></th>
+          <th class="num ord" data-ord="vista">À vista<span class="seta"></span></th>
+          <th class="num ord" data-ord="prazo">A prazo<span class="seta"></span></th>
+          <th class="num ord" data-ord="taxa">Taxa %<span class="seta"></span></th>
+          <th class="num ord" data-ord="vcusto">Estoque a custo<span class="seta"></span></th>
         </tr>
       </thead>
       <tbody id="linhas">
-        <tr><td colspan="10"><div class="vazio"><strong>Escolha um fornecedor</strong>Ou busque por descrição, referência, marca ou código.</div></td></tr>
+        <tr><td colspan="11"><div class="vazio"><strong>Escolha um fornecedor</strong>Ou busque por descrição, referência, marca ou código.</div></td></tr>
       </tbody>
       <tfoot id="rodape" hidden>
         <tr>
-          <td colspan="4" id="rodapeTexto"></td>
+          <td colspan="5" id="rodapeTexto"></td>
           <td class="num" id="rodapeQte"></td>
           <td colspan="4"></td>
           <td class="num" id="rodapeValor"></td>

@@ -10,6 +10,7 @@
 //   - /origem devolve fornecedorConta (conta nova do fornecedor, de/para);
 //     a ficha grava em `ncontabil`
 //   - /origem: produtos ja transferidos (em arquivo_docs) vao para o fim
+// Alterado em: 22/10/2026 - GET /relacao devolve tambem o codigo de barras (ean)
 // Alterado em: 30/09/2026
 //   - GET /relacao-fornecedores e GET /relacao: a Relacao de produtos
 //     (le arquivo_docs, nao o espelho do Access)
@@ -419,12 +420,13 @@ router.get('/relacao', async (req, res) => {
     const r2 = v => Math.round(Number(v || 0) * 100) / 100;
     const produtos = (await col('arquivo_docs').find(filtro)
       .project({ codigo: 1, descricao: 1, referencia: 1, marcaproduto: 1, fornecedor: 1,
-                 qte: 1, precocusto: 1, precovista: 1, precoprazo: 1, taxa: 1, ativo: 1 })
+                 qte: 1, precocusto: 1, precovista: 1, precoprazo: 1, taxa: 1, ativo: 1, ean: 1 })
       .sort({ descricao: 1 }).limit(3000).toArray())
       .map(p => ({
         codigo: p.codigo,
         descricao: p.descricao || '',
         referencia: p.referencia || '',
+        ean: p.ean || '',
         marca: p.marcaproduto || '',
         fornecedor: p.fornecedor || '',
         qte: Number(p.qte) || 0,

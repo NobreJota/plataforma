@@ -1,5 +1,6 @@
 /* Destino: C:\plataformaRota\public\js\contab\auxiliares\fornecedores.js
  * Alterado em: 22/10/2026
+ *   - coluna "#" com o numero da linha; contador: total · ativos · inativos · a ajustar
  *   - fornecedor do Access INATIVO (com "Incluir inativos"): etiqueta Inativo + ajustar; ✏️ Completar
  *     transfere para o cadastro (ativo) com a conta do Access
  *   - ORDENAR clicando no cabecalho: Razão social, Marca, Conta (2o clique inverte). A ordem vale para
@@ -372,7 +373,7 @@
     const tbody = $('#lista-fornecedores');
     const busca = $('#busca').value.trim();
     const inativos = $('#incluir-inativos').checked;
-    tbody.innerHTML = '<tr><td colspan="7" class="for-empty">Carregando...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="for-empty">Carregando...</td></tr>';
     try {
       const params = new URLSearchParams();
       if (busca) params.set('busca', busca);
@@ -380,15 +381,20 @@
       const lista = ordenar(await api('GET', '/' + (params.toString() ? '?' + params : '')));
       state.lista = lista;
       marcarOrdem();
-      $('#contador').textContent = `${lista.length} ${lista.length === 1 ? 'fornecedor' : 'fornecedores'}`;
+      // 22/10/2026: contador por situacao (confere se um inativo mudou)
+      const nAj = lista.filter(f => f.pendente).length, nIn = lista.filter(f => f.ativo === false).length;
+      const nAt = lista.filter(f => !f.pendente && f.ativo !== false).length;
+      $('#contador').textContent = `${lista.length} ${lista.length === 1 ? 'fornecedor' : 'fornecedores'} · ${nAt} ativos`
+        + (nIn ? ` · ${nIn} inativos` : '') + (nAj ? ` · ${nAj} a ajustar` : '');
       if (lista.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="for-empty">Nenhum fornecedor encontrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="for-empty">Nenhum fornecedor encontrado.</td></tr>';
         return;
       }
       const etqAjustar = f => (f.ajustar && f.ajustar.length)
         ? ` <span class="for-tag-ajustar" title="${f.ajustar.join('; ')}">ajustar</span>` : '';
-      tbody.innerHTML = lista.map(f => f.pendente ? `
+      tbody.innerHTML = lista.map((f, i) => f.pendente ? `
         <tr class="for-pendente">
+          <td class="for-n">${i + 1}</td>
           <td>${titleCase(f.razao || '') || '-'}</td>
           <td class="for-doc">${f.cpfCnpjFormatado || '-'}</td>
           <td>${f.marca || '-'}</td>
@@ -401,6 +407,7 @@
         </tr>
       ` : `
         <tr>
+          <td class="for-n">${i + 1}</td>
           <td>${titleCase(f.razao || '') || '-'}</td>
           <td class="for-doc">${f.cpfCnpjFormatado || f.cnpj || '-'}</td>
           <td>${f.marca || '-'}</td>
@@ -433,7 +440,7 @@
         });
       });
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="7" class="for-empty">Erro: ${err.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" class="for-empty">Erro: ${err.message}</td></tr>`;
     }
   }
 

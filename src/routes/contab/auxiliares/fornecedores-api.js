@@ -1,5 +1,9 @@
 // =============================================================================
 // Destino: C:\plataformaRota\src\routes\contab\auxiliares\fornecedores-api.js
+// Alterado em: 22/10/2026
+//   - "Incluir inativos" tambem traz os fornecedores do Access INATIVOS (Ativado = 0) ainda nao
+//     transferidos (antes o filtro ativo != false valia sempre e eles nunca apareciam). Saem com
+//     pendente: true e ativo: false; o Completar transfere com a conta do Access, como os outros.
 // Alterado em: 30/09/2026
 //   - a lista traz tambem os fornecedores do Access ainda nao transferidos
 //     (_fornec_access sem fornecId), com `pendente: true` e os motivos em `ajustar`
@@ -110,7 +114,8 @@ router.get('/', async (req, res) => {
 
     // Fornecedores do Access que ainda nao entraram no cadastro: vao para a
     // lista com a etiqueta "ajustar", para serem completados na tela.
-    const fAcc = { lojistaId: req.lojistaId, ativo: { $ne: false }, fornecId: null };
+    const fAcc = { lojistaId: req.lojistaId, fornecId: null };
+    if (!incluirInativos) fAcc.ativo = { $ne: false };          // 22/10/2026: inativos do Access so com "Incluir inativos" 
     if (busca) {
       const rx = new RegExp(escaparRegex(busca), 'i');
       const or = [{ razao: rx }, { marca: rx }];
@@ -131,7 +136,7 @@ router.get('/', async (req, res) => {
         ncontabil: p.contaNova || '',
         address: { cidade: p.cidade || '', estado: p.estado || '' },
         ajustar: p.ajustar && p.ajustar.length ? p.ajustar : ['completar cadastro'],
-        ativo: true,
+        ativo: p.ativo !== false,                                  // 22/10/2026: inativo no Access
       });
     }
     res.json(saida);

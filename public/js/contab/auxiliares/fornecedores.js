@@ -1,4 +1,9 @@
 /* Destino: C:\plataformaRota\public\js\contab\auxiliares\fornecedores.js
+ * Alterado em: 22/10/2026
+ *   - fornecedor do Access INATIVO (com "Incluir inativos"): etiqueta Inativo + ajustar; ✏️ Completar
+ *     transfere para o cadastro (ativo) com a conta do Access
+ *   - ORDENAR clicando no cabecalho: Razão social, Marca, Conta (2o clique inverte). A ordem vale para
+ *     a lista inteira, inclusive os "ajustar" do Access e os inativos
  * Alterado em: 30/09/2026
  *   - lista mostra os fornecedores do Access ainda nao transferidos, com a
  *     etiqueta "ajustar"; o botao Completar abre a ficha preenchida com o que
@@ -33,8 +38,24 @@
     vinculando: false,       // CNPJ já existe no cadastro compartilhado, sem vínculo com esta empresa
     titulos: [],
     access: null,            // NrFornec do Access quando a ficha completa um pendente
-    lista: []
+    lista: [],
+    ord: 'razao', desc: false  // 22/10/2026: ordem escolhida no cabecalho
   };
+
+  /* ===== Ordem (22/10/2026) ===== */
+  const chaveOrd = (f) => {
+    const k = state.ord;
+    if (k === 'conta') return String(f.ncontabil || '~').replace(/\d+/g, n => n.padStart(6, '0'));   // 2.01.001.9 antes de 2.01.001.10
+    return String((k === 'marca' ? f.marca : f.razao) || '~').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  };
+  function ordenar(lista) {
+    const s = state.desc ? -1 : 1;
+    return lista.slice().sort((a, b) => { const x = chaveOrd(a), y = chaveOrd(b); return x < y ? -s : x > y ? s : 0; });
+  }
+  function marcarOrdem() {
+    $$('th.for-ord').forEach(th => { const on = th.dataset.ord === state.ord;
+      th.classList.toggle('on', on); th.querySelector('.seta').textContent = on ? (state.desc ? '▼' : '▲') : '↕'; });
+  }
 
   /* ===== Títulos contábeis (2.01.xxx) ===== */
   async function carregarTitulos() {
@@ -356,8 +377,9 @@
       const params = new URLSearchParams();
       if (busca) params.set('busca', busca);
       if (inativos) params.set('incluirInativos', 'true');
-      const lista = await api('GET', '/' + (params.toString() ? '?' + params : ''));
+      const lista = ordenar(await api('GET', '/' + (params.toString() ? '?' + params : '')));
       state.lista = lista;
+      marcarOrdem();
       $('#contador').textContent = `${lista.length} ${lista.length === 1 ? 'fornecedor' : 'fornecedores'}`;
       if (lista.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" class="for-empty">Nenhum fornecedor encontrado.</td></tr>';
@@ -372,9 +394,9 @@
           <td>${f.marca || '-'}</td>
           <td class="for-conta">${f.ncontabil || '-'}</td>
           <td>${titleCase(f.address?.cidade || '') || '-'}</td>
-          <td>${etqAjustar(f)}</td>
+          <td>${f.ativo === false ? '<span class="for-tag-inativo" title="Inativo no Access">Inativo</span>' : ''}${etqAjustar(f)}</td>
           <td class="for-col-acoes">
-            <button class="for-btn-acao" data-action="completar" data-nr="${f.nrFornec}" title="Completar cadastro">✏️</button>
+            <button class="for-btn-acao" data-action="completar" data-nr="${f.nrFornec}" title="Completar cadastro${f.ativo === false ? ' (entra ativo, com a conta do Access)' : ''}">✏️</button>
           </td>
         </tr>
       ` : `
@@ -696,6 +718,10 @@
   $('#btn-fechar').addEventListener('click', fecharModal);
   $('#btn-cancelar').addEventListener('click', fecharModal);
   $('#incluir-inativos').addEventListener('change', recarregar);
+  $$('th.for-ord').forEach(th => th.addEventListener('click', () => {           // 22/10/2026
+    if (state.ord === th.dataset.ord) state.desc = !state.desc; else { state.ord = th.dataset.ord; state.desc = false; }
+    recarregar();
+  }));
   $('#busca').addEventListener('input', () => { clearTimeout(state.debounceTimer); state.debounceTimer = setTimeout(recarregar, 300); });
 
   carregarTitulos();

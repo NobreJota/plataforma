@@ -1,4 +1,6 @@
 {{!-- Destino: C:\plataformaRota\views\contab\auxiliares\fornecedores.handlebars
+     Alterado em: 22/10/2026 - cabecalho da tabela FIXO (a grade rola por baixo) e ordenar clicando em
+                  Razão social, Marca e Conta
      Alterado em: 10/10/2026 - botoes "← Voltar" e "☰ Menu" (public/js/comum/navegacao.js) --}}
 <div class="for-page">
   <header class="for-header">
@@ -60,13 +62,14 @@
     <span id="contador" class="for-contador">0 fornecedores</span>
   </div>
 
+  <div class="for-grade">
   <table class="for-table">
     <thead>
       <tr>
-        <th>RAZÃO SOCIAL</th>
+        <th class="for-ord" data-ord="razao">RAZÃO SOCIAL<span class="seta"></span></th>
         <th>CNPJ / CPF</th>
-        <th>MARCA</th>
-        <th>CONTA</th>
+        <th class="for-ord" data-ord="marca">MARCA<span class="seta"></span></th>
+        <th class="for-ord" data-ord="conta">CONTA<span class="seta"></span></th>
         <th>CIDADE</th>
         <th>STATUS</th>
         <th>AÇÕES</th>
@@ -76,6 +79,7 @@
       <tr><td colspan="7" class="for-empty">Carregando...</td></tr>
     </tbody>
   </table>
+  </div>
 </div>
 
 <!-- Modal -->
@@ -278,8 +282,12 @@
   .for-checkbox { display:flex; align-items:center; gap:8px; cursor:pointer; white-space:nowrap; }
   .for-contador { color:#6b7280; font-size:.9rem; white-space:nowrap; }
 
-  .for-table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; font-size:.9rem; }
-  .for-table th { background:#7c3aed; color:#fff; padding:11px; text-align:left; font-size:.78rem; letter-spacing:.5px; }
+  .for-grade { max-height:calc(100vh - 230px); overflow:auto; border-radius:8px; border:1px solid #e5e7eb; }   /* 22/10/2026 */
+  .for-table { width:100%; border-collapse:collapse; background:#fff; font-size:.9rem; }
+  .for-table th { background:#7c3aed; color:#fff; padding:11px; text-align:left; font-size:.78rem; letter-spacing:.5px;
+                  position:sticky; top:0; z-index:2; }                                                   /* 22/10/2026: fixo */
+  .for-table th.for-ord { cursor:pointer; user-select:none; } .for-table th.for-ord:hover { text-decoration:underline; }
+  .for-table th .seta { margin-left:4px; opacity:.5; } .for-table th.on .seta { opacity:1; }
   .for-table td { padding:11px; border-bottom:1px solid #e5e7eb; vertical-align:middle; }
   .for-table tr:hover { background:#faf5ff; }
   .for-empty { text-align:center; padding:32px; color:#9ca3af; }

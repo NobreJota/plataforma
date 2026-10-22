@@ -1,5 +1,7 @@
 // =============================================================================
 // Destino: C:\plataformaRota\src\routes\vendas\venda-api.js
+// Alterado em: 22/10/2026 - VENDAS DO ACCESS (VENDA-11, origem ACCESS) no relatorio: sao so historico —
+//   /:id/cancelar e /:id/instalacao recusam; o relatorio devolve origem e nrCupomAccess.
 // Criado em: 02/10/2026
 // Alterado em: 02/10/2026 - /clientes devolve endereco completo, telefone e e-mail (cabecalho)
 // Alterado em: 13/10/2026 - tecnicos vem do cadastro _tecnicos (tecnicos-api.js); OS nasce com
@@ -1012,7 +1014,7 @@ router.get('/relatorio', async (req, res) => {
     // so as EMITIDAS (fechadas e as canceladas depois de fechadas), pela data do fechamento
     const docs = await Venda.find({ lojistaId: loja, situacao: { $in: ['F', 'C'] }, fechadaEm: { $gte: inicio, $lt: fim } })
       .sort({ fechadaEm: 1, numero: 1 })
-      .select('numero data fechadaEm situacao documento condicao cliente.nome cliente.codigo itens.quantidade itens.precoUnitario itens.desconto descontoGeral totalLiquido pagamentos.forma')
+      .select('numero data fechadaEm situacao documento condicao origem nrCupomAccess cliente.nome cliente.codigo itens.quantidade itens.precoUnitario itens.desconto descontoGeral totalLiquido pagamentos.forma')
       .lean();
 
     const anos = (await Venda.aggregate([
@@ -1027,7 +1029,7 @@ router.get('/relatorio', async (req, res) => {
       const bruto = itens.reduce((s, i) => s + (i.quantidade || 0) * (i.precoUnitario || 0), 0);
       const desconto = itens.reduce((s, i) => s + (i.desconto || 0), 0) + (v.descontoGeral || 0);
       return {
-        _id: v._id, numero: v.numero, data: v.fechadaEm || v.data, situacao: v.situacao,
+        _id: v._id, numero: v.numero, data: v.fechadaEm || v.data, situacao: v.situacao, origem: v.origem || 'PLATAFORMA',
         forma: v.pagamentos?.[0]?.forma || '',
         documento: v.documento, condicao: v.condicao,
         cliente: v.cliente?.nome || '', codigoCliente: v.cliente?.codigo || '',
@@ -1423,6 +1425,7 @@ router.post('/:id/instalacao', async (req, res) => {
       const v = await col('_vendas').findOne({ _id: new mongoose.Types.ObjectId(req.params.id), lojistaId: loja }, { session });
       if (!v) throw Object.assign(new Error('venda não encontrada'), { status: 404 });
       if (v.situacao !== 'F') throw new Error('só venda fechada (a venda aberta tem a instalação na própria tela)');
+      if (v.origem === 'ACCESS') throw new Error('venda importada do Access: a OS é aberta pela tela de OS');
       if (v.documento !== 'NFE') throw new Error('instalação só em nota fiscal');
       if (!v.cliente?.id) throw new Error('a venda não tem cliente');
       if (v.os?.id) {
@@ -1539,6 +1542,8 @@ router.post('/:id/cancelar', async (req, res) => {
       const v = await Venda.findOne({ _id: req.params.id, lojistaId: loja }).session(session);
       if (!v) throw Object.assign(new Error('venda não encontrada'), { status: 404 });
       if (v.situacao === 'C') throw Object.assign(new Error('a venda já está cancelada'), { status: 409 });
+      if (v.origem === 'ACCESS') throw Object.assign(new Error('venda importada do Access (cupom nº ' + (v.nrCupomAccess || v.numero)
+        + '): o lançamento, o fluxo e o estoque vieram do Access — a devolução/cancelamento é feita lá'), { status: 409 });
       const agora = new Date();
 
       if (v.situacao === 'F') {

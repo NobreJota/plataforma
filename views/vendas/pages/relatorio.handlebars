@@ -1,6 +1,9 @@
 {{!--
   Destino: C:\plataformaRota\views\vendas\pages\relatorio.handlebars
   Criado em: 03/10/2026
+  Alterado em: 22/10/2026 - cabecalho da tabela FIXO (a grade rola por baixo) e ordenar clicando na coluna
+               (Venda, Data, Cliente, Líquido)
+  Alterado em: 22/10/2026 - etiqueta "Access" e aviso no espelho das vendas importadas do Access (VENDA-11)
   Alterado em: 07/10/2026 - so as vendas EMITIDAS (fechadas; canceladas riscadas), pela data do
                fechamento. Clique na linha abre o ESPELHO da venda num modal, com as parcelas
                no fluxo e o botao "Cancelar venda" (pede o motivo)
@@ -42,9 +45,12 @@
     .meses label { margin-left:10px; font-weight:700; font-size:13px; }
     .meses select { height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:14px; font-weight:600; }
 
-    .grade { border:1px solid var(--borda); border-radius:10px; overflow:auto; }
+    .grade { border:1px solid var(--borda); border-radius:10px; overflow:auto; max-height:calc(100vh - 260px); }
     table { width:100%; border-collapse:collapse; }
     th { background:var(--roxo); color:#fff; text-align:left; font-size:12px; padding:8px 10px; white-space:nowrap; }
+    .grade > table > thead th { position:sticky; top:0; z-index:2; }          /* 22/10/2026: cabecalho fixo */
+    th.ord { cursor:pointer; user-select:none; } th.ord:hover { text-decoration:underline; }
+    th.ord .seta { opacity:.45; margin-left:3px; } th.ord.on .seta { opacity:1; }
     td { padding:7px 10px; border-bottom:1px solid #f3f4f6; }
     tbody tr.v:nth-child(even) td { background:#f9fafb; }
     tbody tr.v { cursor:pointer; }
@@ -56,6 +62,8 @@
     .etq { display:inline-block; font-size:11px; font-weight:700; border-radius:4px; padding:1px 6px; }
     .etq.cupom { background:#ecfdf5; color:var(--verde); }
     .etq.nfe { background:#eff6ff; color:#1d4ed8; }
+    .etq.access { background:#fef3c7; color:#92400e; }   /* 22/10/2026: venda importada do Access */
+    .esp-access { background:#fffbeb; border:1px solid #fde68a; color:#92400e; border-radius:6px; padding:7px 10px; margin-bottom:10px; font-size:13px; }
     .sit-A { color:var(--ambar); } .sit-F { color:var(--verde); } .sit-C { color:var(--vermelho); text-decoration:line-through; }
     tr.cancelada td { color:var(--cinza); }
     .vazio { padding:24px; text-align:center; color:var(--cinza); }
@@ -158,9 +166,9 @@
   <div class="grade">
     <table>
       <thead>
-        <tr><th class="n">#</th><th>Venda</th><th>Data</th><th>Documento</th><th>Cliente</th>
+        <tr><th class="n">#</th><th class="ord" data-ord="numero">Venda<span class="seta"></span></th><th class="ord" data-ord="data">Data<span class="seta"></span></th><th>Documento</th><th class="ord" data-ord="cliente">Cliente<span class="seta"></span></th>
             <th>Condição</th><th>Situação</th><th class="n">Itens</th><th class="n">Bruto</th>
-            <th class="n">Desconto</th><th class="n">Líquido</th></tr>
+            <th class="n">Desconto</th><th class="n ord" data-ord="liquido">Líquido<span class="seta"></span></th></tr>
       </thead>
       <tbody id="linhas"><tr><td colspan="11" class="vazio">Carregando…</td></tr></tbody>
     </table>

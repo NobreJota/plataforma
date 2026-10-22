@@ -16,6 +16,10 @@
 // Alterado em 08/10/2026: espelho so como modal (sem "Abrir na tela da venda"). Secao COBRANCA:
 //   para cada parte, como foi cobrada — dinheiro/PIX: "recebido, entrou em <conta>" com a
 //   boleta; cartao/titulo: a conta e as parcelas no fluxo com a situacao de cada uma.
+// Alterado em 22/10/2026: ORDENAR clicando no cabecalho (Venda, Data, Cliente, Líquido; 2o clique inverte).
+//   O separador de mes (modo "todos") so aparece na ordem por data. Cabecalho fixo (CSS).
+// Alterado em 22/10/2026: VENDAS DO ACCESS (VENDA-11): etiqueta "Access" na linha; no espelho um aviso,
+//   sem "Cancelar venda" e sem "+ Incluir instalação" (o lancamento, o fluxo e o estoque vieram do Access).
 // Alterado em 17/10/2026: parcelas da cobranca rolam (div.rolar); o botao Cancelar venda fica no rodape fixo.
 // Alterado em 14/10/2026: secao INSTALACAO no espelho da NF. Tem OS: numero, situacao, tecnico,
 //   dia e o botao "Abrir a OS" (modal da OS, /js/vendas/os-modal.js). NF fechada sem OS:
@@ -33,7 +37,7 @@
                  'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
   const hoje = new Date();
-  const estado = { ano: hoje.getFullYear(), mes: hoje.getMonth() + 1, vendas: [] };
+  const estado = { ano: hoje.getFullYear(), mes: hoje.getMonth() + 1, vendas: [], ord: 'data', desc: false };
 
   const brl = c => (Number(c || 0) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const escapar = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -76,8 +80,27 @@
     sel.innerHTML = anos.map(a => '<option value="' + a + '"' + (a === estado.ano ? ' selected' : '') + '>' + a + '</option>').join('');
   }
 
+  // 22/10/2026: ordem escolhida no cabecalho (desempate pelo numero)
+  function ordenadas() {
+    const k = estado.ord, s = estado.desc ? -1 : 1;
+    const val = v => k === 'numero' ? v.numero : k === 'liquido' ? (v.liquido || 0) : k === 'cliente' ? (v.cliente || '~balcão').toLowerCase()
+      : new Date(v.data).getTime();
+    return estado.vendas.slice().sort((a, b) => { const x = val(a), y = val(b);
+      return (x < y ? -s : x > y ? s : 0) || (a.numero - b.numero); });
+  }
+  function marcarOrdem() {
+    document.querySelectorAll('th.ord').forEach(th => { const on = th.dataset.ord === estado.ord;
+      th.classList.toggle('on', on); th.querySelector('.seta').textContent = on ? (estado.desc ? '▼' : '▲') : '↕'; });
+  }
+  document.querySelectorAll('th.ord').forEach(th => th.addEventListener('click', () => {
+    if (estado.ord === th.dataset.ord) estado.desc = !estado.desc;
+    else { estado.ord = th.dataset.ord; estado.desc = th.dataset.ord === 'liquido'; }   // valor: maior primeiro
+    desenhar();
+  }));
+
   function desenhar() {
-    const vs = estado.vendas;
+    marcarOrdem();
+    const vs = ordenadas();
     if (!vs.length) {
       $('linhas').innerHTML = '<tr><td colspan="11" class="vazio">Nenhuma venda fechada em '
         + (estado.mes ? MESES[estado.mes] + ' de ' : '') + estado.ano + '.</td></tr>';
@@ -85,7 +108,7 @@
       let mesAtual = 0, n = 0, html = '';
       for (const v of vs) {
         const m = new Date(v.data).getMonth() + 1;
-        if (!estado.mes && m !== mesAtual) {           // separador de mes no modo "todos"
+        if (!estado.mes && estado.ord === 'data' && m !== mesAtual) {           // separador de mes no modo "todos"
           mesAtual = m;
           html += '<tr class="sep"><td colspan="11">' + MESES[m] + '</td></tr>';
         }
@@ -93,7 +116,7 @@
         const canc = v.situacao === 'C';
         html += '<tr class="v' + (canc ? ' cancelada' : '') + '" data-id="' + escapar(v._id) + '" tabindex="0" title="clique: espelho da venda">'
           + '<td class="n cinza">' + n + '</td>'
-          + '<td><b>nº ' + v.numero + '</b></td>'
+          + '<td><b>nº ' + v.numero + '</b>' + (v.origem === 'ACCESS' ? ' <span class="etq access" title="importada do Access">Access</span>' : '') + '</td>'
           + '<td>' + dia(v.data) + ' <span class="cinza">' + hora(v.data) + '</span></td>'
           + '<td>' + (v.documento === 'NFE' ? '<span class="etq nfe">NF</span>' : '<span class="etq cupom">Cupom</span>') + '</td>'
           + '<td>' + (v.cliente ? escapar(v.cliente) + ' <span class="cinza">' + escapar(v.codigoCliente) + '</span>' : '<span class="cinza">balcão</span>') + '</td>'
@@ -217,7 +240,9 @@
       return '<div class="cob"><div class="cob-cab"><span>' + escapar(FORMA[x.forma] || x.forma)
         + (x.parcelas && x.parcelas.length > 1 ? ' · ' + x.parcelas.length + 'x' : '') + '</span><b>R$ ' + brl(x.valor) + '</b></div>'
         + corpo + '</div>';
-    }).join('') || '<div class="cinza">Sem pagamento registrado.</div>';
+    }).join('') || (v.origem === 'ACCESS'
+      ? '<div class="cinza">Venda feita no Access: a forma de pagamento, o lançamento e as parcelas estão no Access (já importados no razão e no fluxo).</div>'
+      : '<div class="cinza">Sem pagamento registrado.</div>');
     const parc = parcelas.length
       ? '<table><thead><tr><th>Parcela</th><th>Vencimento</th><th>Conta</th><th class="n">Valor</th><th>Situação</th></tr></thead><tbody>'
         + parcelas.map(x => '<tr><td>' + x.parcela + '/' + x.totalParcelas + '</td><td>' + dia(x.vencimento) + '</td><td>'
@@ -230,9 +255,11 @@
     const cancelada = v.situacao === 'C'
       ? '<div class="esp-cancelada">Cancelada em ' + dia(v.canceladaEm) + ' ' + hora(v.canceladaEm)
         + ' — motivo: ' + escapar(v.motivoCancelamento || '') + '</div>' : '';
-    $('esp-conteudo').innerHTML = cab + '<h4>Itens</h4>' + itens + secaoInstalacao(v, os)
+    const doAccess = v.origem === 'ACCESS'
+      ? '<div class="esp-access">Importada do Access — cupom nº ' + escapar(v.nrCupomAccess || v.numero) + '. ' + escapar((v.observacao || '').replace(/^Importada do Access \(cupom nº \d+\)\.\s*/, '')) + '</div>' : '';
+    $('esp-conteudo').innerHTML = doAccess + cab + '<h4>Itens</h4>' + itens + (v.origem === 'ACCESS' ? '' : secaoInstalacao(v, os))
       + '<h4>Cobrança</h4>' + cobranca + cancelada;
-    const podeCancelar = v.situacao === 'F';
+    const podeCancelar = v.situacao === 'F' && v.origem !== 'ACCESS';
     $('esp-cancelar').hidden = !podeCancelar;
     const recebida = parcelas.some(x => x.status === 'QUITADO');
     if (podeCancelar && recebida) {

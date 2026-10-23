@@ -1,5 +1,7 @@
 {{!--
   Destino: C:\plataformaRota\views\contab\financeiro\fluxo.handlebars
+  Alterado em: 23/10/2026 - RECEBIMENTO: botoes Banco · Caixa · Cartão no modal; cada um mostra o seu quadro
+               (banco: combo; caixa: 1.01.001.001 fixo; cartao: bandeira, debito/credito, parcelas e previa)
   Alterado em: 23/10/2026 - carrega /js/comum/razao-conta.js (nome na janela do pos abre o razao da conta)
   Alterado em: 23/10/2026 - cabecalho da grade com data-ord: ordenar por Histórico, Conta, T, Vencto, A receber, A pagar
   Alterado em: 19/10/2026 - cabecalho da grade FIXO (a grade rola dentro da caixa, na altura da tela)
@@ -60,15 +62,53 @@
       <button class="pag-close" id="pag-close">×</button>
     </div>
     <div class="pag-modal-body">
+      <!-- 23/10/2026: recebimento de titulo de cliente — como ele pagou -->
+      <div class="pag-forma" id="pag-forma" hidden>
+        <button type="button" data-forma="BANCO" class="ativo">🏦 Banco</button>
+        <button type="button" data-forma="CAIXA">💵 Caixa</button>
+        <button type="button" data-forma="CARTAO">💳 Cartão</button>
+      </div>
+
       <div class="pag-controles">
-        <label class="pag-campo">
+        <label class="pag-campo" id="pag-campo-banco">
           <span>Banco</span>
           <select id="pag-banco"><option value="">Selecione...</option></select>
         </label>
+        <div class="pag-campo" id="pag-campo-caixa" hidden>
+          <span>Caixa</span>
+          <div class="pag-fixo" id="pag-caixa-nome">1.01.001.001</div>
+        </div>
         <label class="pag-campo">
           <span>Data do movimento</span>
           <input type="date" id="pag-data">
         </label>
+      </div>
+
+      <!-- 23/10/2026: forma CARTAO — o titulo do cliente passa para a operadora (parcelas pos 5 no CEF/Armacao) -->
+      <div class="pag-cartao" id="pag-cartao" hidden>
+        <div class="pag-cc-linha">
+          <label class="pag-campo">
+            <span>Cartão (bandeira)</span>
+            <select id="pag-cc-bandeira"><option value="">escolha o cartão…</option></select>
+          </label>
+          <div class="pag-campo pag-cc-modo">
+            <span>Tipo</span>
+            <div>
+              <label><input type="radio" name="pag-cc-modo" value="DEBITO"> Débito</label>
+              <label><input type="radio" name="pag-cc-modo" value="CREDITO" checked> Crédito</label>
+            </div>
+          </div>
+          <label class="pag-campo pag-cc-parc">
+            <span>Parcelas</span>
+            <select id="pag-cc-parcelas">
+              <option value="1">1x</option><option value="2">2x</option><option value="3">3x</option>
+              <option value="4">4x</option><option value="5">5x</option><option value="6">6x</option>
+              <option value="7">7x</option><option value="8">8x</option><option value="9">9x</option>
+              <option value="10">10x</option>
+            </select>
+          </label>
+        </div>
+        <div class="pag-cc-previa" id="pag-cc-previa"></div>
       </div>
 
       <!-- recebimento: antecipacao de cartao (todas as parcelas em aberto de um cartao) -->
@@ -289,6 +329,23 @@
   .pag-liq input:disabled { background:#f3f4f6; }
   .pag-taxa { margin-top:10px; font-size:.85rem; color:#374151; line-height:1.45; }
   .pag-taxa b { color:#dc2626; }
+  /* 23/10/2026: forma de recebimento (Banco · Caixa · Cartão) */
+  .pag-forma { display:flex; gap:8px; margin-bottom:14px; }
+  .pag-forma[hidden], .pag-cartao[hidden], .pag-campo[hidden] { display:none; }
+  .pag-forma button { flex:1; padding:9px 10px; border:2px solid #d1d5db; background:#fff; border-radius:8px; font-weight:700; cursor:pointer; font-size:.92rem; }
+  .pag-forma button:hover { background:#f9fafb; }
+  .pag-forma button.ativo { border-color:#059669; background:#ecfdf5; color:#065f46; }
+  .pag-fixo { padding:8px 11px; border:1px solid #d1d5db; border-radius:7px; background:#f3f4f6; font-size:.9rem; }
+  .pag-cartao { margin:-4px 0 14px; padding:12px; border:1px solid #bbf7d0; background:#f0fdf4; border-radius:8px; }
+  .pag-cc-linha { display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap; }
+  .pag-cc-modo > div { display:flex; gap:14px; padding:8px 0; font-size:.9rem; }
+  .pag-cc-modo label { display:flex; gap:5px; align-items:center; cursor:pointer; font-weight:400; }
+  .pag-cc-parc { flex:0 0 110px; }
+  .pag-cc-parc select:disabled { background:#f3f4f6; color:#9ca3af; }
+  .pag-cc-previa { margin-top:10px; font-size:.85rem; color:#374151; }
+  .pag-cc-tab { border-collapse:collapse; margin-top:6px; }
+  .pag-cc-tab td { padding:3px 14px 3px 0; font-variant-numeric:tabular-nums; }
+  .pag-cc-tab td.v { text-align:right; font-weight:700; }
 
   /* Boleta */
   .bol-content { background:#fff; border-radius:10px; width:92%; max-width:660px; max-height:88vh; display:flex; flex-direction:column; overflow:hidden; }

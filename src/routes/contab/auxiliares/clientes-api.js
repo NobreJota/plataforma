@@ -6,6 +6,8 @@
 // Alterado em: 09/10/2026 - PESSOA FISICA sem e-mail: a tela manda "@" (cliente que nao
 //   quis informar). Para PF, "@" vale como contato respondido e o e-mail grava VAZIO.
 //   No PUT o tipo vem do cadastro (o corpo nao traz tipo).
+// Alterado em: 23/10/2026 - LISTAR paginado aceita ?ordem=codigo|nome|cpfCnpj|cidade|telefone|ativo&dir=1|-1
+//   (a tela ordena clicando no cabecalho). Ordem "natural" (F7673 antes de F17281) e sem diferenca de acento.
 // =============================================================================
 // src/routes/auxiliares/clientes-api.js
 const express = require('express');
@@ -102,7 +104,11 @@ router.get('/', async (req, res) => {
       const total = tipo ? contagem[tipo] : contagem.PF + contagem.PJ;
       const paginas = Math.max(1, Math.ceil(total / porPagina));
       const pagina = Math.min(Math.max(parseInt(req.query.pagina, 10) || 1, 1), paginas);
-      const itens = await Cliente.find(filtroTipo).sort({ nome: 1 })
+      // 23/10/2026: ordem escolhida na tela (desempate pelo nome)
+      const CAMPOS = { codigo: 'codigo', nome: 'nome', cpfCnpj: 'cpfCnpj', cidade: 'enderecoCobranca.cidade', telefone: 'telefone', ativo: 'ativo' };
+      const campo = CAMPOS[req.query.ordem] || 'nome', dir = String(req.query.dir) === '-1' ? -1 : 1;
+      const ordem = { [campo]: dir }; if (campo !== 'nome') ordem.nome = 1;
+      const itens = await Cliente.find(filtroTipo).collation({ locale: 'pt', strength: 1, numericOrdering: true }).sort(ordem)
         .skip((pagina - 1) * porPagina).limit(porPagina);
       return res.json({ itens: itens.map(decorar), total, pagina, paginas, contagem });
     }

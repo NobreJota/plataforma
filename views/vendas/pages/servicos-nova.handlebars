@@ -1,6 +1,7 @@
 {{!--
   Destino: C:\plataformaRota\views\vendas\pages\servicos-nova.handlebars
   Criado em: 23/10/2026
+  Alterado em: 23/10/2026 - lista de clientes com paginas < >; historico ordena pelo cabecalho
   Alterado em: 23/10/2026 - busca com Edificio e Apto; historico com etiquetas por tipo (todos, VI, C, G, S)
 
   SERVICO > NOVA OS (sem venda). Rota: /vendas/servicos/nova?tipo=C   (C conserto · G garantia · S servicos)
@@ -59,6 +60,10 @@
     .acoes button { border:0; background:var(--ambar); color:#fff; border-radius:8px; padding:10px 22px; font-size:15px; font-weight:800; cursor:pointer; }
     .acoes button:disabled { opacity:.5; cursor:wait; }
     .recado { font-size:15px; font-weight:700; } .recado.erro { color:var(--vermelho); } .recado.ok { color:var(--verde); }
+    .pags { display:flex; gap:8px; align-items:center; justify-content:center; padding:8px; font-size:13px; }
+    .pags button { min-width:34px; height:30px; border:1px solid #d1d5db; background:#fff; border-radius:7px; font-weight:800; cursor:pointer; }
+    .pags button:disabled { opacity:.35; cursor:default; }
+    th.ord { cursor:pointer; user-select:none; } th.ord:hover { text-decoration:underline; }
     .chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
     .chips button { border:1px solid #d1d5db; background:#fff; border-radius:16px; padding:4px 12px; font-size:12px; cursor:pointer; color:#374151; }
     .chips button.on { background:var(--ambar); border-color:var(--ambar); color:#fff; }

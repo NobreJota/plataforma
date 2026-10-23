@@ -44,6 +44,12 @@
  *    "só os que vencem em <mes>" (marcado) mostra so os documentos com parcela no mes da grade.
  *    POS como no Access: 3 = Pedidos feitos, 7 = Compras projetadas.
  *    19/10/2026: linha pos 7 (compra projetada) leva a etiqueta "previsão" antes do historico e fica em italico.
+ * Alterado em 23/10/2026 (Jorge): RECEBIMENTO DE TITULO DE CLIENTE com tres formas: botoes Banco · Caixa · Cartão
+ *    no modal, cada um com o seu quadro. Banco: so os que recebem venda (BB, Banestes, CEF). Caixa: 1.01.001.001
+ *    (POST /quitar com forma CAIXA). Cartão: bandeira, débito/crédito, 1 a 10x e a previa das parcelas; grava pelo
+ *    POST /receber-cartao (o titulo do cliente baixa contra a operadora e nascem as parcelas pos 5 do cartao).
+ *    Com Cartão a lista mostra so os titulos do cliente clicado. Fora do recebimento de cliente (pagar, cartao,
+ *    titulo PJ no Banestes) os botoes nao aparecem.
  * Alterado em 23/10/2026 (Jorge): janela do pos — so UM documento aberto: abrir um fecha os outros.
  * Alterado em 23/10/2026 (Jorge): janela do pos — clique no NOME abre o RAZAO da conta (RazaoConta, janela por cima;
  *    passar o mouse diz "acesso razão"). Grade mes a mes da aba em letra menor (cabe sem rolar para o lado).
@@ -458,7 +464,11 @@
                 cartao: null,        // { conta, historico } quando a lista e de cartao
                 cartaoInfo: null,    // { codigo, nome, contaTaxa:{codigo,nome} } vindo da API
                 cartoes: null,       // lista para a antecipacao
-                liqOk: false };      // Enter no valor liquido ja confirmou o valor
+                liqOk: false,        // Enter no valor liquido ja confirmou o valor
+                forma: 'BANCO',      // 23/10/2026: BANCO | CAIXA | CARTAO (recebimento de cliente)
+                formaAtiva: false,   // os botoes Banco · Caixa · Cartão estao valendo
+                contaClicada: '',    // a conta do titulo clicado (o cliente)
+                caixa: null };       // { codigo, nome } do caixa
   const PREFIXO_CARTAO = '1.01.005.';
   const BANCO_CARTAO = '1.01.002.003';   // CEF/Armacao: o cartao deposita sempre aqui (contrato)
   const ehDebito = h => /d[ée]bito\s*$/i.test(String(h || ''));
@@ -518,7 +528,7 @@
           const label = b.subCodigo
             ? `${b.subCodigo} - ${b.subNome || b.apelido}`
             : `(sem vínculo) ${b.apelido}`;
-          return `<option value="${b._id}">${label}</option>`;
+          return `<option value="${b._id}" data-recebe="${b.recebeVenda ? '1' : ''}">${label}</option>`;
         }).join('');
     } catch (err) { console.warn('bancos:', err.message); }
   }
@@ -546,9 +556,119 @@
     else if (ehRec && cartao && ehTitulo(cartao.historico)) travarBanco(BANCO_TITULO);
     else modoCartao(false);
     $('#pag-todos-cartao').hidden = true;
+    // 23/10/2026: Banco · Caixa · Cartão so no recebimento de titulo de cliente
+    pag.contaClicada = ehRec && cartao ? String(cartao.conta || '') : '';
+    pag.formaAtiva = ehRec && !pag.cartao && !(cartao && ehTitulo(cartao.historico));
+    $('#pag-forma').hidden = !pag.formaAtiva;
+    $('#pag-cc-bandeira').value = '';
+    $('#pag-cc-parcelas').value = '1';
+    const credito = document.querySelector('input[name="pag-cc-modo"][value="CREDITO"]');
+    if (credito) credito.checked = true;
+    await aplicarForma('BANCO');
     if (pag.cartao) await carregarCartao(pag.cartao.conta, pag.cartao.historico, data, 'clicado');
     else await carregarJanela();
     $('#pag-modal').hidden = false;
+  }
+
+  /* ===== 23/10/2026: FORMA DO RECEBIMENTO (Banco · Caixa · Cartão) ===== */
+  const DIA_MS = 86400000;
+  // com Cartão, so os titulos do cliente clicado (uma transacao de cartao e de uma pessoa)
+  function titulosVisiveis() {
+    return pag.forma === 'CARTAO' && pag.contaClicada
+      ? pag.titulos.filter(t => (t.codigoConta || '') === pag.contaClicada) : pag.titulos;
+  }
+  function textoConfirmar() {
+    if (pag.tipo !== 'receber') return '💰 Pagar selecionados';
+    return pag.forma === 'CARTAO' ? '💳 Lançar no cartão' : '💵 Receber selecionados';
+  }
+  async function aplicarForma(f) {
+    pag.forma = pag.formaAtiva ? f : 'BANCO';
+    $$('#pag-forma [data-forma]').forEach(b => b.classList.toggle('ativo', b.dataset.forma === pag.forma));
+    $('#pag-campo-banco').hidden = pag.forma !== 'BANCO';
+    $('#pag-campo-caixa').hidden = pag.forma !== 'CAIXA';
+    $('#pag-cartao').hidden = pag.forma !== 'CARTAO';
+    $('#pag-confirmar').textContent = textoConfirmar();
+    if (!pag.formaAtiva) { $$('#pag-banco option').forEach(o => { o.hidden = false; }); return; }
+    $('#pag-antecipar').hidden = pag.forma !== 'BANCO';
+    // banco: so os que recebem venda (BB, Banestes, CEF)
+    const sel = $('#pag-banco');
+    $$('#pag-banco option').forEach(o => { if (o.value) o.hidden = o.dataset.recebe !== '1'; });
+    if (sel.selectedOptions[0] && sel.selectedOptions[0].hidden) sel.value = '';
+    if (pag.forma === 'CAIXA') await carregarCaixa();
+    if (pag.forma === 'CARTAO') {
+      await carregarBandeiras();
+      const vis = new Set(titulosVisiveis().map(t => t._id));
+      pag.marcados = new Set([...pag.marcados].filter(id => vis.has(id)));
+    }
+  }
+  async function carregarCaixa() {
+    try {
+      if (!pag.caixa) pag.caixa = await pagApi('GET', '/caixa');
+      $('#pag-caixa-nome').textContent = pag.caixa.codigo + ' - ' + pag.caixa.nome;
+    } catch (err) { $('#pag-caixa-nome').textContent = 'Erro: ' + err.message; }
+  }
+  async function carregarBandeiras() {
+    const sel = $('#pag-cc-bandeira');
+    try {
+      if (!pag.cartoes) pag.cartoes = await pagApi('GET', '/cartoes');
+      if (sel.options.length <= 1) {
+        sel.innerHTML = '<option value="">escolha o cartão…</option>'
+          + pag.cartoes.map(c => `<option value="${escAttr(c.codigo)}">${escAttr(c.codigo)} - ${escAttr(c.nome)}</option>`).join('');
+      }
+    } catch (err) { alert('Erro ao ler os cartões: ' + err.message); }
+  }
+  function lerCartao() {
+    const r = document.querySelector('input[name="pag-cc-modo"]:checked');
+    const modo = r ? r.value : 'CREDITO';
+    return { conta: $('#pag-cc-bandeira').value, modo,
+             parcelas: modo === 'DEBITO' ? 1 : (parseInt($('#pag-cc-parcelas').value, 10) || 1) };
+  }
+  // previa: as mesmas contas do servidor (debito: dia seguinte; credito: de 30 em 30 dias; sobra na 1a)
+  function desenharPreviaCartao() {
+    if (pag.forma !== 'CARTAO') return;
+    const cc = lerCartao();
+    $('#pag-cc-parcelas').disabled = cc.modo === 'DEBITO';
+    const prev = $('#pag-cc-previa');
+    const total = Math.round(titulosVisiveis().filter(t => pag.marcados.has(t._id)).reduce((s, t) => s + t.valor, 0) * 100);
+    const dtxt = $('#pag-data').value;
+    if (!total) { prev.textContent = 'Marque o título do cliente.'; return; }
+    if (!dtxt || erroDataMovimento(dtxt)) { prev.textContent = 'Escolha a data do movimento.'; return; }
+    const base = new Date(dtxt + 'T12:00:00');
+    const n = cc.parcelas, b0 = Math.floor(total / n);
+    const linhas = Array.from({ length: n }, (_, i) => {
+      const v = b0 + (i === 0 ? total - b0 * n : 0);
+      const d = new Date(base.getTime() + (cc.modo === 'DEBITO' ? 1 : (i + 1) * 30) * DIA_MS);
+      return '<tr><td>' + (i + 1) + '/' + n + '</td><td>' + fmtData(d) + '</td><td class="v">' + fmt(v / 100) + '</td></tr>';
+    });
+    const op = cc.conta ? $('#pag-cc-bandeira').selectedOptions[0].textContent : 'o cartão (escolha a bandeira)';
+    prev.innerHTML = 'O título do cliente é baixado e passa a receber de <b>' + escAttr(op) + '</b>, no CEF/Armação:'
+      + '<table class="pag-cc-tab">' + linhas.join('') + '</table>';
+  }
+  async function confirmarCartao() {
+    const marcados = titulosVisiveis().filter(t => pag.marcados.has(t._id));
+    if (!marcados.length) return;
+    const cc = lerCartao();
+    if (!cc.conta) { alert('Escolha o cartão (bandeira).'); $('#pag-cc-bandeira').focus(); return; }
+    const btn = $('#pag-confirmar');
+    btn.disabled = true; btn.textContent = 'Processando...';
+    try {
+      const r = await pagApi('POST', '/receber-cartao', {
+        data: $('#pag-data').value,
+        titulosIds: marcados.map(t => t._id),
+        historicos: pag.historicos,
+        cartao: cc.conta, modo: cc.modo, parcelas: cc.parcelas
+      });
+      $('#pag-modal').hidden = true;
+      carregar();
+      abrirBoleta(r.boletaId);
+    } catch (err) {
+      alert('Erro: ' + err.message);
+      if (/já foi baixada|já foram baixadas|marcadas já/.test(err.message)) { await recarregarModal(true); carregar(); }
+    } finally {
+      btn.disabled = false;
+      btn.textContent = textoConfirmar();
+      atualizarResumoPag();
+    }
   }
 
   // cartao: banco fixo (CEF/Armacao) e travado; fora do cartao o select volta livre
@@ -673,12 +793,13 @@
 
   function renderJanela() {
     const tbody = $('#pag-tbody');
-    if (pag.titulos.length === 0) {
+    const lista = titulosVisiveis();                       // 23/10/2026: com Cartão, so o cliente clicado
+    if (lista.length === 0) {
       tbody.innerHTML = '<tr><td colspan="5" class="pag-empty">Nenhum título na janela de datas.</td></tr>';
       atualizarResumoPag();
       return;
     }
-    tbody.innerHTML = pag.titulos.map(t => {
+    tbody.innerHTML = lista.map(t => {
       const marc = pag.marcados.has(t._id);
       const histAtual = pag.historicos[t._id] !== undefined ? pag.historicos[t._id] : t.historico;
       return `<tr class="${marc ? 'marcado' : ''} ${t.noDia ? '' : 'fora-do-dia'}" data-id="${t._id}">
@@ -719,7 +840,9 @@
     atualizarLiquido(marcados, total);
     // cartao: so libera depois do Enter no valor liquido
     const precisaLiq = !$('#pag-liq').hidden;
-    $('#pag-confirmar').disabled = pag.marcados.size === 0 || (precisaLiq && !pag.liqOk);
+    desenharPreviaCartao();                                // 23/10/2026
+    $('#pag-confirmar').disabled = pag.marcados.size === 0 || (precisaLiq && !pag.liqOk)
+      || (pag.forma === 'CARTAO' && !lerCartao().conta);
   }
 
   // valor liquido: so quando tudo que esta marcado e de UM cartao
@@ -762,10 +885,12 @@
 
   async function confirmarPagamento() {
     if (pag.marcados.size === 0) return;
-    const bancoId = $('#pag-banco').value;
-    if (!bancoId) { alert('Selecione o banco.'); return; }
     const erroData = erroDataMovimento($('#pag-data').value);
     if (erroData) { alert(erroData); $('#pag-data').focus(); return; }
+    if (pag.forma === 'CARTAO') return confirmarCartao();      // 23/10/2026
+    const noCaixa = pag.forma === 'CAIXA';
+    const bancoId = noCaixa ? '' : $('#pag-banco').value;
+    if (!noCaixa && !bancoId) { alert('Selecione o banco.'); return; }
     const marcados = pag.titulos.filter(t => pag.marcados.has(t._id));
     let valorLiquido;
     if (contaUnicaDeCartao(marcados) && $('#pag-liquido').value.trim()) {
@@ -781,6 +906,7 @@
       const r = await pagApi('POST', '/quitar', {
         tipo: pag.tipo,
         data: $('#pag-data').value,
+        forma: noCaixa ? 'CAIXA' : 'BANCO',
         contaBancariaId: bancoId,
         titulosIds: Array.from(pag.marcados),
         historicos: pag.historicos,
@@ -798,7 +924,7 @@
       }
     } finally {
       btn.disabled = false;
-      btn.textContent = pag.tipo === 'receber' ? '💵 Receber selecionados' : '💰 Pagar selecionados';
+      btn.textContent = textoConfirmar();
     }
   }
 
@@ -1032,6 +1158,14 @@
   $('#pag-antecipar').addEventListener('click', antecipar);
   $('#pag-todos-cartao').addEventListener('click', todasDoCartao);
   $('#pag-cartao-sel').addEventListener('change', escolherCartaoAntecipacao);
+  // 23/10/2026: Banco · Caixa · Cartão
+  $$('#pag-forma [data-forma]').forEach(b => b.addEventListener('click', async () => {
+    await aplicarForma(b.dataset.forma);
+    renderJanela();
+  }));
+  $('#pag-cc-bandeira').addEventListener('change', atualizarResumoPag);
+  $$('input[name="pag-cc-modo"]').forEach(r => r.addEventListener('change', atualizarResumoPag));
+  $('#pag-cc-parcelas').addEventListener('change', atualizarResumoPag);
   function dataEscolhida() {
     pag.liqOk = false;
     atualizarResumoPag();
@@ -1064,7 +1198,7 @@
   $('#pag-tbody').addEventListener('change', (e) => { if (e.target.type === 'checkbox') pag.liqOk = false; }, true);
   $('#pag-todos').addEventListener('change', () => { pag.liqOk = false; }, true);
   $('#pag-todos').addEventListener('change', (e) => {
-    if (e.target.checked) pag.titulos.forEach(t => pag.marcados.add(t._id));
+    if (e.target.checked) titulosVisiveis().forEach(t => pag.marcados.add(t._id));
     else pag.marcados.clear();
     renderJanela();
   });

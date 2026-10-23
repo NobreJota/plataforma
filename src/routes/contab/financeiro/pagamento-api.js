@@ -46,6 +46,14 @@
 //      real do banco (BB "Agenda de boletos DDA") traz seguro, contador, DNIT etc.
 //  18/10/2026: GET /dda?ate= — DDA - PAGA (sub-menu do Fluxo de Caixa): os titulos a pagar (pos 2)
 //      vencendo ate o dia, vencidos inclusive; paga pelo POST /quitar.
+//  23/10/2026 (Jorge): RECEBIMENTO DE TITULO DE CLIENTE — Banco · Caixa · Cartão:
+//      POST /quitar { forma: 'CAIXA' }: a perna unica e o caixa 1.01.001.001 (sem conta bancaria). GET /caixa.
+//      POST /receber-cartao { data, titulosIds, historicos, cartao, modo: DEBITO|CREDITO, parcelas }: o cliente
+//      pagou no cartao. Boleta RECEBIMENTO: operadora (1.01.005.xxx) a debito x titulo(s) do cliente a credito;
+//      os titulos baixam (QUITADO) e nascem as parcelas pos 5 da operadora (valor inteiro; debito no dia
+//      seguinte, credito de 30 em 30 dias a partir da data do movimento), marcadas com origemBoletaId.
+//      A taxa so aparece quando a operadora paga (valorLiquido no /quitar, como antes).
+//      ESTORNO dessa boleta cancela as parcelas do cartao; se a operadora ja pagou alguma, recusa.
 //  16/10/2026: /janela do Fluxo de Caixa NAO traz as linhas do FLUXO DE SERVICO (origem 'OS',
 //      a receber das OS): elas sao recebidas pela tela Servico > Fluxo de servico, que usa
 //      este mesmo POST /quitar.
@@ -64,6 +72,20 @@ const PREFIXO_CARTAO = '1.01.005.';
 const col = n => mongoose.connection.collection(n);
 const lojaDe = req => (req.lojistaId ? new mongoose.Types.ObjectId(String(req.lojistaId)) : null);
 const emCentavos = v => Math.round(Number(v || 0) * 100);
+const CAIXA = '1.01.001.001';                       // 23/10/2026: recebimento no caixa
+const DIA = 24 * 60 * 60 * 1000;
+
+// divide o total em n parcelas (centavos); a sobra vai na primeira (igual a venda)
+function dividir(total, n) {
+  const base = Math.floor(total / n);
+  return Array.from({ length: n }, (_, i) => base + (i === 0 ? total - base * n : 0));
+}
+
+async function contaCaixa(loja) {
+  const f = { codigo: CAIXA, ativo: { $ne: false } };
+  if (loja) f.lojistaId = loja;
+  return col('_contasubtitulos').findOne(f);
+}
 
 /* Data do movimento: 'AAAA-MM-DD'. Devolve o erro em texto, ou '' se vale.
    Nao pode ser depois de hoje, nem sabado/domingo, nem mais de 5 dias uteis atras. */
@@ -319,6 +341,17 @@ router.get('/receber', async (req, res) => {
   }
 });
 
+/* 23/10/2026: GET /financeiro/api/pagamento/caixa   a conta do caixa (forma CAIXA do recebimento) */
+router.get('/caixa', async (req, res) => {
+  try {
+    const c = await contaCaixa(lojaDe(req));
+    if (!c) return res.status(404).json({ erro: 'O caixa ' + CAIXA + ' não está no plano.' });
+    res.json({ codigo: c.codigo, nome: c.nome });
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+});
+
 /* GET /financeiro/api/pagamento/bancos  (lista contas bancárias para o dropdown) */
 router.get('/bancos', async (req, res) => {
   try {
@@ -418,16 +451,25 @@ router.post('/quitar', async (req, res) => {
     if (!Array.isArray(titulosIds) || titulosIds.length === 0) {
       return res.status(400).json({ erro: 'Selecione ao menos um título.' });
     }
-    if (!contaBancariaId) return res.status(400).json({ erro: 'Selecione o banco.' });
+    // 23/10/2026: forma CAIXA — a perna unica e o caixa (1.01.001.001), sem conta bancaria
+    const noCaixa = String(req.body.forma || '').toUpperCase() === 'CAIXA';
+    if (noCaixa && tipo !== 'receber') return res.status(400).json({ erro: 'Caixa só no recebimento.' });
+    if (!noCaixa && !contaBancariaId) return res.status(400).json({ erro: 'Selecione o banco.' });
 
     // historicos: objeto opcional { tituloId: "texto editado" }
     const histMap = historicos || {};
 
-    // Carrega banco
-    const banco = await ContaBancaria.findById(contaBancariaId)
-      .populate('banco', 'nome')
-      .populate('contaSubTitulo', 'codigo nome').lean();
-    if (!banco) return res.status(404).json({ erro: 'Conta bancária não encontrada.' });
+    // Carrega banco (ou o caixa)
+    let banco = null, caixa = null;
+    if (noCaixa) {
+      caixa = await contaCaixa(loja);
+      if (!caixa) return res.status(400).json({ erro: 'O caixa ' + CAIXA + ' não está no plano.' });
+    } else {
+      banco = await ContaBancaria.findById(contaBancariaId)
+        .populate('banco', 'nome')
+        .populate('contaSubTitulo', 'codigo nome').lean();
+      if (!banco) return res.status(404).json({ erro: 'Conta bancária não encontrada.' });
+    }
 
     // Carrega os títulos do fluxo
     const titulos = await FluxoProjetado.find({ _id: { $in: titulosIds }, status: 'ATIVO' }).lean();
@@ -456,6 +498,7 @@ router.post('/quitar', async (req, res) => {
     const temLiquido = valorLiquido !== undefined && valorLiquido !== null && String(valorLiquido).trim() !== '';
     if (temLiquido) {
       if (!ehRec) return res.status(400).json({ erro: 'Valor líquido só existe no recebimento de cartão.' });
+      if (noCaixa) return res.status(400).json({ erro: 'O cartão paga no banco, não no caixa.' });
       const contas = [...new Set(titulos.map(t => t.codigoConta || ''))];
       if (contas.length !== 1 || !contas[0].startsWith(PREFIXO_CARTAO)) {
         return res.status(400).json({ erro: 'Para informar o valor líquido, marque parcelas de um único cartão.' });
@@ -530,10 +573,10 @@ router.post('/quitar', async (req, res) => {
       await session.withTransaction(async () => {
         [boleta] = await Boleta.create([{
           codigo, tipo: tipoBoleta, data: dataBoleta,
-          contaBancaria: banco._id,
-          bancoSubTitulo: banco.contaSubTitulo?._id || null,
-          bancoCodigo: banco.contaSubTitulo?.codigo || '',
-          bancoNome: banco.apelido || banco.banco?.nome || 'Banco',
+          contaBancaria: banco ? banco._id : null,
+          bancoSubTitulo: caixa ? caixa._id : (banco.contaSubTitulo?._id || null),
+          bancoCodigo: caixa ? caixa.codigo : (banco.contaSubTitulo?.codigo || ''),
+          bancoNome: caixa ? caixa.nome : (banco.apelido || banco.banco?.nome || 'Banco'),
           valorTotal: valorBoleta,
           contrapartidas,
           historico: historico || `${tipoBoleta} em lote — ${titulos.length} título(s)`,
@@ -577,6 +620,117 @@ router.post('/quitar', async (req, res) => {
   }
 });
 
+/* 23/10/2026 (Jorge): POST /financeiro/api/pagamento/receber-cartao
+   O cliente que ficou "a receber" pagou NO CARTAO. O dinheiro nao entra agora: o devedor muda.
+   Body: { data, titulosIds, historicos, cartao: '1.01.005.xxx', modo: 'DEBITO'|'CREDITO', parcelas: 1..10 }
+   - titulos: pos 5, em aberto, todos da MESMA conta de cliente (1.03/1.04)
+   - boleta RECEBIMENTO: perna unica = cartao (debito), contrapartidas = os titulos (credito no cliente)
+   - os titulos baixam (QUITADO, boletaId) e nascem as parcelas pos 5 do cartao: valor inteiro, debito no
+     dia seguinte, credito de 30 em 30 dias a partir da data do movimento; origemBoletaId = a boleta
+     (o estorno cancela). Ligadas a venda (lancamentoId) quando os titulos sao de uma venda so.
+   Tudo numa transacao. */
+router.post('/receber-cartao', async (req, res) => {
+  try {
+    const { data, titulosIds, historicos, cartao, modo, parcelas } = req.body || {};
+    const erroData = erroDataMovimento(data);
+    if (erroData) return res.status(400).json({ erro: erroData });
+    const loja = lojaDe(req);
+    if (!Array.isArray(titulosIds) || titulosIds.length === 0) return res.status(400).json({ erro: 'Selecione ao menos um título.' });
+    const m = String(modo || '').toUpperCase();
+    if (m !== 'DEBITO' && m !== 'CREDITO') return res.status(400).json({ erro: 'Escolha débito ou crédito.' });
+    const n = m === 'DEBITO' ? 1 : Math.floor(Number(parcelas) || 1);
+    if (n < 1 || n > 10) return res.status(400).json({ erro: 'De 1 a 10 parcelas.' });
+    const codCartao = String(cartao || '');
+    if (!codCartao.startsWith(PREFIXO_CARTAO)) return res.status(400).json({ erro: 'Escolha o cartão.' });
+    const fc = { codigo: codCartao, ativo: { $ne: false } };
+    if (loja) fc.lojistaId = loja;
+    const contaCartao = await col('_contasubtitulos').findOne(fc);
+    if (!contaCartao) return res.status(400).json({ erro: 'O cartão ' + codCartao + ' não está no plano.' });
+
+    const titulos = await FluxoProjetado.find({ _id: { $in: titulosIds }, status: 'ATIVO' }).lean();
+    if (titulos.length !== new Set(titulosIds.map(String)).size) {
+      return res.status(409).json({ erro: 'Uma das parcelas marcadas já foi baixada. Nada foi gravado; abra o fluxo de novo.' });
+    }
+    if (titulos.some(t => Number(t.pos) !== 5)) return res.status(400).json({ erro: 'Cartão só recebe título a receber (pos 5).' });
+    const contas = [...new Set(titulos.map(t => t.codigoConta || ''))];
+    if (contas.length !== 1) return res.status(400).json({ erro: 'Cartão: os títulos têm de ser de um cliente só.' });
+    if (!/^1\.0[34]\./.test(contas[0])) return res.status(400).json({ erro: 'Cartão só recebe título de cliente (1.03 / 1.04).' });
+
+    const histMap = historicos || {};
+    const contrapartidas = titulos.map(t => ({
+      contaSubTitulo: t.contaSubTitulo || null,
+      codigoConta: t.codigoConta || '',
+      nomeConta: t.nomeConta || '',
+      historico: (histMap[String(t._id)] || t.historico || t.nomeConta || '').trim(),
+      valor: Math.abs(t.valor),
+      fluxoLancamentoId: t.lancamentoId || null,
+      pos: t.pos
+    }));
+    const totalC = contrapartidas.reduce((s, c) => s + emCentavos(c.valor), 0);
+    if (totalC <= 0) return res.status(400).json({ erro: 'Total zero.' });
+
+    const dataBoleta = new Date(data + 'T12:00:00');
+    const nomeModo = m === 'DEBITO' ? 'débito' : 'crédito';
+    // historico das parcelas: o do titulo (sem o " · a receber") + a forma; termina em "débito" para a
+    // tela do fluxo saber que nao tem antecipacao
+    const base = String(titulos[0].historico || titulos[0].nomeConta || '').replace(/\s*·\s*a receber\s*$/i, '').trim();
+    const histCartao = base + (titulos.length > 1 ? ' (+' + (titulos.length - 1) + ')' : '') + ' · ' + nomeModo;
+    const vendas = [...new Set(titulos.map(t => String(t.lancamentoId || '')).filter(Boolean))];
+    const lancamentoId = vendas.length === 1 ? titulos.find(t => t.lancamentoId).lancamentoId : null;
+    const valores = dividir(totalC, n);
+    const venc = i => new Date(dataBoleta.getTime() + (m === 'DEBITO' ? 1 : (i + 1) * 30) * DIA);
+
+    let boleta = null;
+    const session = await mongoose.startSession();
+    try {
+      await session.withTransaction(async () => {
+        [boleta] = await Boleta.create([{
+          codigo: `BOL-${Date.now()}`, tipo: 'RECEBIMENTO', data: dataBoleta,
+          bancoSubTitulo: contaCartao._id, bancoCodigo: contaCartao.codigo, bancoNome: contaCartao.nome,
+          valorTotal: totalC / 100,
+          contrapartidas,
+          historico: 'Recebimento no cartão ' + nomeModo + (m === 'CREDITO' ? ' ' + n + 'x' : '') + ' — ' + titulos.length + ' título(s)',
+          origem: 'FLUXO',
+          lojistaId: loja
+        }], { session });
+
+        const r = await FluxoProjetado.updateMany(
+          { _id: { $in: titulos.map(t => t._id) }, status: 'ATIVO' },
+          { $set: { status: 'QUITADO', boletaId: boleta._id, quitadoEm: new Date() } },
+          { session }
+        );
+        if (r.modifiedCount !== titulos.length) {
+          throw Object.assign(new Error('Uma das parcelas já foi baixada por outra boleta. Nada foi gravado; abra o fluxo de novo.'), { status: 409 });
+        }
+
+        const linhas = await FluxoProjetado.insertMany(valores.map((v, i) => {
+          const d = venc(i);
+          return {
+            lojistaId: loja, ano: d.getFullYear(), mes: d.getMonth() + 1, pos: 5,
+            codigoConta: contaCartao.codigo, nomeConta: contaCartao.nome,
+            historico: histCartao, valor: v / 100, vencimento: d,
+            parcela: i + 1, totalParcelas: n,
+            origem: 'VENDA', lancamentoId, status: 'ATIVO',
+          };
+        }), { session });
+        // direto na colecao: o schema do fluxo nao conhece origemBoletaId
+        await FluxoProjetado.collection.updateMany({ _id: { $in: linhas.map(l => l._id) } },
+          { $set: { origemBoletaId: boleta._id } }, { session });
+      });
+    } finally {
+      session.endSession();
+    }
+
+    for (const c of contrapartidas) await registrarHistorico(c.codigoConta, c.historico);
+
+    res.status(201).json({ ok: true, boletaId: boleta._id, codigo: boleta.codigo,
+      valorTotal: totalC / 100, titulosQuitados: titulos.length, parcelas: n });
+  } catch (err) {
+    console.error('❌ /pagamento/receber-cartao:', err.message);
+    res.status(err.status || 500).json({ erro: err.message });
+  }
+});
+
 /* GET /financeiro/api/pagamento/boleta/:id  (abre a boleta detalhada) */
 router.get('/boleta/:id', async (req, res) => {
   try {
@@ -600,6 +754,20 @@ router.post('/boleta/:id/estornar', async (req, res) => {
       if (!b) throw Object.assign(new Error('Boleta não encontrada.'), { status: 404 });
       if (b.status === 'CANCELADO') throw Object.assign(new Error('Boleta já estornada.'), { status: 400 });
 
+      // 23/10/2026: recebimento NO CARTAO gerou parcelas da operadora (origemBoletaId): saem junto.
+      // Se a operadora ja pagou alguma, estorne antes esse recebimento do cartao.
+      const geradas = await FluxoProjetado.collection.find({ origemBoletaId: b._id, status: { $ne: 'CANCELADO' } }, { session }).toArray();
+      const pagas = geradas.filter(l => l.status === 'QUITADO');
+      if (pagas.length) {
+        throw Object.assign(new Error('O cartão já pagou ' + pagas.length + ' parcela(s) deste recebimento. Estorne antes o recebimento do cartão.'), { status: 409 });
+      }
+      let cartaoCanceladas = 0;
+      if (geradas.length) {
+        const c = await FluxoProjetado.collection.updateMany({ origemBoletaId: b._id, status: 'ATIVO' },
+          { $set: { status: 'CANCELADO', canceladoEm: new Date() } }, { session });
+        cartaoCanceladas = c.modifiedCount;
+      }
+
       // Devolve os títulos ao Fluxo (QUITADO → ATIVO)
       const f = await FluxoProjetado.updateMany(
         { boletaId: b._id },
@@ -616,7 +784,7 @@ router.post('/boleta/:id/estornar', async (req, res) => {
         { $set: { status: 'CANCELADO' } },
         { session }
       );
-      resposta = { ok: true, titulosDevolvidos: f.modifiedCount, taxaEstornada: t.modifiedCount > 0 };
+      resposta = { ok: true, titulosDevolvidos: f.modifiedCount, taxaEstornada: t.modifiedCount > 0, cartaoCanceladas };
     });
     res.json(resposta);
   } catch (err) {

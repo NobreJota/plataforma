@@ -9,6 +9,8 @@
 //              MODO EMBUTIDO (?embed=1&novo=PF|PJ): abre direto no Novo cliente, por cima
 //              da tela da venda; ao gravar avisa a venda (postMessage) e ela ja escolhe
 //              o cliente; Cancelar/× tambem avisa
+//              23/10/2026 - ORDENAR clicando no cabecalho (Código, Nome, CPF/CNPJ, Cidade, Telefone, Status;
+//              2o clique inverte). A ordem vale para todas as paginas (o servidor ordena: ?ordem=&dir=).
 /* public/js/auxiliares/clientes.js
  * v8 — Pelo menos um contato + CEP com fallback manual
  *  ✓ Email OU Telefone obrigatório (não ambos, mas pelo menos um)
@@ -314,7 +316,16 @@
 
   // ============== Listagem ==============
   const POR_PAGINA = 50;
-  const lista = { tipo: 'PF', pagina: 1, paginas: 1 };
+  const lista = { tipo: 'PF', pagina: 1, paginas: 1, ordem: 'nome', dir: 1 };
+  // 23/10/2026: ordenar pelo cabecalho
+  function marcarOrdem() {
+    document.querySelectorAll('.cli-table th.ord').forEach(th => { const on = th.dataset.ord === lista.ordem;
+      th.classList.toggle('on', on); th.querySelector('.seta').textContent = on ? (lista.dir === 1 ? '▲' : '▼') : '↕'; });
+  }
+  document.querySelectorAll('.cli-table th.ord').forEach(th => th.addEventListener('click', () => {
+    if (lista.ordem === th.dataset.ord) lista.dir = -lista.dir; else { lista.ordem = th.dataset.ord; lista.dir = 1; }
+    lista.pagina = 1; recarregar();
+  }));
 
   async function recarregar() {
     const tbody = $('#lista-clientes');
@@ -331,6 +342,8 @@
       params.set('tipo', lista.tipo);
       params.set('pagina', lista.pagina);
       params.set('porPagina', POR_PAGINA);
+      params.set('ordem', lista.ordem); params.set('dir', lista.dir);
+      marcarOrdem();
 
       const r = await api('GET', '/?' + params.toString());
       const clientes = r.itens;

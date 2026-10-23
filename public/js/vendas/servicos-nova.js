@@ -5,6 +5,7 @@
 // SERVICO > NOVA OS (sem venda) — por enquanto o CONSERTO (tipo C).
 //   1. P. Fisica / P. Juridica + busca pelo nome: a lista muda a cada letra (nome, estado, cidade, bairro)
 //   2. escolhido o cliente: o historico das OS dele (plataforma + Access), TODOS os tipos, mais novas primeiro,
+//      ordena clicando no cabecalho (Nº OS, Data, Tipo, Situacao, Historico); lista de clientes com paginas < >;
 //      com etiquetas para filtrar por tipo (VI, C, G, S) — 23/10/2026; edificio/apto vem do cadastro ou da ultima OS;
 //      clique numa OS da plataforma abre o modal dela
 //   3. a OS: endereco do servico (vem o de cobranca do cliente), telefones, aparelho, defeito, observacao
@@ -37,13 +38,15 @@
 
   // ---- 1. busca do cliente ------------------------------------------------------
   const tipoPessoa = () => (document.querySelector('input[name=pf]:checked') || {}).value || 'PF';
+  let pag = 1;                                          // 23/10/2026: pagina da lista de clientes (20 por pagina)
   async function buscar() {
     const b = $('busca').value.trim();
     if (b.length < 2) { $('res').hidden = true; return; }
     const meu = ++seq;
     $('res').hidden = false; $('res').innerHTML = '<div class="vz">Procurando…</div>';
     try {
-      const d = await api('/vendas/api/venda/clientes?busca=' + encodeURIComponent(b) + '&tipo=' + tipoPessoa());
+      const d = await api('/vendas/api/venda/clientes?busca=' + encodeURIComponent(b) + '&tipo=' + tipoPessoa() + '&pagina=' + pag);
+      pag = d.pagina || 1;
       if (meu !== seq) return;                           // chegou uma busca mais nova
       lista = d.clientes || [];
       $('res').innerHTML = lista.length
@@ -51,14 +54,20 @@
           + lista.map((c, i) => '<tr class="cli" data-i="' + i + '"><td><b>' + esc(c.nome) + '</b></td><td class="cinza">' + esc(c.codigo)
             + '</td><td>' + esc(c.uf) + '</td><td>' + esc(c.cidade) + '</td><td>' + esc(c.bairro) + '</td><td>' + esc(c.edificio || '')
             + '</td><td>' + esc(c.apto || '') + '</td></tr>').join('')
-          + '</tbody></table>' + (d.total > lista.length ? '<div class="vz">' + d.total + ' clientes — continue digitando para estreitar</div>' : '')
+          + '</tbody></table>' + ((d.paginas || 1) > 1
+            ? '<div class="pags"><button type="button" data-pg="-1"' + (pag <= 1 ? ' disabled' : '') + '>&lt;</button> página ' + pag + ' de ' + d.paginas
+              + ' · ' + d.total + ' clientes <button type="button" data-pg="1"' + (pag >= d.paginas ? ' disabled' : '') + '>&gt;</button>'
+              + ' <span class="cinza">(ou continue digitando para estreitar)</span></div>' : '')
         : '<div class="vz">Nenhum cliente ' + (tipoPessoa() === 'PF' ? 'pessoa física' : 'pessoa jurídica') + ' com “' + esc(b) + '”. '
           + '<a href="/vendas/clientes" target="_blank">+ novo cliente</a></div>';
     } catch (e) { if (meu === seq) $('res').innerHTML = '<div class="vz">' + esc(e.message) + '</div>'; }
   }
-  $('busca').addEventListener('input', () => { clearTimeout(espera); espera = setTimeout(buscar, 220); });
-  document.querySelectorAll('input[name=pf]').forEach(r => r.addEventListener('change', () => { buscar(); $('busca').focus(); }));
-  $('res').addEventListener('click', ev => { const tr = ev.target.closest('tr[data-i]'); if (tr) escolher(lista[Number(tr.dataset.i)]); });
+  $('busca').addEventListener('input', () => { pag = 1; clearTimeout(espera); espera = setTimeout(buscar, 220); });
+  document.querySelectorAll('input[name=pf]').forEach(r => r.addEventListener('change', () => { pag = 1; buscar(); $('busca').focus(); }));
+  $('res').addEventListener('click', ev => {
+    const pg = ev.target.closest('[data-pg]'); if (pg) { pag += Number(pg.dataset.pg); buscar(); return; }   // 23/10: troca de pagina
+    const tr = ev.target.closest('tr[data-i]'); if (tr) escolher(lista[Number(tr.dataset.i)]);
+  });
 
   // ---- 2. cliente escolhido: historico -------------------------------------------
   async function escolher(c) {
@@ -79,6 +88,9 @@
   }
   // 23/10/2026: o historico traz TODOS os tipos (VI, C, G, S); as etiquetas filtram por tipo
   let todasOS = [], filtroTipo = '';
+  let histOrd = { k: 'data', asc: false };              // 23/10/2026: ordenar o historico pelo cabecalho
+  const valHist = (o, k) => k === 'numero' ? Number(o.numero) || 0 : k === 'data' ? new Date(o.data || 0).getTime()
+    : String(o[k] || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const NOME_TIPO = { VI: 'VI · venda/instalação', C: 'C · conserto', G: 'G · garantia', S: 'S · serviços' };
   async function historico() {
     $('hist').innerHTML = '<div class="vz">Carregando…</div>'; $('hist-rod').textContent = '';
@@ -98,12 +110,15 @@
       const cont = {}; todasOS.forEach(o => { cont[o.tipo || '?'] = (cont[o.tipo || '?'] || 0) + 1; });
       const chips = '<div class="chips">' + ['', 'VI', 'C', 'G', 'S'].map(t => '<button type="button" data-ft="' + t + '" class="' + (filtroTipo === t ? 'on' : '') + '">'
         + (t ? NOME_TIPO[t] : 'Todos os tipos') + ' <b>' + (t ? (cont[t] || 0) : todasOS.length) + '</b></button>').join('') + '</div>';
-      const oss = filtroTipo ? todasOS.filter(o => o.tipo === filtroTipo) : todasOS;
+      const oss = (filtroTipo ? todasOS.filter(o => o.tipo === filtroTipo) : todasOS.slice()).sort((a, b) => {
+        const x = valHist(a, histOrd.k), y = valHist(b, histOrd.k), s1 = histOrd.asc ? 1 : -1;
+        return (x < y ? -s1 : x > y ? s1 : 0) || (new Date(b.data || 0) - new Date(a.data || 0)); });
+      const th = (k, rot) => '<th class="ord" data-ho="' + k + '">' + rot + (histOrd.k === k ? (histOrd.asc ? ' ▲' : ' ▼') : ' <span class="cinza">↕</span>') + '</th>';
       $('hist-chips').innerHTML = chips;
       $('hist').innerHTML = oss.length
-        ? '<table><thead><tr><th>Nº OS</th><th>Data</th><th>Tipo</th><th>Situação</th><th>Histórico</th></tr></thead><tbody>'
+        ? '<table><thead><tr>' + th('numero', 'Nº OS') + th('data', 'Data') + th('tipo', 'Tipo') + th('situacao', 'Situação') + th('historico', 'Histórico') + '</tr></thead><tbody>'
           + oss.map(o => '<tr' + (o.id ? ' class="abre" data-id="' + esc(o.id) + '" title="abrir a OS"' : '') + '><td><b>' + esc(o.numero) + '</b>'
-            + (o.origem === 'Access' ? '<span class="acc">Access</span>' : '') + '</td><td>' + br(o.data) + '</td><td><span class="tp ' + esc(o.tipo) + '">' + esc(o.tipo || '?')
+            + (o.origem && o.origem !== 'plataforma' ? '<span class="acc">' + esc(o.origem) + '</span>' : '') + '</td><td>' + br(o.data) + '</td><td><span class="tp ' + esc(o.tipo) + '">' + esc(o.tipo || '?')
             + '</span></td><td><span class="sit ' + esc(o.status) + '">' + esc(o.situacao) + '</span></td><td>' + esc(o.historico || '') + (o.tecnico ? ' <span class="cinza">· ' + esc(o.tecnico) + '</span>' : '') + '</td></tr>').join('')
           + '</tbody></table>'
         : '<div class="vz">' + (filtroTipo ? 'Nenhuma OS ' + esc(NOME_TIPO[filtroTipo]) + ' para este cliente.'
@@ -113,6 +128,11 @@
         + (abertas ? ' · <b style="color:#dc2626">' + abertas + ' em aberto</b> — confira se não é a mesma antes de abrir outra' : '');
     }
   }
+  $('hist').addEventListener('click', ev => {
+    const h = ev.target.closest('th[data-ho]'); if (!h) return;
+    const k = h.dataset.ho; histOrd = histOrd.k === k ? { k, asc: !histOrd.asc } : { k, asc: k !== 'data' && k !== 'numero' };
+    desenharHist();
+  });
   $('hist-chips').addEventListener('click', ev => { const b = ev.target.closest('[data-ft]'); if (!b) return; filtroTipo = b.dataset.ft; desenharHist(); });
   $('hist').addEventListener('click', ev => {
     const tr = ev.target.closest('tr[data-id]');

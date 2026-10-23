@@ -44,6 +44,12 @@
  *    "só os que vencem em <mes>" (marcado) mostra so os documentos com parcela no mes da grade.
  *    POS como no Access: 3 = Pedidos feitos, 7 = Compras projetadas.
  *    19/10/2026: linha pos 7 (compra projetada) leva a etiqueta "previsão" antes do historico e fica em italico.
+ * Alterado em 23/10/2026 (Jorge): janela do pos — so UM documento aberto: abrir um fecha os outros.
+ * Alterado em 23/10/2026 (Jorge): janela do pos — clique no NOME abre o RAZAO da conta (RazaoConta, janela por cima;
+ *    passar o mouse diz "acesso razão"). Grade mes a mes da aba em letra menor (cabe sem rolar para o lado).
+ * Alterado em 23/10/2026 (Jorge): ORDENAR a grade clicando em Histórico, Conta, T, Vencto, A receber, A pagar
+ *    (montarGrade). Aba do documento: sai a linha do fluxo do MESMO pos do documento (repetia "Este documento");
+ *    rotulos mais curtos (coluna mais estreita).
  * Alterado em 22/10/2026 (Jorge): a ABA do documento (botao "ver") virou uma GRADE MES A MES (jan do ano da grade
  *    ate mar do ano seguinte): Comprado (notas que entraram), Previsto (Ped_Previsão, mes da compra), o fluxo em
  *    aberto da conta por pos e as parcelas deste documento — cada valor no seu mes; o mes da grade em destaque.
@@ -156,10 +162,11 @@
     .jp-sub { border-collapse:collapse; font-size:13px; margin:2px 0 8px; min-width:380px; }
     .jp-sub th { position:static; background:#ede9fe; font-size:10px; padding:4px 10px; }
     .jp-sub td { padding:3px 10px; border-top:1px solid #ede9fe; } .jp-sub tr.mes td { font-weight:800; }
-    .jp-meses { border-collapse:collapse; font-size:12px; margin:4px 0 8px; }
-    .jp-meses th { position:static; background:#ede9fe; color:#4c1d95; font-size:11px; padding:4px 7px; text-align:right; white-space:nowrap; }
-    .jp-meses th.rot, .jp-meses td.rot { text-align:left; white-space:nowrap; padding-right:12px; }
-    .jp-meses td { padding:3px 7px; border-top:1px solid #ede9fe; text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+    .jp-meses { border-collapse:collapse; font-size:10.5px; margin:4px 0 8px; width:100%; }
+    .jp-meses th { position:static; background:#ede9fe; color:#4c1d95; font-size:10px; padding:3px 3px; text-align:right; white-space:nowrap; }
+    .jp-meses th.rot, .jp-meses td.rot { text-align:left; white-space:nowrap; padding-right:6px; }
+    .jp-meses td { padding:2px 3px; border-top:1px solid #ede9fe; text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; letter-spacing:-.2px; }
+    .jp-razao { color:inherit; text-decoration:none; cursor:pointer; } .jp-razao:hover { color:#6b21a8; text-decoration:underline; }
     .jp-meses td.z { color:#d1d5db; } .jp-meses .cur { background:#ddd6fe; font-weight:800; }
     .jp-meses tr.doc td { font-weight:800; color:#6b21a8; } .jp-meses tr.comp td:not(.rot) { color:#047857; }
     .jp-rodmes { font-size:12px; color:#6b7280; margin:2px 0 6px; }
@@ -231,7 +238,7 @@
     // 22/10/2026: a conta mes a mes (jan do ano da grade ate mar do ano seguinte), lida uma vez por conta
     const N_MESES = 15, iniMes = state.ano * 12, mesesCache = new Map();
     const MES3 = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    const POS_ROT = { 0: 'Avulso', 1: 'Cartão a receber', 2: 'A pagar', 3: 'Pedidos feitos', 5: 'A receber', 7: 'Compras projetadas', 8: 'Orçamento' };
+    const POS_ROT = { 0: 'Avulso', 1: 'Cartão', 2: 'A pagar (notas)', 3: 'Pedidos feitos', 5: 'A receber', 7: 'Compras proj.', 8: 'Orçamento' };
     function gradeMeses(g) {
       const d = mesesCache.get(g.conta);
       if (!d) {
@@ -252,11 +259,14 @@
         + '<td class="rot"><b>' + (fmt(vals.reduce((a, b) => a + b, 0)) || '') + '</b></td></tr>';
       let h = '<table class="jp-meses"><tr><th class="rot"></th>' + d.meses.map((m, k) => '<th' + (k === cur ? ' class="cur"' : '') + '>'
         + MES3[m.mes - 1] + (m.mes === 1 || k === 0 ? '/' + String(m.ano).slice(2) : '') + '</th>').join('') + '<th class="rot">total</th></tr>';
-      if (d.comprado) h += lin('Comprado (notas)', d.comprado, 'comp');
-      if (d.previsto) h += lin('Previsto (compra)', d.previsto);
-      for (const p of Object.keys(d.fluxo || {}).sort()) h += lin('No fluxo · ' + (POS_ROT[p] || 'pos ' + p) + ' (venc.)', d.fluxo[p]);
-      h += lin('Este documento (venc.)', este.map(v => v / 100), 'doc');
-      h += '</table>';
+      if (d.comprado) h += lin('Comprado', d.comprado, 'comp');
+      if (d.previsto) h += lin('Previsto', d.previsto);
+      // 23/10/2026: a linha do MESMO pos do documento repetia "Este documento": sai
+      const posDoc = String(g.parc[0] && g.parc[0].pos);
+      for (const p of Object.keys(d.fluxo || {}).sort()) if (p !== posDoc) h += lin(POS_ROT[p] || 'pos ' + p, d.fluxo[p]);
+      h += lin('Este documento', este.map(v => v / 100), 'doc');
+      h += '</table><div class="jp-rodmes">Comprado = notas que entraram (mês da entrada) · Previsto = Ped_Previsão (mês da compra) · as outras linhas = vencimentos em aberto da conta'
+        + (d.fluxo && d.fluxo[2] ? ' — "A pagar (notas)" são as parcelas das notas já compradas' : '') + '.</div>';
       if (d.fornecedor) h += '<div class="jp-rodmes">' + escAttr(d.fornecedor.marca) + ' · compras dos 3 últimos meses: média <b>R$ ' + (fmt(d.media3) || '0,00')
         + '</b> · maior <b>R$ ' + (fmt(d.maior3) || '0,00') + '</b> · ' + (d.media3 >= 6000 ? 'compra mensal' : 'compra a cada 2 ou 3 meses') + ' (regra da programação)</div>';
       return h;
@@ -277,7 +287,7 @@
           const linha = '<tr><td class="cn">' + (k + 1) + '</td>'
             + '<td><button type="button" class="jp-num" data-doc="' + escAttr(g.k) + '" title="ver os vencimentos">' + (aberto ? '▾ ' : '▸ ') + escAttr(g.rot || 'ver') + '</button>'
             + '<br><span class="cn">' + g.parc.length + ' parcela(s)</span></td>'
-            + '<td><b>' + escAttr(g.nome) + '</b><br><span class="cn">' + escAttr(g.hist) + ' · ' + escAttr(g.conta) + '</span></td>'
+            + '<td><a href="#" class="jp-razao" data-razao="' + escAttr(g.conta) + '" data-nome="' + escAttr(g.nome) + '" title="acesso razão — ' + escAttr(g.conta) + '"><b>' + escAttr(g.nome) + '</b></a><br><span class="cn">' + escAttr(g.hist) + ' · ' + escAttr(g.conta) + '</span></td>'
             + '<td>' + fmtData(vcto(g)) + '</td><td class="n"><b>' + fmt(val(g)) + '</b></td>'
             + '<td>' + sit(vcto(g)) + '</td></tr>';
           const aba = !aberto ? '' : '<tr class="jp-aba"><td></td><td colspan="5"><div style="overflow-x:auto">' + gradeMeses(g) + '</div>'
@@ -294,15 +304,119 @@
     meu.querySelector('[data-busca]').addEventListener('input', desenhar);
     const cx = meu.querySelector('[data-mes]'); if (cx) cx.addEventListener('change', desenhar);
     meu.addEventListener('click', ev => {
+      const rz = ev.target.closest('[data-razao]');                    // 23/10/2026: nome -> razao da conta
+      if (rz) {
+        ev.preventDefault();
+        if (!rz.dataset.razao) return;
+        if (window.RazaoConta) window.RazaoConta.abrir(rz.dataset.razao, rz.dataset.nome);
+        else alert('A janela do razão não está carregada nesta página.');
+        return;
+      }
       const n = ev.target.closest('[data-doc]');
-      if (n) { const k = n.dataset.doc; if (abertos.has(k)) abertos.delete(k); else abertos.add(k); desenhar(); return; }
+      if (n) { const k = n.dataset.doc; const ja = abertos.has(k); abertos.clear(); if (!ja) abertos.add(k); desenhar();   // 23/10: so UM aberto
+        if (!ja) { const b = meu.querySelector('[data-doc="' + CSS.escape(k) + '"]'); if (b) b.closest('tr').scrollIntoView({ block: 'nearest' }); }
+        return; }
       const th = ev.target.closest('th[data-ord]'); if (!th) return;
       jpOrdem = jpOrdem.k === th.dataset.ord ? { k: jpOrdem.k, asc: !jpOrdem.asc } : { k: th.dataset.ord, asc: true };
       desenhar();
     });
     desenhar();
   }
-  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && jp) { jp.remove(); jp = null; } });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && jp && !document.querySelector('.rc-jan')) { jp.remove(); jp = null; } });   // 23/10: com o razao aberto, Esc fecha so ele
+
+  /* 23/10/2026 (Jorge): ORDENAR a grade clicando no cabecalho: Histórico, Conta, T, Vencto, A receber, A pagar.
+     2o clique inverte; 3o volta a ordem normal (vencimento). Fora da ordem por vencimento a coluna Saldo fica
+     vazia (saldo acumulado so faz sentido na ordem das datas) e sai o separador de mes. */
+  let gradeOrdem = { k: null, asc: true };
+  const natural = s => String(s || '').replace(/\d+/g, n => n.padStart(8, '0'));
+  function linhasOrdenadas() {
+    const L = ultimasLinhas.map((l, i) => ({ ...l, _i: i }));
+    if (!gradeOrdem.k) return L;
+    const k = gradeOrdem.k, s = gradeOrdem.asc ? 1 : -1;
+    const val = l => k === 'hist' ? String(l.historico || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+      : k === 'conta' ? natural(l.codigoConta) : k === 'pos' ? Number(l.pos) || 0
+      : k === 'vect' ? String(l.vencimento || '') : k === 'receber' ? Math.abs(Number(l.aReceber) || 0) : Math.abs(Number(l.aPagar) || 0);
+    return L.sort((a, b) => { const x = val(a), y = val(b); return (x < y ? -s : x > y ? s : 0) || (a._i - b._i); });
+  }
+  function marcarOrdemGrade() {
+    $$('.flx-grid thead th[data-ord]').forEach(th => {
+      let sp = th.querySelector('.seta'); if (!sp) { sp = document.createElement('span'); sp.className = 'seta'; th.appendChild(sp); }
+      const on = th.dataset.ord === gradeOrdem.k; sp.textContent = on ? (gradeOrdem.asc ? ' ▲' : ' ▼') : ' ⇅'; sp.style.opacity = on ? '1' : '.5';
+    });
+  }
+  function montarGrade() {
+    const tbody = $('#flx-body');
+    marcarOrdemGrade();
+    // No modo "todos", uma linha em branco separa um mês do outro. Sem ela
+    // os doze meses viram um bloco único e o olho se perde.
+    let mesAnterior = null, corre = 0;
+    const porData = !gradeOrdem.k;                       // ordem do servidor (vencimento)
+    tbody.innerHTML = linhasOrdenadas().map(l => {
+      let separador = '';
+      if (porData && state.mes === null && l.vencimento) {
+        const m = new Date(l.vencimento).getMonth();
+        if (mesAnterior !== null && m !== mesAnterior) {
+          separador = `<tr class="flx-sep"><td colspan="9">${MESES[m]}</td></tr>`;
+        }
+        mesAnterior = m;
+      }
+      // Define a ação conforme o pos:
+      //  8 = despesa projetada → REALIZAR (vira pos 2)
+      //  2 = despesa real → PAGAR
+      //  5,1 = título a receber → RECEBER
+      //  7 = compra projetada → só vira real na Entrada de NF (não clica aqui)
+      let acao = '';
+      if (l.pos === 8) acao = 'realizar';
+      else if (l.pos === 2) acao = 'pagar';
+      else if (l.pos === 5 || l.pos === 1) acao = 'receber';
+      const isoData = l.vencimento ? new Date(l.vencimento).toISOString().slice(0,10) : '';
+      const clicavel = acao ? 'flx-pagavel' : '';
+      return separador + `
+      <tr class="cor-${l.cor} ${clicavel} pos-${l.pos}" data-v="${Math.round(((Number(l.aReceber) || 0) + (Number(l.aPagar) || 0)) * 100)}" data-acao="${acao}" data-data="${isoData}" data-conta="${escAttr(l.codigoConta)}" data-hist="${escAttr(l.historico)}">
+        <td class="c-item">${l.item}</td>
+        <td class="c-chave">${l.chave}</td>
+        <td class="c-hist">${Number(l.pos) === 7 && !/^\s*previs/i.test(l.historico || '') ? '<span class="tag-prev">previsão</span> ' : ''}${l.historico}</td>
+        <td class="c-conta">${l.codigoConta}</td>
+        <td class="c-pos"><span class="c-pos-badge">${l.pos}</span></td>
+        <td class="c-vect">${fmtData(l.vencimento)}</td>
+        <td class="c-receber">${l.aReceber ? '<span class="val-receber">'+fmt(l.aReceber)+'</span>' : ''}</td>
+        <td class="c-pagar">${l.aPagar ? '<span class="val-pagar">'+fmt(l.aPagar)+'</span>' : ''}</td>
+        <td class="c-saldo">${porData ? `<span class="${l.saldo>=0?'val-saldo-pos':'val-saldo-neg'}">${fmt(l.saldo)}</span>` : '<span></span>'}</td>
+      </tr>`;
+    }).join('');
+
+    // 19/10/2026: clique na bolinha do pos -> todos os registros daquele pos (nao abre a acao da linha)
+    $$('#flx-body .c-pos-badge').forEach(b => {
+      b.title = 'ver todos os registros deste pos no período';
+      b.addEventListener('click', ev => { ev.stopPropagation(); abrirPos(b.textContent.trim()); });
+    });
+
+    // Clique na linha → ação conforme o pos
+    $$('#flx-body tr.flx-pagavel').forEach(tr => {
+      tr.addEventListener('click', () => {
+        const acao = tr.dataset.acao;
+        const dataLinha = tr.dataset.data;
+        console.log('🖱️ clique linha → acao:', acao, '| data:', dataLinha);
+        if (!dataLinha) { console.warn('sem data na linha'); return; }
+        if (acao === 'realizar') abrirRealizacao(dataLinha);
+        else if (acao === 'pagar') abrirPagamento(dataLinha, 'pagar');
+        else if (acao === 'receber') abrirPagamento(dataLinha, 'receber', { conta: tr.dataset.conta, historico: tr.dataset.hist });
+        else console.warn('acao não reconhecida:', acao);
+      });
+    });
+    console.log('🔗 linhas clicáveis:', $$('#flx-body tr.flx-pagavel').length);
+  }
+  $$('.flx-grid thead th[data-ord]').forEach(th => {
+    th.style.cursor = 'pointer'; th.title = 'ordenar (clique de novo inverte; 3º clique volta à ordem por vencimento)';
+    th.addEventListener('click', () => {
+      const k = th.dataset.ord;
+      if (gradeOrdem.k !== k) gradeOrdem = { k, asc: k !== 'receber' && k !== 'pagar' };
+      else if (gradeOrdem.asc === (k !== 'receber' && k !== 'pagar')) gradeOrdem.asc = !gradeOrdem.asc;
+      else gradeOrdem = { k: null, asc: true };
+      if (!ultimasLinhas.length) return;
+      montarGrade(); aplicarFiltroPos();
+    });
+  });
 
   /* ===== Grid ===== */
   async function carregar() {
@@ -321,64 +435,7 @@
         return;
       }
 
-      // No modo "todos", uma linha em branco separa um mês do outro. Sem ela
-      // os doze meses viram um bloco único e o olho se perde.
-      let mesAnterior = null;
-
-      tbody.innerHTML = data.linhas.map(l => {
-        let separador = '';
-        if (state.mes === null && l.vencimento) {
-          const m = new Date(l.vencimento).getMonth();
-          if (mesAnterior !== null && m !== mesAnterior) {
-            separador = `<tr class="flx-sep"><td colspan="9">${MESES[m]}</td></tr>`;
-          }
-          mesAnterior = m;
-        }
-        // Define a ação conforme o pos:
-        //  8 = despesa projetada → REALIZAR (vira pos 2)
-        //  2 = despesa real → PAGAR
-        //  5,1 = título a receber → RECEBER
-        //  7 = compra projetada → só vira real na Entrada de NF (não clica aqui)
-        let acao = '';
-        if (l.pos === 8) acao = 'realizar';
-        else if (l.pos === 2) acao = 'pagar';
-        else if (l.pos === 5 || l.pos === 1) acao = 'receber';
-        const isoData = l.vencimento ? new Date(l.vencimento).toISOString().slice(0,10) : '';
-        const clicavel = acao ? 'flx-pagavel' : '';
-        return separador + `
-        <tr class="cor-${l.cor} ${clicavel} pos-${l.pos}" data-v="${Math.round(((Number(l.aReceber) || 0) + (Number(l.aPagar) || 0)) * 100)}" data-acao="${acao}" data-data="${isoData}" data-conta="${escAttr(l.codigoConta)}" data-hist="${escAttr(l.historico)}">
-          <td class="c-item">${l.item}</td>
-          <td class="c-chave">${l.chave}</td>
-          <td class="c-hist">${Number(l.pos) === 7 && !/^\s*previs/i.test(l.historico || '') ? '<span class="tag-prev">previsão</span> ' : ''}${l.historico}</td>
-          <td class="c-conta">${l.codigoConta}</td>
-          <td class="c-pos"><span class="c-pos-badge">${l.pos}</span></td>
-          <td class="c-vect">${fmtData(l.vencimento)}</td>
-          <td class="c-receber">${l.aReceber ? '<span class="val-receber">'+fmt(l.aReceber)+'</span>' : ''}</td>
-          <td class="c-pagar">${l.aPagar ? '<span class="val-pagar">'+fmt(l.aPagar)+'</span>' : ''}</td>
-          <td class="c-saldo"><span class="${l.saldo>=0?'val-saldo-pos':'val-saldo-neg'}">${fmt(l.saldo)}</span></td>
-        </tr>`;
-      }).join('');
-
-      // 19/10/2026: clique na bolinha do pos -> todos os registros daquele pos (nao abre a acao da linha)
-      $$('#flx-body .c-pos-badge').forEach(b => {
-        b.title = 'ver todos os registros deste pos no período';
-        b.addEventListener('click', ev => { ev.stopPropagation(); abrirPos(b.textContent.trim()); });
-      });
-
-      // Clique na linha → ação conforme o pos
-      $$('#flx-body tr.flx-pagavel').forEach(tr => {
-        tr.addEventListener('click', () => {
-          const acao = tr.dataset.acao;
-          const dataLinha = tr.dataset.data;
-          console.log('🖱️ clique linha → acao:', acao, '| data:', dataLinha);
-          if (!dataLinha) { console.warn('sem data na linha'); return; }
-          if (acao === 'realizar') abrirRealizacao(dataLinha);
-          else if (acao === 'pagar') abrirPagamento(dataLinha, 'pagar');
-          else if (acao === 'receber') abrirPagamento(dataLinha, 'receber', { conta: tr.dataset.conta, historico: tr.dataset.hist });
-          else console.warn('acao não reconhecida:', acao);
-        });
-      });
-      console.log('🔗 linhas clicáveis:', $$('#flx-body tr.flx-pagavel').length);
+      montarGrade();                                       // 23/10/2026: na ordem escolhida no cabecalho
 
       const r = data.resumo;
       $('#flx-resumo').innerHTML = `
@@ -1063,6 +1120,7 @@
       if (cel.dataset.orig === undefined) { cel.dataset.orig = cel.textContent; cel.dataset.cls = cel.className; }
       if (filtroPos === null) { cel.textContent = cel.dataset.orig; cel.className = cel.dataset.cls; return; }
       if (!vis) return;
+      if (gradeOrdem.k) { const v0 = Number(tr.dataset.v) || 0; n++; if (v0 > 0) rec += v0; else pag += v0; corre += v0; return; }   // 23/10: fora da ordem por data, sem saldo
       const v = Number(tr.dataset.v) || 0; corre += v; n++; if (v > 0) rec += v; else pag += v;
       cel.textContent = fmt(corre / 100) || '0,00'; cel.className = corre >= 0 ? 'val-saldo-pos' : 'val-saldo-neg';
     });

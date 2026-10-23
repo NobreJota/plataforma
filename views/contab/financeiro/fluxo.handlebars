@@ -1,5 +1,7 @@
 {{!--
   Destino: C:\plataformaRota\views\contab\financeiro\fluxo.handlebars
+  Alterado em: 23/10/2026 - carrega /js/comum/razao-conta.js (nome na janela do pos abre o razao da conta)
+  Alterado em: 23/10/2026 - cabecalho da grade com data-ord: ordenar por Histórico, Conta, T, Vencto, A receber, A pagar
   Alterado em: 19/10/2026 - cabecalho da grade FIXO (a grade rola dentro da caixa, na altura da tela)
   Alterado em: 03/10/2026 - antecipacao de cartao e valor liquido no modal de recebimento
   Alterado em: 05/10/2026 - cabecalho com o caminho de destino
@@ -32,12 +34,12 @@
         <tr>
           <th class="c-item">#</th>
           <th class="c-chave">Parc.</th>
-          <th class="c-hist">Histórico</th>
-          <th class="c-conta">Conta</th>
-          <th class="c-pos">T</th>
-          <th class="c-vect">Vencto</th>
-          <th class="c-receber">A receber</th>
-          <th class="c-pagar">A pagar</th>
+          <th class="c-hist" data-ord="hist">Histórico</th>
+          <th class="c-conta" data-ord="conta">Conta</th>
+          <th class="c-pos" data-ord="pos">T</th>
+          <th class="c-vect" data-ord="vect">Vencto</th>
+          <th class="c-receber" data-ord="receber">A receber</th>
+          <th class="c-pagar" data-ord="pagar">A pagar</th>
           <th class="c-saldo">Saldo</th>
         </tr>
       </thead>
@@ -308,6 +310,7 @@
   .bol-btn-estornar:hover { background:#fee2e2; }
 </style>
 
+<script src="/js/comum/razao-conta.js"></script>
 <script src="/js/contab/contabil/financeiro/fluxo.js"></script>
 <script src="/js/contab/contabil/financeiro/fluxo-submenu.js"></script>
 <script src="/js/comum/navegacao.js"></script>

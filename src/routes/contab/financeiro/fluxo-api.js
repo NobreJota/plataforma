@@ -9,6 +9,9 @@
 //              GET /pos/:pos — TODAS as linhas em aberto daquele pos (todos os anos), para a janela do pos
 //              agrupar por pedido/nota e mostrar os vencimentos de cada um.
 //              GET /conta/:codigo — titulos em aberto de uma conta (conferir com o saldo do razao).
+// Alterado em: 23/10/2026 - GET /nota/:nr?conta=2.01.001.160 — ESPELHO da nota de entrada (janela do razao):
+//              cabecalho (_access_nfe_cabecalho: entrada, emissao, pedido, valor) + itens (_nfe_item_origem,
+//              COMPRA-17, pela Chave da nota) + os titulos dela no fluxo.
 // Alterado em: 22/10/2026 - GET /meses/:codigo?de=2026-01&n=15 — a conta MES A MES (para a aba da janela do pos):
 //              o que esta em aberto no fluxo por pos (mes do vencimento) e, se a conta e de FORNECEDOR do Access,
 //              o que foi COMPRADO (notas, mes da entrada) e o PREVISTO (Ped_Previsão, mes da compra) + media/maior
@@ -99,6 +102,50 @@ router.get('/meses/:codigo', async (req, res) => {
     res.json({ codigo, meses, fluxo, fornecedor, comprado, previsto, media3, maior3 });
   } catch (err) {
     console.error('❌ /fluxo/meses:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* 23/10/2026: GET /financeiro/api/fluxo/nota/:nr?conta= — espelho da nota de entrada do fornecedor da conta. */
+router.get('/nota/:nr', async (req, res) => {
+  try {
+    const nrTxt = String(req.params.nr || '').replace(/\D/g, '').replace(/^0+/, '');
+    if (!nrTxt) return res.status(400).json({ erro: 'número da nota?' });
+    const conta = String(req.query.conta || '').trim();
+    const nrs = [nrTxt, Number(nrTxt)];
+    // o fornecedor do Access pela conta (NrContabil 2.02 -> 2.01)
+    let nrForn = null, marca = '';
+    if (conta) {
+      const f = (await col('_access_compras_fornecedores').find({}).toArray())
+        .find(x => { let c = String(x.NrContabil || '').trim(); if (c.startsWith('2.02.')) c = '2.01.' + c.slice(5); return c === conta; });
+      if (f) { nrForn = Number(f.NrFornec); marca = String(f.Marca || f['Razão'] || '').trim(); }
+    }
+    const filtro = { NrNota: { $in: nrs } }; if (nrForn) filtro.NrFornec = nrForn;
+    const cabs = await col('_access_nfe_cabecalho').find(filtro).sort({ DataEntr: -1 }).limit(1).toArray();
+    const c = cabs[0] || null;
+    // itens: pela Chave da nota (COMPRA-17); sem a chave, pelo numero
+    let itens = [];
+    const fi = c && c.Chave != null ? { chave: { $in: [c.Chave, String(c.Chave)] } } : { nrNota: { $in: nrs } };
+    const brutos = await col('_nfe_item_origem').find(fi).toArray();
+    const cods = [...new Set(brutos.map(i => Number(i.codigoProd)).filter(Boolean))];
+    const nomes = new Map((cods.length ? await col('arquivo_docs').find({ codigo: { $in: cods } }).project({ codigo: 1, descricao: 1 }).toArray() : [])
+      .map(p => [Number(p.codigo), p.descricao || '']));
+    itens = brutos.map(i => ({
+      codigo: Number(i.codigoProd) || null,
+      descricao: i.descricao || i.descricaoProd || i.descricaoNota || nomes.get(Number(i.codigoProd)) || '',
+      qte: Number(i.quantidade) || 0,
+      unitario: (Number(i.custoUnitario) || 0) / 100,
+      ipi: Number(i.ipiPerc) || 0,
+      total: (Number(i.valorTotal) || 0) / 100,
+    }));
+    const rx = new RegExp('NF\\D{0,6}0*' + nrTxt + '(?!\\d)', 'i');
+    const titulos = conta ? (await FluxoProjetado.find({ codigoConta: conta, historico: rx }).sort({ vencimento: 1 }).lean())
+      .map(l => ({ vencimento: l.vencimento, valor: Math.abs(l.valor || 0), status: l.status, pos: l.pos, parcela: l.parcela || null, totalParcelas: l.totalParcelas || null })) : [];
+    res.json({ nr: nrTxt, fornecedor: marca, cab: c ? {
+      nota: c.NrNota, entrada: c.DataEntr || null, emissao: c['Emissão'] || c.Emissao || null, pedido: c.NrPedido || null,
+      valor: Number(c.VrNota) || 0, chave: c.Chave } : null, itens, titulos });
+  } catch (err) {
+    console.error('❌ /fluxo/nota:', err.message);
     res.status(500).json({ erro: err.message });
   }
 });

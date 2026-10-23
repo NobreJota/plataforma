@@ -13,6 +13,11 @@
 // Uso: window.RazaoConta.abrir('2.01.001.182', 'Haenke')   (arrasta pelo título; Esc fecha)
 //      opcoes: { destaque: '140845', valor: 1334.07 } — acende no razao e nos titulos as linhas com essa nota
 //      ou esse valor (DDA - confere: "este boleto ja foi pago?") e conta quantas achou.
+// 23/10/2026 (Jorge): NOTA x TITULOS — passar o mouse numa linha com "NF Nº 180259" (no razao ou nos titulos)
+//   acende em AZUL todas as linhas da mesma nota nas duas partes (a compra, os pagamentos e as parcelas em aberto).
+//   O numero fica na cor normal; azul e sublinhado so com o mouse em cima (ou a nota acesa).
+//   Clique no numero da nota abre o ESPELHO da nota: entrada, emissao, pedido, itens e as parcelas.
+//   API: GET /financeiro/api/fluxo/nota/:nr?conta=
 // APIs: GET /financeiro/api/razao/lancamentos?conta=&de=&ate=   ·   GET /financeiro/api/fluxo/conta/:codigo
 // =============================================================================
 
@@ -44,6 +49,14 @@
   .rc-tab .cn { color:#6b7280; font-size:12px; } .rc-tab .deb { color:#1d4ed8; } .rc-tab .cre { color:#b91c1c; }
   .rc-tab tr.ant td { background:#f9fafb; font-style:italic; } .rc-tab tr.fora td { color:#9ca3af; }
   .rc-tab tr.luz td { background:#fef9c3 !important; font-weight:700; }
+  .rc-tab tr.par td { background:#dbeafe !important; }
+  .rc-nf { color:inherit; text-decoration:none; cursor:pointer; }                       /* 23/10: azul so com o mouse / nota acesa */
+  .rc-nf:hover, .rc-tab tr.par .rc-nf { color:#1d4ed8; text-decoration:underline; }
+  .rc-esp { position:absolute; left:50%; top:40px; transform:translateX(-50%); width:min(760px, calc(100% - 24px)); max-height:80%; overflow:auto;
+            background:#fff; border:2px solid #1d4ed8; border-radius:10px; box-shadow:0 12px 30px rgba(0,0,0,.3); z-index:2; }
+  .rc-esp .cab { display:flex; align-items:center; padding:8px 12px; background:#1d4ed8; color:#fff; font-weight:800; }
+  .rc-esp .cab span { flex:1; } .rc-esp .cab button { border:0; background:none; color:#fff; font-size:18px; cursor:pointer; }
+  .rc-esp .gr { display:flex; flex-wrap:wrap; gap:6px 18px; padding:8px 12px; font-size:12px; } .rc-esp .gr b { font-size:13px; }
   .rc-achou { padding:6px 14px; background:#fef9c3; color:#854d0e; font-weight:700; font-size:12px; border-top:1px solid #fde68a; }
   .rc-pe { padding:10px 14px; border-top:2px solid #d1d5db; display:flex; gap:14px; flex-wrap:wrap; align-items:center; font-weight:700; }
   .rc-pe .ok { color:#166534; } .rc-pe .er { color:#b91c1c; }
@@ -60,7 +73,7 @@
     const acende = (txt, ...vals) => (nf && nf.length >= 3 && String(txt || '').includes(nf)) || (vc && vals.some(v => cent(v) === vc));
     if (jan) jan.remove();
     const ano = new Date().getFullYear();
-    jan = document.createElement('div'); jan.className = 'rc-jan';
+    jan = document.createElement('div'); jan.className = 'rc-jan'; jan.style.position = 'fixed';
     jan.innerHTML = '<div class="rc-cab"><span>Razão · títulos em aberto — ' + esc(nome || '') + ' <small style="opacity:.8">' + esc(conta) + '</small></span><button type="button" data-x title="fechar (Esc)">×</button></div>'
       + '<div class="rc-sec">Razão ' + ano + '</div><div class="rc-rola r1" data-raz><div class="rc-vz">Carregando…</div></div>'
       + '<div class="rc-sec">Títulos em aberto no fluxo</div><div class="rc-rola r2" data-tit><div class="rc-vz">Carregando…</div></div>'
@@ -88,7 +101,7 @@
     if (raz) {
       const ls = raz.lancamentos || [], v = x => x ? brl(x) : '';
       meu.querySelector('[data-raz]').innerHTML = ls.length ? '<table class="rc-tab"><thead><tr><th>Data</th><th>Histórico</th><th>C/Part.</th><th class="n">Débito</th><th class="n">Crédito</th><th class="n">Saldo</th></tr></thead><tbody>'
-        + ls.map(l => '<tr' + (l.saldoAnterior ? ' class="ant"' : acende(l.historico, l.debito, l.credito) ? ' class="luz"' : '') + '><td>' + br(l.data) + '</td><td>' + esc(l.historico) + '</td><td class="cn">' + esc(l.cPartida || '') + (l.cPartidaNome ? ' ' + esc(l.cPartidaNome) : '') + '</td>'
+        + ls.map(l => '<tr' + nfAttr(l.historico) + (l.saldoAnterior ? ' class="ant"' : acende(l.historico, l.debito, l.credito) ? ' class="luz"' : '') + '><td>' + br(l.data) + '</td><td>' + histNf(l.historico) + '</td><td class="cn">' + esc(l.cPartida || '') + (l.cPartidaNome ? ' ' + esc(l.cPartidaNome) : '') + '</td>'
           + '<td class="n deb">' + v(l.debito) + '</td><td class="n cre">' + v(l.credito) + '</td><td class="n"><b>' + brl(l.saldo) + '</b></td></tr>').join('') + '</tbody></table>'
         : '<div class="rc-vz">Nenhum lançamento em ' + ano + '.</div>';
       const r1 = meu.querySelector('[data-raz]');
@@ -110,7 +123,7 @@
       let corre = 0;
       meu.querySelector('[data-tit]').innerHTML = ls.length ? '<table class="rc-tab"><thead><tr><th>Venc.</th><th>Histórico</th><th>Tipo</th><th class="n">Valor</th><th class="n">Saldo</th></tr></thead><tbody>'
         + ls.map(l => { const real = REAL.has(Number(l.pos)); if (real) corre += cent(l.valor);
-          return '<tr' + (acende(l.historico, l.valor) ? ' class="luz"' : real ? '' : ' class="fora" title="não é dívida ainda: fica fora da conferência"') + '><td>' + br(l.vencimento) + '</td><td>' + esc(l.historico)
+          return '<tr' + nfAttr(l.historico) + (acende(l.historico, l.valor) ? ' class="luz"' : real ? '' : ' class="fora" title="não é dívida ainda: fica fora da conferência"') + '><td>' + br(l.vencimento) + '</td><td>' + histNf(l.historico)
           + (l.parcela ? ' · ' + l.parcela + '/' + (l.totalParcelas || '') : '') + '</td><td class="cn">' + (POS[l.pos] || 'pos ' + l.pos) + '</td><td class="n">' + brl(l.valor) + '</td>'
           + '<td class="n"><b>' + (real ? brl(sinal * corre / 100) : '') + '</b></td></tr>'; }).join('')
         + '</tbody></table>' : '<div class="rc-vz">Nenhum título em aberto no fluxo.</div>';
@@ -125,6 +138,51 @@
         + (somaFora ? '<span class="cn" style="font-weight:600;color:#6b7280">(fora da conta: pedidos/projeções R$ ' + brl(somaFora / 100) + ')</span>' : '') + fechar;
     } else pe.innerHTML = '<span class="er">Não deu para conferir.</span>' + fechar;
     pe.querySelector('[data-x]').addEventListener('click', () => { meu.remove(); if (jan === meu) jan = null; });
+
+    // 23/10/2026: passar o mouse numa linha com nota -> acende as linhas da MESMA nota (razao e titulos)
+    const limpa = () => meu.querySelectorAll('tr.par').forEach(t => t.classList.remove('par'));
+    meu.addEventListener('mouseover', ev => {
+      const tr = ev.target.closest('tr[data-nf]'); if (!tr || tr.classList.contains('par')) return;
+      limpa(); meu.querySelectorAll('tr[data-nf="' + tr.dataset.nf + '"]').forEach(t => t.classList.add('par'));
+    });
+    meu.addEventListener('mouseout', ev => { const tr = ev.target.closest('tr[data-nf]'); if (tr && !tr.contains(ev.relatedTarget)) limpa(); });
+    // clique no numero da nota -> espelho
+    meu.addEventListener('click', ev => {
+      const a = ev.target.closest('.rc-nf'); if (a) { ev.preventDefault(); espelho(meu, conta, a.dataset.nf); return; }
+      if (ev.target.closest('[data-espx]')) { const e = meu.querySelector('.rc-esp'); if (e) e.remove(); }
+    });
+  }
+
+  // 23/10/2026: o numero da nota no historico ("NF Nº 180259-25/09/26", "NF 180259")
+  const nfDe = h => { const m = /NF\s*(?:N\s*[º°o.]?\s*)?0*(\d{3,})/i.exec(String(h || '')); return m ? m[1] : ''; };
+  const nfAttr = h => { const n = nfDe(h); return n ? ' data-nf="' + n + '" title="mesma nota em azul · clique no número: espelho da nota"' : ''; };
+  const histNf = h => { const t = esc(h), n = nfDe(h); return n ? t.replace(new RegExp('(0*' + n + ')(?!\\d)'), '<a href="#" class="rc-nf" data-nf="' + n + '">$1</a>') : t; };
+
+  async function espelho(meu, conta, nr) {
+    let e = meu.querySelector('.rc-esp'); if (e) e.remove();
+    e = document.createElement('div'); e.className = 'rc-esp';
+    e.innerHTML = '<div class="cab"><span>Nota fiscal nº ' + esc(nr) + '</span><button type="button" data-espx title="fechar">×</button></div><div class="rc-vz">Carregando…</div>';
+    meu.appendChild(e);
+    try {
+      const r = await fetch('/financeiro/api/fluxo/nota/' + encodeURIComponent(nr) + '?conta=' + encodeURIComponent(conta), { cache: 'no-store' });
+      const d = await r.json(); if (!r.ok || d.erro) throw new Error(d.erro || 'erro ' + r.status);
+      const c = d.cab, tot = d.itens.reduce((s, i) => s + i.total, 0);
+      e.innerHTML = '<div class="cab"><span>Nota fiscal nº ' + esc(nr) + (d.fornecedor ? ' · ' + esc(d.fornecedor) : '') + '</span><button type="button" data-espx title="fechar">×</button></div>'
+        + (c ? '<div class="gr"><span>Emissão <b>' + br(c.emissao) + '</b></span><span>Entrada <b>' + br(c.entrada) + '</b></span>'
+          + (c.pedido ? '<span>Pedido <b>' + esc(c.pedido) + '</b></span>' : '') + '<span>Valor da nota <b>R$ ' + brl(c.valor) + '</b></span></div>'
+          : '<div class="rc-vz">Cabeçalho da nota não encontrado no espelho do Access.</div>')
+        + (d.itens.length ? '<table class="rc-tab"><thead><tr><th>Código</th><th>Descrição</th><th class="n">Qtd</th><th class="n">Unitário</th><th class="n">IPI %</th><th class="n">Total</th></tr></thead><tbody>'
+          + d.itens.map(i => '<tr><td>' + (i.codigo || '') + '</td><td>' + esc(i.descricao) + '</td><td class="n">' + i.qte + '</td><td class="n">' + brl(i.unitario)
+            + '</td><td class="n">' + (i.ipi ? brl(i.ipi) : '') + '</td><td class="n">' + brl(i.total) + '</td></tr>').join('')
+          + '</tbody><tfoot><tr><td colspan="5"><b>Soma dos itens</b>' + (c && Math.abs(tot - c.valor) > 0.05 ? ' <span class="cre">(nota R$ ' + brl(c.valor) + ' — diferença R$ ' + brl(c.valor - tot) + ': frete/IPI/descontos)</span>' : '')
+          + '</td><td class="n"><b>' + brl(tot) + '</b></td></tr></tfoot></table>'
+          : '<div class="rc-vz">Itens da nota não sincronizados (COMPRA-17 traz os do ano).</div>')
+        + (d.titulos.length ? '<div class="rc-sec">Parcelas desta nota no fluxo</div><table class="rc-tab"><tbody>'
+          + d.titulos.map(t => '<tr><td>' + br(t.vencimento) + '</td><td class="cn">' + (t.parcela ? t.parcela + '/' + (t.totalParcelas || '') : '') + '</td><td>'
+            + (t.status === 'QUITADO' ? 'paga' : t.status === 'CANCELADO' ? 'cancelada' : 'em aberto') + '</td><td class="n">' + brl(t.valor) + '</td></tr>').join('') + '</tbody></table>' : '');
+    } catch (err) {
+      e.querySelector('.rc-vz').textContent = err.message;
+    }
   }
 
   window.RazaoConta = { abrir };

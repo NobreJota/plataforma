@@ -50,6 +50,9 @@
  *    POST /receber-cartao (o titulo do cliente baixa contra a operadora e nascem as parcelas pos 5 do cartao).
  *    Com Cartão a lista mostra so os titulos do cliente clicado. Fora do recebimento de cliente (pagar, cartao,
  *    titulo PJ no Banestes) os botoes nao aparecem.
+ * Alterado em 23/10/2026 (Jorge): o modal de pagamento/recebimento ARRASTA pelo titulo (volta ao centro ao abrir).
+ *    No recebimento de cliente (Banco · Caixa · Cartão) o botao "Antecipação de cartão" nao aparece: o cliente
+ *    ainda nao pagou no cartao, nao ha parcela de operadora para antecipar.
  * Alterado em 23/10/2026 (Jorge): janela do pos — so UM documento aberto: abrir um fecha os outros.
  * Alterado em 23/10/2026 (Jorge): janela do pos — clique no NOME abre o RAZAO da conta (RazaoConta, janela por cima;
  *    passar o mouse diz "acesso razão"). Grade mes a mes da aba em letra menor (cabe sem rolar para o lado).
@@ -567,6 +570,7 @@
     await aplicarForma('BANCO');
     if (pag.cartao) await carregarCartao(pag.cartao.conta, pag.cartao.historico, data, 'clicado');
     else await carregarJanela();
+    $('#pag-modal .pag-modal-content').style.transform = '';   // 23/10/2026: abre no centro
     $('#pag-modal').hidden = false;
   }
 
@@ -589,7 +593,7 @@
     $('#pag-cartao').hidden = pag.forma !== 'CARTAO';
     $('#pag-confirmar').textContent = textoConfirmar();
     if (!pag.formaAtiva) { $$('#pag-banco option').forEach(o => { o.hidden = false; }); return; }
-    $('#pag-antecipar').hidden = pag.forma !== 'BANCO';
+    $('#pag-antecipar').hidden = true;                    // recebimento de cliente: sem antecipacao de cartao
     // banco: so os que recebem venda (BB, Banestes, CEF)
     const sel = $('#pag-banco');
     $$('#pag-banco option').forEach(o => { if (o.value) o.hidden = o.dataset.recebe !== '1'; });
@@ -1153,6 +1157,20 @@
 
   /* ===== Listeners dos modais ===== */
   $('#pag-close').addEventListener('click', () => $('#pag-modal').hidden = true);
+  // 23/10/2026 (Jorge): ARRASTAR o modal pelo titulo (o botao × continua so fechando)
+  (function arrastarModalPag() {
+    const cab = $('#pag-header'), caixa = $('#pag-modal .pag-modal-content');
+    cab.addEventListener('mousedown', ev => {
+      if (ev.button !== 0 || ev.target.closest('button')) return;
+      ev.preventDefault();
+      const m0 = /translate\((-?[\d.]+)px,\s*(-?[\d.]+)px\)/.exec(caixa.style.transform || '');
+      const x0 = m0 ? Number(m0[1]) : 0, y0 = m0 ? Number(m0[2]) : 0;
+      const sx = ev.clientX, sy = ev.clientY;
+      const mover = e => { caixa.style.transform = 'translate(' + (x0 + e.clientX - sx) + 'px, ' + (y0 + e.clientY - sy) + 'px)'; };
+      const soltar = () => { document.removeEventListener('mousemove', mover); document.removeEventListener('mouseup', soltar); };
+      document.addEventListener('mousemove', mover); document.addEventListener('mouseup', soltar);
+    });
+  })();
   $('#pag-cancelar').addEventListener('click', () => $('#pag-modal').hidden = true);
   $('#pag-confirmar').addEventListener('click', confirmarPagamento);
   $('#pag-antecipar').addEventListener('click', antecipar);

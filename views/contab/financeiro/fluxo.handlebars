@@ -1,5 +1,6 @@
 {{!--
   Destino: C:\plataformaRota\views\contab\financeiro\fluxo.handlebars
+  Alterado em: 23/10/2026 - modal de pagamento/recebimento arrasta pelo titulo (cursor de mover)
   Alterado em: 23/10/2026 - RECEBIMENTO: botoes Banco · Caixa · Cartão no modal; cada um mostra o seu quadro
                (banco: combo; caixa: 1.01.001.001 fixo; cartao: bandeira, debito/credito, parcelas e previa)
   Alterado em: 23/10/2026 - carrega /js/comum/razao-conta.js (nome na janela do pos abre o razao da conta)
@@ -280,6 +281,8 @@
   .pag-modal-content { background:#fff; border-radius:12px; width:92%; max-width:680px; max-height:88vh; display:flex; flex-direction:column; overflow:hidden; }
   .pag-modal-header { display:flex; justify-content:space-between; align-items:center; padding:16px 20px; background:#6d28d9; color:#fff; }
   .pag-modal-header.receber { background:#059669; }
+  #pag-header { cursor:move; user-select:none; }   /* 23/10/2026: arrasta o modal */
+  #pag-header .pag-close { cursor:pointer; }
   .pag-modal-header h2 { margin:0; font-size:1.15rem; }
   .pag-close { background:none; border:none; color:#fff; font-size:1.6rem; cursor:pointer; line-height:1; }
   .pag-modal-body { padding:18px 20px; overflow-y:auto; }

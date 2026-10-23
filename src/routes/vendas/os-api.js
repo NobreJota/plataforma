@@ -24,6 +24,13 @@
 //   <pasta do sistema>\uploads\os\<empresa>\  (fora do public: so abre logado)
 // Foto removida nao e apagada: ganha removida = true.
 //
+// Alterado em: 23/10/2026 - NOVA OS (sem venda), tela Servico > Nova OS > Conserto (/vendas/servicos/nova?tipo=C):
+//   GET  /historico-cliente?cliente=<id>   (todos os tipos: VI, C, G, S; com edificio/apto de cada OS) as OS do cliente: as da plataforma e as do Access (espelho
+//        _access_ordemservico_cabecalho + _complemento, pela conta do cliente ou F/J + nº), mais novas primeiro
+//   POST /nova  { tipo:'C', clienteId, endereco{}, edificio, apto, pontoReferencia, telefone, celular,
+//                 aparelho, codigoProduto, defeito, observacao }  -> OS status P, numero continuando o Access.
+//        Tecnico e dia: no modal da OS (agenda), logo depois de gravar. Mao de obra e material: na ficha
+//        de fechamento (conserto = mao de obra cobrada do cliente no fechamento).
 // Rotas:
 //   GET  /lista?tipo=programadas|nprogramadas|pendentes|concluidas|liquidadas|geral
 //        17/10/2026: "liquidadas" = concluidas (E, a receber no fluxo de servico) + recebidas (L)
@@ -116,6 +123,7 @@ const Boleta = require('../../models/contab/financeiro/boleta');
 const cfg = require('../../models/contab/config-contas');      // 16/10/2026: contas por chave
 // a agenda do tecnico (mesma conta da venda): require tardio, o venda-api tambem e montado no pages.js
 const agendaDoTecnico = (...a) => require('./venda-api').agendaDoTecnico(...a);
+const proximoNumeroOS = (...a) => require('./venda-api').proximoNumeroOS(...a);   // 23/10/2026
 const paraMin = s => { const m = /^(\d{2}):(\d{2})$/.exec(s || ''); return m ? +m[1] * 60 + +m[2] : null; };
 const subtitulo = (loja, codigo, session) =>
   col('_contasubtitulos').findOne({ lojistaId: loja, codigo, ativo: { $ne: false } }, session ? { session } : {});
@@ -281,6 +289,101 @@ router.get('/config-contas/conta/:codigo', responder(async (req, res) => {
 router.put('/config-contas/:chave', express.json(), responder(async (req, res) => {
   const r = await cfg.gravar(lojaDe(req), req.params.chave, (req.body || {}).codigo);
   res.json({ ok: true, ...r });
+}));
+
+// ---------------------------------------------------------------------------
+// 23/10/2026: GET /historico-cliente?cliente=<id>  — as OS do cliente (plataforma + Access)
+// ---------------------------------------------------------------------------
+const STATUS_TXT = { P: 'pendente', E: 'concluída · a receber', L: 'liquidada', C: 'cancelada' };
+const dataValida = d => { const x = d ? new Date(d) : null; return x && !isNaN(x) && x.getFullYear() > 1950 ? x : null; };
+router.get('/historico-cliente', responder(async (req, res) => {
+  const loja = lojaDe(req);
+  const id = oid(req.query.cliente); if (!id) throw erro(400, 'cliente?');
+  const c = await col('_aux_clientes').findOne({ _id: id, lojistaId: loja });
+  if (!c) throw erro(404, 'cliente não encontrado');
+  const lista = [];
+  // plataforma
+  for (const o of await col('_ordens_servico').find({ lojistaId: loja, 'cliente.id': id }).toArray()) {
+    const hist = [o.servicoDescricao, o.defeito, ...(o.itens || []).map(i => [i.servico, i.descricao].filter(Boolean).join(' '))]
+      .filter(Boolean).join(' · ');
+    lista.push({ origem: 'plataforma', id: String(o._id), numero: o.numero, tipo: o.tipo === 'INSTALACAO' ? 'VI' : (o.tipo || ''),
+      status: o.status, situacao: STATUS_TXT[o.status] || o.status,
+      data: o.terminoEm || o.diaPrevisto || o.data || o.criadoEm || null, tecnico: o.tecnicoNome || '', historico: hist,
+      edificio: o.edificio || '', apto: o.apto || '' });
+  }
+  // Access (espelho do VENDA-1): pela conta do cliente ou pela classe F/J + numero
+  const m = /^([FJ])(\d+)$/i.exec(String(c.codigo || ''));
+  const ou = [];
+  if (c.ncontabil) ou.push({ CtaCliente: c.ncontabil });
+  if (m) ou.push({ Class: m[1].toUpperCase(), NrCliente: Number(m[2]) });
+  if (ou.length) {
+    const cabs = await col('_access_ordemservico_cabecalho').find({ lojistaId: loja, $or: ou }).toArray();
+    const nums = cabs.map(x => x['NrOServiço']);
+    const comps = new Map((await col('_access_ordemservico_complemento').find({ lojistaId: loja, NrOS: { $in: nums } }).toArray())
+      .map(x => [x.NrOS, x]));
+    const ja = new Set(lista.map(x => x.numero));
+    for (const a of cabs) {
+      const n = a['NrOServiço']; if (ja.has(n)) continue;
+      const k = comps.get(n) || {};
+      const hist = [k['Serviço'], k.Defeito, k.Conserto, k['Observação']].map(v => String(v ?? '').trim())
+        .filter(v => v && v !== 'x' && v !== '0').join(' · ');
+      lista.push({ origem: 'Access', id: null, numero: n, tipo: a.Tipo || '', status: a.Status || '',
+        situacao: STATUS_TXT[a.Status] || a.Status || '',
+        data: dataValida(a['DataLiquidação']) || dataValida(a.DiaPrevisto) || dataValida(a.Data),
+        tecnico: '', historico: hist, produto: k.CodProduto || null,
+        edificio: String(a['Edifício'] ?? '').trim(), apto: String(a.Apto ?? '').trim() });
+    }
+  }
+  lista.sort((x, y) => (y.numero || 0) - (x.numero || 0));
+  res.json({ ok: true, cliente: { id: String(c._id), codigo: c.codigo || '', nome: c.nome || '' }, oss: lista });
+}));
+
+// ---------------------------------------------------------------------------
+// 23/10/2026: POST /nova  — abre uma OS sem venda (por enquanto: C = conserto)
+// ---------------------------------------------------------------------------
+const TIPOS_NOVA = { C: 'Conserto' };
+router.post('/nova', express.json(), responder(async (req, res) => {
+  const loja = lojaDe(req), b = req.body || {};
+  const t = v => String(v ?? '').trim();
+  const tipo = t(b.tipo).toUpperCase();
+  if (!TIPOS_NOVA[tipo]) throw erro(400, 'tipo de OS ainda não disponível: ' + (tipo || '?'));
+  const id = oid(b.clienteId); if (!id) throw erro(400, 'escolha o cliente');
+  const c = await col('_aux_clientes').findOne({ _id: id, lojistaId: loja });
+  if (!c) throw erro(404, 'cliente não encontrado');
+  const aparelho = t(b.aparelho), defeito = t(b.defeito);
+  if (!aparelho) throw erro(400, 'informe o aparelho (produto / marca / modelo)');
+  if (!defeito) throw erro(400, 'informe o defeito reclamado');
+  const e = b.endereco || {};
+  const endereco = { logradouro: t(e.logradouro), numero: t(e.numero), complemento: t(e.complemento),
+    bairro: t(e.bairro), cidade: t(e.cidade), uf: t(e.uf).toUpperCase().slice(0, 2), cep: t(e.cep).replace(/\D/g, '') };
+  if (!endereco.logradouro || !endereco.cidade) throw erro(400, 'informe o endereço do serviço (rua e cidade)');
+  const codigoProduto = Number(b.codigoProduto) || null;
+  const agora = new Date();
+  let resposta = null;
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const numero = await proximoNumeroOS(loja, session);
+      const doc = {
+        lojistaId: loja, numero, tipo, status: 'P', data: agora,
+        venda: null, valorServico: 0, servicoContabilizado: false,
+        cliente: { id: c._id, codigo: c.codigo || '', tipo: c.tipo || '', nome: c.nome || '',
+                   documento: c.cpfCnpj || '', ncontabil: c.ncontabil || '' },
+        endereco, edificio: t(b.edificio), apto: t(b.apto), pontoReferencia: t(b.pontoReferencia),
+        telefone: t(b.telefone), celular: t(b.celular), observacao: t(b.observacao),
+        tecnicoConta: '', tecnicoNome: '', diaPrevisto: null, horaIni: '', horaFim: '',
+        aparelho, codigoProduto, defeito,
+        servicoDescricao: TIPOS_NOVA[tipo] + ': ' + aparelho,
+        // o modal da OS mostra os "itens" (o que fazer): aqui, o aparelho e o defeito
+        itens: [{ codigo: codigoProduto || 0, descricao: aparelho, servico: TIPOS_NOVA[tipo], observacao: defeito }],
+        consignados: [], fotos: [], parteTecnico: 0, parteLoja: 0,
+        criadoEm: agora, atualizadoEm: agora,
+      };
+      const r = await col('_ordens_servico').insertOne(doc, { session });
+      resposta = { id: String(r.insertedId), numero };
+    });
+  } finally { await session.endSession(); }
+  res.status(201).json({ ok: true, ...resposta });
 }));
 
 router.get('/:id', responder(async (req, res) => {

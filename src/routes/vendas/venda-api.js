@@ -1,5 +1,7 @@
 // =============================================================================
 // Destino: C:\plataformaRota\src\routes\vendas\venda-api.js
+// Alterado em: 23/10/2026 - GET /clientes devolve tambem edificio e apto (se tiver).
+// Alterado em: 23/10/2026 - exporta proximoNumeroOS (a Nova OS de conserto usa a mesma numeracao).
 // Alterado em: 22/10/2026 - VENDAS DO ACCESS (VENDA-11, origem ACCESS) no relatorio: sao so historico —
 //   /:id/cancelar e /:id/instalacao recusam; o relatorio devolve origem e nrCupomAccess.
 // Criado em: 02/10/2026
@@ -631,6 +633,9 @@ router.get('/clientes', async (req, res) => {
       logradouro: c.enderecoCobranca?.logradouro || '', numero: c.enderecoCobranca?.numero || '',
       complemento: c.enderecoCobranca?.complemento || '', bairro: c.enderecoCobranca?.bairro || '',
       cidade: c.enderecoCobranca?.cidade || '', uf: c.enderecoCobranca?.uf || '', cep: c.enderecoCobranca?.cep || '',
+      // 23/10/2026: edificio e apto, se tiver (cobranca, cadastro ou o 1o endereco de instalacao)
+      edificio: c.enderecoCobranca?.edificio || c.edificio || (c.enderecosInstalacao || []).find(e => e.edificio)?.edificio || '',
+      apto: c.enderecoCobranca?.apto || c.apto || (c.enderecosInstalacao || []).find(e => e.apto)?.apto || '',
     })) });
   } catch (err) {
     console.error('[vendas/clientes]', err);
@@ -1663,3 +1668,5 @@ router.put('/:id', async (req, res) => {
 module.exports = router;
 // usada pela OS (os-api.js) para conferir o horario do tecnico ao (re)agendar
 module.exports.agendaDoTecnico = agendaDoTecnico;
+// 23/10/2026: a NOVA OS (conserto/garantia/servico, os-api.js) usa a mesma numeracao
+module.exports.proximoNumeroOS = (...a) => proximoNumeroOS(...a);

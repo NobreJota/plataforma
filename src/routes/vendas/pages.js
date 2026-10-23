@@ -11,6 +11,7 @@
 //                           (/vendas/api/tecnicos, tecnicos-api.js)
 // Alterado em: 15/10/2026 - Servico > Ficha de fechamento da OS (/vendas/servicos/fechamento/:id)
 // Alterado em: 16/10/2026 - Servico > Fluxo de servico (/vendas/servicos/fluxo)
+// Alterado em: 23/10/2026 - Servico > Nova OS (/vendas/servicos/nova?tipo=C|G|S): por enquanto o conserto
 // Alterado em: 17/10/2026 - Venda > Kits (/vendas/kits): produto principal + itens que vao junto
 //
 // Telas do modulo de vendas. Montado em /vendas no server.js, protegido por
@@ -67,6 +68,12 @@ router.get('/servicos/tecnicos', (req, res) => {
 // servico: ficha de fechamento da OS (abre pelo "Concluir serviço" do modal da OS)
 router.get('/servicos/fechamento/:id', (req, res) => {
   res.render('vendas/pages/servicos-fechamento', { layout: false, activeMenu: 'servico', osId: req.params.id });
+});
+
+// servico: NOVA OS sem venda (23/10/2026) — tipo C conserto (G garantia e S servicos: em seguida)
+router.get('/servicos/nova', (req, res) => {
+  const tipo = String(req.query.tipo || 'C').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 2) || 'C';
+  res.render('vendas/pages/servicos-nova', { layout: false, activeMenu: 'servico', tipo });
 });
 
 // servico: fluxo de servico (o a receber das OS; recebe com o codigo do fluxo de caixa)

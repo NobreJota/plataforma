@@ -1,0 +1,143 @@
+{{!--
+  Destino: C:\plataformaRota\views\vendas\pages\servicos-nova.handlebars
+  Criado em: 23/10/2026
+  Alterado em: 23/10/2026 - busca com Edificio e Apto; historico com etiquetas por tipo (todos, VI, C, G, S)
+
+  SERVICO > NOVA OS (sem venda). Rota: /vendas/servicos/nova?tipo=C   (C conserto · G garantia · S servicos)
+  Por enquanto so o CONSERTO abre OS; Garantia e Servicos: em seguida, no mesmo molde.
+    1. P. Fisica / P. Juridica + busca pelo nome (a lista muda a cada letra): nome, estado, cidade, bairro
+    2. escolhido o cliente: o HISTORICO das OS dele (plataforma + Access): nº, data, tipo VI/C/G, situacao, historico
+    3. a OS: endereco do servico (vem o do cliente), telefones, APARELHO, DEFEITO, observacao -> "Abrir OS"
+       Gravou: abre o modal da OS para escolher tecnico, dia e horario (a agenda de sempre).
+  O JS fica em /js/vendas/servicos-nova.js   API: /vendas/api/os/historico-cliente · /vendas/api/os/nova
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova OS</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root { --ambar:#92400e; --ambar-claro:#fef3c7; --borda:#e5e7eb; --texto:#111827; --cinza:#6b7280; --vermelho:#dc2626; --verde:#047857; }
+    body { margin:0 auto; max-width:1200px; padding:52px 32px 40px; color:var(--texto); background:#fff;
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
+    h1 { margin:0 0 12px; font-size:21px; }
+    .tipos { display:flex; gap:4px; border-bottom:2px solid var(--ambar); margin-bottom:14px; }
+    .tipos a { border:1px solid var(--borda); border-bottom:0; background:#f8fafc; border-radius:8px 8px 0 0; padding:8px 16px;
+               font-weight:700; color:#374151; text-decoration:none; }
+    .tipos a.ativa { background:var(--ambar); border-color:var(--ambar); color:#fff; }
+    .tipos a.breve { color:#9ca3af; }
+    .caixa { border:1px solid var(--borda); border-radius:10px; padding:12px 14px; margin-bottom:14px; }
+    .caixa h2 { margin:0 0 10px; font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--ambar); }
+    .busca { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    .busca label.pf { display:flex; gap:5px; align-items:center; font-weight:700; cursor:pointer; }
+    .busca input[type=text] { flex:1; min-width:260px; height:36px; border:1px solid #d1d5db; border-radius:8px; padding:0 10px; font-size:15px; background:#fffbeb; }
+    .busca a { color:var(--ambar); font-weight:700; text-decoration:none; white-space:nowrap; }
+    .rola { max-height:280px; overflow:auto; border:1px solid var(--borda); border-radius:8px; margin-top:10px; }
+    table { border-collapse:collapse; width:100%; }
+    th { position:sticky; top:0; background:#f3f4f6; font-size:11px; text-transform:uppercase; color:#374151; text-align:left; padding:7px 10px; white-space:nowrap; z-index:1; }
+    td { padding:7px 10px; border-top:1px solid #f3f4f6; vertical-align:top; }
+    tbody tr.cli { cursor:pointer; } tbody tr.cli:hover { background:var(--ambar-claro); }
+    .vz { padding:18px; text-align:center; color:var(--cinza); }
+    .cinza { color:var(--cinza); font-size:12px; }
+    .escolhido { display:flex; gap:14px; align-items:center; flex-wrap:wrap; font-size:15px; }
+    .escolhido b { font-size:17px; }
+    .escolhido button { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:5px 12px; font-weight:700; cursor:pointer; }
+    .tp { display:inline-block; min-width:28px; text-align:center; font-size:11px; font-weight:800; border-radius:6px; padding:1px 6px; background:#e5e7eb; }
+    .tp.VI { background:#dbeafe; color:#1e40af; } .tp.C { background:#fde68a; color:#92400e; } .tp.G { background:#dcfce7; color:#166534; }
+    .sit { font-size:12px; font-weight:700; } .sit.P, .sit.E { color:var(--vermelho); } .sit.L { color:var(--verde); } .sit.C { color:#9ca3af; text-decoration:line-through; }
+    .acc { font-size:10px; font-weight:800; color:#92400e; background:#fef3c7; border-radius:5px; padding:0 5px; margin-left:4px; }
+    tr.abre { cursor:pointer; } tr.abre:hover { background:#f5f3ff; }
+    .grade { display:grid; grid-template-columns:repeat(6, 1fr); gap:8px 12px; }
+    .grade label { display:flex; flex-direction:column; gap:3px; font-size:11px; font-weight:800; text-transform:uppercase; color:#374151; }
+    .grade input, .grade textarea { height:34px; border:1px solid #d1d5db; border-radius:7px; padding:0 9px; font-size:14px; font-family:inherit; font-weight:400; text-transform:none; }
+    .grade textarea { height:62px; padding:6px 9px; resize:vertical; }
+    .c1 { grid-column:span 1; } .c2 { grid-column:span 2; } .c3 { grid-column:span 3; } .c4 { grid-column:span 4; } .c6 { grid-column:span 6; }
+    .grade .obr input, .grade .obr textarea { background:#fffbeb; }
+    .acoes { display:flex; gap:12px; align-items:center; margin-top:12px; }
+    .acoes button { border:0; background:var(--ambar); color:#fff; border-radius:8px; padding:10px 22px; font-size:15px; font-weight:800; cursor:pointer; }
+    .acoes button:disabled { opacity:.5; cursor:wait; }
+    .recado { font-size:15px; font-weight:700; } .recado.erro { color:var(--vermelho); } .recado.ok { color:var(--verde); }
+    .chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+    .chips button { border:1px solid #d1d5db; background:#fff; border-radius:16px; padding:4px 12px; font-size:12px; cursor:pointer; color:#374151; }
+    .chips button.on { background:var(--ambar); border-color:var(--ambar); color:#fff; }
+    .breve-txt { padding:30px; text-align:center; color:var(--cinza); font-size:15px; }
+    @media (max-width:800px) { .grade { grid-template-columns:repeat(2, 1fr); } .c3, .c4, .c6 { grid-column:span 2; } }
+  </style>
+</head>
+<body data-tipo="{{tipo}}">
+
+  <h1>Nova OS</h1>
+  <div class="tipos" id="tipos">
+    <a href="/vendas/servicos/nova?tipo=C" data-t="C">Conserto</a>
+    <a href="/vendas/servicos/nova?tipo=G" data-t="G" class="breve" title="em seguida">Garantia</a>
+    <a href="/vendas/servicos/nova?tipo=S" data-t="S" class="breve" title="em seguida">Serviços</a>
+  </div>
+
+  <div id="breve" class="caixa breve-txt" hidden>Esta página ainda vai ser feita — por enquanto só o <b>Conserto</b>.</div>
+
+  <div id="tela">
+    <!-- 1. cliente -->
+    <div class="caixa" id="cx-busca">
+      <h2>1 · Cliente</h2>
+      <div class="busca">
+        <label class="pf"><input type="radio" name="pf" value="PF" checked> P. Física</label>
+        <label class="pf"><input type="radio" name="pf" value="PJ"> P. Jurídica</label>
+        <input type="text" id="busca" placeholder="digite o nome (ou o código F1234 / CPF / CNPJ)…" autocomplete="off">
+        <a href="/vendas/clientes" target="_blank" title="abre o cadastro em outra aba; depois volte e busque de novo">+ novo cliente</a>
+      </div>
+      <div class="rola" id="res" hidden></div>
+    </div>
+
+    <div class="caixa" id="cx-cliente" hidden>
+      <div class="escolhido"><span>Cliente:</span> <b id="cli-nome"></b> <span class="cinza" id="cli-info"></span>
+        <button type="button" id="trocar">trocar cliente</button></div>
+    </div>
+
+    <!-- 2. historico -->
+    <div class="caixa" id="cx-hist" hidden>
+      <h2>2 · Ordens de serviço deste cliente</h2>
+      <div id="hist-chips"></div>
+      <div class="rola" id="hist"></div>
+      <div class="cinza" id="hist-rod" style="margin-top:6px"></div>
+    </div>
+
+    <!-- 3. a OS -->
+    <div class="caixa" id="cx-os" hidden>
+      <h2>3 · OS de conserto</h2>
+      <form id="form" autocomplete="off">
+        <div class="grade">
+          <label class="c3 obr">Rua / avenida<input id="e-logradouro"></label>
+          <label class="c1">Número<input id="e-numero"></label>
+          <label class="c2">Complemento<input id="e-complemento"></label>
+          <label class="c2">Bairro<input id="e-bairro"></label>
+          <label class="c2 obr">Cidade<input id="e-cidade"></label>
+          <label class="c1">UF<input id="e-uf" maxlength="2"></label>
+          <label class="c1">CEP<input id="e-cep"></label>
+          <label class="c2">Edifício<input id="edificio"></label>
+          <label class="c1">Apto<input id="apto"></label>
+          <label class="c3">Ponto de referência<input id="referencia"></label>
+          <label class="c2">Telefone<input id="telefone"></label>
+          <label class="c2">Celular / WhatsApp<input id="celular"></label>
+          <label class="c2">Código do produto (se for nosso)<input id="codigoProduto" inputmode="numeric"></label>
+          <label class="c6 obr">Aparelho (produto · marca · modelo)<input id="aparelho" placeholder="ex.: aquecedor Komeco KO 33 D"></label>
+          <label class="c6 obr">Defeito reclamado<textarea id="defeito" placeholder="o que o cliente diz que acontece"></textarea></label>
+          <label class="c6">Observação<textarea id="observacao"></textarea></label>
+        </div>
+        <div class="acoes">
+          <button type="submit" id="abrir">Abrir OS</button>
+          <span class="recado" id="recado"></span>
+        </div>
+        <div class="cinza" style="margin-top:6px">Depois de abrir, a OS aparece para escolher técnico, dia e horário (a agenda de sempre).
+          Mão de obra e material ficam para a ficha de fechamento.</div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/comum/razao-conta.js"></script>
+  <script src="/js/vendas/os-modal.js"></script>
+  <script src="/js/vendas/servicos-nova.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
+</body>
+</html>

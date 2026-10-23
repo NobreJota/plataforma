@@ -12,6 +12,7 @@
   Alterado em: 14/10/2026 — Serviço > Lista geral (/vendas/servicos/lista?tipo=geral).
   Alterado em: 16/10/2026 — Serviço > Fluxo de serviço (/vendas/servicos/fluxo).
   Alterado em: 17/10/2026 — Venda > Kits (/vendas/kits).
+  Alterado em: 23/10/2026 — Serviço > Nova OS (3º nível): Conserto, Garantia, Serviços (/vendas/servicos/nova?tipo=C|G|S).
   Alterado em: 10/10/2026 — /usuariocontab/menu?abrir=venda abre direto o submenu da Venda
                 (Clientes, Nova venda, Notas fiscais, Relatórios); serve para fluxo, contabil,
                 compra e site também. O ícone Venda do razão usa isso.
@@ -140,6 +141,9 @@
     {{!-- Servico --}}
     <ul class="coop-sub-list" data-sub="servico">
       <li class="coop-sub-title">Serviço</li>
+      <li class="coop-sub-item" data-leaf="novaos">
+        <span>Nova OS</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
+      </li>
       <li class="coop-sub-item" data-url="/vendas/servicos">
         <span>Agenda do dia</span>
       </li>
@@ -201,6 +205,13 @@
       <li class="coop-leaf-item"><a href="/compra/entrada">Entrada com a nota</a></li>
       <li class="coop-leaf-item"><a href="/compra/desbloqueio">Desbloqueio da nota</a></li>
       <li class="coop-leaf-item"><a href="/compra/notas">Pesquisa de notas</a></li>
+    </ul>
+
+    <ul class="coop-leaf-list" data-leaf="novaos">
+      <li class="coop-sub-title">Nova OS</li>
+      <li class="coop-leaf-item"><a href="/vendas/servicos/nova?tipo=C">Conserto</a></li>
+      <li class="coop-leaf-item"><a href="/vendas/servicos/nova?tipo=G">Garantia</a></li>
+      <li class="coop-leaf-item"><a href="/vendas/servicos/nova?tipo=S">Serviços</a></li>
     </ul>
 
     <ul class="coop-leaf-list" data-leaf="pessoal">

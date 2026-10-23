@@ -12,6 +12,7 @@
 //   - 01/10/2026: estoque so numeros, precos so moeda, taxa antes dos precos e
 //     calculada (ficha-produto-campos.js); sem o botao limpar ficha
 //   - 01/10/2026: duas taxas (prazo e vista), cada uma com o seu preco
+//   - 22/10/2026: nao grava com o codigo de barras de outro produto (aviso ao sair do campo)
 //   - 14/10/2026: CODIGO DE BARRAS (ean) logo abaixo do codigo. Escolheu o fornecedor,
 //     o cursor vai para ele: bipa o produto, o leitor manda Enter e o cursor desce
 //     para a descricao. Codigo de barras ja usado em outro produto: a API recusa.
@@ -139,6 +140,9 @@
     if (!estado.escolhido) { recado('Escolha o fornecedor.', 'erro'); $('fornecedor').focus(); return; }
     if (!(campo('descricao')?.value || '').trim()) { recado('Preencha a descrição.', 'erro'); campo('descricao').focus(); return; }
     // codigo de barras: tamanho errado nao grava; digito que nao confere pergunta
+    // 22/10/2026: codigo de barras de OUTRO produto (aviso de pe, conferido ao sair do campo): nao grava
+    const dupEan = FichaProduto.eanDuplicado(campo);
+    if (dupEan) { recado('Este código de barras já pertence ao produto ' + dupEan + '. Corrija antes de gravar.', 'erro'); campo('ean').focus(); return; }
     const probEan = FichaProduto.eanProblema(campo('ean')?.value);
     if (probEan === 'tamanho') {
       recado('Código de barras deve ter de 8 a 14 dígitos.', 'erro'); campo('ean').focus(); return;

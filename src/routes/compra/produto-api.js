@@ -10,6 +10,8 @@
 //   - /origem devolve fornecedorConta (conta nova do fornecedor, de/para);
 //     a ficha grava em `ncontabil`
 //   - /origem: produtos ja transferidos (em arquivo_docs) vao para o fim
+// Alterado em: 22/10/2026 - GET /ean/:ean?codigo=N: o codigo de barras ja esta em OUTRO produto? (a ficha
+//              pergunta ao sair do campo, antes de gravar)
 // Alterado em: 22/10/2026 - GET /relacao devolve tambem o codigo de barras (ean)
 // Alterado em: 30/09/2026
 //   - GET /relacao-fornecedores e GET /relacao: a Relacao de produtos
@@ -507,6 +509,25 @@ async function resumoProduto(lojistaId, codigo) {
 
   return { consumo, aCaminho, custo, origem };
 }
+
+// ---------------------------------------------------------------------------
+// GET /ean/:ean?codigo=6394   22/10/2026: o codigo de barras ja e de OUTRO produto da loja?
+//   { ok, outro: { codigo, descricao } | null }  (o proprio produto, `codigo`, nao conta)
+// ---------------------------------------------------------------------------
+router.get('/ean/:ean', async (req, res) => {
+  try {
+    const lojistaId = new mongoose.Types.ObjectId(req.lojistaId);
+    const ean = String(req.params.ean || '').replace(/\D/g, '');
+    if (!ean) return res.json({ ok: true, outro: null });
+    const codigo = Number(req.query.codigo) || 0;
+    const outro = await col('arquivo_docs').findOne({ loja_id: lojistaId, ean, codigo: { $ne: codigo } },
+      { projection: { _id: 0, codigo: 1, descricao: 1 } });
+    res.json({ ok: true, outro: outro || null });
+  } catch (err) {
+    console.error('[compra/produto/ean]', err);
+    res.status(500).json({ ok: false, erro: err.message });
+  }
+});
 
 // ---------------------------------------------------------------------------
 // GET /item/:codigo    a pagina do produto: a ficha (arquivo_docs) + o resumo

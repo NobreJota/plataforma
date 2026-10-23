@@ -7,6 +7,10 @@
 // Alterado em: 14/10/2026 - CODIGO DE BARRAS (ean): so digitos; o leitor bipa e manda
 //              Enter (a pagina passa ao proximo campo). eanProblema() confere 8-14
 //              digitos e o digito verificador (GTIN, modulo 10)
+// Alterado em: 22/10/2026 - CODIGO DE BARRAS: (1) COLAR nao e permitido (so digitar ou bipar) — evita
+//              copiar o codigo de outro produto; (2) ao SAIR do campo pergunta ao servidor se o codigo
+//              ja e de outro produto e avisa NA HORA, embaixo do campo, em letra maior.
+//              eanDuplicado(campo) diz se o aviso esta de pe (as fichas nao gravam assim).
 //
 // Regras dos campos da ficha de produto, usadas pelas DUAS fichas:
 //   Novo produto (produto-cadastro.js) e pagina do produto (produto.js).
@@ -108,8 +112,54 @@ window.FichaProduto = (function () {
     for (const idTaxa of Object.keys(PARES)) parear(idTaxa, custo, campo, null);
   }
 
+  // 22/10/2026: aviso embaixo do campo do codigo de barras
+  function avisoEan(el, texto) {
+    let a = el.parentNode.querySelector('.aviso-ean');
+    if (!a) {
+      a = document.createElement('div'); a.className = 'aviso-ean';
+      a.style.cssText = 'color:#dc2626;font-size:15px;font-weight:700;margin-top:4px;line-height:1.3';
+      el.insertAdjacentElement('afterend', a);
+    }
+    a.textContent = texto || ''; a.hidden = !texto;
+  }
+  function marcarEan(el, ruim) {
+    el.style.borderColor = ruim ? '#dc2626' : '';
+    el.style.background = ruim ? '#fef2f2' : '';
+  }
+  // o codigo ja e de outro produto? (pergunta ao servidor; o proprio produto nao conta)
+  async function conferirEan(el, campo) {
+    const ean = el.value.replace(/\D/g, '');
+    el.dataset.dup = '';
+    if (!ean || eanProblema(ean) === 'tamanho') return;
+    try {
+      const cod = Number(String(campo('codigo')?.value || '').replace(/\D/g, '')) || 0;
+      const r = await fetch('/compra/api/produto/ean/' + ean + '?codigo=' + cod, { credentials: 'same-origin' });
+      const j = await r.json();
+      if (el.value.replace(/\D/g, '') !== ean) return;            // mudou enquanto perguntava
+      if (j.ok && j.outro) {
+        el.dataset.dup = String(j.outro.codigo);
+        marcarEan(el, true);
+        avisoEan(el, '⚠ Este código de barras já pertence ao produto ' + j.outro.codigo + ' — ' + (j.outro.descricao || ''));
+      }
+    } catch (e) { /* sem resposta: o servidor confere de novo ao gravar */ }
+  }
+  function eanDuplicado(campo) {
+    const el = campo('ean');
+    return el && el.dataset.dup ? el.dataset.dup : '';
+  }
+
   // liga as regras num container de ficha; campo(id) devolve o <input>
   function ligar(raiz, campo) {
+    // 22/10/2026: codigo de barras nao aceita COLAR nem arrastar (so digitar ou bipar)
+    const bloqueia = ev => {
+      const el = ev.target;
+      if (el.tagName !== 'INPUT' || tipo(el.id.replace(/^f_/, '')) !== 'ean') return;
+      ev.preventDefault();
+      avisoEan(el, 'Colar não é permitido no código de barras: digite ou bipe o código.');
+    };
+    raiz.addEventListener('paste', bloqueia);
+    raiz.addEventListener('drop', bloqueia);
+
     raiz.addEventListener('input', ev => {
       const el = ev.target;
       if (el.tagName !== 'INPUT' || el.readOnly) return;
@@ -118,6 +168,9 @@ window.FichaProduto = (function () {
       // estoque e codigo de barras: so digitos; precos/taxa: digitos, ponto e virgula
       const limpo = el.value.replace(t === 'num' || t === 'ean' ? /\D/g : /[^\d.,]/g, '');
       if (limpo !== el.value) el.value = limpo;
+      if (t === 'ean' && (el.dataset.dup || el.parentNode.querySelector('.aviso-ean'))) {   // corrigindo: tira o aviso
+        el.dataset.dup = ''; marcarEan(el, false); avisoEan(el, '');
+      }
     });
 
     raiz.addEventListener('focusout', ev => {
@@ -127,10 +180,12 @@ window.FichaProduto = (function () {
       const t = tipo(id);
       if (!t) return;
       if (t === 'ean') {                       // vermelho se o codigo nao fecha
-        const ruim = eanProblema(el.value) !== '';
-        el.style.borderColor = ruim ? '#dc2626' : '';
-        el.style.background = ruim ? '#fef2f2' : '';
+        const p = eanProblema(el.value), ruim = p !== '';
+        marcarEan(el, ruim);
         el.title = ruim ? 'código de barras: confira (8 a 14 dígitos, último dígito)' : '';
+        avisoEan(el, p === 'tamanho' ? 'O código de barras tem de ter de 8 a 14 dígitos.'
+          : p === 'digito' ? 'O último dígito não confere: confira o número digitado.' : '');
+        conferirEan(el, campo);                // 22/10/2026: ja e de outro produto?
         return;
       }
       if (t !== 'num' && el.value.trim() !== '') {
@@ -141,5 +196,5 @@ window.FichaProduto = (function () {
     });
   }
 
-  return { tipo, numero, exibir, paraApi, ligar, completar, eanProblema };
+  return { tipo, numero, exibir, paraApi, ligar, completar, eanProblema, eanDuplicado };
 })();

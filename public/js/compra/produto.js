@@ -11,6 +11,7 @@
 // Alterado em: 01/10/2026 — estoque so numeros, precos so moeda, taxa antes dos
 //              precos e calculada (ficha-produto-campos.js)
 // Alterado em: 01/10/2026 — duas taxas (prazo e vista); a que falta e calculada ao abrir
+// Alterado em: 22/10/2026 — nao grava com o codigo de barras de outro produto (aviso ao sair do campo)
 // Alterado em: 14/10/2026 — CODIGO DE BARRAS (ean) logo abaixo do codigo: clica e bipa.
 //              Produto sem EAN na ficha mas com EAN vindo da nota de entrada
 //              (_produto_origem): o campo ja vem com ele, marcado "da nota" — grave
@@ -152,6 +153,9 @@
 
   async function gravar() {
     // codigo de barras: tamanho errado nao grava; digito que nao confere pergunta
+    // 22/10/2026: codigo de barras de OUTRO produto (aviso de pe, conferido ao sair do campo): nao grava
+    const dupEan = FichaProduto.eanDuplicado(campo);
+    if (dupEan) { recado('Este código de barras já pertence ao produto ' + dupEan + '. Corrija antes de gravar.', 'erro'); campo('ean').focus(); return; }
     const probEan = FichaProduto.eanProblema(campo('ean')?.value);
     if (probEan === 'tamanho') {
       recado('Código de barras deve ter de 8 a 14 dígitos.', 'erro'); campo('ean').focus(); return;

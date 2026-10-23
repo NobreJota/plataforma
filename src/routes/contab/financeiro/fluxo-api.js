@@ -9,9 +9,15 @@
 //              GET /pos/:pos — TODAS as linhas em aberto daquele pos (todos os anos), para a janela do pos
 //              agrupar por pedido/nota e mostrar os vencimentos de cada um.
 //              GET /conta/:codigo — titulos em aberto de uma conta (conferir com o saldo do razao).
+// Alterado em: 22/10/2026 - GET /meses/:codigo?de=2026-01&n=15 — a conta MES A MES (para a aba da janela do pos):
+//              o que esta em aberto no fluxo por pos (mes do vencimento) e, se a conta e de FORNECEDOR do Access,
+//              o que foi COMPRADO (notas, mes da entrada) e o PREVISTO (Ped_Previsão, mes da compra) + media/maior
+//              dos 3 ultimos meses fechados.
 
 const express = require('express');
 const FluxoProjetado = require('../../../models/contab/financeiro/fluxoProjetado');
+const mongoose = require('mongoose');
+const col = n => mongoose.connection.collection(n);
 
 const router = express.Router();
 
@@ -42,6 +48,57 @@ router.get('/conta/:codigo', async (req, res) => {
     })) });
   } catch (err) {
     console.error('❌ /fluxo/conta:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
+});
+
+/* 22/10/2026: GET /financeiro/api/fluxo/meses/:codigo?de=2026-01&n=15 — a conta mes a mes. */
+router.get('/meses/:codigo', async (req, res) => {
+  try {
+    const codigo = String(req.params.codigo || '').trim();
+    if (!/^\d\.\d{2}\.\d{3}\.\d{3}$/.test(codigo)) return res.status(400).json({ erro: 'código de conta inválido' });
+    const hoje = new Date();
+    const m0 = /^(\d{4})-(\d{1,2})$/.exec(String(req.query.de || '')) || [null, hoje.getFullYear(), 1];
+    const n = Math.min(24, Math.max(3, parseInt(req.query.n, 10) || 15));
+    const ini = Number(m0[1]) * 12 + Number(m0[2]) - 1;                      // mes como numero
+    const meses = Array.from({ length: n }, (_, i) => ({ ano: Math.floor((ini + i) / 12), mes: (ini + i) % 12 + 1 }));
+    const idx = d => { const x = new Date(d); const k = x.getUTCFullYear() * 12 + x.getUTCMonth() - ini; return k >= 0 && k < n ? k : -1; };
+    const zeros = () => Array(n).fill(0);
+    const r2 = v => Math.round(v * 100) / 100;
+
+    // o fluxo em aberto desta conta, por pos, no mes do vencimento
+    const fluxo = {};
+    for (const l of await FluxoProjetado.find({ codigoConta: codigo, status: 'ATIVO', ...FORA_SERVICO }).lean()) {
+      const k = idx(l.vencimento); if (k < 0) continue;
+      (fluxo[l.pos] = fluxo[l.pos] || zeros())[k] += Math.abs(l.valor || 0);
+    }
+    for (const p of Object.keys(fluxo)) fluxo[p] = fluxo[p].map(r2);
+
+    // fornecedor do Access com esta conta (NrContabil 2.02 -> 2.01 na plataforma)
+    let fornecedor = null, comprado = null, previsto = null, media3 = 0, maior3 = 0;
+    const fs = await col('_access_compras_fornecedores').find({}).toArray();
+    const f = fs.find(x => { let c = String(x.NrContabil || '').trim(); if (c.startsWith('2.02.')) c = '2.01.' + c.slice(5); return c === codigo; });
+    if (f) {
+      const nr = Number(f.NrFornec);
+      fornecedor = { nr, marca: String(f.Marca || f['Razão'] || '').trim() };
+      comprado = zeros(); previsto = zeros();
+      const atual = hoje.getFullYear() * 12 + hoje.getMonth(), ult = [atual - 3, atual - 2, atual - 1].map(() => 0);
+      const desde = new Date(Date.UTC(Math.floor(Math.min(ini, atual - 3) / 12), Math.min(ini, atual - 3) % 12, 1));
+      for (const nf of await col('_access_nfe_cabecalho').find({ NrFornec: nr, DataEntr: { $gte: desde } }).project({ DataEntr: 1, VrNota: 1 }).toArray()) {
+        const v = Number(nf.VrNota) || 0, d = new Date(nf.DataEntr), mm = d.getUTCFullYear() * 12 + d.getUTCMonth();
+        const k = idx(d); if (k >= 0) comprado[k] += v;
+        const u = mm - (atual - 3); if (u >= 0 && u < 3) ult[u] += v;
+      }
+      media3 = r2(ult.reduce((a, b) => a + b, 0) / 3); maior3 = r2(Math.max(...ult));
+      for (const p of await col('_access_ped_previsao').find({ NrFornec: nr }).toArray()) {
+        if (Number(p.Pos) || !p['Previsão']) continue;
+        const k = idx(p['Previsão']); if (k >= 0) previsto[k] += Number(p.VTotal) || 0;
+      }
+      comprado = comprado.map(r2); previsto = previsto.map(r2);
+    }
+    res.json({ codigo, meses, fluxo, fornecedor, comprado, previsto, media3, maior3 });
+  } catch (err) {
+    console.error('❌ /fluxo/meses:', err.message);
     res.status(500).json({ erro: err.message });
   }
 });

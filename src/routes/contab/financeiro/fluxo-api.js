@@ -1,4 +1,6 @@
-// src/routes/contab/financeiro/fluxo-api.js
+// Destino: C:\plataformaRota\src\routes\contab\financeiro\fluxo-api.js
+// Alterado em: 23/10/2026 - POS 6 = CARTOES A RECEBER DA OPERADORA (Jorge): entra como "a receber" (+) junto
+//              com o 1 e o 5. O 5 fica para o titulo a receber do cliente.
 // API da Tela do Fluxo de Caixa: lista lançamentos (projetados + futuros)
 // com saldo acumulado, filtrável por mês e ano.
 // Alterado em: 16/10/2026 - fica de fora o FLUXO DE SERVICO (origem 'OS': o a receber das OS),
@@ -34,6 +36,7 @@ const POS_INFO = {
   2: { rotulo: 'Compra pagar', cor: 'preto'    },
   3: { rotulo: 'Pedido feito', cor: 'preto'    },     // 19/10/2026: como no Access
   5: { rotulo: 'Título receber', cor: 'vermelho' },
+  6: { rotulo: 'Cartão operadora', cor: 'vermelho' },   // 23/10/2026: cartoes a receber da operadora
   7: { rotulo: 'Compra projetada', cor: 'preto' },   // 19/10/2026: previsao (programacao de compras)
   8: { rotulo: 'Orçamento',    cor: 'verde'    }
 };
@@ -201,7 +204,7 @@ router.get('/:ano', async (req, res) => {
       }).select('pos valor').lean();
 
       for (const it of anteriores) {
-        const ehEntrada = (it.pos === 5 || it.pos === 1);
+        const ehEntrada = (it.pos === 5 || it.pos === 1 || it.pos === 6);
         saldoAnterior += ehEntrada ? Math.abs(it.valor) : -Math.abs(it.valor);
       }
     }
@@ -213,8 +216,8 @@ router.get('/:ano', async (req, res) => {
 
     const linhas = itens.map((it, i) => {
       const info = POS_INFO[it.pos] || { rotulo: '?', cor: 'preto' };
-      // pos de recebimento (1,5) = entrada (+); demais = saída (-)
-      const ehEntrada = (it.pos === 5 || it.pos === 1);
+      // pos de recebimento (1, 5, 6) = entrada (+); demais = saída (-)
+      const ehEntrada = (it.pos === 5 || it.pos === 1 || it.pos === 6);
       const aReceber = ehEntrada ? Math.abs(it.valor) : 0;
       const aPagar   = ehEntrada ? 0 : -Math.abs(it.valor);
 
@@ -266,7 +269,7 @@ router.get('/:ano/resumo-mensal', async (req, res) => {
     const meses = Array.from({ length: 12 }, () => ({ receber: 0, pagar: 0 }));
     itens.forEach(it => {
       const idx = it.mes - 1;
-      const ehEntrada = (it.pos === 5 || it.pos === 1);
+      const ehEntrada = (it.pos === 5 || it.pos === 1 || it.pos === 6);
       if (ehEntrada) meses[idx].receber += Math.abs(it.valor);
       else meses[idx].pagar += Math.abs(it.valor);
     });

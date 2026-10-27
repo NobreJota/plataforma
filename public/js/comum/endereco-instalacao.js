@@ -14,6 +14,10 @@
 //       guardarRot: o <label> do checkbox (aparece so com endereco novo).
 //       Devolve { carregar(clienteId), ler(), guardarSeNovo() }
 //   EnderecoInst.form(container, prefixo)   monta os campos (para o modal da OS)
+// Alterado em: 24/10/2026 - botao 🔍 ao lado do CEP (Jorge: muito cadastro sem CEP): com o CEP vazio, busca pelo
+//              LOGRADOURO + CIDADE + UF no ViaCEP (viacep.com.br/ws/UF/cidade/rua/json): um so -> preenche CEP, rua,
+//              bairro, cidade, UF; varios (rua longa tem CEP por faixa de numero) -> lista para escolher (os do
+//              bairro digitado primeiro). Com CEP digitado, busca o endereco do CEP. Vale na venda e na OS.
 // API: GET/POST /vendas/api/venda/clientes/:id/enderecos · CEP: /aux/api/lookup/cep/:num
 // =============================================================================
 
@@ -83,9 +87,9 @@
     });
     // CEP: com 8 numeros busca rua, bairro, cidade e UF
     const cep = f('cep');
-    if (cep) cep.addEventListener('input', async () => {
+    async function buscarCep(forcar) {
       const d = cep.value.replace(/\D/g, '');
-      if (d.length !== 8 || d === ultimoCep) return;
+      if (d.length !== 8 || (d === ultimoCep && !forcar)) return;
       ultimoCep = d; aviso('🔍 buscando o CEP…');
       try {
         const r = await fetch('/aux/api/lookup/cep/' + d), j = await r.json().catch(() => ({}));
@@ -99,7 +103,79 @@
         f('numero').value = ''; aviso('✓ CEP encontrado: falta o número.');
         conferir(); f('numero').focus();
       } catch (e) { aviso('CEP: ' + e.message + ' — preencha o endereço.'); f('logradouro').focus(); }
-    });
+    }
+    if (cep) cep.addEventListener('input', () => buscarCep(false));
+
+    // 24/10/2026: 🔍 ao lado do CEP — CEP vazio: procura pela rua + cidade + UF; CEP digitado: busca o CEP
+    let lupa = null, listaCep = null;
+    const semAcento = v => String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    // tira o tipo do logradouro (o ViaCEP procura pelo nome): "Rua João de Oliveira Barros" -> "Joao de Oliveira Barros"
+    const nomeRua = v => semAcento(v).replace(/^\s*(rua|r\.|avenida|av\.?|travessa|tv\.?|alameda|al\.?|pra[cç]a|pc\.?|rodovia|rod\.?|estrada|est\.?|ladeira|beco|largo|via|vila|servid[aã]o)\s+/i, '')
+      .replace(/[^\w\s'-]/g, ' ').replace(/\s+/g, ' ').trim();
+    function fecharLista() { if (listaCep) { listaCep.remove(); listaCep = null; document.removeEventListener('mousedown', foraLista, true); } }
+    function foraLista(ev) { if (listaCep && !listaCep.contains(ev.target) && ev.target !== lupa) fecharLista(); }
+    function usar(x) {
+      fecharLista();
+      ultimoCep = String(x.cep || '').replace(/\D/g, '');
+      cep.value = cepFmt(ultimoCep);
+      if (x.logradouro) f('logradouro').value = x.logradouro;
+      if (x.bairro) f('bairro').value = x.bairro;
+      if (x.localidade) f('cidade').value = x.localidade;
+      if (x.uf) f('uf').value = String(x.uf).toUpperCase();
+      aviso('✓ CEP ' + cep.value + (f('numero').value ? '' : ' — falta o número.'));
+      conferir();
+      if (!f('numero').value) f('numero').focus();
+    }
+    async function procurarPelaRua() {
+      const e = ler();
+      if (cep.value.replace(/\D/g, '').length === 8) { buscarCep(true); return; }
+      const rua = nomeRua(e.logradouro), cid = semAcento(e.cidade).trim(), uf = e.uf;
+      if (rua.length < 3 || cid.length < 3 || !/^[A-Z]{2}$/.test(uf)) {
+        aviso('Para achar o CEP: preencha o logradouro, a cidade e a UF.'); return;
+      }
+      aviso('🔍 procurando o CEP de ' + e.logradouro + '…');
+      let r;
+      try {
+        const res = await fetch('https://viacep.com.br/ws/' + uf + '/' + encodeURIComponent(cid) + '/' + encodeURIComponent(rua) + '/json/');
+        r = await res.json();
+        if (!res.ok || !Array.isArray(r)) throw new Error('resposta inválida');
+      } catch (er) { aviso('Não consegui consultar o ViaCEP (' + er.message + ').'); return; }
+      if (!r.length) { aviso('Nenhum CEP para "' + e.logradouro + '" em ' + e.cidade + '/' + uf + '. Confira o nome da rua.'); return; }
+      // os do bairro digitado primeiro
+      const b = norm(semAcento(e.bairro));
+      const doBairro = x => b && norm(semAcento(x.bairro)).includes(b) ? 0 : 1;
+      r.sort((x, y) => doBairro(x) - doBairro(y) || String(x.cep).localeCompare(String(y.cep)));
+      if (r.length === 1 || (b && r.filter(x => doBairro(x) === 0).length === 1)) { usar(r[0]); return; }
+      aviso(r.length + ' CEPs para esta rua: escolha pela faixa de número e bairro.');
+      fecharLista();
+      listaCep = document.createElement('div');
+      const box = (lupa.parentNode).getBoundingClientRect();
+      listaCep.style.cssText = 'position:fixed;z-index:3000;background:#fff;border:1px solid #7c3aed;border-radius:8px;box-shadow:0 12px 30px rgba(0,0,0,.25);'
+        + 'max-height:300px;overflow:auto;min-width:420px;font-family:system-ui,sans-serif;font-size:13px';
+      listaCep.style.left = Math.max(8, Math.min(box.left, innerWidth - 440)) + 'px';
+      listaCep.style.top = Math.min(box.bottom + 4, innerHeight - 310) + 'px';
+      listaCep.innerHTML = r.map((x, k) => '<div data-k="' + k + '" style="padding:7px 10px;border-top:1px solid #f3f4f6;cursor:pointer' + (doBairro(x) === 0 ? ';background:#f5f3ff' : '') + '">'
+        + '<b>' + esc(cepFmt(x.cep)) + '</b> · ' + esc(x.logradouro) + (x.complemento ? ' <span style="color:#7c3aed">(' + esc(x.complemento) + ')</span>' : '')
+        + '<br><span style="color:#6b7280">' + esc(x.bairro) + ' · ' + esc(x.localidade) + '/' + esc(x.uf) + '</span></div>').join('');
+      listaCep.addEventListener('mouseover', ev => { const d = ev.target.closest('[data-k]'); listaCep.querySelectorAll('[data-k]').forEach(z => { z.style.outline = z === d ? '2px solid #c4b5fd' : ''; }); });
+      listaCep.addEventListener('click', ev => { const d = ev.target.closest('[data-k]'); if (d) usar(r[Number(d.dataset.k)]); });
+      document.body.appendChild(listaCep);
+      setTimeout(() => document.addEventListener('mousedown', foraLista, true), 0);
+    }
+    if (cep && cep.parentNode) {
+      // o CEP e o 🔍 lado a lado
+      const caixa = document.createElement('div');
+      caixa.style.cssText = 'display:flex;gap:4px;align-items:stretch;width:100%';
+      cep.parentNode.insertBefore(caixa, cep);
+      caixa.appendChild(cep);
+      cep.style.flex = '1 1 auto'; cep.style.minWidth = '0'; cep.style.width = 'auto';
+      lupa = document.createElement('button');
+      lupa.type = 'button'; lupa.textContent = '🔍'; lupa.tabIndex = -1;
+      lupa.title = 'CEP vazio: procura o CEP pela rua, cidade e UF · CEP digitado: busca o endereço';
+      lupa.style.cssText = 'flex:0 0 auto;border:1px solid #c4b5fd;background:#faf5ff;border-radius:6px;padding:0 9px;cursor:pointer;font-size:15px';
+      caixa.appendChild(lupa);
+      lupa.addEventListener('click', procurarPelaRua);
+    }
     CAMPOS.forEach(n => { const el = f(n); if (el && n !== 'cep') el.addEventListener('input', () => { if (n === 'numero') aviso(''); conferir(); }); });
     async function guardarSeNovo() {
       if (!clienteId || !op.guardar || !op.guardar.checked) return false;

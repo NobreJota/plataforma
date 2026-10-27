@@ -1,5 +1,7 @@
 {{!--
   Destino: C:\plataformaRota\views\contab\financeiro\fluxo.handlebars
+  Alterado em: 23/10/2026 - RECEBIMENTO EM PARTES: caixa "Valor recebido"; menor que o total guarda a parte
+               (lista em cima) e abre outra caixa com o que falta, com a sua forma (Banco · Caixa · Cartão)
   Alterado em: 23/10/2026 - modal de pagamento/recebimento arrasta pelo titulo (cursor de mover)
   Alterado em: 23/10/2026 - RECEBIMENTO: botoes Banco · Caixa · Cartão no modal; cada um mostra o seu quadro
                (banco: combo; caixa: 1.01.001.001 fixo; cartao: bandeira, debito/credito, parcelas e previa)
@@ -64,6 +66,9 @@
     </div>
     <div class="pag-modal-body">
       <!-- 23/10/2026: recebimento de titulo de cliente — como ele pagou -->
+      <!-- 23/10/2026: partes ja guardadas (ex.: 1. PIX BB 5.000,00) -->
+      <div class="pag-partes" id="pag-partes" hidden></div>
+
       <div class="pag-forma" id="pag-forma" hidden>
         <button type="button" data-forma="BANCO" class="ativo">🏦 Banco</button>
         <button type="button" data-forma="CAIXA">💵 Caixa</button>
@@ -83,7 +88,12 @@
           <span>Data do movimento</span>
           <input type="date" id="pag-data">
         </label>
+        <label class="pag-campo pag-campo-valor" id="pag-campo-valor" hidden>
+          <span>Valor recebido</span>
+          <input type="text" id="pag-parte-valor" inputmode="decimal" autocomplete="off">
+        </label>
       </div>
+      <div class="pag-falta" id="pag-falta" hidden></div>
 
       <!-- 23/10/2026: forma CARTAO — o titulo do cliente passa para a operadora (parcelas pos 5 no CEF/Armacao) -->
       <div class="pag-cartao" id="pag-cartao" hidden>
@@ -332,6 +342,16 @@
   .pag-liq input:disabled { background:#f3f4f6; }
   .pag-taxa { margin-top:10px; font-size:.85rem; color:#374151; line-height:1.45; }
   .pag-taxa b { color:#dc2626; }
+  /* 23/10/2026: recebimento em partes */
+  .pag-partes { border:1px solid #c7d2fe; background:#eef2ff; border-radius:8px; padding:6px 10px; margin-bottom:12px; }
+  .pag-partes[hidden], .pag-falta[hidden] { display:none; }
+  .pag-parte { display:flex; align-items:center; gap:10px; padding:4px 0; font-size:.88rem; }
+  .pag-parte + .pag-parte { border-top:1px solid #dbe1fe; }
+  .pag-parte span { flex:1; } .pag-parte b { font-variant-numeric:tabular-nums; }
+  .pag-parte button { border:0; background:none; color:#b91c1c; font-size:1.1rem; cursor:pointer; line-height:1; }
+  .pag-campo-valor { flex:0 0 170px; }
+  .pag-campo-valor input { text-align:right; font-weight:700; background:#fef9c3; border:2px solid #eab308; }
+  .pag-falta { margin:-6px 0 12px; font-size:.84rem; color:#374151; }
   /* 23/10/2026: forma de recebimento (Banco · Caixa · Cartão) */
   .pag-forma { display:flex; gap:8px; margin-bottom:14px; }
   .pag-forma[hidden], .pag-cartao[hidden], .pag-campo[hidden] { display:none; }

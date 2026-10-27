@@ -1,5 +1,7 @@
 // =============================================================================
 // Destino: C:\plataformaRota\src\routes\vendas\venda-api.js
+// Alterado em: 23/10/2026 - POS 6 (Jorge): as parcelas de CARTAO (debito e credito, conta 1.01.005.xxx) nascem
+//   com pos 6 = cartoes a receber da operadora. Titulo (PJ) e "a receber" continuam pos 5 (conta do cliente).
 // Alterado em: 23/10/2026 - GET /clientes devolve tambem edificio e apto (se tiver).
 // Alterado em: 23/10/2026 - exporta proximoNumeroOS (a Nova OS de conserto usa a mesma numeracao).
 // Alterado em: 22/10/2026 - VENDAS DO ACCESS (VENDA-11, origem ACCESS) no relatorio: sao so historico —
@@ -1349,7 +1351,7 @@ router.post('/:id/fechar', async (req, res) => {
           const linhas = await FluxoProjetado.insertMany(p.parcelas.map(x => ({
             lojistaId: loja,
             ano: x.vencimento.getFullYear(), mes: x.vencimento.getMonth() + 1,
-            pos: 5,
+            pos: (p.forma === 'DEBITO' || p.forma === 'CREDITO') ? 6 : 5,   // 23/10/2026: 6 = cartao (operadora)
             codigoConta: p.destino.codigo, nomeConta: p.destino.nome,
             historico: 'Venda ' + v.numero + ' ' + nomeCli + ' · ' + NOME_FORMA[p.forma],
             valor: x.valor / 100,

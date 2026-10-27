@@ -8,7 +8,8 @@
 //   DDA - paga               titulos a pagar vencendo hoje ou ja vencidos (ex.: sabado e domingo);
 //                            escolhe o banco, marca e paga (uma boleta: banco a credito)
 //   Vendas - receber         titulos de clientes em aberto; receber com juros/desconto (vendas-receber.js)
-//   Cartões - recebimento    (em breve)
+//   Cartões - recebimento    24/10/2026: parcelas de cartao a receber da operadora (pos 6) EM LOTE: duas listas,
+//                            clique passa de uma para a outra; recebido liquido e a taxa/juros (cartoes-receber.js)
 //   Mostrar no fluxo: Orçamento proj. (pos 8) · Compras proj. (pos 3) · Pedidos feitos (pos 7) — caixinhas;
 //                            escondido sai da grade e do saldo (fica guardado neste computador)
 //   19/10/2026 (Jorge): SAIU o "Mostrar no fluxo" — TODOS os lancamentos (0, 2, 3, 5, 7, 8...) aparecem
@@ -109,7 +110,7 @@
     + '<button type="button" class="sm-it" data-r="dda-confere" title="importar o CSV do DDA do banco e conferir com o fluxo">DDA - confere</button>'
     + '<button type="button" class="sm-it" data-r="dda-paga">DDA - paga</button>'
     + '<button type="button" class="sm-it" data-r="vendas-receber" title="títulos de clientes em aberto: receber com juros ou desconto">Vendas - receber</button>'
-    + '<button type="button" class="sm-it" disabled>Cartões - recebimento <small>em breve</small></button>';
+    + '<button type="button" class="sm-it" data-r="cartoes" title="parcelas de cartão a receber da operadora: receber em lote">Cartões - recebimento</button>';
   document.body.appendChild(menu);
   try { const p = JSON.parse(localStorage.getItem('fluxo-submenu-pos') || 'null'); if (p) { menu.style.left = p.l; menu.style.top = p.t; } } catch (e) { /* sem storage */ }
   arrastavel(menu, menu.querySelector('.sm-cab'), 'fluxo-submenu-pos');
@@ -119,6 +120,7 @@
     if (b.dataset.r === 'dda-paga') abrirDdaPaga();
     if (b.dataset.r === 'dda-confere') abrirDdaConfere();
     if (b.dataset.r === 'vendas-receber') carregarJs('VendasReceber', '/js/contab/contabil/financeiro/vendas-receber.js');
+    if (b.dataset.r === 'cartoes') carregarJs('CartoesReceber', '/js/contab/contabil/financeiro/cartoes-receber.js');
   });
   // arquivo carregado na primeira vez (vendas-receber.js, dda-confere.js)
   function carregarJs(nome, src) {

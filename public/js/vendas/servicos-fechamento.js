@@ -80,6 +80,8 @@
 // Alterado em: 17/10/2026 - espelho: a faixa do resultado virou APURACAO (botao, modal pequeno no canto):
 //              venda (vendido + mao de obra da empresa) - custo (vendido - voltou ao estoque) = lucro
 //              parcial; - material complementar = lucro final. A parte do tecnico fica fora.
+// Alterado em: 26/10/2026 - OS sem venda (conserto) com VALOR COMBINADO no modal da OS: a ficha ja vem com a
+//              mao de obra cobrada e a parte da empresa preenchidas (pode mudar; acrescimo na mao de obra adicional).
 // Alterado em: 17/10/2026 - a janela da ★ saiu daqui para /js/comum/config-contas.js (tambem na venda).
 // =============================================================================
 
@@ -202,7 +204,8 @@
 
     const moTxt = { VENDA: 'cobrada na venda nº ' + (o.venda ? o.venda.numero : '') + ' (não muda)',
                     JA_PARTILHADA: 'já dividida: técnico R$ ' + brl(d.parteTecnico) + ' · empresa R$ ' + brl(d.parteLoja),
-                    OS: 'cobrar do cliente agora (fluxo de serviço)',
+                    OS: mo.combinado ? 'combinado com o cliente na OS: R$ ' + brl(mo.valor) + ' (pode mudar; acréscimo na mão de obra adicional)'
+                        : 'cobrar do cliente agora (fluxo de serviço)',
                     // 17/10/2026: dividida na venda; a parte do tecnico esta "a apropriar"
                     APROPRIAR: 'dividida na venda nº ' + (o.venda ? o.venda.numero : '') + ': a parte do técnico (R$ ' + brl(mo.tecnico)
                       + ') sai da conta a apropriar ' + (mo.conta || '') + ' para a conta do técnico desta OS' }[mo.modo];
@@ -253,6 +256,8 @@
     if (o.terminoEm) { $('tdia').value = iso(o.terminoEm); $('thora').value = meiaHora(hora(o.terminoEm)); }
     opcoesHora();
     if (mo.modo === 'VENDA') $('emp').value = '';
+    // 26/10/2026: valor combinado com o cliente no modal da OS
+    if (mo.modo === 'OS' && mo.combinado) { $('mo').value = brl(mo.valor); $('emp').value = brl(mo.empresa || 0); }
     ligarEdicao(cons);
     recalcular();
   }

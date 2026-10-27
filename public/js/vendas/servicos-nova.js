@@ -10,6 +10,10 @@
 //      clique numa OS da plataforma abre o modal dela
 //   3. a OS: endereco do servico (vem o de cobranca do cliente), telefones, aparelho, defeito, observacao
 //      "Abrir OS" grava (POST /vendas/api/os/nova) e abre o modal da OS para tecnico, dia e horario.
+// 26/10/2026: "OS PENDENTES" no topo (todas as pendentes sem venda deste tipo; as incompletas primeiro, com o que
+//   falta; as completas com "completa · aguarda o serviço"). Antes: "OS POR COMPLETAR" no topo: as OS pendentes sem venda deste tipo faltando tecnico, dia, horario ou
+//   valor combinado (GET /vendas/api/os/incompletas?tipo=). Abrir = modal da OS; Cancelar = motivo
+//   (POST /vendas/api/os/:id/cancelar; consignado com o tecnico tem que voltar antes).
 // APIs: GET /vendas/api/venda/clientes?busca=&tipo=PF|PJ   GET /vendas/api/os/historico-cliente?cliente=
 //       POST /vendas/api/os/nova
 // =============================================================================
@@ -136,7 +140,7 @@
   $('hist-chips').addEventListener('click', ev => { const b = ev.target.closest('[data-ft]'); if (!b) return; filtroTipo = b.dataset.ft; desenharHist(); });
   $('hist').addEventListener('click', ev => {
     const tr = ev.target.closest('tr[data-id]');
-    if (tr && window.OSModal) window.OSModal.abrir(tr.dataset.id, () => historico());
+    if (tr && window.OSModal) window.OSModal.abrir(tr.dataset.id, () => { historico(); carregarIncompletas(); });
   });
   $('trocar').addEventListener('click', () => {
     cliente = null;
@@ -167,11 +171,53 @@
       rec.className = 'recado ok'; rec.textContent = '✓ OS nº ' + r.numero + ' aberta. Escolha técnico, dia e horário.';
       ['aparelho', 'defeito', 'observacao', 'codigoProduto'].forEach(id => { $(id).value = ''; });
       await historico();
-      if (window.OSModal) window.OSModal.abrir(r.id, () => historico());
+      carregarIncompletas();                                // 26/10/2026
+      if (window.OSModal) window.OSModal.abrir(r.id, () => { historico(); carregarIncompletas(); });
     } catch (e) {
       rec.className = 'recado erro'; rec.textContent = e.message;
     } finally { $('abrir').disabled = false; }
   });
+
+  // ---- 26/10/2026: OS por completar ----------------------------------------------
+  let incompletas = [];
+  async function carregarIncompletas() {
+    try { incompletas = (await api('/vendas/api/os/incompletas?tipo=' + encodeURIComponent(TIPO))).oss || []; }
+    catch (e) { incompletas = []; }
+    $('cx-incomp').hidden = !incompletas.length;
+    const nInc = incompletas.filter(o => o.falta.length).length;
+    $('incomp-n').textContent = incompletas.length ? '(' + incompletas.length + (nInc ? ' · ' + nInc + ' por completar' : '') + ')' : '';
+    $('cx-incomp').classList.toggle('tudo-ok', !nInc);
+    $('incomp').innerHTML = '<table><thead><tr><th>Nº OS</th><th>Aberta</th><th>Cliente</th><th>Aparelho / defeito</th><th>Situação</th><th></th></tr></thead><tbody>'
+      + incompletas.map((o, i) => '<tr><td><b>' + esc(o.numero) + '</b></td><td>' + br(o.aberta) + '</td><td>' + esc(o.cliente) + '</td>'
+        + '<td>' + esc(o.aparelho) + (o.defeito ? '<br><span class="cinza">' + esc(o.defeito) + '</span>' : '')
+        + (o.tecnicoNome ? '<br><span class="cinza">técnico: ' + esc(o.tecnicoNome) + (o.diaPrevisto ? ' · ' + br(o.diaPrevisto + 'T12:00:00Z') : '')
+          + (o.horaIni ? ' ' + esc(o.horaIni) + '–' + esc(o.horaFim) : '') + '</span>' : '')
+        + (o.valor ? '<br><span class="cinza">valor combinado: R$ ' + (o.valor / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + '</span>' : '') + '</td>'
+        + '<td>' + (o.falta.length ? o.falta.map(f => '<span class="falta">' + esc(f) + '</span>').join('') : '<span class="falta ok">completa · aguarda o serviço</span>') + (o.consignados ? '<br><span class="cinza">' + o.consignados + ' consignado(s) com o técnico</span>' : '') + '</td>'
+        + '<td style="text-align:right"><button type="button" class="mini abrir" data-ab="' + i + '">Abrir</button> '
+        + '<button type="button" class="mini canc" data-ca="' + i + '">Cancelar</button></td></tr>').join('')
+      + '</tbody></table>';
+  }
+  $('incomp').addEventListener('click', async ev => {
+    const ab = ev.target.closest('[data-ab]'), ca = ev.target.closest('[data-ca]');
+    if (ab) { const o = incompletas[Number(ab.dataset.ab)]; if (o && window.OSModal) window.OSModal.abrir(o.id, () => { carregarIncompletas(); if (cliente) historico(); }); return; }
+    if (!ca) return;
+    const o = incompletas[Number(ca.dataset.ca)]; if (!o) return;
+    if (o.consignados) { alert('A OS nº ' + o.numero + ' tem ' + o.consignados + ' consignado(s) com o técnico.\nAbra a OS e devolva ao estoque antes de cancelar.'); return; }
+    const motivo = prompt('CANCELAR a OS nº ' + o.numero + ' · ' + o.cliente + '\n' + o.aparelho + '\n\nMotivo (obrigatório):', 'cliente desistiu');
+    if (motivo === null) return;
+    if (motivo.trim().length < 3) { alert('Escreva o motivo.'); return; }
+    try {
+      await api('/vendas/api/os/' + encodeURIComponent(o.id) + '/cancelar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ motivo: motivo.trim() }) });
+      await carregarIncompletas();
+      if (cliente) historico();
+    } catch (e) { alert(e.message); }
+  });
+  // a lista se atualiza quando o modal da OS grava (o mesmo aviso que o historico usa)
+  window.addEventListener('os-mudou', carregarIncompletas);
+  window.addEventListener('os-modal-fechou', carregarIncompletas);          // fechou o modal: confere de novo
+  window.addEventListener('focus', carregarIncompletas);                    // voltou de outra aba/janela
+  carregarIncompletas();
 
   $('busca').focus();
 })();

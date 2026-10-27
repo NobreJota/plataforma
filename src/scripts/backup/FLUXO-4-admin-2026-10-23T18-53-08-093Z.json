@@ -1,0 +1,9896 @@
+[
+ {
+  "_id": {
+   "$oid": "6ac16a30fac41f50d448bb27"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "10"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 5 balcão · débito",
+  "valor": {
+   "$numberDouble": "229.88"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1791039600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "1"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac169e6fac41f50d448bb09"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791060528785"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791060528785"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac16a6afac41f50d448bb49"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 4 Elenice Biccas Zucchi · crédito",
+  "valor": {
+   "$numberDouble": "517.44"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1793631600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac10b337cbe7ef38dbb7f9d"
+  },
+  "boletaId": {
+   "$oid": "6aca372d8fdaffb57559710e"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791637293506"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791060586325"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791637293507"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3ad176794cf6beb571547"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 2 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "403.91"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1793804400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0f22b03e50e9cbee23ec7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791208727879"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791208727879"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3e68d9d37aa706e8b0647"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 1 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "62.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1793804400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0e9abd182ea948a485b25"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f306dd95e32637cebab"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 7 Abinair Maria Callegari · crédito",
+  "valor": {
+   "$numberDouble": "442.37"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1793804400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f256dd95e32637ceb90"
+  },
+  "boletaId": {
+   "$oid": "6ac69b4f14e1e489ccf01a38"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791400783331"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791400783332"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f5e6dd95e32637cebd1"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 8 balcão · crédito",
+  "valor": {
+   "$numberDouble": "531.34"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1793804400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f4b6dd95e32637cebc0"
+  },
+  "boletaId": {
+   "$oid": "6ac41899b515624942e6cbd9"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791236249597"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233886285"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791236249598"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40fc56dd95e32637cec01"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 9 Aline Ribeiro Pedroni · crédito",
+  "valor": {
+   "$numberDouble": "242.56"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1793804400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40fbc6dd95e32637cebe6"
+  },
+  "boletaId": {
+   "$oid": "6ac559cb19073e48f2320d90"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791318476133"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233989094"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791318476134"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac69f80fe539e667a7a43b5"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 11 balcão · crédito",
+  "valor": {
+   "$numberDouble": "21.14"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1793966400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac69f5890046b59111bca62"
+  },
+  "boletaId": {
+   "$oid": "6ac6a074fe539e667a7a43c7"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791402100968"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791401856565"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791402100969"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac69f816fa10f76db2d24a9"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 12 balcão · crédito",
+  "valor": {
+   "$numberDouble": "28.56"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1793977200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac69f586fa10f76db2d2496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791401857811"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791401857811"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6aca3fd10d99d7f7a7d8165c"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 20 Rigoberto Duarte Baptista · crédito",
+  "valor": {
+   "$numberInt": "500"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794236400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6aca3fbe0d99d7f7a7d81647"
+  },
+  "boletaId": {
+   "$oid": "6aca40220d99d7f7a7d8168f"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791639586334"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791639505721"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791639586335"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acaab4d39dc524ad1c224ad"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 22 Aristides do Couto Neto · crédito",
+  "valor": {
+   "$numberInt": "550"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794236400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acaab3f39dc524ad1c22496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791667021951"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791667021951"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3d93a7cbbdd9233a4517"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 23 Flávio de Jesus Julião · crédito",
+  "valor": {
+   "$numberDouble": "338.41"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794495600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace39a6249d9c5ac27223aa"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901075959"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901075959"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3ecea7cbbdd9233a4558"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 24 Aloisio Claudino · crédito",
+  "valor": {
+   "$numberDouble": "968.72"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794495600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace3e66a7cbbdd9233a453b"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfb0fbc1ffb44fe8cf3749"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 28 Jamily Trevisani Sperandio · crédito",
+  "valor": {
+   "$numberDouble": "832.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794571200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfb03ad61cda4197552866"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfb68bd61cda41975528cd"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 29 Jamily Trevisani Sperandio · crédito",
+  "valor": {
+   "$numberInt": "8327"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794571200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "1"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfb657d61cda41975528b1"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791997579392"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791997579392"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfba77c1ffb44fe8cf37ef"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 30 Carlos Eduardo Maioli Santos · crédito",
+  "valor": {
+   "$numberDouble": "547.5"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794571200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "4"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfba27c1ffb44fe8cf37c7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791998583196"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791998583196"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfe8b4c1ffb44fe8cf3862"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 32 Adalto Correa Stos · crédito",
+  "valor": {
+   "$numberDouble": "963.51"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794571200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "5"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfe89ad61cda4197552973"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792010420256"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792010420256"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acf8b92549845fe5b36b8c1"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 26 Claudia Souza Bortolote · crédito",
+  "valor": {
+   "$numberDouble": "416.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794582000000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acf89d7549845fe5b36b8a1"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfd93342bd69d01bd799da"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 31 AMG. Engenharia ltda · crédito",
+  "valor": {
+   "$numberDouble": "933.34"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794582000000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfd90f42bd69d01bd799bb"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792006451464"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792006451464"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11699c1ffb44fe8cf38e0"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 34 Elias Fernando de Araujo Colnago · crédito",
+  "valor": {
+   "$numberDouble": "472.33"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794657600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11624d61cda41975529e0"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792087705059"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792087705059"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11b2bc1ffb44fe8cf3922"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 35 Paula Comerio · crédito",
+  "valor": {
+   "$numberDouble": "335.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794657600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11af5c1ffb44fe8cf3902"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792088875515"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792088875515"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad139f75cd1ad6d665a99d1"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 37 Suzana Denise Zanandrea Borgo · crédito",
+  "valor": {
+   "$numberDouble": "424.57"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794668400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad139e55cd1ad6d665a99af"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad228cdf1f078aeb23c63b0"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 38 Wanda Barroso dos Reis · crédito",
+  "valor": {
+   "$numberDouble": "403.02"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794754800000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad2288df1f078aeb23c638e"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad3ea298147cb4b414b133a"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 40 balcão · crédito",
+  "valor": {
+   "$numberDouble": "733.06"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794841200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad3ea168147cb4b414b1323"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "CANCELADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "canceladoEm": {
+   "$date": {
+    "$numberLong": "1792326845875"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad4d21350290aa09787f777"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 42 Marcia Bumachar · crédito",
+  "valor": {
+   "$numberDouble": "278.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1794927600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad4d1ef50290aa09787f74d"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792332307789"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792332307789"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad760a787e8775ee70a0cb0"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 47 balcão · crédito",
+  "valor": {
+   "$numberDouble": "217.82"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1795089600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "1"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad7605287e8775ee70a0c9c"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792499879891"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792499879891"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad76f5687e8775ee70a0cd4"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 48 Marcos Assef do Vale Depes · crédito",
+  "valor": {
+   "$numberInt": "6242"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1795089600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "1"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad76f3387e8775ee70a0cc3"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792503638400"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792503638400"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad8c49c69d9c7c5fa7168cf"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "11"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 49 balcão · crédito",
+  "valor": {
+   "$numberDouble": "19.98"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1795176000000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "1"
+  },
+  "totalParcelas": {
+   "$numberInt": "1"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad8c46769d9c7c5fa7168c1"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792591004438"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792591004438"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac16a6afac41f50d448bb4a"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 4 Elenice Biccas Zucchi · crédito",
+  "valor": {
+   "$numberDouble": "517.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1796223600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac10b337cbe7ef38dbb7f9d"
+  },
+  "boletaId": {
+   "$oid": "6ac555fadba733412504a2c3"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791317498811"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791060586325"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791317498812"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3ad176794cf6beb571548"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 2 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "403.85"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1796396400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0f22b03e50e9cbee23ec7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3e68d9d37aa706e8b0648"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 1 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "62.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1796396400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0e9abd182ea948a485b25"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f306dd95e32637cebac"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 7 Abinair Maria Callegari · crédito",
+  "valor": {
+   "$numberDouble": "442.31"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1796396400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f256dd95e32637ceb90"
+  },
+  "boletaId": {
+   "$oid": "6ac55539dba733412504a299"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791317305810"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791317305810"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f5e6dd95e32637cebd2"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 8 balcão · crédito",
+  "valor": {
+   "$numberDouble": "531.33"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1796396400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f4b6dd95e32637cebc0"
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233886285"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791317174582"
+   }
+  },
+  "boletaId": {
+   "$oid": "6ac554b6dba733412504a272"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791317174580"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40fc56dd95e32637cec02"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 9 Aline Ribeiro Pedroni · crédito",
+  "valor": {
+   "$numberDouble": "242.54"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1796396400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40fbc6dd95e32637cebe6"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233989094"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233989094"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac69f80fe539e667a7a43b6"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 11 balcão · crédito",
+  "valor": {
+   "$numberDouble": "21.13"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1796558400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac69f5890046b59111bca62"
+  },
+  "boletaId": {
+   "$oid": "6ac6a074fe539e667a7a43c7"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791402100968"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791401856565"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791402100969"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac69f816fa10f76db2d24aa"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 12 balcão · crédito",
+  "valor": {
+   "$numberDouble": "28.56"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1796569200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac69f586fa10f76db2d2496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791401857812"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791401857812"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6aca3fd10d99d7f7a7d8165d"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 20 Rigoberto Duarte Baptista · crédito",
+  "valor": {
+   "$numberInt": "500"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1796828400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6aca3fbe0d99d7f7a7d81647"
+  },
+  "boletaId": {
+   "$oid": "6aca40220d99d7f7a7d8168f"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791639586334"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791639505721"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791639586335"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acaab4d39dc524ad1c224ae"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 22 Aristides do Couto Neto · crédito",
+  "valor": {
+   "$numberInt": "550"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1796828400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acaab3f39dc524ad1c22496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791667021951"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791667021951"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3d93a7cbbdd9233a4518"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 23 Flávio de Jesus Julião · crédito",
+  "valor": {
+   "$numberDouble": "338.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797087600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace39a6249d9c5ac27223aa"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901075959"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901075959"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3ecea7cbbdd9233a4559"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 24 Aloisio Claudino · crédito",
+  "valor": {
+   "$numberDouble": "968.71"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797087600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace3e66a7cbbdd9233a453b"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfb0fbc1ffb44fe8cf374a"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 28 Jamily Trevisani Sperandio · crédito",
+  "valor": {
+   "$numberDouble": "832.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797163200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfb03ad61cda4197552866"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfba77c1ffb44fe8cf37f0"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 30 Carlos Eduardo Maioli Santos · crédito",
+  "valor": {
+   "$numberDouble": "547.5"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797163200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "4"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfba27c1ffb44fe8cf37c7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791998583197"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791998583197"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfe8b4c1ffb44fe8cf3863"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 32 Adalto Correa Stos · crédito",
+  "valor": {
+   "$numberDouble": "963.5"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797163200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "5"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfe89ad61cda4197552973"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792010420257"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792010420257"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acf8b92549845fe5b36b8c2"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 26 Claudia Souza Bortolote · crédito",
+  "valor": {
+   "$numberDouble": "416.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797174000000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acf89d7549845fe5b36b8a1"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfd93342bd69d01bd799db"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 31 AMG. Engenharia ltda · crédito",
+  "valor": {
+   "$numberDouble": "933.33"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797174000000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfd90f42bd69d01bd799bb"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792006451465"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792006451465"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11699c1ffb44fe8cf38e1"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 34 Elias Fernando de Araujo Colnago · crédito",
+  "valor": {
+   "$numberDouble": "472.29"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797249600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11624d61cda41975529e0"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792087705059"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792087705059"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11b2bc1ffb44fe8cf3923"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 35 Paula Comerio · crédito",
+  "valor": {
+   "$numberDouble": "335.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797249600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11af5c1ffb44fe8cf3902"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792088875515"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792088875515"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad139f75cd1ad6d665a99d2"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 37 Suzana Denise Zanandrea Borgo · crédito",
+  "valor": {
+   "$numberDouble": "424.52"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797260400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad139e55cd1ad6d665a99af"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad228cdf1f078aeb23c63b1"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 38 Wanda Barroso dos Reis · crédito",
+  "valor": {
+   "$numberDouble": "402.98"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797346800000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad2288df1f078aeb23c638e"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad3ea298147cb4b414b133b"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 40 balcão · crédito",
+  "valor": {
+   "$numberInt": "733"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797433200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad3ea168147cb4b414b1323"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "CANCELADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "canceladoEm": {
+   "$date": {
+    "$numberLong": "1792326845875"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad4d21350290aa09787f778"
+  },
+  "ano": {
+   "$numberInt": "2026"
+  },
+  "mes": {
+   "$numberInt": "12"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 42 Marcia Bumachar · crédito",
+  "valor": {
+   "$numberDouble": "278.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1797519600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "2"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad4d1ef50290aa09787f74d"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac16a6afac41f50d448bb4b"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 4 Elenice Biccas Zucchi · crédito",
+  "valor": {
+   "$numberDouble": "517.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1798815600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac10b337cbe7ef38dbb7f9d"
+  },
+  "boletaId": {
+   "$oid": "6aca372d8fdaffb57559710e"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791637293506"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791060586325"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791637293507"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3ad176794cf6beb571549"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 2 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "403.85"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1798988400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0f22b03e50e9cbee23ec7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3e68d9d37aa706e8b0649"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 1 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "62.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1798988400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0e9abd182ea948a485b25"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f306dd95e32637cebad"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 7 Abinair Maria Callegari · crédito",
+  "valor": {
+   "$numberDouble": "442.31"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1798988400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f256dd95e32637ceb90"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f5e6dd95e32637cebd3"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 8 balcão · crédito",
+  "valor": {
+   "$numberDouble": "531.33"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1798988400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f4b6dd95e32637cebc0"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233886285"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233886285"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40fc56dd95e32637cec03"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 9 Aline Ribeiro Pedroni · crédito",
+  "valor": {
+   "$numberDouble": "242.54"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1798988400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40fbc6dd95e32637cebe6"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233989094"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233989094"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac69f80fe539e667a7a43b7"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 11 balcão · crédito",
+  "valor": {
+   "$numberDouble": "21.13"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799150400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac69f5890046b59111bca62"
+  },
+  "boletaId": {
+   "$oid": "6ac6a074fe539e667a7a43c7"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791402100968"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791401856567"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791402100969"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac69f816fa10f76db2d24ab"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 12 balcão · crédito",
+  "valor": {
+   "$numberDouble": "28.56"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799161200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac69f586fa10f76db2d2496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791401857812"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791401857812"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6aca3fd10d99d7f7a7d8165e"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 20 Rigoberto Duarte Baptista · crédito",
+  "valor": {
+   "$numberInt": "500"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799420400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6aca3fbe0d99d7f7a7d81647"
+  },
+  "boletaId": {
+   "$oid": "6aca40220d99d7f7a7d8168f"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791639586334"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791639505721"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791639586335"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acaab4d39dc524ad1c224af"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 22 Aristides do Couto Neto · crédito",
+  "valor": {
+   "$numberInt": "550"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799420400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acaab3f39dc524ad1c22496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791667021951"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791667021951"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3d93a7cbbdd9233a4519"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 23 Flávio de Jesus Julião · crédito",
+  "valor": {
+   "$numberDouble": "338.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799679600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace39a6249d9c5ac27223aa"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901075960"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901075960"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3ecea7cbbdd9233a455a"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 24 Aloisio Claudino · crédito",
+  "valor": {
+   "$numberDouble": "968.71"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799679600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace3e66a7cbbdd9233a453b"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfb0fbc1ffb44fe8cf374b"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 28 Jamily Trevisani Sperandio · crédito",
+  "valor": {
+   "$numberDouble": "832.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799755200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfb03ad61cda4197552866"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfba77c1ffb44fe8cf37f1"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 30 Carlos Eduardo Maioli Santos · crédito",
+  "valor": {
+   "$numberDouble": "547.5"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799755200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "4"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfba27c1ffb44fe8cf37c7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791998583197"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791998583197"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfe8b4c1ffb44fe8cf3864"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 32 Adalto Correa Stos · crédito",
+  "valor": {
+   "$numberDouble": "963.5"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799755200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "5"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfe89ad61cda4197552973"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792010420257"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792010420257"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acf8b92549845fe5b36b8c3"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 26 Claudia Souza Bortolote · crédito",
+  "valor": {
+   "$numberDouble": "416.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799766000000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acf89d7549845fe5b36b8a1"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfd93342bd69d01bd799dc"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 31 AMG. Engenharia ltda · crédito",
+  "valor": {
+   "$numberDouble": "933.33"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799766000000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "3"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfd90f42bd69d01bd799bb"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792006451465"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792006451465"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11699c1ffb44fe8cf38e2"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 34 Elias Fernando de Araujo Colnago · crédito",
+  "valor": {
+   "$numberDouble": "472.29"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799841600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11624d61cda41975529e0"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792087705060"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792087705060"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11b2bc1ffb44fe8cf3924"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 35 Paula Comerio · crédito",
+  "valor": {
+   "$numberDouble": "335.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799841600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11af5c1ffb44fe8cf3902"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792088875515"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792088875515"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad139f75cd1ad6d665a99d3"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 37 Suzana Denise Zanandrea Borgo · crédito",
+  "valor": {
+   "$numberDouble": "424.52"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799852400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad139e55cd1ad6d665a99af"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad228cdf1f078aeb23c63b2"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 38 Wanda Barroso dos Reis · crédito",
+  "valor": {
+   "$numberDouble": "402.98"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1799938800000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad2288df1f078aeb23c638e"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad3ea298147cb4b414b133c"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 40 balcão · crédito",
+  "valor": {
+   "$numberInt": "733"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1800025200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad3ea168147cb4b414b1323"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "CANCELADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "canceladoEm": {
+   "$date": {
+    "$numberLong": "1792326845875"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad4d21350290aa09787f779"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 42 Marcia Bumachar · crédito",
+  "valor": {
+   "$numberDouble": "278.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1800111600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "3"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad4d1ef50290aa09787f74d"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac16a6afac41f50d448bb4c"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "1"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 4 Elenice Biccas Zucchi · crédito",
+  "valor": {
+   "$numberDouble": "517.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1801407600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac10b337cbe7ef38dbb7f9d"
+  },
+  "boletaId": {
+   "$oid": "6aca372d8fdaffb57559710e"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791637293506"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791060586325"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791637293507"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3ad176794cf6beb57154a"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 2 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "403.85"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1801580400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0f22b03e50e9cbee23ec7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3e68d9d37aa706e8b064a"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 1 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "62.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1801580400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0e9abd182ea948a485b25"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f306dd95e32637cebae"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 7 Abinair Maria Callegari · crédito",
+  "valor": {
+   "$numberDouble": "442.31"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1801580400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f256dd95e32637ceb90"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40fc56dd95e32637cec04"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 9 Aline Ribeiro Pedroni · crédito",
+  "valor": {
+   "$numberDouble": "242.54"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1801580400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40fbc6dd95e32637cebe6"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233989094"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233989094"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6aca3fd10d99d7f7a7d8165f"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 20 Rigoberto Duarte Baptista · crédito",
+  "valor": {
+   "$numberInt": "500"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802012400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6aca3fbe0d99d7f7a7d81647"
+  },
+  "boletaId": {
+   "$oid": "6aca40220d99d7f7a7d8168f"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791639586334"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791639505721"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791639586335"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acaab4d39dc524ad1c224b0"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 22 Aristides do Couto Neto · crédito",
+  "valor": {
+   "$numberInt": "550"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802012400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acaab3f39dc524ad1c22496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3d93a7cbbdd9233a451a"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 23 Flávio de Jesus Julião · crédito",
+  "valor": {
+   "$numberDouble": "338.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802271600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace39a6249d9c5ac27223aa"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901075960"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901075960"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3ecea7cbbdd9233a455b"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 24 Aloisio Claudino · crédito",
+  "valor": {
+   "$numberDouble": "968.71"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802271600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace3e66a7cbbdd9233a453b"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfb0fbc1ffb44fe8cf374c"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 28 Jamily Trevisani Sperandio · crédito",
+  "valor": {
+   "$numberDouble": "832.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802347200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfb03ad61cda4197552866"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfba77c1ffb44fe8cf37f2"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 30 Carlos Eduardo Maioli Santos · crédito",
+  "valor": {
+   "$numberDouble": "547.5"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802347200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "4"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfba27c1ffb44fe8cf37c7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791998583197"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791998583197"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfe8b4c1ffb44fe8cf3865"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 32 Adalto Correa Stos · crédito",
+  "valor": {
+   "$numberDouble": "963.5"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802347200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "5"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfe89ad61cda4197552973"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792010420257"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792010420257"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acf8b92549845fe5b36b8c4"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 26 Claudia Souza Bortolote · crédito",
+  "valor": {
+   "$numberDouble": "416.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802358000000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acf89d7549845fe5b36b8a1"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11699c1ffb44fe8cf38e3"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 34 Elias Fernando de Araujo Colnago · crédito",
+  "valor": {
+   "$numberDouble": "472.29"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802433600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11624d61cda41975529e0"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792087705060"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792087705060"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11b2bc1ffb44fe8cf3925"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 35 Paula Comerio · crédito",
+  "valor": {
+   "$numberDouble": "335.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802433600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11af5c1ffb44fe8cf3902"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad139f75cd1ad6d665a99d4"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 37 Suzana Denise Zanandrea Borgo · crédito",
+  "valor": {
+   "$numberDouble": "424.52"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802444400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad139e55cd1ad6d665a99af"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad228cdf1f078aeb23c63b3"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 38 Wanda Barroso dos Reis · crédito",
+  "valor": {
+   "$numberDouble": "402.98"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802530800000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad2288df1f078aeb23c638e"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad3ea298147cb4b414b133d"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 40 balcão · crédito",
+  "valor": {
+   "$numberInt": "733"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802617200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad3ea168147cb4b414b1323"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "CANCELADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "canceladoEm": {
+   "$date": {
+    "$numberLong": "1792326845875"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad4d21350290aa09787f77a"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "2"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 42 Marcia Bumachar · crédito",
+  "valor": {
+   "$numberDouble": "278.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1802703600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "4"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad4d1ef50290aa09787f74d"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac16a6afac41f50d448bb4d"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 4 Elenice Biccas Zucchi · crédito",
+  "valor": {
+   "$numberDouble": "517.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1803999600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac10b337cbe7ef38dbb7f9d"
+  },
+  "boletaId": {
+   "$oid": "6aca372d8fdaffb57559710e"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791637293506"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791060586325"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791637293507"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3ad176794cf6beb57154b"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 2 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "403.85"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1804172400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0f22b03e50e9cbee23ec7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3e68d9d37aa706e8b064b"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 1 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "62.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1804172400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0e9abd182ea948a485b25"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f306dd95e32637cebaf"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 7 Abinair Maria Callegari · crédito",
+  "valor": {
+   "$numberDouble": "442.31"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1804172400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f256dd95e32637ceb90"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40fc56dd95e32637cec05"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 9 Aline Ribeiro Pedroni · crédito",
+  "valor": {
+   "$numberDouble": "242.54"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1804172400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40fbc6dd95e32637cebe6"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233989094"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233989094"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6aca3fd10d99d7f7a7d81660"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 20 Rigoberto Duarte Baptista · crédito",
+  "valor": {
+   "$numberInt": "500"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1804604400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6aca3fbe0d99d7f7a7d81647"
+  },
+  "boletaId": {
+   "$oid": "6aca40220d99d7f7a7d8168f"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791639586334"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791639505721"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791639586335"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acaab4d39dc524ad1c224b1"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 22 Aristides do Couto Neto · crédito",
+  "valor": {
+   "$numberInt": "550"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1804604400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acaab3f39dc524ad1c22496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3d93a7cbbdd9233a451b"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 23 Flávio de Jesus Julião · crédito",
+  "valor": {
+   "$numberDouble": "338.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1804863600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace39a6249d9c5ac27223aa"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901075960"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901075960"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3ecea7cbbdd9233a455c"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 24 Aloisio Claudino · crédito",
+  "valor": {
+   "$numberDouble": "968.71"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1804863600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace3e66a7cbbdd9233a453b"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfb0fbc1ffb44fe8cf374d"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 28 Jamily Trevisani Sperandio · crédito",
+  "valor": {
+   "$numberDouble": "832.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1804939200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfb03ad61cda4197552866"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfe8b4c1ffb44fe8cf3866"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 32 Adalto Correa Stos · crédito",
+  "valor": {
+   "$numberDouble": "963.5"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1804939200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "5"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfe89ad61cda4197552973"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792010420257"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792010420257"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acf8b92549845fe5b36b8c5"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 26 Claudia Souza Bortolote · crédito",
+  "valor": {
+   "$numberDouble": "416.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1804950000000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acf89d7549845fe5b36b8a1"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11699c1ffb44fe8cf38e4"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 34 Elias Fernando de Araujo Colnago · crédito",
+  "valor": {
+   "$numberDouble": "472.29"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1805025600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11624d61cda41975529e0"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792087705060"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792087705060"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11b2bc1ffb44fe8cf3926"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 35 Paula Comerio · crédito",
+  "valor": {
+   "$numberDouble": "335.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1805025600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11af5c1ffb44fe8cf3902"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad139f75cd1ad6d665a99d5"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 37 Suzana Denise Zanandrea Borgo · crédito",
+  "valor": {
+   "$numberDouble": "424.52"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1805036400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad139e55cd1ad6d665a99af"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad228cdf1f078aeb23c63b4"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 38 Wanda Barroso dos Reis · crédito",
+  "valor": {
+   "$numberDouble": "402.98"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1805122800000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad2288df1f078aeb23c638e"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad3ea298147cb4b414b133e"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 40 balcão · crédito",
+  "valor": {
+   "$numberInt": "733"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1805209200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad3ea168147cb4b414b1323"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "CANCELADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "canceladoEm": {
+   "$date": {
+    "$numberLong": "1792326845875"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad4d21350290aa09787f77b"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "3"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 42 Marcia Bumachar · crédito",
+  "valor": {
+   "$numberDouble": "278.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1805295600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "5"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad4d1ef50290aa09787f74d"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac16a6afac41f50d448bb4e"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 4 Elenice Biccas Zucchi · crédito",
+  "valor": {
+   "$numberDouble": "517.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1806591600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac10b337cbe7ef38dbb7f9d"
+  },
+  "boletaId": {
+   "$oid": "6aca372d8fdaffb57559710e"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791637293506"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791060586325"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791637293507"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3ad176794cf6beb57154c"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 2 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "403.85"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1806764400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0f22b03e50e9cbee23ec7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3e68d9d37aa706e8b064c"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 1 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "62.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1806764400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0e9abd182ea948a485b25"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791223437715"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f306dd95e32637cebb0"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 7 Abinair Maria Callegari · crédito",
+  "valor": {
+   "$numberDouble": "442.31"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1806764400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f256dd95e32637ceb90"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40fc56dd95e32637cec06"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 9 Aline Ribeiro Pedroni · crédito",
+  "valor": {
+   "$numberDouble": "242.54"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1806764400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40fbc6dd95e32637cebe6"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233989094"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233989094"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6aca3fd10d99d7f7a7d81661"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 20 Rigoberto Duarte Baptista · crédito",
+  "valor": {
+   "$numberInt": "500"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807196400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6aca3fbe0d99d7f7a7d81647"
+  },
+  "boletaId": {
+   "$oid": "6aca40220d99d7f7a7d8168f"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791639586334"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791639505721"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791639586335"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acaab4d39dc524ad1c224b2"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 22 Aristides do Couto Neto · crédito",
+  "valor": {
+   "$numberInt": "550"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807196400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acaab3f39dc524ad1c22496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3d93a7cbbdd9233a451c"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 23 Flávio de Jesus Julião · crédito",
+  "valor": {
+   "$numberDouble": "338.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807455600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace39a6249d9c5ac27223aa"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901075960"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901075960"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ace3ecea7cbbdd9233a455d"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 24 Aloisio Claudino · crédito",
+  "valor": {
+   "$numberDouble": "968.71"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807455600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ace3e66a7cbbdd9233a453b"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791901390529"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfb0fbc1ffb44fe8cf374e"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 28 Jamily Trevisani Sperandio · crédito",
+  "valor": {
+   "$numberDouble": "832.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807531200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfb03ad61cda4197552866"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acf8b92549845fe5b36b8c6"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 26 Claudia Souza Bortolote · crédito",
+  "valor": {
+   "$numberDouble": "416.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807542000000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acf89d7549845fe5b36b8a1"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791986578418"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11699c1ffb44fe8cf38e5"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 34 Elias Fernando de Araujo Colnago · crédito",
+  "valor": {
+   "$numberDouble": "472.29"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807617600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11624d61cda41975529e0"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792087705060"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792087705060"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11b2bc1ffb44fe8cf3927"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 35 Paula Comerio · crédito",
+  "valor": {
+   "$numberDouble": "335.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807617600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11af5c1ffb44fe8cf3902"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad139f75cd1ad6d665a99d6"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 37 Suzana Denise Zanandrea Borgo · crédito",
+  "valor": {
+   "$numberDouble": "424.52"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807628400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad139e55cd1ad6d665a99af"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792096759927"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad228cdf1f078aeb23c63b5"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 38 Wanda Barroso dos Reis · crédito",
+  "valor": {
+   "$numberDouble": "402.98"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807714800000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "6"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad2288df1f078aeb23c638e"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792157901518"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad3ea298147cb4b414b133f"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 40 balcão · crédito",
+  "valor": {
+   "$numberInt": "733"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807801200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad3ea168147cb4b414b1323"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "CANCELADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "canceladoEm": {
+   "$date": {
+    "$numberLong": "1792326845875"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad4d21350290aa09787f77c"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "4"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 42 Marcia Bumachar · crédito",
+  "valor": {
+   "$numberDouble": "278.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1807887600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "6"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad4d1ef50290aa09787f74d"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac16a6afac41f50d448bb4f"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "5"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 4 Elenice Biccas Zucchi · crédito",
+  "valor": {
+   "$numberDouble": "517.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1809183600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "7"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac10b337cbe7ef38dbb7f9d"
+  },
+  "boletaId": {
+   "$oid": "6aca372d8fdaffb57559710e"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791637293506"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791060586325"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791637293507"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3ad176794cf6beb57154d"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "5"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 2 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "403.85"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1809356400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "7"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0f22b03e50e9cbee23ec7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f306dd95e32637cebb1"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "5"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 7 Abinair Maria Callegari · crédito",
+  "valor": {
+   "$numberDouble": "442.31"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1809356400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "7"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f256dd95e32637ceb90"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6aca3fd10d99d7f7a7d81662"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "5"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 20 Rigoberto Duarte Baptista · crédito",
+  "valor": {
+   "$numberInt": "500"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1809788400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "7"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6aca3fbe0d99d7f7a7d81647"
+  },
+  "boletaId": {
+   "$oid": "6aca40220d99d7f7a7d8168f"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791639586334"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791639505721"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791639586335"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acaab4d39dc524ad1c224b3"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "5"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 22 Aristides do Couto Neto · crédito",
+  "valor": {
+   "$numberInt": "550"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1809788400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "7"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acaab3f39dc524ad1c22496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfb0fbc1ffb44fe8cf374f"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "5"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 28 Jamily Trevisani Sperandio · crédito",
+  "valor": {
+   "$numberDouble": "832.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1810123200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "7"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfb03ad61cda4197552866"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791996155608"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11b2bc1ffb44fe8cf3928"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "5"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 35 Paula Comerio · crédito",
+  "valor": {
+   "$numberDouble": "335.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1810209600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "7"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11af5c1ffb44fe8cf3902"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad3ea298147cb4b414b1340"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "5"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 40 balcão · crédito",
+  "valor": {
+   "$numberInt": "733"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1810393200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "7"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad3ea168147cb4b414b1323"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "CANCELADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "canceladoEm": {
+   "$date": {
+    "$numberLong": "1792326845875"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad4d21350290aa09787f77d"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "5"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 42 Marcia Bumachar · crédito",
+  "valor": {
+   "$numberDouble": "278.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1810479600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "7"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad4d1ef50290aa09787f74d"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac16a6afac41f50d448bb50"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "5"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 4 Elenice Biccas Zucchi · crédito",
+  "valor": {
+   "$numberDouble": "517.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1811775600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "8"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac10b337cbe7ef38dbb7f9d"
+  },
+  "boletaId": {
+   "$oid": "6aca372d8fdaffb57559710e"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791637293506"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791060586325"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791637293507"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3ad176794cf6beb57154e"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "6"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 2 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "403.85"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1811948400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "8"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0f22b03e50e9cbee23ec7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f306dd95e32637cebb2"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "6"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 7 Abinair Maria Callegari · crédito",
+  "valor": {
+   "$numberDouble": "442.31"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1811948400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "8"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f256dd95e32637ceb90"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6aca3fd10d99d7f7a7d81663"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "6"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 20 Rigoberto Duarte Baptista · crédito",
+  "valor": {
+   "$numberInt": "500"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1812380400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "8"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6aca3fbe0d99d7f7a7d81647"
+  },
+  "boletaId": {
+   "$oid": "6aca40220d99d7f7a7d8168f"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791639586334"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791639505721"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791639586335"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acaab4d39dc524ad1c224b4"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "6"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 22 Aristides do Couto Neto · crédito",
+  "valor": {
+   "$numberInt": "550"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1812380400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "8"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acaab3f39dc524ad1c22496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfb0fbc1ffb44fe8cf3750"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "6"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 28 Jamily Trevisani Sperandio · crédito",
+  "valor": {
+   "$numberDouble": "832.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1812715200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "8"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfb03ad61cda4197552866"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791996155612"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791996155612"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11b2bc1ffb44fe8cf3929"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "6"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 35 Paula Comerio · crédito",
+  "valor": {
+   "$numberDouble": "335.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1812801600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "8"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11af5c1ffb44fe8cf3902"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad3ea298147cb4b414b1341"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "6"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 40 balcão · crédito",
+  "valor": {
+   "$numberInt": "733"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1812985200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "8"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad3ea168147cb4b414b1323"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "CANCELADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792272937165"
+   }
+  },
+  "canceladoEm": {
+   "$date": {
+    "$numberLong": "1792326845875"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad4d21350290aa09787f77e"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "6"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 42 Marcia Bumachar · crédito",
+  "valor": {
+   "$numberDouble": "278.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1813071600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "8"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad4d1ef50290aa09787f74d"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac16a6afac41f50d448bb51"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "6"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 4 Elenice Biccas Zucchi · crédito",
+  "valor": {
+   "$numberDouble": "517.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1814367600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "9"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac10b337cbe7ef38dbb7f9d"
+  },
+  "boletaId": {
+   "$oid": "6aca372d8fdaffb57559710e"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791637293506"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791060586325"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791637293507"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3ad176794cf6beb57154f"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "7"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 2 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "403.85"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1814540400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "9"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0f22b03e50e9cbee23ec7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f306dd95e32637cebb3"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "7"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 7 Abinair Maria Callegari · crédito",
+  "valor": {
+   "$numberDouble": "442.31"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1814540400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "9"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f256dd95e32637ceb90"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6aca3fd10d99d7f7a7d81664"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "7"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 20 Rigoberto Duarte Baptista · crédito",
+  "valor": {
+   "$numberInt": "500"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1814972400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "9"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6aca3fbe0d99d7f7a7d81647"
+  },
+  "boletaId": {
+   "$oid": "6aca40220d99d7f7a7d8168f"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791639586334"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791639505721"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791639586335"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acaab4d39dc524ad1c224b5"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "7"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 22 Aristides do Couto Neto · crédito",
+  "valor": {
+   "$numberInt": "550"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1814972400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "9"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acaab3f39dc524ad1c22496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfb0fbc1ffb44fe8cf3751"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "7"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 28 Jamily Trevisani Sperandio · crédito",
+  "valor": {
+   "$numberDouble": "832.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1815307200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "9"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfb03ad61cda4197552866"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791996155612"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791996155612"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11b2bc1ffb44fe8cf392a"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "7"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 35 Paula Comerio · crédito",
+  "valor": {
+   "$numberDouble": "335.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1815393600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "9"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11af5c1ffb44fe8cf3902"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad3ea298147cb4b414b1342"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "7"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 40 balcão · crédito",
+  "valor": {
+   "$numberInt": "733"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1815577200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "9"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad3ea168147cb4b414b1323"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "CANCELADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792272937166"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792272937166"
+   }
+  },
+  "canceladoEm": {
+   "$date": {
+    "$numberLong": "1792326845875"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad4d21350290aa09787f77f"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "7"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 42 Marcia Bumachar · crédito",
+  "valor": {
+   "$numberDouble": "278.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1815663600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "9"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad4d1ef50290aa09787f74d"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac16a6afac41f50d448bb52"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "7"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 4 Elenice Biccas Zucchi · crédito",
+  "valor": {
+   "$numberDouble": "517.4"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1816959600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "10"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac10b337cbe7ef38dbb7f9d"
+  },
+  "boletaId": {
+   "$oid": "6aca372d8fdaffb57559710e"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791637293506"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791060586325"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791637293507"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac3ad176794cf6beb571550"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "8"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 2 Heliana Dias Martins · crédito",
+  "valor": {
+   "$numberDouble": "403.85"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1817132400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "10"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac0f22b03e50e9cbee23ec7"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791208727880"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ac40f306dd95e32637cebb4"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "8"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 7 Abinair Maria Callegari · crédito",
+  "valor": {
+   "$numberDouble": "442.31"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1817132400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "10"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ac40f256dd95e32637ceb90"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791233840140"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6aca3fd10d99d7f7a7d81665"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "8"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 20 Rigoberto Duarte Baptista · crédito",
+  "valor": {
+   "$numberInt": "500"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1817564400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "10"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6aca3fbe0d99d7f7a7d81647"
+  },
+  "boletaId": {
+   "$oid": "6aca40220d99d7f7a7d8168f"
+  },
+  "quitadoEm": {
+   "$date": {
+    "$numberLong": "1791639586334"
+   }
+  },
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "QUITADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791639505722"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791639586335"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acaab4d39dc524ad1c224b6"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "8"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 22 Aristides do Couto Neto · crédito",
+  "valor": {
+   "$numberInt": "550"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1817564400000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "10"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acaab3f39dc524ad1c22496"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791667021952"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6acfb0fbc1ffb44fe8cf3752"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "8"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 28 Jamily Trevisani Sperandio · crédito",
+  "valor": {
+   "$numberDouble": "832.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1817899200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "10"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6acfb03ad61cda4197552866"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1791996155612"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1791996155612"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad11b2bc1ffb44fe8cf392b"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "8"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.004",
+  "nomeConta": "Visanet",
+  "historico": "Venda 35 Paula Comerio · crédito",
+  "valor": {
+   "$numberDouble": "335.7"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1817985600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "10"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad11af5c1ffb44fe8cf3902"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792088875516"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad3ea298147cb4b414b1343"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "8"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 40 balcão · crédito",
+  "valor": {
+   "$numberInt": "733"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1818169200000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "10"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad3ea168147cb4b414b1323"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "CANCELADO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792272937166"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792272937166"
+   }
+  },
+  "canceladoEm": {
+   "$date": {
+    "$numberLong": "1792326845875"
+   }
+  }
+ },
+ {
+  "_id": {
+   "$oid": "6ad4d21350290aa09787f780"
+  },
+  "ano": {
+   "$numberInt": "2027"
+  },
+  "mes": {
+   "$numberInt": "8"
+  },
+  "pos": {
+   "$numberInt": "5"
+  },
+  "contaSubTitulo": null,
+  "codigoConta": "1.01.005.003",
+  "nomeConta": "MasterCard",
+  "historico": "Venda 42 Marcia Bumachar · crédito",
+  "valor": {
+   "$numberDouble": "278.66"
+  },
+  "vencimento": {
+   "$date": {
+    "$numberLong": "1818255600000"
+   }
+  },
+  "parcela": {
+   "$numberInt": "10"
+  },
+  "totalParcelas": {
+   "$numberInt": "10"
+  },
+  "origem": "VENDA",
+  "orcamentoAno": null,
+  "lancamentoId": {
+   "$oid": "6ad4d1ef50290aa09787f74d"
+  },
+  "boletaId": null,
+  "quitadoEm": null,
+  "documento": "",
+  "projecaoOrigemId": null,
+  "realizadaEm": null,
+  "status": "ATIVO",
+  "lojistaId": {
+   "$oid": "6892706a86509313e632f717"
+  },
+  "__v": {
+   "$numberInt": "0"
+  },
+  "criadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  },
+  "atualizadoEm": {
+   "$date": {
+    "$numberLong": "1792332307790"
+   }
+  }
+ }
+]

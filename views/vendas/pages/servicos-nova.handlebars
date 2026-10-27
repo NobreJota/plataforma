@@ -2,6 +2,9 @@
   Destino: C:\plataformaRota\views\vendas\pages\servicos-nova.handlebars
   Criado em: 23/10/2026
   Alterado em: 23/10/2026 - lista de clientes com paginas < >; historico ordena pelo cabecalho
+  Alterado em: 26/10/2026 - virou "OS PENDENTES": todas as pendentes sem venda; completas com etiqueta verde
+  Alterado em: 26/10/2026 - "OS POR COMPLETAR": as OS pendentes sem venda faltando tecnico, dia, horario ou valor
+               combinado (Abrir · Cancelar com motivo)
   Alterado em: 23/10/2026 - busca com Edificio e Apto; historico com etiquetas por tipo (todos, VI, C, G, S)
 
   SERVICO > NOVA OS (sem venda). Rota: /vendas/servicos/nova?tipo=C   (C conserto · G garantia · S servicos)
@@ -67,6 +70,13 @@
     .chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
     .chips button { border:1px solid #d1d5db; background:#fff; border-radius:16px; padding:4px 12px; font-size:12px; cursor:pointer; color:#374151; }
     .chips button.on { background:var(--ambar); border-color:var(--ambar); color:#fff; }
+    .incomp { border-color:#fca5a5; background:#fffafa; }
+    .incomp h2 { color:var(--vermelho); }
+    .falta { display:inline-block; font-size:11px; font-weight:800; color:#991b1b; background:#fee2e2; border-radius:6px; padding:1px 6px; margin:0 3px 2px 0; }
+    .falta.ok { color:#166534; background:#dcfce7; }
+    .incomp.tudo-ok { border-color:#86efac; background:#f7fef9; } .incomp.tudo-ok h2 { color:var(--verde); }
+    .mini { border:1px solid #d1d5db; background:#fff; border-radius:7px; padding:4px 10px; font-weight:700; cursor:pointer; font-size:12px; white-space:nowrap; }
+    .mini.abrir { border-color:var(--ambar); color:var(--ambar); } .mini.canc { color:#b91c1c; }
     .breve-txt { padding:30px; text-align:center; color:var(--cinza); font-size:15px; }
     @media (max-width:800px) { .grade { grid-template-columns:repeat(2, 1fr); } .c3, .c4, .c6 { grid-column:span 2; } }
   </style>
@@ -83,6 +93,12 @@
   <div id="breve" class="caixa breve-txt" hidden>Esta página ainda vai ser feita — por enquanto só o <b>Conserto</b>.</div>
 
   <div id="tela">
+    <!-- 26/10/2026: OS que ainda falta completar -->
+    <div class="caixa incomp" id="cx-incomp" hidden>
+      <h2>OS pendentes <span id="incomp-n"></span></h2>
+      <div class="rola" id="incomp" style="max-height:220px;margin-top:0"></div>
+    </div>
+
     <!-- 1. cliente -->
     <div class="caixa" id="cx-busca">
       <h2>1 · Cliente</h2>

@@ -47,9 +47,16 @@
  * Alterado em 23/10/2026 (Jorge): RECEBIMENTO DE TITULO DE CLIENTE com tres formas: botoes Banco · Caixa · Cartão
  *    no modal, cada um com o seu quadro. Banco: so os que recebem venda (BB, Banestes, CEF). Caixa: 1.01.001.001
  *    (POST /quitar com forma CAIXA). Cartão: bandeira, débito/crédito, 1 a 10x e a previa das parcelas; grava pelo
- *    POST /receber-cartao (o titulo do cliente baixa contra a operadora e nascem as parcelas pos 5 do cartao).
+ *    POST /receber-partes (o titulo do cliente baixa contra a operadora e nascem as parcelas pos 6 do cartao).
  *    Com Cartão a lista mostra so os titulos do cliente clicado. Fora do recebimento de cliente (pagar, cartao,
  *    titulo PJ no Banestes) os botoes nao aparecem.
+ * Alterado em 24/10/2026 (Jorge): clique numa parcela de CARTAO (1.01.005) pergunta: "Recebimento único" (o modal de
+ *    sempre) ou "Receber em lote" (cartoes-receber.js: todas as parcelas de cartao, duas listas, liquido e taxa).
+ * Alterado em 23/10/2026 (Jorge): RECEBIMENTO EM PARTES — caixa "Valor recebido" (vem com o total). Menor que o
+ *    que falta + Enter: a parte fica guardada (lista em cima, × tira) e abre outra caixa com o saldo, onde se escolhe
+ *    outra forma (ex.: PIX no BB + o resto no cartão). Uma parte só no Banco/Caixa: POST /quitar como antes;
+ *    cartão ou mais de uma parte: POST /receber-partes. No recebimento de cliente a lista mostra SO o cliente clicado.
+ *    POS 6 = cartões a receber da operadora: clicável (recebe como cartão), na janela do pos e no Sintetizar.
  * Alterado em 23/10/2026 (Jorge): o modal de pagamento/recebimento ARRASTA pelo titulo (volta ao centro ao abrir).
  *    No recebimento de cliente (Banco · Caixa · Cartão) o botao "Antecipação de cartão" nao aparece: o cliente
  *    ainda nao pagou no cartao, nao ha parcela de operadora para antecipar.
@@ -138,7 +145,7 @@
 
   /* ===== 19/10/2026: janela "todos os registros do pos" (clique na bolinha do pos) ===== */
   // 19/10/2026: como no Access — 3 = pedido feito ao fabricante, 7 = compra projetada (previsao)
-  const POS_NOME = { 0: 'Avulso', 1: 'Cartão - receber', 2: 'A pagar', 3: 'Pedidos feitos', 5: 'A receber',
+  const POS_NOME = { 0: 'Avulso', 1: 'Cartão - receber', 2: 'A pagar', 3: 'Pedidos feitos', 5: 'A receber', 6: 'Cartões a receber',
                      7: 'Compras projetadas', 8: 'Orçamento projetado' };
   let ultimasLinhas = [], jp = null, jpOrdem = { k: 'venc', asc: true };
   (function estiloPos() {
@@ -191,7 +198,7 @@
     if (m) return { k: 'P' + m[1], rot: 'nº ' + m[1] };
     m = /\bNF\s*N?[ºo°.]*\s*(\d+)/i.exec(h);
     if (m) return { k: 'N' + l.codigoConta + '|' + Number(m[1]), rot: 'NF ' + Number(m[1]) };
-    if (Number(l.pos) === 5 || Number(l.pos) === 1) return { k: 'C' + l.codigoConta, rot: '' };      // a receber: por cliente
+    if (Number(l.pos) === 5 || Number(l.pos) === 1 || Number(l.pos) === 6) return { k: 'C' + l.codigoConta, rot: '' };      // a receber: por cliente
     const base = h.replace(/[\s\-·:]*\d+\s*\/\s*\d+\s*[a-z]?\s*$/i, '').trim().toLowerCase();       // tira o "5/6" do fim
     return { k: 'H' + l.codigoConta + '|' + base, rot: '' };
   }
@@ -247,7 +254,7 @@
     // 22/10/2026: a conta mes a mes (jan do ano da grade ate mar do ano seguinte), lida uma vez por conta
     const N_MESES = 15, iniMes = state.ano * 12, mesesCache = new Map();
     const MES3 = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    const POS_ROT = { 0: 'Avulso', 1: 'Cartão', 2: 'A pagar (notas)', 3: 'Pedidos feitos', 5: 'A receber', 7: 'Compras proj.', 8: 'Orçamento' };
+    const POS_ROT = { 0: 'Avulso', 1: 'Cartão', 2: 'A pagar (notas)', 3: 'Pedidos feitos', 5: 'A receber', 6: 'Cartões', 7: 'Compras proj.', 8: 'Orçamento' };
     function gradeMeses(g) {
       const d = mesesCache.get(g.conta);
       if (!d) {
@@ -377,7 +384,7 @@
       let acao = '';
       if (l.pos === 8) acao = 'realizar';
       else if (l.pos === 2) acao = 'pagar';
-      else if (l.pos === 5 || l.pos === 1) acao = 'receber';
+      else if (l.pos === 5 || l.pos === 1 || l.pos === 6) acao = 'receber';   // 23/10/2026: 6 = cartao operadora
       const isoData = l.vencimento ? new Date(l.vencimento).toISOString().slice(0,10) : '';
       const clicavel = acao ? 'flx-pagavel' : '';
       return separador + `
@@ -409,6 +416,9 @@
         if (!dataLinha) { console.warn('sem data na linha'); return; }
         if (acao === 'realizar') abrirRealizacao(dataLinha);
         else if (acao === 'pagar') abrirPagamento(dataLinha, 'pagar');
+        else if (acao === 'receber' && String(tr.dataset.conta || '').startsWith(PREFIXO_CARTAO)) {
+          escolherCartao(tr, () => abrirPagamento(dataLinha, 'receber', { conta: tr.dataset.conta, historico: tr.dataset.hist }));
+        }
         else if (acao === 'receber') abrirPagamento(dataLinha, 'receber', { conta: tr.dataset.conta, historico: tr.dataset.hist });
         else console.warn('acao não reconhecida:', acao);
       });
@@ -471,7 +481,9 @@
                 forma: 'BANCO',      // 23/10/2026: BANCO | CAIXA | CARTAO (recebimento de cliente)
                 formaAtiva: false,   // os botoes Banco · Caixa · Cartão estao valendo
                 contaClicada: '',    // a conta do titulo clicado (o cliente)
-                caixa: null };       // { codigo, nome } do caixa
+                caixa: null,         // { codigo, nome } do caixa
+                partes: [],          // 23/10/2026: partes ja guardadas { forma, valor (centavos), ..., rotulo }
+                valorEditado: false };   // a caixa "Valor recebido" foi digitada (senao, mostra o que falta)
   const PREFIXO_CARTAO = '1.01.005.';
   const BANCO_CARTAO = '1.01.002.003';   // CEF/Armacao: o cartao deposita sempre aqui (contrato)
   const ehDebito = h => /d[ée]bito\s*$/i.test(String(h || ''));
@@ -536,6 +548,38 @@
     } catch (err) { console.warn('bancos:', err.message); }
   }
 
+  /* 24/10/2026: parcela de cartao -> "Recebimento único" ou "Receber em lote" */
+  function escolherCartao(tr, unico) {
+    let cx = document.getElementById('flx-cc-esc');
+    if (cx) cx.remove();
+    cx = document.createElement('div');
+    cx.id = 'flx-cc-esc';
+    cx.style.cssText = 'position:fixed;z-index:1600;background:#fff;border:1px solid #059669;border-radius:10px;'
+      + 'box-shadow:0 12px 30px rgba(0,0,0,.25);padding:10px;display:flex;flex-direction:column;gap:6px;min-width:230px;font-family:system-ui,sans-serif';
+    const r = tr.getBoundingClientRect();
+    cx.style.left = Math.min(Math.max(8, r.left + 260), innerWidth - 250) + 'px';
+    cx.style.top = Math.min(r.bottom + 4, innerHeight - 140) + 'px';
+    const bt = 'border:1px solid #d1d5db;background:#fff;border-radius:8px;padding:9px 12px;font-weight:700;cursor:pointer;text-align:left;font-size:14px';
+    cx.innerHTML = '<div style="font-size:12px;color:#6b7280;font-weight:700">💳 ' + escAttr(tr.dataset.hist || 'cartão') + '</div>'
+      + '<button type="button" data-o="lote" style="' + bt + ';border-color:#059669;color:#065f46">📦 Receber em lote</button>'
+      + '<button type="button" data-o="unico" style="' + bt + '">💳 Recebimento único</button>';
+    document.body.appendChild(cx);
+    const fora = ev => { if (!cx.contains(ev.target)) fechar(); };
+    const esc = ev => { if (ev.key === 'Escape') fechar(); };
+    function fechar() { cx.remove(); document.removeEventListener('mousedown', fora, true); document.removeEventListener('keydown', esc); }
+    setTimeout(() => { document.addEventListener('mousedown', fora, true); document.addEventListener('keydown', esc); }, 0);
+    cx.addEventListener('click', ev => {
+      const b = ev.target.closest('[data-o]'); if (!b) return;
+      fechar();
+      if (b.dataset.o === 'unico') { unico(); return; }
+      const ir = () => window.CartoesReceber.abrir();
+      if (window.CartoesReceber) { ir(); return; }
+      const sc = document.createElement('script'); sc.src = '/js/contab/contabil/financeiro/cartoes-receber.js';
+      sc.onload = ir; sc.onerror = () => alert('Não carregou o cartoes-receber.js');
+      document.head.appendChild(sc);
+    });
+  }
+
   async function abrirPagamento(data, tipo, cartao) {
     pag.tipo = tipo; pag.data = data; pag.marcados = new Set(); pag.historicos = {};
     const ehRec = tipo === 'receber';
@@ -568,6 +612,10 @@
     const credito = document.querySelector('input[name="pag-cc-modo"][value="CREDITO"]');
     if (credito) credito.checked = true;
     await aplicarForma('BANCO');
+    pag.partes = []; pag.valorEditado = false;            // 23/10/2026: recebimento em partes
+    renderPartes();
+    $('#pag-campo-valor').hidden = !pag.formaAtiva;
+    $('#pag-parte-valor').value = '';
     if (pag.cartao) await carregarCartao(pag.cartao.conta, pag.cartao.historico, data, 'clicado');
     else await carregarJanela();
     $('#pag-modal .pag-modal-content').style.transform = '';   // 23/10/2026: abre no centro
@@ -577,8 +625,9 @@
   /* ===== 23/10/2026: FORMA DO RECEBIMENTO (Banco · Caixa · Cartão) ===== */
   const DIA_MS = 86400000;
   // com Cartão, so os titulos do cliente clicado (uma transacao de cartao e de uma pessoa)
+  // 23/10/2026: no recebimento de cliente (Banco · Caixa · Cartão), so os titulos do cliente clicado
   function titulosVisiveis() {
-    return pag.forma === 'CARTAO' && pag.contaClicada
+    return pag.formaAtiva && pag.contaClicada
       ? pag.titulos.filter(t => (t.codigoConta || '') === pag.contaClicada) : pag.titulos;
   }
   function textoConfirmar() {
@@ -633,9 +682,9 @@
     const cc = lerCartao();
     $('#pag-cc-parcelas').disabled = cc.modo === 'DEBITO';
     const prev = $('#pag-cc-previa');
-    const total = Math.round(titulosVisiveis().filter(t => pag.marcados.has(t._id)).reduce((s, t) => s + t.valor, 0) * 100);
+    const total = valorAtualC();                           // o valor desta parte (o total, se for uma so)
     const dtxt = $('#pag-data').value;
-    if (!total) { prev.textContent = 'Marque o título do cliente.'; return; }
+    if (!total) { prev.textContent = 'Marque o título do cliente e informe o valor.'; return; }
     if (!dtxt || erroDataMovimento(dtxt)) { prev.textContent = 'Escolha a data do movimento.'; return; }
     const base = new Date(dtxt + 'T12:00:00');
     const n = cc.parcelas, b0 = Math.floor(total / n);
@@ -648,23 +697,86 @@
     prev.innerHTML = 'O título do cliente é baixado e passa a receber de <b>' + escAttr(op) + '</b>, no CEF/Armação:'
       + '<table class="pag-cc-tab">' + linhas.join('') + '</table>';
   }
-  async function confirmarCartao() {
+  /* ===== 23/10/2026: RECEBIMENTO EM PARTES ===== */
+  const totalMarcadoC = () => Math.round(titulosVisiveis().filter(t => pag.marcados.has(t._id)).reduce((s, t) => s + t.valor, 0) * 100);
+  const somaPartesC = () => pag.partes.reduce((s, p) => s + p.valor, 0);
+  const faltaC = () => totalMarcadoC() - somaPartesC();
+  const valorAtualC = () => pag.valorEditado ? Math.round(parseMoeda($('#pag-parte-valor').value) * 100) : faltaC();
+  // a forma escolhida agora, com o valor da caixa
+  function parteAtual() {
+    const p = { forma: pag.forma, valor: valorAtualC() };
+    if (pag.forma === 'BANCO') {
+      p.contaBancariaId = $('#pag-banco').value;
+      const o = $('#pag-banco').selectedOptions[0];
+      p.rotulo = 'Banco ' + (p.contaBancariaId && o ? o.textContent : '');
+    } else if (pag.forma === 'CAIXA') {
+      p.rotulo = 'Caixa ' + (pag.caixa ? pag.caixa.codigo + ' - ' + pag.caixa.nome : '');
+    } else {
+      const cc = lerCartao();
+      p.cartao = cc.conta; p.modo = cc.modo; p.parcelas = cc.parcelas;
+      const o = $('#pag-cc-bandeira').selectedOptions[0];
+      p.rotulo = 'Cartão ' + (cc.conta && o ? o.textContent : '') + ' · ' + (cc.modo === 'DEBITO' ? 'débito' : 'crédito ' + cc.parcelas + 'x');
+    }
+    return p;
+  }
+  function erroParte(p) {
+    if (p.forma === 'BANCO' && !p.contaBancariaId) return 'Selecione o banco.';
+    if (p.forma === 'CARTAO' && !p.cartao) return 'Escolha o cartão (bandeira).';
+    if (!(p.valor > 0)) return 'Informe o valor recebido.';
+    if (p.valor > faltaC()) return 'O valor passa do que falta receber (' + (fmt(faltaC() / 100) || '0,00') + ').';
+    return '';
+  }
+  function renderPartes() {
+    const box = $('#pag-partes');
+    box.hidden = !pag.partes.length;
+    box.innerHTML = pag.partes.map((p, i) => '<div class="pag-parte"><span>' + (i + 1) + '. ' + escAttr(p.rotulo) + '</span><b>'
+      + fmt(p.valor / 100) + '</b><button type="button" data-tira="' + i + '" title="tirar esta parte">×</button></div>').join('');
+  }
+  function atualizarFalta() {
+    const el = $('#pag-falta');
+    if (!pag.formaAtiva) { el.hidden = true; return; }
+    const f = faltaC();
+    if (!pag.valorEditado) $('#pag-parte-valor').value = f > 0 ? mascaraMoeda(f) : '';
+    const v = valorAtualC();
+    el.hidden = false;
+    if (!totalMarcadoC()) { el.textContent = 'Marque o título do cliente.'; return; }
+    el.innerHTML = 'Falta receber: <b>' + (fmt(f / 100) || '0,00') + '</b>'
+      + (v > 0 && v < f ? ' — <b>Enter</b> no valor guarda esta parte e abre outra caixa com o que falta (' + fmt((f - v) / 100) + ').' : '')
+      + (v > f ? ' — <b style="color:#b91c1c">o valor passa do que falta.</b>' : '');
+  }
+  // Enter na caixa do valor: menor que o que falta guarda a parte e abre outra caixa com o saldo
+  function guardarParte() {
+    const p = parteAtual();
+    const e = erroParte(p);
+    if (e) { alert(e); return; }
+    if (p.valor === faltaC()) { atualizarResumoPag(); $('#pag-confirmar').focus(); return; }
+    pag.partes.push(p);
+    pag.valorEditado = false;
+    renderPartes();
+    atualizarResumoPag();
+    const inp = $('#pag-parte-valor'); inp.focus(); inp.select();
+  }
+  function limparPartes() {
+    if (!pag.partes.length && !pag.valorEditado) return;
+    pag.partes = []; pag.valorEditado = false;
+    renderPartes();
+  }
+  async function confirmarPartes(lista) {
     const marcados = titulosVisiveis().filter(t => pag.marcados.has(t._id));
     if (!marcados.length) return;
-    const cc = lerCartao();
-    if (!cc.conta) { alert('Escolha o cartão (bandeira).'); $('#pag-cc-bandeira').focus(); return; }
     const btn = $('#pag-confirmar');
     btn.disabled = true; btn.textContent = 'Processando...';
     try {
-      const r = await pagApi('POST', '/receber-cartao', {
+      const r = await pagApi('POST', '/receber-partes', {
         data: $('#pag-data').value,
         titulosIds: marcados.map(t => t._id),
         historicos: pag.historicos,
-        cartao: cc.conta, modo: cc.modo, parcelas: cc.parcelas
+        partes: lista.map(({ rotulo, ...x }) => x)
       });
       $('#pag-modal').hidden = true;
       carregar();
       abrirBoleta(r.boletaId);
+      if (r.partes > 1) alert('Recebido em ' + r.partes + ' partes: ' + r.partes + ' boletas. Estornar uma desfaz o recebimento todo.');
     } catch (err) {
       alert('Erro: ' + err.message);
       if (/já foi baixada|já foram baixadas|marcadas já/.test(err.message)) { await recarregarModal(true); carregar(); }
@@ -797,7 +909,11 @@
 
   function renderJanela() {
     const tbody = $('#pag-tbody');
-    const lista = titulosVisiveis();                       // 23/10/2026: com Cartão, so o cliente clicado
+    const lista = titulosVisiveis();                       // 23/10/2026: recebimento de cliente: so o clicado
+    if (pag.formaAtiva) {                                  // marcado que nao aparece nao conta
+      const vis = new Set(lista.map(t => t._id));
+      pag.marcados = new Set([...pag.marcados].filter(id => vis.has(id)));
+    }
     if (lista.length === 0) {
       tbody.innerHTML = '<tr><td colspan="5" class="pag-empty">Nenhum título na janela de datas.</td></tr>';
       atualizarResumoPag();
@@ -845,8 +961,10 @@
     // cartao: so libera depois do Enter no valor liquido
     const precisaLiq = !$('#pag-liq').hidden;
     desenharPreviaCartao();                                // 23/10/2026
-    $('#pag-confirmar').disabled = pag.marcados.size === 0 || (precisaLiq && !pag.liqOk)
-      || (pag.forma === 'CARTAO' && !lerCartao().conta);
+    atualizarFalta();
+    let bloqueia = pag.marcados.size === 0 || (precisaLiq && !pag.liqOk);
+    if (pag.formaAtiva) { const p = parteAtual(); bloqueia = bloqueia || p.valor !== faltaC() || !!erroParte(p); }
+    $('#pag-confirmar').disabled = bloqueia;
   }
 
   // valor liquido: so quando tudo que esta marcado e de UM cartao
@@ -891,7 +1009,16 @@
     if (pag.marcados.size === 0) return;
     const erroData = erroDataMovimento($('#pag-data').value);
     if (erroData) { alert(erroData); $('#pag-data').focus(); return; }
-    if (pag.forma === 'CARTAO') return confirmarCartao();      // 23/10/2026
+    if (pag.formaAtiva) {                                       // 23/10/2026: Banco · Caixa · Cartão / em partes
+      const atual = parteAtual(), e = erroParte(atual);
+      if (e) { alert(e); return; }
+      if (atual.valor !== faltaC()) {
+        alert('Ainda falta receber ' + fmt((faltaC() - atual.valor) / 100) + ': aperte Enter no valor para abrir outra caixa.');
+        return;
+      }
+      const lista = [...pag.partes, atual];
+      if (lista.length > 1 || atual.forma === 'CARTAO') return confirmarPartes(lista);
+    }
     const noCaixa = pag.forma === 'CAIXA';
     const bancoId = noCaixa ? '' : $('#pag-banco').value;
     if (!noCaixa && !bancoId) { alert('Selecione o banco.'); return; }
@@ -1184,6 +1311,28 @@
   $('#pag-cc-bandeira').addEventListener('change', atualizarResumoPag);
   $$('input[name="pag-cc-modo"]').forEach(r => r.addEventListener('change', atualizarResumoPag));
   $('#pag-cc-parcelas').addEventListener('change', atualizarResumoPag);
+  $('#pag-banco').addEventListener('change', atualizarResumoPag);
+  // 23/10/2026: recebimento em partes
+  $('#pag-parte-valor').addEventListener('input', (e) => {
+    e.target.value = mascaraMoeda(e.target.value);
+    pag.valorEditado = true;
+    atualizarResumoPag();
+  });
+  $('#pag-parte-valor').addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    guardarParte();
+  });
+  $('#pag-partes').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-tira]'); if (!b) return;
+    pag.partes.splice(Number(b.dataset.tira), 1);
+    pag.valorEditado = false;
+    renderPartes();
+    atualizarResumoPag();
+  });
+  // marcar/desmarcar titulo muda o total: as partes guardadas recomecam
+  $('#pag-tbody').addEventListener('change', (e) => { if (e.target.type === 'checkbox') limparPartes(); }, true);
+  $('#pag-todos').addEventListener('change', limparPartes, true);
   function dataEscolhida() {
     pag.liqOk = false;
     atualizarResumoPag();
@@ -1243,7 +1392,7 @@
      7 previsao de compras, 8 orcamento) e o total do mes. Clicou num item: a grade mostra SO aquele pos.
      "todos" (ou clicar num mes) volta ao normal. Usa as linhas que a grade ja carregou. */
   let filtroPos = null, sint = null, ultimoResumo = null, resumoNormal = '';
-  const SINT = [[0, 'avulso'], [2, 'contas a pagar'], [5, 'contas a receber'], [1, 'cartões a receber'], [3, 'pedidos'], [7, 'previsão compras'], [8, 'orçamento']];
+  const SINT = [[0, 'avulso'], [2, 'contas a pagar'], [5, 'contas a receber'], [1, 'cartões a receber'], [6, 'cartões operadora'], [3, 'pedidos'], [7, 'previsão compras'], [8, 'orçamento']];
   (function estiloSint() {
     const st = document.createElement('style');
     st.textContent = `

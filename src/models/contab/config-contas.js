@@ -21,6 +21,8 @@
 //              "mao de obra a apropriar" (2.06.002). Chave do tipo 'titulo': guarda um titulo e a conta
 //              de cada tecnico e titulo + final da conta dele (2.06.001.008 -> 2.06.002.008).
 // Alterado em: 18/10/2026 - pagina 'receber' (Fluxo de Caixa > Vendas - receber): juros e desconto.
+// Alterado em: 24/10/2026 - pagina 'cartoes' (Fluxo de Caixa > Cartões - recebimento em lote): a conta de
+//              despesa da taxa / juros do cartao (diferenca entre o total das parcelas e o liquido no banco).
 // Cada pagina tem a sua lista (campo "pagina" do catalogo). Novas chaves: so acrescentar
 // no CATALOGO abaixo.
 // =============================================================================
@@ -80,6 +82,11 @@ const CATALOGO = {
   'receber-desconto': { pagina: 'receber', ordem: 2, padrao: '',
     rotulo: 'Desconto concedido ao cliente',
     uso: 'recebimento de título com desconto: o que o cliente pagou A MENOS vai para esta conta (D); o título baixa inteiro.' },
+
+  // ---- fluxo de caixa > cartoes - recebimento em lote (24/10/2026) ----
+  'cartao-taxa': { pagina: 'cartoes', ordem: 1, padrao: '',
+    rotulo: 'Despesa com taxa e juros de cartão',
+    uso: 'recebimento de cartão em lote: a diferença entre o total das parcelas e o líquido que caiu no banco vai para esta conta (D).' },
 };
 
 const subtitulo = (loja, codigo, session) =>

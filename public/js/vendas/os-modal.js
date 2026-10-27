@@ -56,6 +56,16 @@
 // Alterado em: 16/10/2026 - DEVOLVER limitado ao que esta com o tecnico (aviso: levar mais e no "+ levar")
 // Alterado em: 16/10/2026 - USADO editavel na linha (OS pendente): digita a quantidade certa e Enter
 //              (ou sai do campo); o estoque acompanha. PUT /:id/consignados/:cid { usado }
+// Alterado em: 26/10/2026 - VALOR COMBINADO (OS sem venda, pendente): Valor da mao de obra combinado com o cliente ·
+//              Parte da empresa · Parte do tecnico (o resto). Grava no Gravar (PUT /:id { combinado }). A ficha de
+//              fechamento ja vem com ele; la pode acrescentar (mao de obra adicional).
+// Alterado em: 26/10/2026 - SAIR DA PAGINA (← Voltar, ☰ Menu, recarregar, fechar a aba) com o modal aberto e
+//              agendamento/observacao nao gravados: o navegador pergunta antes de sair (antes saia calado).
+// Alterado em: 26/10/2026 - apagou o texto da busca do consignado: a lista de produtos FECHA (mesmo com fornecedor
+//              escolhido). Trocar o fornecedor no combo continua abrindo a lista dele.
+// Alterado em: 26/10/2026 - LEVAR / DEVOLVER / USADO nao perdem mais o que foi digitado e ainda nao gravado
+//              (tecnico, dia, das/ate, observacao do servico): o redesenho depois do consignado guarda esses
+//              campos e poe de volta. Gravam no Gravar, como antes (fechar sem gravar ainda pergunta).
 // Alterado em: 17/10/2026 - OS concluida/liquidada: "Ver fechamento" virou "Ver espelho" e sai o
 //              botao "Fechar" (fecha pelo X).
 //              PUT /vendas/api/venda/fornecedores/consignado
@@ -123,6 +133,11 @@
       .osm-corpo { overflow:auto; padding:14px 20px; display:grid; grid-template-columns:minmax(0, 5fr) minmax(0, 6fr) 260px; gap:18px; align-items:start; }
       .osm-agenda { position:sticky; top:0; }
       .osm-sec { font-size:12px; font-weight:800; text-transform:uppercase; color:#6b21a8; margin:4px 0 6px; }
+      .osm-comb { margin:0 0 10px; }
+      .osm-comb-g { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; }
+      .osm-comb-g label { display:flex; flex-direction:column; gap:3px; font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; }
+      .osm-comb-g input { height:34px; border:1px solid #d1d5db; border-radius:7px; padding:0 9px; font-size:15px; text-align:right; font-weight:700; background:#fffbeb; }
+      .osm-comb-g input[readonly] { background:#f3f4f6; color:#065f46; }
       .osm-det { display:grid; grid-template-columns:100px minmax(0,1fr); gap:4px 10px; margin-bottom:10px; }
       .osm-det span { font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; padding-top:2px; }
       .osm-det ul { margin:0; padding-left:18px; }
@@ -271,6 +286,15 @@
               <div class="osm-endx-bt"><button type="button" class="osm-btn" id="osm-end-canc">Cancelar</button>
                 <button type="button" class="osm-btn roxo" id="osm-end-ok">Usar este endereço</button></div>
             </div>
+            <div class="osm-comb" id="osm-comb" hidden>
+              <div class="osm-sec">Valor combinado com o cliente</div>
+              <div class="osm-comb-g">
+                <label>Mão de obra (R$)<input id="osm-cval" inputmode="decimal" autocomplete="off" placeholder="0,00"></label>
+                <label>Parte da empresa (R$)<input id="osm-cemp" inputmode="decimal" autocomplete="off" placeholder="0,00"></label>
+                <label>Parte do técnico<input id="osm-ctec" readonly tabindex="-1"></label>
+              </div>
+              <div class="osm-dica" id="osm-cdica">O que foi combinado antes do técnico ir. Na ficha de fechamento pode acrescentar. Grava no <b>Gravar</b>.</div>
+            </div>
             <label>Observação do serviço<textarea id="osm-obs" placeholder=" " maxlength="2000"></textarea></label>
           </div>
           <div>
@@ -357,7 +381,17 @@
     q('concluir').addEventListener('click', concluir);
     q('reabrir').addEventListener('click', reabrir);
     q('levar').addEventListener('click', levar);
-    q('busca').addEventListener('input', () => { clearTimeout(buscaT); buscaT = setTimeout(buscar, 250); });
+    // 26/10/2026: valor combinado — conta a parte do tecnico; sair do campo formata; Enter anda
+    ['cval', 'cemp'].forEach(id => {
+      q(id).addEventListener('input', contaComb);
+      q(id).addEventListener('blur', () => { const c = paraCent(q(id).value); if (Number.isFinite(c)) q(id).value = c ? brl(c) : ''; contaComb(); });
+      q(id).addEventListener('keydown', ev => { if (ev.key !== 'Enter') return; ev.preventDefault(); if (id === 'cval') { q('cemp').focus(); q('cemp').select(); } else q('gravar').focus(); });
+    });
+    q('busca').addEventListener('input', () => {
+      clearTimeout(buscaT);
+      if (!q('busca').value.trim()) { q('res').hidden = true; achados = []; ultimaBusca = ''; return; }   // 26/10/2026: vazio fecha
+      buscaT = setTimeout(buscar, 250);
+    });
     q('busca').addEventListener('keydown', ev => {
       const linhas = [...q('res').querySelectorAll('[data-i]')];
       const k = linhas.findIndex(l => l.classList.contains('sel'));
@@ -484,6 +518,16 @@
 
   const msg = (t, ok) => { q('msg').textContent = t || ''; q('msg').classList.toggle('ok', !!ok); };
   const podeEditar = () => os && os.status === 'P';     // 15/10/2026: fechada, so pela ficha
+  // 26/10/2026: valor combinado (centavos) — so OS sem venda (mao de obra cobrada na OS)
+  const temCombinado = () => os && os.modoMaoDeObra === 'OS';
+  const paraCent = s => { let x = String(s || '').replace(/[R$\s]/g, ''); if (!x) return 0; if (x.includes(',')) x = x.replace(/\./g, '').replace(',', '.'); const n = Number(x); return Number.isFinite(n) ? Math.round(n * 100) : NaN; };
+  const lerComb = () => ({ valor: paraCent(q('cval').value), empresa: paraCent(q('cemp').value) });
+  function contaComb() {
+    const c = lerComb();
+    q('ctec').value = c.valor > 0 && Number.isFinite(c.empresa) && c.empresa <= c.valor ? brl(c.valor - c.empresa) : '';
+    q('cdica').innerHTML = c.valor > 0 && c.empresa > c.valor ? '<b style="color:#b91c1c">a parte da empresa passa do valor</b>'
+      : 'O que foi combinado antes do técnico ir. Na ficha de fechamento pode acrescentar. Grava no <b>Gravar</b>.';
+  }
 
   function desenhar() {
     const o = os, e = o.endereco || {}, cli = o.cliente || {};
@@ -524,6 +568,9 @@
     q('adia').min = hojeIso();
     // sem dia reservado: horario limpo (so vale hora com dia)
     q('ahi').value = o.diaPrevisto ? o.horaIni || '' : ''; q('ahf').value = o.diaPrevisto ? o.horaFim || '' : '';
+    if (manter && agEd) {                                 // 26/10/2026: o digitado e nao gravado volta
+      q('tec').value = manter.tec; q('adia').value = manter.adia; q('ahi').value = manter.ahi; q('ahf').value = manter.ahf;
+    }
     ['tec', 'adia', 'ahi', 'ahf'].forEach(id => { q(id).disabled = !agEd; });
     q('agendar').hidden = !agEd;
     agCarregar();
@@ -533,6 +580,16 @@
         ? ' · técnico R$ ' + brl(o.parteTecnico) + ' · loja R$ ' + brl(o.parteLoja)
         : ' · na receita de serviços: a parte do técnico é definida na ficha de fechamento');
     q('obs').value = o.observacaoServico || '';
+    if (manter) q('obs').value = manter.obs;              // 26/10/2026
+    // 26/10/2026: valor combinado
+    q('comb').hidden = !temCombinado();
+    if (temCombinado()) {
+      const c = o.combinado || { valor: 0, empresa: 0 };
+      q('cval').value = c.valor ? brl(c.valor) : ''; q('cemp').value = c.valor ? brl(c.empresa) : '';
+      if (manter) { q('cval').value = manter.cval; q('cemp').value = manter.cemp; }
+      q('cval').disabled = q('cemp').disabled = o.status !== 'P';
+      contaComb();
+    }
 
     const ed = podeEditar();
     q('obs').disabled = !ed;
@@ -673,6 +730,10 @@
     }
     if (podeEditar()) {
       if (q('obs').value !== (o.observacaoServico || '')) lista.push('observação do serviço');
+      if (temCombinado()) {                                          // 26/10/2026
+        const c = lerComb(), g = o.combinado || { valor: 0, empresa: 0 };
+        if (c.valor !== (g.valor || 0) || (c.valor > 0 && c.empresa !== (g.empresa || 0))) lista.push('valor combinado');
+      }
     }
     return lista;
   }
@@ -689,6 +750,7 @@
     }
     q('sair').hidden = true;
     q('fundo').hidden = true; q('caixa').hidden = true; q('res').hidden = true; os = null;
+    window.dispatchEvent(new Event('os-modal-fechou'));   // 26/10/2026: a pagina atualiza as listas
   }
 
   async function gravarEFechar() {
@@ -698,7 +760,17 @@
     if (alteracoes().length && !(await gravar(false))) return;
     fechar(true);
   }
-  function mudou(novo, texto) { os = novo; desenhar(); msg(texto, true); if (aoMudar) aoMudar(); }
+  // 26/10/2026: o redesenho repoe o que esta gravado; o digitado e nao gravado (agendamento e observacao)
+  // fica guardado em `manter` e volta para a tela
+  let manter = null;
+  function mudou(novo, texto) {
+    const pend = os && os.status === 'P' && novo && novo.status === 'P';
+    manter = pend ? { tec: q('tec').value, adia: q('adia').value, ahi: q('ahi').value, ahf: q('ahf').value, obs: q('obs').value,
+                      cval: q('cval').value, cemp: q('cemp').value } : null;
+    os = novo;
+    try { desenhar(); } finally { manter = null; }
+    msg(texto, true); if (aoMudar) aoMudar();
+  }
 
   // ---- 18/10/2026: LOCAL da instalacao ----
   let endOS = null;
@@ -731,7 +803,14 @@
   async function gravar(avisar) {
     if (!podeEditar()) return true;
     try {
-      const r = await api('PUT', API + os.id, { observacaoServico: q('obs').value });
+      const corpo = { observacaoServico: q('obs').value };
+      if (temCombinado()) {                                          // 26/10/2026: valor combinado
+        const c = lerComb();
+        if (!Number.isFinite(c.valor) || !Number.isFinite(c.empresa)) { msg('Valor combinado: confira os números.'); q('cval').focus(); return false; }
+        if (c.valor > 0 && c.empresa > c.valor) { msg('A parte da empresa passa do valor combinado.'); q('cemp').focus(); return false; }
+        corpo.combinado = { valor: c.valor, empresa: c.valor > 0 ? c.empresa : 0 };
+      }
+      const r = await api('PUT', API + os.id, corpo);
       mudou(r.os, avisar ? '✓ gravado' : '');
       return true;
     } catch (e) { msg(e.message); return false; }
@@ -818,7 +897,10 @@
     ultimaBusca = t;
     if (!forn && t.length < 2 && !/^\d+$/.test(t)) { q('res').hidden = true; achados = []; return; }
     try {
-      achados = (await api('GET', BUSCA + encodeURIComponent(t) + (forn ? '&fornecedor=' + encodeURIComponent(forn) : ''))).produtos || [];
+      const vindos = (await api('GET', BUSCA + encodeURIComponent(t) + (forn ? '&fornecedor=' + encodeURIComponent(forn) : ''))).produtos || [];
+      // 26/10/2026: a caixa mudou (ou foi limpa) enquanto buscava: resposta velha nao abre a lista
+      if (q('busca').value.trim() !== t || q('forn').value !== forn) return;
+      achados = vindos;
       q('res').innerHTML = (achados.length ? '<div class="cab"><span style="grid-column:1/-1;text-transform:none;color:#6b21a8">'
           + 'clique no produto para levar · quantidade: ' + esc(q('qtd').value || '1') + ' (campo ao lado)</span></div>' : '')
         + (achados.length ? '<div class="cab"><span>Código</span><span>Descrição</span><span class="n">Estoque</span><span class="n">À vista</span></div>' : '')
@@ -911,7 +993,14 @@
     catch (e) { msg(e.message); }
   }
 
-  window.OSModal = { abrir };
+  // 26/10/2026: saindo da pagina com o modal aberto e alteracao nao gravada, o navegador pergunta
+  // (o texto da pergunta e do navegador: "Sair do site? As alterações podem não ser salvas")
+  window.addEventListener('beforeunload', ev => {
+    if (!os || q('caixa').hidden || !alteracoes().length) return;
+    ev.preventDefault(); ev.returnValue = '';
+  });
+
+  window.OSModal = { abrir, versao: '26/10/2026-f' };   // versao: F12 > Console > OSModal.versao
 
   // voltou da ficha de fechamento sem gravar (?os=<id>): reabre o modal desta OS
   const reabrirId = new URLSearchParams(location.search).get('os');

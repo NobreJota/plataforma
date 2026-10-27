@@ -107,6 +107,15 @@
 //       CLIENTE: entra no a receber do cliente (D) · EMPRESA (cortesia): 'os-mo-adicional-cortesia' (D)
 //   - DEVOLUCAO DE VENDIDO sem troca (saldo a compensar [1]): estoque (D) x 'os-devolucao-vendido' (C),
 //       a preco de custo (padrao: estorna o CPV)
+// Alterado em: 26/10/2026 (Jorge) - VALOR COMBINADO (OS sem venda, conserto): antes do tecnico ir, o valor da mao de
+//              obra combinado com o cliente e a parte da EMPRESA (o resto e do tecnico).
+//              PUT /:id { combinado: { valor, empresa } } (centavos; valor 0 tira). OS.combinado = { valor, empresa, em }.
+//              A ficha de fechamento ja vem com esses valores (modoMaoDeObra 'OS': valor/empresa do combinado);
+//              no fechamento pode mudar e acrescentar (mao de obra adicional, como antes).
+//              GET  /incompletas?tipo=C   TODAS as OS pendentes sem venda; `falta` = tecnico, dia, horario, valor
+//                   (vazio = completa, aguarda o servico); as incompletas primeiro
+//              POST /:id/cancelar { motivo }  cancela OS pendente SEM venda (status C); consignado com o tecnico
+//                   tem que voltar antes. A agenda ja ignora OS cancelada.
 // Alterado em: 18/10/2026 - PUT /:id aceita `local` (logradouro... cep, edificio, apto, pontoReferencia): mudar o
 //              local da OS pendente pelo modal (outro endereco do cliente).
 // =============================================================================
@@ -176,6 +185,8 @@ function resumo(o) {
     valorServico: o.valorServico || 0,
     servicoContabilizado: !!o.servicoContabilizado,          // VI: mao de obra ja lancada na venda
     servicoDescricao: o.servicoDescricao || '', parteTecnico: o.parteTecnico || 0, parteLoja: o.parteLoja || 0,
+    combinado: o.combinado ? { valor: o.combinado.valor || 0, empresa: o.combinado.empresa || 0 } : null,   // 26/10/2026
+    modoMaoDeObra: modoMaoDeObra(o).modo,                                                                  // 26/10/2026
     totalConsignado: cons.reduce((t, c) => t + c.total, 0),
     programada: !!(o.tecnicoConta && o.diaPrevisto && o.horaIni),
     itens: (o.itens || []).map(i => ({ codigo: i.codigo, descricao: i.descricao || '', servico: i.servico || '' })),
@@ -386,6 +397,50 @@ router.post('/nova', express.json(), responder(async (req, res) => {
   res.status(201).json({ ok: true, ...resposta });
 }));
 
+// ---------------------------------------------------------------------------
+// 26/10/2026: GET /incompletas?tipo=C — OS pendentes SEM venda que ainda falta completar
+//   (tecnico, dia, horario ou valor combinado), para a tela Nova OS retomar ou cancelar
+// ---------------------------------------------------------------------------
+router.get('/incompletas', responder(async (req, res) => {
+  const loja = lojaDe(req);
+  const tipo = String(req.query.tipo || '').toUpperCase();
+  const filtro = { lojistaId: loja, status: 'P', venda: null };
+  if (tipo) filtro.tipo = tipo;
+  const docs = await col('_ordens_servico').find(filtro).sort({ data: -1, numero: -1 }).limit(300).toArray();
+  const lista = [];
+  for (const o of docs) {
+    const falta = [];
+    if (!o.tecnicoConta) falta.push('técnico');
+    if (!o.diaPrevisto) falta.push('dia');
+    else if (!o.horaIni) falta.push('horário');
+    if (!(o.combinado && o.combinado.valor > 0)) falta.push('valor');
+    const comTec = (o.consignados || []).filter(c => (c.quantidade || 0) - (c.devolvido || 0) > 0).length;
+    lista.push({ id: String(o._id), numero: o.numero, tipo: o.tipo || '', aberta: o.data || o.criadoEm || null,
+      cliente: o.cliente?.nome || '', aparelho: o.aparelho || '', defeito: o.defeito || '',
+      tecnicoNome: o.tecnicoNome || '', diaPrevisto: diaIso(o.diaPrevisto), horaIni: o.diaPrevisto ? o.horaIni || '' : '',
+      horaFim: o.diaPrevisto ? o.horaFim || '' : '', valor: o.combinado?.valor || 0, falta, consignados: comTec });
+  }
+  // 26/10/2026: as incompletas primeiro; as completas pelo dia marcado
+  lista.sort((a, b) => (b.falta.length > 0) - (a.falta.length > 0) || String(a.diaPrevisto || '9').localeCompare(String(b.diaPrevisto || '9')));
+  res.json({ ok: true, oss: lista });
+}));
+
+// 26/10/2026: POST /:id/cancelar { motivo } — OS pendente sem venda (a de venda cancela pela venda)
+router.post('/:id/cancelar', express.json(), responder(async (req, res) => {
+  const o = await lerOS(req);
+  if (o.status !== 'P') throw erro(409, 'só cancela OS pendente');
+  if (o.venda) throw erro(409, 'OS de venda: cancele pela venda');
+  const motivo = String(req.body?.motivo || '').trim().slice(0, 300);
+  if (motivo.length < 3) throw erro(400, 'escreva o motivo do cancelamento');
+  const comTec = (o.consignados || []).filter(c => (c.quantidade || 0) - (c.devolvido || 0) > 0);
+  if (comTec.length) throw erro(409, 'há consignado com o técnico (' + comTec.map(c => c.codigo).join(', ') + '): devolva ao estoque antes de cancelar');
+  const agora = new Date();
+  const r = await col('_ordens_servico').updateOne({ _id: o._id, lojistaId: o.lojistaId, status: 'P' },
+    { $set: { status: 'C', canceladaEm: agora, motivoCancelamento: motivo, atualizadoEm: agora } });
+  if (!r.modifiedCount) throw erro(409, 'a OS mudou: abra de novo');
+  res.json({ ok: true });
+}));
+
 router.get('/:id', responder(async (req, res) => {
   res.json({ ok: true, os: completa(await lerOS(req)) });
 }));
@@ -419,6 +474,19 @@ router.put('/:id', express.json(), responder(async (req, res) => {
     set.valorServico = v;
   }
   if ('observacaoServico' in b) set.observacaoServico = String(b.observacaoServico || '').trim().slice(0, 2000);
+  // 26/10/2026: VALOR COMBINADO com o cliente (OS sem venda, pendente): mao de obra e a parte da empresa
+  let tirarCombinado = false;
+  if (b.combinado && typeof b.combinado === 'object') {
+    if (o.status !== 'P') throw erro(409, 'o valor combinado só muda com a OS pendente (depois, na ficha de fechamento)');
+    if (modoMaoDeObra(o).modo !== 'OS') throw erro(409, 'esta OS tem a mão de obra da venda: não tem valor combinado');
+    const valor = Math.round(Number(b.combinado.valor)), empresa = Math.round(Number(b.combinado.empresa));
+    if (!Number.isFinite(valor) || valor < 0) throw erro(400, 'valor combinado inválido');
+    if (valor === 0) tirarCombinado = true;
+    else {
+      if (!Number.isFinite(empresa) || empresa < 0 || empresa > valor) throw erro(400, 'a parte da empresa tem que ser de 0 até o valor combinado');
+      set.combinado = { valor, empresa, em: new Date() };
+    }
+  }
   // 18/10/2026: LOCAL da instalacao (outro endereco do cliente, CEP...)
   if (b.local && typeof b.local === 'object') {
     const t = (k, n) => String(b.local[k] ?? '').trim().slice(0, n || 120);
@@ -427,7 +495,8 @@ router.put('/:id', express.json(), responder(async (req, res) => {
                      cidade: t('cidade'), uf: t('uf', 2).toUpperCase(), cep: t('cep', 9).replace(/\D/g, '') };
     set.edificio = t('edificio'); set.apto = t('apto', 20); set.pontoReferencia = t('pontoReferencia', 200);
   }
-  await col('_ordens_servico').updateOne({ _id: o._id, lojistaId: o.lojistaId }, { $set: set });
+  await col('_ordens_servico').updateOne({ _id: o._id, lojistaId: o.lojistaId },
+    tirarCombinado ? { $set: set, $unset: { combinado: '' } } : { $set: set });
   res.json({ ok: true, os: completa(await lerOS(req)) });
 }));
 
@@ -702,6 +771,8 @@ function modoMaoDeObra(o) {
   if (o.servicoContabilizado && (o.parteTecnico || 0) > 0) return { modo: 'JA_PARTILHADA', valor: o.valorServico || 0 };
   if (o.servicoContabilizado) return { modo: 'VENDA', valor: o.maoDeObraVenda || o.valorServico || 0 };
   if (ehVI(o)) return { modo: 'VENDA', valor: 0 };        // VI sem mao de obra na venda: nada a dividir
+  // 26/10/2026: o valor COMBINADO com o cliente (e a parte da empresa) ja vem na ficha
+  if (o.combinado && o.combinado.valor > 0) return { modo: 'OS', valor: o.combinado.valor, empresa: o.combinado.empresa || 0, combinado: true };
   return { modo: 'OS', valor: 0 };
 }
 const DESTINOS = ['VENDA', 'COMPLEMENTAR', 'TROCA'];
@@ -717,7 +788,9 @@ async function dadosFechamento(o) {
     fechamento: o.fechamento || null,
     aReceber: o.aReceber || 0,
     maoDeObra: modoMaoDeObra(o),
-    parteTecnico: o.parteTecnico || 0, parteLoja: o.parteLoja || 0,
+    // 26/10/2026: OS ainda nao fechada com valor combinado: a partilha vem do combinado
+    parteTecnico: o.parteTecnico || (!o.fechamento && o.combinado ? (o.combinado.valor || 0) - (o.combinado.empresa || 0) : 0),
+    parteLoja: o.parteLoja || (!o.fechamento && o.combinado ? o.combinado.empresa || 0 : 0),
     clienteConta: o.cliente?.ncontabil || '',
     vendidos: (v?.itens || []).map(i => ({
       codigo: i.codigo, descricao: i.descricao || '', quantidade: i.quantidade || 0,
@@ -837,6 +910,9 @@ router.post('/:id/fechamento', express.json(), responder(async (req, res) => {
       // ---- mao de obra ----
       const mo = modoMaoDeObra(o);
       if (mo.modo === 'OS') {
+        // 26/10/2026: a ficha nao mandou o valor: vale o combinado
+        if ((b.maoDeObra === undefined || b.maoDeObra === '' || b.maoDeObra === null) && o.combinado) b.maoDeObra = o.combinado.valor || 0;
+        if ((b.empresa === undefined || b.empresa === '' || b.empresa === null) && o.combinado) b.empresa = o.combinado.empresa || 0;
         const val = inteiro(b.maoDeObra);
         if (!Number.isFinite(val)) throw erro(400, 'valor da mão de obra inválido');
         mo.valor = val;

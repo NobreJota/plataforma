@@ -107,6 +107,9 @@
 //       CLIENTE: entra no a receber do cliente (D) · EMPRESA (cortesia): 'os-mo-adicional-cortesia' (D)
 //   - DEVOLUCAO DE VENDIDO sem troca (saldo a compensar [1]): estoque (D) x 'os-devolucao-vendido' (C),
 //       a preco de custo (padrao: estorna o CPV)
+// Alterado em: 28/10/2026 (Jorge) - PRECO NEGOCIADO do consignado: PUT /:id/consignados/:cid { precoUnit } (centavos, OS
+//              pendente). Guarda o preco de tabela (precoTabela, o da saida) e o historico em consignados.ajustes. A ficha de
+//              fechamento ja usa o preco novo (venda adicional).
 // Alterado em: 26/10/2026 (Jorge) - VALOR COMBINADO (OS sem venda, conserto): antes do tecnico ir, o valor da mao de
 //              obra combinado com o cliente e a parte da EMPRESA (o resto e do tecnico).
 //              PUT /:id { combinado: { valor, empresa } } (centavos; valor 0 tira). OS.combinado = { valor, empresa, em }.
@@ -170,7 +173,8 @@ const consignadosDe = o => (o.consignados || []).map(c => {
   const usado = (c.quantidade || 0) - (c.devolvido || 0);
   return { id: String(c.id), codigo: c.codigo, descricao: c.descricao || '', referencia: c.referencia || '',
            quantidade: c.quantidade || 0, devolvido: c.devolvido || 0, usado,
-           precoUnit: c.precoUnit || 0, total: usado * (c.precoUnit || 0), saidaEm: c.saidaEm || null };
+           precoUnit: c.precoUnit || 0, total: usado * (c.precoUnit || 0), saidaEm: c.saidaEm || null,
+           precoTabela: c.precoTabela || 0 };                       // 28/10/2026: 0 = preco nao mudou
 });
 function resumo(o) {
   const cons = consignadosDe(o);
@@ -540,6 +544,22 @@ router.post('/:id/consignados', express.json(), responder(async (req, res) => {
 router.put('/:id/consignados/:cid', express.json(), responder(async (req, res) => {
   const cid = oid(req.params.cid), usado = Number(req.body?.usado);
   if (!cid) throw erro(400, 'item inválido');
+  // 28/10/2026: PRECO NEGOCIADO (unitario, centavos)
+  if (req.body && 'precoUnit' in req.body) {
+    const p = Math.round(Number(req.body.precoUnit));
+    if (!Number.isFinite(p) || p <= 0) throw erro(400, 'preço inválido');
+    const o = await lerOS(req);
+    if (o.status !== 'P') throw erro(409, 'só OS pendente: depois de fechada, não muda');
+    const c = (o.consignados || []).find(x => String(x.id) === String(cid));
+    if (!c) throw erro(404, 'item consignado não encontrado');
+    if (p !== (c.precoUnit || 0)) {
+      const agora = new Date();
+      await col('_ordens_servico').updateOne({ _id: o._id, lojistaId: o.lojistaId, 'consignados.id': cid }, {
+        $set: { 'consignados.$.precoUnit': p, 'consignados.$.precoTabela': c.precoTabela || c.precoUnit || 0, atualizadoEm: agora },
+        $push: { 'consignados.$.ajustes': { campo: 'precoUnit', de: c.precoUnit || 0, para: p, em: agora } } });
+    }
+    return res.json({ ok: true, os: completa(await lerOS(req)) });
+  }
   if (!Number.isInteger(usado) || usado < 0) throw erro(400, 'quantidade usada tem que ser inteira (0 ou mais)');
   const session = await mongoose.startSession();
   try {

@@ -13,7 +13,13 @@
 //   Gravar: UMA boleta RECEBIMENTO: banco a debito pelo liquido; cada parcela a credito na conta do cartao;
 //             a taxa a debito na despesa (contrapartida negativa). As parcelas baixam. O estorno desfaz tudo.
 // Abre pelo sub-menu (Cartões - recebimento) e pelo clique numa parcela de cartao no fluxo ("Receber em lote").
-// API: /financeiro/api/pagamento (GET /cartoes-receber, GET /bancos, POST /quitar { valorLiquido, lote: true })
+// 28/10/2026 (Jorge): 📂 IMPORTAR ARQUIVO DA REDE (relatorio de recebimentos, xlsx, aba "pagamentos": uma linha por
+//   parcela paga). Cada parcela do arquivo casa com a pos 6 do fluxo (bandeira, n/N, valor, data da venda); as casadas
+//   vao para a direita, o liquido vem do arquivo e a data do movimento e a do recebimento. Quadro por venda (NSU): bruto,
+//   MDR, ANTECIPACAO ("taxa de recebimento automatico") e os JUROS AO MES da antecipacao. "Só na Rede" = venda que nao
+//   esta no fluxo (ou com bandeira/parcelas/valor diferente). Gravando so parcelas do arquivo, a taxa vai em duas contas:
+//   MDR ('cartao-taxa') e antecipacao ('cartao-antecipacao'), as duas pelo ★. Leitor de planilha: SheetJS (cdnjs).
+// API: /financeiro/api/pagamento (GET /cartoes-receber, GET /bancos, POST /quitar { valorLiquido, lote: true, taxas })
 // =============================================================================
 
 (function () {
@@ -89,6 +95,14 @@
   .cr-pe { display:flex; gap:12px; align-items:center; padding:10px 14px; border-top:1px solid #e5e7eb; }
   .cr-msg { flex:1; color:#dc2626; font-weight:600; font-size:13px; } .cr-msg.ok { color:#059669; }
   .cr-btn { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:8px 14px; font-weight:700; cursor:pointer; font-size:14px; }
+  .cr-rede { margin:0 14px; border:1px solid #a7f3d0; border-radius:10px; background:#f0fdf4; overflow:hidden; }
+  .cr-rede[hidden] { display:none; }
+  .cr-rede-cab { padding:7px 10px; font-size:13px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .cr-rede-cab .cr-mini { margin-left:auto; }
+  .cr-rede-lista { max-height:150px; overflow:auto; background:#fff; border-top:1px solid #d1fae5; }
+  .cr-rede .cr-tab tr { cursor:default; } .cr-rede .cr-tab tr.so td { background:#fef2f2; }
+  .cr-rede .cr-tab tfoot td { position:sticky; bottom:0; background:#ecfdf5; font-weight:800; }
+  .cr-split { grid-column:1 / -1; text-align:right; font-size:12px; color:#065f46; }
   .cr-btn.verde { background:#059669; border-color:#059669; color:#fff; } .cr-btn:disabled { opacity:.5; cursor:not-allowed; }`;
   document.head.appendChild(st);
 
@@ -102,7 +116,10 @@
       + '<button type="button" class="estrela" id="cr-cfg" title="conta da despesa com taxa e juros de cartão">★</button>'
       + '<button type="button" id="cr-x" title="fechar (Esc)">×</button></div>'
       + '<div class="cr-ctl"><label>Data do movimento<input type="date" id="cr-data" title="dia útil, até 5 dias úteis para trás"></label>'
-      + '<label>Banco (onde caiu)<select id="cr-banco"><option value="">escolha o banco</option></select></label></div>'
+      + '<label>Banco (onde caiu)<select id="cr-banco"><option value="">escolha o banco</option></select></label>'
+      + '<button type="button" class="cr-btn" id="cr-rede-bt" title="relatório de recebimentos da Rede (xlsx, aba pagamentos): casa as parcelas com o fluxo">📂 Importar arquivo da Rede</button>'
+      + '<input type="file" id="cr-rede-arq" accept=".xlsx,.xls,.csv" hidden></div>'
+      + '<div class="cr-rede" id="cr-rede" hidden></div>'
       + '<div class="cr-dois">'
       + '<div class="cr-lado"><h3><span>Títulos a receber da operadora (6)</span><span class="cn" id="cr-qe"></span></h3>'
       + '<div class="cr-filtro"><input id="cr-busca" placeholder="cliente ou venda" autocomplete="off" style="flex:1;min-width:140px">'
@@ -136,6 +153,9 @@
     q('cr-banco').addEventListener('change', contas);
     q('cr-data').addEventListener('change', contas);
     q('cr-ok').addEventListener('click', gravar);
+    // 28/10/2026: arquivo da Rede
+    q('cr-rede-bt').addEventListener('click', () => q('cr-rede-arq').click());
+    q('cr-rede-arq').addEventListener('change', ev => { const a = ev.target.files[0]; ev.target.value = ''; if (a) importarRede(a); });
   }
 
   async function abrir() {
@@ -190,6 +210,7 @@
     q('cr-esq').innerHTML = tabela(esq, titulos.length ? 'Nada com esse filtro.' : 'Nenhum título de cartão a receber.');
     q('cr-dir').innerHTML = tabela(dir, 'Clique nas linhas da esquerda para trazer para este depósito.');
     q('cr-qe').textContent = esq.length + ' · R$ ' + brl(esq.reduce((s, t) => s + cent(t.valor), 0) / 100);
+    desenharRede();
     contas();
   }
   function contas() {
@@ -200,35 +221,191 @@
     q('cr-pct').textContent = !dir.length ? '' : !liq ? dir.length + ' parcela(s) · informe o recebido líquido'
       : liq > total ? '⚠ o líquido passa do total a receber'
       : dir.length + ' parcela(s) · taxa e juros ' + (taxa / total * 100).toFixed(2).replace('.', ',') + '%';
+    // 28/10/2026: so parcelas do arquivo da Rede e o liquido do arquivo: MDR e antecipacao separadas
+    const ta = taxasDoArquivo(dir);
+    const split = ta && ta.liquido === liq ? ta : null;
+    if (split) q('cr-pct').innerHTML = esc(q('cr-pct').textContent) + '<br><b>MDR R$ ' + brl(split.mdr / 100) + ' · antecipação R$ ' + brl(split.antecipacao / 100)
+      + (split.juros ? ' (≈ ' + (split.juros * 100).toFixed(2).replace('.', ',') + '% ao mês)' : '') + '</b>';
+    else if (ta) q('cr-pct').innerHTML = esc(q('cr-pct').textContent) + '<br>o líquido não é o do arquivo (R$ ' + brl(ta.liquido / 100) + '): a taxa vai numa conta só';
     q('cr-ok').disabled = !dir.length || !liq || liq > total || !q('cr-banco').value || !q('cr-data').value;
-    return { dir, total, liq, taxa };
+    return { dir, total, liq, taxa, split };
   }
 
   async function gravar() {
-    const { dir, total, liq, taxa } = contas();
+    const { dir, total, liq, taxa, split } = contas();
     const banco = q('cr-banco').selectedOptions[0].textContent;
     if (!confirm('Quer gravar o recebimento do cartão?\n\n' + dir.length + ' parcela(s): R$ ' + brl(total / 100)
       + '\nRecebido líquido: R$ ' + brl(liq / 100) + ' no ' + banco
-      + (taxa ? '\nDespesas com taxa e juros: R$ ' + brl(taxa / 100) : '')
+      + (split ? '\nTaxa MDR: R$ ' + brl(split.mdr / 100) + '\nJuros da antecipação: R$ ' + brl(split.antecipacao / 100)
+          + (split.juros ? ' (≈ ' + (split.juros * 100).toFixed(2).replace('.', ',') + '% ao mês)' : '')
+        : taxa ? '\nDespesas com taxa e juros: R$ ' + brl(taxa / 100) : '')
       + '\nData: ' + br(q('cr-data').value + 'T12:00:00'))) return;
     q('cr-ok').disabled = true; msg('');
     try {
       const r = await api('POST', '/quitar', { tipo: 'receber', data: q('cr-data').value, contaBancariaId: q('cr-banco').value,
         titulosIds: dir.map(t => t._id), valorLiquido: liq / 100, lote: true,
+        ...(split && split.antecipacao ? { taxas: { mdr: total - liq - split.antecipacao, antecipacao: split.antecipacao } } : {}),
         historico: 'Recebimento cartões em lote — ' + dir.length + ' parcela(s)' });
-      escolhidos = new Set(); q('cr-liq').value = '';
+      escolhidos = new Set(); q('cr-liq').value = ''; rede = null;
       await carregar();
-      msg('✓ recebido: boleta ' + (r.codigo || '') + ' · líquido R$ ' + brl(r.liquido) + (r.taxa ? ' · taxa R$ ' + brl(r.taxa) : ''), true);
+      msg('✓ recebido: boleta ' + (r.codigo || '') + ' · líquido R$ ' + brl(r.liquido) + (r.taxa ? ' · taxa R$ ' + brl(r.taxa) : '')
+        + (r.antecipacao ? ' (antecipação R$ ' + brl(r.antecipacao) + ')' : ''), true);
       if (window.FluxoCaixa && window.FluxoCaixa.recarregar) window.FluxoCaixa.recarregar();
     } catch (e) { msg(e.message); contas(); }
   }
 
   // ★ conta da despesa com taxa e juros (configuracao por chave 'cartao-taxa')
   function abrirConfig() {
-    const ir = () => window.ConfigContas.abrir({ pagina: 'cartoes', titulo: 'cartões - recebimento (taxa e juros)' });
+    const ir = () => window.ConfigContas.abrir({ pagina: 'cartoes', titulo: 'cartões - recebimento (MDR e antecipação)' });
     if (window.ConfigContas) { ir(); return; }
     const sc = document.createElement('script'); sc.src = '/js/comum/config-contas.js';
     sc.onload = ir; sc.onerror = () => alert('Não carregou o config-contas.js'); document.head.appendChild(sc);
+  }
+
+  // ===================== 28/10/2026: ARQUIVO DA REDE =====================
+  // Relatorio de recebimentos da Rede (xlsx, aba "pagamentos": uma linha por PARCELA paga):
+  //   data do recebimento · data original da venda · valor bruto da parcela original · taxa MDR (%) ·
+  //   valor MDR descontado (MDR + antecipacao) · valor liquido da parcela · NSU/CV · bandeira · numero de parcelas · parcela
+  // Cada linha casa com uma parcela pos 6 do fluxo: mesma bandeira, mesmo n/N, valor (±0,03) e data da venda (±4 dias).
+  // A taxa se divide em MDR (taxa MDR x bruto) e ANTECIPACAO (o resto do "valor MDR descontado").
+  const semAc = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const bandeiraDe = s => { const x = semAc(s);
+    return /master/.test(x) ? 'master' : /visa/.test(x) ? 'visa' : /\belo\b/.test(x) ? 'elo' : /amex|american/.test(x) ? 'amex'
+      : /hiper/.test(x) ? 'hiper' : /diners/.test(x) ? 'diners' : x; };
+  const numRede = v => { if (typeof v === 'number') return v; let s = String(v ?? '').replace(/[R$\s%]/g, ''); if (!s || s === '-') return NaN;
+    if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.'); return Number(s); };
+  const pctRede = v => { const n = numRede(v); if (!Number.isFinite(n)) return 0; return typeof v === 'string' && v.includes('%') ? n / 100 : (n > 1 ? n / 100 : n); };
+  const DIA = 86400000;
+  const diaRede = v => {                     // serial do Excel, Date ou dd/mm/aaaa -> 'aaaa-mm-dd'
+    if (v instanceof Date && !isNaN(v)) return ymd(v);
+    if (typeof v === 'number' && v > 20000 && v < 80000) { const d = new Date(Date.UTC(1899, 11, 30) + Math.round(v) * DIA); return d.toISOString().slice(0, 10); }
+    const m = /^(\d{2})[\/-](\d{2})[\/-](\d{4})/.exec(String(v ?? '').trim());
+    return m ? m[3] + '-' + m[2] + '-' + m[1] : '';
+  };
+  const difDias = (a, b) => Math.round((new Date(a + 'T12:00:00') - new Date(b + 'T12:00:00')) / DIA);
+
+  // linhas do arquivo (SheetJS: matriz de celulas) -> parcelas
+  function lerPlanilhaRede(wb) {
+    const nomes = wb.SheetNames.slice().sort((a, b) => (semAc(b) === 'pagamentos') - (semAc(a) === 'pagamentos'));
+    for (const nome of nomes) {
+      const m = XLSX.utils.sheet_to_json(wb.Sheets[nome], { header: 1, raw: true, defval: '' });
+      const h = m.findIndex(r => r.some(c => semAc(c) === 'valor liquido da parcela') && r.some(c => semAc(c) === 'nsu/cv'));
+      if (h < 0) continue;
+      const col = {}; m[h].forEach((c, i) => { col[semAc(c)] = i; });
+      const pega = (r, ...ks) => { for (const k of ks) if (col[k] !== undefined) return r[col[k]]; return ''; };
+      const linhas = [];
+      for (const r of m.slice(h + 1)) {
+        const bruto = numRede(pega(r, 'valor bruto da parcela original', 'valor bruto da parcela'));
+        const liq = numRede(pega(r, 'valor liquido da parcela'));
+        if (!Number.isFinite(bruto) || !Number.isFinite(liq)) continue;
+        const tx = numRede(pega(r, 'valor mdr descontado'));
+        const mdrPct = pctRede(pega(r, 'taxa mdr'));
+        const cB = Math.round(bruto * 100), cL = Math.round(liq * 100);
+        const cTx = Number.isFinite(tx) ? Math.round(tx * 100) : cB - cL;
+        const cMdr = Math.min(cTx, Math.round(cB * mdrPct));
+        linhas.push({ receb: diaRede(pega(r, 'data do recebimento', 'data prevista do recebimento')),
+          venda: diaRede(pega(r, 'data original da venda')), bruto: cB, liquido: cL, mdr: cMdr, antecipacao: Math.max(0, cB - cL - cMdr),
+          mdrPct, nsu: String(pega(r, 'nsu/cv')).trim(), bandeira: String(pega(r, 'bandeira')).trim(), band: bandeiraDe(pega(r, 'bandeira')),
+          n: Number(numRede(pega(r, 'numero de parcelas'))) || 1, k: Number(numRede(pega(r, 'parcela'))) || 1,
+          status: String(pega(r, 'status')).trim() });
+      }
+      if (linhas.length) return { aba: nome, linhas };
+    }
+    return null;
+  }
+
+  // juros da antecipacao ao mes: o que viria em 30/60/90... dias (liquido de MDR) contra o que veio hoje
+  function jurosMes(ls) {
+    const fluxos = ls.map(l => ({ v: l.bruto - l.mdr, t: Math.max(0, difDias(l.venda, l.receb) + 30 * l.k) / 30 }));
+    const hoje = ls.reduce((s, l) => s + l.liquido, 0);
+    if (!fluxos.some(f => f.t > 0.05) || ls.every(l => !l.antecipacao)) return 0;
+    let lo = 0, hi = 0.5;
+    for (let i = 0; i < 100; i++) { const m = (lo + hi) / 2; const v = fluxos.reduce((s, f) => s + f.v / Math.pow(1 + m, f.t), 0); if (v > hoje) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+  }
+
+  // casa as linhas do arquivo com as parcelas do fluxo
+  function casarRede(linhas) {
+    const usados = new Set(), vendaDoNsu = new Map(), casadas = new Map(), soRede = [];
+    const dVendaT = t => t.dataVenda ? ymd(new Date(t.dataVenda)) : ymd(new Date(new Date(t.vencimento).getTime() - 30 * (t.parcela || 1) * DIA));
+    const ordem = linhas.slice().sort((a, b) => a.nsu.localeCompare(b.nsu) || a.k - b.k);
+    for (const l of ordem) {
+      const pref = vendaDoNsu.get(l.nsu);
+      let melhor = null, nota = 1e9;
+      for (const t of titulos) {
+        if (usados.has(t._id) || bandeiraDe(t.nomeConta || t.codigoConta) !== l.band) continue;
+        if ((t.totalParcelas || 1) !== l.n || (t.parcela || 1) !== l.k) continue;
+        const dv = Math.abs(Math.round(t.valor * 100) - l.bruto); if (dv > 3) continue;
+        const dd = l.venda ? Math.abs(difDias(dVendaT(t), l.venda)) : 0; if (dd > 4) continue;
+        const n = dd * 10 + dv + (pref && String(t.vendaId) !== pref ? 50 : 0);
+        if (n < nota) { nota = n; melhor = t; }
+      }
+      if (melhor) { usados.add(melhor._id); casadas.set(melhor._id, l); if (!pref && melhor.vendaId) vendaDoNsu.set(l.nsu, String(melhor.vendaId)); }
+      else soRede.push(l);
+    }
+    return { casadas, soRede };
+  }
+
+  let rede = null;          // { arquivo, aba, linhas, casadas: Map(tituloId -> linha), soRede }
+  async function carregarSheetJS() {
+    if (window.XLSX) return;
+    await new Promise((ok, falha) => { const sc = document.createElement('script');
+      sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+      sc.onload = ok; sc.onerror = () => falha(new Error('não carregou o leitor de planilha (internet?)')); document.head.appendChild(sc); });
+  }
+  async function importarRede(arq) {
+    msg('Lendo ' + arq.name + '…', true);
+    try {
+      await carregarSheetJS();
+      const wb = XLSX.read(await arq.arrayBuffer(), { type: 'array', cellDates: false });
+      const lido = lerPlanilhaRede(wb);
+      if (!lido) { msg('Não achei as parcelas no arquivo: use o relatório de recebimentos da Rede (aba "pagamentos", com "valor líquido da parcela" e "NSU/CV").'); return; }
+      await carregar();                                   // fluxo atualizado antes de casar
+      const { casadas, soRede } = casarRede(lido.linhas);
+      rede = { arquivo: arq.name, aba: lido.aba, linhas: lido.linhas, casadas, soRede };
+      escolhidos = new Set(casadas.keys());
+      const liq = [...casadas.values()].reduce((s, l) => s + l.liquido, 0);
+      q('cr-liq').value = liq ? brl(liq / 100) : '';
+      const dias = [...new Set(lido.linhas.map(l => l.receb).filter(Boolean))];
+      if (dias.length === 1 && dias[0] <= ymd(new Date())) q('cr-data').value = dias[0];
+      desenhar();
+      msg(casadas.size + ' de ' + lido.linhas.length + ' parcela(s) do arquivo casaram com o fluxo' + (soRede.length ? ' · ' + soRede.length + ' só na Rede' : ''), !soRede.length);
+    } catch (e) { msg('Arquivo da Rede: ' + e.message); }
+  }
+  // o quadro do arquivo: por venda (NSU), com MDR, antecipacao e juros ao mes
+  function desenharRede() {
+    const box = q('cr-rede');
+    if (!rede) { box.hidden = true; return; }
+    const grupos = new Map();
+    for (const l of rede.linhas) { const g = grupos.get(l.nsu) || { ls: [], nsu: l.nsu, bandeira: l.bandeira, n: l.n, venda: l.venda }; g.ls.push(l); grupos.set(l.nsu, g); }
+    const so = new Set(rede.soRede);
+    const tot = { bruto: 0, liq: 0, mdr: 0, ant: 0 };
+    const linhas = [...grupos.values()].map(g => {
+      const s = k => g.ls.reduce((t, l) => t + l[k], 0);
+      const b = s('bruto'), lq = s('liquido'), md = s('mdr'), an = s('antecipacao'), j = jurosMes(g.ls);
+      tot.bruto += b; tot.liq += lq; tot.mdr += md; tot.ant += an;
+      const falta = g.ls.filter(l => so.has(l)).length;
+      return '<tr' + (falta ? ' class="so"' : '') + '><td>' + esc(br(g.venda + 'T12:00:00')) + '</td><td>' + esc(g.bandeira) + ' ' + g.n + 'x</td><td class="cn">' + esc(g.nsu)
+        + '</td><td class="n">' + g.ls.length + '</td><td class="n">' + brl(b / 100) + '</td><td class="n">' + brl(md / 100) + '</td><td class="n">' + brl(an / 100)
+        + '</td><td class="n">' + (j ? (j * 100).toFixed(2).replace('.', ',') + '%' : '—') + '</td><td class="n">' + brl(lq / 100) + '</td><td>'
+        + (falta ? '<b class="v">' + falta + ' só na Rede</b>' : '✓') + '</td></tr>';
+    });
+    const jt = jurosMes(rede.linhas);
+    box.hidden = false;
+    box.innerHTML = '<div class="cr-rede-cab"><b>📂 ' + esc(rede.arquivo) + '</b> · aba ' + esc(rede.aba) + ' · ' + rede.linhas.length + ' parcela(s) · '
+      + 'casadas <b>' + rede.casadas.size + '</b>' + (rede.soRede.length ? ' · <b class="v">' + rede.soRede.length + ' só na Rede</b> (venda que não está no fluxo, ou com bandeira/parcelas/valor diferente)' : '')
+      + ' <button type="button" class="cr-mini" id="cr-rede-x" title="esquecer o arquivo">×</button></div>'
+      + '<div class="cr-rede-lista"><table class="cr-tab"><thead><tr><th>Venda</th><th>Cartão</th><th>NSU</th><th class="n">Parc.</th><th class="n">Bruto</th><th class="n">MDR</th><th class="n">Antecipação</th><th class="n">Juros a.m.</th><th class="n">Líquido</th><th></th></tr></thead><tbody>'
+      + linhas.join('') + '</tbody><tfoot><tr><td colspan="4">Total do arquivo</td><td class="n">' + brl(tot.bruto / 100) + '</td><td class="n">' + brl(tot.mdr / 100)
+      + '</td><td class="n">' + brl(tot.ant / 100) + '</td><td class="n">' + (jt ? (jt * 100).toFixed(2).replace('.', ',') + '%' : '—') + '</td><td class="n">' + brl(tot.liq / 100) + '</td><td></td></tr></tfoot></table></div>';
+    q('cr-rede-x').addEventListener('click', () => { rede = null; desenhar(); });
+  }
+  // as escolhidas vieram TODAS do arquivo? entao a taxa se divide em MDR e antecipacao
+  function taxasDoArquivo(dir) {
+    if (!rede || !dir.length || !dir.every(t => rede.casadas.has(t._id))) return null;
+    const ls = dir.map(t => rede.casadas.get(t._id));
+    return { mdr: ls.reduce((s, l) => s + l.mdr, 0), antecipacao: ls.reduce((s, l) => s + l.antecipacao, 0),
+             liquido: ls.reduce((s, l) => s + l.liquido, 0), juros: jurosMes(ls) };
   }
 
   window.CartoesReceber = { abrir };

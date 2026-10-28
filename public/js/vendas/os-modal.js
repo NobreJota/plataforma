@@ -56,6 +56,8 @@
 // Alterado em: 16/10/2026 - DEVOLVER limitado ao que esta com o tecnico (aviso: levar mais e no "+ levar")
 // Alterado em: 16/10/2026 - USADO editavel na linha (OS pendente): digita a quantidade certa e Enter
 //              (ou sai do campo); o estoque acompanha. PUT /:id/consignados/:cid { usado }
+// Alterado em: 28/10/2026 - consignado: UNIT. EDITAVEL (preco negociado com o cliente): digita e Enter (ou sai do campo);
+//              o preco de tabela fica embaixo, em cinza. PUT /:id/consignados/:cid { precoUnit }.
 // Alterado em: 26/10/2026 - VALOR COMBINADO (OS sem venda, pendente): Valor da mao de obra combinado com o cliente ·
 //              Parte da empresa · Parte do tecnico (o resto). Grava no Gravar (PUT /:id { combinado }). A ficha de
 //              fechamento ja vem com ele; la pode acrescentar (mao de obra adicional).
@@ -202,6 +204,8 @@
       .osm-raz .ok { color:#059669; } .osm-raz .deve { color:#b91c1c; }
       .osm-dev { display:flex; gap:4px; justify-content:flex-end; }
       .osm-dev input { width:40px; padding:3px 4px; text-align:right; }
+      .osm-preco { width:84px; padding:3px 4px; text-align:right; font-weight:800; border:1px solid #c4b5fd; border-radius:6px; background:#faf5ff; }
+      .osm-tab { display:block; font-size:10px; color:#9ca3af; text-decoration:line-through; }
       .osm-usado { width:46px; padding:3px 4px; text-align:right; font-weight:800; border:1px solid #c4b5fd; border-radius:6px; background:#faf5ff; }
       .osm-endx { border:1px solid #c4b5fd; background:#fdfcff; border-radius:10px; padding:10px 12px; margin:0 0 10px; }
       .osm-endx[hidden] { display:none; }
@@ -451,11 +455,27 @@
           '✓ ' + c.codigo + ': usado ' + c.usado + ' → ' + n + (n > c.usado ? ' (estoque baixou ' + (n - c.usado) + ')' : ' (voltou ' + (c.usado - n) + ' ao estoque)'));
       } catch (e) { msg(e.message); el.disabled = false; el.value = c.usado; }
     };
+    // 28/10/2026: PRECO NEGOCIADO do consignado
+    const acertarPreco = async el => {
+      const c = (os.consignados || []).find(x => String(x.id) === el.dataset.preco); if (!c) return;
+      const p = paraCent(el.value);
+      if (!Number.isFinite(p) || p <= 0) { el.value = brl(c.precoUnit); msg('Preço: informe um valor maior que zero.'); return; }
+      if (p === c.precoUnit) { el.value = brl(p); return; }
+      el.disabled = true;
+      try {
+        mudou((await api('PUT', API + os.id + '/consignados/' + c.id, { precoUnit: p })).os,
+          '✓ ' + c.codigo + ': preço ' + brl(c.precoUnit) + ' → ' + brl(p) + (c.precoTabela || c.precoUnit ? ' (tabela ' + brl(c.precoTabela || c.precoUnit) + ')' : ''));
+      } catch (e) { msg(e.message); el.disabled = false; el.value = brl(c.precoUnit); }
+    };
     q('cons').addEventListener('keydown', ev => {
       if (ev.key === 'Enter' && ev.target.dataset && ev.target.dataset.usado) { ev.preventDefault(); acertarUsado(ev.target); }
+      if (ev.key === 'Enter' && ev.target.dataset && ev.target.dataset.preco) { ev.preventDefault(); acertarPreco(ev.target); }
     });
-    q('cons').addEventListener('change', ev => { if (ev.target.dataset && ev.target.dataset.usado) acertarUsado(ev.target); });
-    q('cons').addEventListener('focusin', ev => { if (ev.target.dataset && ev.target.dataset.usado) ev.target.select(); });
+    q('cons').addEventListener('change', ev => {
+      if (ev.target.dataset && ev.target.dataset.usado) acertarUsado(ev.target);
+      if (ev.target.dataset && ev.target.dataset.preco) acertarPreco(ev.target);
+    });
+    q('cons').addEventListener('focusin', ev => { if (ev.target.dataset && (ev.target.dataset.usado || ev.target.dataset.preco)) ev.target.select(); });
     // 16/10/2026: DEVOLVER nao passa do que esta com o tecnico (para levar mais: "+ levar", soma na linha)
     q('cons').addEventListener('input', ev => {
       if (ev.target.dataset && ev.target.dataset.usado) { ev.target.value = ev.target.value.replace(/\D/g, ''); return; }
@@ -607,7 +627,10 @@
         + '<td class="n">' + c.quantidade + '</td><td class="n">' + c.devolvido + '</td><td class="n">'
         + (ed ? '<input class="osm-usado" data-usado="' + c.id + '" value="' + c.usado + '" inputmode="numeric" title="quantidade usada: corrija e dê Enter">'
               : '<b>' + c.usado + '</b>') + '</td>'
-        + '<td class="n">' + brl(c.precoUnit) + '</td><td class="n">' + brl(c.total) + '</td>'
+        + '<td class="n">' + (ed ? '<input class="osm-preco" data-preco="' + c.id + '" value="' + brl(c.precoUnit) + '" inputmode="decimal" title="preço negociado: corrija e dê Enter">'
+              : brl(c.precoUnit))
+          + (c.precoTabela && c.precoTabela !== c.precoUnit ? '<small class="osm-tab" title="preço de tabela">tab. ' + brl(c.precoTabela) + '</small>' : '') + '</td>'
+        + '<td class="n">' + brl(c.total) + '</td>'
         + '<td class="n">' + (ed && resta > 0
             ? '<span class="osm-dev"><input data-devq="' + c.id + '" id="osm-dq-' + c.id + '" value="' + resta + '" inputmode="numeric" title="quantas voltaram">'
               + '<button type="button" class="osm-btn mini" data-dev="' + c.id + '" title="voltou para a loja: repõe o estoque">↩</button></span>'
@@ -1000,7 +1023,7 @@
     ev.preventDefault(); ev.returnValue = '';
   });
 
-  window.OSModal = { abrir, versao: '26/10/2026-f' };   // versao: F12 > Console > OSModal.versao
+  window.OSModal = { abrir, versao: '28/10/2026-g' };   // versao: F12 > Console > OSModal.versao
 
   // voltou da ficha de fechamento sem gravar (?os=<id>): reabre o modal desta OS
   const reabrirId = new URLSearchParams(location.search).get('os');

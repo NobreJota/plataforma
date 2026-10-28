@@ -62,6 +62,10 @@
 //      POST /quitar { ..., valorLiquido, lote: true }: aceita parcelas de VARIOS cartoes; a taxa/juros (total - liquido)
 //      vai para a conta da chave 'cartao-taxa' (botao ★). Sem essa conta configurada e um cartao so, usa a contaTaxa
 //      do cartao, como antes.
+//  28/10/2026 (Jorge): ARQUIVO DA REDE no recebimento em lote. GET /cartoes-receber traz a data da venda (venda.fechadaEm)
+//      para casar com a planilha; POST /quitar { lote: true, taxas: { mdr, antecipacao } } (centavos) divide a taxa em
+//      duas contrapartidas: MDR na conta 'cartao-taxa' (ou a contaTaxa do cartao) e ANTECIPACAO na 'cartao-antecipacao'.
+//      A soma tem de ser o total - liquido.
 //  16/10/2026: /janela do Fluxo de Caixa NAO traz as linhas do FLUXO DE SERVICO (origem 'OS',
 //      a receber das OS): elas sao recebidas pela tela Servico > Fluxo de servico, que usa
 //      este mesmo POST /quitar.
@@ -420,9 +424,14 @@ router.get('/cartoes-receber', async (req, res) => {
     const filtro = { status: 'ATIVO', pos: { $in: [5, 6] }, codigoConta: /^1\.01\.005\./, origem: { $ne: 'OS' } };
     if (loja) filtro.lojistaId = loja;
     const itens = await FluxoProjetado.find(filtro).sort({ vencimento: 1, historico: 1, parcela: 1 }).lean();
+    // 28/10/2026: a data da venda (para casar com o arquivo da Rede)
+    const idsV = [...new Set(itens.map(it => String(it.lancamentoId || '')).filter(x => mongoose.isValidObjectId(x)))];
+    const vendas = new Map(idsV.length ? (await col('_vendas').find({ _id: { $in: idsV.map(x => new mongoose.Types.ObjectId(x)) } })
+      .project({ fechadaEm: 1, data: 1 }).toArray()).map(v => [String(v._id), v.fechadaEm || v.data || null]) : []);
     const hoje = new Date(); hoje.setHours(12, 0, 0, 0);
     res.json({ titulos: itens.map(it => { const v = new Date(it.vencimento); v.setHours(12, 0, 0, 0);
-      return { ...tituloParaTela(it, null), atraso: Math.round((hoje - v) / 86400000) }; }) });
+      return { ...tituloParaTela(it, null), atraso: Math.round((hoje - v) / 86400000),
+               dataVenda: vendas.get(String(it.lancamentoId || '')) || null, vendaId: it.lancamentoId || null }; }) });
   } catch (err) {
     console.error('❌ /pagamento/cartoes-receber:', err.message);
     res.status(500).json({ erro: err.message });
@@ -580,7 +589,34 @@ router.post('/quitar', async (req, res) => {
 
     // taxa do cartao: entra na MESMA boleta, como contrapartida negativa (debito na despesa)
     let valorBoleta = (emCentavos(valorTotal) + extra) / 100;
-    if (taxa) {
+    // 28/10/2026: arquivo da Rede: a taxa vem dividida em MDR e antecipacao
+    let partes = null;
+    if (taxa && req.body.lote === true && req.body.taxas && typeof req.body.taxas === 'object') {
+      const mdrC = Math.round(Number(req.body.taxas.mdr)), antC = Math.round(Number(req.body.taxas.antecipacao));
+      if (!Number.isFinite(mdrC) || !Number.isFinite(antC) || mdrC < 0 || antC < 0) return res.status(400).json({ erro: 'Taxas do arquivo inválidas.' });
+      if (mdrC + antC !== taxa.centavos) {
+        return res.status(400).json({ erro: 'MDR (' + (mdrC / 100).toFixed(2) + ') + antecipação (' + (antC / 100).toFixed(2)
+          + ') não fecha com total − líquido (' + (taxa.centavos / 100).toFixed(2) + '). Nada foi gravado.' });
+      }
+      if (antC > 0) {
+        let cAnt;
+        try { cAnt = await cfg.contaDe(loja, 'cartao-antecipacao'); }
+        catch (e) { return res.status(e.status || 400).json({ erro: e.message }); }
+        partes = { mdr: mdrC, antecipacao: antC, contaAnt: cAnt };
+      }
+    }
+    if (taxa && partes) {
+      const tot = emCentavos(valorTotal), pctDe = c => (c / tot * 100).toFixed(2).replace('.', ',');
+      if (partes.mdr > 0) contrapartidas.push({
+        contaSubTitulo: taxa.cartao.contaTaxa._id, codigoConta: taxa.cartao.contaTaxa.codigo, nomeConta: taxa.cartao.contaTaxa.nome,
+        historico: 'Taxa MDR ' + taxa.cartao.nome + ' ' + pctDe(partes.mdr) + '% s/ ' + valorTotal.toFixed(2).replace('.', ','),
+        valor: -partes.mdr / 100, fluxoLancamentoId: null, pos: null });
+      contrapartidas.push({
+        contaSubTitulo: partes.contaAnt._id, codigoConta: partes.contaAnt.codigo, nomeConta: partes.contaAnt.nome,
+        historico: 'Juros antecipação ' + taxa.cartao.nome + ' ' + pctDe(partes.antecipacao) + '% s/ ' + valorTotal.toFixed(2).replace('.', ','),
+        valor: -partes.antecipacao / 100, fluxoLancamentoId: null, pos: null });
+      valorBoleta = (emCentavos(valorTotal) - taxa.centavos) / 100;
+    } else if (taxa) {
       const v = taxa.centavos / 100;
       const pct = (taxa.centavos / emCentavos(valorTotal) * 100).toFixed(2).replace('.', ',');
       contrapartidas.push({
@@ -652,7 +688,8 @@ router.post('/quitar', async (req, res) => {
       valorTotal,
       titulosQuitados: titulos.length,
       liquido: valorBoleta,
-      taxa: taxa ? taxa.centavos / 100 : 0
+      taxa: taxa ? taxa.centavos / 100 : 0,
+      antecipacao: partes ? partes.antecipacao / 100 : 0
     });
   } catch (err) {
     console.error('❌ /pagamento/quitar:', err.message);

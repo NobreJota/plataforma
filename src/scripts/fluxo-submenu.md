@@ -32,13 +32,26 @@ A operadora deposita várias parcelas juntas (vários clientes, às vezes mais d
 - Abre pelo Sub-menu "Cartões - recebimento" e pelo clique numa parcela de cartão (1.01.005) no fluxo, que pergunta
   **📦 Receber em lote** ou **💳 Recebimento único** (o modal de sempre, com antecipação).
 - `public/js/contab/contabil/financeiro/cartoes-receber.js`: ESQUERDA = todas as parcelas de cartão em aberto (`GET /cartoes-receber`:
-  pos 6 e o 5 antigo), filtro por texto, cartão e "até" (vencimento); clique passa para a DIREITA ("→ todas" passa a lista).
+  pos 6 e o 5 antigo, com a data da venda), filtro por texto, cartão e "até"; clique passa para a DIREITA ("→ todas" passa a lista).
   DIREITA = o depósito; clique devolve. Valores a receber (soma) · Recebido líquido (digita) · Despesas com taxa e juros (diferença, %).
-- Data do movimento + banco (padrão CEF/Armação 1.01.002.003). ★ = chave **`cartao-taxa`** (pagina `cartoes` em `config-contas.js`,
-  sem padrão — **configurar**).
-- Grava pelo `POST /quitar { valorLiquido, lote: true }`: UMA boleta, banco (D) pelo líquido, cada parcela (C) na conta do cartão,
-  taxa como contrapartida negativa na conta `cartao-taxa`. Lote aceita cartões diferentes. Sem `cartao-taxa` e um cartão só, usa a
-  `contaTaxa` do cartão. Estorno desfaz tudo.
+- Data do movimento + banco (padrão CEF/Armação 1.01.002.003). ★ (pagina `cartoes`): **`cartao-taxa`** (MDR) e **`cartao-antecipacao`**
+  (juros da antecipação) — sem padrão, **configurar**.
+- Grava pelo `POST /quitar { valorLiquido, lote: true, taxas? }`: UMA boleta, banco (D) pelo líquido, cada parcela (C) na conta do cartão,
+  taxa como contrapartida negativa. Lote aceita cartões diferentes. Estorno desfaz tudo.
+
+### Arquivo da Rede (28/10/2026)
+- Maquininha: **Rede** (estabelecimento 7871457), deposita na **CEF**. Hoje a Armação **antecipa tudo** ("recebimento automático",
+  D+1, por falta de capital de giro); no futuro deve parar — o sistema atende os dois (sem antecipar as parcelas vêm uma por mês).
+- Relatórios da Rede: **vendas** (por venda: MDR, taxa de recebimento automático, líquido, NSU); **recebimentos** (xlsx com abas;
+  a aba **"pagamentos"** é uma linha por parcela paga: data do recebimento, data da venda, bruto, taxa MDR %, valor MDR descontado
+  [MDR + antecipação], líquido, NSU, bandeira, nº parcelas, parcela); o CSV "recebidos" é só o total do dia por bandeira.
+- **📂 Importar arquivo da Rede** (tela Cartões - recebimento; SheetJS 0.18.5 do cdnjs): lê a aba pagamentos, casa cada parcela com a
+  pos 6 (bandeira, n/N, valor ±0,03, data da venda ±4 dias; mesmo NSU fica na mesma venda), passa as casadas para a direita, líquido e
+  data do arquivo. Quadro por venda (NSU): bruto, MDR, antecipação, **juros ao mês**, líquido; "só na Rede" em vermelho.
+  Só parcelas do arquivo + líquido do arquivo → taxa em duas contrapartidas (MDR / antecipação).
+- Taxas da Rede (out/2026): MDR 1,81% (1x) · 2,51% (2–6x) · 2,81% (7–12x); recebimento automático 1,05% · ~2,31% (3x) · 6,72% (10x)
+  ≈ **1,08% / 1,21% / 1,32% ao mês**. Conferido com 28/10: Visa líquido 915,74, Mastercard 5.125,60.
+- **Decisão (28/10):** o cartão **continua no fechamento da nota** (bandeira + parcelas); o arquivo da Rede confere depois.
 
 ## POS 6 = cartões a receber da operadora (23/10/2026, Jorge)
 - Parcelas de cartão (conta 1.01.005.xxx) nascem com **pos 6**: fechamento da venda com débito/crédito (`venda-api`) e recebimento
@@ -47,7 +60,8 @@ A operadora deposita várias parcelas juntas (vários clientes, às vezes mais d
 - `src/scripts/FLUXO-4-cartoes-pos6.js` (`--base <nome>`, `--aplicar`): rodado na `admin` em 23/10 (164 → pos 6). Na `rotaes_ensaio`
   ficaram 2 com pos 5 — **não precisa** (dado de teste, regra acima).
 - `os-api` (linha ~932, a receber da OS na conta do cliente) continua pos 5.
-- `.env` local: a linha 8 (`/admin`) conecta; a linha 9 (`/rotaes_ensaio`) dá timeout (string antiga). Para outra base, use a linha 8 + `dbName` (`--base`).
+- `.env` local: a linha 8 (`/admin`) conecta; a linha 9 (`/rotaes_ensaio`) dá timeout (replicaSet antigo). Para outra base, copie a
+  linha 8 trocando só `/admin` (ou `--base` nos scripts).
 
 ## Recebimento de título de cliente no Fluxo: Banco · Caixa · Cartão, em partes (23/10/2026)
 Venda fechada "a receber" (cliente não decidiu como paga). Clique na linha pos 5 do cliente → modal "Recebimento em lote" com
@@ -61,15 +75,13 @@ e aí a lista mostra **só os títulos do cliente clicado**. "Antecipação de c
   `POST /receber-partes`: uma boleta por parte (perna = banco/caixa/operadora × cliente), ligadas por `grupoRecebimento`;
   títulos QUITADO (boletaId = 1ª boleta); parte cartão gera pos 6 com `origemBoletaId` e `lancamentoId` da venda.
 - **Estorno** de qualquer boleta do grupo desfaz tudo e cancela as parcelas do cartão; se a operadora já pagou alguma, recusa.
-- Taxa do cartão só quando a operadora paga (valor líquido, como antes).
 
 ## Buscar CEP pela rua — endereço de instalação (venda e OS) (24/10/2026)
 - `public/js/comum/endereco-instalacao.js` (comum ao modal da venda e da OS): botão **🔍** ao lado do CEP.
 - CEP vazio: busca no ViaCEP pelo browser (`viacep.com.br/ws/UF/cidade/rua/json/`), sem o tipo do logradouro (Rua/Av./Praça…) e
   sem acento. Um resultado (ou um só no bairro digitado) preenche CEP, rua, bairro, cidade, UF. Vários (rua longa, CEP por faixa de
   número): lista para escolher, os do bairro digitado primeiro. CEP digitado: busca o endereço (rota antiga `/aux/api/lookup/cep`).
-- Com "guardar no cadastro do cliente" marcado, o endereço (com CEP) vai para a ficha.
-- Se o site tiver CSP bloqueando `viacep.com.br`, passar a busca para o servidor (rota no `/aux/api/lookup`).
+- Se o site tiver CSP bloqueando `viacep.com.br`, passar a busca para o servidor (`/aux` = `auxiliares` no server.js linha 437).
 
 ## Importação do fluxo do Access
 - `src/scripts/FLUXO-1-importar-fluxo-access.js` (Contab_Caixa_Fluxo → `_fluxo_projetado`, origem ACCESS; 2.02→2.01; fora pos 8 e 7). Rodado em 18/10: 194 linhas.

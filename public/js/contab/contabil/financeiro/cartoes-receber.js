@@ -19,6 +19,10 @@
 //   MDR, ANTECIPACAO ("taxa de recebimento automatico") e os JUROS AO MES da antecipacao. "Só na Rede" = venda que nao
 //   esta no fluxo (ou com bandeira/parcelas/valor diferente). Gravando so parcelas do arquivo, a taxa vai em duas contas:
 //   MDR ('cartao-taxa') e antecipacao ('cartao-antecipacao'), as duas pelo ★. Leitor de planilha: SheetJS (cdnjs).
+// 29/10/2026 (Jorge): os arquivos ACUMULAM (importa o Visa, depois o Mastercard: as linhas somam, sem repetir) e o botao
+//   ⚖ EQUIPARAR: para cada venda "só na Rede", os titulos da esquerda com o MESMO VALOR (um titulo, ou as parcelas de uma
+//   venda que somam o valor) sobem em amarelo com a venda da Rede ao lado; clicar liga e passa para a direita (a MDR e a
+//   antecipacao daquela venda vao junto). Tirar da direita um titulo equiparado desliga a venda inteira.
 // API: /financeiro/api/pagamento (GET /cartoes-receber, GET /bancos, POST /quitar { valorLiquido, lote: true, taxas })
 // =============================================================================
 
@@ -102,6 +106,8 @@
   .cr-rede-lista { max-height:150px; overflow:auto; background:#fff; border-top:1px solid #d1fae5; }
   .cr-rede .cr-tab tr { cursor:default; } .cr-rede .cr-tab tr.so td { background:#fef2f2; }
   .cr-rede .cr-tab tfoot td { position:sticky; bottom:0; background:#ecfdf5; font-weight:800; }
+  .cr-tab tr.eq td { background:#fef9c3; } .cr-tab tr.eq:hover td { background:#fde68a; }
+  .eq-r { display:block; font-size:11px; color:#92400e; font-weight:700; } .eq-r.ok { color:#065f46; }
   .cr-split { grid-column:1 / -1; text-align:right; font-size:12px; color:#065f46; }
   .cr-btn.verde { background:#059669; border-color:#059669; color:#fff; } .cr-btn:disabled { opacity:.5; cursor:not-allowed; }`;
   document.head.appendChild(st);
@@ -143,10 +149,13 @@
     document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !jan.hidden) fechar(); });
     q('cr-cfg').addEventListener('click', abrirConfig);
     ['cr-busca', 'cr-cartao', 'cr-ate'].forEach(id => q(id).addEventListener(id === 'cr-busca' ? 'input' : 'change', desenhar));
-    q('cr-esq').addEventListener('click', ev => { const tr = ev.target.closest('tr[data-id]'); if (!tr) return; escolhidos.add(tr.dataset.id); desenhar(); });
-    q('cr-dir').addEventListener('click', ev => { const tr = ev.target.closest('tr[data-id]'); if (!tr) return; escolhidos.delete(tr.dataset.id); desenhar(); });
+    q('cr-esq').addEventListener('click', ev => { const tr = ev.target.closest('tr[data-id]'); if (!tr) return;
+      if (ligarCandidato(tr.dataset.id)) return;                       // 29/10/2026: Equiparar
+      escolhidos.add(tr.dataset.id); if (rede && rede.cand) equiparar(true); desenhar(); });
+    q('cr-dir').addEventListener('click', ev => { const tr = ev.target.closest('tr[data-id]'); if (!tr) return;
+      desligar(tr.dataset.id); escolhidos.delete(tr.dataset.id); if (rede && rede.cand) equiparar(true); desenhar(); });
     q('cr-todas').addEventListener('click', () => { esquerda().forEach(t => escolhidos.add(t._id)); desenhar(); });
-    q('cr-limpa').addEventListener('click', () => { escolhidos = new Set(); desenhar(); });
+    q('cr-limpa').addEventListener('click', () => { escolhidos = new Set(); if (rede) { rede.manual.clear(); religar(); } desenhar(); });
     q('cr-liq').addEventListener('input', contas);
     q('cr-liq').addEventListener('blur', () => { const c = paraCent(q('cr-liq').value); q('cr-liq').value = c ? brl(c / 100) : ''; contas(); });
     q('cr-liq').addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); q('cr-liq').blur(); if (!q('cr-ok').disabled) q('cr-ok').focus(); } });
@@ -190,19 +199,26 @@
   // a esquerda: o que nao foi escolhido e passa nos filtros
   function esquerda() {
     const b = q('cr-busca').value.trim().toLowerCase(), c = q('cr-cartao').value, ate = q('cr-ate').value;
-    return titulos.filter(t => !escolhidos.has(t._id)
-      && (!b || (t.historico + ' ' + t.nomeConta).toLowerCase().includes(b))
+    const cand = rede && rede.cand && rede.cand.size ? rede.cand : null;
+    const l = titulos.filter(t => !escolhidos.has(t._id)
+      && ((cand && cand.has(t._id)) || ((!b || (t.historico + ' ' + t.nomeConta).toLowerCase().includes(b))
       && (!c || t.codigoConta === c)
-      && (!ate || ymd(new Date(t.vencimento)) <= ate));
+      && (!ate || ymd(new Date(t.vencimento)) <= ate))));
+    // 29/10/2026: Equiparar: os candidatos em cima
+    return cand ? l.sort((x, y) => (cand.has(y._id) - cand.has(x._id)) || ((cand.get(x._id) || {}).nota || 0) - ((cand.get(y._id) || {}).nota || 0)) : l;
   }
   const direita = () => titulos.filter(t => escolhidos.has(t._id));
   const cartaoCurto = t => String(t.nomeConta || t.codigoConta).replace(/^cart[ãa]o\s*/i, '');
   function tabela(lista, vazio) {
     if (!lista.length) return '<div class="cr-vz">' + vazio + '</div>';
     return '<table class="cr-tab"><thead><tr><th>Venc.</th><th>Histórico</th><th>Cartão</th><th class="n">Parc.</th><th class="n">Valor</th></tr></thead><tbody>'
-      + lista.map(t => '<tr data-id="' + esc(t._id) + '"><td' + (t.atraso > 0 ? ' class="v"' : '') + '>' + br(t.vencimento) + '</td>'
-        + '<td>' + esc(t.historico) + '</td><td class="cn">' + esc(cartaoCurto(t)) + '</td>'
-        + '<td class="n cn">' + (t.parcela ? t.parcela + '/' + t.totalParcelas : '') + '</td><td class="n">' + brl(t.valor) + '</td></tr>').join('')
+      + lista.map(t => { const cd = rede && rede.cand && !escolhidos.has(t._id) ? rede.cand.get(t._id) : null;
+        const eq = rede && escolhidos.has(t._id) && rede.casadas.get(t._id) && rede.casadas.get(t._id).manual;
+        return '<tr data-id="' + esc(t._id) + '"' + (cd ? ' class="eq" title="clique: liga à venda da Rede e passa para a direita"' : '') + '><td' + (t.atraso > 0 ? ' class="v"' : '') + '>' + br(t.vencimento) + '</td>'
+        + '<td>' + esc(t.historico)
+        + (cd ? '<small class="eq-r">≈ Rede ' + esc(cd.g.bandeira) + ' ' + cd.g.n + 'x · NSU ' + esc(cd.nsu) + ' · ' + brl(cd.g.bruto / 100) + (cd.ids.length > 1 ? ' (' + cd.ids.length + ' parcelas)' : '') + '</small>' : '')
+        + (eq ? '<small class="eq-r ok">equiparado · NSU ' + esc(eq) + '</small>' : '') + '</td><td class="cn">' + esc(cartaoCurto(t)) + '</td>'
+        + '<td class="n cn">' + (t.parcela ? t.parcela + '/' + t.totalParcelas : '') + '</td><td class="n">' + brl(t.valor) + '</td></tr>'; }).join('')
       + '</tbody></table>';
   }
   function desenhar() {
@@ -325,7 +341,7 @@
   }
 
   // casa as linhas do arquivo com as parcelas do fluxo
-  function casarRede(linhas) {
+  function casarRede(linhas, livres) {
     const usados = new Set(), vendaDoNsu = new Map(), casadas = new Map(), soRede = [];
     const dVendaT = t => t.dataVenda ? ymd(new Date(t.dataVenda)) : ymd(new Date(new Date(t.vencimento).getTime() - 30 * (t.parcela || 1) * DIA));
     const ordem = linhas.slice().sort((a, b) => a.nsu.localeCompare(b.nsu) || a.k - b.k);
@@ -333,7 +349,7 @@
       const pref = vendaDoNsu.get(l.nsu);
       let melhor = null, nota = 1e9;
       for (const t of titulos) {
-        if (usados.has(t._id) || bandeiraDe(t.nomeConta || t.codigoConta) !== l.band) continue;
+        if ((livres && !livres.has(t._id)) || usados.has(t._id) || bandeiraDe(t.nomeConta || t.codigoConta) !== l.band) continue;
         if ((t.totalParcelas || 1) !== l.n || (t.parcela || 1) !== l.k) continue;
         const dv = Math.abs(Math.round(t.valor * 100) - l.bruto); if (dv > 3) continue;
         const dd = l.venda ? Math.abs(difDias(dVendaT(t), l.venda)) : 0; if (dd > 4) continue;
@@ -346,12 +362,54 @@
     return { casadas, soRede };
   }
 
-  let rede = null;          // { arquivo, aba, linhas, casadas: Map(tituloId -> linha), soRede }
+  // 29/10/2026 (Jorge): os arquivos ACUMULAM (Visa, depois Mastercard...) e EQUIPARAR liga a venda "só na Rede" ao
+  // titulo do fluxo pelo VALOR (lancada com outra bandeira/parcelas: ex. Visa 3x 758,00 na Rede x 1/1 758,00 no fluxo).
+  //   rede.linhas       todas as parcelas dos arquivos importados (sem repetir)
+  //   rede.manual       NSU -> [ids dos titulos] ligados a mao (Equiparar)
+  //   rede.casadas      titulo -> { bruto, liquido, mdr, antecipacao, linhas } (automatico + manual)
+  //   rede.soRede       linhas sem titulo
+  //   rede.cand         titulo -> { nsu, ids } candidatos do Equiparar (aparecem em cima, em amarelo, na esquerda)
+  let rede = null;
   async function carregarSheetJS() {
     if (window.XLSX) return;
     await new Promise((ok, falha) => { const sc = document.createElement('script');
       sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
       sc.onload = ok; sc.onerror = () => falha(new Error('não carregou o leitor de planilha (internet?)')); document.head.appendChild(sc); });
+  }
+  const chaveLinha = l => [l.nsu, l.k, l.n, l.receb, l.bruto].join('|');
+  const somaL = (ls, k) => ls.reduce((s, l) => s + l[k], 0);
+  // refaz as ligacoes: automatico nas linhas sem ligacao manual; manual divide o grupo pelos titulos (proporcional ao valor)
+  function religar() {
+    if (!rede) return;
+    const manTit = new Set([].concat(...[...rede.manual.values()]));
+    const livres = new Set(titulos.filter(t => !manTit.has(t._id)).map(t => t._id));
+    const { casadas, soRede } = casarRede(rede.linhas.filter(l => !rede.manual.has(l.nsu)), livres);
+    rede.casadas = new Map();
+    for (const [id, l] of casadas) rede.casadas.set(id, { bruto: l.bruto, liquido: l.liquido, mdr: l.mdr, antecipacao: l.antecipacao, linhas: [l] });
+    for (const [nsu, ids] of rede.manual) {
+      const ls = rede.linhas.filter(l => l.nsu === nsu), ts = ids.map(id => titulos.find(t => t._id === id)).filter(Boolean);
+      if (!ts.length) continue;
+      const tot = ts.reduce((s, t) => s + cent(t.valor), 0) || 1;
+      const g = { liquido: somaL(ls, 'liquido'), mdr: somaL(ls, 'mdr'), antecipacao: somaL(ls, 'antecipacao') };
+      const usado = { liquido: 0, mdr: 0, antecipacao: 0 };
+      ts.forEach((t, i) => {
+        const ult = i === ts.length - 1, f = cent(t.valor) / tot;
+        const parte = k => ult ? g[k] - usado[k] : Math.round(g[k] * f);
+        const a = { bruto: cent(t.valor), liquido: parte('liquido'), mdr: parte('mdr'), antecipacao: parte('antecipacao'), linhas: ls, manual: nsu };
+        usado.liquido += a.liquido; usado.mdr += a.mdr; usado.antecipacao += a.antecipacao;
+        rede.casadas.set(t._id, a);
+      });
+    }
+    rede.soRede = soRede;
+    if (rede.cand) equiparar(true);
+  }
+  // o liquido e a data do movimento vem do arquivo (o que esta casado)
+  function puxarDoArquivo() {
+    if (!rede) return;
+    const liq = [...rede.casadas.values()].reduce((s, a) => s + a.liquido, 0);
+    q('cr-liq').value = liq ? brl(liq / 100) : '';
+    const dias = [...new Set(rede.linhas.map(l => l.receb).filter(Boolean))];
+    if (dias.length === 1 && dias[0] <= ymd(new Date())) q('cr-data').value = dias[0];
   }
   async function importarRede(arq) {
     msg('Lendo ' + arq.name + '…', true);
@@ -360,19 +418,69 @@
       const wb = XLSX.read(await arq.arrayBuffer(), { type: 'array', cellDates: false });
       const lido = lerPlanilhaRede(wb);
       if (!lido) { msg('Não achei as parcelas no arquivo: use o relatório de recebimentos da Rede (aba "pagamentos", com "valor líquido da parcela" e "NSU/CV").'); return; }
+      if (rede && rede.arquivos.includes(arq.name)) { msg(arq.name + ' já foi importado.'); return; }
       await carregar();                                   // fluxo atualizado antes de casar
-      const { casadas, soRede } = casarRede(lido.linhas);
-      rede = { arquivo: arq.name, aba: lido.aba, linhas: lido.linhas, casadas, soRede };
-      escolhidos = new Set(casadas.keys());
-      const liq = [...casadas.values()].reduce((s, l) => s + l.liquido, 0);
-      q('cr-liq').value = liq ? brl(liq / 100) : '';
-      const dias = [...new Set(lido.linhas.map(l => l.receb).filter(Boolean))];
-      if (dias.length === 1 && dias[0] <= ymd(new Date())) q('cr-data').value = dias[0];
+      if (!rede) rede = { arquivos: [], linhas: [], manual: new Map(), casadas: new Map(), soRede: [], cand: null };
+      const ja = new Set(rede.linhas.map(chaveLinha));
+      const novas = lido.linhas.filter(l => !ja.has(chaveLinha(l)));
+      rede.arquivos.push(arq.name); rede.linhas = rede.linhas.concat(novas);
+      const antes = new Set(rede.casadas.keys());
+      religar();
+      for (const id of rede.casadas.keys()) if (!antes.has(id)) escolhidos.add(id);   // acumula: as novas vao para a direita
+      puxarDoArquivo();
       desenhar();
-      msg(casadas.size + ' de ' + lido.linhas.length + ' parcela(s) do arquivo casaram com o fluxo' + (soRede.length ? ' · ' + soRede.length + ' só na Rede' : ''), !soRede.length);
+      const casN = novas.filter(l => [...rede.casadas.values()].some(a => a.linhas.includes(l))).length;
+      msg(arq.name + ': ' + casN + ' de ' + novas.length + ' parcela(s) casaram' + (rede.soRede.length ? ' · ' + rede.soRede.length + ' só na Rede (use Equiparar)' : ''), !rede.soRede.length);
     } catch (e) { msg('Arquivo da Rede: ' + e.message); }
   }
-  // o quadro do arquivo: por venda (NSU), com MDR, antecipacao e juros ao mes
+
+  // EQUIPARAR: para cada venda "só na Rede" (NSU), os titulos da esquerda com o MESMO VALOR da venda: um titulo so, ou
+  // todas as parcelas de uma venda do fluxo que somam o valor. Os da mesma bandeira e data mais perto vem primeiro.
+  function equiparar(calado) {
+    if (!rede) return;
+    const grupos = new Map();
+    for (const l of rede.soRede) { const g = grupos.get(l.nsu) || { nsu: l.nsu, bruto: 0, band: l.band, venda: l.venda, bandeira: l.bandeira, n: l.n }; g.bruto += l.bruto; grupos.set(l.nsu, g); }
+    const livres = titulos.filter(t => !escolhidos.has(t._id) && !rede.casadas.has(t._id));
+    const porVenda = new Map();
+    for (const t of livres) if (t.vendaId) { const k = String(t.vendaId); porVenda.set(k, (porVenda.get(k) || []).concat(t)); }
+    const dataT = t => t.dataVenda ? ymd(new Date(t.dataVenda)) : '';
+    const cand = new Map();
+    for (const g of grupos.values()) {
+      const op = [];
+      for (const t of livres) if (Math.abs(cent(t.valor) - g.bruto) <= 3) op.push({ ids: [t._id], t });
+      for (const ts of porVenda.values()) if (ts.length > 1 && Math.abs(ts.reduce((s, t) => s + cent(t.valor), 0) - g.bruto) <= 3) op.push({ ids: ts.map(t => t._id), t: ts[0] });
+      for (const o of op) {
+        const nota = (bandeiraDe(o.t.nomeConta || o.t.codigoConta) === g.band ? 0 : 100) + (dataT(o.t) && g.venda ? Math.min(99, Math.abs(difDias(dataT(o.t), g.venda))) : 50);
+        for (const id of o.ids) { const atual = cand.get(id); if (!atual || nota < atual.nota) cand.set(id, { nsu: g.nsu, ids: o.ids, nota, g }); }
+      }
+    }
+    rede.cand = cand;
+    if (!calado) {
+      desenhar();
+      msg(cand.size ? cand.size + ' título(s) com o mesmo valor de venda só na Rede: estão em amarelo, em cima, na esquerda. Clique para ligar e passar.'
+        : 'Nenhum título da esquerda com o valor das vendas só na Rede (' + grupos.size + ').', !!cand.size);
+    }
+  }
+  // clique num candidato do Equiparar: liga a venda da Rede a esse(s) titulo(s) e passa para a direita
+  function ligarCandidato(id) {
+    const c = rede && rede.cand && rede.cand.get(id); if (!c) return false;
+    rede.manual.set(c.nsu, c.ids);
+    c.ids.forEach(x => escolhidos.add(x));
+    religar(); puxarDoArquivo(); desenhar();
+    msg('✓ NSU ' + c.nsu + ' (' + c.g.bandeira + ' ' + c.g.n + 'x · ' + brl(c.g.bruto / 100) + ') ligado a ' + c.ids.length + ' título(s) do fluxo', true);
+    return true;
+  }
+  // saiu da direita: se estava ligado a mao, desliga a venda inteira
+  function desligar(id) {
+    const a = rede && rede.casadas.get(id);
+    if (!a || !a.manual) return;
+    const ids = rede.manual.get(a.manual) || [];
+    rede.manual.delete(a.manual);
+    ids.forEach(x => escolhidos.delete(x));
+    religar(); puxarDoArquivo();
+  }
+
+  // o quadro dos arquivos: por venda (NSU), com MDR, antecipacao e juros ao mes
   function desenharRede() {
     const box = q('cr-rede');
     if (!rede) { box.hidden = true; return; }
@@ -380,32 +488,34 @@
     for (const l of rede.linhas) { const g = grupos.get(l.nsu) || { ls: [], nsu: l.nsu, bandeira: l.bandeira, n: l.n, venda: l.venda }; g.ls.push(l); grupos.set(l.nsu, g); }
     const so = new Set(rede.soRede);
     const tot = { bruto: 0, liq: 0, mdr: 0, ant: 0 };
-    const linhas = [...grupos.values()].map(g => {
-      const s = k => g.ls.reduce((t, l) => t + l[k], 0);
-      const b = s('bruto'), lq = s('liquido'), md = s('mdr'), an = s('antecipacao'), j = jurosMes(g.ls);
+    const linhas = [...grupos.values()].sort((a, b) => (b.ls.some(l => so.has(l))) - (a.ls.some(l => so.has(l))) || a.bandeira.localeCompare(b.bandeira)).map(g => {
+      const b = somaL(g.ls, 'bruto'), lq = somaL(g.ls, 'liquido'), md = somaL(g.ls, 'mdr'), an = somaL(g.ls, 'antecipacao'), j = jurosMes(g.ls);
       tot.bruto += b; tot.liq += lq; tot.mdr += md; tot.ant += an;
-      const falta = g.ls.filter(l => so.has(l)).length;
+      const falta = g.ls.filter(l => so.has(l)).length, man = rede.manual.has(g.nsu);
       return '<tr' + (falta ? ' class="so"' : '') + '><td>' + esc(br(g.venda + 'T12:00:00')) + '</td><td>' + esc(g.bandeira) + ' ' + g.n + 'x</td><td class="cn">' + esc(g.nsu)
         + '</td><td class="n">' + g.ls.length + '</td><td class="n">' + brl(b / 100) + '</td><td class="n">' + brl(md / 100) + '</td><td class="n">' + brl(an / 100)
         + '</td><td class="n">' + (j ? (j * 100).toFixed(2).replace('.', ',') + '%' : '—') + '</td><td class="n">' + brl(lq / 100) + '</td><td>'
-        + (falta ? '<b class="v">' + falta + ' só na Rede</b>' : '✓') + '</td></tr>';
+        + (falta ? '<b class="v">' + falta + ' só na Rede</b>' : man ? '✓ <span class="cn">equiparado</span>' : '✓') + '</td></tr>';
     });
-    const jt = jurosMes(rede.linhas);
+    const jt = jurosMes(rede.linhas), nSo = new Set(rede.soRede.map(l => l.nsu)).size;
     box.hidden = false;
-    box.innerHTML = '<div class="cr-rede-cab"><b>📂 ' + esc(rede.arquivo) + '</b> · aba ' + esc(rede.aba) + ' · ' + rede.linhas.length + ' parcela(s) · '
-      + 'casadas <b>' + rede.casadas.size + '</b>' + (rede.soRede.length ? ' · <b class="v">' + rede.soRede.length + ' só na Rede</b> (venda que não está no fluxo, ou com bandeira/parcelas/valor diferente)' : '')
-      + ' <button type="button" class="cr-mini" id="cr-rede-x" title="esquecer o arquivo">×</button></div>'
+    box.innerHTML = '<div class="cr-rede-cab"><b>📂 ' + rede.arquivos.map(esc).join(' + ') + '</b> · ' + rede.linhas.length + ' parcela(s) · '
+      + 'casadas <b>' + (rede.linhas.length - rede.soRede.length) + '</b>' + (rede.soRede.length ? ' · <b class="v">' + rede.soRede.length + ' só na Rede</b> (' + nSo + ' venda(s): no fluxo com bandeira/parcelas/valor diferente, ou faltando)' : '')
+      + (rede.soRede.length ? ' <button type="button" class="cr-btn" id="cr-eq" title="procura na lista da esquerda os títulos com o mesmo valor das vendas só na Rede">⚖ Equiparar</button>' : '')
+      + ' <button type="button" class="cr-mini" id="cr-rede-x" title="esquecer os arquivos importados">×</button></div>'
       + '<div class="cr-rede-lista"><table class="cr-tab"><thead><tr><th>Venda</th><th>Cartão</th><th>NSU</th><th class="n">Parc.</th><th class="n">Bruto</th><th class="n">MDR</th><th class="n">Antecipação</th><th class="n">Juros a.m.</th><th class="n">Líquido</th><th></th></tr></thead><tbody>'
-      + linhas.join('') + '</tbody><tfoot><tr><td colspan="4">Total do arquivo</td><td class="n">' + brl(tot.bruto / 100) + '</td><td class="n">' + brl(tot.mdr / 100)
+      + linhas.join('') + '</tbody><tfoot><tr><td colspan="4">Total ' + (rede.arquivos.length > 1 ? 'dos arquivos' : 'do arquivo') + '</td><td class="n">' + brl(tot.bruto / 100) + '</td><td class="n">' + brl(tot.mdr / 100)
       + '</td><td class="n">' + brl(tot.ant / 100) + '</td><td class="n">' + (jt ? (jt * 100).toFixed(2).replace('.', ',') + '%' : '—') + '</td><td class="n">' + brl(tot.liq / 100) + '</td><td></td></tr></tfoot></table></div>';
     q('cr-rede-x').addEventListener('click', () => { rede = null; desenhar(); });
+    if (q('cr-eq')) q('cr-eq').addEventListener('click', () => equiparar(false));
   }
-  // as escolhidas vieram TODAS do arquivo? entao a taxa se divide em MDR e antecipacao
+  // as escolhidas vieram TODAS dos arquivos? entao a taxa se divide em MDR e antecipacao
   function taxasDoArquivo(dir) {
     if (!rede || !dir.length || !dir.every(t => rede.casadas.has(t._id))) return null;
-    const ls = dir.map(t => rede.casadas.get(t._id));
-    return { mdr: ls.reduce((s, l) => s + l.mdr, 0), antecipacao: ls.reduce((s, l) => s + l.antecipacao, 0),
-             liquido: ls.reduce((s, l) => s + l.liquido, 0), juros: jurosMes(ls) };
+    const as = dir.map(t => rede.casadas.get(t._id));
+    const ls = [...new Set([].concat(...as.map(a => a.linhas)))];
+    return { mdr: as.reduce((s, a) => s + a.mdr, 0), antecipacao: as.reduce((s, a) => s + a.antecipacao, 0),
+             liquido: as.reduce((s, a) => s + a.liquido, 0), juros: jurosMes(ls) };
   }
 
   window.CartoesReceber = { abrir };

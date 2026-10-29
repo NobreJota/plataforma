@@ -35,6 +35,7 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 // -------------------------------------------------------------------
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(require('./src/middleware/erro-banco').traduzir);
 app.use(cors());
 app.use(morgan('dev'));
 // Middleware para evitar qualquer cache no cliente e proxies
@@ -492,10 +493,12 @@ app.use((req, _res, next) => {
   next();
 });
 app.use((_, res) => res.status(404).send('404 - Página não encontrada'));
+app.use(require('./src/middleware/erro-banco'));
 
 // -------------------------------------------------------------------
 // Boot: conecta no Mongo ANTES de ouvir porta
 // -------------------------------------------------------------------
+require('./src/middleware/erro-banco').protegerProcesso();
 (async () => {
   try {
     await connectToDatabase(); // ✅ único ponto de conexão

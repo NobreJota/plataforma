@@ -56,6 +56,14 @@
 // Alterado em: 16/10/2026 - DEVOLVER limitado ao que esta com o tecnico (aviso: levar mais e no "+ levar")
 // Alterado em: 16/10/2026 - USADO editavel na linha (OS pendente): digita a quantidade certa e Enter
 //              (ou sai do campo); o estoque acompanha. PUT /:id/consignados/:cid { usado }
+// Alterado em: 29/10/2026 (Jorge) - linha SERVICO = valor combinado (ou o da venda), com "empresa" e "técnico" embaixo.
+//              OS gravada: a trava do consignado e so nas caixas/botoes (o mouse na descricao mostra o preco original).
+// Alterado em: 29/10/2026 (Jorge) - o botao "Fechar" do rodape virou "Lista": fecha o modal (perguntando se ha algo nao
+//              gravado) e, fora da tela da lista, vai para a Lista geral. O × do canto e o Esc so fecham.
+// Alterado em: 29/10/2026 (Jorge) - OS GRAVADA x EDITANDO. Gravada (abriu completa, ou acabou de gravar): campos
+//              travados (agendamento, valor combinado, observacao, consignado, mudar local; fotos liberadas) e os botoes
+//              "Editar OS" · "Fechar OS" (= ficha de fechamento, antes "Concluir serviço") · Fechar. Editando (OS nova,
+//              incompleta, ou depois de "Editar OS"): "Gravar" · Fechar. Gravou -> volta a gravada.
 // Alterado em: 28/10/2026 - consignado: UNIT. EDITAVEL (preco negociado com o cliente): digita e Enter (ou sai do campo);
 //              o preco de tabela fica embaixo, em cinza. PUT /:id/consignados/:cid { precoUnit }.
 // Alterado em: 26/10/2026 - VALOR COMBINADO (OS sem venda, pendente): Valor da mao de obra combinado com o cliente ·
@@ -204,13 +212,18 @@
       .osm-raz .ok { color:#059669; } .osm-raz .deve { color:#b91c1c; }
       .osm-dev { display:flex; gap:4px; justify-content:flex-end; }
       .osm-dev input { width:40px; padding:3px 4px; text-align:right; }
-      .osm-preco { width:84px; padding:3px 4px; text-align:right; font-weight:800; border:1px solid #c4b5fd; border-radius:6px; background:#faf5ff; }
-      .osm-tab { display:block; font-size:10px; color:#9ca3af; text-decoration:line-through; }
+      .osm-preco { width:100%; max-width:84px; box-sizing:border-box; padding:3px 4px; text-align:right; font-weight:800; border:1px solid #c4b5fd; border-radius:6px; background:#faf5ff; }
+      .osm-neg { text-decoration:underline dotted #7c3aed; text-underline-offset:3px; cursor:help; }
       .osm-usado { width:46px; padding:3px 4px; text-align:right; font-weight:800; border:1px solid #c4b5fd; border-radius:6px; background:#faf5ff; }
       .osm-endx { border:1px solid #c4b5fd; background:#fdfcff; border-radius:10px; padding:10px 12px; margin:0 0 10px; }
       .osm-endx[hidden] { display:none; }
       .osm-endx-cab { font-weight:800; color:#6b21a8; font-size:13px; margin-bottom:6px; }
       .osm-endx-bt { display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
+      .osm-ler #osm-cons input, .osm-ler #osm-cons button, .osm-ler #osm-ag, .osm-ler #osm-mudar, .osm-ler #osm-agendar { pointer-events:none; }
+      .osm-ler #osm-cons input, .osm-ler #osm-cons button, .osm-ler #osm-ag { opacity:.6; }
+      .osm-tab tfoot tr.parte td { font-size:12px; font-weight:600; background:#fff; color:#6b21a8; border-top:0; padding-top:2px; padding-bottom:2px; }
+      .osm-tab tfoot tr.parte td:first-child { padding-left:22px; }
+      .osm-ler #osm-busca-l, .osm-ler #osm-agendar, .osm-ler #osm-mudar { display:none; }
       .osm-mudar { border:1px solid #c4b5fd; background:#faf5ff; color:#6b21a8; border-radius:6px; padding:0 8px; font-size:12px; font-weight:700; cursor:pointer; margin-left:6px; }
       .osm-btn { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:7px 12px; font-weight:700; cursor:pointer; font-size:13px; }
       .osm-btn.mini { padding:3px 8px; font-size:12px; }
@@ -329,12 +342,14 @@
             <div class="osm-sub">Lista do consignado</div>
             <table class="osm-tab">
               <colgroup><col style="width:52px"><col><col style="width:40px"><col style="width:44px"><col style="width:48px">
-                <col style="width:64px"><col style="width:70px"><col style="width:84px"></colgroup>
+                <col style="width:92px"><col style="width:84px"><col style="width:84px"></colgroup>
               <thead><tr><th>Cód.</th><th>Descrição</th><th class="n">Saiu</th><th class="n" title="voltou">Volt.</th><th class="n">Usado</th>
                 <th class="n">Unit.</th><th class="n">Total</th><th class="n" title="devolver">Devolver</th></tr></thead>
               <tbody id="osm-cons"></tbody>
               <tfoot><tr><td colspan="6">Consignado usado</td><td class="n" id="osm-tcons">0,00</td><td></td></tr>
-                <tr class="serv"><td colspan="6">Serviço</td><td class="n" id="osm-tgeral">0,00</td><td></td></tr></tfoot>
+                <tr class="serv"><td colspan="6">Serviço</td><td class="n" id="osm-tgeral">0,00</td><td></td></tr>
+                <tr class="parte" id="osm-lemp" hidden><td colspan="6">empresa</td><td class="n" id="osm-temp">0,00</td><td></td></tr>
+                <tr class="parte" id="osm-ltec" hidden><td colspan="6">técnico</td><td class="n" id="osm-ttec">0,00</td><td></td></tr></tfoot>
             </table>
             <div class="osm-sec" style="margin-top:14px">Fotos do serviço acabado</div>
             <div class="osm-fotos" id="osm-fotos"></div>
@@ -346,9 +361,10 @@
           <button type="button" class="osm-btn" id="osm-razao" title="conta do cliente: ver se a venda já foi recebida">Razão</button>
           <span class="msg" id="osm-msg"></span>
           <button type="button" class="osm-btn" id="osm-reabrir">Ver espelho</button>
-          <button type="button" class="osm-btn verde" id="osm-concluir">Concluir serviço</button>
+          <button type="button" class="osm-btn" id="osm-editar" hidden title="destrava os campos para mudar a OS">✎ Editar OS</button>
+          <button type="button" class="osm-btn verde" id="osm-concluir" title="ficha de fechamento: término, mão de obra, consignado">Fechar OS</button>
           <button type="button" class="osm-btn roxo" id="osm-gravar">Gravar</button>
-          <button type="button" class="osm-btn" id="osm-fechar">Fechar</button>
+          <button type="button" class="osm-btn" id="osm-fechar" title="fecha a OS e volta para a lista">Lista</button>
         </div>
         <div class="osm-raz" id="osm-raz" hidden><div>
           <h4 id="osm-raz-tit">Razão do cliente</h4>
@@ -368,20 +384,24 @@
       </div>`;
     document.body.appendChild(d);
 
-    q('x').addEventListener('click', () => fechar());
+    q('x').addEventListener('click', () => { irLista = false; fechar(); });
     // 18/10/2026: mudar o local (enderecos do cliente, + outro: CEP ou digitar)
     q('det').addEventListener('click', ev => { if (ev.target.id === 'osm-mudar') abrirLocal(); });
     q('end-canc').addEventListener('click', () => { q('endx').hidden = true; });
     q('end-ok').addEventListener('click', gravarLocal);
-    q('fechar').addEventListener('click', () => fechar());
+    q('fechar').addEventListener('click', () => { irLista = true; fechar(); });     // 29/10/2026: "Lista"
     q('sair-cont').addEventListener('click', () => { q('sair').hidden = true; });
     q('razao').addEventListener('click', abrirRazao);
     q('raz-fechar').addEventListener('click', () => { q('raz').hidden = true; });
     q('sair-nao').addEventListener('click', () => fechar(true));
     q('sair-sim').addEventListener('click', gravarEFechar);
     q('fundo').addEventListener('click', fechar);
-    q('gravar').addEventListener('click', async () => { if (!alteracoes().length) { msg('Nada a gravar.', true); return; }
-                                                        if (await gravarTudo()) msg('✓ gravado', true); });
+    q('gravar').addEventListener('click', async () => {
+      if (!alteracoes().length) { modoLer = true; aplicarModo(); msg('Nada a gravar.', true); return; }
+      if (await gravarTudo()) { modoLer = true; aplicarModo(); msg('✓ gravado', true); }
+    });
+    // 29/10/2026: destrava a OS gravada
+    q('editar').addEventListener('click', () => { modoLer = false; aplicarModo(); msg('Editando: grave para travar de novo.', true); q('tec').focus(); });
     q('concluir').addEventListener('click', concluir);
     q('reabrir').addEventListener('click', reabrir);
     q('levar').addEventListener('click', levar);
@@ -532,12 +552,28 @@
       if (ev.key !== 'Escape' || q('caixa').hidden) return;
       if (!q('sair').hidden) { q('sair').hidden = true; return; }   // Esc na pergunta: continua editando
       if (!q('raz').hidden) { q('raz').hidden = true; return; }     // Esc no razao: so fecha o razao
-      fechar();
+      irLista = false; fechar();
     });
   }
 
   const msg = (t, ok) => { q('msg').textContent = t || ''; q('msg').classList.toggle('ok', !!ok); };
   const podeEditar = () => os && os.status === 'P';     // 15/10/2026: fechada, so pela ficha
+  // 29/10/2026: OS GRAVADA (travada) x EDITANDO
+  let modoLer = false;
+  let irLista = false;                                   // 29/10/2026: o botao "Lista" pediu para ir a lista
+  const osCompleta = o => !!(o && o.status === 'P' && o.tecnicoConta && o.diaPrevisto && o.horaIni
+    && (o.modoMaoDeObra !== 'OS' || (o.combinado && o.combinado.valor > 0)));
+  function aplicarModo() {
+    if (!os) return;
+    const pend = os.status === 'P', ler = pend && modoLer;
+    q('caixa').classList.toggle('osm-ler', ler);
+    if (pend) {
+      ['tec', 'adia', 'ahi', 'ahf', 'cval', 'cemp', 'obs'].forEach(id => { const el = q(id); if (el) el.disabled = ler; });
+      q('gravar').hidden = ler;
+      q('editar').hidden = !ler;
+      q('concluir').hidden = !ler;                        // so com a OS gravada
+    } else q('editar').hidden = true;
+  }
   // 26/10/2026: valor combinado (centavos) — so OS sem venda (mao de obra cobrada na OS)
   const temCombinado = () => os && os.modoMaoDeObra === 'OS';
   const paraCent = s => { let x = String(s || '').replace(/[R$\s]/g, ''); if (!x) return 0; if (x.includes(',')) x = x.replace(/\./g, '').replace(',', '.'); const n = Number(x); return Number.isFinite(n) ? Math.round(n * 100) : NaN; };
@@ -618,18 +654,22 @@
     q('concluir').hidden = o.status !== 'P';
     q('reabrir').hidden = !(o.status === 'E' || o.status === 'L');
     q('fechar').hidden = o.status !== 'P';                 // 17/10/2026: concluida fecha pelo X
+    aplicarModo();                                         // 29/10/2026: gravada x editando
 
     // 15/10/2026: so o que ainda esta com o tecnico (devolvido todo sai da lista)
     const comTec = (o.consignados || []).filter(c => c.quantidade - c.devolvido > 0);
     q('cons').innerHTML = comTec.length ? comTec.map(c => {
       const resta = c.quantidade - c.devolvido;
-      return '<tr><td>' + esc(c.codigo) + '</td><td class="d">' + esc(c.descricao) + '</td>'
+      // 29/10/2026: preco negociado: o original aparece passando o mouse na descricao (sublinhado pontilhado)
+      const mudou = c.precoTabela && c.precoTabela !== c.precoUnit;
+      return '<tr><td>' + esc(c.codigo) + '</td><td class="d">'
+        + (mudou ? '<span class="osm-neg" title="preço original R$ ' + brl(c.precoTabela) + ' · negociado R$ ' + brl(c.precoUnit) + '">' + esc(c.descricao) + '</span>' : esc(c.descricao)) + '</td>'
         + '<td class="n">' + c.quantidade + '</td><td class="n">' + c.devolvido + '</td><td class="n">'
         + (ed ? '<input class="osm-usado" data-usado="' + c.id + '" value="' + c.usado + '" inputmode="numeric" title="quantidade usada: corrija e dê Enter">'
               : '<b>' + c.usado + '</b>') + '</td>'
         + '<td class="n">' + (ed ? '<input class="osm-preco" data-preco="' + c.id + '" value="' + brl(c.precoUnit) + '" inputmode="decimal" title="preço negociado: corrija e dê Enter">'
               : brl(c.precoUnit))
-          + (c.precoTabela && c.precoTabela !== c.precoUnit ? '<small class="osm-tab" title="preço de tabela">tab. ' + brl(c.precoTabela) + '</small>' : '') + '</td>'
+          + '</td>'
         + '<td class="n">' + brl(c.total) + '</td>'
         + '<td class="n">' + (ed && resta > 0
             ? '<span class="osm-dev"><input data-devq="' + c.id + '" id="osm-dq-' + c.id + '" value="' + resta + '" inputmode="numeric" title="quantas voltaram">'
@@ -649,9 +689,16 @@
   function totais() {
     if (!os) return;
     const cons = (os.consignados || []).reduce((t, c) => t + c.total, 0);
-    const serv = os.valorServico || 0;
+    // 29/10/2026: servico = o combinado (conserto) ou o da venda; com a parte da empresa e a do tecnico
+    const comb = os.combinado && os.combinado.valor > 0 ? os.combinado : null;
+    const serv = comb ? comb.valor : os.valorServico || 0;
+    const emp = comb ? comb.empresa || 0 : os.parteLoja || 0;
+    const tec = comb ? comb.valor - (comb.empresa || 0) : os.parteTecnico || 0;
     q('tcons').textContent = brl(cons);
     q('tgeral').textContent = brl(serv);                  // so o servico (o consignado esta na linha de cima)
+    const partes = serv > 0 && (emp > 0 || tec > 0);
+    q('lemp').hidden = q('ltec').hidden = !partes;
+    q('temp').textContent = brl(emp); q('ttec').textContent = brl(tec);
   }
 
   async function abrir(id, cb) {
@@ -667,6 +714,7 @@
       encherForn();
       os = (await api('GET', API + id)).os;
       msg('');
+      modoLer = osCompleta(os);                           // 29/10/2026: completa abre GRAVADA (travada)
       desenhar();
     } catch (e) { msg(e.message); }
   }
@@ -773,6 +821,9 @@
     }
     q('sair').hidden = true;
     q('fundo').hidden = true; q('caixa').hidden = true; q('res').hidden = true; os = null;
+    // 29/10/2026: "Lista" fora da tela da lista: vai para a Lista geral
+    if (irLista && !/\/vendas\/servicos\/lista/.test(location.pathname)) { irLista = false; location.href = '/vendas/servicos/lista?tipo=geral'; return; }
+    irLista = false;
     window.dispatchEvent(new Event('os-modal-fechou'));   // 26/10/2026: a pagina atualiza as listas
   }
 
@@ -1023,7 +1074,7 @@
     ev.preventDefault(); ev.returnValue = '';
   });
 
-  window.OSModal = { abrir, versao: '28/10/2026-g' };   // versao: F12 > Console > OSModal.versao
+  window.OSModal = { abrir, versao: '29/10/2026-m' };   // versao: F12 > Console > OSModal.versao
 
   // voltou da ficha de fechamento sem gravar (?os=<id>): reabre o modal desta OS
   const reabrirId = new URLSearchParams(location.search).get('os');

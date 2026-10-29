@@ -13,7 +13,7 @@ const path = require('path');
 const morgan = require('morgan');
 const passport = require('passport');
 const { engine } = require('express-handlebars');
-
+process.env.TZ = process.env.TZ || 'America/Sao_Paulo';   // 29/10/2026: servidor (DigitalOcean) em UTC -> horário de Brasília
 require('dotenv').config();
 require('./config/auth')(passport);
 require('./src/config/multer');

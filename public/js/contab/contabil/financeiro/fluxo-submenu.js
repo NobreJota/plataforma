@@ -14,6 +14,9 @@
 //                            escondido sai da grade e do saldo (fica guardado neste computador)
 //   19/10/2026 (Jorge): SAIU o "Mostrar no fluxo" — TODOS os lancamentos (0, 2, 3, 5, 7, 8...) aparecem
 //   sempre no fluxo; para resumir um tipo, clique no numero do pos na grade (janela do pos, fluxo.js).
+// 29/10/2026 (Jorge): a janela do sub-menu ficou mais ESTREITA (210 px), abre EMBAIXO A ESQUERDA e com AZUL mais forte
+//   (#1d4ed8); continua arrastando (a posicao arrastada fica guardada: chave nova 'fluxo-submenu-pos2').
+//   Abrindo o sub-menu com o Sintetizar ja no canto, o Sintetizar sobe para cima dele (nao esconde o sub-menu).
 // API: /financeiro/api/pagamento (GET /dda?ate=, GET /bancos, POST /quitar)
 // Depois de pagar, a grade do fluxo recarrega (window.FluxoCaixa.recarregar, do fluxo.js).
 // =============================================================================
@@ -41,19 +44,19 @@
   // ---- CSS ----
   const st = document.createElement('style');
   st.textContent = `
-  .sm-leg { color:#0284c7; cursor:pointer; font-weight:700; }
-  .sm-leg, .sm-leg:hover { text-decoration:none; } .sm-leg:hover { color:#0369a1; }
+  .sm-leg { color:#1d4ed8; cursor:pointer; font-weight:700; }
+  .sm-leg, .sm-leg:hover { text-decoration:none; } .sm-leg:hover { color:#1e3a8a; }
   .sm-sep { border-top:2px solid #e0f2fe; margin-top:4px; padding:5px 12px 2px; font-size:10px; font-weight:800; text-transform:uppercase; color:#94a3b8; }
   .sm-tg input { margin-right:6px; accent-color:#0284c7; pointer-events:none; }
-  .sm-cx { position:fixed; left:12px; top:150px; z-index:60; width:250px; background:#fff; border:1px solid #0ea5e9;
+  .sm-cx { position:fixed; left:12px; bottom:12px; z-index:60; width:210px; background:#fff; border:1px solid #1d4ed8;
            border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,.18); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
   .sm-cx[hidden], .sm-jan[hidden], .sm-fundo[hidden] { display:none; }
-  .sm-cab { display:flex; justify-content:space-between; align-items:center; padding:7px 10px; background:#0284c7; color:#fff;
+  .sm-cab { display:flex; justify-content:space-between; align-items:center; padding:7px 10px; background:#1d4ed8; color:#fff;
             border-radius:9px 9px 0 0; cursor:move; user-select:none; font-weight:800; font-size:13px; }
   .sm-cab button { border:0; background:none; color:#fff; font-size:18px; cursor:pointer; line-height:1; }
   .sm-it { display:flex; justify-content:space-between; align-items:center; width:100%; text-align:left; border:0; background:none;
-           padding:9px 12px; font-size:14px; font-weight:700; color:#0369a1; cursor:pointer; border-top:1px solid #f0f9ff; }
-  .sm-it:hover:not(:disabled) { background:#f0f9ff; }
+           padding:8px 12px; font-size:14px; font-weight:700; color:#1e40af; cursor:pointer; border-top:1px solid #eff6ff; }
+  .sm-it:hover:not(:disabled) { background:#eff6ff; }
   .sm-it:disabled { color:#94a3b8; cursor:default; }
   .sm-it small { font-size:10px; font-weight:600; color:#94a3b8; }
   .sm-fundo { position:fixed; inset:0; background:rgba(15,23,42,.18); z-index:70; }
@@ -90,7 +93,7 @@
       if (ev.button !== 0 || ev.target.closest('button')) return;
       ev.preventDefault();
       const r = caixa.getBoundingClientRect(), dx = ev.clientX - r.left, dy = ev.clientY - r.top;
-      caixa.style.transform = 'none'; caixa.style.left = r.left + 'px'; caixa.style.top = r.top + 'px';
+      caixa.style.transform = 'none'; caixa.style.left = r.left + 'px'; caixa.style.top = r.top + 'px'; caixa.style.bottom = 'auto';
       const mexe = e => {
         caixa.style.left = Math.min(Math.max(0, e.clientX - dx), innerWidth - 60) + 'px';
         caixa.style.top = Math.min(Math.max(0, e.clientY - dy), innerHeight - 30) + 'px';
@@ -112,8 +115,8 @@
     + '<button type="button" class="sm-it" data-r="vendas-receber" title="títulos de clientes em aberto: receber com juros ou desconto">Vendas - receber</button>'
     + '<button type="button" class="sm-it" data-r="cartoes" title="parcelas de cartão a receber da operadora: receber em lote">Cartões - recebimento</button>';
   document.body.appendChild(menu);
-  try { const p = JSON.parse(localStorage.getItem('fluxo-submenu-pos') || 'null'); if (p) { menu.style.left = p.l; menu.style.top = p.t; } } catch (e) { /* sem storage */ }
-  arrastavel(menu, menu.querySelector('.sm-cab'), 'fluxo-submenu-pos');
+  try { const p = JSON.parse(localStorage.getItem('fluxo-submenu-pos2') || 'null'); if (p) { menu.style.left = p.l; menu.style.top = p.t; menu.style.bottom = 'auto'; } } catch (e) { /* sem storage */ }
+  arrastavel(menu, menu.querySelector('.sm-cab'), 'fluxo-submenu-pos2');
   menu.querySelector('[data-x]').addEventListener('click', () => { menu.hidden = true; });
   menu.addEventListener('click', ev => {
     const b = ev.target.closest('[data-r]'); if (!b) return;
@@ -142,7 +145,14 @@
   if (leg) {
     const s = document.createElement('span');
     s.className = 'flx-leg sm-leg'; s.textContent = '● Sub-menu'; s.title = 'DDA, vendas a receber, cartões';
-    s.addEventListener('click', () => { menu.hidden = !menu.hidden; });
+    s.addEventListener('click', () => {
+      menu.hidden = !menu.hidden;
+      // 29/10/2026: o Sintetizar ja aberto no mesmo canto (nao arrastado) sobe para cima do sub-menu
+      const sint = document.querySelector('.sint-cx:not([hidden])');
+      if (!menu.hidden && sint && sint.style.bottom && sint.style.bottom !== 'auto' && menu.style.bottom !== 'auto') {
+        sint.style.bottom = Math.round(innerHeight - menu.getBoundingClientRect().top + 8) + 'px';
+      }
+    });
     leg.appendChild(s);
   }
 

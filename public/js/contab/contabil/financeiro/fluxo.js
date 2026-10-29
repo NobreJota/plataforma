@@ -50,6 +50,10 @@
  *    POST /receber-partes (o titulo do cliente baixa contra a operadora e nascem as parcelas pos 6 do cartao).
  *    Com Cartão a lista mostra so os titulos do cliente clicado. Fora do recebimento de cliente (pagar, cartao,
  *    titulo PJ no Banestes) os botoes nao aparecem.
+ * Alterado em 29/10/2026 (Jorge): a LEGENDA virou FILTRO: "● Orçamento (proj.)" = pos 8; "● A receber" = pos 1, 5, 6;
+ *    "● A pagar" = pos 0, 2, 3, 7. Clicar de novo (ou "mostrar todos", ou num mes) volta a grade inteira.
+ * Alterado em 29/10/2026 (Jorge): janela do SINTETIZAR mais estreita (240 px), abre EMBAIXO A ESQUERDA (acima do sub-menu,
+ *    se ele estiver aberto), azul mais forte (#1d4ed8); continua arrastando.
  * Alterado em 24/10/2026 (Jorge): clique numa parcela de CARTAO (1.01.005) pergunta: "Recebimento único" (o modal de
  *    sempre) ou "Receber em lote" (cartoes-receber.js: todas as parcelas de cartao, duas listas, liquido e taxa).
  * Alterado em 23/10/2026 (Jorge): RECEBIMENTO EM PARTES — caixa "Valor recebido" (vem com o total). Menor que o
@@ -1392,18 +1396,22 @@
      7 previsao de compras, 8 orcamento) e o total do mes. Clicou num item: a grade mostra SO aquele pos.
      "todos" (ou clicar num mes) volta ao normal. Usa as linhas que a grade ja carregou. */
   let filtroPos = null, sint = null, ultimoResumo = null, resumoNormal = '';
+  // 29/10/2026: filtroPos pode ser um pos (Sintetizar) ou uma lista de pos (legenda); filtroNome = nome do grupo
+  let filtroNome = '';
+  const naLista = (tr) => [].concat(filtroPos).some(p => tr.classList.contains('pos-' + p));
+  const rotFiltro = () => Array.isArray(filtroPos) ? filtroNome : 'pos ' + filtroPos;
   const SINT = [[0, 'avulso'], [2, 'contas a pagar'], [5, 'contas a receber'], [1, 'cartões a receber'], [6, 'cartões operadora'], [3, 'pedidos'], [7, 'previsão compras'], [8, 'orçamento']];
   (function estiloSint() {
     const st = document.createElement('style');
     st.textContent = `
-    .flx-leg.sint-leg { color:#0284c7; font-weight:800; cursor:pointer; } .flx-leg.sint-leg:hover { text-decoration:underline; }
-    .sint-cx { position:fixed; z-index:62; width:300px; background:#fff; border:1px solid #0284c7; border-radius:10px;
+    .flx-leg.sint-leg { color:#1d4ed8; font-weight:800; cursor:pointer; } .flx-leg.sint-leg:hover { text-decoration:underline; }
+    .sint-cx { position:fixed; z-index:62; width:240px; background:#fff; border:1px solid #1d4ed8; border-radius:10px;
                box-shadow:0 12px 30px rgba(0,0,0,.2); font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; font-size:13px; }
     .sint-cx[hidden] { display:none; }
-    .sint-cab { display:flex; align-items:center; padding:7px 10px; background:#0284c7; color:#fff; border-radius:10px 10px 0 0; font-weight:800; cursor:move; user-select:none; }
+    .sint-cab { display:flex; align-items:center; padding:7px 10px; background:#1d4ed8; color:#fff; border-radius:10px 10px 0 0; font-weight:800; cursor:move; user-select:none; }
     .sint-cab span { flex:1; } .sint-cab button { border:0; background:none; color:#fff; font-size:18px; cursor:pointer; }
     .sint-it { display:flex; gap:8px; align-items:baseline; width:100%; border:0; border-bottom:1px solid #f1f5f9; background:#fff; padding:6px 10px; cursor:pointer; font-size:13px; text-align:left; }
-    .sint-it:hover { background:#f0f9ff; } .sint-it.on { background:#e0f2fe; font-weight:800; }
+    .sint-it:hover { background:#eff6ff; } .sint-it.on { background:#dbeafe; font-weight:800; }
     .sint-it b { width:18px; color:#6d28d9; } .sint-it span { flex:1; } .sint-it em { font-style:normal; font-variant-numeric:tabular-nums; }
     .sint-it .neg { color:#b91c1c; } .sint-it .pos { color:#059669; }
     .sint-tot { display:flex; padding:8px 10px; font-weight:800; border-top:2px solid #cbd5e1; } .sint-tot span { flex:1; }
@@ -1415,7 +1423,7 @@
     let corre = 0, rec = 0, pag = 0, n = 0;
     $$('#flx-body tr').forEach(tr => {
       if (tr.classList.contains('flx-sep')) { tr.hidden = filtroPos !== null; return; }
-      const vis = filtroPos === null || tr.classList.contains('pos-' + filtroPos);
+      const vis = filtroPos === null || naLista(tr);
       tr.hidden = !vis;
       const cel = tr.querySelector('td.c-saldo span'); if (!cel) return;
       if (cel.dataset.orig === undefined) { cel.dataset.orig = cel.textContent; cel.dataset.cls = cel.className; }
@@ -1427,16 +1435,18 @@
     });
     const res = $('#flx-resumo');
     if (res) res.innerHTML = filtroPos === null ? resumoNormal : `
-        <div class="flx-resumo-item"><span class="lbl">A receber (pos ${filtroPos})</span><span class="val val-receber">${fmt(rec / 100) || '0,00'}</span></div>
-        <div class="flx-resumo-item"><span class="lbl">A pagar (pos ${filtroPos})</span><span class="val val-pagar">${fmt(pag / 100) || '0,00'}</span></div>
-        <div class="flx-resumo-item"><span class="lbl">Saldo (pos ${filtroPos})</span><span class="val ${corre >= 0 ? 'val-saldo-pos' : 'val-saldo-neg'}">${fmt(corre / 100) || '0,00'}</span></div>
+        <div class="flx-resumo-item"><span class="lbl">A receber (${rotFiltro()})</span><span class="val val-receber">${fmt(rec / 100) || '0,00'}</span></div>
+        <div class="flx-resumo-item"><span class="lbl">A pagar (${rotFiltro()})</span><span class="val val-pagar">${fmt(pag / 100) || '0,00'}</span></div>
+        <div class="flx-resumo-item"><span class="lbl">Saldo (${rotFiltro()})</span><span class="val ${corre >= 0 ? 'val-saldo-pos' : 'val-saldo-neg'}">${fmt(corre / 100) || '0,00'}</span></div>
         <div class="flx-resumo-item"><span class="lbl">Lançamentos</span><span class="val">${n}</span></div>`;
     let av = $('#flx-sint-aviso');
-    if (filtroPos === null) { if (av) av.remove(); return; }
+    if (filtroPos === null) { if (av) av.remove(); marcarLegenda(); return; }
     if (!av) { av = document.createElement('div'); av.id = 'flx-sint-aviso'; const leg = $('.flx-legenda'); if (leg) leg.insertAdjacentElement('afterend', av); }
     av.className = 'sint-aviso';
-    av.innerHTML = 'Mostrando só: pos ' + filtroPos + ' · ' + (SINT.find(x => x[0] === filtroPos) || [0, ''])[1] + ' &nbsp; <a href="#" data-sint-todos>mostrar todos</a>';
-    av.querySelector('[data-sint-todos]').addEventListener('click', ev => { ev.preventDefault(); filtroPos = null; aplicarFiltroPos(); if (sint && !sint.hidden) desenharSintese(); });
+    av.innerHTML = 'Mostrando só: ' + (Array.isArray(filtroPos) ? filtroNome + ' (pos ' + filtroPos.join(', ') + ')'
+      : 'pos ' + filtroPos + ' · ' + (SINT.find(x => x[0] === filtroPos) || [0, ''])[1]) + ' &nbsp; <a href="#" data-sint-todos>mostrar todos</a>';
+    marcarLegenda();
+    av.querySelector('[data-sint-todos]').addEventListener('click', ev => { ev.preventDefault(); filtroPos = null; aplicarFiltroPos(); marcarLegenda(); if (sint && !sint.hidden) desenharSintese(); });
   }
   function desenharSintese() {
     const tot = new Map();
@@ -1450,6 +1460,31 @@
       + '<div class="sint-tot"><span>total ' + (state.mes ? 'do mês' : 'do ano') + ':</span>' + v(total) + '</div>'
       ;   // 20/10/2026 (Jorge): SEM saldo anterior aqui — so o que vence no mes escolhido
   }
+  // 29/10/2026: LEGENDA = FILTRO (Orçamento / A receber / A pagar)
+  const GRUPOS_LEG = { verde: { nome: 'orçamento', pos: [8] }, vermelho: { nome: 'a receber', pos: [1, 5, 6] }, preto: { nome: 'a pagar', pos: [0, 2, 3, 7] } };
+  function marcarLegenda() {
+    $$('.flx-legenda .flx-leg').forEach(el => {
+      const k = Object.keys(GRUPOS_LEG).find(c => el.classList.contains(c)); if (!k) return;
+      el.classList.toggle('leg-on', Array.isArray(filtroPos) && filtroNome === GRUPOS_LEG[k].nome);
+    });
+  }
+  (function legendaFiltro() {
+    const st = document.createElement('style');
+    st.textContent = '.flx-legenda .flx-leg.verde, .flx-legenda .flx-leg.vermelho, .flx-legenda .flx-leg.preto { cursor:pointer; }'
+      + '.flx-legenda .flx-leg.verde:hover, .flx-legenda .flx-leg.vermelho:hover, .flx-legenda .flx-leg.preto:hover { text-decoration:underline; }'
+      + '.flx-legenda .flx-leg.leg-on { font-weight:800; text-decoration:underline; }';
+    document.head.appendChild(st);
+    Object.entries(GRUPOS_LEG).forEach(([cls, g]) => {
+      const el = $('.flx-legenda .flx-leg.' + cls); if (!el) return;
+      el.title = 'mostrar só ' + g.nome + ' (pos ' + g.pos.join(', ') + '); clique de novo para ver todos';
+      el.addEventListener('click', () => {
+        const mesmo = Array.isArray(filtroPos) && filtroNome === g.nome;
+        filtroPos = mesmo ? null : g.pos.slice(); filtroNome = mesmo ? '' : g.nome;
+        aplicarFiltroPos(); marcarLegenda();
+        if (sint && !sint.hidden) desenharSintese();
+      });
+    });
+  })();
   function abrirSintese(ancora) {
     if (!sint) {
       sint = document.createElement('div'); sint.className = 'sint-cx'; sint.hidden = true;
@@ -1466,14 +1501,18 @@
         if (ev.button !== 0 || ev.target.closest('button')) return;
         ev.preventDefault();
         const r = sint.getBoundingClientRect(), dx = ev.clientX - r.left, dy = ev.clientY - r.top;
+        sint.style.bottom = 'auto';
         const m = e => { sint.style.left = Math.max(0, e.clientX - dx) + 'px'; sint.style.top = Math.max(0, e.clientY - dy) + 'px'; };
         const u = () => { document.removeEventListener('mousemove', m); document.removeEventListener('mouseup', u); };
         document.addEventListener('mousemove', m); document.addEventListener('mouseup', u);
       });
     }
     if (!sint.hidden) { sint.hidden = true; return; }
-    const r = ancora.getBoundingClientRect();
-    sint.style.left = Math.min(r.left, innerWidth - 320) + 'px'; sint.style.top = (r.bottom + 6) + 'px';
+    // 29/10/2026: embaixo a esquerda; com o sub-menu aberto ali, logo acima dele
+    const sm = document.querySelector('.sm-cx:not([hidden])'), smR = sm ? sm.getBoundingClientRect() : null;
+    const emCima = smR && smR.left < 260 && smR.bottom > innerHeight - 80;
+    sint.style.left = '12px'; sint.style.top = 'auto';
+    sint.style.bottom = (emCima ? Math.round(innerHeight - smR.top + 8) : 12) + 'px';
     desenharSintese(); sint.hidden = false;
   }
   (function legendaSintese() {

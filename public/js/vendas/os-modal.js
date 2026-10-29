@@ -56,6 +56,8 @@
 // Alterado em: 16/10/2026 - DEVOLVER limitado ao que esta com o tecnico (aviso: levar mais e no "+ levar")
 // Alterado em: 16/10/2026 - USADO editavel na linha (OS pendente): digita a quantidade certa e Enter
 //              (ou sai do campo); o estoque acompanha. PUT /:id/consignados/:cid { usado }
+// Alterado em: 29/10/2026 (tarde) - OS gravada e programada abre TRAVADA (✎ Editar OS) mesmo sem o valor combinado,
+//              com o aviso "falta o valor"; Servico/empresa/tecnico acompanham o que se digita no valor combinado.
 // Alterado em: 29/10/2026 (Jorge) - linha SERVICO = valor combinado (ou o da venda), com "empresa" e "técnico" embaixo.
 //              OS gravada: a trava do consignado e so nas caixas/botoes (o mouse na descricao mostra o preco original).
 // Alterado em: 29/10/2026 (Jorge) - o botao "Fechar" do rodape virou "Lista": fecha o modal (perguntando se ha algo nao
@@ -398,7 +400,7 @@
     q('fundo').addEventListener('click', fechar);
     q('gravar').addEventListener('click', async () => {
       if (!alteracoes().length) { modoLer = true; aplicarModo(); msg('Nada a gravar.', true); return; }
-      if (await gravarTudo()) { modoLer = true; aplicarModo(); msg('✓ gravado', true); }
+      if (await gravarTudo()) { modoLer = true; aplicarModo(); msg('✓ gravado', true); avisoValor(); }
     });
     // 29/10/2026: destrava a OS gravada
     q('editar').addEventListener('click', () => { modoLer = false; aplicarModo(); msg('Editando: grave para travar de novo.', true); q('tec').focus(); });
@@ -561,8 +563,10 @@
   // 29/10/2026: OS GRAVADA (travada) x EDITANDO
   let modoLer = false;
   let irLista = false;                                   // 29/10/2026: o botao "Lista" pediu para ir a lista
-  const osCompleta = o => !!(o && o.status === 'P' && o.tecnicoConta && o.diaPrevisto && o.horaIni
-    && (o.modoMaoDeObra !== 'OS' || (o.combinado && o.combinado.valor > 0)));
+  // 29/10/2026 (tarde): GRAVADA = pendente e programada (tecnico, dia, horario). Abre travada (✎ Editar OS)
+  //   mesmo sem o valor combinado; nesse caso avisa "falta o valor" e o Servico mostra "falta".
+  const osCompleta = o => !!(o && o.status === 'P' && o.tecnicoConta && o.diaPrevisto && o.horaIni);
+  const faltaValor = o => !!(o && o.status === 'P' && o.modoMaoDeObra === 'OS' && !(o.combinado && o.combinado.valor > 0));
   function aplicarModo() {
     if (!os) return;
     const pend = os.status === 'P', ler = pend && modoLer;
@@ -583,6 +587,12 @@
     q('ctec').value = c.valor > 0 && Number.isFinite(c.empresa) && c.empresa <= c.valor ? brl(c.valor - c.empresa) : '';
     q('cdica').innerHTML = c.valor > 0 && c.empresa > c.valor ? '<b style="color:#b91c1c">a parte da empresa passa do valor</b>'
       : 'O que foi combinado antes do técnico ir. Na ficha de fechamento pode acrescentar. Grava no <b>Gravar</b>.';
+    totais();                                            // 29/10/2026: Servico / empresa / tecnico acompanham o que digita
+  }
+  // 29/10/2026: OS gravada sem o valor combinado
+  function avisoValor() {
+    if (faltaValor(os)) msg(modoLer ? 'Falta o valor combinado com o cliente: clique ✎ Editar OS, informe a mão de obra e a parte da empresa e grave.'
+      : 'Falta o valor combinado com o cliente: informe a mão de obra e a parte da empresa e grave.');
   }
 
   function desenhar() {
@@ -690,13 +700,22 @@
     if (!os) return;
     const cons = (os.consignados || []).reduce((t, c) => t + c.total, 0);
     // 29/10/2026: servico = o combinado (conserto) ou o da venda; com a parte da empresa e a do tecnico
-    const comb = os.combinado && os.combinado.valor > 0 ? os.combinado : null;
+    let comb = os.combinado && os.combinado.valor > 0 ? os.combinado : null;
+    // 29/10/2026 (tarde): OS com valor combinado: vale o que esta nos campos (gravado ou digitando)
+    const viaCampos = temCombinado() && os.status === 'P' && q('cval');
+    if (viaCampos) {
+      const c = lerComb();
+      comb = Number.isFinite(c.valor) && c.valor > 0 ? { valor: c.valor, empresa: Number.isFinite(c.empresa) ? Math.min(c.empresa, c.valor) : 0 } : null;
+    }
     const serv = comb ? comb.valor : os.valorServico || 0;
     const emp = comb ? comb.empresa || 0 : os.parteLoja || 0;
     const tec = comb ? comb.valor - (comb.empresa || 0) : os.parteTecnico || 0;
     q('tcons').textContent = brl(cons);
     q('tgeral').textContent = brl(serv);                  // so o servico (o consignado esta na linha de cima)
-    const partes = serv > 0 && (emp > 0 || tec > 0);
+    // 29/10/2026 (tarde): sem valor combinado: "falta" em vermelho
+    const falta = viaCampos && !comb;
+    if (falta) q('tgeral').innerHTML = '<span style="color:#b91c1c">falta o valor</span>';
+    const partes = serv > 0 && (emp > 0 || tec > 0 || viaCampos);
     q('lemp').hidden = q('ltec').hidden = !partes;
     q('temp').textContent = brl(emp); q('ttec').textContent = brl(tec);
   }
@@ -714,8 +733,9 @@
       encherForn();
       os = (await api('GET', API + id)).os;
       msg('');
-      modoLer = osCompleta(os);                           // 29/10/2026: completa abre GRAVADA (travada)
+      modoLer = osCompleta(os);                           // 29/10/2026: gravada e programada abre TRAVADA
       desenhar();
+      avisoValor();
     } catch (e) { msg(e.message); }
   }
   // ---- fornecedores do consignado ----------------------------------------------
@@ -1074,7 +1094,7 @@
     ev.preventDefault(); ev.returnValue = '';
   });
 
-  window.OSModal = { abrir, versao: '29/10/2026-m' };   // versao: F12 > Console > OSModal.versao
+  window.OSModal = { abrir, versao: '29/10/2026-n' };   // versao: F12 > Console > OSModal.versao
 
   // voltou da ficha de fechamento sem gravar (?os=<id>): reabre o modal desta OS
   const reabrirId = new URLSearchParams(location.search).get('os');

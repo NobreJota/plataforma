@@ -9,6 +9,7 @@
 // "Gravar ordem de serviço" -> POST /vendas/api/os/:id/fechamento (lancamentos no servidor)
 // OS ja fechada: so consulta; "Reabrir" desfaz o fechamento.
 // Dinheiro em centavos na API.
+// Alterado em: 29/10/2026 - destino do saldo do consignado: "troca" so aparece se a OS tem venda (material vendido).
 // Alterado em: 15/10/2026 - consignado usado a PRECO DE VENDA; o destino de cada item e escolhido
 //              aqui: venda adicional (preco de venda) · complementar/cortesia (despesa a custo) ·
 //              troca por vendido que voltou (devolucao de vendido "troca"). VI: mao de obra so a
@@ -192,7 +193,8 @@
     const destSaldo = '<select id="dest-saldo" title="o que fazer com o saldo (o que o técnico usou)" style="width:auto">'
       + '<option value="">— escolha —</option><option value="VENDA" title="venda adicional, preço de venda">venda adicional</option>'
       + '<option value="COMPLEMENTAR" title="material complementar / cortesia: despesa a custo">complementar</option>'
-      + '<option value="TROCA" title="ficou no lugar de material vendido que voltou">troca</option></select>';
+      // 29/10/2026: troca so se houve venda (material vendido que possa voltar)
+      + (d.vendidos.length ? '<option value="TROCA" title="ficou no lugar de material vendido que voltou">troca</option>' : '') + '</select>';
 
     const devCons = cons.length
       ? '<table><colgroup><col style="width:48px"><col><col style="width:48px"><col style="width:68px"><col style="width:66px"></colgroup>'

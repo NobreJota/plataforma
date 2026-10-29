@@ -13,6 +13,9 @@
   Alterado em: 16/10/2026 — Serviço > Fluxo de serviço (/vendas/servicos/fluxo).
   Alterado em: 17/10/2026 — Venda > Kits (/vendas/kits).
   Alterado em: 23/10/2026 — Serviço > Nova OS (3º nível): Conserto, Garantia, Serviços (/vendas/servicos/nova?tipo=C|G|S).
+  Alterado em: 29/10/2026 — Serviço: saem Programadas, N/programadas, Pendentes e Liquidadas (sao abas da Lista geral).
+                Menu principal ganha PESSOAL e ADMIN (submenu "em breve", a desenvolver).
+                Contabilidade: sai o "Pessoal" (e as folhas Cadastro/Alterar/Deletar): vai para o menu principal.
   Alterado em: 10/10/2026 — /usuariocontab/menu?abrir=venda abre direto o submenu da Venda
                 (Clientes, Nova venda, Notas fiscais, Relatórios); serve para fluxo, contabil,
                 compra e site também. O ícone Venda do razão usa isso.
@@ -59,6 +62,18 @@
         <span>Serviço</span>
         <i class="ti ti-chevron-right coop-arrow" aria-hidden="true"></i>
       </li>
+      <li class="coop-nav-item {{#if (eq activeMenu 'pessoal')}}active{{/if}}"
+          data-menu="pessoal">
+        <i class="ti ti-users" aria-hidden="true"></i>
+        <span>Pessoal</span>
+        <i class="ti ti-chevron-right coop-arrow" aria-hidden="true"></i>
+      </li>
+      <li class="coop-nav-item {{#if (eq activeMenu 'admin')}}active{{/if}}"
+          data-menu="admin">
+        <i class="ti ti-settings" aria-hidden="true"></i>
+        <span>Admin</span>
+        <i class="ti ti-chevron-right coop-arrow" aria-hidden="true"></i>
+      </li>
       <li class="coop-nav-item {{#if (eq activeMenu 'site')}}active{{/if}}"
           data-menu="site">
         <i class="ti ti-world" aria-hidden="true"></i>
@@ -89,9 +104,6 @@
 </li>
       <li class="coop-sub-item" data-url="/contab/razao">
         <span>Razão</span>
-      </li>
-      <li class="coop-sub-item" data-leaf="pessoal" data-url="/contabil/pessoal">
-        <span>Pessoal</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
       </li>
       <li class="coop-sub-item" data-url="/contab/balancete">
         <span>Balancete</span>
@@ -150,24 +162,22 @@
       <li class="coop-sub-item" data-url="/vendas/servicos/lista?tipo=geral">
         <span>Lista geral</span>
       </li>
-      <li class="coop-sub-item" data-url="/vendas/servicos/lista?tipo=programadas">
-        <span>Programadas</span>
-      </li>
-      <li class="coop-sub-item" data-url="/vendas/servicos/lista?tipo=nprogramadas">
-        <span>N/programadas</span>
-      </li>
-      <li class="coop-sub-item" data-url="/vendas/servicos/lista?tipo=pendentes">
-        <span>Pendentes</span>
-      </li>
-      <li class="coop-sub-item" data-url="/vendas/servicos/lista?tipo=liquidadas">
-        <span>Liquidadas</span>
-      </li>
       <li class="coop-sub-item" data-url="/vendas/servicos/fluxo">
         <span>Fluxo de serviço</span>
       </li>
       <li class="coop-sub-item" data-url="/vendas/servicos/tecnicos">
         <span>Técnicos</span>
       </li>
+    </ul>
+
+    {{!-- 29/10/2026: Pessoal e Admin — a desenvolver --}}
+    <ul class="coop-sub-list" data-sub="pessoal">
+      <li class="coop-sub-title">Pessoal</li>
+      <li class="coop-sub-item breve"><span>em breve</span></li>
+    </ul>
+    <ul class="coop-sub-list" data-sub="admin">
+      <li class="coop-sub-title">Admin</li>
+      <li class="coop-sub-item breve"><span>em breve</span></li>
     </ul>
 
     {{!-- Site --}}
@@ -214,12 +224,6 @@
       <li class="coop-leaf-item"><a href="/vendas/servicos/nova?tipo=S">Serviços</a></li>
     </ul>
 
-    <ul class="coop-leaf-list" data-leaf="pessoal">
-      <li class="coop-sub-title">Pessoal</li>
-      <li class="coop-leaf-item"><a href="/contabil/pessoal/cadastro">Cadastro</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/pessoal/alterar">Alterar</a></li>
-      <li class="coop-leaf-item"><a href="/contabil/pessoal/deletar">Deletar</a></li>
-    </ul>
 
   </div>
 
@@ -304,6 +308,8 @@
   .coop-sub-item:hover { background: #e9ecef; color: #212529; }
   .coop-sub-item.active { background: #e7f5ff; color: #1971c2; border-left-color: #1971c2; font-weight: 500; }
   .coop-sub-item i { font-size: 13px; opacity: 0.4; }
+  .coop-sub-item.breve { color: #adb5bd; font-style: italic; cursor: default; }
+  .coop-sub-item.breve:hover { background: none; color: #adb5bd; }
 
   /* Coluna folha nível 3 */
   .coop-leaf-col {

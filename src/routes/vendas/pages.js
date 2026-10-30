@@ -13,6 +13,7 @@
 // Alterado em: 16/10/2026 - Servico > Fluxo de servico (/vendas/servicos/fluxo)
 // Alterado em: 23/10/2026 - Servico > Nova OS (/vendas/servicos/nova?tipo=C|G|S): por enquanto o conserto
 // Alterado em: 17/10/2026 - Venda > Kits (/vendas/kits): produto principal + itens que vao junto
+// Alterado em: 30/10/2026 - Venda > Vendedores (/vendas/vendedores; ?aba=comissao abre o quadro da comissao)
 //
 // Telas do modulo de vendas. Montado em /vendas no server.js, protegido por
 // ensureContab (que expoe req.lojistaId).
@@ -43,6 +44,11 @@ router.get('/venda/:id', (req, res) => {
 // kits de venda (17/10/2026)
 router.get('/kits', (req, res) => {
   res.render('vendas/pages/kits', { layout: false, activeMenu: 'vendas' });
+});
+
+// vendedores: cadastro e comissao (30/10/2026)
+router.get('/vendedores', (req, res) => {
+  res.render('vendas/pages/vendedores', { layout: false, activeMenu: 'vendas' });
 });
 
 // relatorio de vendas, mes a mes (como o fluxo)

@@ -1,0 +1,49 @@
+ompra/api/produto/loja 200 140.401 ms - 121
+GET /compra/api/produto/novo 200 601.889 ms - 2063
+GET /compra/api/produto/novo 200 601.889 ms - 2063
+GET /usuariocontab/menu 200 11.380 ms - 12353
+GET /usuariocontab/menu 200 11.380 ms - 12353
+GET /usuarioloja/login 200 11.317 ms - 1842
+GET /usuarioloja/login 200 11.317 ms - 1842
+[login loja] ok 6892706a86509313e632f717 → /loja/cooperados
+POST /loja/cooperados 302 338.230 ms - 45
+POST /loja/cooperados 302 338.230 ms - 45
+abrindo cooperados-GET
+---------------------------------------------------
+6892706a86509313e632f717
+[ 96 /routes/empresa/rotina.js/cooperados:  ] 6892706a86509313e632f717
+---------------------------------------------------
+-------------------------------------------------
+fornId [ 110 ] /cooperados CORRIGIR-sem valor fornId 
+
+CastError: Cast to ObjectId failed for value "" (type string) at path "_id" for model "departamentos"
+    at SchemaObjectId.cast (C:\plataformaRota\node_modules\mongoose\lib\schema\objectId.js:251:11)
+    at SchemaType.applySetters (C:\plataformaRota\node_modules\mongoose\lib\schemaType.js:1258:12)
+    at SchemaType.castForQuery (C:\plataformaRota\node_modules\mongoose\lib\schemaType.js:1676:17)
+    at C:\plataformaRota\node_modules\mongoose\lib\schemaType.js:1637:18
+    at Array.map (<anonymous>)
+    at SchemaObjectId.handle$in (C:\plataformaRota\node_modules\mongoose\lib\schemaType.js:1633:14)
+    at SchemaType.castForQuery (C:\plataformaRota\node_modules\mongoose\lib\schemaType.js:1672:20)
+    at cast (C:\plataformaRota\node_modules\mongoose\lib\cast.js:367:39)
+    at Query.cast (C:\plataformaRota\node_modules\mongoose\lib\query.js:5055:12)
+    at Query._castConditions (C:\plataformaRota\node_modules\mongoose\lib\query.js:2351:10) {
+  stringValue: '""',
+  messageFormat: undefined,
+  kind: 'ObjectId',
+  value: '',
+  path: '_id',
+  reason: BSONError: input must be a 24 character hex string, 12 byte Uint8Array, or an integer
+      at new ObjectId (C:\plataformaRota\node_modules\bson\lib\bson.cjs:2538:23)
+      at castObjectId (C:\plataformaRota\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at SchemaObjectId.cast (C:\plataformaRota\node_modules\mongoose\lib\schema\objectId.js:249:12)
+      at SchemaType.applySetters (C:\plataformaRota\node_modules\mongoose\lib\schemaType.js:1258:12)
+      at SchemaType.castForQuery (C:\plataformaRota\node_modules\mongoose\lib\schemaType.js:1676:17)
+      at C:\plataformaRota\node_modules\mongoose\lib\schemaType.js:1637:18
+      at Array.map (<anonymous>)
+      at SchemaObjectId.handle$in (C:\plataformaRota\node_modules\mongoose\lib\schemaType.js:1633:14)
+      at SchemaType.castForQuery (C:\plataformaRota\node_modules\mongoose\lib\schemaType.js:1672:20)
+      at cast (C:\plataformaRota\node_modules\mongoose\lib\cast.js:367:39),
+  valueType: 'string'
+}
+GET /loja/cooperados 500 1128.340 ms - 25
+GET /loja/cooperados 500 1128.340 ms - 25

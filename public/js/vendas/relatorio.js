@@ -8,6 +8,17 @@
 //   - rodape: cupons, notas, descontos e liquido; canceladas fora da soma
 // API: GET /vendas/api/venda/relatorio?ano=&mes=   (valores em CENTAVOS)
 //
+// Alterado em 30/10/2026 (6): SEM CALENDARIO (decisao do Jorge). Abre em HOJE (todas as vendas do dia); as abas
+//   Todas / Nota fiscal / Cupom mostram o MES marcado (ao sair do Hoje, o mes corrente); Jan..Dez / todos / ano escolhem.
+// Alterado em 30/10/2026 (5): "Hoje" LIGA/DESLIGA so as vendas de hoje (todas) sem mudar o calendario; mes, ano ou
+//   data no calendario desligam o Hoje.
+// Alterado em 30/10/2026 (4): a aba so FILTRA o periodo que esta na tela (nao muda as datas); mudar a data no calendario
+//   ja mostra (sem precisar do Mostrar); "Hoje" mostra TODAS as vendas do dia (cupom e nota).
+// Alterado em 30/10/2026 (3): ABRE NO MES CORRENTE (1o ao ultimo dia, botao do mes marcado); "Hoje" mostra so o dia.
+// Alterado em 30/10/2026 (2): clicar numa aba mostra o MES inteiro daquele tipo (o mes da data inicial; abre em hoje).
+// Alterado em 30/10/2026: abas Todas · Nota fiscal · Cupom (filtro na tela; o rodape soma o que esta na aba);
+//   PERIODO "de … até …" (GET /relatorio?de=&ate=); ABRE NAS VENDAS DE HOJE. Jan..Dez / todos preenchem o periodo
+//   do mes / do ano escolhido; o botao do mes fica marcado so quando o periodo e exatamente aquele mes.
 // Alterado em 07/10/2026: so as EMITIDAS (pela data do fechamento). Clique na linha abre o
 //   ESPELHO da venda (GET /:id/espelho): cabecalho, itens, pagamento e as parcelas no fluxo
 //   (aberta / recebida / cancelada). "Cancelar venda" pede o motivo e chama POST /:id/cancelar;
@@ -37,7 +48,25 @@
                  'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
   const hoje = new Date();
-  const estado = { ano: hoje.getFullYear(), mes: hoje.getMonth() + 1, vendas: [], ord: 'data', desc: false };
+  // 30/10/2026: periodo (de/ate, YYYY-MM-DD) e aba do documento; abre em HOJE
+  const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  // 30/10/2026 (3): abre no MES corrente (dia 1 ao ultimo dia), com o botao do mes marcado
+  const estado = { ano: hoje.getFullYear(), mes: -1, de: iso(new Date(hoje.getFullYear(), hoje.getMonth(), 1)),
+                   ate: iso(new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0)), doc: 'TODAS', vendas: [], ord: 'data', desc: false,
+                   soHoje: true };     // 30/10/2026 (6): ABRE EM HOJE (todas as vendas do dia)    // 30/10/2026 (5): botao Hoje ligado = so as vendas de hoje, SEM mexer no calendario
+  const brData = t => t ? t.slice(8, 10) + '/' + t.slice(5, 7) + '/' + t.slice(0, 4) : '';
+  // o mes (1..12) que o periodo cobre exatamente; 0 = o ano inteiro; -1 = outro periodo
+  function mesDoPeriodo() {
+    const a = estado.ano;
+    if (estado.de === a + '-01-01' && estado.ate === a + '-12-31') return 0;
+    for (let m = 1; m <= 12; m++) if (estado.de === iso(new Date(a, m - 1, 1)) && estado.ate === iso(new Date(a, m, 0))) return m;
+    return -1;
+  }
+  function periodoDoMes(m) {
+    const a = estado.ano;
+    if (m === 0) { estado.de = a + '-01-01'; estado.ate = a + '-12-31'; }
+    else { estado.de = iso(new Date(a, m - 1, 1)); estado.ate = iso(new Date(a, m, 0)); }
+  }
 
   const brl = c => (Number(c || 0) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const escapar = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -52,8 +81,9 @@
   const SITUACAO = { A: 'aberta', F: 'fechada', C: 'cancelada' };
 
   function marcarBotoes() {
+    estado.mes = mesDoPeriodo();
     $('meses').querySelectorAll('button[data-m]').forEach(b =>
-      b.classList.toggle('ativo', Number(b.dataset.m) === estado.mes));
+      b.classList.toggle('ativo', !estado.soHoje && Number(b.dataset.m) === estado.mes));
   }
 
   async function carregar() {
@@ -61,7 +91,9 @@
     $('recado').textContent = '';
     $('linhas').innerHTML = '<tr><td colspan="11" class="vazio">Carregando…</td></tr>';
     try {
-      const r = await fetch(API + '?ano=' + estado.ano + '&mes=' + estado.mes, { credentials: 'same-origin' });
+      const h = iso(new Date()), de = estado.soHoje ? h : estado.de, ate = estado.soHoje ? h : estado.ate;
+      $('hoje').classList.toggle('prim', estado.soHoje);
+      const r = await fetch(API + '?ano=' + estado.ano + '&de=' + de + '&ate=' + ate, { credentials: 'same-origin' });
       if (r.status === 401) { window.location.href = '/usuariocontab/login'; return; }
       const d = await r.json();
       if (!d.ok) throw new Error(d.erro || 'falha na API');
@@ -83,9 +115,10 @@
   // 22/10/2026: ordem escolhida no cabecalho (desempate pelo numero)
   function ordenadas() {
     const k = estado.ord, s = estado.desc ? -1 : 1;
+    const lista = estado.doc === 'TODAS' ? estado.vendas : estado.vendas.filter(v => (v.documento === 'NFE' ? 'NFE' : 'CUPOM') === estado.doc);
     const val = v => k === 'numero' ? v.numero : k === 'liquido' ? (v.liquido || 0) : k === 'cliente' ? (v.cliente || '~balcão').toLowerCase()
       : new Date(v.data).getTime();
-    return estado.vendas.slice().sort((a, b) => { const x = val(a), y = val(b);
+    return lista.slice().sort((a, b) => { const x = val(a), y = val(b);
       return (x < y ? -s : x > y ? s : 0) || (a.numero - b.numero); });
   }
   function marcarOrdem() {
@@ -101,15 +134,24 @@
   function desenhar() {
     marcarOrdem();
     const vs = ordenadas();
+    // 30/10/2026: quantas em cada aba
+    const nNfe = estado.vendas.filter(v => v.documento === 'NFE').length;
+    $('n-todas').textContent = '(' + estado.vendas.length + ')'; $('n-nfe').textContent = '(' + nNfe + ')';
+    $('n-cupom').textContent = '(' + (estado.vendas.length - nNfe) + ')';
+    document.querySelectorAll('#abas-doc button').forEach(b => b.classList.toggle('ativo', b.dataset.doc === estado.doc));
     if (!vs.length) {
-      $('linhas').innerHTML = '<tr><td colspan="11" class="vazio">Nenhuma venda fechada em '
-        + (estado.mes ? MESES[estado.mes] + ' de ' : '') + estado.ano + '.</td></tr>';
+      const oque = estado.doc === 'NFE' ? 'nota fiscal' : estado.doc === 'CUPOM' ? 'cupom' : 'venda fechada';
+      $('linhas').innerHTML = '<tr><td colspan="11" class="vazio">Nenhum(a) ' + oque + ' '
+        + (estado.soHoje ? 'hoje (' + brData(iso(new Date())) + ')' : estado.mes > 0 ? 'em ' + MESES[estado.mes] + ' de ' + estado.ano
+          : estado.de === estado.ate ? 'em ' + brData(estado.de) + (estado.de === iso(new Date()) ? ' (hoje)' : '')
+          : 'de ' + brData(estado.de) + ' a ' + brData(estado.ate)) + '.</td></tr>';
     } else {
       let mesAtual = 0, n = 0, html = '';
+      const variosMeses = estado.de.slice(0, 7) !== estado.ate.slice(0, 7);
       for (const v of vs) {
-        const m = new Date(v.data).getMonth() + 1;
-        if (!estado.mes && estado.ord === 'data' && m !== mesAtual) {           // separador de mes no modo "todos"
-          mesAtual = m;
+        const dv = new Date(v.data), m = dv.getMonth() + 1, chave = dv.getFullYear() * 100 + m;
+        if (variosMeses && estado.ord === 'data' && chave !== mesAtual) {      // separador de mes (periodo com mais de um mes)
+          mesAtual = chave;
           html += '<tr class="sep"><td colspan="11">' + MESES[m] + '</td></tr>';
         }
         n++;
@@ -134,7 +176,7 @@
   }
 
   function totais() {
-    const validas = estado.vendas.filter(v => v.situacao !== 'C');
+    const validas = ordenadas().filter(v => v.situacao !== 'C');          // 30/10/2026: so a aba escolhida
     const soma = (lista, campo) => lista.reduce((s, v) => s + (v[campo] || 0), 0);
     const cupons = validas.filter(v => v.documento !== 'NFE');
     const notas = validas.filter(v => v.documento === 'NFE');
@@ -152,10 +194,26 @@
   $('meses').addEventListener('click', ev => {
     const b = ev.target.closest('button[data-m]');
     if (!b) return;
-    estado.mes = Number(b.dataset.m);
+    periodoDoMes(Number(b.dataset.m));                 // 30/10/2026: o mes (ou o ano) vira o periodo
+    estado.soHoje = false;
     carregar();
   });
-  $('ano').addEventListener('change', ev => { estado.ano = Number(ev.target.value); carregar(); });
+  $('ano').addEventListener('change', ev => {
+    const m = mesDoPeriodo();
+    estado.ano = Number(ev.target.value);
+    periodoDoMes(m >= 0 ? m : 0);                      // mesmo mes no outro ano (periodo livre: o ano todo)
+    estado.soHoje = false;
+    carregar();
+  });
+  // 30/10/2026: abas e periodo
+  $('abas-doc').addEventListener('click', ev => {
+    const b = ev.target.closest('button[data-doc]'); if (!b) return;
+    estado.doc = b.dataset.doc;
+    // 30/10/2026 (6): saindo do Hoje, a aba mostra o MES (o que esta marcado; ao abrir, o mes corrente)
+    if (estado.soHoje) { estado.soHoje = false; carregar(); } else desenhar();
+  });
+  // 30/10/2026 (6): Hoje = todas as vendas de hoje (cupom e nota)
+  $('hoje').addEventListener('click', () => { estado.soHoje = true; estado.doc = 'TODAS'; carregar(); });
 
   const abrir = tr => { if (tr && tr.dataset.id) abrirEspelho(tr.dataset.id); };
   $('linhas').addEventListener('click', ev => abrir(ev.target.closest('tr.v')));

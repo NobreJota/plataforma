@@ -1,6 +1,10 @@
 {{!--
   Destino: C:\plataformaRota\views\vendas\pages\relatorio.handlebars
   Criado em: 03/10/2026
+  Alterado em: 30/10/2026 (6) - SEM o calendario: abre em Hoje; abas mostram o mes; Jan..Dez escolhem o mes.
+  Alterado em: 30/10/2026 (2) - periodo na margem direita; Hoje ao lado das abas; sem o texto "hoje".
+  Alterado em: 30/10/2026 - abas Todas · Nota fiscal · Cupom; PERIODO "de … até …" (calendario); abre nas vendas do DIA.
+               Os botoes Jan..Dez / todos preenchem o periodo do mes / do ano.
   Alterado em: 22/10/2026 - cabecalho da tabela FIXO (a grade rola por baixo) e ordenar clicando na coluna
                (Venda, Data, Cliente, Líquido)
   Alterado em: 22/10/2026 - etiqueta "Access" e aviso no espelho das vendas importadas do Access (VENDA-11)
@@ -45,6 +49,18 @@
     .meses label { margin-left:10px; font-weight:700; font-size:13px; }
     .meses select { height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:14px; font-weight:600; }
 
+    /* 30/10/2026: abas do documento e periodo */
+    .filtros { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
+    .abas-doc { display:flex; gap:0; border:1px solid #d1d5db; border-radius:8px; overflow:hidden; }
+    .abas-doc button { border:0; border-right:1px solid #d1d5db; background:#fff; padding:7px 18px; font-size:13px; font-weight:700; color:#374151; cursor:pointer; }
+    .abas-doc button:last-child { border-right:0; }
+    .abas-doc button.ativo { background:var(--roxo); color:#fff; }
+    .abas-doc button small { font-weight:600; opacity:.8; margin-left:4px; }
+    .periodo { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:#374151; }
+    .periodo input { height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:14px; font-weight:600; }
+    .periodo button { height:32px; border:1px solid #d1d5db; background:#fff; border-radius:6px; padding:0 12px; font-size:13px; font-weight:700; cursor:pointer; color:#374151; }
+    .periodo button.prim { background:var(--roxo); border-color:var(--roxo); color:#fff; }
+    .periodo.direita { margin-left:auto; }              /* 30/10/2026: periodo na margem direita */
     .grade { border:1px solid var(--borda); border-radius:10px; overflow:auto; max-height:calc(100vh - 260px); }
     table { width:100%; border-collapse:collapse; }
     th { background:var(--roxo); color:#fff; text-align:left; font-size:12px; padding:8px 10px; white-space:nowrap; }
@@ -161,6 +177,18 @@
     <button type="button" data-m="0" class="todos">todos</button>
     <label for="ano">Ano:</label>
     <select id="ano"></select>
+  </div>
+
+  <!-- 30/10/2026: abas e periodo -->
+  <div class="filtros">
+    <div class="abas-doc" id="abas-doc">
+      <button type="button" data-doc="TODAS" class="ativo">Todas<small id="n-todas"></small></button>
+      <button type="button" data-doc="NFE">Nota fiscal<small id="n-nfe"></small></button>
+      <button type="button" data-doc="CUPOM">Cupom<small id="n-cupom"></small></button>
+    </div>
+    <div class="periodo">
+      <button type="button" id="hoje" title="só as vendas de hoje">Hoje</button>
+    </div>
   </div>
 
   <div class="grade">

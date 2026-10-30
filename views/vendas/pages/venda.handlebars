@@ -59,6 +59,8 @@
   Alterado em: 18/10/2026 - instalacao: combo de ENDERECOS do cliente (+ outro endereco: CEP ou digitar), CEP
     primeiro; guardar no cadastro (/js/comum/endereco-instalacao.js).
   Alterado em: 17/10/2026 - cupom: botao de kits apagado (.kits-btn.apagado); janela dos kits arrasta pelo titulo.
+  Alterado em: 30/10/2026 (tarde) - grupo de comissao do produto (select.gc na coluna Ref.).
+  Alterado em: 30/10/2026 - VENDEDOR: combo a direita do titulo Produtos (#sel-vendedor); obrigatorio para fechar.
   Alterado em: 17/10/2026 - instalacao: campo PARTE DO TECNICO (ins-ptec) e botao ★ (configuracao de
                contas da mao de obra; /js/comum/config-contas.js).
 --}}
@@ -202,6 +204,17 @@
     .kits-btn { margin-left:12px; border:1px solid #c4b5fd; background:#faf5ff; color:#6b21a8; border-radius:8px; padding:3px 12px;
                 font-size:13px; font-weight:700; cursor:pointer; text-transform:none; letter-spacing:0; vertical-align:middle; }
     .kits-btn:hover { background:#ede9fe; }
+    /* 30/10/2026: vendedor */
+    .prod-tit { display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+    .vend-l { margin-left:auto; display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; color:var(--roxo); }
+    .vend-l select { height:32px; min-width:200px; border:1px solid #c4b5fd; border-radius:8px; padding:0 8px; font-size:14px;
+                     font-weight:600; text-transform:none; letter-spacing:0; color:var(--texto); background:#fffbeb; }
+    .vend-l select.ok { background:#faf5ff; }
+    .vend-l select.falta { border-color:var(--vermelho); outline:2px solid #fecaca; }
+    /* 30/10/2026 (tarde): grupo de comissao na linha do produto */
+    td select.gc { display:block; margin-top:4px; max-width:150px; height:24px; font-size:11px; border:1px solid #f59e0b; border-radius:5px;
+                   background:#fef3c7; color:#92400e; font-weight:700; padding:0 4px; }
+    td select.gc.ok { border-color:#e5e7eb; background:#fff; color:var(--cinza); font-weight:400; }
     .kits-btn.apagado { opacity:.45; filter:grayscale(1); cursor:not-allowed; }
     .kits-cab { cursor:move; user-select:none; }
     .kits-fundo { position:fixed; inset:0; background:rgba(17,24,39,.45); z-index:300; display:flex; align-items:flex-start; justify-content:center; padding:70px 16px; }
@@ -442,7 +455,9 @@
   </div>
 
   <div class="bloco">
-    <h2>Produtos <button type="button" class="kits-btn" id="kits-btn" title="escolher um kit: fornecedor e depois o kit (o aquecedor com o material que vai junto)">📦 Kits aquecedores</button></h2>
+    <h2 class="prod-tit">Produtos <button type="button" class="kits-btn" id="kits-btn" title="escolher um kit: fornecedor e depois o kit (o aquecedor com o material que vai junto)">📦 Kits aquecedores</button>
+      <label class="vend-l" title="quem vendeu (comissão) · obrigatório para fechar">Vendedor
+        <select id="sel-vendedor"><option value="">carregando…</option></select></label></h2>
     <div class="prod-linha">
       <select id="filtro-fornec" title="filtrar pelo fornecedor"><option value="">todos os fornecedores</option></select>
       <div class="busca">

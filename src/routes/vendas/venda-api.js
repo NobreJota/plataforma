@@ -1,5 +1,25 @@
 // =============================================================================
 // Destino: C:\plataformaRota\src\routes\vendas\venda-api.js
+// Alterado em: 30/10/2026 - VENDEDOR (Jorge): cadastro _vendedores (CLT ou avulso/MEI, % de comissao; o quadro de
+//   empregados do Access liga depois pelo codigoAccess). A venda guarda vendedor { id, nome, comissao } (gravado
+//   direto na colecao, fora do modelo). OBRIGATORIO para fechar; no fechamento a comissao do cadastro e congelada.
+//   Comissao = % sobre o liquido SEM a mao de obra (totalLiquido - totalServico), no MES DO FECHAMENTO (canceladas fora).
+//   GET  /vendedores (?todos=1 traz os inativos) · POST /vendedores · PUT /vendedores/:id
+//   GET  /vendedores/comissao?ano=          quadro jan..dez por vendedor (padrao fluxo de caixa)
+//   GET  /vendedores/comissao/vendas?vendedor=&ano=&mes=   as vendas de uma celula
+//   GET  /vendedores/tela                   a pagina (views/vendas/pages/vendedores.handlebars)
+// Alterado em: 30/10/2026 (tarde) - COMISSAO POR GRUPO DE PRODUTO (Jorge): grupos em _comissao_grupos (nascem 3:
+//   Pecas para aquecedores e bombas · Vendidos no balcao · Aquecedores e outros; da para incluir). O produto e
+//   classificado NA VENDA, a medida que e vendido (_produto_grupo_comissao { lojistaId, codigo, grupo } — fora do
+//   arquivo_docs, para nao se perder numa reimportacao do Access). O vendedor tem uma taxa por grupo
+//   (taxas: [{ grupo, taxa }]). Fechar exige todos os itens classificados; a venda guarda
+//   comissao { itens: [{ codigo, grupo, base, taxa, valor }], base, total } (base = liquido do item com o desconto
+//   geral repartido; a mao de obra fica fora). Vendas antigas sem `comissao`: % unico antigo do vendedor.
+//   GET/POST /comissao-grupos · PUT /comissao-grupos/:id · POST /produtos/:codigo/grupo-comissao { grupo }
+//   /produtos e /kits/:codigo devolvem grupoComissao (id do grupo; '' = sem classificar).
+// Alterado em: 30/10/2026 (tarde 2) - a TAXA e do GRUPO (vale para todos os vendedores: _comissao_grupos.taxa);
+//   o vendedor so tem os GRUPOS a que tem direito (grupos: [id]). Fechar: item de grupo que o vendedor nao tem = 0 %.
+//   (taxas por vendedor, da versao anterior, viram so a lista de grupos.)
 // Alterado em: 23/10/2026 - POS 6 (Jorge): as parcelas de CARTAO (debito e credito, conta 1.01.005.xxx) nascem
 //   com pos 6 = cartoes a receber da operadora. Titulo (PJ) e "a receber" continuam pos 5 (conta do cliente).
 // Alterado em: 23/10/2026 - GET /clientes devolve tambem edificio e apto (se tiver).
@@ -210,8 +230,10 @@ router.get('/produtos', async (req, res) => {
     const exato = c => c === Number(busca) || porEan.includes(c);
     docs.sort((a, b) => exato(b.codigo) - exato(a.codigo));
 
+    const gm = await gruposDosProdutos(loja, docs.map(p => Number(p.codigo)));      // 30/10/2026
     res.json({ ok: true, produtos: docs.map(p => ({ ...produtoSaida(p),
       porEan: porEan.includes(p.codigo),                            // achado pelo codigo de barras
+      grupoComissao: gm.get(Number(p.codigo)) || '',
     })) });
   } catch (err) {
     console.error('[vendas/produtos]', err);
@@ -274,10 +296,12 @@ router.get('/kits/:codigo', async (req, res) => {
     const k = await col('_kits').findOne({ lojistaId: loja, codigo });
     if (!k || !(k.itens || []).length) return res.json({ ok: true, kit: null });
     const prods = await produtosPorCodigo(loja, [codigo, ...k.itens.map(i => Number(i.codigo))]);
+    const gm = await gruposDosProdutos(loja, [...prods.keys()]);                     // 30/10/2026
+    const saida = p => ({ ...produtoSaida(p), grupoComissao: gm.get(Number(p.codigo)) || '' });
     res.json({ ok: true, kit: { codigo, descricao: (prods.get(codigo) || {}).descricao || '',
-      principal: prods.has(codigo) ? produtoSaida(prods.get(codigo)) : null,
+      principal: prods.has(codigo) ? saida(prods.get(codigo)) : null,
       itens: k.itens.filter(i => prods.has(Number(i.codigo)))
-        .map(i => ({ ...produtoSaida(prods.get(Number(i.codigo))), quantidade: i.quantidade })) } });
+        .map(i => ({ ...saida(prods.get(Number(i.codigo))), quantidade: i.quantidade })) } });
   } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
 });
 router.put('/kits/:codigo', express.json(), async (req, res) => {
@@ -988,7 +1012,236 @@ async function montar(req, venda) {
 
   venda.recalcular();
   if (venda.descontoGeral > venda.totalBruto) throw new Error('desconto maior que o total');
+  // 30/10/2026: vendedor (gravado direto na colecao depois do save: o modelo nao tem o campo)
+  venda.$locals.vendedor = await vendedorDaVenda(loja, b.vendedorId);
 }
+// 30/10/2026: grava o vendedor na venda e devolve a venda com ele
+async function gravarVendedor(venda) {
+  const vend = venda.$locals.vendedor || null;
+  await col('_vendas').updateOne({ _id: venda._id }, { $set: { vendedor: vend } });
+  return { ...venda.toJSON(), vendedor: vend };
+}
+
+// ---------------------------------------------------------------------------
+// 30/10/2026: VENDEDORES — cadastro, comissao e a pagina
+// ---------------------------------------------------------------------------
+const TIPOS_VENDEDOR = ['CLT', 'MEI', 'AVULSO'];
+const vendedorSaida = d => ({
+  id: String(d._id), nome: d.nome || '', apelido: d.apelido || '', tipo: d.tipo || 'CLT', documento: d.documento || '',
+  telefone: d.telefone || '', comissao: Number(d.comissao) || 0, ativo: d.ativo !== false, codigoAccess: d.codigoAccess || '',
+  grupos: gruposDoVendedor(d),                                                                    // 30/10/2026 (tarde 2)
+});
+// 30/10/2026 (tarde 2): grupos com direito a comissao (o cadastro da versao anterior tinha `taxas`)
+const gruposDoVendedor = d => [...new Set((Array.isArray(d.grupos) ? d.grupos : (d.taxas || []).map(t => t.grupo)).map(String))];
+
+// ---- 30/10/2026 (tarde): GRUPOS DE COMISSAO -------------------------------------------------
+const GRUPOS_PADRAO = ['Peças para aquecedores e bombas', 'Vendidos no balcão', 'Aquecedores e outros'];
+const grupoSaida = g => ({ id: String(g._id), nome: g.nome || '', ordem: g.ordem || 0, ativo: g.ativo !== false, taxa: Number(g.taxa) || 0 });
+const lerTaxa = v => { const n = Number(String(v ?? '').replace(',', '.')); return Number.isFinite(n) && n >= 0 && n <= 50 ? Math.round(n * 100) / 100 : NaN; };
+async function gruposComissao(loja, session) {
+  let g = await col('_comissao_grupos').find({ lojistaId: loja }, { session }).sort({ ordem: 1 }).toArray();
+  if (!g.length) {                                       // primeira vez: os tres grupos do Jorge
+    const agora = new Date();
+    await col('_comissao_grupos').insertMany(GRUPOS_PADRAO.map((nome, i) => ({ lojistaId: loja, nome, ordem: i + 1, ativo: true, criadoEm: agora })));
+    g = await col('_comissao_grupos').find({ lojistaId: loja }).sort({ ordem: 1 }).toArray();
+  }
+  return g;
+}
+// codigo do produto -> id do grupo (texto)
+async function gruposDosProdutos(loja, cods, session) {
+  const lista = [...new Set(cods.map(Number).filter(Boolean))];
+  if (!lista.length) return new Map();
+  const docs = await col('_produto_grupo_comissao').find({ lojistaId: loja, codigo: { $in: lista } }, { session }).toArray();
+  return new Map(docs.map(d => [Number(d.codigo), String(d.grupo)]));
+}
+// o vendedor que a tela mandou (id), com o % atual do cadastro; '' = sem vendedor
+async function vendedorDaVenda(loja, id, session) {
+  if (!id) return null;
+  if (!mongoose.Types.ObjectId.isValid(String(id))) throw new Error('vendedor inválido');
+  const d = await col('_vendedores').findOne({ _id: new mongoose.Types.ObjectId(String(id)), lojistaId: loja }, { session });
+  if (!d) throw new Error('vendedor não encontrado no cadastro');
+  return { id: d._id, nome: d.apelido || d.nome, comissao: Number(d.comissao) || 0, grupos: gruposDoVendedor(d) };   // 30/10/2026 (tarde 2)
+}
+const lerVendedorCorpo = b => {
+  const t = (v, n) => String(v ?? '').trim().slice(0, n || 120);
+  const comissao = Number(String(b.comissao ?? '').replace(',', '.'));
+  // 30/10/2026 (tarde 2): os grupos com direito a comissao (a taxa e do grupo)
+  const grupos = [...new Set((Array.isArray(b.grupos) ? b.grupos : []).map(x => t(x, 24)).filter(Boolean))];
+  return { nome: t(b.nome), apelido: t(b.apelido, 40), tipo: TIPOS_VENDEDOR.includes(b.tipo) ? b.tipo : 'CLT',
+           documento: t(b.documento, 20).replace(/[^\d./-]/g, ''), telefone: t(b.telefone, 30),
+           comissao: Number.isFinite(comissao) ? Math.round(comissao * 100) / 100 : 0, ativo: b.ativo !== false,
+           codigoAccess: t(b.codigoAccess, 20), grupos };
+};
+const conferirVendedor = v => {
+  if (!v.nome) throw Object.assign(new Error('informe o nome do vendedor'), { status: 400 });
+  if (v.comissao < 0 || v.comissao > 50) throw Object.assign(new Error('comissão: de 0 a 50 %'), { status: 400 });
+  for (const g of v.grupos) if (!mongoose.Types.ObjectId.isValid(g)) throw Object.assign(new Error('grupo de comissão inválido'), { status: 400 });
+};
+
+// 30/10/2026 (tarde): grupos de comissao (com quantos produtos ja classificados)
+router.get('/comissao-grupos', async (req, res) => {
+  try {
+    const loja = lojaDe(req), g = await gruposComissao(loja);
+    const cont = new Map((await col('_produto_grupo_comissao').aggregate([{ $match: { lojistaId: loja } },
+      { $group: { _id: '$grupo', n: { $sum: 1 } } }]).toArray()).map(x => [String(x._id), x.n]));
+    res.json({ ok: true, grupos: g.map(x => ({ ...grupoSaida(x), produtos: cont.get(String(x._id)) || 0 })) });
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
+});
+router.post('/comissao-grupos', async (req, res) => {
+  try {
+    const loja = lojaDe(req), nome = String(req.body?.nome || '').trim().slice(0, 60);
+    if (!nome) return res.status(400).json({ ok: false, erro: 'informe o nome do grupo' });
+    const g = await gruposComissao(loja);
+    if (g.some(x => x.nome.toLowerCase() === nome.toLowerCase())) return res.status(409).json({ ok: false, erro: 'já existe o grupo ' + nome });
+    const taxa = lerTaxa(req.body?.taxa || 0);
+    if (!Number.isFinite(taxa)) return res.status(400).json({ ok: false, erro: 'taxa: de 0 a 50 %' });
+    const doc = { lojistaId: loja, nome, taxa, ordem: g.reduce((m, x) => Math.max(m, x.ordem || 0), 0) + 1, ativo: true, criadoEm: new Date() };
+    const r = await col('_comissao_grupos').insertOne(doc);
+    res.status(201).json({ ok: true, grupo: grupoSaida({ _id: r.insertedId, ...doc }) });
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
+});
+router.put('/comissao-grupos/:id', async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ ok: false, erro: 'id inválido' });
+    const set = { atualizadoEm: new Date() };
+    if ('nome' in (req.body || {})) { set.nome = String(req.body.nome || '').trim().slice(0, 60); if (!set.nome) return res.status(400).json({ ok: false, erro: 'informe o nome do grupo' }); }
+    if ('ativo' in (req.body || {})) set.ativo = req.body.ativo !== false;
+    if ('taxa' in (req.body || {})) { set.taxa = lerTaxa(req.body.taxa); if (!Number.isFinite(set.taxa)) return res.status(400).json({ ok: false, erro: 'taxa: de 0 a 50 %' }); }
+    const r = await col('_comissao_grupos').updateOne({ _id: new mongoose.Types.ObjectId(req.params.id), lojistaId: lojaDe(req) }, { $set: set });
+    if (!r.matchedCount) return res.status(404).json({ ok: false, erro: 'grupo não encontrado' });
+    res.json({ ok: true });
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
+});
+// classifica o produto (na venda, a medida que vende); grupo '' tira a classificacao
+router.post('/produtos/:codigo/grupo-comissao', async (req, res) => {
+  try {
+    const loja = lojaDe(req), codigo = Number(req.params.codigo), grupo = String(req.body?.grupo || '');
+    if (!codigo) return res.status(400).json({ ok: false, erro: 'código inválido' });
+    if (!grupo) { await col('_produto_grupo_comissao').deleteOne({ lojistaId: loja, codigo }); return res.json({ ok: true }); }
+    if (!mongoose.Types.ObjectId.isValid(grupo)) return res.status(400).json({ ok: false, erro: 'grupo inválido' });
+    const g = await col('_comissao_grupos').findOne({ _id: new mongoose.Types.ObjectId(grupo), lojistaId: loja });
+    if (!g) return res.status(404).json({ ok: false, erro: 'grupo não encontrado' });
+    await col('_produto_grupo_comissao').updateOne({ lojistaId: loja, codigo },
+      { $set: { grupo: g._id, atualizadoEm: new Date() }, $setOnInsert: { criadoEm: new Date() } }, { upsert: true });
+    res.json({ ok: true });
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
+});
+
+router.get('/vendedores', async (req, res) => {
+  try {
+    const filtro = { lojistaId: lojaDe(req) };
+    if (!req.query.todos) filtro.ativo = { $ne: false };
+    const docs = await col('_vendedores').find(filtro).sort({ ativo: -1, nome: 1 }).toArray();
+    res.json({ ok: true, vendedores: docs.map(vendedorSaida) });
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
+});
+
+router.post('/vendedores', async (req, res) => {
+  try {
+    const loja = lojaDe(req), v = lerVendedorCorpo(req.body || {});
+    conferirVendedor(v);
+    const igual = await col('_vendedores').findOne({ lojistaId: loja, nome: { $regex: '^' + escapar(v.nome) + '$', $options: 'i' } });
+    if (igual) return res.status(409).json({ ok: false, erro: 'já existe o vendedor ' + igual.nome });
+    const agora = new Date();
+    const r = await col('_vendedores').insertOne({ lojistaId: loja, ...v, criadoEm: agora, atualizadoEm: agora });
+    res.status(201).json({ ok: true, vendedor: vendedorSaida({ _id: r.insertedId, ...v }) });
+  } catch (err) { res.status(err.status || 500).json({ ok: false, erro: err.message }); }
+});
+
+router.put('/vendedores/:id', async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ ok: false, erro: 'id inválido' });
+    const loja = lojaDe(req), _id = new mongoose.Types.ObjectId(req.params.id), v = lerVendedorCorpo(req.body || {});
+    conferirVendedor(v);
+    const igual = await col('_vendedores').findOne({ lojistaId: loja, _id: { $ne: _id }, nome: { $regex: '^' + escapar(v.nome) + '$', $options: 'i' } });
+    if (igual) return res.status(409).json({ ok: false, erro: 'já existe o vendedor ' + igual.nome });
+    const r = await col('_vendedores').findOneAndUpdate({ _id, lojistaId: loja }, { $set: { ...v, atualizadoEm: new Date() }, $unset: { taxas: '' } }, { returnDocument: 'after' });
+    const d = r && r.value !== undefined ? r.value : r;
+    if (!d) return res.status(404).json({ ok: false, erro: 'vendedor não encontrado' });
+    res.json({ ok: true, vendedor: vendedorSaida(d) });
+  } catch (err) { res.status(err.status || 500).json({ ok: false, erro: err.message }); }
+});
+
+// base da comissao: liquido sem a mao de obra (centavos); comissao em centavos
+const baseComissao = v => Math.max(0, (v.totalLiquido || 0) - (v.totalServico || 0));
+const valorComissao = (base, pct) => Math.round(base * (Number(pct) || 0) / 100);
+// 30/10/2026 (tarde): a comissao gravada no fechamento (por grupo); venda antiga: % unico do vendedor
+const comissaoDaVenda = v => {
+  if (v.comissao && Number.isFinite(v.comissao.total)) return { base: v.comissao.base || 0, valor: v.comissao.total || 0 };
+  const base = baseComissao(v);
+  return { base, valor: v.vendedor && v.vendedor.id ? valorComissao(base, v.vendedor.comissao) : 0 };
+};
+
+router.get('/vendedores/comissao', async (req, res) => {
+  try {
+    const loja = lojaDe(req), hoje = new Date();
+    const ano = Number(req.query.ano) || hoje.getFullYear();
+    const docs = await col('_vendas').find({ lojistaId: loja, situacao: 'F', fechadaEm: { $gte: new Date(ano, 0, 1), $lt: new Date(ano + 1, 0, 1) } })
+      .project({ fechadaEm: 1, totalLiquido: 1, totalServico: 1, vendedor: 1, comissao: 1 }).toArray();
+    const cad = await col('_vendedores').find({ lojistaId: loja }).toArray();
+    const linhas = new Map();
+    const linha = (id, nome, ativo) => {
+      if (!linhas.has(id)) linhas.set(id, { vendedor: id, nome, ativo, meses: Array.from({ length: 12 }, () => ({ qtd: 0, base: 0, comissao: 0 })) });
+      return linhas.get(id);
+    };
+    cad.filter(d => d.ativo !== false).forEach(d => linha(String(d._id), d.apelido || d.nome, true));
+    for (const v of docs) {
+      const id = v.vendedor && v.vendedor.id ? String(v.vendedor.id) : '';
+      const c = cad.find(d => String(d._id) === id);
+      const l = linha(id, id ? (c ? c.apelido || c.nome : v.vendedor.nome || '?') : 'sem vendedor', id ? (c ? c.ativo !== false : false) : null);
+      const m = l.meses[new Date(v.fechadaEm).getMonth()], cv = comissaoDaVenda(v);
+      m.qtd++; m.base += cv.base; m.comissao += cv.valor;
+    }
+    const lista = [...linhas.values()].map(l => ({ ...l,
+      total: l.meses.reduce((t, m) => ({ qtd: t.qtd + m.qtd, base: t.base + m.base, comissao: t.comissao + m.comissao }), { qtd: 0, base: 0, comissao: 0 }) }))
+      .sort((a, b) => (a.vendedor ? 0 : 1) - (b.vendedor ? 0 : 1) || a.nome.localeCompare(b.nome));
+    const anos = (await col('_vendas').aggregate([{ $match: { lojistaId: loja, situacao: 'F', fechadaEm: { $ne: null } } },
+      { $group: { _id: { $year: '$fechadaEm' } } }]).toArray()).map(a => a._id).filter(Boolean);
+    if (!anos.includes(hoje.getFullYear())) anos.push(hoje.getFullYear());
+    anos.sort((a, b) => b - a);
+    res.json({ ok: true, ano, anos, linhas: lista });
+  } catch (err) { console.error('[vendas/comissao]', err); res.status(500).json({ ok: false, erro: err.message }); }
+});
+
+router.get('/vendedores/comissao/vendas', async (req, res) => {
+  try {
+    const loja = lojaDe(req), ano = Number(req.query.ano), mes = Number(req.query.mes);   // mes 1..12; 0 = ano todo
+    if (!ano) return res.status(400).json({ ok: false, erro: 'ano inválido' });
+    const ini = mes ? new Date(ano, mes - 1, 1) : new Date(ano, 0, 1), fim = mes ? new Date(ano, mes, 1) : new Date(ano + 1, 0, 1);
+    const filtro = { lojistaId: loja, situacao: 'F', fechadaEm: { $gte: ini, $lt: fim } };
+    const vid = String(req.query.vendedor || '');
+    if (vid) {
+      if (!mongoose.Types.ObjectId.isValid(vid)) return res.status(400).json({ ok: false, erro: 'vendedor inválido' });
+      filtro['vendedor.id'] = new mongoose.Types.ObjectId(vid);
+    } else filtro.$or = [{ vendedor: null }, { 'vendedor.id': null }];
+    const docs = await col('_vendas').find(filtro).sort({ fechadaEm: 1, numero: 1 })
+      .project({ numero: 1, fechadaEm: 1, documento: 1, origem: 1, 'cliente.nome': 1, totalLiquido: 1, totalServico: 1, vendedor: 1, comissao: 1 }).toArray();
+    const nomes = new Map((await gruposComissao(loja)).map(g => [String(g._id), g.nome]));
+    res.json({ ok: true, vendas: docs.map(v => {
+      const cv = comissaoDaVenda(v);
+      // por grupo (o que entrou em cada taxa)
+      const porGrupo = new Map();
+      for (const i of (v.comissao && v.comissao.itens) || []) {
+        const k = String(i.grupo) + '|' + i.taxa, x = porGrupo.get(k) || { grupo: nomes.get(String(i.grupo)) || '?', taxa: i.taxa, base: 0, valor: 0 };
+        x.base += i.base; x.valor += i.valor; porGrupo.set(k, x);
+      }
+      return { id: String(v._id), numero: v.numero, data: v.fechadaEm, documento: v.documento, origem: v.origem || 'PLATAFORMA',
+               cliente: v.cliente?.nome || '', liquido: v.totalLiquido || 0, maoDeObra: v.totalServico || 0, base: cv.base,
+               pct: cv.base ? Math.round(cv.valor / cv.base * 10000) / 100 : 0, comissao: cv.valor, grupos: [...porGrupo.values()] };
+    }) });
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
+});
+
+// a pagina (Venda > Vendedores)
+router.get('/vendedores/tela', (req, res) => {
+  res.render('vendas/pages/vendedores', { layout: false }, (err, html) => {
+    if (!err) return res.send(html);
+    // sem o handlebars configurado para esse caminho: manda o arquivo como esta (nao usa variaveis)
+    res.sendFile(require('path').join(process.cwd(), 'views', 'vendas', 'pages', 'vendedores.handlebars'), e2 => {
+      if (e2) res.status(500).send('página do vendedor não encontrada: ' + err.message);
+    });
+  });
+});
 
 // ---------------------------------------------------------------------------
 // GET /abertas   as vendas em aberto, da mais recente
@@ -1005,6 +1258,7 @@ router.get('/abertas', async (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// 30/10/2026: ?de=YYYY-MM-DD&ate=YYYY-MM-DD (periodo, dias inclusive) tem preferencia sobre ano/mes.
 // GET /relatorio?ano=2026&mes=10   vendas do mes (mes=0: o ano todo), da mais
 // antiga para a mais recente. Valores em CENTAVOS. Devolve tambem os anos que
 // tem venda, para o combo.
@@ -1015,8 +1269,15 @@ router.get('/relatorio', async (req, res) => {
     const hoje = new Date();
     const ano = Number(req.query.ano) || hoje.getFullYear();
     const mes = Math.min(12, Math.max(0, Number(req.query.mes ?? (hoje.getMonth() + 1)) || 0));
-    const inicio = mes ? new Date(ano, mes - 1, 1) : new Date(ano, 0, 1);
-    const fim = mes ? new Date(ano, mes, 1) : new Date(ano + 1, 0, 1);
+    let inicio = mes ? new Date(ano, mes - 1, 1) : new Date(ano, 0, 1);
+    let fim = mes ? new Date(ano, mes, 1) : new Date(ano + 1, 0, 1);
+    // 30/10/2026: PERIODO de/ate (YYYY-MM-DD, os dois dias inclusive) no lugar do mes
+    const dataQ = t => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(t || '')); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; };
+    const de = dataQ(req.query.de), ate = dataQ(req.query.ate);
+    if (de && ate) {
+      if (ate < de) return res.status(400).json({ ok: false, erro: 'a data final é antes da inicial' });
+      inicio = de; fim = new Date(ate.getFullYear(), ate.getMonth(), ate.getDate() + 1);
+    }
 
     // so as EMITIDAS (fechadas e as canceladas depois de fechadas), pela data do fechamento
     const docs = await Venda.find({ lojistaId: loja, situacao: { $in: ['F', 'C'] }, fechadaEm: { $gte: inicio, $lt: fim } })
@@ -1122,6 +1383,29 @@ router.post('/:id/fechar', async (req, res) => {
       v.recalcular();
       const total = v.totalLiquido;
       if (total <= 0) throw new Error('a venda está com total zero');
+      // 30/10/2026: VENDEDOR obrigatorio; a comissao do cadastro fica congelada na venda
+      const rawV = await col('_vendas').findOne({ _id: v._id }, { session, projection: { vendedor: 1 } });
+      if (!rawV?.vendedor?.id) throw new Error('escolha o vendedor antes de fechar');
+      const vendAtual = await vendedorDaVenda(loja, rawV.vendedor.id, session);
+      // 30/10/2026 (tarde): comissao por GRUPO do produto (todos classificados), congelada na venda
+      const gm = await gruposDosProdutos(loja, v.itens.map(i => i.codigo), session);
+      const taxaGrupo = new Map((await gruposComissao(loja, session)).map(g => [String(g._id), Number(g.taxa) || 0]));   // tarde 2
+      const semGrupo = v.itens.filter(i => !gm.get(Number(i.codigo)));
+      if (semGrupo.length) {
+        throw new Error('classifique o grupo de comissão de ' + semGrupo.slice(0, 3).map(i => i.codigo + ' ' + (i.descricao || '')).join(', ')
+          + (semGrupo.length > 3 ? ' e mais ' + (semGrupo.length - 3) : '') + ' (na linha do produto, abaixo da referência)');
+      }
+      const liqItem = i => (i.quantidade || 0) * (i.precoUnitario || 0) - (i.desconto || 0);
+      const somaItens = v.itens.reduce((t, i) => t + liqItem(i), 0), geral = Math.min(v.descontoGeral || 0, somaItens);
+      const itensC = v.itens.map(i => {
+        const liq = liqItem(i), base = somaItens ? liq - Math.round(geral * liq / somaItens) : 0;
+        const grupo = gm.get(Number(i.codigo)), taxa = (vendAtual.grupos || []).includes(grupo) ? taxaGrupo.get(grupo) || 0 : 0;
+        return { codigo: i.codigo, grupo: new mongoose.Types.ObjectId(grupo), base, taxa, valor: valorComissao(base, taxa) };
+      });
+      const sobra = (somaItens - geral) - itensC.reduce((t, x) => t + x.base, 0);       // arredondamento do rateio
+      if (sobra && itensC.length) { itensC[0].base += sobra; itensC[0].valor = valorComissao(itensC[0].base, itensC[0].taxa); }
+      const comissao = { itens: itensC, base: itensC.reduce((t, x) => t + x.base, 0), total: itensC.reduce((t, x) => t + x.valor, 0) };
+      await col('_vendas').updateOne({ _id: v._id }, { $set: { vendedor: vendAtual, comissao } }, { session });
 
       // os pagamentos: lista nova, ou o formato antigo (uma forma so, pelo total)
       const pedidos = Array.isArray(b.pagamentos) && b.pagamentos.length
@@ -1624,7 +1908,8 @@ router.get('/:id', async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(400).json({ ok: false, erro: 'id inválido' });
     const v = await Venda.findOne({ _id: req.params.id, lojistaId: lojaDe(req) });
     if (!v) return res.status(404).json({ ok: false, erro: 'venda não encontrada' });
-    res.json({ ok: true, venda: v });
+    const raw = await col('_vendas').findOne({ _id: v._id }, { projection: { vendedor: 1 } });   // 30/10/2026
+    res.json({ ok: true, venda: { ...v.toJSON(), vendedor: raw?.vendedor || null } });
   } catch (err) {
     res.status(500).json({ ok: false, erro: err.message });
   }
@@ -1644,7 +1929,7 @@ router.post('/', async (req, res) => {
       try { await venda.save(); break; }
       catch (e) { if (e.code !== 11000 || tentativa === 2) throw e; }   // dois ao mesmo tempo: tenta o proximo
     }
-    res.status(201).json({ ok: true, venda });
+    res.status(201).json({ ok: true, venda: await gravarVendedor(venda) });
   } catch (err) {
     console.error('[vendas/criar]', err);
     res.status(400).json({ ok: false, erro: err.message });
@@ -1660,7 +1945,7 @@ router.put('/:id', async (req, res) => {
     await montar(req, v);
     if (!v.itens.length) return res.status(400).json({ ok: false, erro: 'a venda não tem itens' });
     await v.save();
-    res.json({ ok: true, venda: v });
+    res.json({ ok: true, venda: await gravarVendedor(v) });
   } catch (err) {
     console.error('[vendas/alterar]', err);
     res.status(400).json({ ok: false, erro: err.message });

@@ -1,0 +1,204 @@
+{{!--
+  Destino: C:\plataformaRota\views\vendas\pages\vendedores.handlebars
+  Criado em: 30/10/2026 (Jorge)
+
+  VENDA > VENDEDORES
+    Botao "Cadastro" (ao lado das abas): abre a ficha de vendedor NOVO numa coluna ao lado da lista
+      (escondida ate clicar). Clique num vendedor da lista: a ficha abre num MODAL para editar.
+    Aba Lista: os vendedores (CLT ou avulso/MEI), com as taxas por grupo.
+    Aba Comissão: quadro do ano no padrao do fluxo de caixa (jan..dez + total), por vendedor; clique no mes: as vendas.
+    Aba Grupos: grupos de comissao (Pecas p/ aquecedores e bombas · Vendidos no balcao · Aquecedores e outros; + grupo).
+      O produto e classificado NA VENDA, a medida que e vendido (fica gravado).
+  Comissao = taxa do grupo do produto sobre o liquido do item (desconto geral repartido; mao de obra fora),
+  no mes do fechamento (canceladas fora). O quadro de empregados do Access liga depois ("código no Access").
+  Alterado em: 30/10/2026 (tarde 2) - a TAXA e do grupo (aba Grupos, coluna Taxa); na ficha so os grupos com direito.
+  Alterado em: 30/10/2026 (tarde) - Cadastro/Lista/Comissão/Grupos; ficha ao lado (novo) e modal (editar); taxa por grupo.
+  Aberta por /vendas/vendedores (pages.js). JS: /js/vendas/vendedores.js
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendedores</title>
+  <style>
+    *, *::before, *::after { box-sizing:border-box; }
+    :root { --roxo:#6b21a8; --roxo-claro:#f3e8ff; --borda:#e5e7eb; --texto:#111827; --cinza:#6b7280; --verde:#059669; --vermelho:#dc2626; }
+    body { margin:0 auto; max-width:1480px; padding:20px 24px 60px; color:var(--texto); background:#fff;
+           font-family:system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
+    .topo { display:flex; align-items:center; gap:14px; margin-bottom:14px; padding-right:190px; flex-wrap:wrap; }
+    .topo h1 { margin:0; font-size:21px; }
+    .btn-cad { border:1px solid #1d4ed8; background:#1d4ed8; color:#fff; border-radius:8px; padding:7px 16px; font-weight:700; cursor:pointer; }
+    .btn-cad.ativo { background:#fff; color:#1d4ed8; }
+    .abas { display:flex; gap:6px; }
+    .abas button { border:1px solid var(--borda); background:#fff; border-radius:8px; padding:7px 16px; font-weight:700; color:#374151; cursor:pointer; }
+    .abas button.ativo { background:var(--roxo); border-color:var(--roxo); color:#fff; }
+    .aba[hidden] { display:none; }
+    .bloco { border:1px solid var(--borda); border-radius:10px; padding:12px 14px; margin-bottom:12px; }
+    .bloco h2 { margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--roxo); display:flex; justify-content:space-between; align-items:center; }
+    .cad { display:grid; grid-template-columns:minmax(0,1fr); gap:16px; align-items:start; }
+    .cad.com-lado { grid-template-columns:minmax(0,1.3fr) minmax(360px,1fr); }
+    #lado[hidden] { display:none; }
+    table { width:100%; border-collapse:collapse; }
+    th { text-align:left; font-size:11px; text-transform:uppercase; color:#374151; background:#f8fafc; border-bottom:1px solid var(--borda); padding:6px 8px; white-space:nowrap; }
+    td { padding:6px 8px; border-bottom:1px solid #f3f4f6; vertical-align:top; }
+    .num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    #lista tr { cursor:pointer; } #lista tr:hover td { background:#faf5ff; }
+    #lista tr.inativo td { color:#9ca3af; }
+    #lista td.tx { font-size:12px; color:#374151; } #lista td.tx span { display:block; white-space:nowrap; }
+    #lista td.tx .falta { color:#b45309; }
+    .tag { font-size:11px; border-radius:4px; padding:1px 6px; background:#f3f4f6; color:#374151; font-weight:700; }
+    .tag.MEI, .tag.AVULSO { background:#fef3c7; color:#92400e; }
+    .ficha label { display:flex; flex-direction:column; gap:3px; margin-bottom:8px; font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; }
+    .ficha input, .ficha select { height:34px; border:1px solid #d1d5db; border-radius:8px; padding:0 10px; font-size:14px; font-weight:400; text-transform:none; width:100%; }
+    .ficha input:placeholder-shown { background:#fffbeb; }
+    .ficha .linha { display:grid; grid-template-columns:1fr 1fr; gap:0 12px; }
+    .ficha .chk { flex-direction:row; align-items:center; gap:8px; text-transform:none; font-size:14px; font-weight:600; }
+    .ficha .chk input { height:18px; width:18px; }
+    .ficha .sub { margin:6px 0 4px; font-size:11px; font-weight:700; text-transform:uppercase; color:var(--roxo); }
+    .taxas { border:1px solid var(--borda); border-radius:8px; padding:6px 8px; margin-bottom:8px; }
+    .ficha label.gr-l { display:flex; flex-direction:row; align-items:center; gap:10px; padding:5px 2px; margin:0; font-size:14px;
+                       font-weight:600; text-transform:none; color:var(--texto); cursor:pointer; }
+    .gr-l input { width:18px !important; height:18px !important; }
+    .gr-l b { margin-left:auto; color:var(--roxo); }
+    .ficha label.gr-l.inativo { color:#9ca3af; }
+    #g-lista input.tx { width:90px; text-align:right; }
+    .taxa-l { display:grid; grid-template-columns:minmax(0,1fr) 92px 28px; gap:8px; align-items:center; margin-bottom:6px; }
+    .taxa-l .cab { font-size:11px; font-weight:700; text-transform:uppercase; color:#374151; }
+    .taxa-l input { text-align:right; }
+    .taxa-l button { border:0; background:none; color:var(--vermelho); font-size:18px; cursor:pointer; }
+    .mais { border:0; background:none; color:var(--roxo); font-weight:800; cursor:pointer; padding:2px 0; font-size:14px; }
+    .botoes { display:flex; gap:8px; margin-top:6px; }
+    .botoes button { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:9px 16px; font-weight:700; cursor:pointer; }
+    .botoes button.prim { background:var(--roxo); border-color:var(--roxo); color:#fff; }
+    .x { border:0; background:none; color:var(--vermelho); font-size:20px; cursor:pointer; line-height:1; }
+    .msg { min-height:18px; font-size:13px; color:var(--vermelho); margin-top:8px; } .msg.ok { color:var(--verde); }
+    .dica { font-size:12px; color:var(--cinza); margin-top:4px; }
+    .filtro { display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:13px; }
+    .filtro select { height:34px; border:1px solid #d1d5db; border-radius:8px; padding:0 8px; font-size:14px; font-weight:700; }
+    /* quadro da comissao (padrao fluxo de caixa) */
+    .quadro { overflow-x:auto; }
+    .quadro table { min-width:1100px; }
+    .quadro th.m, .quadro td.m { text-align:right; }
+    .quadro td.nome { font-weight:700; white-space:nowrap; position:sticky; left:0; background:#fff; }
+    .quadro td.m { cursor:pointer; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .quadro td.m:hover { background:#faf5ff; }
+    .quadro td.m b { display:block; color:var(--roxo); }
+    .quadro td.m small { display:block; color:var(--cinza); font-size:11px; }
+    .quadro td.vz { color:#d1d5db; cursor:default; }
+    .quadro td.tot { background:#f5f3ff; }
+    .quadro tr.sem td.nome { color:var(--cinza); font-style:italic; }
+    .quadro tfoot td { border-top:2px solid var(--borda); background:#f8fafc; font-weight:700; }
+    /* grupos */
+    #g-lista input { height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:14px; width:100%; }
+    #g-lista tr.inativo input { color:#9ca3af; text-decoration:line-through; }
+    .g-novo { display:flex; gap:8px; margin-top:10px; }
+    .g-novo input { flex:1; max-width:420px; height:34px; border:1px solid #d1d5db; border-radius:8px; padding:0 10px; font-size:14px; background:#fffbeb; }
+    .g-novo button, #g-lista button { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:6px 12px; font-weight:700; cursor:pointer; }
+    /* modais */
+    .fundo { position:fixed; inset:0; background:rgba(15,23,42,.25); z-index:40; }
+    .caixa { position:fixed; top:6vh; left:50%; transform:translateX(-50%); z-index:41; width:min(900px, calc(100vw - 24px));
+             max-height:88vh; display:flex; flex-direction:column; background:#fff; border-radius:12px; box-shadow:0 18px 50px rgba(0,0,0,.3); }
+    .caixa.estreita { width:min(560px, calc(100vw - 24px)); }
+    .fundo[hidden], .caixa[hidden] { display:none; }
+    .caixa h3 { margin:0; padding:14px 18px; border-bottom:1px solid var(--borda); font-size:17px; color:var(--roxo); display:flex; justify-content:space-between; }
+    .caixa .corpo { overflow:auto; padding:10px 18px 16px; }
+    @media (max-width: 1100px) { .cad.com-lado { grid-template-columns:minmax(0,1fr); } body { padding:16px 12px 60px; } }
+  </style>
+</head>
+<body>
+  <div class="topo">
+    <h1>Vendedores</h1>
+    <button type="button" class="btn-cad" id="btn-cad" title="cadastrar um vendedor novo">Cadastro</button>
+    <div class="abas" id="abas">
+      <button type="button" data-aba="lista" class="ativo">Lista</button>
+      <button type="button" data-aba="com">Comissão</button>
+      <button type="button" data-aba="grupos">Grupos</button>
+    </div>
+  </div>
+
+  <div class="aba" id="aba-lista">
+    <div class="cad" id="cad">
+      <div class="bloco">
+        <h2>Vendedores <label class="dica" style="display:flex;gap:6px;align-items:center;margin:0;text-transform:none;letter-spacing:0;font-weight:400">
+          <input type="checkbox" id="ver-inativos"> mostrar os inativos</label></h2>
+        <table>
+          <thead><tr><th>Nome</th><th>Apelido</th><th>Tipo</th><th>CPF / CNPJ</th><th>Telefone</th><th>Grupos (taxa)</th></tr></thead>
+          <tbody id="lista"><tr><td colspan="6" class="dica">Carregando…</td></tr></tbody>
+        </table>
+        <div class="dica">Clique num vendedor para editar.</div>
+      </div>
+      <div class="bloco" id="lado" hidden>
+        <h2><span>Novo vendedor</span><button type="button" class="x" id="lado-fechar" title="fechar">×</button></h2>
+        <div id="lado-corpo"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="aba" id="aba-com" hidden>
+    <div class="bloco">
+      <div class="filtro"><span>Ano</span><select id="c-ano"></select>
+        <span class="dica">comissão (em roxo) e, embaixo, a base (líquido sem mão de obra) · clique no mês para ver as vendas</span></div>
+      <div class="quadro"><table>
+        <thead><tr><th>Vendedor</th><th class="m">Jan</th><th class="m">Fev</th><th class="m">Mar</th><th class="m">Abr</th><th class="m">Mai</th><th class="m">Jun</th>
+          <th class="m">Jul</th><th class="m">Ago</th><th class="m">Set</th><th class="m">Out</th><th class="m">Nov</th><th class="m">Dez</th><th class="m">Total</th></tr></thead>
+        <tbody id="c-corpo"><tr><td colspan="14" class="dica">Carregando…</td></tr></tbody>
+        <tfoot id="c-pe"></tfoot>
+      </table></div>
+      <div class="msg" id="c-msg"></div>
+    </div>
+  </div>
+
+  <div class="aba" id="aba-grupos" hidden>
+    <div class="bloco" style="max-width:820px">
+      <h2>Grupos de comissão</h2>
+      <table>
+        <thead><tr><th style="width:50px">Nº</th><th>Nome</th><th class="num">Taxa (%)</th><th class="num">Produtos classificados</th><th></th></tr></thead>
+        <tbody id="g-lista"><tr><td colspan="5" class="dica">Carregando…</td></tr></tbody>
+      </table>
+      <div class="g-novo"><input id="g-nome" placeholder="nome do grupo novo" autocomplete="off"><input id="g-taxa" placeholder="taxa %" inputmode="decimal" autocomplete="off" style="max-width:100px;text-align:right"><button type="button" id="g-incluir">+ grupo</button></div>
+      <div class="dica">O produto é classificado na venda, à medida que é vendido (combo amarelo abaixo da referência). Depois de classificado não pede mais.
+        A taxa vale para todos os vendedores que têm o grupo. Mudar o nome ou a taxa: mude e saia do campo (vale para as vendas fechadas daí em diante).</div>
+      <div class="msg" id="g-msg"></div>
+    </div>
+  </div>
+
+  <!-- a ficha (vai para o lado quando e NOVO; para o modal quando e EDITAR) -->
+  <div id="ficha" class="ficha">
+    <label>Nome<input id="f-nome" placeholder=" " autocomplete="off"></label>
+    <div class="linha">
+      <label>Apelido (aparece na venda)<input id="f-apelido" placeholder=" " autocomplete="off"></label>
+      <label>Tipo<select id="f-tipo"><option value="CLT">Empregado (CLT)</option><option value="MEI">Avulso · MEI</option><option value="AVULSO">Avulso · outro</option></select></label>
+      <label>CPF / CNPJ<input id="f-doc" placeholder=" " autocomplete="off"></label>
+      <label>Telefone<input id="f-fone" placeholder=" " autocomplete="off"></label>
+    </div>
+    <label>Código no Access<input id="f-access" placeholder=" " autocomplete="off" title="quadro de empregados do Access (liga na importação)"></label>
+    <div class="sub">Grupos com direito a comissão</div>
+    <div class="taxas" id="f-grupos"></div>
+    <label class="chk"><input type="checkbox" id="f-ativo" checked> ativo (aparece na venda)</label>
+    <div class="dica">A taxa é a do grupo (aba Grupos), igual para todos. Sobre o líquido de cada produto do grupo, sem a mão de obra.</div>
+    <div class="botoes">
+      <button type="button" class="prim" id="f-gravar">Gravar</button>
+      <button type="button" id="f-cancelar">Fechar</button>
+    </div>
+    <div class="msg" id="f-msg"></div>
+  </div>
+
+  <div class="fundo" id="e-fundo" hidden></div>
+  <div class="caixa estreita" id="e-caixa" hidden role="dialog">
+    <h3><span id="e-tit">Editar vendedor</span><button type="button" class="x" id="e-fechar" title="fechar">×</button></h3>
+    <div class="corpo" id="e-corpo"></div>
+  </div>
+
+  <div class="fundo" id="d-fundo" hidden></div>
+  <div class="caixa" id="d-caixa" hidden role="dialog">
+    <h3><span id="d-tit">Vendas</span><button type="button" class="x" id="d-fechar" title="fechar">×</button></h3>
+    <div class="corpo"><table>
+      <thead><tr><th>Nº</th><th>Data</th><th>Doc.</th><th>Cliente</th><th class="num">Líquido</th><th class="num">Mão de obra</th><th class="num">Base</th><th class="num">% médio</th><th class="num">Comissão</th></tr></thead>
+      <tbody id="d-corpo"></tbody><tfoot id="d-pe"></tfoot></table></div>
+  </div>
+
+  <script src="/js/vendas/vendedores.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+✅ MongoDB conectado=1000: dbaas-db-9498210-a980bbcd.mongo.ondigitalocean.com:27017 | DB: rotaes_ensaio
+
+HTTP on 5000
+Backfill *_norm concluído
+⚠ [21:35:18] MongoDB desconectou — tentando reconectar…
+✅ [21:36:19] MongoDB reconectado
+⚠ [21:36:19] MongoDB desconectou — tentando reconectar…
+✅ [21:36:30] MongoDB reconectado
+⚠ [21:50:22] MongoDB desconectou — tentando reconectar…
+✅ [21:51:29] MongoDB reconectado
+⚠ [00:52:52] MongoDB desconectou — tentando reconectar…
+✅ [00:53:53] MongoDB reconectado
+⚠ [00:53:54] MongoDB desconectou — tentando reconectar…
+✅ [00:54:04] MongoDB reconectado
+⚠ [01:09:50] MongoDB desconectou — tentando reconectar…
+✅ [01:11:02] MongoDB reconectado
+⚠ [04:08:08] MongoDB desconectou — tentando reconectar…
+✅ [04:09:39] MongoDB reconectado
+⚠ [04:09:44] MongoDB desconectou — tentando reconectar…
+✅ [04:09:55] MongoDB reconectado
+Get-ChildItem C:\plataformaRota\views\vendas, C:\plataformaRota\public\js\vendas, C:\plataformaRota\src\models -Recurse -File | Select-Object FullName, Length
+PS C:\plataformaRota> Get-ChildItem C:\plataformaRota\views\vendas, C:\plataformaRota\public\js\vendas, C:\plataformaRota\src\models -Recurse -File | Select-Object FullName, Length
+
+FullName                                                            Length
+--------                                                            ------
+C:\plataformaRota\views\vendas\pages\clientes.handlebars             20336
+C:\plataformaRota\views\vendas\pages\kits.handlebars                 10241
+C:\plataformaRota\views\vendas\pages\relatorio.handlebars            14046
+C:\plataformaRota\views\vendas\pages\servicos-fechamento.handlebars  17671
+C:\plataformaRota\views\vendas\pages\servicos-fluxo.handlebars        5614
+C:\plataformaRota\views\vendas\pages\servicos-lista.handlebars        5304
+C:\plataformaRota\views\vendas\pages\servicos-nova.handlebars        11370
+C:\plataformaRota\views\vendas\pages\servicos.handlebars              8674
+C:\plataformaRota\views\vendas\pages\tecnicos.handlebars              9227
+C:\plataformaRota\views\vendas\pages\venda.handlebars                46379
+C:\plataformaRota\public\js\vendas\clientes.js                       45354
+C:\plataformaRota\public\js\vendas\kits.js                           18218
+C:\plataformaRota\public\js\vendas\os-modal.js                       75937
+C:\plataformaRota\public\js\vendas\relatorio.js                      24207
+C:\plataformaRota\public\js\vendas\servicos-fechamento.js            52079
+C:\plataformaRota\public\js\vendas\servicos-fluxo.js                  7785
+C:\plataformaRota\public\js\vendas\servicos-lista.js                  9994
+C:\plataformaRota\public\js\vendas\servicos-nova.js                  16832
+C:\plataformaRota\public\js\vendas\servicos.js                       10501
+C:\plataformaRota\public\js\vendas\tecnicos.js                        9773
+C:\plataformaRota\public\js\vendas\venda.js                         107728
+C:\plataformaRota\src\models\arquivoDoc.js                            4989
+C:\plataformaRota\src\models\bco_imagem.js                             926
+C:\plataformaRota\src\models\campanha.js                               861
+C:\plataformaRota\src\models\departamento.js                           434
+C:\plataformaRota\src\models\deptosecao.js                             583
+C:\plataformaRota\src\models\deptosetores.js                           607
+C:\plataformaRota\src\models\fornec.js                                4983
+C:\plataformaRota\src\models\fornecedor copy.js                       1612
+C:\plataformaRota\src\models\grupo.js                                 1567
+C:\plataformaRota\src\models\grupoSub.js                              1521
+C:\plataformaRota\src\models\home_layout.js                           1227
+C:\plataformaRota\src\models\ImportModelo.js                          1208
+C:\plataformaRota\src\models\import_item.js                           1214
+C:\plataformaRota\src\models\import_lote.js                           1558
+C:\plataformaRota\src\models\lista-pedido.js                           740
+C:\plataformaRota\src\models\parceiro.js                               809
+C:\plataformaRota\src\models\produtoImagem.js                         2953
+C:\plataformaRota\src\models\similares.js                              382
+C:\plataformaRota\src\models\usuario.js                                618
+C:\plataformaRota\src\models\usuariosite.js                            850
+C:\plataformaRota\src\models\Z_atividades.js                           680
+C:\plataformaRota\src\models\Z_mconstrucao.js                         3261
+C:\plataformaRota\src\models\compra\notaEntrada.js                   17044
+C:\plataformaRota\src\models\compra\pedido.js                         8390
+C:\plataformaRota\src\models\contab\config-contas.js                 13830
+C:\plataformaRota\src\models\contab\auxiliares\banco.js                874
+C:\plataformaRota\src\models\contab\auxiliares\cliente.js             2190
+C:\plataformaRota\src\models\contab\auxiliares\contaBancaria.js       2122
+C:\plataformaRota\src\models\contab\financeiro\boleta.js              3800
+C:\plataformaRota\src\models\contab\financeiro\compraAnual.js         1899
+C:\plataformaRota\src\models\contab\financeiro\compraFornecedor.js    1415
+C:\plataformaRota\src\models\contab\financeiro\contaSubTitulo.js      1467
+C:\plataformaRota\src\models\contab\financeiro\contaTitulo.js         1407
+C:\plataformaRota\src\models\contab\financeiro\fluxoCaixa.js          3522
+C:\plataformaRota\src\models\contab\financeiro\fluxoProjetado.js      2507
+C:\plataformaRota\src\models\contab\financeiro\historicoConta.js      1816
+C:\plataformaRota\src\models\contab\financeiro\orcamentoAnual.js      2299
+C:\plataformaRota\src\models\contab\financeiro\orcamentoConta.js      1767
+C:\plataformaRota\src\models\contab\financeiro\registroContabil.js    2999
+C:\plataformaRota\src\models\empresa\lojista.js                       2533
+C:\plataformaRota\src\models\vendas\venda.js                         17339

@@ -1,5 +1,10 @@
 // =============================================================================
 // Destino: C:\plataformaRota\public\js\vendas\venda.js
+// Alterado em: 30/10/2026 (tarde) - GRUPO DE COMISSAO do produto: combo na linha (coluna Ref.); produto sem grupo
+//              fica amarelo e e classificado ali (uma vez: grava no cadastro, POST /produtos/:codigo/grupo-comissao).
+//              Fechar exige todos classificados.
+// Alterado em: 30/10/2026 - VENDEDOR: combo na linha de Produtos (GET /vendedores); vai na venda (vendedorId);
+//              obrigatorio para fechar.
 // Criado em: 02/10/2026
 //
 // VENDA — Parte 1: lancar e gravar a venda ABERTA.
@@ -1191,7 +1196,7 @@
           + '<td class="desc-item' + (i.garantia ? ' garantia' : '') + '" data-cod="' + i.codigo + '"'
             + (estado.documento === 'NFE' ? ' title="' + (i.garantia ? 'clique para TIRAR a garantia deste produto' : 'clique se o produto tem garantia (pode ser instalado)') + '"' : '') + '>'
             + escapar(i.descricao) + (i.descricaoTecnica ? '<div class="tec">' + escapar(i.descricaoTecnica) + '</div>' : '') + '</td>'
-          + '<td>' + escapar(i.referencia) + '</td>'
+          + '<td>' + escapar(i.referencia) + comboGrupo(i) + '</td>'
           + '<td class="num' + (i.estoque < i.quantidade ? ' zero' : '') + '">' + i.estoque + '</td>'
           + '<td class="num"><input class="qtd" data-cod="' + i.codigo + '" value="' + i.quantidade + '" inputmode="numeric"></td>'
           + '<td class="num"><input class="unit' + (i.precoManual > 0 ? ' negociado' : '')
@@ -1209,6 +1214,27 @@
     totais();
     atualizarInst();
   }
+
+  // 30/10/2026 (tarde): grupo de comissao do produto
+  let gruposCom = [];
+  function comboGrupo(i) {
+    const g = i.grupoComissao || '';
+    const ops = gruposCom.filter(x => x.ativo || x.id === g);
+    return '<select class="gc' + (g ? ' ok' : '') + '" data-cod="' + i.codigo + '" title="grupo de comissão do produto (fica gravado no cadastro)">'
+      + '<option value="">— grupo comissão —</option>'
+      + ops.map(x => '<option value="' + escapar(x.id) + '"' + (x.id === g ? ' selected' : '') + '>' + escapar(x.nome) + '</option>').join('') + '</select>';
+  }
+  $('itens').addEventListener('change', async ev => {
+    const el = ev.target;
+    if (!el.classList || !el.classList.contains('gc')) return;
+    const cod = el.dataset.cod, grupo = el.value;
+    try {
+      await api('POST', '/produtos/' + cod + '/grupo-comissao', { grupo });
+      estado.itens.filter(x => String(x.codigo) === cod).forEach(x => { x.grupoComissao = grupo; });
+      el.classList.toggle('ok', !!grupo);
+      recado(grupo ? '✓ produto ' + cod + ' classificado: ' + el.options[el.selectedIndex].text : 'produto ' + cod + ' sem grupo', 'ok');
+    } catch (e) { recado(e.message, 'erro'); }
+  });
 
   // mao de obra da instalacao: entra no total so na nota fiscal com item marcado
   function maoDeObraAtiva() {
@@ -1313,6 +1339,7 @@
       documento: estado.documento, condicao: estado.condicao,
       clienteId: estado.documento === 'NFE' && estado.cliente ? estado.cliente.id : null,
       ocCliente: $('oc-cliente').value.trim(),
+      vendedorId: $('sel-vendedor').value || null,                 // 30/10/2026
       descontoGeral: paraCentavos($('desc-geral').value),
       observacao: $('observacao').value.trim(),
       itens: estado.itens.map(i => ({ codigo: i.codigo, quantidade: i.quantidade, desconto: i.desconto,
@@ -1356,12 +1383,25 @@
   let pagos = [];               // as partes ja incluidas
 
   function somenteConsulta(sit) {
-    $('gravar').disabled = true; $('fechar').disabled = true;
+    $('gravar').disabled = true; $('fechar').disabled = true; $('sel-vendedor').disabled = true;
     recado('Venda ' + sit + ': só consulta.', 'ok');
   }
   const falta = () => (aFechar ? aFechar.totalLiquido : 0) - pagos.reduce((t, p) => t + p.valor, 0);
 
   async function abrirFechamento() {
+    // 30/10/2026: vendedor obrigatorio
+    if (!$('sel-vendedor').value) {
+      recado('Escolha o vendedor antes de fechar a venda.', 'erro');
+      $('sel-vendedor').classList.add('falta'); $('sel-vendedor').focus();
+      return;
+    }
+    // 30/10/2026 (tarde): todo produto com grupo de comissao
+    const semGrupo = estado.itens.filter(i => !i.grupoComissao);
+    if (semGrupo.length) {
+      recado('Classifique o grupo de comissão (amarelo, abaixo da referência): ' + semGrupo.map(i => i.codigo).join(', '), 'erro');
+      const c = document.querySelector('select.gc[data-cod="' + semGrupo[0].codigo + '"]'); if (c) c.focus();
+      return;
+    }
     if (faltaInstalacao()) {
       recado('Há produto marcado para instalar: preencha a instalação antes de fechar.', 'erro');
       abrirInstalacao();
@@ -1674,6 +1714,11 @@
         bairro: e.bairro || '', cidade: e.cidade || '', uf: e.uf || '', cep: e.cep || '',
       } : null;
       $('oc-cliente').value = v.ocCliente || '';
+      // 30/10/2026: vendedor (inativo ou fora da lista: entra no combo do mesmo jeito)
+      const vd = v.vendedor && v.vendedor.id ? v.vendedor : null, sv = $('sel-vendedor');
+      if (vd && ![...sv.options].some(o => o.value === String(vd.id))) sv.add(new Option(vd.nome + ' (inativo)', String(vd.id)));
+      sv.value = vd ? String(vd.id) : '';
+      sv.classList.toggle('ok', !!sv.value);
       $('observacao').value = v.observacao || '';
       $('desc-geral').value = v.descontoGeral ? brl(v.descontoGeral) : '';
       // preco a vista e a prazo atuais de cada item (a troca de condicao recalcula)
@@ -1687,6 +1732,7 @@
           precoVista: p ? p.precoVista : i.precoUnitario, precoPrazo: p ? p.precoPrazo : i.precoUnitario,
           quantidade: i.quantidade, desconto: i.desconto,
           precisaInstalacao: !!i.precisaInstalacao, garantia: p ? !!p.garantia : false,
+          grupoComissao: p ? p.grupoComissao || '' : '',                            // 30/10/2026 (tarde)
           // negociado: o unitario gravado diferente do de tabela gravado
           precoManual: i.precoTabela && i.precoUnitario !== i.precoTabela ? i.precoUnitario : null,
         });
@@ -1760,7 +1806,25 @@
   $('sai-fundo').addEventListener('click', fecharSai);
   window.addEventListener('beforeunload', ev => { if (temAlgo()) { ev.preventDefault(); ev.returnValue = ''; } });
 
+  // ---- 30/10/2026: vendedor ----------------------------------------------------------------
+  async function carregarVendedores() {
+    const sv = $('sel-vendedor');
+    try {
+      const lista = (await api('GET', '/vendedores')).vendedores || [];
+      sv.innerHTML = '<option value="">— escolha —</option>'
+        + lista.map(x => '<option value="' + escapar(x.id) + '">' + escapar(x.apelido || x.nome) + '</option>').join('');
+      if (!lista.length) sv.innerHTML = '<option value="">nenhum vendedor: cadastre em Venda › Vendedores</option>';
+    } catch (e) { sv.innerHTML = '<option value="">erro: ' + escapar(e.message) + '</option>'; }
+  }
+  $('sel-vendedor').addEventListener('change', ev => {
+    sujo = true; ev.target.classList.remove('falta'); ev.target.classList.toggle('ok', !!ev.target.value);
+  });
+
+  async function carregarGrupos() {                       // 30/10/2026 (tarde)
+    try { gruposCom = (await api('GET', '/comissao-grupos')).grupos || []; } catch (e) { gruposCom = []; }
+  }
+
   desenharItens();
   desenharCliente();
-  carregar().finally(() => { sujo = false; });
+  Promise.all([carregarVendedores(), carregarGrupos()]).then(() => carregar()).finally(() => { sujo = false; desenharItens(); });
 })();

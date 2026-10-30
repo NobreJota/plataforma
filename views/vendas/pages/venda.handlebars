@@ -59,6 +59,7 @@
   Alterado em: 18/10/2026 - instalacao: combo de ENDERECOS do cliente (+ outro endereco: CEP ou digitar), CEP
     primeiro; guardar no cadastro (/js/comum/endereco-instalacao.js).
   Alterado em: 17/10/2026 - cupom: botao de kits apagado (.kits-btn.apagado); janela dos kits arrasta pelo titulo.
+  Alterado em: 30/10/2026 (fim) - coluna TIPO (grupo de comissao, select.gc) depois de Ref.
   Alterado em: 30/10/2026 (tarde) - grupo de comissao do produto (select.gc na coluna Ref.).
   Alterado em: 30/10/2026 - VENDEDOR: combo a direita do titulo Produtos (#sel-vendedor); obrigatorio para fechar.
   Alterado em: 17/10/2026 - instalacao: campo PARTE DO TECNICO (ins-ptec) e botao ★ (configuracao de
@@ -211,8 +212,11 @@
                      font-weight:600; text-transform:none; letter-spacing:0; color:var(--texto); background:#fffbeb; }
     .vend-l select.ok { background:#faf5ff; }
     .vend-l select.falta { border-color:var(--vermelho); outline:2px solid #fecaca; }
+    .vend-l select.pisca { animation:vend-pisca .45s ease-in-out 3; }
+    @keyframes vend-pisca { 50% { background:#fecaca; transform:scale(1.04); } }
     /* 30/10/2026 (tarde): grupo de comissao na linha do produto */
-    td select.gc { display:block; margin-top:4px; max-width:150px; height:24px; font-size:11px; border:1px solid #f59e0b; border-radius:5px;
+    td.c-tipo { width:170px; }
+    td select.gc { display:block; width:100%; max-width:170px; height:24px; font-size:11px; border:1px solid #f59e0b; border-radius:5px;
                    background:#fef3c7; color:#92400e; font-weight:700; padding:0 4px; }
     td select.gc.ok { border-color:#e5e7eb; background:#fff; color:var(--cinza); font-weight:400; }
     .kits-btn.apagado { opacity:.45; filter:grayscale(1); cursor:not-allowed; }
@@ -467,11 +471,11 @@
     </div>
     <table>
       <thead>
-        <tr><th>Código</th><th>Descrição</th><th>Ref.</th><th class="num">Estoque</th>
+        <tr><th>Código</th><th>Descrição</th><th>Ref.</th><th title="grupo de comissão do produto (escolha uma vez; fica gravado)">Tipo</th><th class="num">Estoque</th>
             <th class="num">Qtd</th><th class="num">Unitário</th><th class="num">Desconto</th><th class="num">Total</th>
             <th class="c-inst" title="OS: produto com garantia, marcar se vai ser instalado (só nota fiscal)">OS</th><th class="c-rem">Remover</th></tr>
       </thead>
-      <tbody id="itens"><tr><td colspan="10" class="vazio">Nenhum produto. Busque acima.</td></tr></tbody>
+      <tbody id="itens"><tr><td colspan="11" class="vazio">Nenhum produto. Busque acima.</td></tr></tbody>
     </table>
 
     <div class="totais">

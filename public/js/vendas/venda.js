@@ -1,5 +1,7 @@
 // =============================================================================
 // Destino: C:\plataformaRota\public\js\vendas\venda.js
+// Alterado em: 30/10/2026 (fim 2) - foco no combo de FORNECEDOR sem vendedor: o foco passa ao Vendedor (pisca, aviso).
+// Alterado em: 30/10/2026 (fim) - o grupo de comissao ganhou a coluna TIPO (depois de Ref.).
 // Alterado em: 30/10/2026 (tarde) - GRUPO DE COMISSAO do produto: combo na linha (coluna Ref.); produto sem grupo
 //              fica amarelo e e classificado ali (uma vez: grava no cadastro, POST /produtos/:codigo/grupo-comissao).
 //              Fechar exige todos classificados.
@@ -1187,7 +1189,7 @@
   function desenharItens() {
     const tb = $('itens');
     if (!estado.itens.length) {
-      tb.innerHTML = '<tr><td colspan="10" class="vazio">Nenhum produto. Busque acima.</td></tr>';
+      tb.innerHTML = '<tr><td colspan="11" class="vazio">Nenhum produto. Busque acima.</td></tr>';
     } else {
       tb.innerHTML = estado.itens.map(i => {
         const total = i.quantidade * preco(i) - i.desconto;
@@ -1196,7 +1198,8 @@
           + '<td class="desc-item' + (i.garantia ? ' garantia' : '') + '" data-cod="' + i.codigo + '"'
             + (estado.documento === 'NFE' ? ' title="' + (i.garantia ? 'clique para TIRAR a garantia deste produto' : 'clique se o produto tem garantia (pode ser instalado)') + '"' : '') + '>'
             + escapar(i.descricao) + (i.descricaoTecnica ? '<div class="tec">' + escapar(i.descricaoTecnica) + '</div>' : '') + '</td>'
-          + '<td>' + escapar(i.referencia) + comboGrupo(i) + '</td>'
+          + '<td>' + escapar(i.referencia) + '</td>'
+          + '<td class="c-tipo">' + comboGrupo(i) + '</td>'                  // 30/10/2026: coluna Tipo (grupo de comissao)
           + '<td class="num' + (i.estoque < i.quantidade ? ' zero' : '') + '">' + i.estoque + '</td>'
           + '<td class="num"><input class="qtd" data-cod="' + i.codigo + '" value="' + i.quantidade + '" inputmode="numeric"></td>'
           + '<td class="num"><input class="unit' + (i.precoManual > 0 ? ' negociado' : '')
@@ -1398,7 +1401,7 @@
     // 30/10/2026 (tarde): todo produto com grupo de comissao
     const semGrupo = estado.itens.filter(i => !i.grupoComissao);
     if (semGrupo.length) {
-      recado('Classifique o grupo de comissão (amarelo, abaixo da referência): ' + semGrupo.map(i => i.codigo).join(', '), 'erro');
+      recado('Classifique o tipo do produto (coluna Tipo, em amarelo): ' + semGrupo.map(i => i.codigo).join(', '), 'erro');
       const c = document.querySelector('select.gc[data-cod="' + semGrupo[0].codigo + '"]'); if (c) c.focus();
       return;
     }
@@ -1816,8 +1819,20 @@
       if (!lista.length) sv.innerHTML = '<option value="">nenhum vendedor: cadastre em Venda › Vendedores</option>';
     } catch (e) { sv.innerHTML = '<option value="">erro: ' + escapar(e.message) + '</option>'; }
   }
+  // 30/10/2026: foco no FORNECEDOR sem vendedor escolhido -> o foco vai para o vendedor, piscando
+  function pedirVendedor(ev) {
+    const sv = $('sel-vendedor');
+    if (sv.value || sv.disabled) return false;
+    if (ev) ev.preventDefault();
+    sv.classList.add('falta'); sv.classList.remove('pisca'); void sv.offsetWidth; sv.classList.add('pisca');
+    sv.focus();
+    recado('Escolha primeiro o vendedor.', 'erro');
+    return true;
+  }
+  $('filtro-fornec').addEventListener('mousedown', pedirVendedor);
+  $('filtro-fornec').addEventListener('focus', () => pedirVendedor());
   $('sel-vendedor').addEventListener('change', ev => {
-    sujo = true; ev.target.classList.remove('falta'); ev.target.classList.toggle('ok', !!ev.target.value);
+    sujo = true; ev.target.classList.remove('falta', 'pisca'); ev.target.classList.toggle('ok', !!ev.target.value);
   });
 
   async function carregarGrupos() {                       // 30/10/2026 (tarde)

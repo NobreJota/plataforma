@@ -11,6 +11,7 @@
 //              ficha ao lado (novo) e em modal (editar).
 // Alterado em: 30/10/2026 (tarde 2) - a TAXA e do GRUPO (aba Grupos, igual para todos); o vendedor so marca os grupos
 //              com direito (grupos: [id]). Editar mostra sempre todos os grupos com a caixa.
+// Alterado em: 30/10/2026 - os modais (vendas do mes e editar vendedor) ARRASTAM pelo titulo.
 // Dinheiro em centavos na API; taxa em % (ex.: 1,5).
 // =============================================================================
 (function () {
@@ -99,7 +100,7 @@
     fecharLado();
     $('e-corpo').appendChild($('ficha'));
     $('e-tit').textContent = 'Editar vendedor · ' + v.nome;
-    $('e-fundo').hidden = false; $('e-caixa').hidden = false;
+    centrar('e-caixa'); $('e-fundo').hidden = false; $('e-caixa').hidden = false;
     modo = 'editar'; preencher(v); $('f-nome').focus();
   }
   function fecharEditar(semFoco) { $('e-fundo').hidden = true; $('e-caixa').hidden = true; if (modo === 'editar') modo = ''; if (!semFoco) atual = null; }
@@ -196,7 +197,7 @@
     const l = linhas.find(x => x.vendedor === td.dataset.v), m = Number(td.dataset.m);
     $('d-tit').textContent = (l ? l.nome : '') + ' · ' + (m ? MESES[m - 1] + ' de ' + ano : 'ano de ' + ano);
     $('d-corpo').innerHTML = '<tr><td colspan="9" class="dica">Carregando…</td></tr>'; $('d-pe').innerHTML = '';
-    $('d-fundo').hidden = false; $('d-caixa').hidden = false;
+    centrar('d-caixa'); $('d-fundo').hidden = false; $('d-caixa').hidden = false;
     try {
       const vs = (await api('GET', '/vendedores/comissao/vendas?vendedor=' + encodeURIComponent(td.dataset.v) + '&ano=' + ano + '&mes=' + m)).vendas;
       $('d-corpo').innerHTML = vs.map(v => {
@@ -217,6 +218,25 @@
     if (ev.key !== 'Escape') return;
     if (!$('d-caixa').hidden) fecharD(); else if (!$('e-caixa').hidden) fecharEditar();
   });
+
+  // ---- 30/10/2026: modais MOVEIS (arrasta pelo titulo); cada abertura volta ao centro ----------
+  function centrar(id) { const cx = $(id); cx.style.left = '50%'; cx.style.top = '6vh'; cx.style.transform = 'translateX(-50%)'; }
+  function arrastar(id) {
+    const cx = $(id), tit = cx.querySelector('h3'); let ini = null;
+    tit.addEventListener('mousedown', ev => {
+      if (ev.target.closest('button')) return;
+      const r = cx.getBoundingClientRect();
+      cx.style.transform = 'none'; cx.style.left = r.left + 'px'; cx.style.top = r.top + 'px';
+      ini = { x: ev.clientX - r.left, y: ev.clientY - r.top }; ev.preventDefault();
+    });
+    document.addEventListener('mousemove', ev => {
+      if (!ini) return;
+      cx.style.left = Math.min(window.innerWidth - 80, Math.max(-cx.offsetWidth + 80, ev.clientX - ini.x)) + 'px';
+      cx.style.top = Math.min(window.innerHeight - 40, Math.max(0, ev.clientY - ini.y)) + 'px';
+    });
+    document.addEventListener('mouseup', () => { ini = null; });
+  }
+  arrastar('d-caixa'); arrastar('e-caixa');
 
   // ---- inicio ---------------------------------------------------------------------------
   $('lado-corpo').appendChild($('ficha'));                  // a ficha comeca escondida, ao lado

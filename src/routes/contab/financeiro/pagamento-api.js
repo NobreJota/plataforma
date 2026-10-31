@@ -1,6 +1,8 @@
 // Destino: C:\plataformaRota\src\routes\contab\financeiro\pagamento-api.js
 // (caminho corrigido em 05/10/2026; antes dizia src/routes/financeiro/pagamento-api.js)
 // Pagamento/Recebimento em LOTE a partir do Fluxo de Caixa.
+// Alterado em: 31/10/2026 - /janela do RECEBER inclui a linha marcada entrada (ex.: pos 0 aluguel a receber); a do
+//   PAGAR nao a mostra.
 // Lista títulos numa janela de dias, e grava a Boleta (partida dobrada com rateio):
 //   PAGAMENTO  → banco creditado (sai $), contrapartidas = débitos (despesas)
 //   RECEBIMENTO→ banco debitado (entra $), contrapartidas = créditos (receitas)
@@ -173,7 +175,8 @@ router.get('/janela', async (req, res) => {
     const itens = await FluxoProjetado.find({
       status: 'ATIVO',
       vencimento: { $gte: ini, $lte: fim },
-      pos: { $in: posFiltro },
+      // 31/10/2026: no receber, tambem a linha de ENTRADA de outra pos (ex.: pos 0 aluguel a receber, Deb no Access)
+      ...(tipo === 'receber' ? { $or: [{ pos: { $in: posFiltro } }, { entrada: true }] } : { pos: { $in: posFiltro }, entrada: { $ne: true } }),
       origem: { $ne: 'OS' },              // 16/10/2026: o a receber das OS fica no fluxo de servico
     }).sort({ vencimento: 1 }).lean();
 

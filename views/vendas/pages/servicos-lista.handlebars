@@ -13,6 +13,8 @@
   Alterado em: 16/10/2026 - HORA VENCIDA: cliente em amarelo e etiqueta "hora vencida".
   Alterado em: 16/10/2026 - clique no titulo Cliente, Dia ou Tecnico ordena a lista.
   Alterado em: 17/10/2026 - saiu a aba "Concluidas" (equivale a Liquidadas).
+  Alterado em: 31/10/2026 - abas do TIPO da OS: VI (venda/instalacao) · G (garantia) · C (conserto), combinadas com a
+               situacao (ex.: Pendentes + VI). Clicar de novo no tipo = todos os tipos.
   O JS fica em /js/vendas/servicos-lista.js   API: /vendas/api/os/lista?tipo=
   Rota: /vendas/servicos/lista?tipo=programadas (o menu manda o tipo)
 --}}
@@ -58,6 +60,11 @@
     .vencida td:nth-child(1), .vencida td:nth-child(2) { background:#fef08a; }
     .sit.p { background:#dcfce7; color:#065f46; } .sit.n { background:#fee2e2; color:#991b1b; } .sit.e { background:#e0e7ff; color:#3730a3; }
     .rodape { margin-top:8px; font-size:12px; color:var(--cinza); }
+    /* 31/10/2026: abas do tipo da OS */
+    .abas .sep-tos { width:18px; }
+    .abas button.tos { min-width:64px; }
+    .abas button.tos.ativa { background:#1d4ed8; border-color:#1d4ed8; }
+    .abas button.tos.ativa .n { color:#1d4ed8; }
   </style>
 </head>
 <body>
@@ -74,6 +81,10 @@
     <button type="button" data-tipo="nprogramadas">N/programadas<span class="n" id="n-nprogramadas">0</span></button>
     <button type="button" data-tipo="pendentes">Pendentes<span class="n" id="n-pendentes">0</span></button>
     <button type="button" data-tipo="liquidadas">Liquidadas<span class="n" id="n-liquidadas">0</span></button>
+    <span class="sep-tos"></span>
+    <button type="button" data-tos="VI" class="tos" title="venda / instalação">VI<span class="n" id="n-VI">0</span></button>
+    <button type="button" data-tos="G" class="tos" title="garantia">G<span class="n" id="n-G">0</span></button>
+    <button type="button" data-tos="C" class="tos" title="conserto">C<span class="n" id="n-C">0</span></button>
   </div>
 
   <div class="lista" id="lista"><div class="vazio">Carregando…</div></div>

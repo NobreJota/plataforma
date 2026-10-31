@@ -1,6 +1,8 @@
 /* Destino: C:\plataformaRota\public\js\contab\contabil\financeiro\fluxo.js
  * (caminho corrigido em 05/10/2026; antes dizia public/js/financeiro/fluxo.js)
  * Tela do Fluxo de Caixa — lê o Fluxo Projetado, saldo acumulado, filtro mês/ano
+ * Alterado em: 31/10/2026 - linha de ENTRADA fora da pos 5 (ex.: pos 0 aluguel a receber, Deb no Access): positiva,
+ *   vermelha, clique = receber; na legenda conta em "a receber".
  *
  * Alterado em 03/10/2026:
  *  - data do movimento nasce HOJE (sabado/domingo -> a sexta); nao aceita data
@@ -389,10 +391,11 @@
       if (l.pos === 8) acao = 'realizar';
       else if (l.pos === 2) acao = 'pagar';
       else if (l.pos === 5 || l.pos === 1 || l.pos === 6) acao = 'receber';   // 23/10/2026: 6 = cartao operadora
+      else if (l.entrada) acao = 'receber';                                     // 31/10/2026: pos 0 de entrada (aluguel...)
       const isoData = l.vencimento ? new Date(l.vencimento).toISOString().slice(0,10) : '';
       const clicavel = acao ? 'flx-pagavel' : '';
       return separador + `
-      <tr class="cor-${l.cor} ${clicavel} pos-${l.pos}" data-v="${Math.round(((Number(l.aReceber) || 0) + (Number(l.aPagar) || 0)) * 100)}" data-acao="${acao}" data-data="${isoData}" data-conta="${escAttr(l.codigoConta)}" data-hist="${escAttr(l.historico)}">
+      <tr class="cor-${l.cor} ${clicavel} pos-${l.pos}${l.entrada && ![1, 5, 6].includes(l.pos) ? ' entrada' : ''}" data-v="${Math.round(((Number(l.aReceber) || 0) + (Number(l.aPagar) || 0)) * 100)}" data-acao="${acao}" data-data="${isoData}" data-conta="${escAttr(l.codigoConta)}" data-hist="${escAttr(l.historico)}">
         <td class="c-item">${l.item}</td>
         <td class="c-chave">${l.chave}</td>
         <td class="c-hist">${Number(l.pos) === 7 && !/^\s*previs/i.test(l.historico || '') ? '<span class="tag-prev">previsão</span> ' : ''}${l.historico}</td>
@@ -1398,7 +1401,13 @@
   let filtroPos = null, sint = null, ultimoResumo = null, resumoNormal = '';
   // 29/10/2026: filtroPos pode ser um pos (Sintetizar) ou uma lista de pos (legenda); filtroNome = nome do grupo
   let filtroNome = '';
-  const naLista = (tr) => [].concat(filtroPos).some(p => tr.classList.contains('pos-' + p));
+  // 31/10/2026: a linha de ENTRADA fora da pos 5 (ex.: pos 0 aluguel) fica em "a receber", nao em "a pagar"
+  const naLista = (tr) => {
+    const ent = tr.classList.contains('entrada');
+    if (Array.isArray(filtroPos) && filtroNome === 'a receber' && ent) return true;
+    if (Array.isArray(filtroPos) && filtroNome === 'a pagar' && ent) return false;
+    return [].concat(filtroPos).some(p => tr.classList.contains('pos-' + p));
+  };
   const rotFiltro = () => Array.isArray(filtroPos) ? filtroNome : 'pos ' + filtroPos;
   const SINT = [[0, 'avulso'], [2, 'contas a pagar'], [5, 'contas a receber'], [1, 'cartões a receber'], [6, 'cartões operadora'], [3, 'pedidos'], [7, 'previsão compras'], [8, 'orçamento']];
   (function estiloSint() {

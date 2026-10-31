@@ -27,6 +27,10 @@
 // Alterado em: 19/10/2026 - lista as linhas sem lojistaId e opcao --sem-loja (o comando
 //   node -e com $exists nao roda no PowerShell: o $ e lido como variavel).
 // Venda com NF-e AUTORIZADA (tem chave) nao e apagada: aparece com aviso. So com --com-nfe.
+// Alterado em: 31/10/2026 (simulacao do dia D) - apaga TODAS as OS da plataforma (as de conserto/garantia/servico,
+//   sem venda, nascidas na Nova OS desde 23/10, tambem sao teste); a numeracao da OS volta para a maior do Access.
+//   Parcelas de cartao (pos 6) e o recebimento em partes tem origem VENDA: ja entram. NAO MEXE tambem em:
+//   _vendedores, _comissao_grupos, _produto_grupo_comissao (classificacao dos produtos), _config_contas (★).
 //
 // Seguranca: para gravar, o nome da base tem que ser dito: --base rotaes_ensaio (ou admin no
 // dia D). Assim nao se apaga a base errada por engano do .env.
@@ -89,10 +93,13 @@ const dia = d => (d ? new Date(d).toLocaleDateString('pt-BR') : '-');
   // ---------------- OS ----------------
   const idsVenda = vendasApagar.map(v => v._id);
   const oss = await db.collection('_ordens_servico').find({ lojistaId: LOJA }).sort({ numero: 1 }).toArray();
-  const osApagar = oss.filter(o => o.venda && idsVenda.some(id => String(id) === String(o.venda.id)));
+  // 31/10/2026: TODAS as OS da plataforma sao teste (as de venda com NF-e autorizada que fica, ficam junto)
+  const vendaFica = id => comNfe.some(v => !COM_NFE && String(v._id) === String(id));
+  const osApagar = oss.filter(o => o.origem !== 'ACCESS' && !(o.venda && vendaFica(o.venda.id)));
   const osFica = oss.filter(o => !osApagar.includes(o));
-  console.log('\n3) OS da plataforma: ' + oss.length + ' · apagar (nascidas das vendas de teste): ' + osApagar.length);
-  for (const o of osApagar) console.log('     OS ' + String(o.numero).padEnd(7) + String(o.status || '').padEnd(3) + 'venda ' + String(o.venda?.numero ?? '-').padEnd(5) + (o.cliente?.nome || ''));
+  console.log('\n3) OS da plataforma: ' + oss.length + ' · apagar (todas as de teste): ' + osApagar.length);
+  for (const o of osApagar) console.log('     OS ' + String(o.numero).padEnd(7) + String(o.status || '').padEnd(3) + String(o.tipo || '').padEnd(4)
+    + (o.venda ? 'venda ' + String(o.venda.numero ?? '-').padEnd(5) : 'sem venda  ') + (o.cliente?.nome || ''));
   for (const o of osFica) console.log('     (fica) OS ' + o.numero + ' · ' + (o.cliente?.nome || '') + ' · venda ' + (o.venda?.numero ?? '-'));
 
   // ---------------- fluxo ----------------

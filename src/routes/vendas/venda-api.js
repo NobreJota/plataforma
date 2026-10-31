@@ -17,6 +17,15 @@
 //   geral repartido; a mao de obra fica fora). Vendas antigas sem `comissao`: % unico antigo do vendedor.
 //   GET/POST /comissao-grupos · PUT /comissao-grupos/:id · POST /produtos/:codigo/grupo-comissao { grupo }
 //   /produtos e /kits/:codigo devolvem grupoComissao (id do grupo; '' = sem classificar).
+// Alterado em: 30/10/2026 (noite 3) - LUCRO DIARIO devolve tambem `os`: as OS fechadas no mes (concluidaEm), por dia:
+//   mao de obra (tecnico + empresa), adicionais, material (consignado cobrado: venda - custo), despesas (complementar a
+//   custo + mao de obra adicional paga pela empresa) e o lucro da empresa; com a lista das OS de cada dia (tecnico...).
+// Alterado em: 30/10/2026 (noite 2) - ADMIN: o login do contabil nao passa pelo passport (req.user vazio): POST /admin/entrar
+//   { email, senha } confere no cadastro `usuarios` (bcryptjs, admin "1") e libera o Admin NA SESSAO; POST /admin/sair.
+// Alterado em: 30/10/2026 (noite) - ADMIN > LUCRO DIARIO: GET /lucro-diario?ano=&mes= (so usuario com admin "1").
+//   Por dia: vendas (liquido SEM mao de obra), custo do que saiu (quantidade x custoUnitario gravado na venda) e lucro
+//   bruto. So vendas FECHADAS feitas na plataforma (as importadas do Access ficam fora). Devolve os feriados do mes
+//   (nacionais + Vitoria/ES) para os dias uteis (seg a sex) da tela. exporta ehAdmin (pages.js).
 // Alterado em: 30/10/2026 (tarde 2) - a TAXA e do GRUPO (vale para todos os vendedores: _comissao_grupos.taxa);
 //   o vendedor so tem os GRUPOS a que tem direito (grupos: [id]). Fechar: item de grupo que o vendedor nao tem = 0 %.
 //   (taxas por vendedor, da versao anterior, viram so a lista de grupos.)
@@ -1244,6 +1253,105 @@ router.get('/vendedores/tela', (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// 30/10/2026 (noite): ADMIN > LUCRO DIARIO
+// ---------------------------------------------------------------------------
+// usuario administrador da empresa (cadastro `usuarios`, admin "1"). O login do contabil NAO e o do passport:
+// 30/10/2026 (noite 2): "Entrar como administrador" (POST /admin/entrar) confere e-mail e senha no `usuarios` e marca a
+// SESSAO (req.session.adminContab); vale ate o logout / fechar o navegador ou "Sair do admin" (POST /admin/sair).
+const ehAdmin = req => {
+  if (req.session && req.session.adminContab && req.session.adminContab.id) return true;
+  const u = req.user || {}; return String(u.admin ?? '') === '1' || u.admin === true;
+};
+router.post('/admin/entrar', async (req, res) => {
+  try {
+    const email = String(req.body?.email || '').trim().toLowerCase(), senha = String(req.body?.senha || '');
+    if (!email || !senha) return res.status(400).json({ ok: false, erro: 'informe o e-mail e a senha' });
+    const u = await col('usuarios').findOne({ email: { $regex: '^' + escapar(email) + '$', $options: 'i' } });
+    const bate = u && u.senha ? await require('bcryptjs').compare(senha, u.senha) : false;
+    if (!bate) return res.status(401).json({ ok: false, erro: 'e-mail ou senha não conferem' });
+    if (String(u.admin ?? '') !== '1') return res.status(403).json({ ok: false, erro: (u.nome || email) + ' não é administrador' });
+    req.session.adminContab = { id: String(u._id), nome: u.nome || email, em: new Date() };
+    req.session.save(() => res.json({ ok: true, nome: u.nome || email }));
+  } catch (err) { res.status(500).json({ ok: false, erro: err.message }); }
+});
+router.post('/admin/sair', (req, res) => {
+  if (req.session) delete req.session.adminContab;
+  res.json({ ok: true });
+});
+// feriados (YYYY-MM-DD): nacionais, os da Pascoa (carnaval seg/ter, sexta santa, corpus christi) e os de Vitoria/ES
+function pascoa(ano) {
+  const a = ano % 19, b = Math.floor(ano / 100), c = ano % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25),
+    g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4,
+    l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451), mes = Math.floor((h + l - 7 * m + 114) / 31),
+    dia = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(ano, mes - 1, dia);
+}
+function feriadosDoAno(ano) {
+  const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const p = pascoa(ano), mais = n => new Date(p.getFullYear(), p.getMonth(), p.getDate() + n);
+  const lista = [['01-01', 'Confraternização'], ['04-21', 'Tiradentes'], ['05-01', 'Dia do Trabalho'], ['09-07', 'Independência'],
+    ['09-08', 'N. Sra. da Vitória (Vitória)'], ['10-12', 'N. Sra. Aparecida'], ['11-02', 'Finados'], ['11-15', 'Proclamação da República'],
+    ['11-20', 'Consciência Negra'], ['12-25', 'Natal']].map(([md, nome]) => ({ dia: ano + '-' + md, nome }));
+  lista.push({ dia: iso(mais(-48)), nome: 'Carnaval' }, { dia: iso(mais(-47)), nome: 'Carnaval' }, { dia: iso(mais(-2)), nome: 'Sexta-feira Santa' },
+    { dia: iso(mais(8)), nome: 'N. Sra. da Penha (ES)' }, { dia: iso(mais(60)), nome: 'Corpus Christi' });
+  return lista;
+}
+router.get('/lucro-diario', async (req, res) => {
+  try {
+    if (!ehAdmin(req)) return res.status(403).json({ ok: false, erro: 'só o administrador da empresa' });
+    const loja = lojaDe(req), hoje = new Date();
+    const ano = Number(req.query.ano) || hoje.getFullYear(), mes = Math.min(12, Math.max(1, Number(req.query.mes) || hoje.getMonth() + 1));
+    const docs = await col('_vendas').find({ lojistaId: loja, situacao: 'F', origem: { $ne: 'ACCESS' },
+      fechadaEm: { $gte: new Date(ano, mes - 1, 1), $lt: new Date(ano, mes, 1) } })
+      .project({ fechadaEm: 1, totalLiquido: 1, totalServico: 1, 'itens.quantidade': 1, 'itens.custoUnitario': 1 }).toArray();
+    const dias = new Map();
+    for (const v of docs) {
+      const d = new Date(v.fechadaEm);
+      const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      const x = dias.get(k) || { dia: k, qtd: 0, vendas: 0, custo: 0 };
+      x.qtd++;
+      x.vendas += Math.max(0, (v.totalLiquido || 0) - (v.totalServico || 0));
+      x.custo += (v.itens || []).reduce((t, i) => t + (i.quantidade || 0) * (i.custoUnitario || 0), 0);
+      dias.set(k, x);
+    }
+    const anos = (await col('_vendas').aggregate([{ $match: { lojistaId: loja, situacao: 'F', fechadaEm: { $ne: null } } },
+      { $group: { _id: { $year: '$fechadaEm' } } }]).toArray()).map(a => a._id).filter(Boolean);
+    if (!anos.includes(hoje.getFullYear())) anos.push(hoje.getFullYear());
+    anos.sort((a, b) => b - a);
+    // 30/10/2026 (noite 3): ORDENS DE SERVICO fechadas no mes (pela data do fechamento), por dia, com cada OS
+    const ordens = await col('_ordens_servico').find({ lojistaId: loja, status: { $in: ['E', 'L'] }, fechamento: { $exists: true },
+      concluidaEm: { $gte: new Date(ano, mes - 1, 1), $lt: new Date(ano, mes, 1) } })
+      .project({ numero: 1, tipo: 1, concluidaEm: 1, 'cliente.nome': 1, tecnicoNome: 1, tecnicoConta: 1, servicoDescricao: 1, itens: 1,
+                 parteLoja: 1, parteTecnico: 1, fechamento: 1 }).sort({ concluidaEm: 1, numero: 1 }).toArray();
+    const osDias = new Map();
+    for (const o of ordens) {
+      const f = o.fechamento || {}, mo = f.maoDeObra || {};
+      const ja = mo.modo === 'JA_PARTILHADA';
+      const empresa = ja ? o.parteLoja || 0 : mo.empresa || 0, tecnico = ja ? o.parteTecnico || 0 : mo.tecnico || 0;
+      const adicionais = (f.adicionais || []).reduce((t, a) => t + (a.valor || 0), 0);
+      const cons = f.consignados || [];
+      const matRec = cons.filter(c => c.destino === 'VENDA').reduce((t, c) => t + (c.usado || 0) * (c.precoUnit || 0), 0);
+      const matCusto = cons.filter(c => c.destino === 'VENDA').reduce((t, c) => t + (c.usado || 0) * (c.custoUnit || 0), 0);
+      const despesas = cons.filter(c => c.destino === 'COMPLEMENTAR').reduce((t, c) => t + (c.usado || 0) * (c.custoUnit || 0), 0)
+        + (f.maoAdicional && f.maoAdicional.paga === 'EMPRESA' ? f.maoAdicional.valor || 0 : 0);
+      const lucro = empresa + adicionais + matRec - matCusto - despesas;
+      const d = new Date(o.concluidaEm);
+      const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      const x = osDias.get(k) || { dia: k, qtd: 0, maoDeObra: 0, tecnico: 0, empresa: 0, adicionais: 0, material: 0, materialCusto: 0, despesas: 0, lucro: 0, ordens: [] };
+      x.qtd++; x.maoDeObra += empresa + tecnico; x.tecnico += tecnico; x.empresa += empresa; x.adicionais += adicionais;
+      x.material += matRec; x.materialCusto += matCusto; x.despesas += despesas; x.lucro += lucro;
+      x.ordens.push({ id: String(o._id), numero: o.numero, tipo: o.tipo || '', cliente: o.cliente?.nome || '', tecnico: o.tecnicoNome || o.tecnicoConta || '',
+                      servico: o.servicoDescricao || (o.itens || []).map(i => i.servico || i.descricao).filter(Boolean).join(', '),
+                      maoDeObra: empresa + tecnico, parteTecnico: tecnico, empresa, adicionais, material: matRec - matCusto, despesas, lucro });
+      osDias.set(k, x);
+    }
+    const pre = ano + '-' + String(mes).padStart(2, '0');
+    res.json({ os: [...osDias.values()].sort((a, b) => a.dia.localeCompare(b.dia)), ok: true, admin: (req.session && req.session.adminContab && req.session.adminContab.nome) || (req.user && req.user.nome) || '', ano, mes, anos, dias: [...dias.values()].sort((a, b) => a.dia.localeCompare(b.dia)),
+               feriados: feriadosDoAno(ano).filter(f => f.dia.startsWith(pre)) });
+  } catch (err) { console.error('[vendas/lucro-diario]', err); res.status(500).json({ ok: false, erro: err.message }); }
+});
+
+// ---------------------------------------------------------------------------
 // GET /abertas   as vendas em aberto, da mais recente
 // ---------------------------------------------------------------------------
 router.get('/abertas', async (req, res) => {
@@ -1957,3 +2065,5 @@ module.exports = router;
 module.exports.agendaDoTecnico = agendaDoTecnico;
 // 23/10/2026: a NOVA OS (conserto/garantia/servico, os-api.js) usa a mesma numeracao
 module.exports.proximoNumeroOS = (...a) => proximoNumeroOS(...a);
+// 30/10/2026 (noite): o Admin (pages.js) usa a mesma regra de administrador
+module.exports.ehAdmin = ehAdmin;

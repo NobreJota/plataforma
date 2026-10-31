@@ -1,5 +1,7 @@
 {{!--
   Destino: C:\plataformaRota\views\contab\contabil\cooperado_menu.handlebars
+  Alterado em: 30/10/2026 — Compra > Programação de compras (/compra/programacao) volta ao menu.
+  Alterado em: 30/10/2026 — Admin > Lucro diário (/vendas/admin/lucro-diario, só admin); resultado, curva ABC e lucro de serviços em breve.
   Alterado em: 30/10/2026 — Venda > Vendedores (lista/cadastro e comissão, em abas na mesma tela).
   Alterado em: 27/09/2026 — submenu Produtos.
   Alterado em: 30/09/2026 — sai "Alteração de produtos": o produto abre por duplo clique na Relação.
@@ -126,6 +128,9 @@
       <li class="coop-sub-item" data-leaf="entrada">
         <span>Entrada de mercadoria</span><i class="ti ti-chevron-right" aria-hidden="true"></i>
       </li>
+      <li class="coop-sub-item" data-url="/compra/programacao">
+        <span>Programação de compras</span>
+      </li>
       <li class="coop-sub-item" data-url="/compra/relatorios">
         <span>Relatórios</span>
       </li>
@@ -181,7 +186,12 @@
     </ul>
     <ul class="coop-sub-list" data-sub="admin">
       <li class="coop-sub-title">Admin</li>
-      <li class="coop-sub-item breve"><span>em breve</span></li>
+      <li class="coop-sub-item" data-url="/vendas/admin/lucro-diario">
+        <span>Lucro diário</span>
+      </li>
+      <li class="coop-sub-item breve"><span>Relatório de resultado · em breve</span></li>
+      <li class="coop-sub-item breve"><span>Curva ABC de produtos · em breve</span></li>
+      <li class="coop-sub-item breve"><span>Lucro de serviços · em breve</span></li>
     </ul>
 
     {{!-- Site --}}

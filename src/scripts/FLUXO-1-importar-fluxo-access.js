@@ -31,6 +31,8 @@
 //   node src\scripts\FLUXO-1-importar-fluxo-access.js --aplicar
 //   opcoes: --com-orcamento  --com-pedidos  --mdb "C:\Armação\Dados\2026B\2026B.mdb"
 //   para tirar tudo o que veio do Access:  --remover --aplicar
+// Alterado em: 31/10/2026 - ENTRADA: linha com Deb (e sem Cre) e ENTRADA de dinheiro (+), como no Access; grava
+//   entrada: true. Ex.: pos 0 "Alsco Brasil" 1.01.007.002 (aluguel a receber) aparecia como -17.000,00 a pagar.
 // =============================================================================
 
 'use strict';
@@ -122,6 +124,7 @@ const POS = { 0: 'avulso', 2: 'a pagar', 3: 'pedido feito (não é pedido da pla
       codigoConta: conta, nomeConta: sub ? sub.nome : '', contaSubTitulo: sub ? sub._id : null,
       historico: (hist || (sub ? sub.nome : conta)) + (temTit && !hist.includes(nrTit) ? ' · ' + nrTit : ''),
       valor, vencimento: venc, status: 'ATIVO', origem: 'ACCESS',
+      entrada: deb > 0 && !cre,                                                   // 31/10/2026: Deb = entrada (+)
       nrTitulo: temTit ? nrTit : '', titular: txt(l[C.titular]),
       chaveAccess: num(l[C.chave]), ordAccess: num(l[C.ord]),
       dataAccess: l[C.data] instanceof Date ? l[C.data] : null,
@@ -141,6 +144,12 @@ const POS = { 0: 'avulso', 2: 'a pagar', 3: 'pedido feito (não é pedido da pla
   const porPos = {};
   for (const d of entram) { const k = d.pos; porPos[k] = porPos[k] || { n: 0, v: 0 }; porPos[k].n++; porPos[k].v += d.valor; }
   for (const [k, x] of Object.entries(porPos)) console.log('  pos ' + k + ' (' + (POS[k] || '?') + '):', x.n, 'linhas · R$', brl(x.v));
+  // 31/10/2026: entradas fora das pos de receber (ex.: pos 0 aluguel a receber)
+  const entr = entram.filter(d => d.entrada && ![1, 5, 6].includes(d.pos));
+  if (entr.length) {
+    console.log('  ENTRADAS (+) fora da pos 5: ' + entr.length + ' linha(s) · R$ ' + brl(entr.reduce((s, d) => s + d.valor, 0)));
+    for (const d of entr) console.log('     pos ' + d.pos + '  ' + dia(d.vencimento) + '  ' + d.codigoConta.padEnd(13) + ' R$ ' + brl(d.valor).padStart(12) + '  ' + d.historico);
+  }
   const forn = entram.filter(d => d.codigoConta.startsWith('2.01.001.'));
   console.log('  de fornecedor (2.01.001):', forn.length, 'linhas · R$', brl(forn.reduce((s, d) => s + d.valor, 0)));
   if (semConta.size) {

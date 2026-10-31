@@ -7,6 +7,8 @@
 // titulo (1.01.002) > subtitulo (1.01.002.003), somando cada nivel.
 // Sinal da casa: debito +, credito −. Saldo atual = anterior + debitos − creditos.
 // API: GET /financeiro/api/razao/balancete?de=&ate=
+// Alterado em: 31/10/2026 - botoes ATIVO · PASSIVO · DESPESAS · RECEITAS (como o "Grupo" do Access): mostram so o
+//   grupo 1, 2, 3 ou 4 (clicar de novo = todos). Os botoes sao criados aqui, acima da tabela (o .handlebars nao muda).
 // =============================================================================
 
 'use strict';
@@ -16,6 +18,7 @@
   const $ = id => document.getElementById(id);
   const GRUPOS = { '1': 'ATIVO', '2': 'PASSIVO', '3': 'DESPESAS', '4': 'RECEITAS' };
   let dados = null;
+  let grupo = '';                       // 31/10/2026: '' = todos; '1'..'4'
 
   const fmt = v => {
     const c = Math.round((v || 0) * 100) / 100;
@@ -76,7 +79,7 @@
     if (!dados) return;
     const nivel = Number($('nivel').value);
     const soMov = $('so-mov').checked;
-    const lista = montar().filter(n => n.nivel <= nivel && (!soMov || n.mov));
+    const lista = montar().filter(n => n.nivel <= nivel && (!soMov || n.mov) && (!grupo || n.codigo.split('.')[0] === grupo));
     $('linhas').innerHTML = lista.length ? lista.map(n => '<tr class="g' + n.nivel + '">'
       + '<td class="cod">' + esc(n.codigo) + '</td>'
       + '<td class="nome' + (n.fora ? ' fora' : '') + '">' + esc(n.nome) + '</td>'
@@ -98,6 +101,28 @@
       + (dif === 0 ? 'Débitos e créditos do período batem.' : 'Atenção: débitos e créditos do período não batem.')
       + ' A soma dos saldos inclui o saldo transferido de abertura, que no Access não fechava em zero.';
   }
+
+  // 31/10/2026: botoes dos grupos, acima da tabela
+  (function botoesGrupo() {
+    const tab = $('linhas').closest('table');
+    if (!tab) return;
+    const st = document.createElement('style');
+    st.textContent = '.bal-grupos{display:flex;gap:8px;margin:10px 0 10px;flex-wrap:wrap}'
+      + '.bal-grupos button{min-width:130px;height:34px;border:1px solid #1d4ed8;background:#fff;color:#1d4ed8;border-radius:8px;font-weight:800;font-size:13px;letter-spacing:.04em;cursor:pointer}'
+      + '.bal-grupos button:hover{background:#eff6ff}.bal-grupos button.ativo{background:#1d4ed8;color:#fff}'
+      + '@media print{.bal-grupos{display:none}}';
+    document.head.appendChild(st);
+    const div = document.createElement('div');
+    div.className = 'bal-grupos';
+    div.innerHTML = Object.entries(GRUPOS).map(([g, nome]) => '<button type="button" data-g="' + g + '" title="só o grupo ' + g + ' (de novo: todos)">' + nome + '</button>').join('');
+    (tab.parentElement && tab.parentElement !== document.body && tab.parentElement.children.length === 1 ? tab.parentElement : tab).before(div);
+    div.addEventListener('click', ev => {
+      const b = ev.target.closest('button[data-g]'); if (!b) return;
+      grupo = grupo === b.dataset.g ? '' : b.dataset.g;
+      div.querySelectorAll('button').forEach(x => x.classList.toggle('ativo', x.dataset.g === grupo));
+      desenhar();
+    });
+  })();
 
   $('aplicar').addEventListener('click', carregar);
   $('nivel').addEventListener('change', desenhar);

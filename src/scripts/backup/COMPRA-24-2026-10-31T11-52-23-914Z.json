@@ -1,0 +1,1549 @@
+{
+ "pedidos": [
+  {
+   "_id": {
+    "$oid": "6ad5dd1ccff99dcc0ce5c8a7"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7169"
+   },
+   "situacao": "P",
+   "fornecedor": {
+    "$oid": "68e005b40f338c9f1358b5b7"
+   },
+   "fornecedorNome": "Haenke",
+   "nrFornecOrigem": {
+    "$numberInt": "262"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1790812800000"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1791417600000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "28/56 dias",
+    "dias": [
+     {
+      "$numberInt": "28"
+     },
+     {
+      "$numberInt": "56"
+     }
+    ]
+   },
+   "itens": [
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6455"
+     },
+     "referencia": "00651",
+     "descricao": "adaptador fogão 1/2 Fema x 1/2 Macho",
+     "quantidade": {
+      "$numberInt": "10"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1282"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8a8"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5184"
+     },
+     "referencia": "",
+     "descricao": "engate agua 30 cm 1/2 x 1/2 (3581)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "3237"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8a9"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5444"
+     },
+     "referencia": "",
+     "descricao": "engate agua 40 cm  3/4 x 3/4",
+     "quantidade": {
+      "$numberInt": "10"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "4816"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8aa"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5185"
+     },
+     "referencia": "",
+     "descricao": "engate agua 40 cm 1/2 x 1/2 (3582)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "3532"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8ab"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5217"
+     },
+     "referencia": "",
+     "descricao": "engate agua 40 cm 3/4 F x 1/2 M (3537)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "4454"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8ac"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6310"
+     },
+     "referencia": "",
+     "descricao": "engate flex 30 cm gás 1/2 M x 3/4 F(3531)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "4984"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8ad"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6311"
+     },
+     "referencia": "",
+     "descricao": "engate flex 40 cm gás 1/2 M x 3/4 F(3538)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "5288"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8ae"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "490880"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ad5dd1ccff99dcc0ce5c8b0"
+    },
+    {
+     "$oid": "6ad5dd1ccff99dcc0ce5c8b1"
+    }
+   ],
+   "observacao": "Importado do sistema antigo (pedido 7169)",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400668138"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792400668441"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ad5dd1ccff99dcc0ce5c8b4"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7175"
+   },
+   "situacao": "P",
+   "fornecedor": {
+    "$oid": "68dfd90a0f338c9f1358b516"
+   },
+   "fornecedorNome": "Westaflex",
+   "nrFornecOrigem": {
+    "$numberInt": "43"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1791244800000"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1791936000000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "45 dias",
+    "dias": [
+     {
+      "$numberInt": "45"
+     }
+    ]
+   },
+   "itens": [
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5290"
+     },
+     "referencia": "1424",
+     "descricao": "ampliação alumínio   100 x  80 (1424)",
+     "quantidade": {
+      "$numberInt": "10"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1274"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8b5"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "4707"
+     },
+     "referencia": "2182",
+     "descricao": "ampliação D.60/80mm _Westa (1047)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1297"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8b6"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "3684"
+     },
+     "referencia": "1639",
+     "descricao": "aro de arremate   80 mm (1639)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1029"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8b7"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5264"
+     },
+     "referencia": "1413",
+     "descricao": "aro de arremate  100 mm (1413)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1224"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8b8"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "3637"
+     },
+     "referencia": "819",
+     "descricao": "braçadeira      80 mm (1874)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1306"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8b9"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5293"
+     },
+     "referencia": "1875",
+     "descricao": "braçadeira    100 mm (1875)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1306"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8ba"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5300"
+     },
+     "referencia": "",
+     "descricao": "Compact F +   80 mm  x  5.0 mts (2519)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "14546"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8bb"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "3213"
+     },
+     "referencia": "1663",
+     "descricao": "compact F + 100 mm  x  5.0 mts (1663)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "17861"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8bc"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "2897"
+     },
+     "referencia": "1640",
+     "descricao": "compact F + 120 mm  x  5.0 mts (1640)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "21069"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8bd"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "3681"
+     },
+     "referencia": "1048",
+     "descricao": "Flextic  1.5 mts x   80mm  [ 370 mm ] (1048)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "5193"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8be"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "3531"
+     },
+     "referencia": "1050",
+     "descricao": "Flextic  1.5 mts x 100  [ 370 mm ] (1050)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "6715"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8bf"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "3210"
+     },
+     "referencia": "1052",
+     "descricao": "Flextic  1.5 mts x 120 mm [ 370 mm ] (1052)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "7323"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8c0"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "3212"
+     },
+     "referencia": "346",
+     "descricao": "Flextic  3.0 mts x   80 mm  [ 740mm ] (1049)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "10099"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8c1"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "2692"
+     },
+     "referencia": "1051",
+     "descricao": "Flextic  3.0 mts x 100 mm (1527)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "11527"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8c2"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5278"
+     },
+     "referencia": "1053",
+     "descricao": "kit Chaminé  1.5  x  80  [ 370 mm ] (2355)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "9230"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8c3"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5281"
+     },
+     "referencia": "1129",
+     "descricao": "kit Chaminé  1.5  x 130   [ 370 mm ] (1129)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "12956"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8c4"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5282"
+     },
+     "referencia": "1054",
+     "descricao": "kit Chaminé  3.0  x  80 (2255)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "13877"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8c5"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "3326"
+     },
+     "referencia": "1664",
+     "descricao": "luva galv. 100 x 100 (1664)",
+     "quantidade": {
+      "$numberInt": "5"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1457"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1ccff99dcc0ce5c8c6"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "527130"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ad5dd1ccff99dcc0ce5c8c8"
+    }
+   ],
+   "observacao": "Importado do sistema antigo (pedido 7175)",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400668592"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792400668870"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8cb"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7176"
+   },
+   "situacao": "P",
+   "fornecedor": {
+    "$oid": "68e003080f338c9f1358b5a9"
+   },
+   "fornecedorNome": "Aliança",
+   "nrFornecOrigem": {
+    "$numberInt": "207"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1791244800000"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1793318400000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "28/35/42 dias",
+    "dias": [
+     {
+      "$numberInt": "28"
+     },
+     {
+      "$numberInt": "35"
+     },
+     {
+      "$numberInt": "42"
+     }
+    ]
+   },
+   "itens": [
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5090"
+     },
+     "referencia": "027841",
+     "descricao": "borboleta de zamac 76514/13  P 13 (1099)",
+     "quantidade": {
+      "$numberInt": "30"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1200"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1dcff99dcc0ce5c8cc"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "4331"
+     },
+     "referencia": "058029",
+     "descricao": "registro 3/8\"x 3/8 SAE 76517/8 BT (2058)",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "1500"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1dcff99dcc0ce5c8cd"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5788"
+     },
+     "referencia": "069049",
+     "descricao": "regulador gás 4 M³  506/75 GN (2002)",
+     "quantidade": {
+      "$numberInt": "40"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "3208"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1dcff99dcc0ce5c8ce"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "3874"
+     },
+     "referencia": "057848",
+     "descricao": "regulador gás 5 kg 506/18 BT",
+     "quantidade": {
+      "$numberInt": "20"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "4113"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1dcff99dcc0ce5c8cf"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "276580"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ad5dd1dcff99dcc0ce5c8d1"
+    },
+    {
+     "$oid": "6ad5dd1dcff99dcc0ce5c8d2"
+    },
+    {
+     "$oid": "6ad5dd1dcff99dcc0ce5c8d3"
+    }
+   ],
+   "observacao": "Importado do sistema antigo (pedido 7176)",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400669008"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792400669283"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8d6"
+   },
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "numero": {
+    "$numberInt": "7178"
+   },
+   "situacao": "P",
+   "fornecedor": null,
+   "fornecedorNome": "Komeco",
+   "nrFornecOrigem": {
+    "$numberInt": "67"
+   },
+   "dataEmissao": {
+    "$date": {
+     "$numberLong": "1791504000000"
+    }
+   },
+   "dataEntregaPrevista": {
+    "$date": {
+     "$numberLong": "1791936000000"
+    }
+   },
+   "condicaoPagamento": {
+    "texto": "84/112 dias",
+    "dias": [
+     {
+      "$numberInt": "84"
+     },
+     {
+      "$numberInt": "112"
+     }
+    ]
+   },
+   "itens": [
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5551"
+     },
+     "referencia": "KO 21 D",
+     "descricao": "Aquec. GN      KO 21 D    BR   21(3553)",
+     "quantidade": {
+      "$numberInt": "4"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "158828"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1dcff99dcc0ce5c8d7"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5588"
+     },
+     "referencia": "KO 21 Di",
+     "descricao": "Aquec. GN      KO 21 Di  Inox (3556)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "172941"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1dcff99dcc0ce5c8d8"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "5987"
+     },
+     "referencia": "KO 38 D",
+     "descricao": "Aquec. GN      KO 38 D  BR   38 Prime(3590)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "370006"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1dcff99dcc0ce5c8d9"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6008"
+     },
+     "referencia": "KO 38 Di",
+     "descricao": "Aquec. GN      KO 38 Di  BR   38 Prime(3591)",
+     "quantidade": {
+      "$numberInt": "2"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "379256"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1dcff99dcc0ce5c8da"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6147"
+     },
+     "referencia": "KO 46 D",
+     "descricao": "Aquec. GN      KO 46 D  BR  46 Prime(3394)",
+     "quantidade": {
+      "$numberInt": "3"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "494477"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1dcff99dcc0ce5c8db"
+     }
+    },
+    {
+     "produto": null,
+     "codigoOrigem": {
+      "$numberInt": "6211"
+     },
+     "referencia": "KO 46 Di",
+     "descricao": "Aquec. GN      KO 46 Di  BR  46 Prime(3412)",
+     "quantidade": {
+      "$numberInt": "1"
+     },
+     "quantidadeAtendida": {
+      "$numberInt": "0"
+     },
+     "custoUnitario": {
+      "$numberInt": "456291"
+     },
+     "baseCalculo": {
+      "ajustadoAMao": false
+     },
+     "_id": {
+      "$oid": "6ad5dd1dcff99dcc0ce5c8dc"
+     }
+    }
+   ],
+   "valorTotal": {
+    "$numberInt": "4419440"
+   },
+   "lancamentosFluxo": [
+    {
+     "$oid": "6ad5dd1dcff99dcc0ce5c8de"
+    },
+    {
+     "$oid": "6ad5dd1dcff99dcc0ce5c8df"
+    }
+   ],
+   "observacao": "Importado do sistema antigo (pedido 7178)",
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400669424"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792400669704"
+    }
+   },
+   "__v": {
+    "$numberInt": "1"
+   }
+  }
+ ],
+ "fluxo": [
+  {
+   "_id": {
+    "$oid": "6ad5dd1ccff99dcc0ce5c8b0"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "11"
+   },
+   "pos": {
+    "$numberInt": "3"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.182",
+   "nomeConta": "Haenke Tubos Flexiveis Ltda",
+   "historico": "Pedido 7169 Haenke",
+   "valor": {
+    "$numberDouble": "2454.4"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1793836800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ad5dd1ccff99dcc0ce5c8a7"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400668287"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792427942327"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ad5dd1ccff99dcc0ce5c8b1"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "12"
+   },
+   "pos": {
+    "$numberInt": "3"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.182",
+   "nomeConta": "Haenke Tubos Flexiveis Ltda",
+   "historico": "Pedido 7169 Haenke",
+   "valor": {
+    "$numberDouble": "2454.4"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1796256000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ad5dd1ccff99dcc0ce5c8a7"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400668288"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792427942327"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ad5dd1ccff99dcc0ce5c8c8"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "11"
+   },
+   "pos": {
+    "$numberInt": "3"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.030",
+   "nomeConta": "Westaflex Brasil",
+   "historico": "Pedido 7175 Westaflex",
+   "valor": {
+    "$numberDouble": "5271.3"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1795824000000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "1"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ad5dd1ccff99dcc0ce5c8b4"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400668734"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792427942327"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8d1"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "11"
+   },
+   "pos": {
+    "$numberInt": "3"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.126",
+   "nomeConta": "Aliança Metalurgica",
+   "historico": "Pedido 7176 Aliança",
+   "valor": {
+    "$numberDouble": "921.93"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1795737600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8cb"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400669146"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792427942327"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8d2"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "12"
+   },
+   "pos": {
+    "$numberInt": "3"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.126",
+   "nomeConta": "Aliança Metalurgica",
+   "historico": "Pedido 7176 Aliança",
+   "valor": {
+    "$numberDouble": "921.93"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1796342400000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8cb"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400669146"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792427942327"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8d3"
+   },
+   "ano": {
+    "$numberInt": "2026"
+   },
+   "mes": {
+    "$numberInt": "12"
+   },
+   "pos": {
+    "$numberInt": "3"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.126",
+   "nomeConta": "Aliança Metalurgica",
+   "historico": "Pedido 7176 Aliança",
+   "valor": {
+    "$numberDouble": "921.94"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1796947200000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "3"
+   },
+   "totalParcelas": {
+    "$numberInt": "3"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8cb"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400669146"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792427942327"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8de"
+   },
+   "ano": {
+    "$numberInt": "2027"
+   },
+   "mes": {
+    "$numberInt": "1"
+   },
+   "pos": {
+    "$numberInt": "3"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.056",
+   "nomeConta": "Asia Import.& Com.Ext.Ltda",
+   "historico": "Pedido 7178 Komeco",
+   "valor": {
+    "$numberDouble": "22097.2"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1799193600000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "1"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8d6"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400669565"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792427942327"
+    }
+   }
+  },
+  {
+   "_id": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8df"
+   },
+   "ano": {
+    "$numberInt": "2027"
+   },
+   "mes": {
+    "$numberInt": "2"
+   },
+   "pos": {
+    "$numberInt": "3"
+   },
+   "contaSubTitulo": null,
+   "codigoConta": "2.01.001.056",
+   "nomeConta": "Asia Import.& Com.Ext.Ltda",
+   "historico": "Pedido 7178 Komeco",
+   "valor": {
+    "$numberDouble": "22097.2"
+   },
+   "vencimento": {
+    "$date": {
+     "$numberLong": "1801612800000"
+    }
+   },
+   "parcela": {
+    "$numberInt": "2"
+   },
+   "totalParcelas": {
+    "$numberInt": "2"
+   },
+   "origem": "PEDIDO_IMPORTADO",
+   "orcamentoAno": null,
+   "lancamentoId": {
+    "$oid": "6ad5dd1dcff99dcc0ce5c8d6"
+   },
+   "boletaId": null,
+   "quitadoEm": null,
+   "documento": "",
+   "projecaoOrigemId": null,
+   "realizadaEm": null,
+   "status": "ATIVO",
+   "lojistaId": {
+    "$oid": "6892706a86509313e632f717"
+   },
+   "__v": {
+    "$numberInt": "0"
+   },
+   "criadoEm": {
+    "$date": {
+     "$numberLong": "1792400669565"
+    }
+   },
+   "atualizadoEm": {
+    "$date": {
+     "$numberLong": "1792427942327"
+    }
+   }
+  }
+ ]
+}

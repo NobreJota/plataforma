@@ -1,0 +1,126 @@
+{{!--
+  Destino: C:\plataformaRota\views\vendas\pages\lucro-diario.handlebars
+  Criado em: 30/10/2026 (Jorge)
+  Alterado em: 30/10/2026 (noite 3) - linha fina vertical entre as colunas; abas Vendas / Ordem de servico (OS por dia;
+               clique no dia abre as OS com o tecnico); quadro "Resumo das OS do mes" embaixo do painel.
+  Alterado em: 30/10/2026 (noite 2) - nome do administrador e botao "Sair do admin".
+
+  ADMIN > LUCRO DIARIO (so o administrador da empresa: login com admin "1"; ver pages.js)
+    Botoes Jan..Dez + ano. Uma linha por dia: data · vendas (liquido sem mao de obra) · estoque (custo do que saiu) ·
+    lucro bruto · margem. Linha em branco separando as semanas. Seg a sex sempre aparecem; sabado/domingo so com venda.
+    Ao lado: lucro do mes, media diaria (lucro / dias uteis ja passados), dias uteis (seg a sex sem feriado; da para
+    mudar) e previsao (media x dias uteis). So vendas fechadas na plataforma (as do Access ficam fora).
+  API: GET /vendas/api/venda/lucro-diario?ano=&mes=   JS: /js/vendas/lucro-diario.js
+--}}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucro diário</title>
+  <style>
+    *, *::before, *::after { box-sizing:border-box; }
+    :root { --roxo:#6b21a8; --roxo-claro:#f3e8ff; --borda:#e5e7eb; --texto:#111827; --cinza:#6b7280; --verde:#059669; --vermelho:#dc2626; }
+    body { margin:0 auto; max-width:1300px; padding:20px 24px 50px; color:var(--texto); background:#fff;
+           font-family:system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size:14px; }
+    .topo { display:flex; align-items:baseline; gap:12px; margin-bottom:14px; padding-right:190px; }
+    .topo h1 { margin:0; font-size:21px; } .topo small { color:var(--cinza); }
+    .meses { display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-bottom:14px; }
+    .meses button { flex:1 1 0; min-width:52px; height:32px; border:1px solid #d1d5db; background:#fff; border-radius:6px;
+                    font-size:13px; font-weight:600; color:#374151; cursor:pointer; }
+    .meses button.ativo { background:var(--roxo); border-color:var(--roxo); color:#fff; }
+    .meses select { height:32px; border:1px solid #d1d5db; border-radius:6px; padding:0 8px; font-size:14px; font-weight:600; margin-left:8px; }
+    .corpo { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:18px; align-items:start; }
+    .grade { border:1px solid var(--borda); border-radius:10px; overflow:auto; max-height:calc(100vh - 170px); }
+    table { width:100%; border-collapse:collapse; }
+    th { background:var(--roxo); color:#fff; font-size:12px; padding:8px 10px; text-align:left; position:sticky; top:0; z-index:1; }
+    td { padding:6px 10px; border-bottom:1px solid #f3f4f6; }
+    .n { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    /* 30/10/2026: linha fininha vertical separando as colunas */
+    th + th, td + td { border-left:1px solid #e5e7eb; }
+    th + th { border-left-color:rgba(255,255,255,.25); }
+    tr.semana td { border-left:0; }
+    tr.semana td { height:12px; padding:0; background:#f3f4f6; border-bottom:0; }
+    tr.fds td { color:var(--cinza); }
+    tr.feriado td { background:#fffbeb; }
+    td span.fer { color:var(--vermelho); font-weight:700; cursor:help; border-bottom:1px dotted var(--vermelho); }   /* nome no mouse */
+    tr.hoje td { background:#ede9fe; }
+    tr.futuro td { color:#cbd5e1; }
+    td small { color:var(--cinza); margin-left:6px; }
+    .neg { color:var(--vermelho) !important; }
+    tfoot td { background:#f8fafc; font-weight:800; border-top:2px solid var(--borda); position:sticky; bottom:0; }
+    .lado { border:1px solid var(--borda); border-radius:10px; padding:14px 16px; position:sticky; top:20px; }
+    .lado h2 { margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--roxo); }
+    .lin { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
+    .lin span { font-size:13px; font-weight:700; color:#374151; }
+    .lin b, .lin input { width:130px; height:34px; border:1px solid #d1d5db; border-radius:8px; padding:0 10px; font-size:15px; font-weight:800;
+                         text-align:right; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end; background:#f8fafc; }
+    .lin input { background:#fffbeb; }
+    .lin b.grande { color:var(--roxo); font-size:17px; }
+    .dica { font-size:12px; color:var(--cinza); line-height:1.4; margin-top:6px; }
+    .msg { color:var(--vermelho); font-size:13px; margin-top:8px; }
+    /* 30/10/2026 (noite 3): abas Vendas / Ordem de servico; OS do dia; resumo das OS */
+    .abas { display:flex; gap:6px; margin-bottom:8px; }
+    .abas button { border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:7px 16px; font-size:13px; font-weight:700; color:#374151; cursor:pointer; }
+    .abas button.ativo { background:var(--roxo); border-color:var(--roxo); color:#fff; }
+    tr.tem-os { cursor:pointer; } tr.tem-os:hover td { background:#faf5ff; }
+    tr.tem-os td:first-child::after { content:' ▸'; color:var(--roxo); }
+    tr.tem-os.aberto td:first-child::after { content:' ▾'; }
+    tr.os-det td { background:#fbfaff; font-size:12px; color:#374151; padding:4px 10px; }
+    tr.os-det td:first-child { padding-left:24px; }
+    tr.os-det b { color:var(--roxo); }
+    .lado + .lado { margin-top:14px; position:static; }
+    .res { width:100%; border-collapse:collapse; font-size:13px; }
+    .res td { padding:4px 0; border:0 !important; } .res td.n { font-weight:700; }
+    .res tr.sep td { border-top:1px solid var(--borda) !important; padding-top:8px; }
+    .res tr.tot td { font-weight:800; color:var(--roxo); }
+    @media (max-width: 1100px) { .corpo { grid-template-columns:minmax(0,1fr); } .lado { position:static; } body { padding:16px 12px 40px; } }
+  </style>
+</head>
+<body>
+  <div class="topo"><h1>Lucro diário</h1><small>Admin · só vendas fechadas na plataforma</small>
+    <small id="adm-nome" style="margin-left:auto"></small>
+    <button type="button" id="adm-sair" title="fecha o Admin nesta sessão (você continua no seu usuário)"
+      style="border:1px solid #d1d5db;background:#fff;border-radius:8px;padding:5px 12px;font-weight:700;cursor:pointer">Sair do admin</button></div>
+
+  <div class="meses" id="meses">
+    <button type="button" data-m="1">Jan</button><button type="button" data-m="2">Fev</button><button type="button" data-m="3">Mar</button>
+    <button type="button" data-m="4">Abr</button><button type="button" data-m="5">Mai</button><button type="button" data-m="6">Jun</button>
+    <button type="button" data-m="7">Jul</button><button type="button" data-m="8">Ago</button><button type="button" data-m="9">Set</button>
+    <button type="button" data-m="10">Out</button><button type="button" data-m="11">Nov</button><button type="button" data-m="12">Dez</button>
+    <select id="ano"></select>
+  </div>
+
+  <div class="abas" id="abas">
+    <button type="button" data-aba="vendas" class="ativo">Lucro bruto · vendas</button>
+    <button type="button" data-aba="os">Ordem de serviço</button>
+  </div>
+
+  <div class="corpo">
+    <div class="grade"><table>
+      <thead id="cab"></thead>
+      <tbody id="linhas"><tr><td colspan="8" class="dica">Carregando…</td></tr></tbody>
+      <tfoot id="pe"></tfoot>
+    </table></div>
+    <div>
+
+    <div class="lado">
+      <h2 id="lado-tit">Mês</h2>
+      <div class="lin"><span>Lucro bruto do mês</span><b class="grande" id="r-lucro">0,00</b></div>
+      <div class="lin"><span>Média diária</span><b id="r-media">0,00</b></div>
+      <div class="lin"><span>Dias úteis</span><input id="r-dias" inputmode="numeric" title="seg a sex sem feriado; pode mudar"></div>
+      <div class="lin"><span>Previsão</span><b class="grande" id="r-prev">0,00</b></div>
+      <div class="dica" id="r-dica"></div>
+      <div class="msg" id="msg"></div>
+    </div>
+    <div class="lado">
+      <h2>Resumo das OS do mês</h2>
+      <div id="os-resumo" class="dica">Carregando…</div>
+    </div>
+    </div>
+  </div>
+
+  <script src="/js/vendas/lucro-diario.js"></script>
+  <script src="/js/comum/navegacao.js"></script>
+</body>
+</html>

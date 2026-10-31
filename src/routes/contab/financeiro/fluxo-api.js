@@ -1,4 +1,6 @@
 // Destino: C:\plataformaRota\src\routes\contab\financeiro\fluxo-api.js
+// Alterado em: 31/10/2026 - ENTRADA marcada na linha (entrada: true, ex.: pos 0 "aluguel a receber" vindo do Access com
+//              Deb) conta como a receber (+), em vermelho. Regra: entradaDe(linha).
 // Alterado em: 23/10/2026 - POS 6 = CARTOES A RECEBER DA OPERADORA (Jorge): entra como "a receber" (+) junto
 //              com o 1 e o 5. O 5 fica para o titulo a receber do cliente.
 // API da Tela do Fluxo de Caixa: lista lançamentos (projetados + futuros)
@@ -40,6 +42,9 @@ const POS_INFO = {
   7: { rotulo: 'Compra projetada', cor: 'preto' },   // 19/10/2026: previsao (programacao de compras)
   8: { rotulo: 'Orçamento',    cor: 'verde'    }
 };
+// 31/10/2026: entrada (+) = pos de receber (1, 5, 6) ou linha marcada entrada (ex.: pos 0 aluguel a receber)
+const entradaDe = it => it.pos === 5 || it.pos === 1 || it.pos === 6 || it.entrada === true;
+
 
 /* 19/10/2026: GET /financeiro/api/fluxo/conta/:codigo — os titulos EM ABERTO de uma conta (cliente ou
    fornecedor), todos os anos, para conferir com o saldo do razao (janela "Razão · títulos em aberto"). */
@@ -204,7 +209,7 @@ router.get('/:ano', async (req, res) => {
       }).select('pos valor').lean();
 
       for (const it of anteriores) {
-        const ehEntrada = (it.pos === 5 || it.pos === 1 || it.pos === 6);
+        const ehEntrada = entradaDe(it);
         saldoAnterior += ehEntrada ? Math.abs(it.valor) : -Math.abs(it.valor);
       }
     }
@@ -217,7 +222,7 @@ router.get('/:ano', async (req, res) => {
     const linhas = itens.map((it, i) => {
       const info = POS_INFO[it.pos] || { rotulo: '?', cor: 'preto' };
       // pos de recebimento (1, 5, 6) = entrada (+); demais = saída (-)
-      const ehEntrada = (it.pos === 5 || it.pos === 1 || it.pos === 6);
+      const ehEntrada = entradaDe(it);
       const aReceber = ehEntrada ? Math.abs(it.valor) : 0;
       const aPagar   = ehEntrada ? 0 : -Math.abs(it.valor);
 
@@ -234,7 +239,8 @@ router.get('/:ano', async (req, res) => {
         codigoConta: it.codigoConta || '',
         pos: it.pos,
         posRotulo: info.rotulo,
-        cor: info.cor,
+        cor: it.entrada === true && ![1, 5, 6].includes(it.pos) ? 'vermelho' : info.cor,   // 31/10/2026: entrada
+        entrada: entradaDe(it),
         vencimento: it.vencimento,
         aReceber,
         aPagar,
@@ -269,7 +275,7 @@ router.get('/:ano/resumo-mensal', async (req, res) => {
     const meses = Array.from({ length: 12 }, () => ({ receber: 0, pagar: 0 }));
     itens.forEach(it => {
       const idx = it.mes - 1;
-      const ehEntrada = (it.pos === 5 || it.pos === 1 || it.pos === 6);
+      const ehEntrada = entradaDe(it);
       if (ehEntrada) meses[idx].receber += Math.abs(it.valor);
       else meses[idx].pagar += Math.abs(it.valor);
     });

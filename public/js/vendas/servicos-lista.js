@@ -14,6 +14,8 @@
 //              (ate) ja passado, fica com o cliente em amarelo e a situacao "hora vencida".
 // Alterado em: 16/10/2026 - ORDENAR: clique no titulo Cliente, Dia ou Tecnico ordena (de novo: inverte).
 //              Sem dia / sem tecnico vao para o fim.
+// Alterado em: 31/10/2026 - abas do TIPO da OS (VI · G · C) combinadas com a situacao; a contagem do tipo e da
+//              aba de situacao aberta. Clicar de novo no tipo = todos. O tipo escolhido fica na URL (&os=VI).
 // =============================================================================
 
 (function () {
@@ -62,10 +64,15 @@
   if (tipo === 'concluidas') tipo = 'liquidadas';     // 17/10/2026: aba Concluidas saiu (link antigo)
   if (!TIPOS.includes(tipo)) tipo = 'pendentes';
   let lista = [];
+  // 31/10/2026: tipo da OS (VI · G · C); '' = todos
+  const tipoOS = o => (o.tipo === 'INSTALACAO' ? 'VI' : o.tipo) || 'C';
+  let tos = new URLSearchParams(location.search).get('os') || '';
+  if (!['VI', 'G', 'C'].includes(tos)) tos = '';
 
   async function carregar() {
-    history.replaceState(null, '', location.pathname + '?tipo=' + tipo);
-    document.querySelectorAll('#abas button').forEach(b => b.classList.toggle('ativa', b.dataset.tipo === tipo));
+    history.replaceState(null, '', location.pathname + '?tipo=' + tipo + (tos ? '&os=' + tos : ''));
+    document.querySelectorAll('#abas button[data-tipo]').forEach(b => b.classList.toggle('ativa', b.dataset.tipo === tipo));
+    document.querySelectorAll('#abas button[data-tos]').forEach(b => b.classList.toggle('ativa', b.dataset.tos === tos));
     try {
       const r = await fetch(API + tipo, { headers: { Accept: 'application/json' } });
       const txt = await r.text();
@@ -88,10 +95,12 @@
 
   function desenhar() {
     const f = $('filtro').value.trim().toLowerCase();
-    const vis = ordenar(f ? lista.filter(o => texto(o).includes(f)) : lista);
+    ['VI', 'G', 'C'].forEach(t => { $('n-' + t).textContent = lista.filter(o => tipoOS(o) === t).length; });   // 31/10/2026
+    const doTipo = tos ? lista.filter(o => tipoOS(o) === tos) : lista;
+    const vis = ordenar(f ? doTipo.filter(o => texto(o).includes(f)) : doTipo);
     const feita = tipo === 'concluidas' || tipo === 'liquidadas';
     if (!vis.length) {
-      $('lista').innerHTML = '<div class="vazio">' + (lista.length ? 'Nada com esse filtro.' : 'Nenhuma OS nesta aba.') + '</div>';
+      $('lista').innerHTML = '<div class="vazio">' + (lista.length ? (tos && !doTipo.length ? 'Nenhuma OS ' + tos + ' nesta aba.' : 'Nada com esse filtro.') : 'Nenhuma OS nesta aba.') + '</div>';
       $('rodape').textContent = '';
       return;
     }
@@ -148,6 +157,13 @@
   }
 
   $('abas').addEventListener('click', ev => {
+    const bt = ev.target.closest('button[data-tos]');                // 31/10/2026: tipo da OS (de novo = todos)
+    if (bt) {
+      tos = tos === bt.dataset.tos ? '' : bt.dataset.tos;
+      history.replaceState(null, '', location.pathname + '?tipo=' + tipo + (tos ? '&os=' + tos : ''));
+      document.querySelectorAll('#abas button[data-tos]').forEach(b => b.classList.toggle('ativa', b.dataset.tos === tos));
+      desenhar(); return;
+    }
     const b = ev.target.closest('button[data-tipo]');
     if (!b || b.dataset.tipo === tipo) return;
     tipo = b.dataset.tipo;

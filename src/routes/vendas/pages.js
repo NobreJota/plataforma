@@ -13,6 +13,7 @@
 // Alterado em: 16/10/2026 - Servico > Fluxo de servico (/vendas/servicos/fluxo)
 // Alterado em: 23/10/2026 - Servico > Nova OS (/vendas/servicos/nova?tipo=C|G|S): por enquanto o conserto
 // Alterado em: 17/10/2026 - Venda > Kits (/vendas/kits): produto principal + itens que vao junto
+// Alterado em: 30/10/2026 - Admin > Lucro diario (/vendas/admin/lucro-diario; so admin "1")
 // Alterado em: 30/10/2026 - Venda > Vendedores (/vendas/vendedores; ?aba=comissao abre o quadro da comissao)
 //
 // Telas do modulo de vendas. Montado em /vendas no server.js, protegido por
@@ -50,6 +51,37 @@ router.get('/kits', (req, res) => {
 router.get('/vendedores', (req, res) => {
   res.render('vendas/pages/vendedores', { layout: false, activeMenu: 'vendas' });
 });
+
+// ADMIN > lucro diario (30/10/2026) — so o administrador da empresa (login com admin "1")
+router.get('/admin/lucro-diario', (req, res) => {
+  if (!vendaApi.ehAdmin(req)) return res.status(403).send(paginaEntrarAdmin());
+  res.render('vendas/pages/lucro-diario', { layout: false, activeMenu: 'admin' });
+});
+// 30/10/2026 (noite 2): sem admin na sessao -> "Entrar como administrador" (e-mail e senha de um usuario admin "1");
+// o usuario do contabil continua o mesmo, so o Admin fica liberado nesta sessao
+function paginaEntrarAdmin() {
+  return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+    + '<title>Admin</title><style>body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#f8fafc;margin:0;'
+    + 'display:flex;align-items:center;justify-content:center;min-height:100vh;color:#111827}'
+    + '.cx{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:26px 30px;width:min(420px,calc(100vw - 32px));box-shadow:0 10px 30px rgba(0,0,0,.08)}'
+    + 'h1{margin:0 0 6px;font-size:20px;color:#6b21a8}p{margin:0 0 16px;color:#374151;font-size:14px}'
+    + 'label{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;text-transform:uppercase;color:#374151;margin-bottom:10px}'
+    + 'input{height:38px;border:1px solid #d1d5db;border-radius:8px;padding:0 10px;font-size:15px}'
+    + 'button{width:100%;height:40px;border:0;border-radius:8px;background:#6b21a8;color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-top:4px}'
+    + '.msg{min-height:18px;color:#dc2626;font-size:13px;margin-top:10px}a{color:#6b21a8;font-size:13px}</style></head><body>'
+    + '<form class="cx" id="f"><h1>Admin</h1><p>Só o administrador da empresa entra aqui. Entre com o e-mail e a senha do administrador '
+    + '(você continua no seu usuário; o Admin fica liberado até sair).</p>'
+    + '<label>E-mail<input id="e" type="email" autocomplete="username" autofocus></label>'
+    + '<label>Senha<input id="s" type="password" autocomplete="current-password"></label>'
+    + '<button type="submit" id="b">Entrar como administrador</button><div class="msg" id="m"></div>'
+    + '<p style="margin:14px 0 0"><a href="/usuariocontab/menu">← voltar ao menu</a></p></form>'
+    + '<script>document.getElementById("f").addEventListener("submit",async function(ev){ev.preventDefault();'
+    + 'var b=document.getElementById("b"),m=document.getElementById("m");b.disabled=true;m.textContent="";'
+    + 'try{var r=await fetch("/vendas/api/venda/admin/entrar",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},'
+    + 'body:JSON.stringify({email:document.getElementById("e").value,senha:document.getElementById("s").value})});'
+    + 'var d=await r.json();if(!d.ok)throw new Error(d.erro||"não entrou");location.reload();}'
+    + 'catch(x){m.textContent=x.message;b.disabled=false;}});</script></body></html>';
+}
 
 // relatorio de vendas, mes a mes (como o fluxo)
 router.get('/relatorio', (req, res) => {
